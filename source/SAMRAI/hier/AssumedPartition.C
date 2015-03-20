@@ -203,10 +203,10 @@ AssumedPartition::getBox(int box_index) const
 }
 
 /*
- ********************************************************************************
- * Compute the box with the given index.
- ********************************************************************************
- */
+********************************************************************************
+* Compute all boxes.
+********************************************************************************
+*/
 void
 AssumedPartition::getAllBoxes(BoxContainer& all_boxes) const
 {
@@ -216,10 +216,10 @@ AssumedPartition::getAllBoxes(BoxContainer& all_boxes) const
 }
 
 /*
- ********************************************************************************
- * Compute the box with the given index.
- ********************************************************************************
- */
+********************************************************************************
+* Compute all boxes owned by the given rank.
+********************************************************************************
+*/
 void
 AssumedPartition::getAllBoxes(BoxContainer& all_boxes, int rank) const
 {

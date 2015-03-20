@@ -199,11 +199,14 @@ void CascadePartitionerTree::distributeLoad()
    for (int top_gen_number = 0; top_gen_number < tree_depth; ++top_gen_number) {
 
       /*
-       * This block combines and balances child branches and, for
-       * certain top groups, update Connectors.  Only non-leaf nodes
-       * combine and balance children but all nodes must participate
-       * in updating Connectors (or the step will hang when diagnostic
-       * barriers are used).
+       * This block combines and balances child branches.  Each time through:
+       * - Compute group weight by combining descendant group weights.
+       * - Reset obligations of processes based on group weight.
+       * - Balance the two children group.
+       *
+       * For certain top groups, update Connectors.  All nodes must
+       * participate in updating Connectors (or the step will hang
+       * when diagnostic barriers are used).
        */
       TBOX_ASSERT(top_group->d_gen_num == top_gen_number);
 
@@ -224,9 +227,13 @@ void CascadePartitionerTree::distributeLoad()
 
          d_leaf->recomputeLeafData();
 
-         for (CascadePartitionerTree* current_group = d_leaf->d_parent;
-              current_group != 0 && current_group->d_near != top_group;
-              current_group = current_group->d_parent) {
+         /*
+          * Loop from leaf's parent toward current_group, combining
+          * group weights.
+          */
+         for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
+               current_group != 0 && current_group->d_near != top_group;
+               current_group = current_group->d_parent ) {
 
             current_group->combineChildren();
             if (d_common->d_print_steps && d_common->d_print_child_steps) {
@@ -242,55 +249,57 @@ void CascadePartitionerTree::distributeLoad()
                current_group->d_children[1]->printClassData(tbox::plog, "\t");
             }
 
-            if (d_common->d_reset_obligations &&
-                current_group == top_group && top_group->d_gen_num != 0) {
-               const double old_obligation = top_group->d_obligation;
-               top_group->resetObligation(top_group->d_work / static_cast<double>(top_group->size()));
-               if (d_common->d_print_steps) {
-                  tbox::plog << d_common->d_object_name << "::distributeLoad generation "
-                             << top_group->d_gen_num << " reset obligation from "
-                             << old_obligation << " to " << top_group->d_obligation
-                             << std::endl;
-               }
-            }
-
-            /*
-             * Balance the children is needed only for top_group, but we
-             * optionally also balance intermediate children.
-             */
-            if (current_group == top_group) {
-               current_group->balanceChildren();
-               if (d_common->d_print_steps) {
-                  tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
-                             << top_group->d_gen_num << "  shuffled generation "
-                             << top_group->d_gen_num
-                             << ".  d_work is exact, but childrens' are estimates."
-                             << std::endl;
-                  tbox::plog << "\ttop_group:" << std::endl;
-                  top_group->printClassData(tbox::plog, "\t");
-                  tbox::plog << "\tchild 0:" << std::endl;
-                  top_group->d_children[0]->printClassData(tbox::plog, "\t");
-                  tbox::plog << "\tchild 1:" << std::endl;
-                  top_group->d_children[1]->printClassData(tbox::plog, "\t");
-               }
-            }
-
          } // Inner loop, current_group
-         if (d_common->d_print_steps) {
-            tbox::plog << d_common->d_object_name
-                       << "::distributeLoad completed inner loop for generation "
+
+         /*
+          * Non-root groups may have average weights different than the
+          * global average.  Reset the obligation to the group average
+          * if option is on.
+          */
+         if ( d_common->d_reset_obligations && top_group->d_gen_num != 0 ) {
+            const double old_obligation = top_group->d_obligation;
+            top_group->resetObligation( top_group->d_work/static_cast<double>(top_group->size()) );
+            if ( d_common->d_print_steps ) {
+               tbox::plog << d_common->d_object_name << "::distributeLoad generation "
+                          << top_group->d_gen_num << " reset obligation from "
+                          << old_obligation << " to " << top_group->d_obligation
+                          << std::endl;
+            }
+         }
+
+         /*
+          * Balance between children of the top_group.
+          */
+         top_group->balanceChildren();
+         if ( d_common->d_print_steps ) {
+            tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
+                       << top_group->d_gen_num << "  shuffled generation "
+                       << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates."
+                       << std::endl;
+            tbox::plog << "\ttop_group:" << std::endl;
+            top_group->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 0:" << std::endl;
+            top_group->d_children[0]->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 1:" << std::endl;
+            top_group->d_children[1]->printClassData( tbox::plog, "\t" );
+         }
+
+         if ( d_common->d_print_steps ) {
+            tbox::plog << d_common->d_object_name << "::distributeLoad completed inner loop for generation "
                        << top_group->d_gen_num << std::endl;
          }
 
       }
 
-      if (static_cast<int>(top_gen_number / connector_update_interval) !=
-          static_cast<int>((top_gen_number + 1) / connector_update_interval) ||
-          top_gen_number == tree_depth - 2) {
-         // Update Connectors.
-         if (d_common->d_print_steps) {
-            tbox::plog << d_common->d_object_name
-                       << "::distributeLoad updating Connectors after balancing generation "
+      /*
+       * Update Connectors at appropriate intervals or if this is the
+       * last time through the loop.
+       */
+      if ( static_cast<int>(top_gen_number/connector_update_interval) !=
+           static_cast<int>((top_gen_number+1)/connector_update_interval) ||
+           top_gen_number == tree_depth-2 ) {
+         if ( d_common->d_print_steps ) {
+            tbox::plog << d_common->d_object_name << "::distributeLoad updating Connectors after balancing generation "
                        << top_group->d_gen_num << std::endl;
          }
          d_common->t_distribute_load->stop();
@@ -542,8 +551,8 @@ CascadePartitionerTree::balanceChildren()
  * This method recurses into descendent groups, estimating changes
  * needed to supply the work_requested.  Estimation is necessary
  * because most of the changes take place remotely.  If the recursion
- * reaches the leaf group of the local process, it sets aside the work
- * that the local process supplies.
+ * reaches the leaf group containing the local process, it sets aside
+ * the work that the local process supplies.
  *************************************************************************
  */
 double
@@ -571,7 +580,7 @@ CascadePartitionerTree::supplyWork(double work_requested, int taker)
       TBOX_ASSERT(allowed_supply >= 0.0);
 
       if (d_children[0] != 0) {
-         // Near group and not a leaf: Recursively supply load from children.
+         // This is a near group but not a leaf: Recursively supply load from children.
          const int priority = taker >= d_begin;
          est_work_supplied = d_children[priority]->supplyWork(allowed_supply, taker);
          if (est_work_supplied < allowed_supply) {
@@ -579,7 +588,7 @@ CascadePartitionerTree::supplyWork(double work_requested, int taker)
                d_children[!priority]->supplyWork(allowed_supply - est_work_supplied, taker);
          }
       } else {
-         // A leaf and/or a far group.  No children, and no recursion.
+         // This is a leaf and/or a far group.  No children, and no recursion.
          est_work_supplied = allowed_supply;
 
          if (containsRank(d_common->d_mpi.getRank())) {

@@ -134,8 +134,8 @@ namespace mesh {
  *
  *   - \b    sequentialize_patch_indices
  *      whether patch indices will be globally sequentialized.
- *      This is not scalable, but is required for writing correct VisIt files.
- *      Due to the current VisIt requirement, this is currently true by
+ *      This is required for writing correct VisIt files, and
+ *      due to the current VisIt requirement, this is currently true by
  *      default.  It will evetually be set back to false after we remove the
  *      VisIt requirement.
  *
@@ -1146,42 +1146,6 @@ private:
    assertNoMessageForCommunicator(
       const tbox::SAMRAI_MPI& mpi) const;
 
-   /*!
-    * @brief Initialize static objects and register shutdown routine.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   startupCallback()
-   {
-      s_user_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-      s_saved_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-      s_boolean_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-      s_buf_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-   }
-
-   /*!
-    * @brief Method registered with ShutdownRegister to cleanup statics.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   shutdownCallback()
-   {
-      delete s_user_tag_indx;
-      delete s_saved_tag_indx;
-      delete s_boolean_tag_indx;
-      delete s_buf_tag_indx;
-   }
-
    /*
     * @brief Record statistics on how many patches and cells were generated.
     */
@@ -1199,15 +1163,6 @@ private:
     * hierarchy what width the GriddingAlgorithm will be requesting.
     */
    GriddingAlgorithmConnectorWidthRequestor d_connector_width_requestor;
-
-   /*
-    * Static members for managing shared tag data among multiple
-    * GriddingAlgorithm objects.
-    */
-   static std::vector<int> * s_user_tag_indx;
-   static std::vector<int> * s_saved_tag_indx;
-   static std::vector<int> * s_boolean_tag_indx;
-   static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
 
@@ -1435,7 +1390,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_refinement;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_new;
    boost::shared_ptr<tbox::Timer> t_find_new_to_new;
-   boost::shared_ptr<tbox::Timer> t_bridge_new_to_coarser;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
@@ -1479,12 +1433,6 @@ private:
    bool d_check_proper_nesting;
    bool d_check_connectors;
    bool d_print_steps;
-
-   /*
-    * Static startup and shutdown handler.
-    */
-   static tbox::StartupShutdownManager::Handler
-      s_startup_shutdown_handler;
 
 };
 

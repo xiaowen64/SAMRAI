@@ -166,15 +166,10 @@ OverlapConnectorAlgorithm::extractNeighbors(
       std::string dbgbord;
       TBOX_ERROR(
          "\nOverlapConnectorAlgorithm::extractNeighbors: box_id " << box_id
-                                                                  <<
-         " is not in the base of the box_level.\n"
-                                                                  << "base:\n" << connector.getBase(
-            ).format(dbgbord, 2)
-                                                                  << "head:\n" << connector.getHead(
-            ).format(dbgbord,
-            2)
-         << "connector:\n"
-         << connector.format(dbgbord, 2));
+         << " is not in the base of the box_level.\n"
+         << "base:\n" << connector.getBase().format(dbgbord, 2)
+         << "head:\n" << connector.getHead().format(dbgbord, 2)
+         << "connector:\n" << connector.format(dbgbord, 2));
    }
 #endif
 
@@ -297,16 +292,9 @@ OverlapConnectorAlgorithm::extractNeighbors(
             "\nOverlapConnectorAlgorithm::extractNeighbors: box_id " << box_id
                                                                      <<
             " is not in the base of the box_level.\n"
-                                                                     << "base:\n"
-                                                                     << connector.getBase().format(
-               dbgbord,
-               2)
-            << "head:\n"
-            << connector.getHead().format(
-               dbgbord,
-               2)
-            << "connector:\n"
-            << connector.format(dbgbord, 2));
+            << "base:\n" << connector.getBase().format(dbgbord, 2)
+            << "head:\n" << connector.getHead().format(dbgbord, 2)
+            << "connector:\n" << connector.format(dbgbord, 2));
       }
 #endif
 
@@ -384,6 +372,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
          }
       }
    }
+   return;
 }
 
 /*
@@ -401,9 +390,9 @@ OverlapConnectorAlgorithm::findOverlaps(
    const bool ignore_self_overlap) const
 {
    connector.reset(new Connector(base_box_level,
-         head_box_level,
-         base_width,
-         parallel_state));
+      head_box_level,
+      base_width,
+      parallel_state));
    findOverlaps(*connector,
       head_box_level.getGlobalizedVersion(),
       ignore_self_overlap);
@@ -435,9 +424,9 @@ OverlapConnectorAlgorithm::findOverlapsWithTranspose(
       ignore_self_overlap);
    if (&base_box_level != &head_box_level) {
       Connector* transpose = new Connector(head_box_level,
-            base_box_level,
-            transpose_base_width,
-            parallel_state);
+         base_box_level,
+         transpose_base_width,
+         parallel_state);
       findOverlaps(*transpose, ignore_self_overlap);
       connector->setTranspose(transpose, true);
    }
@@ -533,13 +522,18 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       }
    }
 
-   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStart();
+   d_object_timers->t_find_overlaps_assumed_partition_get_ap->barrierAndStart();
 
    /*
     * Set up center BoxLevel.  We can use either the base or head to
     * construct the center.  We choose the smaller one because we
     * don't need to cover the bigger region.  There are no overlaps
     * away from the smaller BoxLevel anyway.
+    *
+    * As an optimization, try to make an AssumedPartition with about
+    * 1 partition per rank, or fewer if the base or head have fewer boxes.
+    * This avoids having more many more assumed partitions than boxes,
+    * which can scale poorly.
     */
    BoxContainer base_bounding_boxes, head_bounding_boxes;
    size_t base_bounding_cell_count = 0, head_bounding_cell_count = 0;
@@ -550,11 +544,12 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       base_bounding_cell_count += base_bounding_boxes.back().size();
       head_bounding_cell_count += head_bounding_boxes.back().size();
    }
+   size_t num_parts = head.getGlobalNumberOfBoxes() < base.getGlobalNumberOfBoxes() ?
+      head.getGlobalNumberOfBoxes() : base.getGlobalNumberOfBoxes();
+   num_parts = mpi.getSize() < num_parts ? mpi.getSize() : num_parts;
    const AssumedPartition center_ap(
-      head_bounding_cell_count <
-      base_bounding_cell_count ? head_bounding_boxes : base_bounding_boxes,
-      0,
-      mpi.getSize());
+      head_bounding_cell_count < base_bounding_cell_count ? head_bounding_boxes : base_bounding_boxes,
+      0, mpi.getSize(), 0, static_cast<double>(num_parts)/mpi.getSize() );
    base_bounding_boxes.clear();
    head_bounding_boxes.clear();
 
@@ -562,7 +557,11 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    center_ap.getAllBoxes(center_boxes, mpi.getRank());
    const IntVector& center_refinement_ratio = head_bounding_cell_count < base_bounding_cell_count ?
       head.getRefinementRatio() : base.getRefinementRatio();
-   const BoxLevel center(center_boxes, center_refinement_ratio, geom, mpi);
+   const BoxLevel center( center_boxes, center_refinement_ratio, geom, mpi );
+
+   d_object_timers->t_find_overlaps_assumed_partition_get_ap->barrierAndStop();
+
+   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStart();
 
    // Set up base<==>center
    Connector base_to_center(base, center, width_in_base_resolution);
@@ -707,12 +706,12 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
       visible_east_nabrs);
    Connector* east_to_west = 0;
    west_to_east.reset(new Connector(west_to_cent.getBase(),
-         cent_to_east.getHead(),
-         west_to_east_width));
+      cent_to_east.getHead(),
+      west_to_east_width));
    if (compute_transpose) {
       east_to_west = new Connector(cent_to_east.getHead(),
-            west_to_cent.getBase(),
-            east_to_west_width);
+         west_to_cent.getBase(),
+         east_to_west_width);
    }
    privateBridge(
       *west_to_east,
@@ -780,12 +779,12 @@ OverlapConnectorAlgorithm::bridge(
       visible_east_nabrs);
    Connector* east_to_west = 0;
    west_to_east.reset(new Connector(west_to_cent.getBase(),
-         cent_to_east.getHead(),
-         west_to_east_width));
+      cent_to_east.getHead(),
+      west_to_east_width));
    if (compute_transpose) {
       east_to_west = new Connector(cent_to_east.getHead(),
-            west_to_cent.getBase(),
-            east_to_west_width);
+         west_to_cent.getBase(),
+         east_to_west_width);
    }
    privateBridge(
       *west_to_east,
@@ -853,12 +852,12 @@ OverlapConnectorAlgorithm::bridge(
       visible_east_nabrs);
    Connector* east_to_west = 0;
    west_to_east.reset(new Connector(west_to_cent.getBase(),
-         cent_to_east.getHead(),
-         west_to_east_width));
+      cent_to_east.getHead(),
+      west_to_east_width));
    if (compute_transpose) {
       east_to_west = new Connector(cent_to_east.getHead(),
-            west_to_cent.getBase(),
-            east_to_west_width);
+      west_to_cent.getBase(),
+      east_to_west_width);
    }
    privateBridge(
       *west_to_east,
@@ -1054,8 +1053,8 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
       output_width2 = cent_to_west.getConnectorWidth();
    }
    IntVector output_width_in_finest_refinement_ratio =
-      IntVector::max(output_width1, output_width2)
-      * finest_refinement_ratio / cent_refinement_ratio;
+      IntVector::max(output_width1, output_width2) *
+      finest_refinement_ratio / cent_refinement_ratio;
 
    /*
     * Reduce the output width to the user-specified width limit.  Note
@@ -1088,11 +1087,11 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
    }
 
    west_to_east_width = IntVector::ceilingDivide(
-         output_width_in_finest_refinement_ratio,
-         finest_refinement_ratio / west_refinement_ratio);
+      output_width_in_finest_refinement_ratio,
+      finest_refinement_ratio / west_refinement_ratio);
    east_to_west_width = IntVector::ceilingDivide(
-         output_width_in_finest_refinement_ratio,
-         finest_refinement_ratio / east_refinement_ratio);
+      output_width_in_finest_refinement_ratio,
+      finest_refinement_ratio / east_refinement_ratio);
 
    const int rank = cent.getMPI().getRank();
 
@@ -1173,6 +1172,7 @@ OverlapConnectorAlgorithm::privateBridge(
       }
    }
 #endif
+
 
    /*
     * Set up communication mechanism and post receives.
@@ -1388,6 +1388,7 @@ OverlapConnectorAlgorithm::privateBridge_removeAndCache(
     * that need to be deleted.
     */
    d_object_timers->t_bridge_remove_and_cache->stop();
+   return;
 }
 
 /*
@@ -2002,6 +2003,8 @@ OverlapConnectorAlgorithm::getAllTimers(
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()");
    timers.t_find_overlaps_assumed_partition_connect_to_ap = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()_connect_to_ap");
+   timers.t_find_overlaps_assumed_partition_get_ap = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()_get_ap");
    timers.t_find_overlaps_assumed_partition_transpose = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()_transpose");
 

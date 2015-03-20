@@ -154,9 +154,17 @@ boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_rich_extrap;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt_sync;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_integrate;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_pre_integrate;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_post_integrate;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_patch_loop;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_new_advance_bdry_fill_comm;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_patch_num_kernel;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_sync;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_compute_dt;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_preprocess_flux_data;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_postprocess_flux_data;
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_copy_time_dependent_data;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_std_level_sync;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_new_levels;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_barrier_after_error_bdry_fill_comm;
@@ -209,7 +217,8 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    d_new(hier::VariableDatabase::getDatabase()->getContext("NEW")),
    d_plot_context(d_current),
    d_have_flux_on_level_zero(false),
-   d_distinguish_mpi_reduction_costs(false)
+   d_distinguish_mpi_reduction_costs(false),
+   d_barrier_advance_level_sections(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(patch_strategy != 0);
@@ -995,7 +1004,9 @@ HyperbolicLevelIntegrator::advanceLevel(
    recordStatistics(*level, current_time);
 #endif
 
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
    t_advance_level->start();
+   t_advance_level_pre_integrate->start();
 
    const int level_number = level->getLevelNumber();
    const double dt = new_time - current_time;
@@ -1075,6 +1086,10 @@ HyperbolicLevelIntegrator::advanceLevel(
    d_patch_strategy->clearDataContext();
    fill_schedule.reset();
 
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_pre_integrate->stop();
+   t_advance_level_integrate->start();
+
    preprocessFluxData(level,
       current_time,
       new_time,
@@ -1096,6 +1111,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       last_step,
       regrid_advance);
    t_patch_num_kernel->stop();
+
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_patch_loop->start();
 
    d_patch_strategy->setDataContext(d_scratch);
    for (hier::PatchLevel::iterator ip(level->begin());
@@ -1123,6 +1141,9 @@ HyperbolicLevelIntegrator::advanceLevel(
    }
    d_patch_strategy->clearDataContext();
 
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_patch_loop->stop();
+
    level->setTime(new_time, d_saved_var_scratch_data);
    level->setTime(new_time, d_flux_var_data);
 
@@ -1136,6 +1157,10 @@ HyperbolicLevelIntegrator::advanceLevel(
       last_step,
       regrid_advance);
    t_patch_num_kernel->stop();
+
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_integrate->stop();
+   t_advance_level_post_integrate->start();
 
    /*
     * (9) If the level advance is for regridding, we compute the next timestep:
@@ -1155,6 +1180,8 @@ HyperbolicLevelIntegrator::advanceLevel(
    double dt_next = tbox::MathUtilities<double>::getMax();
 
    if (!regrid_advance) {
+
+      t_advance_level_compute_dt->start();
 
       if (d_lag_dt_computation) {
 
@@ -1206,6 +1233,8 @@ HyperbolicLevelIntegrator::advanceLevel(
       }
       d_patch_strategy->clearDataContext();
 
+      t_advance_level_compute_dt->stop();
+
    } // !regrid_advance
 
    level->deallocatePatchData(d_saved_var_scratch_data);
@@ -1215,8 +1244,8 @@ HyperbolicLevelIntegrator::advanceLevel(
       first_step,
       last_step);
 
-   t_advance_level->stop();
-
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_post_integrate->stop();
    t_advance_level_sync->start();
 
    if (d_distinguish_mpi_reduction_costs) {
@@ -1237,6 +1266,9 @@ HyperbolicLevelIntegrator::advanceLevel(
    } else {
       t_advance_level_sync->stop();
    }
+
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level->stop();
 
    return next_dt;
 }
@@ -2048,6 +2080,8 @@ HyperbolicLevelIntegrator::registerVariable(
  * If the advance is not temporary, we also zero out the FLUX INTEGRALS
  * on the first step of any level finer than level zero.
  *
+ * This method is local.
+ *
  *************************************************************************
  */
 
@@ -2148,6 +2182,8 @@ HyperbolicLevelIntegrator::preprocessFluxData(
  *    flux integrals.
  *
  * If the advance is temporary, deallocate the flux data if first step.
+ *
+ * This method is local.
  *
  *************************************************************************
  */
@@ -2365,6 +2401,7 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(src_context);
    TBOX_ASSERT(dst_context);
+   t_copy_time_dependent_data->start();
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
@@ -2383,6 +2420,7 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
       }
 
    }
+   t_copy_time_dependent_data->stop();
 
 }
 
@@ -2667,6 +2705,10 @@ HyperbolicLevelIntegrator::getFromInput(
 
       d_distinguish_mpi_reduction_costs =
          input_db->getBoolWithDefault("DEV_distinguish_mpi_reduction_costs", false);
+
+      d_barrier_advance_level_sections =
+         input_db->getBoolWithDefault("DEV_barrier_advance_level_sections",
+                                      d_barrier_advance_level_sections);
    } else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
@@ -2687,6 +2729,10 @@ HyperbolicLevelIntegrator::getFromInput(
          d_distinguish_mpi_reduction_costs =
             input_db->getBoolWithDefault("DEV_distinguish_mpi_reduction_costs",
                d_distinguish_mpi_reduction_costs);
+
+         d_barrier_advance_level_sections =
+            input_db->getBoolWithDefault("DEV_barrier_advance_level_sections",
+                                         d_barrier_advance_level_sections);
       }
    }
 }
@@ -2781,13 +2827,25 @@ HyperbolicLevelIntegrator::initializeCallback()
    t_get_level_dt_sync = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::getLevelDt()_sync");
    t_advance_level = tbox::TimerManager::getManager()->
-      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()");
+           getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()");
+   t_advance_level_integrate = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_integrate");
+   t_advance_level_pre_integrate = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_pre_integrate");
+   t_advance_level_post_integrate = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_post_integrate");
+   t_advance_level_patch_loop = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_patch_loop");
    t_new_advance_bdry_fill_comm = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::new_advance_bdry_fill_comm");
    t_patch_num_kernel = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::patch_numerical_kernels");
    t_advance_level_sync = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_sync");
+   t_advance_level_compute_dt = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_compute_dt");
+   t_copy_time_dependent_data = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::copyTimeDependentData()");
    t_std_level_sync = tbox::TimerManager::getManager()->
       getTimer(
          "algs::HyperbolicLevelIntegrator::standardLevelSynchronization()");

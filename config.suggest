@@ -151,7 +151,6 @@ EOF
 # use of configure
 # % use ic-14.0.144
 # % use gcc-4.6.1
-;;
 
 chaos5_clang) # CHAOS5, clang compilers and MPI2
 cat <<-EOF

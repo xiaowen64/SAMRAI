@@ -405,6 +405,7 @@ private:
     */
    static int s_operation_mpi_tag;
 
+
    //@{
    //! @name Timer data for this class.
 
@@ -423,6 +424,7 @@ private:
       boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
       boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
       boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
+      boost::shared_ptr<tbox::Timer> t_modify_find_overlaps_for_one_process;
       boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
       boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
       boost::shared_ptr<tbox::Timer> t_modify_misc;
