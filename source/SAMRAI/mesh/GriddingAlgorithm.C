@@ -91,6 +91,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_enforce_proper_nesting(true),
    d_extend_to_domain_boundary(true),
    d_load_balance(true),
+   d_save_tag_data(false),
    d_barrier_and_time(false),
    d_check_overflow_nesting(false),
    d_check_proper_nesting(false),
@@ -4822,7 +4823,7 @@ GriddingAlgorithm::getFromInput(
             input_db->getBoolWithDefault("DEV_barrier_and_time", false);
 
          d_save_tag_data =
-            input_db->getBoolWithDefault("save_tag_data", true);
+            input_db->getBoolWithDefault("save_tag_data", false);
 
       } else {
          bool read_on_restart =
@@ -4920,7 +4921,7 @@ GriddingAlgorithm::getFromInput(
                d_barrier_and_time);
 
          d_save_tag_data =
-            input_db->getBoolWithDefault("save_tag_data", true);
+            input_db->getBoolWithDefault("save_tag_data", false);
       }
    }
 }
