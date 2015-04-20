@@ -128,8 +128,12 @@ EOF
 
 chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
 cat <<-EOF
-	CXXFLAGS="-std=c++0x"
-	CFLAGS="-std=c++0x"
+	CXXFLAGS="-mpi=mvapich2-intel-1.9 -std=c++11"
+	CFLAGS=-mpi=mvapich2-intel-1.9
+        FFLAGS=-mpi=mvapich2-intel-1.9
+        --with-mpi-include=/usr/local/tools/mvapich2-intel-1.9/include
+        --with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel-1.9/lib
+        --with-mpi-libs="mpich fmpich"
 	--with-CC=mpiicc
 	--with-CXX=mpiicpc
 	--with-F77=mpiifort
@@ -149,7 +153,7 @@ EOF
 ;;
 # With the above configure options, these "use" commands must precede the
 # use of configure
-# % use ic-14.0.144
+# % use ic-14.0.174
 # % use gcc-4.6.1
 
 chaos5_clang) # CHAOS5, clang compilers and MPI2
