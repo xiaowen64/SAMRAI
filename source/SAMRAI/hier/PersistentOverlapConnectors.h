@@ -183,9 +183,6 @@ private:
     * smallest ghost cell width (based on the algebraic sum of the
     * components) is selected.
     *
-    * TODO: The criterion for selecting a single Connector is
-    * arbitrary and should be re-examined.
-    *
     * @par Assertions
     * If no Connector fits the criteria and not_found_action == ERROR, an
     * unrecoverable error will be generated.  If not_found_action == CREATE,
@@ -200,8 +197,10 @@ private:
     * @param[in] min_connector_width Find the overlap Connector satisfying
     *      this minimum Connector width.
     * @param[in] not_found_action Action to take if Connector is not found.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
+    * @param[in] exact_width_only If true, the returned Connector will
+    *      have exactly the requested connector width. If only a Connector
+    *      with a greater width is found, a connector of the requested width
+    *      will be generated.
     *
     * @return The Connector which matches the search criterion.
     *
@@ -213,7 +212,7 @@ private:
       const BoxLevel& head,
       const IntVector& min_connector_width,
       ConnectorNotFoundAction not_found_action,
-      bool exact_width_only = false);
+      bool exact_width_only = true);
 
    /*!
     * @brief Find an overlap Connector with its transpose with the given head
@@ -243,8 +242,10 @@ private:
     * @param[in] transpose_min_connector_width Find the transpose overlap
     *      Connector satisfying this minimum Connector width.
     * @param[in] not_found_action Action to take if Connector is not found.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
+    * @param[in] exact_width_only If true, the returned Connector will
+    *      have exactly the requested connector width. If only a Connector
+    *      with a greater width is found, a connector of the requested width
+    *      will be generated.
     *
     * @return The Connector which matches the search criterion.
     *
@@ -257,7 +258,7 @@ private:
       const IntVector& min_connector_width,
       const IntVector& transpose_min_connector_width,
       ConnectorNotFoundAction not_found_action,
-      bool exact_width_only = false);
+      bool exact_width_only = true);
 
    /*!
     * @brief Returns whether the object has overlap
@@ -273,16 +274,13 @@ private:
     * @param[in] head Find the overlap Connector with this specified head.
     * @param[in] min_connector_width Find the overlap Connector satisfying
     *      this minimum ghost cell width.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
     *
     * @return True if a Connector is found, otherwise false.
     */
    bool
    hasConnector(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
-      bool exact_width_only = false) const;
+      const IntVector& min_connector_width) const;
 
    /*!
     * @brief Delete stored Connectors.

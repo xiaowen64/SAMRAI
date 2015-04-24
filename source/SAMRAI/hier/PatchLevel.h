@@ -903,8 +903,10 @@ public:
     * @param[in] min_connector_width Find the overlap Connector satisfying
     *      this minimum Connector width.
     * @param[in] not_found_action Action to take if Connector is not found.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
+    * @param[in] exact_width_only If true, the returned Connector will
+    *      have exactly the requested connector width. If only a Connector
+    *      with a greater width is found, a connector of the requested width
+    *      will be generated.
     *
     * @return The Connector which matches the search criterion.
     *
@@ -916,7 +918,7 @@ public:
       const PatchLevel& head,
       const IntVector& min_connector_width,
       ConnectorNotFoundAction not_found_action,
-      bool exact_width_only = false) const
+      bool exact_width_only = true) const
    {
       return getBoxLevel()->findConnector(*head.getBoxLevel(),
          min_connector_width,
@@ -940,9 +942,10 @@ public:
     * @param[in] transpose_min_connector_width Find the transpose overlap
     *      Connector satisfying this minimum Connector width.
     * @param[in] not_found_action Action to take if Connector is not found.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
-    *
+    * @param[in] exact_width_only If true, the returned Connector will
+    *      have exactly the requested connector width. If only a Connector
+    *      with a greater width is found, a connector of the requested width
+    *      will be generated.
     * @return The Connector which matches the search criterion.
     *
     * @pre getBoxLevel()->isInitialized()
@@ -954,7 +957,7 @@ public:
       const IntVector& min_connector_width,
       const IntVector& transpose_min_connector_width,
       ConnectorNotFoundAction not_found_action,
-      bool exact_width_only = false) const
+      bool exact_width_only = true) const
    {
       return getBoxLevel()->findConnectorWithTranspose(*head.getBoxLevel(),
          min_connector_width,
@@ -1051,20 +1054,16 @@ public:
     *      BoxLevel as the head.
     * @param[in] min_connector_width Find the overlap Connector satisfying
     *      this minimum ghost cell width.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
     *
     * @return True if a Connector is found, otherwise false.
     */
    bool
    hasConnector(
       const PatchLevel& head,
-      const IntVector& min_connector_width,
-      bool exact_width_only = false) const
+      const IntVector& min_connector_width) const
    {
       return getBoxLevel()->hasConnector(*head.getBoxLevel(),
-         min_connector_width,
-         exact_width_only);
+         min_connector_width);
    }
 
    /*!
