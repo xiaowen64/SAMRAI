@@ -615,7 +615,6 @@ int AutoTester::testFlattenedHierarchy(
          for (hier::BoxContainer::const_iterator itr = flat_boxes.begin();
               itr != flat_boxes.end(); ++itr) {
             const hier::Box& flat_box = *itr;
-            const hier::BlockId& block_id = flat_box.getBlockId();
             double cell_value = 1.0 / refine_quotient;
             local_size += (cell_value * static_cast<double>(flat_box.size()));
          }
