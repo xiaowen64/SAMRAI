@@ -23,6 +23,7 @@ namespace hier {
 
 class Patch;
 class PatchHierarchy;
+class FlattenedHierarchy;
 
 /*!
  * @brief An iterator over the uncovered Boxes in a hierarhcy.
@@ -138,11 +139,10 @@ private:
    findNextFinestUncoveredBoxes();
 
    /*!
-    * @brief Find the patch overlapped by the current uncovered box at set
-    * d_item appropriatly.
+    * @brief Set the item based on the current patch id and uncovered box.
     */
    void
-   findOverlappedPatch();
+   setIteratorItem();
 
    /* The PatchHierarchy on which this iterator operates. */
    const PatchHierarchy* d_hierarchy;
@@ -150,17 +150,14 @@ private:
    /* The current level in the PatchHierarchy. */
    int d_level_num;
 
-   /* The uncovered Boxes for the current level. */
-   BoxContainer d_uncovered_boxes;
+   /* The id of the current patch */
+   BoxId d_current_patch_id;
 
-   /* The iterator over d_uncovered_boxes. */
+   /* The iterator over the uncovered boxes for the current patch. */
    BoxContainer::const_iterator d_uncovered_boxes_itr;
 
-   /* The iterator at the end of d_uncovered_boxes. */
+   /* The iterator at the end of the uncovered boxes for the current patch. */
    BoxContainer::const_iterator d_uncovered_boxes_itr_end;
-
-   /* All Boxes uncovered or not in the current level of the PatchHierarchy. */
-   BoxContainer d_level_boxes;
 
    /* The current item in the iteration. */
    std::pair<boost::shared_ptr<Patch>, Box>* d_item;
@@ -168,21 +165,7 @@ private:
    /* The number of the finest level in the hierarchy. */
    int d_finest_level_num;
 
-   /* The level boxes that the current uncovered box originally came from.
-    * Since overlapping patches are allowed, a given uncovered box may be
-    * associated with multiple patches and may therefore have multiple
-    * overlapping level boxes.  Much depends on how the original level boxes
-    * are cut up to form the uncovered boxes.
-    */
-   BoxContainer d_overlapping_level_boxes;
-
-   /* The originating level box corresponding to the patch that the iterator is
-    * currently pointing to.
-    */
-   BoxContainer::const_iterator d_cur_overlapping_level_box;
-
-   /* The iterator at the end of d_overlapping_level_boxes. */
-   BoxContainer::const_iterator d_end_overlapping_level_boxes;
+   boost::shared_ptr<FlattenedHierarchy> d_flattened_hierarchy;
 };
 
 }
