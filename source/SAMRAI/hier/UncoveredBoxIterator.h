@@ -37,6 +37,7 @@ class FlattenedHierarchy;
 class UncoveredBoxIterator
 {
    friend class PatchHierarchy;
+   friend class FlattenedHierarchy;
 
 public:
    /*!
@@ -126,6 +127,10 @@ private:
       const PatchHierarchy* hierarchy,
       bool begin);
 
+   UncoveredBoxIterator(
+      const FlattenedHierarchy* hierarchy,
+      bool begin);
+
    /*!
     * @brief Private method to do work common to both pre and post increments.
     */
@@ -133,10 +138,10 @@ private:
    incrementIterator();
 
    /*!
-    * @brief Private method to find next finest uncovered boxes.
+    * @brief Private method to find first uncovered box
     */
    void
-   findNextFinestUncoveredBoxes();
+   findFirstUncoveredBox();
 
    /*!
     * @brief Set the item based on the current patch id and uncovered box.
@@ -146,6 +151,9 @@ private:
 
    /* The PatchHierarchy on which this iterator operates. */
    const PatchHierarchy* d_hierarchy;
+   const FlattenedHierarchy* d_flattened_hierarchy;
+
+   bool d_allocated_flattened_hierarchy;
 
    /* The current level in the PatchHierarchy. */
    int d_level_num;
@@ -165,7 +173,6 @@ private:
    /* The number of the finest level in the hierarchy. */
    int d_finest_level_num;
 
-   boost::shared_ptr<FlattenedHierarchy> d_flattened_hierarchy;
 };
 
 }

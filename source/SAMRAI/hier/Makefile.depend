@@ -2825,7 +2825,9 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Connector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/FlattenedHierarchy.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/HierarchyNeighbors.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
@@ -2844,6 +2846,7 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/RealBoxConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\

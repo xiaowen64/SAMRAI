@@ -28,16 +28,38 @@ UncoveredBoxIterator::UncoveredBoxIterator(
 
    d_finest_level_num = d_hierarchy->getFinestLevelNumber();
    if (begin) {
-      // The iterator begins with the coarsest uncovered boxes so start looking
-      // for uncovered boxes from level 0.
       d_level_num = -1;
-      d_flattened_hierarchy = boost::make_shared<FlattenedHierarchy>(*d_hierarchy, 0, d_finest_level_num);
-      findNextFinestUncoveredBoxes();
+      d_flattened_hierarchy = new FlattenedHierarchy(*d_hierarchy, 0, d_finest_level_num);
+      d_allocated_flattened_hierarchy = true;
+      findFirstUncoveredBox();
    } else {
-      // The iterator ends at the end of the boxes on the finest level which,
-      // by definition, are uncovered.
       d_level_num = d_finest_level_num + 1;
-      d_flattened_hierarchy.reset();
+      d_flattened_hierarchy = 0;
+      d_allocated_flattened_hierarchy = false;
+   }
+}
+
+
+UncoveredBoxIterator::UncoveredBoxIterator(
+   const FlattenedHierarchy* flattened_hierarchy,
+   bool begin):
+   d_hierarchy(&(flattened_hierarchy->getPatchHierarchy())),
+   d_uncovered_boxes_itr(BoxContainer().begin()),
+   d_uncovered_boxes_itr_end(BoxContainer().end()),
+   d_item(0)
+{
+   TBOX_ASSERT(flattened_hierarchy);
+
+   d_finest_level_num = d_hierarchy->getFinestLevelNumber();
+   if (begin) {
+      d_level_num = -1;
+      d_flattened_hierarchy = flattened_hierarchy;
+      d_allocated_flattened_hierarchy = false;
+      findFirstUncoveredBox();
+   } else {
+      d_level_num = d_finest_level_num + 1;
+      d_flattened_hierarchy = 0;
+      d_allocated_flattened_hierarchy = false;
    }
 }
 
@@ -47,10 +69,43 @@ UncoveredBoxIterator::UncoveredBoxIterator(
    d_level_num(other.d_level_num),
    d_uncovered_boxes_itr(other.d_uncovered_boxes_itr),
    d_uncovered_boxes_itr_end(other.d_uncovered_boxes_itr_end),
-   d_item(new std::pair<boost::shared_ptr<Patch>, Box>(*other.d_item)),
+   d_item(0),
    d_finest_level_num(other.d_finest_level_num),
-   d_flattened_hierarchy(other.d_flattened_hierarchy)
+   d_current_patch_id(other.d_current_patch_id),
+   d_flattened_hierarchy(0),
+   d_allocated_flattened_hierarchy(false)
 {
+   if (other.d_item) {
+      d_item = new std::pair<boost::shared_ptr<Patch>, Box>(*other.d_item);
+   }
+   if (other.d_flattened_hierarchy) {
+      d_flattened_hierarchy =
+         new FlattenedHierarchy(*other.d_flattened_hierarchy);
+      d_allocated_flattened_hierarchy = true;
+      if (d_level_num <= d_finest_level_num) {
+         TBOX_ASSERT(d_item);
+         const Box& patch_box = d_item->first->getBox();
+         const BoxContainer& visible_boxes =
+            d_flattened_hierarchy->getVisibleBoxes(patch_box, d_level_num);
+
+         BoxContainer::const_iterator itr = visible_boxes.begin(); 
+            for( ; itr != visible_boxes.end(); ++itr) {
+
+            if (itr->getBoxId() == d_item->second.getBoxId() &&
+                itr->isSpatiallyEqual(d_item->second)) {
+
+               d_uncovered_boxes_itr = itr;
+               d_uncovered_boxes_itr_end = visible_boxes.end();
+               break;
+            }
+         }
+
+         if (itr == visible_boxes.end()) {
+            d_uncovered_boxes_itr = itr;
+            d_uncovered_boxes_itr_end = itr;
+         }
+      }
+   }
 }
 
 UncoveredBoxIterator::~UncoveredBoxIterator()
@@ -58,6 +113,9 @@ UncoveredBoxIterator::~UncoveredBoxIterator()
    if (d_item) {
       delete d_item;
    }
+   if (d_flattened_hierarchy && d_allocated_flattened_hierarchy) {
+      delete d_flattened_hierarchy;
+   } 
 }
 
 UncoveredBoxIterator&
@@ -69,11 +127,53 @@ UncoveredBoxIterator::operator = (
       d_level_num = rhs.d_level_num;
       d_uncovered_boxes_itr = rhs.d_uncovered_boxes_itr;
       d_uncovered_boxes_itr_end = rhs.d_uncovered_boxes_itr_end;
-      d_item->first = rhs.d_item->first;
-      d_item->second = rhs.d_item->second;
+      d_current_patch_id = rhs.d_current_patch_id; 
+      if (d_item) {
+         delete d_item;
+      }
+      if (rhs.d_item) {
+         d_item = new std::pair<boost::shared_ptr<Patch>, Box>(*rhs.d_item);
+         d_item->first = rhs.d_item->first;
+         d_item->second = rhs.d_item->second;
+      } else {
+         d_item = 0;
+      } 
       d_finest_level_num = rhs.d_finest_level_num;
-      d_flattened_hierarchy = rhs.d_flattened_hierarchy;
+      if (d_flattened_hierarchy && d_allocated_flattened_hierarchy) {
+         delete d_flattened_hierarchy;
+      }
+      d_flattened_hierarchy = 0;
+      d_allocated_flattened_hierarchy = false;
+      if (rhs.d_flattened_hierarchy) {
+         d_flattened_hierarchy =
+            new FlattenedHierarchy(*rhs.d_flattened_hierarchy);
+         d_allocated_flattened_hierarchy = true;
+         if (d_level_num <= d_finest_level_num) {
+            TBOX_ASSERT(d_item);
+            const Box& patch_box = d_item->first->getBox();
+            const BoxContainer& visible_boxes =
+            d_flattened_hierarchy->getVisibleBoxes(patch_box, d_level_num);
+
+            BoxContainer::const_iterator itr = visible_boxes.begin();
+               for( ; itr != visible_boxes.end(); ++itr) {
+
+               if (itr->getBoxId() == d_item->second.getBoxId() &&
+                   itr->isSpatiallyEqual(d_item->second)) {
+
+                  d_uncovered_boxes_itr = itr;
+                  d_uncovered_boxes_itr_end = visible_boxes.end();
+                  break;
+               }
+            }
+
+            if (itr == visible_boxes.end()) {
+               d_uncovered_boxes_itr = itr;
+               d_uncovered_boxes_itr_end = itr;
+            }
+         }
+      }
    }
+
    return *this;
 }
 
@@ -122,27 +222,10 @@ UncoveredBoxIterator::operator == (
             result = true;
          } else {
             result = false;
+         }
       }
    }
 
-#if 0
-      // Now check if the iterators are at the same point in the level.  If
-      // they are both at the end of the level, then they are equal.  If they
-      // are both in the middle of the level and on the same box, then they are
-      // equal.  Otherwise one is at the end and the other is in the middle so
-      // they are not equal.
-      if (d_uncovered_boxes_itr == d_uncovered_boxes_itr_end &&
-          rhs.d_uncovered_boxes_itr == rhs.d_uncovered_boxes_itr_end) {
-      } else if (d_uncovered_boxes_itr != d_uncovered_boxes_itr_end &&
-                 rhs.d_uncovered_boxes_itr != rhs.d_uncovered_boxes_itr_end) {
-         result =
-            (d_uncovered_boxes_itr->isSpatiallyEqual(
-                *rhs.d_uncovered_boxes_itr));
-      } else {
-         result = false;
-      }
-#endif
-   }
    return result;
 }
 
@@ -176,14 +259,12 @@ UncoveredBoxIterator::operator ++ (
 void
 UncoveredBoxIterator::incrementIterator()
 {
-   // Move to the next originating patch associated with the current box.  If
-   // there are any left then make the iterator point to that patch.  If not
-   // then move to the next uncovered box on the current level.  If there are
-   // no more left, then check if this finest level.  If so the iteration is at
-   // its end.  Otherwise, look for the next finer level with uncovered boxes.
-   // If there are uncovered boxes left on the current level then set the
-   // iterator return value to point to this next box and the first patch that
-   // it overlaps.
+   /*
+    * Increment the iterator over the uncovered boxes for the current patch.
+    * If we reach the end of the uncovered boxes for the current patch,
+    * look for the next patch with uncovered boxes, moving to finer levels if
+    * necessary
+    */
    ++d_uncovered_boxes_itr;
    if (d_uncovered_boxes_itr != d_uncovered_boxes_itr_end) {
       d_current_patch_id = d_item->first->getBox().getBoxId();
@@ -230,7 +311,10 @@ UncoveredBoxIterator::incrementIterator()
       if (id_found) {
          setIteratorItem();
       } else {
-         d_flattened_hierarchy.reset();
+         if (d_flattened_hierarchy && d_allocated_flattened_hierarchy) {
+            delete d_flattened_hierarchy;
+         }
+         d_flattened_hierarchy = 0;
          if (d_item) {
             delete d_item;
             d_item = 0; 
@@ -240,7 +324,7 @@ UncoveredBoxIterator::incrementIterator()
 }
 
 void
-UncoveredBoxIterator::findNextFinestUncoveredBoxes()
+UncoveredBoxIterator::findFirstUncoveredBox()
 {
    ++d_level_num;
    boost::shared_ptr<PatchLevel> this_level =
@@ -285,17 +369,21 @@ UncoveredBoxIterator::findNextFinestUncoveredBoxes()
          delete d_item;
          d_item = 0;
       }
-      d_flattened_hierarchy.reset();
+      if (d_flattened_hierarchy && d_allocated_flattened_hierarchy) {
+         delete d_flattened_hierarchy;
+      }
+      d_flattened_hierarchy = 0;
+      if (d_item) {
+         delete d_item;
+         d_item = 0;
+      }
    }
 }
 
 void
 UncoveredBoxIterator::setIteratorItem()
 {
-   // Get rid of the overlapping boxes from the previous uncovered box.
-
-   // Get the current uncovered box and the boxes from the level it came from
-   // and find the overlap.
+   // Get the current uncovered box.
    const Box& cur_box = *d_uncovered_boxes_itr;
    boost::shared_ptr<PatchLevel> this_level =
       d_hierarchy->getPatchLevel(d_level_num);

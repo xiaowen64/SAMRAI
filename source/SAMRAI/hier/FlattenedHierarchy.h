@@ -117,6 +117,32 @@ public:
       return itr->second;
    }
 
+   /*
+    * @brief Get the PatchHierachy associated with this FlattenedHierarchy.
+    */
+   const PatchHierarchy& getPatchHierarchy() const
+   {
+      return *d_patch_hierarchy;
+   }
+
+   /*!
+    * @brief Returns an iterator to the first uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   beginUncovered()
+   {
+      return UncoveredBoxIterator(this, true);
+   }
+
+   /*!
+    * @brief Returns an iterator to the last uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   endUncovered()
+   {
+      return UncoveredBoxIterator(this, false);
+   }
+
 private:
 
    /*!
@@ -133,6 +159,11 @@ private:
     * that Patch's box.
     */
    std::vector< std::map<BoxId, BoxContainer> > d_visible_boxes;
+
+   /*!
+    * @brief Pointer to the PatchHierarchy that was used to create this object.
+    */
+   const PatchHierarchy* d_patch_hierarchy;
 
 };
 

@@ -29,7 +29,8 @@ FlattenedHierarchy::FlattenedHierarchy(
    int coarsest_level,
    int finest_level)
 : d_coarsest_level(coarsest_level),
-  d_finest_level(finest_level)
+  d_finest_level(finest_level),
+  d_patch_hierarchy(&hierarchy)
 {
    int num_levels = hierarchy.getNumberOfLevels();
    TBOX_ASSERT(coarsest_level >= 0);
@@ -108,7 +109,6 @@ FlattenedHierarchy::FlattenedHierarchy(
          }
       }
    }
-
 }
 
 /*

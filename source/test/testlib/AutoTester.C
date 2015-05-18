@@ -593,32 +593,21 @@ int AutoTester::testFlattenedHierarchy(
       static_cast<double>(level_zero->getBoxLevel()->getGlobalNumberOfCells());
 
    double local_size = 0.0;
-   for (int ln = 0; ln < num_levels; ++ln) {
-      const boost::shared_ptr<hier::PatchLevel>& current_level =
-         hierarchy->getPatchLevel(ln);
+
+   hier::UncoveredBoxIterator itr = flat_hier.beginUncovered();
+   hier::UncoveredBoxIterator flat_end = flat_hier.endUncovered();
+   for ( ; itr != flat_end; ++itr) {
 
       const hier::IntVector& ratio_to_zero =
-         current_level->getRatioToLevelZero();
+         itr->first->getPatchGeometry()->getRatio();
 
-      for (hier::PatchLevel::Iterator pi = current_level->begin();
-           pi != current_level->end(); ++pi) {
+      const hier::BlockId& block_id = itr->second.getBlockId();
+      double refine_quotient =
+         static_cast<double>(ratio_to_zero.getProduct(block_id));
 
-         const boost::shared_ptr<hier::Patch>& patch(*pi);
-         const hier::Box& box = patch->getBox();
-         const hier::BlockId& block_id = box.getBlockId();
-         double refine_quotient =
-            static_cast<double>(ratio_to_zero.getProduct(block_id));
+      double cell_value = 1.0 / refine_quotient;
+      local_size += (cell_value * static_cast<double>(itr->second.size()));
 
-         const hier::BoxContainer& flat_boxes =
-            flat_hier.getVisibleBoxes(box, ln);
-
-         for (hier::BoxContainer::const_iterator itr = flat_boxes.begin();
-              itr != flat_boxes.end(); ++itr) {
-            const hier::Box& flat_box = *itr;
-            double cell_value = 1.0 / refine_quotient;
-            local_size += (cell_value * static_cast<double>(flat_box.size()));
-         }
-      }
    }
 
    double global_flat_size = local_size;
