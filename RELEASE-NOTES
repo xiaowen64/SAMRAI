@@ -43,6 +43,10 @@ handle through changes to IntVector described in "what's changed".
 2) A new feature allows user-defined gradient detector tag values to be saved
 and retrieved during or after regridding.
 
+3) A more scalable partitioner, CascadePartitioner was added, and
+TileClustering was improved.  Both of these should scale well to
+1M+ MPI tasks.
+
 -----------------------------------------------------------------------------
                 Summary of what's changed
 -----------------------------------------------------------------------------
@@ -108,6 +112,27 @@ application code.
    input argument "d_save_tag_data" is set to true in the GriddingAlgorithm
    input.  This feature adds communication overhead, so it should only be
    turned on if it is really desired. 
+
+3) A more scalable partitioner, CascadePartitioner was added, and
+TileClustering was improved.  Both of these should scale well to
+1M+ MPI tasks.
+
+CascadePartitioner can be used wherever a LoadBalanceStrategy is
+needed.  TileClustering can be used wherever BoxGeneratorStrategy is
+needed.  They can be drop-in replacements for what you are using in
+the GriddingAlgorithm.  See the class documentation.  The algorithms
+are described in the article "Advances in Patch-Based Adaptive Mesh
+Refinement Scalability" submitted to JPDC.  Scaling benchmark results
+are also in the article.
+
+Tiling generates clusters of a predetermined tile size.  Tile size can
+be different on different levels, and mixing tiled and untiled levels
+is permitted.  However, tiling is most efficient when tile boundaries
+coincide, which is achieved by when Tc*R is divisible by Tf or vice
+versa, where Tc is the tile size on a coarser level, Tf is the tile
+size on the finer level and R is the refinement ratio between the two
+levels.  Be sure to use a compatible tile size in the partitioning
+object.
 
 
 

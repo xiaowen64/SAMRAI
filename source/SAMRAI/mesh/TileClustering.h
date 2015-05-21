@@ -30,6 +30,18 @@ namespace mesh {
 /*!
  * @brief Tiled patch clustering algorithm.
  *
+ * Tiling generates clusters of a predetermined tile size.  Tile size can
+ * be different on different levels, and mixing tiled and untiled levels
+ * is permitted.  However, tiling is most efficient when tile boundaries
+ * coincide, which is achieved by setting Tc*R is divisible by Tf or vice
+ * versa, where Tc is the tile size on a coarser level, Tf is the tile size
+ * on the finer level and R is the refinement ratio between the two levels.
+ * Be sure to use a compatible tile size in the partitioning object.
+ *
+ * The algorithm is described in the article "Advances in Patch-Based
+ * Adaptive Mesh Refinement Scalability" submitted to JPDC.  Scaling
+ * benchmark results are also in the article.
+ *
  * <b> Input Parameters </b>
  *
  * <b> Definitions: </b>
