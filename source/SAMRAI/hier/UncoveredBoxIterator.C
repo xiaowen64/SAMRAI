@@ -66,14 +66,14 @@ UncoveredBoxIterator::UncoveredBoxIterator(
 UncoveredBoxIterator::UncoveredBoxIterator(
    const UncoveredBoxIterator& other):
    d_hierarchy(other.d_hierarchy),
+   d_flattened_hierarchy(0),
+   d_allocated_flattened_hierarchy(false),
    d_level_num(other.d_level_num),
+   d_current_patch_id(other.d_current_patch_id),
    d_uncovered_boxes_itr(other.d_uncovered_boxes_itr),
    d_uncovered_boxes_itr_end(other.d_uncovered_boxes_itr_end),
    d_item(0),
-   d_finest_level_num(other.d_finest_level_num),
-   d_current_patch_id(other.d_current_patch_id),
-   d_flattened_hierarchy(0),
-   d_allocated_flattened_hierarchy(false)
+   d_finest_level_num(other.d_finest_level_num)
 {
    if (other.d_item) {
       d_item = new std::pair<boost::shared_ptr<Patch>, Box>(*other.d_item);
@@ -329,8 +329,6 @@ UncoveredBoxIterator::findFirstUncoveredBox()
    ++d_level_num;
    boost::shared_ptr<PatchLevel> this_level =
       d_hierarchy->getPatchLevel(d_level_num);
-
-   const BoxContainer& this_level_boxes = this_level->getBoxLevel()->getBoxes();
 
    bool id_found = false;
 
