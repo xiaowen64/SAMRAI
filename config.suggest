@@ -158,9 +158,9 @@ EOF
 
 chaos5_clang) # CHAOS5, clang compilers and MPI2
 cat <<-EOF
-	--with-CC=clang
-	--with-CXX=clang++
-	--with-F77=ifort
+	--with-CC=/usr/apps/gnu/clang/bin/clang
+	--with-CXX=/usr/apps/gnu/clang/bin/clang++
+	--with-F77=/usr/local/bin/gfortran-4.6.1
 	--without-petsc
         --without-blas
         --without-lapack
@@ -179,12 +179,8 @@ cat <<-EOF
         --with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel/lib
         --with-mpi-libs="mpichcxx mpich opa mpl pmi"
 EOF
-# Maintained by Bill Arrighi
+# Maintained by Bob Anderson
 ;;
-# With the above configure options, these "use" commands must precede the
-# use of configure
-# % use clang
-# % use gcc-4.6.1
 
 edge_gcc) # Edge with default GNU GCC compilers
 cat <<-EOF
