@@ -95,6 +95,14 @@ public:
       const hier::BoxLevel& correct_box_level,
       int iter);
 
+   static int
+   testHierarchyNeighbors(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+
+   static int
+   testFlattenedHierarchy(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+
 private:
    /*
     *  Sets the parameters in the struct, based

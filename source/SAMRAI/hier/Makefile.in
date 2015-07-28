@@ -29,6 +29,8 @@ OBJS = 	\
 	LocalId.o \
 	PatchBoundaries.o \
 	PatchHierarchy.o \
+	HierarchyNeighbors.o \
+	FlattenedHierarchy.o \
 	PatchLevel.o \
 	PatchLevelFactory.o \
 	PeriodicId.o \

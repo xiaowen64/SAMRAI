@@ -36,7 +36,10 @@ namespace mesh {
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy using the cascade partitioning algorithm.
- * This is UNSUPPORTED, EXPERIMENTAL code not for general use.
+ *
+ * The algorithm is described in the article "Advances in Patch-Based
+ * Adaptive Mesh Refinement Scalability" submitted to JPDC.  Scaling
+ * benchmark results are also in the article.
  *
  * Currently, only uniform load balancing is supported.  Eventually,
  * non-uniform load balancing should be supported.  (Non-uniform load

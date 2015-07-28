@@ -270,8 +270,7 @@ PersistentOverlapConnectors::findConnectorWithTranspose(
 bool
 PersistentOverlapConnectors::hasConnector(
    const BoxLevel& head,
-   const IntVector& min_connector_width,
-   bool exact_width_only) const
+   const IntVector& min_connector_width) const
 {
    const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector min_width(min_connector_width);
@@ -282,20 +281,10 @@ PersistentOverlapConnectors::hasConnector(
          TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
       }
    }
-
-   if (exact_width_only) {
-      for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
-         if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() == min_width) {
-            return true;
-         }
-      }
-   } else {
-      for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
-         if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() >= min_width) {
-            return true;
-         }
+   for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
+      if (&d_cons_from_me[i]->getHead() == &head &&
+          d_cons_from_me[i]->getConnectorWidth() >= min_width) {
+         return true;
       }
    }
    return false;
