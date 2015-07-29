@@ -38,7 +38,7 @@ SHELL         = /bin/sh
 SAMRAI_TARGET=@SAMRAI_TARGET@
 
 INCLUDE_SAM   = $(SAMRAI)/source
-LIB_SAM       = @ac_pwd@/lib
+LIB_SAM       = $(OBJECT)/lib
 BIN_SAM       = $(OBJECT)/bin
 
 LIB_SUFFIX=@LIB_SUFFIX@
