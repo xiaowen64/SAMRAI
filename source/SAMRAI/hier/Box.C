@@ -14,8 +14,6 @@
 namespace SAMRAI {
 namespace hier {
 
-BREAKINGBUILD;
-
 Box * Box::s_emptys[SAMRAI::MAX_DIM_VAL];
 Box * Box::s_universes[SAMRAI::MAX_DIM_VAL];
 
