@@ -164,7 +164,7 @@ cat <<-EOF
 	--without-petsc
         --without-blas
         --without-lapack
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt
+	--without-hypre
 	--without-x
 	--without-sundials
 	--disable-shared
