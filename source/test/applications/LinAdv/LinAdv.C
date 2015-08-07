@@ -43,7 +43,7 @@ using namespace std;
 #include "SAMRAI/pdat/FaceIndex.h"
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -398,8 +398,8 @@ void LinAdv::setupLoadBalancer(
       hier::PatchDataRestartManager::getManager();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         boost::dynamic_pointer_cast<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+      boost::shared_ptr<mesh::CascadePartitioner> load_balancer(
+         boost::dynamic_pointer_cast<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
             gridding_algorithm->getLoadBalanceStrategy()));
       if (load_balancer) {
          d_workload_variable.reset(
@@ -578,7 +578,12 @@ void LinAdv::initializeDataOnPatch(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
-      workload_data->fillAll(1.0);
+
+      const hier::Box& box = patch.getBox();
+      const hier::BoxId& box_id = box.getBoxId();
+      const hier::LocalId& local_id = box_id.getLocalId();
+      double id_val = local_id.getValue() % 2 ? static_cast<double>(local_id.getValue() % 10) : 0.0;
+      workload_data->fillAll(1.0+id_val);
    }
 
 }

@@ -84,6 +84,13 @@ public:
    insertAll(
       TransitLoad& other);
 
+   void
+   insertAllWithExistingLoads(
+      const hier::BoxContainer& box_container)
+   {
+      insertAll(box_container);
+   }
+
    //! @copydoc TransitLoad::getNumberOfItems()
    size_t
    getNumberOfItems() const;

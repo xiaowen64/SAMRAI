@@ -96,6 +96,10 @@ public:
    insertAll(
       TransitLoad& other) = 0;
 
+   virtual void
+   insertAllWithExistingLoads(
+      const hier::BoxContainer& box_container) = 0;
+
    //! @brief Return number of items in this container.
    virtual size_t
    getNumberOfItems() const = 0;

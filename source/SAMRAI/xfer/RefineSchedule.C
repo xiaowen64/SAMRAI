@@ -1758,16 +1758,21 @@ RefineSchedule::createCoarseInterpPatchLevel(
           * enhanced connectivity.
           */
 
-         hier::IntVector transpose_connector_width(src_to_dst_width);
-         transpose_connector_width.max(hier::IntVector::getOne(dim));
+         int level_number = d_src_level->getLevelNumber();
 
-         hier::IntVector connector_width(dst_to_src_width);
-         connector_width.max(one_vec);
          const hier::Connector& found_dst_to_src =
             dst_box_level.findConnectorWithTranspose(
                src_box_level,
-               connector_width,
-               transpose_connector_width,
+               hierarchy->getRequiredConnectorWidth(level_number, level_number),
+               hierarchy->getRequiredConnectorWidth(level_number, level_number),
+               hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+               true);
+
+         const hier::Connector& found_src_to_hiercoarse =
+            d_src_level->findConnectorWithTranspose(
+               *hiercoarse_level,
+               hierarchy->getRequiredConnectorWidth(level_number, level_number - 1),
+               hierarchy->getRequiredConnectorWidth(level_number - 1, level_number),
                hier::CONNECTOR_IMPLICIT_CREATION_RULE,
                true);
 
@@ -1778,7 +1783,7 @@ RefineSchedule::createCoarseInterpPatchLevel(
          oca.bridge(
             bridged_dst_to_hiercoarse,
             found_dst_to_src,
-            src_to_hiercoarse,
+            found_src_to_hiercoarse,
             d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln],
             true);
 

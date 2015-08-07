@@ -53,6 +53,7 @@ BoxTransitSet::BoxTransitSet(
    TransitLoad(),
    d_set(),
    d_sumload(0.0),
+   d_sumsize(0.0),
    d_pparams(&pparams),
    d_box_breaker(pparams),
    d_print_steps(false),
@@ -78,6 +79,7 @@ BoxTransitSet::BoxTransitSet(
    TransitLoad(other),
    d_set(),
    d_sumload(0.0),
+   d_sumsize(0.0),
    d_pparams(other.d_pparams),
    d_box_breaker(other.d_box_breaker),
    d_print_steps(other.d_print_steps),
@@ -90,6 +92,7 @@ BoxTransitSet::BoxTransitSet(
    if (copy_load) {
       d_set = other.d_set;
       d_sumload = other.d_sumload;
+      d_sumsize = other.d_sumsize;
    }
    d_box_breaker.setPrintBreakSteps(d_print_break_steps);
 }
@@ -104,6 +107,7 @@ void BoxTransitSet::initialize()
 {
    d_set.clear();
    d_sumload = 0.0;
+   d_sumsize = 0.0;
 }
 
 /*
@@ -128,6 +132,7 @@ void BoxTransitSet::insertAll(const hier::BoxContainer& other)
       BoxInTransit new_box(*bi);
       d_set.insert(new_box);
       d_sumload += new_box.getLoad();
+      d_sumsize += new_box.getSize();
    }
    if (d_set.size() != old_size + other.size()) {
       TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
@@ -144,9 +149,68 @@ void BoxTransitSet::insertAll(TransitLoad& other_transit_load)
    size_t old_size = d_set.size();
    d_set.insert(other.d_set.begin(), other.d_set.end());
    d_sumload += other.d_sumload;
+   d_sumsize += other.d_sumsize;
    if (d_set.size() != old_size + other.size()) {
       TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
    }
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void BoxTransitSet::insertAllWithExistingLoads(
+   const hier::BoxContainer& other)
+{
+   std::set<BoxInTransit, BoxInTransitMoreLoad> tmp_set;
+
+   for (iterator si = begin(); si != end(); ++si) {
+      hier::BoxContainer::const_iterator itr = other.find(si->getBox());
+      if (itr != other.end()) {
+         BoxInTransit new_box(*itr);
+         new_box.setLoad(si->getLoad());
+         new_box.setCornerWeights(si->getCornerWeights());
+         tmp_set.insert(new_box);
+      } else {
+         TBOX_ERROR("BoxTransitSet::insertAllWithExistingLoads requires that the BoxContainer input contains the same boxes as this BoxTransitSet");
+      }
+   }
+   d_set.swap(tmp_set);
+
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void BoxTransitSet::setWorkload(
+   const hier::PatchLevel& patch_level,
+   const int work_data_id)
+{
+   /*
+    * Set the workload for all the BoxInTransit members of d_set based
+    * on the data represented by the work_data_id.  Since we cannot
+    * change the members of a set in place, we construct a temporary set
+    * and then swap.
+    */
+   std::set<BoxInTransit, BoxInTransitMoreLoad> tmp_set;
+   LoadType sumload = 0.0;
+   for (iterator si = begin(); si != end(); ++si) {
+      const hier::BoxId& box_id = si->getBox().getBoxId();
+      const boost::shared_ptr<hier::Patch>& patch =
+         patch_level.getPatch(box_id);
+      BoxInTransit new_transit_box(*si);
+      std::vector<double> corner_weights;
+      new_transit_box.setLoad(
+         BalanceUtilities::computeNonUniformWorkloadOnCorners(corner_weights,
+            patch,
+            work_data_id));
+      new_transit_box.setCornerWeights(corner_weights);
+      sumload += new_transit_box.getLoad();
+      tmp_set.insert(new_transit_box);
+   }
+   d_set.swap(tmp_set);
+   d_sumload = sumload;
 }
 
 /*
@@ -843,6 +907,8 @@ BoxTransitSet::adjustLoadByBreaking(
          trial_leftover,
          trial_breakoff_amt,
          candidate.getBox(),
+         candidate.getLoad(),
+         candidate.getCornerWeights(),
          ideal_transfer,
          low_transfer,
          high_transfer,
@@ -894,33 +960,52 @@ BoxTransitSet::adjustLoadByBreaking(
        * in main_bin and its leftover parts back into hold_bin.
        */
       hold_bin.erase(breakbox);
+      size_t breakoff_size = breakoff.getTotalSizeOfBoxes();
       for (hier::BoxContainer::const_iterator bi = breakoff.begin();
            bi != breakoff.end();
            ++bi) {
+         /*
+          * The breakoff load (breakoff_amt) is apportioned proportionally
+          * according to box size to the boxes in the breakoff container.
+          * No corner weight information is stored in the resulting
+          * BoxInTransits.
+          *
+          * When uniform load balancing is being used, all the loads should
+          * be equal to the box zone counts.
+          */
+         double load_frac = static_cast<double>(bi->size()) /
+                            static_cast<double>(breakoff_size);
          BoxInTransit give_box_in_transit(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
-         give_box_in_transit.setLoad(
-            computeLoad(
-               give_box_in_transit.getOrigBox(),
-               give_box_in_transit.getBox()));
+         give_box_in_transit.setLoad(load_frac * breakoff_amt);
+         give_box_in_transit.setCornerWeights(std::vector<double>(0));
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.getLoad();
       }
+      LoadType leftover_amt = breakbox.getLoad() - 
+                              static_cast<LoadType>(breakoff_amt);
+      size_t leftover_size = leftover.getTotalSizeOfBoxes();
       for (hier::BoxContainer::const_iterator bi = leftover.begin();
            bi != leftover.end();
            ++bi) {
+         /*
+          * The leftover load (origial load minus breakoff_amt) is
+          * aportioned proportionally according to box size to the boxes
+          * in the leftover container.  No corner weight information is
+          * stored in the resulting BoxInTransits.
+          */
+         double load_frac = static_cast<double>(bi->size()) /
+                            static_cast<double>(leftover_size);
          BoxInTransit keep_box_in_transit(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
-         keep_box_in_transit.setLoad(
-            computeLoad(
-               keep_box_in_transit.getOrigBox(),
-               keep_box_in_transit.getBox()));
+         keep_box_in_transit.setLoad(load_frac * leftover_amt);
+         keep_box_in_transit.setCornerWeights(std::vector<double>(0));
          hold_bin.insert(keep_box_in_transit);
       }
    }

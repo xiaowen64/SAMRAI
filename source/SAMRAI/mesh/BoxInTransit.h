@@ -50,7 +50,9 @@ struct BoxInTransit {
       const hier::Box& origin):
       d_box(origin),
       d_orig_box(origin),
-      d_boxload(static_cast<double>(origin.size())) {
+      d_boxload(static_cast<double>(origin.size()))
+   {
+      d_boxsize = d_boxload;
    }
 
    /*!
@@ -71,7 +73,12 @@ struct BoxInTransit {
       double load = -1.):
       d_box(box, local_id, rank),
       d_orig_box(other.d_orig_box),
-      d_boxload(load >= 0 ? load : static_cast<double>(d_box.size())) {
+      d_boxsize(static_cast<double>(d_box.size()))
+   {
+      d_boxload = load >= 0 ? load : other.d_boxload;
+      if (d_boxload > 0) {
+         d_corner_weights = other.d_corner_weights;
+      }
    }
 
    /*!
@@ -83,6 +90,8 @@ struct BoxInTransit {
       d_box = other.d_box;
       d_orig_box = other.d_orig_box;
       d_boxload = other.d_boxload;
+      d_boxsize = other.d_boxsize;
+      d_corner_weights = other.d_corner_weights;
       return *this;
    }
 
@@ -121,9 +130,24 @@ struct BoxInTransit {
       return d_boxload;
    }
 
-   //! @brief Return the Box load.
+   //! @brief Set the Box load.
    void setLoad(double boxload) {
       d_boxload = boxload;
+   }
+
+   //! @brief Set the corner weights vector
+   void setCornerWeights(const std::vector<double>& corner_weights) {
+      d_corner_weights = corner_weights;
+   }
+
+   //! @brief Get the box size
+   double getSize() const {
+      return d_boxsize;
+   }
+
+   //! @brief Get reference to the corner weights vector
+   const std::vector<double>& getCornerWeights() const {
+      return d_corner_weights;
    }
 
    //! @brief Return whether this is an original box.
@@ -136,6 +160,12 @@ struct BoxInTransit {
       d_box.putToMessageStream(mstream);
       d_orig_box.putToMessageStream(mstream);
       mstream << d_boxload;
+      mstream << d_boxsize;
+      int num_corners = static_cast<int>(d_corner_weights.size());
+      mstream << num_corners;
+      for (int nc = 0; nc < num_corners; ++nc) {
+         mstream << d_corner_weights[nc]; 
+      }
    }
 
    //! @brief Set attributes according to data in a MessageStream.
@@ -143,6 +173,13 @@ struct BoxInTransit {
       d_box.getFromMessageStream(mstream);
       d_orig_box.getFromMessageStream(mstream);
       mstream >> d_boxload;
+      mstream >> d_boxsize;
+      int num_corners = 0;
+      mstream >> num_corners;
+      d_corner_weights.resize(num_corners);
+      for (int nc = 0; nc < num_corners; ++nc) {
+         mstream >> d_corner_weights[nc]; 
+      }
    }
 
    /*!
@@ -158,13 +195,21 @@ struct BoxInTransit {
    }
 
 private:
+
+   //! @brief Current Box
    hier::Box d_box;
 
    //! @brief Originating Box (the oldest one leading to this one).
    hier::Box d_orig_box;
 
-   //! @brief Work load in this d_box.
+   //! @brief Work load in this box.
    double d_boxload;
+
+   //! @brief Size of this box
+   double d_boxsize;
+
+   //! @brief Vector holding fractional workload weighting for each corner
+   std::vector<double> d_corner_weights;
 };
 
 }

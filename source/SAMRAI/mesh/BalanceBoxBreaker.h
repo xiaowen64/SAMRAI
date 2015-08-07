@@ -59,6 +59,11 @@ public:
     *
     * @param[in] box Box to break.
     *
+    * @param[in] corner_weights Fraction of the total load associated with
+    *                           each corner.
+    *
+    * @param[in] box_load Load of the box before breaking.
+    *
     * @param[in] ideal_load Ideal load to break.
     *
     * @param[in] low_load
@@ -78,6 +83,8 @@ public:
       hier::BoxContainer& leftover,
       double& brk_load,
       const hier::Box& box,
+      double box_load,
+      const std::vector<double>& corner_weights,
       double ideal_load,
       double low_load,
       double high_load,
@@ -136,6 +143,8 @@ private:
          const PartitioningParams& pparams,
          double threshold_width,
          const hier::Box& whole_box,
+         double whole_box_load,
+         const std::vector<double>& corner_weights,
          const std::vector<std::vector<bool> >& bad_cuts,
          double ideal_load,
          double low_load,
@@ -148,6 +157,11 @@ private:
       void
       computeBreakData(
          const hier::Box& box);
+
+      //! @brief Compute load that would break off if the box is broken off.
+      double computeBreakOffLoad(
+         const hier::Box& box);
+
       void
       swapWithReversedTrial(
          TrialBreak& reversed);
@@ -179,7 +193,10 @@ private:
       const PartitioningParams* d_pparams;
       const double d_threshold_width;
       const hier::Box& d_whole_box;
+      double d_whole_box_load;
+      const std::vector<double>& d_corner_weights;
       const std::vector<std::vector<bool> >& d_bad_cuts;
+      std::vector<hier::Box> d_corner_box;
    };
 
 private:
