@@ -170,7 +170,7 @@ public:
    void
    setWorkloadPatchDataIndex(
       int data_id,
-      int level_number = -1);
+      int level_number = -1) {}
 
    /*!
     * @brief Return true if load balancing procedure for given level

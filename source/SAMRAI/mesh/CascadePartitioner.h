@@ -325,6 +325,13 @@ private:
    computeLocalLoad(
       const hier::BoxLevel& box_level) const;
 
+   /*
+    * Compute the workload for the level based on a work function.
+    */
+   LoadType
+   computeNonUniformWorkLoad(
+      const hier::PatchLevel& patch_level) const;
+
    /*!
     * *@brief Implements the cascade partitioner algorithm.
     */
@@ -431,6 +438,8 @@ private:
     * @brief Metadata operations with timers set according to this object.
     */
    hier::MappingConnectorAlgorithm d_mca;
+
+   mutable boost::shared_ptr<hier::PatchLevel> d_workload_level;
 
    //@{
    //! @name Shared temporaries, used only when actively partitioning.

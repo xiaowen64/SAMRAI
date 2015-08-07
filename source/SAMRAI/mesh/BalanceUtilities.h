@@ -282,7 +282,7 @@ struct BalanceUtilities {
     * intersection of argument box and box over which data associated with
     * workload is defined.
     *
-    * @return          Double-valued sum of workload values in box region.
+    * @return          Sum of workload values in box region.
     *
     * @param patch     Input patch on which workload data is defined.
     * @param wrk_indx  Input integer patch data identifier for work data.
@@ -298,6 +298,28 @@ struct BalanceUtilities {
       const boost::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);
+
+   /*!
+    * @brief Compute total workload in region of argument box based on patch
+    * data defined by given integer index, while also associating weights with
+    * corners of the patch.
+    *
+    * The corner weights are fractional values that identify how much of the
+    * workload is located in each quadrant or octant of the patch.
+    *
+    * @return          Sum of workload values in the patch.
+    *
+    * @param[out] corner_weights  Fraction of weights associated with
+    *                             each corner of the patch. Vector must be
+    *                             empty on input. 
+    * @param[in]  patch     Patch on which workload data is defined.
+    * @param[in]  wrk_indx  Patch data identifier for work data.
+    */
+   static double
+   computeNonUniformWorkloadOnCorners(
+      std::vector<double>& corner_weights,
+      const boost::shared_ptr<hier::Patch>& patch,
+      int wrk_indx);
 
    /*!
     * @brief Find small boxes in a post-balance BoxLevel that are not

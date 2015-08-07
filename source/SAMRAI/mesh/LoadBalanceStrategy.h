@@ -129,6 +129,11 @@ public:
       const hier::IntVector& cut_factor, // Default v 2.x.x = 1
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const = 0;
 
+   virtual void
+   setWorkloadPatchDataIndex(
+      int data_id,
+      int level_number = -1) = 0;
+
 protected:
    /*!
     * Construct load balance strategy object.

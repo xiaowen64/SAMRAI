@@ -83,6 +83,28 @@ public:
    insertAll(
       TransitLoad& other);
 
+   //! @copydoc TransitLoad::insertAllWithExistingLoads( const hier::BoxContainer & )
+   void
+   insertAllWithExistingLoads(
+      const hier::BoxContainer& box_container);
+
+   /*!
+    * @brief Set workloads in the members of this BoxTransitSet.
+    *
+    * The BoxInTransit members of this BoxTransitSet will have their
+    * workload values set according to the data on the given patch level
+    * associated with the given data id
+    *
+    * @param[in]  patch_level  Level with boxes that are the same as those
+    *                          held in this BoxTransitSet
+    * @param[in]  work_data_id Data id for the workload data that exists on
+    *                          the patch level
+    */
+   void
+   setWorkload(
+      const hier::PatchLevel& patch_level,
+      const int work_data_id);
+
    //! @copydoc TransitLoad::getNumberOfItems()
    size_t
    getNumberOfItems() const;
@@ -286,7 +308,7 @@ private:
       bool operator () (
          const BoxInTransit& a,
          const BoxInTransit& b) const {
-         if (a.getBox().size() != b.getBox().size()) {
+         if (tbox::MathUtilities<double>::Abs(a.getLoad() - b.getLoad()) > 1.0e-10) {
             return a.getLoad() > b.getLoad();
          }
          if (a.getBox().getBlockId() != b.getBox().getBlockId()) {
@@ -342,15 +364,18 @@ public:
    std::pair<iterator, bool> insert(const value_type& x) {
       std::pair<iterator, bool> rval = d_set.insert(x);
       if (rval.second) d_sumload += x.getLoad();
+      if (rval.second) d_sumsize += x.getSize();
       return rval;
    }
    void erase(iterator pos) {
       d_sumload -= pos->getLoad();
+      d_sumsize -= pos->getSize();
       d_set.erase(pos);
    }
    size_t erase(const key_type& k) {
       const size_t num_erased = d_set.erase(k);
       if (num_erased) d_sumload -= k.getLoad();
+      if (num_erased) d_sumsize -= k.getSize();
       return num_erased;
    }
    bool empty() const {
@@ -358,12 +383,16 @@ public:
    }
    void clear() {
       d_sumload = 0;
+      d_sumsize = 0;
       d_set.clear();
    }
    void swap(BoxTransitSet& other) {
       const LoadType tl = d_sumload;
+      const LoadType ts = d_sumsize;
       d_sumload = other.d_sumload;
+      d_sumsize = other.d_sumsize;
       other.d_sumload = tl;
+      other.d_sumsize = ts;
       d_set.swap(other.d_set);
    }
    iterator lower_bound(const key_type& k) const {
@@ -566,6 +595,7 @@ private:
 
    std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
    LoadType d_sumload;
+   LoadType d_sumsize;
 
    const PartitioningParams* d_pparams;
 

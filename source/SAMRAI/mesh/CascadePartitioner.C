@@ -17,9 +17,12 @@
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
+#include "SAMRAI/pdat/CellDoubleConstantRefine.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -270,6 +273,7 @@ CascadePartitioner::loadBalanceBoxLevel(
       balance_to_reference->setBase(balance_box_level, true);
    }
 
+   d_workload_level.reset();
    t_load_balance_box_level->start();
 
    d_pparams = boost::make_shared<PartitioningParams>(
@@ -280,7 +284,8 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    LoadType local_load = computeLocalLoad(balance_box_level);
 
-   globalWorkReduction(local_load, (balance_box_level.getLocalNumberOfBoxes() != 0));
+   globalWorkReduction(local_load,
+                       (balance_box_level.getLocalNumberOfBoxes() != 0));
 
    d_global_work_avg = d_global_work_sum / rank_group.size();
 
@@ -289,13 +294,186 @@ CascadePartitioner::loadBalanceBoxLevel(
       balance_box_level,
       balance_to_reference);
 
+   t_load_balance_box_level->stop();
+
+   int wrk_indx = getWorkloadDataId(level_number);
+
+   /*
+    * Do non-uniform load balance if a workload data id has been registered
+    * and this is not a new finest level of the hierarchy.
+    */
+   if ((wrk_indx >= 0) && (hierarchy->getNumberOfLevels() > level_number)) {
+
+      d_workload_level =
+         boost::make_shared<hier::PatchLevel>(balance_box_level,
+                                              hierarchy->getGridGeometry(),
+                                              hierarchy->getPatchDescriptor());
+
+      d_workload_level->setLevelNumber(level_number);
+
+      /*
+       * Set up workload_to_reference and reference_to_workload.  Since
+       * d_workload_level is based on balance_box_level, the new Connectors
+       * are effectively copies of balance_to_reference and its transpose.
+       */
+      boost::shared_ptr<hier::Connector> workload_to_reference(
+         boost::make_shared<hier::Connector>(
+            *d_workload_level->getBoxLevel(),
+            balance_to_reference->getHead(),
+            balance_to_reference->getConnectorWidth()));
+
+      for (hier::Connector::ConstNeighborhoodIterator ei =
+           balance_to_reference->begin();
+           ei != balance_to_reference->end(); ++ei) {
+         const hier::BoxId& box_id = *ei;
+         for (hier::Connector::ConstNeighborIterator na =
+              balance_to_reference->begin(ei);
+              na != balance_to_reference->end(ei); ++na) {
+            workload_to_reference->insertLocalNeighbor(*na, box_id);
+         }
+      }
+
+      boost::shared_ptr<hier::Connector> reference_to_workload(
+         boost::make_shared<hier::Connector>(
+            balance_to_reference->getHead(),
+            *d_workload_level->getBoxLevel(),
+            balance_to_reference->getTranspose().getConnectorWidth()));
+
+      for (hier::Connector::ConstNeighborhoodIterator ti =
+           balance_to_reference->getTranspose().begin();
+           ti != balance_to_reference->getTranspose().end(); ++ti) {
+         const hier::BoxId& box_id = *ti;
+         for (hier::Connector::ConstNeighborIterator ta =
+              balance_to_reference->getTranspose().begin(ti);
+              ta != balance_to_reference->getTranspose().end(ti); ++ta) {
+            reference_to_workload->insertLocalNeighbor(*ta, box_id);
+         }
+      }
+
+      /*
+       * Cache the Connectors before calling setTranspose.
+       */
+      d_workload_level->cacheConnector(workload_to_reference);
+      reference_to_workload->getBase().cacheConnector(reference_to_workload);
+      reference_to_workload->setTranspose(workload_to_reference.get(), false);
+
+      /*
+       * Find the Connectors between the current level of the hierarchy and
+       * the reference level.
+       */
+      boost::shared_ptr<hier::PatchLevel> current_level(
+         hierarchy->getPatchLevel(level_number));
+
+      const hier::Connector& current_to_reference = 
+         current_level->getBoxLevel()->findConnector(
+            workload_to_reference->getHead(),
+            hierarchy->getRequiredConnectorWidth(level_number, level_number-1),
+            hier::CONNECTOR_CREATE,
+            true);
+
+      const hier::Connector& reference_to_current =
+         workload_to_reference->getHead().findConnector(
+            *current_level->getBoxLevel(),
+            hierarchy->getRequiredConnectorWidth(level_number-1, level_number),
+            hier::CONNECTOR_CREATE,
+            true);
+
+      /*
+       * All of the above Connector work was so that we can call these
+       * bridge operations to connect the current and workload levels.
+       */
+      hier::OverlapConnectorAlgorithm oca;
+      boost::shared_ptr<hier::Connector> current_to_workload;
+      oca.bridgeWithNesting(
+         current_to_workload,
+         current_to_reference,
+         *reference_to_workload,
+         hier::IntVector::getZero(d_dim),
+         hier::IntVector::getZero(d_dim),
+         hier::IntVector::getOne(d_dim),
+         false);
+      current_level->cacheConnector(current_to_workload);
+
+      boost::shared_ptr<hier::Connector> workload_to_current;
+      oca.bridgeWithNesting(
+         workload_to_current,
+         *workload_to_reference,
+         reference_to_current,                
+         hier::IntVector::getZero(d_dim),
+         hier::IntVector::getZero(d_dim),
+         hier::IntVector::getOne(d_dim),
+         false);
+      d_workload_level->cacheConnector(workload_to_current);
+
+      /*
+       * Build and use a RefineSchedule to communicate workload data
+       * from the current level to d_workload_level.
+       */
+      d_workload_level->allocatePatchData(wrk_indx);
+   
+      xfer::RefineAlgorithm fill_work_algorithm;
+
+      boost::shared_ptr<hier::RefineOperator> work_refine_op(
+         boost::make_shared<pdat::CellDoubleConstantRefine>());
+
+      fill_work_algorithm.registerRefine(wrk_indx,
+         wrk_indx,
+         wrk_indx,
+         work_refine_op);
+
+      fill_work_algorithm.createSchedule(d_workload_level,
+         current_level,
+         level_number - 1,
+         hierarchy)->fillData(0.0);
+
+      t_load_balance_box_level->start();
+
+      /*
+       * Compute workloads for each box and run the partitioning algorithm
+       */
+      LoadType local_load =
+         computeNonUniformWorkLoad(*d_workload_level);
+
+      globalWorkReduction(local_load,
+                          (balance_box_level.getLocalNumberOfBoxes() != 0));
+
+      d_global_work_avg = d_global_work_sum / rank_group.size();
+
+      partitionByCascade(
+         balance_box_level,
+         balance_to_reference);
+
+      d_workload_level.reset();
+      t_load_balance_box_level->stop();
+   }
+
+   /*
+    * If max_size is given (positive), constrain boxes to the given
+    * max_size.  If not given, skip the enforcement step to save some
+    * communications.
+    */
+
+   hier::IntVector max_intvector(d_dim, tbox::MathUtilities<int>::getMax());
+   if (max_size != max_intvector) {
+
+      BalanceUtilities::constrainMaxBoxSizes(
+         balance_box_level,
+         balance_to_reference ? &balance_to_reference->getTranspose() : 0,
+         *d_pparams);
+
+      if (d_print_steps) {
+         tbox::plog << " CascadePartitioner completed constraining box sizes."
+                    << "\n";
+      }
+
+   }
+
+
    /*
     * Finished load balancing.  Clean up and wrap up.
     */
 
    d_pparams.reset();
-
-   t_load_balance_box_level->stop();
 
    local_load = computeLocalLoad(balance_box_level);
    d_load_stat.push_back(local_load);
@@ -372,6 +550,10 @@ CascadePartitioner::partitionByCascade(
    shipment.setThresholdWidth(ideal_box_width);
 
    local_load.insertAll(balance_box_level.getBoxes());
+   if (d_workload_level) {
+      local_load.setWorkload(*d_workload_level,
+         getWorkloadDataId(d_workload_level->getLevelNumber()));
+   }
 
    // Set up temporaries shared with the process groups.
    d_balance_box_level = &balance_box_level;
@@ -489,8 +671,7 @@ void CascadePartitioner::updateConnectors() const
       hier::BoxLevel::swap(*d_balance_box_level, balanced_box_level);
    }
 
-   d_local_load->clear();
-   d_local_load->insertAll(d_balance_box_level->getBoxes());
+   d_local_load->insertAllWithExistingLoads(d_balance_box_level->getBoxes());
 
    if (d_print_steps) {
       tbox::plog
@@ -620,6 +801,25 @@ CascadePartitioner::computeLocalLoad(
         ++ni) {
       double box_load = static_cast<double>(ni->size());
       load += box_load;
+   }
+   return static_cast<LoadType>(load);
+}
+
+CascadePartitioner::LoadType
+CascadePartitioner::computeNonUniformWorkLoad(
+   const hier::PatchLevel& patch_level) const
+{
+   double load = 0.0;
+   for (hier::PatchLevel::iterator ip(patch_level.begin());
+        ip != patch_level.end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
+
+      double patch_work =
+         BalanceUtilities::computeNonUniformWorkload(patch,
+            getWorkloadDataId(patch_level.getLevelNumber()),
+            patch->getBox());
+
+      load += patch_work;
    }
    return static_cast<LoadType>(load);
 }

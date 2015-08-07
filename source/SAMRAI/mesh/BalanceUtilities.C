@@ -977,6 +977,84 @@ BalanceUtilities::computeNonUniformWorkload(
 /*
  *************************************************************************
  *
+ * Compute workload in patch while storing corner weights.
+ *
+ *************************************************************************
+ */
+
+double
+BalanceUtilities::computeNonUniformWorkloadOnCorners(
+   std::vector<double>& corner_weights,
+   const boost::shared_ptr<hier::Patch>& patch,
+   int wrk_indx)
+{
+   TBOX_ASSERT(patch);
+
+   if (!corner_weights.empty()) {
+      TBOX_ERROR("BalanceUtilities::computeNonUniformWorkloadOnCorners received a non-empty corner weights argument.");
+   }
+
+   double workload = 0.0;
+   const hier::Box& patch_box = patch->getBox();
+   hier::Box work_box(patch_box);
+   hier::IntVector box_width(patch_box.numberCells());
+   hier::IntVector mid_point(box_width/2);
+   const tbox::Dimension& dim = patch_box.getDim();
+
+   hier::IntVector corner_id(hier::IntVector::getZero(dim));
+   do {
+      // Set work_box to current corner.
+      for (unsigned int d = 0; d < dim.getValue(); ++d) {
+         if (corner_id[d] == 0) {
+            work_box.setLower(d, patch_box.lower()[d]);
+            work_box.setUpper(d, patch_box.lower()[d] + mid_point[d] - 1);
+         } else {
+            work_box.setLower(d, patch_box.lower()[d] + mid_point[d]);
+            work_box.setUpper(d, patch_box.upper()[d]);
+         }
+      }
+
+      // Increment n-dimensional corner id
+      for (unsigned int d = 0; d < dim.getValue(); ++d) {
+         if (corner_id[d] == 0) {
+            corner_id[d] = 1;
+            break;
+         } else {
+            corner_id[d] = 0;
+         }
+      }
+
+      // Compute workload for current corner
+      corner_weights.push_back(
+         computeNonUniformWorkload(patch, wrk_indx, work_box));
+
+      // End loop when all corners have been evaluated.
+   } while (corner_id != hier::IntVector::getZero(dim));
+
+   /*
+    * Corner weights currently hold absolute workload.  The sum is the
+    * the patch.
+    */
+   for (std::vector<double>::const_iterator itr = corner_weights.begin();
+        itr != corner_weights.end(); ++itr) {
+      workload += *itr;
+   }
+
+   /*
+    * Change the corner weights to the fractions of the total workload.
+    */
+   for (std::vector<double>::iterator itr = corner_weights.begin();
+        itr != corner_weights.end(); ++itr) {
+      *itr /= workload;
+   }
+
+   return workload;
+}
+
+
+/*
+ *************************************************************************
+ *
  * Construct a processor mapping using the collection of weights and
  * the number of processors.  The return value provides an estimate of
  * the load balance efficiency from zero through one hundred.

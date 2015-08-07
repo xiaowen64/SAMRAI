@@ -306,8 +306,7 @@ void CascadePartitionerTree::distributeLoad()
          d_common->updateConnectors();
          d_common->t_distribute_load->start();
          if (top_group != d_leaf->d_parent) {
-            d_common->d_local_load->clear();
-            d_common->d_local_load->insertAll(d_common->d_balance_box_level->getBoxes());
+            d_common->d_local_load->insertAllWithExistingLoads(d_common->d_balance_box_level->getBoxes());
          }
       }
 
