@@ -145,7 +145,7 @@ cat <<-EOF
 	--with-zlib
 	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
 	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt-mvapich2
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.58.0
 	--without-tbb
 EOF
