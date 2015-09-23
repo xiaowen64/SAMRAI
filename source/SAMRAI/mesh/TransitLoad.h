@@ -100,6 +100,11 @@ public:
    insertAllWithExistingLoads(
       const hier::BoxContainer& box_container) = 0;
 
+   virtual void
+   setWorkload(
+      const hier::PatchLevel& patch_level,
+      const int work_data_id) = 0;
+
    //! @brief Return number of items in this container.
    virtual size_t
    getNumberOfItems() const = 0;

@@ -319,7 +319,8 @@ struct BalanceUtilities {
    computeNonUniformWorkloadOnCorners(
       std::vector<double>& corner_weights,
       const boost::shared_ptr<hier::Patch>& patch,
-      int wrk_indx);
+      int wrk_indx,
+      const hier::Box& box);
 
    /*!
     * @brief Find small boxes in a post-balance BoxLevel that are not

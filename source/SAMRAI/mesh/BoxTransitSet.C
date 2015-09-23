@@ -204,7 +204,8 @@ void BoxTransitSet::setWorkload(
       new_transit_box.setLoad(
          BalanceUtilities::computeNonUniformWorkloadOnCorners(corner_weights,
             patch,
-            work_data_id));
+            work_data_id,
+            patch->getBox()));
       new_transit_box.setCornerWeights(corner_weights);
       sumload += new_transit_box.getLoad();
       tmp_set.insert(new_transit_box);
@@ -955,6 +956,9 @@ BoxTransitSet::adjustLoadByBreaking(
    }
 
    if (found_breakage == 1) {
+
+      int work_data_id = d_pparams->getWorkloadDataId();
+
       /*
        * Remove the chosen candidate.  Put its breakoff parts
        * in main_bin and its leftover parts back into hold_bin.
@@ -973,15 +977,30 @@ BoxTransitSet::adjustLoadByBreaking(
           * When uniform load balancing is being used, all the loads should
           * be equal to the box zone counts.
           */
-         double load_frac = static_cast<double>(bi->size()) /
-                            static_cast<double>(breakoff_size);
          BoxInTransit give_box_in_transit(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
-         give_box_in_transit.setLoad(load_frac * breakoff_amt);
-         give_box_in_transit.setCornerWeights(std::vector<double>(0));
+
+         if (work_data_id >= 0 && d_pparams->usingVouchers()) {
+            const hier::BoxId& orig_box_id = give_box_in_transit.getOrigBox().getBoxId();
+            const boost::shared_ptr<hier::Patch>& patch =
+               d_pparams->getWorkloadPatchLevel().getPatch(orig_box_id);
+
+            std::vector<double> corner_weights;
+            give_box_in_transit.setLoad(
+               BalanceUtilities::computeNonUniformWorkloadOnCorners(corner_weights,
+                  patch,
+                  work_data_id,
+                  give_box_in_transit.getBox()));
+            give_box_in_transit.setCornerWeights(corner_weights);
+         } else {
+            double load_frac = static_cast<double>(bi->size()) /
+                               static_cast<double>(breakoff_size);
+            give_box_in_transit.setLoad(load_frac * breakoff_amt);
+            give_box_in_transit.setCornerWeights(std::vector<double>(0));
+         }
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.getLoad();
       }
@@ -997,15 +1016,30 @@ BoxTransitSet::adjustLoadByBreaking(
           * in the leftover container.  No corner weight information is
           * stored in the resulting BoxInTransits.
           */
-         double load_frac = static_cast<double>(bi->size()) /
-                            static_cast<double>(leftover_size);
          BoxInTransit keep_box_in_transit(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
-         keep_box_in_transit.setLoad(load_frac * leftover_amt);
-         keep_box_in_transit.setCornerWeights(std::vector<double>(0));
+         if (work_data_id >= 0 && d_pparams->usingVouchers()) {
+            const hier::BoxId& orig_box_id = keep_box_in_transit.getOrigBox().getBoxId();
+            const boost::shared_ptr<hier::Patch>& patch =
+               d_pparams->getWorkloadPatchLevel().getPatch(orig_box_id);
+
+            std::vector<double> corner_weights;
+            keep_box_in_transit.setLoad(
+               BalanceUtilities::computeNonUniformWorkloadOnCorners(corner_weights,
+                  patch,
+                  work_data_id,
+                  keep_box_in_transit.getBox()));
+            keep_box_in_transit.setCornerWeights(corner_weights);
+         } else {
+            double load_frac = static_cast<double>(bi->size()) /
+                               static_cast<double>(leftover_size);
+
+            keep_box_in_transit.setLoad(load_frac * leftover_amt);
+            keep_box_in_transit.setCornerWeights(std::vector<double>(0));
+         }
          hold_bin.insert(keep_box_in_transit);
       }
    }

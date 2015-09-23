@@ -135,6 +135,39 @@ void VoucherTransitLoad::insertAll(TransitLoad& other_transit_load)
    }
 }
 
+void VoucherTransitLoad::setWorkload(
+   const hier::PatchLevel& patch_level,
+   const int work_data_id)
+{
+   d_reserve.clear();
+   d_reserve.setAllowBoxBreaking(getAllowBoxBreaking());
+   d_reserve.setThresholdWidth(getThresholdWidth());
+
+   /*
+    */
+   clear();
+   LoadType sumload = 0.0;
+   for (hier::PatchLevel::iterator pi = patch_level.begin();
+        pi != patch_level.end(); ++pi) {
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
+      const hier::BoxId& box_id = patch->getBox().getBoxId();
+      BoxInTransit new_transit_box(patch->getBox());
+      std::vector<double> corner_weights;
+      new_transit_box.setLoad(
+         BalanceUtilities::computeNonUniformWorkloadOnCorners(corner_weights,
+            patch,
+            work_data_id,
+            new_transit_box.getBox()));
+      new_transit_box.setCornerWeights(corner_weights);
+      sumload += new_transit_box.getLoad();
+      d_reserve.insert(new_transit_box);
+      insertCombine(Voucher(LoadType(new_transit_box.getLoad()),
+                    box_id.getOwnerRank()));
+   }
+   d_sumload = sumload;
+}
+
+
 /*
  *************************************************************************
  *************************************************************************
@@ -278,7 +311,14 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
     * been sent off in the form of vouchers and we don't know where
     * they ended up.
     */
-   LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
+   LoadType original_work;
+   if (d_reserve.empty()) {
+      original_work = LoadType(unbalanced_box_level.getLocalNumberOfCells());
+   } else {
+      original_work = d_reserve.getSumLoad();
+   }
+   //LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
+   LoadType unaccounted_work = original_work
       - findVoucher(mpi.getRank()).d_load;
 
    if (d_print_edge_steps) {
@@ -310,10 +350,12 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    }
 
    // Set up the reserve for fulfilling incoming redemption requests.
-   d_reserve.clear();
-   d_reserve.setAllowBoxBreaking(getAllowBoxBreaking());
-   d_reserve.setThresholdWidth(getThresholdWidth());
-   d_reserve.insertAll(unbalanced_box_level.getBoxes());
+   if (d_reserve.empty()) {
+      d_reserve.clear();
+      d_reserve.setAllowBoxBreaking(getAllowBoxBreaking());
+      d_reserve.setThresholdWidth(getThresholdWidth());
+      d_reserve.insertAll(unbalanced_box_level.getBoxes());
+   }
    if (d_print_edge_steps) {
       tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                  << " reserve before redemption steps: "
@@ -525,7 +567,8 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
       double lower_lim = left_load * (1 - d_flexible_load_tol);
       lower_lim = tbox::MathUtilities<double>::Max(
             lower_lim, left_load - right_load * d_flexible_load_tol);
-
+      upper_lim = tbox::MathUtilities<double>::Min(
+            upper_lim, left_load + right_load * d_flexible_load_tol);
       if (d_print_edge_steps) {
          tbox::plog << "VoucherTransitLoad::recursiveSendWorkSupply: splitting reserve:"
                     << reserve.format()
@@ -861,13 +904,24 @@ VoucherTransitLoad::raiseDstLoad(
 
    LoadType old_dst_load = dst.getSumLoad();
 
+   int num_src_vouchers = src.getNumberOfItems();
+   int num_iterations = -1;
    while (dst.getSumLoad() < ideal_dst_load - dst.d_pparams->getLoadComparisonTol() &&
           !src.empty()) {
+      ++num_iterations;
+      LoadType give_load = ideal_dst_load - dst.getSumLoad();
 
       iterator src_itr;
       if (take_from_src_end) {
-         src_itr = src.end();
-         --src_itr;
+         if (num_iterations < num_src_vouchers) {
+            src_itr = src.end();
+            do {
+               --src_itr;
+            } while (((give_load < src_itr->d_load && 2.0*give_load > src_itr->d_load) || (src_itr->d_load < give_load && (give_load - src_itr->d_load) < 0.5*give_load)) && src_itr != src.begin());
+         } else {
+            src_itr = src.end();
+            --src_itr;
+         }
       } else {
          src_itr = src.begin();
       }
@@ -888,7 +942,6 @@ VoucherTransitLoad::raiseDstLoad(
           */
          break;
       }
-
    }
 
    d_object_timers->t_raise_dst_load->stop();

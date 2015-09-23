@@ -986,31 +986,34 @@ double
 BalanceUtilities::computeNonUniformWorkloadOnCorners(
    std::vector<double>& corner_weights,
    const boost::shared_ptr<hier::Patch>& patch,
-   int wrk_indx)
+   int wrk_indx,
+   const hier::Box& box)
 {
    TBOX_ASSERT(patch);
+   TBOX_ASSERT(box.getBlockId() == patch->getBox().getBlockId());
+   TBOX_ASSERT(box.isSpatiallyEqual(patch->getBox()) ||
+               box.isSpatiallyEqual(box * patch->getBox()));
 
    if (!corner_weights.empty()) {
       TBOX_ERROR("BalanceUtilities::computeNonUniformWorkloadOnCorners received a non-empty corner weights argument.");
    }
 
    double workload = 0.0;
-   const hier::Box& patch_box = patch->getBox();
-   hier::Box work_box(patch_box);
-   hier::IntVector box_width(patch_box.numberCells());
+   hier::Box work_box(box);
+   hier::IntVector box_width(box.numberCells());
    hier::IntVector mid_point(box_width/2);
-   const tbox::Dimension& dim = patch_box.getDim();
+   const tbox::Dimension& dim = box.getDim();
 
    hier::IntVector corner_id(hier::IntVector::getZero(dim));
    do {
       // Set work_box to current corner.
       for (unsigned int d = 0; d < dim.getValue(); ++d) {
          if (corner_id[d] == 0) {
-            work_box.setLower(d, patch_box.lower()[d]);
-            work_box.setUpper(d, patch_box.lower()[d] + mid_point[d] - 1);
+            work_box.setLower(d, box.lower()[d]);
+            work_box.setUpper(d, box.lower()[d] + mid_point[d] - 1);
          } else {
-            work_box.setLower(d, patch_box.lower()[d] + mid_point[d]);
-            work_box.setUpper(d, patch_box.upper()[d]);
+            work_box.setLower(d, box.lower()[d] + mid_point[d]);
+            work_box.setUpper(d, box.upper()[d]);
          }
       }
 

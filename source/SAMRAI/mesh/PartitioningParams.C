@@ -29,7 +29,9 @@ PartitioningParams::PartitioningParams(
    d_bad_interval(bad_interval, grid_geometry.getNumberBlocks()),
    d_cut_factor(cut_factor),
    d_flexible_load_tol(flexible_load_tol),
-   d_load_comparison_tol(1e-6)
+   d_load_comparison_tol(1e-6),
+   d_using_vouchers(false),
+   d_work_data_id(-1)
 {
    for (hier::BlockId::block_t bid(0); bid < grid_geometry.getNumberBlocks(); ++bid) {
       grid_geometry.computePhysicalDomain(
@@ -44,7 +46,9 @@ PartitioningParams::PartitioningParams(
    d_max_size(other.d_max_size),
    d_bad_interval(other.d_bad_interval),
    d_cut_factor(other.d_cut_factor),
-   d_load_comparison_tol(other.d_load_comparison_tol)
+   d_load_comparison_tol(other.d_load_comparison_tol),
+   d_using_vouchers(other.d_using_vouchers),
+   d_work_data_id(other.d_work_data_id)
 {
 }
 
@@ -59,7 +63,8 @@ std::ostream& operator << (
    << "  bad_interval=" << pp.d_bad_interval
    << "  cut_factor=" << pp.d_cut_factor
    << "  flexible_load_tol=" << pp.d_flexible_load_tol
-   << "  load_comparison_tol=" << pp.d_load_comparison_tol;
+   << "  load_comparison_tol=" << pp.d_load_comparison_tol
+   << "  work_data_id=" << pp.d_work_data_id;
    for (std::map<hier::BlockId, hier::BoxContainer>::const_iterator mi =
            pp.d_block_domain_boxes.begin();
         mi != pp.d_block_domain_boxes.end(); ++mi) {

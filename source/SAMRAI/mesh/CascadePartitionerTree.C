@@ -297,7 +297,9 @@ void CascadePartitionerTree::distributeLoad()
        */
       if ( static_cast<int>(top_gen_number/connector_update_interval) !=
            static_cast<int>((top_gen_number+1)/connector_update_interval) ||
-           top_gen_number == tree_depth-2 ) {
+           (top_gen_number == tree_depth-2 && !d_common->d_pparams->usingVouchers()) ) {
+//      if ( static_cast<int>(top_gen_number/connector_update_interval) !=
+//           static_cast<int>((top_gen_number+1)/connector_update_interval) ) {
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad updating Connectors after balancing generation "
                        << top_group->d_gen_num << std::endl;

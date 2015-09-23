@@ -566,6 +566,21 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    t_load_balance_boxes->stop();
 
+   int my_rank = mpi.getRank();
+   std::vector<int> mapping_vec = mapping.getProcessorMapping(); 
+   int global_num_boxes = mapping_vec.size();
+   double load = 0.0;
+   TBOX_ASSERT(workloads.size() == global_num_boxes);
+   for (int b = 0; b < global_num_boxes; ++b) {
+      if (mapping_vec[b] == my_rank) {
+         load += workloads[b];
+      } else if (mapping_vec[b] > my_rank) {
+         break;
+      }
+   }
+
+   d_load_stat.push_back(load);
+
 #if 0
    /*
     * For debugging, output load balance statistics
@@ -1344,6 +1359,20 @@ ChopAndPackLoadBalancer::setupTimers()
       getTimer(d_object_name + "::binPackBoxes()_pack");
    t_chop_boxes = tbox::TimerManager::getManager()->
       getTimer(d_object_name + "::chop_boxes");
+}
+
+void
+ChopAndPackLoadBalancer::printStatistics(
+   std::ostream& output_stream) const
+{
+   if (d_load_stat.empty()) {
+      output_stream << "No statistics for ChopAndPackLoadBalancer.\n";
+   } else {
+      BalanceUtilities::reduceAndReportLoadBalance(
+         d_load_stat,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         output_stream);
+   }
 }
 
 }

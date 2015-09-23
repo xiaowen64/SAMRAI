@@ -338,7 +338,8 @@ private:
    void
    partitionByCascade(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference) const;
+      hier::Connector* balance_to_reference,
+      bool use_vouchers = false) const;
 
    /*!
     * @brief Update Connectors balance_box_level<==>reference.
@@ -433,6 +434,10 @@ private:
     * See input parameter "flexible_load_tolerance".
     */
    double d_flexible_load_tol;
+
+   bool d_use_vouchers;
+
+   bool d_post_balance_workload;
 
    /*!
     * @brief Metadata operations with timers set according to this object.
