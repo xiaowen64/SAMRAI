@@ -130,8 +130,19 @@ private:
     */
    double d_load_comparison_tol;
 
+   /*!
+    * @brief Flag for using voucher method or not.
+    */
    bool d_using_vouchers;
+
+   /*!
+    * @brief Patch data id for nonuniform workload
+    */
    int d_work_data_id;
+
+   /*!
+    * @brief Pointer to level holding nonuniform workload
+    */
    boost::shared_ptr<hier::PatchLevel> d_workload_level;
 };
 

@@ -135,6 +135,11 @@ void VoucherTransitLoad::insertAll(TransitLoad& other_transit_load)
    }
 }
 
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
 void VoucherTransitLoad::setWorkload(
    const hier::PatchLevel& patch_level,
    const int work_data_id)
@@ -317,7 +322,6 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    } else {
       original_work = d_reserve.getSumLoad();
    }
-   //LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
    LoadType unaccounted_work = original_work
       - findVoucher(mpi.getRank()).d_load;
 

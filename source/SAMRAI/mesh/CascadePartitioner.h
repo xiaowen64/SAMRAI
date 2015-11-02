@@ -435,9 +435,10 @@ private:
     */
    double d_flexible_load_tol;
 
+   /*!
+    * @brief Boolean to determine whether to use vouchers for transferring load.
+    */
    bool d_use_vouchers;
-
-   bool d_post_balance_workload;
 
    /*!
     * @brief Metadata operations with timers set according to this object.
