@@ -445,6 +445,9 @@ private:
     */
    hier::MappingConnectorAlgorithm d_mca;
 
+   /*!
+    * @brief Level holding workload data
+    */
    mutable boost::shared_ptr<hier::PatchLevel> d_workload_level;
 
    //@{

@@ -68,6 +68,7 @@ CascadePartitioner::CascadePartitioner(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
+   d_workload_data_id(0),
    d_tile_size(dim, 1),
    d_max_spread_procs(500),
    d_limit_supply_to_surplus(true),
@@ -76,6 +77,7 @@ CascadePartitioner::CascadePartitioner(
    d_use_vouchers(false),
    d_mca(),
    // Shared data.
+   d_workload_level(),
    d_balance_box_level(0),
    d_balance_to_reference(0),
    d_global_work_sum(-1),
