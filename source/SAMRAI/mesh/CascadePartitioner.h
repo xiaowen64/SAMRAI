@@ -41,9 +41,14 @@ namespace mesh {
  * Adaptive Mesh Refinement Scalability" submitted to JPDC.  Scaling
  * benchmark results are also in the article.
  *
- * Currently, only uniform load balancing is supported.  Eventually,
- * non-uniform load balancing should be supported.  (Non-uniform load
- * balancing is supported by the CutAndPackLoadBalancer class.)
+ * This class can be used for both uniform or non-uniform load balancing.
+ * To enable non-uniform load balancing, a call must be made to the method
+ * setWorkloadPatchDataIndex to give this object a patch data id for
+ * cell-centered workload data that must be set on the hierarchy outside of
+ * this class.
+ *
+ * The default behavior of this class is to do uniform load balancing, treating
+ * all cells of a level as having equal load value.
  *
  * <b> Input Parameters </b>
  *
@@ -67,6 +72,12 @@ namespace mesh {
  *   initial load, this limit causes the Connector to be updated gradually,
  *   alleviating the bottle-neck of one process doing an excessive amount
  *   of Connector updates.
+ *
+ *   - \b use_vouchers
+ *   Boolean parameter to turn on the optional voucher method for passing
+ *   around workload during the cascade algorithm.  Note that non-uniform
+ *   load balancing always uses the voucher method regardless of this
+ *   parameter's value.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -99,6 +110,14 @@ namespace mesh {
  *     <td>int</td>
  *     <td>500</td>
  *     <td> > 1</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>use_vouchers</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE or FALSE</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -188,9 +207,6 @@ public:
    /*!
     * @copydoc LoadBalanceStrategy::loadBalanceBoxLevel()
     *
-    * Note: This implementation does not yet support non-uniform load
-    * balancing.
-    *
     * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
     * @pre !balance_to_anchor || balance_to_anchor->isTransposeOf(balance_to_anchor->getTranspose())
     * @pre (d_dim == balance_box_level.getDim()) &&
@@ -237,9 +253,6 @@ public:
     * @brief Configure the load balancer to use the data stored
     * in the hierarchy at the specified descriptor index
     * for estimating the workload on each cell.
-    *
-    * Note: This method currently does not affect the results because
-    * this class does not yet support uniform load balancing.
     *
     * @param data_id
     * Integer value of patch data identifier for workload
