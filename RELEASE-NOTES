@@ -36,7 +36,8 @@ Please send email to samrai-bugs@llnl.gov.
                 Summary of what's new
 -----------------------------------------------------------------------------
 
-1)
+1) Non-uniform load balancing capabilities have been added to
+CascadePartitioner.
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -44,17 +45,28 @@ Please send email to samrai-bugs@llnl.gov.
 
 1)
 
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
                 Details about what's new
 -----------------------------------------------------------------------------
 
-1)
+1) Non-uniform load balancing capabilities have been added to
+CascadePartitioner.
+
+The CascadePartitioner now has the ability to balance based on user-provided
+workload values for each cell instead of balancing based on a simple cell
+count.  The non-uniform capability is enabled by passing in a patch data id
+to the method setWorkloadPatchDataIndex.  The patch data id should identify
+cell-centered data that has already been set on the hierarchy prior to invoking
+the CascadePartitioner.
+
+CascadePartitioner continues to work as a uniform load balancer by default.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 1)
 
