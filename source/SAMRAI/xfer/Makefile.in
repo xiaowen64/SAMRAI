@@ -47,7 +47,9 @@ OBJS = 	\
 	CoarsenTransactionFactory.o \
 	CoarsenPatchStrategy.o \
 	CoarsenClasses.o \
-	SingularityPatchStrategy.o
+	SingularityPatchStrategy.o \
+        CompositeBoundaryAlgorithm.o \
+        CompositeBoundarySchedule.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

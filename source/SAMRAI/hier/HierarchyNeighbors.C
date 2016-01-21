@@ -23,14 +23,17 @@ namespace hier {
 HierarchyNeighbors::HierarchyNeighbors(
    const PatchHierarchy& hierarchy,
    int coarsest_level,
-   int finest_level)
+   int finest_level,
+   int width)
 : d_coarsest_level(coarsest_level),
-  d_finest_level(finest_level)
+  d_finest_level(finest_level),
+  d_neighbor_width(hierarchy.getDim(), width)
 {
    int num_levels = hierarchy.getNumberOfLevels();
    TBOX_ASSERT(coarsest_level >= 0);
    TBOX_ASSERT(coarsest_level <= finest_level);
    TBOX_ASSERT(finest_level < num_levels);
+   TBOX_ASSERT(width >= 1);
 
    d_same_level_nbrs.resize(num_levels);
    d_finer_level_nbrs.resize(num_levels);
@@ -48,10 +51,19 @@ HierarchyNeighbors::HierarchyNeighbors(
          boost::shared_ptr<PatchLevel> finer_level(
             hierarchy.getPatchLevel(ln+1));
 
+         hier::IntVector connector_width(
+            IntVector::getOne(hierarchy.getDim()),
+            hierarchy.getNumberBlocks());
+
+         if (d_neighbor_width != IntVector::getOne(hierarchy.getDim())) {
+            connector_width *= d_neighbor_width;
+            connector_width.ceilingDivide(finer_level->getRatioToCoarserLevel());
+         }
+
          const Connector& coarse_to_fine =
             current_level->findConnector(
                *finer_level,
-               IntVector::getOne(hierarchy.getDim()),
+               connector_width,
                CONNECTOR_IMPLICIT_CREATION_RULE,
                true);
 
@@ -80,7 +92,7 @@ HierarchyNeighbors::HierarchyNeighbors(
          const Connector& fine_to_coarse =
             current_level->findConnector(
                *coarser_level,
-               IntVector::getOne(hierarchy.getDim()),
+               d_neighbor_width,
                CONNECTOR_IMPLICIT_CREATION_RULE,
                true);
 
@@ -105,7 +117,7 @@ HierarchyNeighbors::HierarchyNeighbors(
       const Connector& current_to_current =
          current_level->findConnector(
             *current_level,
-            IntVector::getOne(hierarchy.getDim()),
+            d_neighbor_width,
             CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 

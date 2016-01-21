@@ -32,12 +32,6 @@ namespace hier {
  * provides a basic interface for identifying the neightbors of a given
  * local Patch.
  *
- * In this class a neighbor of a Patch is defined only one that touches the
- * first Patch in index space in some way, either by overlapping or by
- * adjacency at a Patch boundary.  See the class Connector for a means to
- * find neighbor relationships defined more broadly, such as Patches that are
- * near to each other within a defined width of cells but do not touch.
- *
  * @see Connector
  */
 class HierarchyNeighbors
@@ -55,17 +49,26 @@ public:
     * The coarsest and finest level numbers may be equal, but when this is so,
     * this class should only be used to find neighbors on the same level.
     *
+    * The width argument can be used to specify a cell width such that the
+    * neighbors of a patch are defined as all patches closer in proximity to
+    * the patch than the given width.  If the default value of 1 is used, then
+    * neighbors will be only those patches which overlap or touch at a patch
+    * boundary.
+    *
     * @param hierarchy        PatchHierarchy that will be used
     * @param coarsest_level   The coarsest level that will be used
     * @param finest_level     The finest level that will be used
+    * @param width            Cell width to find neighbors
     *
     * @pre coarsest_level >= 0;
     * @pre coarsest_level <= finest_level
     * @pre finest_level < hierarchy->getNumberOfLevels()
+    * @pre width >= 1
     */
    HierarchyNeighbors(const PatchHierarchy& hierarchy,
                       int coarsest_level,
-                      int finest_level);
+                      int finest_level,
+                      int width = 1);
 
    /*!
     * @brief Destructor
@@ -209,6 +212,10 @@ private:
    std::vector< std::map<BoxId, BoxContainer> > d_coarser_level_nbrs;
    std::vector< std::map<BoxId, BoxContainer> > d_finer_level_nbrs;
 
+   /*!
+    * @brief Cell width that defines proximity to search for neighbors.
+    */
+   IntVector d_neighbor_width;
 };
 
 }
