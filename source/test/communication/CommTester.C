@@ -404,14 +404,6 @@ void CommTester::performRefineOperations(
       }
       d_data_test_strategy->clearDataContext();
    }
-   SAMRAI::xfer::CompositeBoundaryAlgorithm cba(d_patch_hierarchy, 3);
-   cba.addDataId(0);
-   if (level_number > 0) {
-      boost::shared_ptr<SAMRAI::xfer::CompositeBoundarySchedule> cbsched =
-         cba.createSchedule(level_number-1);
-      cbsched->fillData(d_fake_time);
-   }
-
 }
 
 void CommTester::performCoarsenOperations(
