@@ -221,6 +221,28 @@ public:
       const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number) = 0;
 
+   virtual void
+   setDataIds(std::list<int>& data_ids)
+   {
+      NULL_USE(data_ids);
+   }
+
+   virtual bool
+   verifyCompositeBoundaryData(
+      const hier::Patch& patch,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      int data_id,
+      int level_number,
+      const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data)
+   {
+      NULL_USE(patch);
+      NULL_USE(hierarchy);
+      NULL_USE(data_id);
+      NULL_USE(level_number);
+      NULL_USE(bdry_data);
+      return true;
+   }
+
 protected:
    const tbox::Dimension d_dim;
    /*

@@ -24,9 +24,11 @@ HierarchyNeighbors::HierarchyNeighbors(
    const PatchHierarchy& hierarchy,
    int coarsest_level,
    int finest_level,
+   bool do_same_level_nbrs, 
    int width)
 : d_coarsest_level(coarsest_level),
   d_finest_level(finest_level),
+  d_do_same_level_nbrs(do_same_level_nbrs),
   d_neighbor_width(hierarchy.getDim(), width)
 {
    int num_levels = hierarchy.getNumberOfLevels();
@@ -113,29 +115,30 @@ HierarchyNeighbors::HierarchyNeighbors(
       /*
        * Find the neighbors on the current level
        */
+      if (do_same_level_nbrs) {
+         const Connector& current_to_current =
+            current_level->findConnector(
+               *current_level,
+               d_neighbor_width,
+               CONNECTOR_IMPLICIT_CREATION_RULE,
+               true);
 
-      const Connector& current_to_current =
-         current_level->findConnector(
-            *current_level,
-            d_neighbor_width,
-            CONNECTOR_IMPLICIT_CREATION_RULE,
-            true);
+         for (PatchLevel::iterator ip(current_level->begin());
+              ip != current_level->end(); ++ip) {
+            const boost::shared_ptr<Patch>& patch = *ip;
+            const Box& box = patch->getBox();
+            const BoxId& box_id = box.getBoxId();
+            BoxContainer& same_level_nbrs = d_same_level_nbrs[ln][box_id];
 
-      for (PatchLevel::iterator ip(current_level->begin());
-           ip != current_level->end(); ++ip) {
-         const boost::shared_ptr<Patch>& patch = *ip;
-         const Box& box = patch->getBox();
-         const BoxId& box_id = box.getBoxId();
-         BoxContainer& same_level_nbrs = d_same_level_nbrs[ln][box_id];
-
-         BoxContainer same_nbr_boxes;
-         if (current_to_current.hasNeighborSet(box_id)) {
-            current_to_current.getNeighborBoxes(box_id, same_nbr_boxes);
-         }
-         for (BoxContainer::iterator itr =
-              same_nbr_boxes.begin(); itr != same_nbr_boxes.end(); ++itr) {
-            if (box_id != itr->getBoxId()) {
-               same_level_nbrs.insert(same_level_nbrs.end(), *itr);
+            BoxContainer same_nbr_boxes;
+            if (current_to_current.hasNeighborSet(box_id)) {
+               current_to_current.getNeighborBoxes(box_id, same_nbr_boxes);
+            }
+            for (BoxContainer::iterator itr =
+                 same_nbr_boxes.begin(); itr != same_nbr_boxes.end(); ++itr) {
+               if (box_id != itr->getBoxId()) {
+                  same_level_nbrs.insert(same_level_nbrs.end(), *itr);
+               }
             }
          }
       }

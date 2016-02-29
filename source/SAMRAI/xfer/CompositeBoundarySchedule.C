@@ -42,6 +42,7 @@ CompositeBoundarySchedule::CompositeBoundarySchedule(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarse_level_num <= hierarchy->getFinestLevelNumber());
    TBOX_ASSERT(stencil_width >= 1);
+   registerDataIds();
    createStencilForLevel();
 }
 
@@ -92,6 +93,7 @@ CompositeBoundarySchedule::createStencilForLevel()
       hier::HierarchyNeighbors hier_nbrs(*d_hierarchy,
                                          level_num,
                                          level_num+1,
+                                         false,
                                          d_stencil_width);
 
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geom =
@@ -134,7 +136,8 @@ CompositeBoundarySchedule::createStencilForLevel()
          *level->getBoxLevel(),
          s_to_c_width);
 
-      hier::LocalId local_id(-1);
+      hier::LocalId stencil_local_id(-1);
+      hier::LocalId coarse_local_id(-1);
       for (hier::PatchLevel::iterator itr = level->begin(); itr != level->end();
            ++itr) {
          const boost::shared_ptr<hier::Patch>& patch(*itr);
@@ -147,29 +150,46 @@ CompositeBoundarySchedule::createStencilForLevel()
          hier::BoxContainer finer_tree(finer_nbrs);
          finer_tree.makeTree(&(*grid_geom));
 
-         hier::BoxContainer work_boxes(patch_box);
-         work_boxes.refine(d_hierarchy->getRatioToCoarserLevel(level_num+1));
-         work_boxes.removeIntersections(finer_level->getRatioToLevelZero(),
+         const hier::IntVector& level_ratio(
+            d_hierarchy->getRatioToCoarserLevel(level_num+1));
+         hier::BoxContainer uncovered_fine(patch_box);
+         uncovered_fine.refine(level_ratio);
+         uncovered_fine.removeIntersections(finer_level->getRatioToLevelZero(),
                                         finer_tree,
                                         true);
-         work_boxes.coalesce();
+         uncovered_fine.coalesce();
 
-         if (!work_boxes.empty()) {
-            work_boxes.grow(stencil_vec);
-            work_boxes.intersectBoxes(finer_level->getRatioToLevelZero(),
+         hier::BoxContainer& uncovered_boxes =
+            d_patch_to_uncovered[box_id];
+
+         for (hier::BoxContainer::iterator uitr = uncovered_fine.begin();
+              uitr != uncovered_fine.end(); ++uitr) { 
+            ++coarse_local_id;
+            hier::Box add_box(*uitr, coarse_local_id, box_id.getOwnerRank());
+            add_box.coarsen(level_ratio);
+            uncovered_boxes.insert(uncovered_boxes.end(), add_box);
+         }
+
+         for (hier::BoxContainer::iterator uitr = uncovered_boxes.begin();
+              uitr != uncovered_boxes.end(); ++uitr) {
+            hier::BoxContainer grow_boxes(*uitr);
+            grow_boxes.refine(level_ratio);
+            grow_boxes.grow(stencil_vec);
+            grow_boxes.intersectBoxes(finer_level->getRatioToLevelZero(),
                                       finer_tree, true);
+            grow_boxes.coalesce();
 
-            work_boxes.simplify();
+            for (hier::BoxContainer::iterator gitr = grow_boxes.begin();
+                 gitr != grow_boxes.end(); ++gitr) {
+               ++stencil_local_id;
+               hier::Box stencil_box(*gitr, stencil_local_id, box_id.getOwnerRank());
+               stencil_box_level->addBoxWithoutUpdate(stencil_box); 
+               d_uncovered_to_stencil[uitr->getBoxId()].insert(
+                  stencil_box.getBoxId()); 
 
-            for (hier::BoxContainer::iterator witr = work_boxes.begin();
-                 witr != work_boxes.end(); ++witr) {
-               ++local_id;
-               hier::Box add_box(*witr, local_id, box_id.getOwnerRank());
-               stencil_box_level->addBoxWithoutUpdate(add_box);
-               d_stencil_map[box_id].insert(add_box.getBoxId()); 
-               coarse_to_stencil.insertLocalNeighbor(add_box, box_id);
+               coarse_to_stencil.insertLocalNeighbor(stencil_box, box_id);
                stencil_to_coarse.insertLocalNeighbor(patch_box,
-                                                     add_box.getBoxId());
+                                                     stencil_box.getBoxId());
             }
          }
       }
@@ -228,17 +248,19 @@ CompositeBoundarySchedule::createStencilForLevel()
 
 }
 
-void CompositeBoundarySchedule::addDataId(int data_id)
+void CompositeBoundarySchedule::registerDataIds()
 {
-   TBOX_ASSERT(data_id >= 0);
-   d_data_ids.insert(data_id);
-
    boost::shared_ptr< xfer::VariableFillPattern >
       interior_fill(new PatchInteriorVariableFillPattern(d_hierarchy->getDim()));
 
-   d_refine_algorithm.registerRefine(data_id, data_id, data_id,
-      boost::shared_ptr<hier::RefineOperator>(), interior_fill);
+   for (std::set<int>::const_iterator itr = d_data_ids.begin();
+        itr != d_data_ids.end(); ++itr) {
+      TBOX_ASSERT(*itr >= 0);
+      int data_id = *itr;
 
+      d_refine_algorithm.registerRefine(data_id, data_id, data_id,
+         boost::shared_ptr<hier::RefineOperator>(), interior_fill);
+   }
 }
 
 
@@ -277,7 +299,7 @@ CompositeBoundarySchedule::setUpSchedule()
  *************************************************************************
  */
 void
-CompositeBoundarySchedule::fillData()
+CompositeBoundarySchedule::fillData(double fill_time)
 {
    if (!d_stencil_created) {
       TBOX_ERROR("CompositeBoundarySchedule::fillData error:  No stencil for boundary of Level " << d_coarse_level_num << " created." << std::endl);
@@ -295,7 +317,7 @@ CompositeBoundarySchedule::fillData()
          }
       }
 
-      d_refine_schedule->fillData(0.0);
+      d_refine_schedule->fillData(fill_time);
    }
 
    const boost::shared_ptr<hier::PatchLevel>& level =
@@ -312,19 +334,30 @@ CompositeBoundarySchedule::fillData()
 
          const boost::shared_ptr<hier::Patch>& patch(*itr);
          const hier::BoxId& box_id = patch->getBox().getBoxId();
-         std::vector<boost::shared_ptr<hier::PatchData> >& data_vec =
+         VectorPatchData& data_vec =
             d_data_map[data_id][box_id];
          data_vec.clear();
 
+         std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> >&
+            stencil_map = d_stencil_to_data[data_id];
          if (d_stencil_level) {
-            const std::set<hier::BoxId>& stencil_ids = d_stencil_map[box_id];
+            const hier::BoxContainer& uncovered_boxes =
+               d_patch_to_uncovered[box_id];
 
-            for (std::set<hier::BoxId>::const_iterator sitr = stencil_ids.begin();
-                 sitr != stencil_ids.end(); ++sitr) {
+            for (hier::BoxContainer::const_iterator uitr = uncovered_boxes.begin();
+                 uitr != uncovered_boxes.end(); ++uitr) {
+               const std::set<hier::BoxId>& stencil_ids =
+                  d_uncovered_to_stencil[uitr->getBoxId()];
 
-               data_vec.push_back(
-                  d_stencil_level->getPatch(*sitr)->getPatchData(data_id)); 
+               for (std::set<hier::BoxId>::const_iterator sitr = stencil_ids.begin();
+                    sitr != stencil_ids.end(); ++sitr) {
 
+                  data_vec.push_back(
+                     d_stencil_level->getPatch(*sitr)->getPatchData(data_id)); 
+
+                  stencil_map[*sitr] = data_vec.back();
+
+               } 
             } 
          } 
       }
@@ -381,6 +414,50 @@ CompositeBoundarySchedule::getBoundaryPatchData(
    return data_vec;
 
 }
+
+std::vector<boost::shared_ptr<hier::PatchData> >
+CompositeBoundarySchedule::getDataForUncoveredBox(
+   const hier::BoxId& uncovered_id,
+   int data_id) const
+{
+   if (d_data_ids.find(data_id) == d_data_ids.end()) {
+      TBOX_ERROR("CompositeBoundarySchedule:: data_id " << data_id << " not registered with CompositeBoundarySchedule" << std::endl);
+   }
+
+   if (!d_stencil_filled) {
+      TBOX_ERROR("CompositeBoundarySchedule:: error:  stencil not filled." << std::endl);
+   }
+
+   std::map<int, std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> > >::const_iterator data_map_itr = d_stencil_to_data.find(data_id);
+   if (data_map_itr == d_stencil_to_data.end()) {
+      TBOX_ERROR("CompositeBoundarySchedule:: error:  stencil data for patch data id " << data_id << " not found." << std::endl);
+   }
+
+   const std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> >& data_map =
+      data_map_itr->second;
+
+   std::vector<boost::shared_ptr<hier::PatchData> > data_vec;
+
+   std::map<hier::BoxId, std::set<hier::BoxId> >::const_iterator st_itr =
+      d_uncovered_to_stencil.find(uncovered_id);
+
+   if (st_itr != d_uncovered_to_stencil.end()) {
+      const std::set<hier::BoxId>& stencil_ids = st_itr->second;
+
+      for (std::set<hier::BoxId>::const_iterator itr = stencil_ids.begin();
+           itr != stencil_ids.end(); ++itr) {
+         std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> >::const_iterator pd_itr = data_map.find(*itr);
+         if (pd_itr == data_map.end()) {
+            TBOX_ERROR("CompositeBoundarySchedule:: error:  No patch data for stencil box "  << *itr << " found." << std::endl); 
+         }
+         data_vec.push_back(pd_itr->second);
+      }
+   }
+
+   return data_vec; 
+}
+
+
 
 
 

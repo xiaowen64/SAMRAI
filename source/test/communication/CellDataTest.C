@@ -640,4 +640,81 @@ bool CellDataTest::verifyResults(
 
 }
 
+void CellDataTest::setDataIds(std::list<int>& data_ids)
+{
+   hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
+      int data_id = variable_db->mapVariableAndContextToIndex(
+         d_variables[i],
+         getDataContext());
+      data_ids.push_back(data_id);
+   }
+}
+
+bool CellDataTest::verifyCompositeBoundaryData(
+   const hier::Patch& patch,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   int data_id,
+   int level_number,
+   const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data)
+{
+   bool test_failed = false;
+
+   const hier::IntVector periodic_shift(
+      d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
+   bool is_periodic = periodic_shift.max() > 0;
+
+   if (d_do_refine && !is_periodic) {
+      for (std::vector<boost::shared_ptr<hier::PatchData> >::const_iterator
+           itr = bdry_data.begin(); itr != bdry_data.end(); ++itr) {
+         boost::shared_ptr<pdat::CellData<double> > cell_bdry_data(
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(*itr));
+         TBOX_ASSERT(cell_bdry_data);
+
+         hier::Patch solution_patch(
+            cell_bdry_data->getBox(), patch.getPatchDescriptor());
+
+         d_cart_grid_geometry->setGeometryDataOnPatch(
+            solution_patch,
+            hierarchy->getPatchLevel(level_number+1)->getRatioToLevelZero(),
+            hier::PatchGeometry::TwoDimBool(patch.getDim(), false));
+
+         boost::shared_ptr<pdat::CellData<double> > solution(
+            new pdat::CellData<double>(
+               solution_patch.getBox(), 1,
+               hier::IntVector::getZero(patch.getDim())));
+
+         setLinearData(solution, solution_patch.getBox(), solution_patch);
+
+         int depth = cell_bdry_data->getDepth();
+         hier::Box dbox(cell_bdry_data->getBox());
+
+         pdat::CellIterator ciend(pdat::CellGeometry::end(dbox));
+         for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
+              ci != ciend; ++ci) {
+            double correct = (*solution)(*ci);
+            for (int d = 0; d < depth; ++d) {
+               double result = (*cell_bdry_data)(*ci, d);
+               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                  tbox::perr << "Test FAILED: ...."
+                             << " : cell index = " << *ci
+                             << " on composite boundary stencil"
+                             << " " << solution->getBox() << endl;
+                  tbox::perr << "    patch data id " << data_id
+                             << " : depth index = " << d << endl;
+                  tbox::perr << "    result = " << result
+                             << " : correct = " << correct << endl;
+                  test_failed = true;
+               }
+            }
+         }
+      }
+   }
+
+   return !test_failed;
+
+}
+
+
+
 }

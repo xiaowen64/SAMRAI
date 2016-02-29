@@ -86,12 +86,37 @@ public:
     *
     * This may be called multiple times, to account for changing state of
     * data on the hierarchy.
+    *
+    * @param[in] fill_time   Time for the filling operation.
     */
-   void fillData();
+   void fillData(double fill_time);
+
+   /*!
+    * @brief Get the uncovered boxes for a patch on the schedule's coarse level.
+    *
+    * The uncovered boxes represent the regions of the patch, if any, that
+    * are not overlapped by the mesh of the next finest level.
+    *
+    * @param patch  A local patch on the the coarse level.  An error will occur
+    * the patch is not local or not on the level.
+    */
+   const hier::BoxContainer&
+   getUncoveredBoxes(
+      const hier::Patch& patch) const
+   {
+      std::map<hier::BoxId, hier::BoxContainer>::const_iterator itr =
+         d_patch_to_uncovered.find(patch.getBox().getBoxId());
+
+      if (itr == d_patch_to_uncovered.end()) {
+         TBOX_ERROR("CompositeBoundarySchedule::getUncoveredBoxes error: Patch " << patch.getBox().getBoxId() << " is not a local patch on the current coarse level." << std::endl);
+      }
+
+      return itr->second;
+   }
 
    /*!
     * @brief Get PatchData from the composite boundary stencil for a given
-    *        data id.
+    * data id.
     *
     * Get a vector that holds the stencil PatchData for the parts of the
     * coarse-fine boundary touching the Patch.  The Patch must be a local
@@ -109,6 +134,24 @@ public:
       const hier::Patch& patch,
       int data_id) const;
 
+   /*!
+    * @brief Get PatchData from the composite boundary stencil associated with
+    * an uncovered box.
+    *
+    * The returned vector will contain PatchData located at the coarse-fine
+    * stencil touching the uncovered box.
+    *
+    * An error will occur if the uncovered_id is not the id of an uncovered
+    * box, or if the data_id is not an id that was passed into the constructor.
+    *
+    * @param uncovered_id  BoxId for an uncovered box
+    * @param data_id       patch data id for the desired data.
+    */
+   std::vector<boost::shared_ptr<hier::PatchData> >
+   getDataForUncoveredBox(
+      const hier::BoxId& uncovered_id,
+      int data_id) const;
+
 private:
    CompositeBoundarySchedule(
       const CompositeBoundarySchedule&);                  // not implemented
@@ -117,30 +160,15 @@ private:
       const CompositeBoundarySchedule&);                  // not implemented
 
    /*!
-    * @brief Add a patch data id to identify data to be managed on the stencils.
+    * @brief Register the data ids for communication.
     *
-    * This may be called multiple times to add as many data ids as desired.
-    * All desired data ids must be added prior to calling
-    * createStencilForLevel().
-    *
-    * @param[in] data_id
-    *
-    * @pre data_id >= 0 
+    * This must be called prior to calling createStencilForLevel().
     */
-   void addDataId(int data_id);
+   void registerDataIds();
 
    /*!
     * @brief Create a stencil that exists at the coarse-fine boundaries
-    * of the given level.
-    *
-    * The given level number represents a level from the hierarchy.  The
-    * stencil will hold data from the next finer level of resolution at the
-    * coarse fine boundaries.
-    *
-    * This method should be called to recreate stencils after the level
-    * represented by level_num and/or the next finer level have been regridded.
-    *
-    * @param level_num   level number for a level from hierarchy.
+    * of the coarse level.
     */
    void createStencilForLevel();
 
@@ -148,13 +176,9 @@ private:
     * @brief Set up communication schedule to fill data at composite boundary
     *
     * This sets up the communications that fill the patch data around the
-    * coarse-fine boundaries of the given level.
-    *
-    * @param[in]   level_num
-    *
+    * coarse-fine boundaries of the coarse level.
     */
    void setUpSchedule();
-
 
    /*!
     * @brief Hierarchy where the stencils exist
@@ -199,6 +223,17 @@ private:
    typedef std::vector<boost::shared_ptr<hier::PatchData> > VectorPatchData;
    typedef std::map<hier::BoxId, VectorPatchData> MapBoxIdPatchData;
 
+   // map BoxId from Patch to container of uncovered boxes
+   std::map<hier::BoxId, hier::BoxContainer> d_patch_to_uncovered;
+
+   // map BoxId of uncovered box to container of stencil boxes 
+   std::map<hier::BoxId, std::set<hier::BoxId> > d_uncovered_to_stencil;
+
+   // outer map maps a data id to the inner map.  Inner map maps BoxId of
+   // a stencil box to the PatchData located on that box.
+   std::map<int, std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> > >
+      d_stencil_to_data;
+   
    /*!
     * @brief Container of PatchData on the stencil.
     *
@@ -208,7 +243,7 @@ private:
     *
     * The nesting of the containers is organized as:
     *
-    * d_data_map[level_number][data_id][box_id][stencil_box_index]
+    * d_data_map[data_id][box_id][stencil_box_index]
     *
     * level_number is the level number of the coarse level at a coarse-fine
     * boundary where the stencil has been created and filled.  data_id
@@ -216,7 +251,7 @@ private:
     * the id of a Patch on the hierarchy.  stencil_box_index is an index into
     * the inner nested vector of PatchData.
     */
-   std::map< int, MapBoxIdPatchData > d_data_map;
+   std::map<int, MapBoxIdPatchData> d_data_map;
 
    /*!
     * @brief Vector of flags telling if stencil has been created for each
@@ -230,6 +265,10 @@ private:
     */
    bool d_stencil_filled; 
 
+   /*!
+    * The level number of the coarse level at the coarse-fine boundary where
+    * the composite boundary stencils are created.
+    */
    int d_coarse_level_num;
 };
 

@@ -503,6 +503,14 @@ int main(
 
       }
 
+      bool composite_test_passed = true;
+      if (do_refine) {
+         for (int i = 0; i < nlevels; ++i) {
+            composite_test_passed = comm_tester->performCompositeBoundaryComm(i);
+         }
+      }
+
+
       bool test1_passed = comm_tester->verifyCommunicationResults();
 
       if (do_refine) {
@@ -570,7 +578,7 @@ int main(
       tbox::plog << "\nInput file data at end of run is ...." << endl;
       input_db->printClassData(tbox::plog);
 
-      if (test1_passed && test2_passed) {
+      if (test1_passed && test2_passed && composite_test_passed) {
          tbox::pout << "\nPASSED:  communication" << endl;
          return_val = 0;
       }

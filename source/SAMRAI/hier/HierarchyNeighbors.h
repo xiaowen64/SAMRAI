@@ -55,9 +55,14 @@ public:
     * neighbors will be only those patches which overlap or touch at a patch
     * boundary.
     *
+    * If no intra-level neighbors information is desired, set the
+    * do_same_level_nbrs parameter to false.
+    *
     * @param hierarchy        PatchHierarchy that will be used
     * @param coarsest_level   The coarsest level that will be used
     * @param finest_level     The finest level that will be used
+    * @param do_same_level_numbers  Find intra-level neigbhors as well as
+    *                               coarse-fine neighbors
     * @param width            Cell width to find neighbors
     *
     * @pre coarsest_level >= 0;
@@ -68,6 +73,7 @@ public:
    HierarchyNeighbors(const PatchHierarchy& hierarchy,
                       int coarsest_level,
                       int finest_level,
+                      bool do_same_level_nbrs = true,
                       int width = 1);
 
    /*!
@@ -181,13 +187,21 @@ public:
    {
       TBOX_ASSERT(ln <= d_finest_level && ln >= d_coarsest_level);
 
+      if (!d_do_same_level_nbrs) {
+         TBOX_ERROR("HierarchyNeighbors::getSameLevelNeighbors error:  "
+            << "HierarchyNeighbors object was constructed with argument "
+            << "to not find same level neighbors." << std::endl);
+      }
+
       std::map<BoxId, BoxContainer >::const_iterator itr =
          d_same_level_nbrs[ln].find(box.getBoxId());
+
 
       if (itr == d_same_level_nbrs[ln].end()) {
          TBOX_ERROR("HierarchyNeighbors::getSameLevelNeighbors error: Box "
             << box << " does not exist locally on level " << ln << ".\n"
-            << "You must specify the BoxId of a current local patch.");
+            << "You must specify the BoxId of a current local patch."
+            << std::endl);
       }
 
       return itr->second;
@@ -200,6 +214,11 @@ private:
     */
    int d_coarsest_level;
    int d_finest_level;
+
+   /*!
+    * Flag to tell whether this object has computed intra-level neighbors.
+    */
+   bool d_do_same_level_nbrs;
 
    /*!
     * @brief Containers for the neighbor boxes
