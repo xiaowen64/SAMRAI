@@ -161,6 +161,9 @@ RefineSchedule::RefineSchedule(
    initializeDomainAndGhostInformation();
 
    hier::IntVector min_connector_width(getMinConnectorWidth());
+   if (!d_dst_level_fill_pattern->fillingCoarseFineGhosts()) {
+      min_connector_width = hier::IntVector::getZero(dst_level->getDim());
+   }
 
    d_dst_to_src = &d_dst_level->findConnectorWithTranspose(*d_src_level,
          min_connector_width,
@@ -174,8 +177,12 @@ RefineSchedule::RefineSchedule(
 
    TBOX_ASSERT(d_dst_to_src->getBase() == *d_dst_level->getBoxLevel());
    TBOX_ASSERT(src_to_dst.getHead() == *d_dst_level->getBoxLevel());
-   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_max_scratch_gcw);
-   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_boundary_fill_ghost_width);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_dst_level_fill_pattern->fillingCoarseFineGhosts()) {
+      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_max_scratch_gcw);
+      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_boundary_fill_ghost_width);
+   } 
+#endif
 
    if (s_extra_debug) {
       /*

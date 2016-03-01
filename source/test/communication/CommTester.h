@@ -146,6 +146,10 @@ public:
    performRefineOperations(
       const int level_number);
 
+   bool
+   performCompositeBoundaryComm(
+      const int level_number);
+
    /**
     * Coarsen data to specified level.
     */

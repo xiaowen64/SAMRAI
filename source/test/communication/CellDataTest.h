@@ -121,6 +121,17 @@ public:
       const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
+   void
+   setDataIds(std::list<int>& data_ids);
+
+   bool
+   verifyCompositeBoundaryData(
+      const hier::Patch& patch,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      int data_id,
+      int level_number,
+      const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data);
+
 private:
    /**
     * Function for reading test data from input file.

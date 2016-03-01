@@ -32,12 +32,6 @@ namespace hier {
  * provides a basic interface for identifying the neightbors of a given
  * local Patch.
  *
- * In this class a neighbor of a Patch is defined only one that touches the
- * first Patch in index space in some way, either by overlapping or by
- * adjacency at a Patch boundary.  See the class Connector for a means to
- * find neighbor relationships defined more broadly, such as Patches that are
- * near to each other within a defined width of cells but do not touch.
- *
  * @see Connector
  */
 class HierarchyNeighbors
@@ -55,17 +49,32 @@ public:
     * The coarsest and finest level numbers may be equal, but when this is so,
     * this class should only be used to find neighbors on the same level.
     *
+    * The width argument can be used to specify a cell width such that the
+    * neighbors of a patch are defined as all patches closer in proximity to
+    * the patch than the given width.  If the default value of 1 is used, then
+    * neighbors will be only those patches which overlap or touch at a patch
+    * boundary.
+    *
+    * If no intra-level neighbors information is desired, set the
+    * do_same_level_nbrs parameter to false.
+    *
     * @param hierarchy        PatchHierarchy that will be used
     * @param coarsest_level   The coarsest level that will be used
     * @param finest_level     The finest level that will be used
+    * @param do_same_level_numbers  Find intra-level neigbhors as well as
+    *                               coarse-fine neighbors
+    * @param width            Cell width to find neighbors
     *
     * @pre coarsest_level >= 0;
     * @pre coarsest_level <= finest_level
     * @pre finest_level < hierarchy->getNumberOfLevels()
+    * @pre width >= 1
     */
    HierarchyNeighbors(const PatchHierarchy& hierarchy,
                       int coarsest_level,
-                      int finest_level);
+                      int finest_level,
+                      bool do_same_level_nbrs = true,
+                      int width = 1);
 
    /*!
     * @brief Destructor
@@ -178,13 +187,21 @@ public:
    {
       TBOX_ASSERT(ln <= d_finest_level && ln >= d_coarsest_level);
 
+      if (!d_do_same_level_nbrs) {
+         TBOX_ERROR("HierarchyNeighbors::getSameLevelNeighbors error:  "
+            << "HierarchyNeighbors object was constructed with argument "
+            << "to not find same level neighbors." << std::endl);
+      }
+
       std::map<BoxId, BoxContainer >::const_iterator itr =
          d_same_level_nbrs[ln].find(box.getBoxId());
+
 
       if (itr == d_same_level_nbrs[ln].end()) {
          TBOX_ERROR("HierarchyNeighbors::getSameLevelNeighbors error: Box "
             << box << " does not exist locally on level " << ln << ".\n"
-            << "You must specify the BoxId of a current local patch.");
+            << "You must specify the BoxId of a current local patch."
+            << std::endl);
       }
 
       return itr->second;
@@ -199,6 +216,11 @@ private:
    int d_finest_level;
 
    /*!
+    * Flag to tell whether this object has computed intra-level neighbors.
+    */
+   bool d_do_same_level_nbrs;
+
+   /*!
     * @brief Containers for the neighbor boxes
     *
     * The vectors are indexed by level number, and for each level, the BoxId
@@ -209,6 +231,10 @@ private:
    std::vector< std::map<BoxId, BoxContainer> > d_coarser_level_nbrs;
    std::vector< std::map<BoxId, BoxContainer> > d_finer_level_nbrs;
 
+   /*!
+    * @brief Cell width that defines proximity to search for neighbors.
+    */
+   IntVector d_neighbor_width;
 };
 
 }

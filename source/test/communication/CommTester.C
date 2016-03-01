@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/xfer/CompositeBoundaryAlgorithm.h"
 
 namespace SAMRAI {
 
@@ -420,6 +421,52 @@ void CommTester::performCoarsenOperations(
       d_data_test_strategy->clearDataContext();
    }
 }
+
+bool CommTester::performCompositeBoundaryComm(
+      const int level_number)
+{
+   bool test_failed = false;
+
+   d_data_test_strategy->setDataContext(d_destination);
+   std::list<int> dst_ids;
+   d_data_test_strategy->setDataIds(dst_ids);
+   if (!dst_ids.empty()) {
+      SAMRAI::xfer::CompositeBoundaryAlgorithm cba(d_patch_hierarchy, 3);
+      for (std::list<int>::const_iterator itr = dst_ids.begin();
+           itr != dst_ids.end(); ++itr) {
+         cba.addDataId(*itr);
+      }
+      boost::shared_ptr<SAMRAI::xfer::CompositeBoundarySchedule> cbsched =
+         cba.createSchedule(level_number);
+      cbsched->fillData(d_fake_time);
+
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_patch_hierarchy->getPatchLevel(level_number));
+
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
+         const boost::shared_ptr<hier::Patch>& patch = *p;
+
+         for (std::list<int>::const_iterator itr = dst_ids.begin();
+              itr != dst_ids.end(); ++itr) {
+            const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data =
+               cbsched->getBoundaryPatchData(*patch, *itr);
+
+            bool result = d_data_test_strategy->verifyCompositeBoundaryData(
+               *patch, d_patch_hierarchy, *itr, level_number, bdry_data);
+
+            if (!result) {
+               test_failed = true;
+            }
+         }
+      }
+   }
+
+   d_data_test_strategy->clearDataContext();
+
+   return !test_failed;
+}
+
 
 /*
  *************************************************************************
