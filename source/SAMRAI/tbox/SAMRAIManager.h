@@ -169,7 +169,6 @@ public:
    static int
    getMaxNumberPatchDataEntries()
    {
-      s_max_patch_data_entries_accessed = true;
       return s_max_patch_data_entries;
    }
 
@@ -178,15 +177,6 @@ public:
     *
     * The maximum number will be set to the maximum of the current value and
     * the argument value.
-    *
-    * Note that this routine cannot be called anytime after the max patch
-    * data entries value has been accessed via the
-    * getMaxNumberPatchDataEntries() function, neither by the user nor
-    * internally within SAMRAI.  Typically, the first internal access of this
-    * value occurs whenever any objects related to the patch hierarchy or
-    * variables are created.
-    *
-    * @pre s_max_patch_data_entries_accessed
     */
    static void
    setMaxNumberPatchDataEntries(
@@ -220,11 +210,6 @@ private:
     */
    static int s_max_patch_data_entries;
 
-   /*!
-    * Flag telling whether maximum number of patch data components has
-    * been accessed.
-    */
-   static bool s_max_patch_data_entries_accessed;
 
 };
 

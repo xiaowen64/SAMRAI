@@ -174,14 +174,14 @@ public:
     *
     * @return True if the bit at position i is set to true.
     *
-    * @pre (i >= 0) && (i < getSize())
+    * @pre (i >= 0)
     */
    bool
    isSet(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < getSize()));
-      return d_bit_vector[_index(i)].test(_element(i));
+      TBOX_ASSERT(i >= 0);
+      return i < getSize() && d_bit_vector[_index(i)].test(_element(i));
    }
 
    /*!
@@ -189,13 +189,17 @@ public:
     *
     * @param[in]  i The position in the bit vector to set to true.
     *
-    * @pre (i >= 0) && (i < getSize())
+    * @pre (i >= 0)
     */
    void
    setFlag(
       const int i)
    {
-      TBOX_ASSERT((i >= 0) && (i < getSize()));
+      TBOX_ASSERT(i >= 0);
+      if (i >= getSize()) {
+         d_bit_vector.resize(d_bit_vector.size() + 1, d_bit_vector[0]);
+         d_bit_vector[d_bit_vector.size()-1].reset();
+      }
       d_bit_vector[_index(i)].set(_element(i));
    }
 
@@ -204,14 +208,16 @@ public:
     *
     * @param[in]  i The position in the bit vector to set to false.
     *
-    * @pre (i >= 0) && (i < getSize())
+    * @pre (i >= 0)
     */
    void
    clrFlag(
       const int i)
    {
-      TBOX_ASSERT((i >= 0) && (i < getSize()));
-      d_bit_vector[_index(i)].reset(_element(i));
+      TBOX_ASSERT(i >= 0);
+      if (i < getSize()) {
+         d_bit_vector[_index(i)].reset(_element(i));
+      } 
       d_max_bit_index = _findMaxIndex(d_bit_vector);
    }
 
