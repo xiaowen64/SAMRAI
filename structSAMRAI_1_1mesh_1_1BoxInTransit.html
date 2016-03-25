@@ -61,7 +61,13 @@
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#ab4705f801bcd0cbae532db79ebb28336">getLoad</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the Box load.  <a href="#ab4705f801bcd0cbae532db79ebb28336"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#abb3ecb3c152fded8e156d7c65a6b1a2e">setLoad</a> (double boxload)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the Box load.  <a href="#abb3ecb3c152fded8e156d7c65a6b1a2e"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the Box load.  <a href="#abb3ecb3c152fded8e156d7c65a6b1a2e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#aee93ccac4596bf9bcdb7d2ec6d316aac">setCornerWeights</a> (const std::vector&lt; double &gt; &amp;corner_weights)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the corner weights vector.  <a href="#aee93ccac4596bf9bcdb7d2ec6d316aac"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#aecc5d974ceaf4e7b837b6b42a135cb0b">getSize</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the box size.  <a href="#aecc5d974ceaf4e7b837b6b42a135cb0b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const std::vector&lt; double &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#ad44720d0d00b8eab5db72f4f2d234491">getCornerWeights</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get reference to the corner weights vector.  <a href="#ad44720d0d00b8eab5db72f4f2d234491"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#ad3dda40f7bb921f90917862721d13e76">isOriginal</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return whether this is an original box.  <a href="#ad3dda40f7bb921f90917862721d13e76"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html#a88ecaf6850536dc6d5ee544117b2b5d5">putToMessageStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;mstream) const </td></tr>
@@ -271,7 +277,7 @@
 
 <p>Return the Box. </p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00508">SAMRAI::mesh::BoxTransitSet::generateLocalBasedMapEdges()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00573">SAMRAI::mesh::BoxTransitSet::generateLocalBasedMapEdges()</a>.</p>
 
 </div>
 </div>
@@ -311,7 +317,7 @@
 
 <p>Return the original Box. </p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00508">SAMRAI::mesh::BoxTransitSet::generateLocalBasedMapEdges()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00573">SAMRAI::mesh::BoxTransitSet::generateLocalBasedMapEdges()</a>.</p>
 
 </div>
 </div>
@@ -351,7 +357,7 @@
 
 <p>Return the Box load. </p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00124">SAMRAI::mesh::BoxTransitSet::insertAll()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00128">SAMRAI::mesh::BoxTransitSet::insertAll()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00186">SAMRAI::mesh::BoxTransitSet::setWorkload()</a>.</p>
 
 </div>
 </div>
@@ -371,7 +377,71 @@
 </div>
 <div class="memdoc">
 
-<p>Return the Box load. </p>
+<p>Set the Box load. </p>
+
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00162">SAMRAI::mesh::BoxTransitSet::insertAllWithExistingLoads()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00186">SAMRAI::mesh::BoxTransitSet::setWorkload()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aee93ccac4596bf9bcdb7d2ec6d316aac"></a><!-- doxytag: member="SAMRAI::mesh::BoxInTransit::setCornerWeights" ref="aee93ccac4596bf9bcdb7d2ec6d316aac" args="(const std::vector&lt; double &gt; &amp;corner_weights)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BoxInTransit::setCornerWeights </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>corner_weights</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set the corner weights vector. </p>
+
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00162">SAMRAI::mesh::BoxTransitSet::insertAllWithExistingLoads()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00186">SAMRAI::mesh::BoxTransitSet::setWorkload()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aecc5d974ceaf4e7b837b6b42a135cb0b"></a><!-- doxytag: member="SAMRAI::mesh::BoxInTransit::getSize" ref="aecc5d974ceaf4e7b837b6b42a135cb0b" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double SAMRAI::mesh::BoxInTransit::getSize </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the box size. </p>
+
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00128">SAMRAI::mesh::BoxTransitSet::insertAll()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad44720d0d00b8eab5db72f4f2d234491"></a><!-- doxytag: member="SAMRAI::mesh::BoxInTransit::getCornerWeights" ref="ad44720d0d00b8eab5db72f4f2d234491" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt;double&gt;&amp; SAMRAI::mesh::BoxInTransit::getCornerWeights </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get reference to the corner weights vector. </p>
 
 </div>
 </div>
@@ -394,7 +464,7 @@
 
 <p>References <a class="el" href="Box_8h_source.html#l00382">SAMRAI::hier::Box::isIdEqual()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00508">SAMRAI::mesh::BoxTransitSet::generateLocalBasedMapEdges()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00573">SAMRAI::mesh::BoxTransitSet::generateLocalBasedMapEdges()</a>.</p>
 
 </div>
 </div>
@@ -418,7 +488,7 @@
 
 <p>References <a class="el" href="Box_8C_source.html#l00751">SAMRAI::hier::Box::putToMessageStream()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l01592">SAMRAI::mesh::BoxTransitSet::putToMessageStream()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l01715">SAMRAI::mesh::BoxTransitSet::putToMessageStream()</a>.</p>
 
 </div>
 </div>
@@ -478,7 +548,7 @@
 <li>source/SAMRAI/mesh/<a class="el" href="BoxInTransit_8h.html">BoxInTransit.h</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 5 Jun 2015 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jan 2016 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

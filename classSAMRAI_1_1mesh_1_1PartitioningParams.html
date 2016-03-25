@@ -49,6 +49,12 @@
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#aa0678e9197f7812ec7a8cdf1d68b8610">getDim</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const double &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#ad87996bd1b42d0646703855aa213a9a4">getFlexibleLoadTol</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const double &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#a6dd3c319559ecb9e806a7e33fc1f1020">getLoadComparisonTol</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const bool &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#abd78a86c35b72a1b75ff1aa3f6db958a">usingVouchers</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#ac113f1528a67e07e6271f17cde90ad82">setUsingVouchers</a> (bool using_vouchers)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#abf0e535fedf1bb530ce458ca58ca24f6">getWorkloadDataId</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#a6d22c9fbad424b98a0f6341ef9ab5329">setWorkloadDataId</a> (int work_data_id)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#a97cab81813fcdf45e8fbec17609c7a67">getWorkloadPatchLevel</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#a7ff897496a5a660869f3a15e7249b5f1">setWorkloadPatchLevel</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level)</td></tr>
 <tr><td colspan="2"><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html#ae3753374ec8a303eef40b3557d07f1ab">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classSAMRAI_1_1mesh_1_1PartitioningParams.html">PartitioningParams</a> &amp;pp)</td></tr>
 </table>
@@ -150,7 +156,7 @@
 
 <p>References <a class="el" href="IntVector_8h_source.html#l01076">SAMRAI::hier::IntVector::getProduct()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00564">SAMRAI::mesh::BoxTransitSet::adjustLoad()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00629">SAMRAI::mesh::BoxTransitSet::adjustLoad()</a>.</p>
 
 </div>
 </div>
@@ -169,7 +175,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00758">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00564">SAMRAI::mesh::BoxTransitSet::adjustLoad()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00805">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00629">SAMRAI::mesh::BoxTransitSet::adjustLoad()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
 
 </div>
 </div>
@@ -188,7 +194,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
 
 </div>
 </div>
@@ -208,7 +214,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BalanceBoxBreaker_8C_source.html#l00072">SAMRAI::mesh::BalanceBoxBreaker::breakOffLoad()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceBoxBreaker_8C_source.html#l00072">SAMRAI::mesh::BalanceBoxBreaker::breakOffLoad()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
 
 </div>
 </div>
@@ -227,7 +233,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BalanceBoxBreaker_8C_source.html#l00072">SAMRAI::mesh::BalanceBoxBreaker::breakOffLoad()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceBoxBreaker_8C_source.html#l00072">SAMRAI::mesh::BalanceBoxBreaker::breakOffLoad()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
 
 </div>
 </div>
@@ -246,7 +252,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>.</p>
 
 </div>
 </div>
@@ -267,7 +273,7 @@
 
 <p>References <a class="el" href="IntVector_8h_source.html#l01118">SAMRAI::hier::IntVector::getDim()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l01606">SAMRAI::mesh::BoxTransitSet::getFromMessageStream()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l01729">SAMRAI::mesh::BoxTransitSet::getFromMessageStream()</a>.</p>
 
 </div>
 </div>
@@ -303,7 +309,116 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00758">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01872">SAMRAI::mesh::BalanceUtilities::compareLoads()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l00128">SAMRAI::mesh::VoucherTransitLoad::insertAll()</a>.</p>
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00805">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01953">SAMRAI::mesh::BalanceUtilities::compareLoads()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l00128">SAMRAI::mesh::VoucherTransitLoad::insertAll()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abd78a86c35b72a1b75ff1aa3f6db958a"></a><!-- doxytag: member="SAMRAI::mesh::PartitioningParams::usingVouchers" ref="abd78a86c35b72a1b75ff1aa3f6db958a" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool&amp; SAMRAI::mesh::PartitioningParams::usingVouchers </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac113f1528a67e07e6271f17cde90ad82"></a><!-- doxytag: member="SAMRAI::mesh::PartitioningParams::setUsingVouchers" ref="ac113f1528a67e07e6271f17cde90ad82" args="(bool using_vouchers)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::PartitioningParams::setUsingVouchers </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>using_vouchers</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abf0e535fedf1bb530ce458ca58ca24f6"></a><!-- doxytag: member="SAMRAI::mesh::PartitioningParams::getWorkloadDataId" ref="abf0e535fedf1bb530ce458ca58ca24f6" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int&amp; SAMRAI::mesh::PartitioningParams::getWorkloadDataId </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6d22c9fbad424b98a0f6341ef9ab5329"></a><!-- doxytag: member="SAMRAI::mesh::PartitioningParams::setWorkloadDataId" ref="a6d22c9fbad424b98a0f6341ef9ab5329" args="(int work_data_id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::PartitioningParams::setWorkloadDataId </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>work_data_id</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a97cab81813fcdf45e8fbec17609c7a67"></a><!-- doxytag: member="SAMRAI::mesh::PartitioningParams::getWorkloadPatchLevel" ref="a97cab81813fcdf45e8fbec17609c7a67" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&amp; SAMRAI::mesh::PartitioningParams::getWorkloadPatchLevel </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7ff897496a5a660869f3a15e7249b5f1"></a><!-- doxytag: member="SAMRAI::mesh::PartitioningParams::setWorkloadPatchLevel" ref="a7ff897496a5a660869f3a15e7249b5f1" args="(boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::PartitioningParams::setWorkloadPatchLevel </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>level</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -340,7 +455,7 @@
 <li>source/SAMRAI/mesh/<a class="el" href="PartitioningParams_8C.html">PartitioningParams.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 5 Jun 2015 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jan 2016 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -82,6 +82,9 @@ Inheritance diagram for SAMRAI::mesh::BoxTransitSet:</div>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a3d6e3d112422c0eec198af61e3aebce9">LoadType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a2a7bd7e398e6d4a2dc1b5cd067f846d3">getSumLoad</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a72ba240597139f5dd3f8514ab6d277f4">insertAll</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;box_container)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a47417e0dda4275b0c62f73d95829fb44">insertAll</a> (<a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html">TransitLoad</a> &amp;other)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#ad4258269dbb01222ff5f26eb64fe5e39">insertAllWithExistingLoads</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;box_container)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a68779f9ba4e8c10de8e3b83824615e30">setWorkload</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;patch_level, const int work_data_id)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set workloads in the members of this <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html" title="Implementation of TransitLoad, representing the load with a set of boxes, each of...">BoxTransitSet</a>.  <a href="#a68779f9ba4e8c10de8e3b83824615e30"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#aeaae1e7f61b90714816f06ac6dbab8eb">getNumberOfItems</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#aac4e247b706192cc6dca1b76471dbaa1">getNumberOfOriginatingProcesses</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#acb0e36ce5c3722fb9d256557924e468e">putToMessageStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;msg) const </td></tr>
@@ -224,9 +227,9 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="BalanceBoxBreaker_8h_source.html#l00089">SAMRAI::mesh::BalanceBoxBreaker::setPrintBreakSteps()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01536">setTimerPrefix()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BalanceBoxBreaker_8h_source.html#l00096">SAMRAI::mesh::BalanceBoxBreaker::setPrintBreakSteps()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01659">setTimerPrefix()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00114">clone()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00118">clone()</a>.</p>
 
 </div>
 </div>
@@ -255,7 +258,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="BalanceBoxBreaker_8h_source.html#l00089">SAMRAI::mesh::BalanceBoxBreaker::setPrintBreakSteps()</a>.</p>
+<p>References <a class="el" href="BalanceBoxBreaker_8h_source.html#l00096">SAMRAI::mesh::BalanceBoxBreaker::setPrintBreakSteps()</a>.</p>
 
 </div>
 </div>
@@ -320,7 +323,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a647168789630076733b4d027d3584484">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00564">adjustLoad()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l01626">recursivePrint()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00629">adjustLoad()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l01749">recursivePrint()</a>.</p>
 
 </div>
 </div>
@@ -343,7 +346,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a87e2b7cd08578de755826c08d9154c0e">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00706">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00717">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00120">SAMRAI::mesh::BoxInTransit::getLoad()</a>, <a class="el" href="BoxContainer_8h_source.html#l00663">SAMRAI::hier::BoxContainer::size()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00706">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00717">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00129">SAMRAI::mesh::BoxInTransit::getLoad()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00144">SAMRAI::mesh::BoxInTransit::getSize()</a>, <a class="el" href="BoxContainer_8h_source.html#l00663">SAMRAI::hier::BoxContainer::size()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -362,7 +365,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
       </table>
 </div>
 <div class="memdoc">
-<p>Insert all boxes from the given TransitSet. Changes to other as an implementation side-effect is allowed. This and other are guaranteed to be the same concrete type.<dl><dt><b>Parameters:</b></dt><dd>
+<p>Insert all boxes from the given <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a>. Changes to other as an implementation side-effect is allowed. This and other are guaranteed to be the same concrete type.<dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>[in] Other <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a> container whose implementation matches this one. </td></tr>
   </table>
@@ -370,7 +373,71 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </dl>
  </p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00339">size()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00361">size()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad4258269dbb01222ff5f26eb64fe5e39"></a><!-- doxytag: member="SAMRAI::mesh::BoxTransitSet::insertAllWithExistingLoads" ref="ad4258269dbb01222ff5f26eb64fe5e39" args="(const hier::BoxContainer &amp;box_container)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BoxTransitSet::insertAllWithExistingLoads </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box_container</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Insert Boxes from the given container but preserve load values currently held by the <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a>.  </p>
+
+<p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#afeb30f8e4d00fb8f7dbcffcc4cea1436">SAMRAI::mesh::TransitLoad</a>.</p>
+
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00717">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, <a class="el" href="BoxContainer_8h_source.html#l01583">SAMRAI::hier::BoxContainer::find()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00139">SAMRAI::mesh::BoxInTransit::setCornerWeights()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00134">SAMRAI::mesh::BoxInTransit::setLoad()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a68779f9ba4e8c10de8e3b83824615e30"></a><!-- doxytag: member="SAMRAI::mesh::BoxTransitSet::setWorkload" ref="a68779f9ba4e8c10de8e3b83824615e30" args="(const hier::PatchLevel &amp;patch_level, const int work_data_id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BoxTransitSet::setWorkload </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>patch_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>work_data_id</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set workloads in the members of this <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html" title="Implementation of TransitLoad, representing the load with a set of boxes, each of...">BoxTransitSet</a>. </p>
+<p>The <a class="el" href="structSAMRAI_1_1mesh_1_1BoxInTransit.html" title="A Box moving around during load balancing.">BoxInTransit</a> members of this <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html" title="Implementation of TransitLoad, representing the load with a set of boxes, each of...">BoxTransitSet</a> will have their workload values set according to the data on the given patch level associated with the given data id</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_level</em>&nbsp;</td><td>Level with boxes that are the same as those held in this <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html" title="Implementation of TransitLoad, representing the load with a set of boxes, each of...">BoxTransitSet</a> </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>work_data_id</em>&nbsp;</td><td>Data id for the workload data that exists on the patch level </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a45e96b84d4d1767ca031965c1064bdb1">SAMRAI::mesh::TransitLoad</a>.</p>
+
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l00986">SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkloadOnCorners()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00129">SAMRAI::mesh::BoxInTransit::getLoad()</a>, <a class="el" href="PatchLevel_8h_source.html#l00329">SAMRAI::hier::PatchLevel::getPatch()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00139">SAMRAI::mesh::BoxInTransit::setCornerWeights()</a>, and <a class="el" href="BoxInTransit_8h_source.html#l00134">SAMRAI::mesh::BoxInTransit::setLoad()</a>.</p>
 
 </div>
 </div>
@@ -392,7 +459,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a89bbb90a70565df2fa528704ca03b9a3">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00339">size()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00361">size()</a>.</p>
 
 </div>
 </div>
@@ -414,7 +481,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a1e0ede51465599fe446207b37b774886">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00321">begin()</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00324">end()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>.</p>
 
 </div>
 </div>
@@ -437,7 +504,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a22ce0cae81747edcef2e8e5fdb1e2865">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00321">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00324">end()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00135">SAMRAI::mesh::BoxInTransit::putToMessageStream()</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00339">size()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00159">SAMRAI::mesh::BoxInTransit::putToMessageStream()</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00361">size()</a>.</p>
 
 </div>
 </div>
@@ -460,7 +527,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a55a7b39d87f581035b39c8ba2333393c">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="PartitioningParams_8h_source.html#l00067">SAMRAI::mesh::PartitioningParams::getDim()</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00342">insert()</a>.</p>
+<p>References <a class="el" href="PartitioningParams_8h_source.html#l00067">SAMRAI::mesh::PartitioningParams::getDim()</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00364">insert()</a>.</p>
 
 </div>
 </div>
@@ -512,7 +579,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Net load added to this TransitSet. If negative, load decreased. </dd></dl>
  </p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00356">empty()</a>, <a class="el" href="TransitLoad_8h_source.html#l00228">SAMRAI::mesh::TransitLoad::getAllowBoxBreaking()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00047">SAMRAI::mesh::PartitioningParams::getMinBoxSize()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00043">SAMRAI::mesh::PartitioningParams::getMinLoad()</a>, <a class="el" href="IntVector_8h_source.html#l01076">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00072">getSumLoad()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00339">size()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00381">empty()</a>, <a class="el" href="TransitLoad_8h_source.html#l00247">SAMRAI::mesh::TransitLoad::getAllowBoxBreaking()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00047">SAMRAI::mesh::PartitioningParams::getMinBoxSize()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00043">SAMRAI::mesh::PartitioningParams::getMinLoad()</a>, <a class="el" href="IntVector_8h_source.html#l01076">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00072">getSumLoad()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00361">size()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -565,9 +632,9 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ae64bded64f836423f2f1f377d318b5dc">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxLevel_8C_source.html#l01376">SAMRAI::hier::BoxLevel::getLastLocalId()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00487">putInBoxLevel()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00460">reassignOwnership()</a>.</p>
+<p>References <a class="el" href="BoxLevel_8C_source.html#l01376">SAMRAI::hier::BoxLevel::getLastLocalId()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00552">putInBoxLevel()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00525">reassignOwnership()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00187">assignToLocalAndPopulateMaps()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00252">assignToLocalAndPopulateMaps()</a>.</p>
 
 </div>
 </div>
@@ -628,7 +695,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ac1fb9621253eabd688c014bd03b85dcb">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxTransitSet_8C_source.html#l00217">assignToLocal()</a>, <a class="el" href="Connector_8h_source.html#l00753">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, and <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8C_source.html#l00282">assignToLocal()</a>, <a class="el" href="Connector_8h_source.html#l00753">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, and <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>.</p>
 
 </div>
 </div>
@@ -657,9 +724,9 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00321">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00324">end()</a>, and <a class="el" href="SequentialLocalIdGenerator_8h_source.html#l00065">SAMRAI::hier::SequentialLocalIdGenerator::nextValue()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, and <a class="el" href="SequentialLocalIdGenerator_8h_source.html#l00065">SAMRAI::hier::SequentialLocalIdGenerator::nextValue()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00217">assignToLocal()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00282">assignToLocal()</a>.</p>
 
 </div>
 </div>
@@ -681,9 +748,9 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Put local Boxes into a BoxLevel. </p>
 
-<p>References <a class="el" href="BoxLevel_8C_source.html#l01045">SAMRAI::hier::BoxLevel::addBox()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00321">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00324">end()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxLevel_8C_source.html#l01045">SAMRAI::hier::BoxLevel::addBox()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00217">assignToLocal()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00282">assignToLocal()</a>.</p>
 
 </div>
 </div>
@@ -715,7 +782,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 <p>Generate unbalanced&lt;==&gt;balanced edges incident from local boxes. </p>
 <p>This method does no communication. Semilocal edges not incident from remote Boxes are not communicated. </p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00321">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00324">end()</a>, <a class="el" href="Connector_8h_source.html#l00753">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00100">SAMRAI::mesh::BoxInTransit::getBox()</a>, <a class="el" href="Box_8h_source.html#l00315">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00110">SAMRAI::mesh::BoxInTransit::getOrigBox()</a>, <a class="el" href="Box_8h_source.html#l00358">SAMRAI::hier::Box::getOwnerRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00561">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, and <a class="el" href="BoxInTransit_8h_source.html#l00130">SAMRAI::mesh::BoxInTransit::isOriginal()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, <a class="el" href="Connector_8h_source.html#l00753">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00109">SAMRAI::mesh::BoxInTransit::getBox()</a>, <a class="el" href="Box_8h_source.html#l00315">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="BoxInTransit_8h_source.html#l00119">SAMRAI::mesh::BoxInTransit::getOrigBox()</a>, <a class="el" href="Box_8h_source.html#l00358">SAMRAI::hier::Box::getOwnerRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00561">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, and <a class="el" href="BoxInTransit_8h_source.html#l00154">SAMRAI::mesh::BoxInTransit::isOriginal()</a>.</p>
 
 </div>
 </div>
@@ -740,7 +807,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a982ccd9d8ddc95eaa2ae00b75e0a86e6">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00051">BoxTransitSet()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l00956">SAMRAI::mesh::VoucherTransitLoad::setTimerPrefix()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00051">BoxTransitSet()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l01013">SAMRAI::mesh::VoucherTransitLoad::setTimerPrefix()</a>.</p>
 
 </div>
 </div>
@@ -826,7 +893,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#af9a6e7b0b1b5c43a80440c88f3d2ab1a">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00321">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00324">end()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00072">getSumLoad()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00339">size()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8h_source.html#l00343">begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00346">end()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00072">getSumLoad()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, and <a class="el" href="BoxTransitSet_8h_source.html#l00361">size()</a>.</p>
 
 </div>
 </div>
@@ -884,7 +951,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00508">generateLocalBasedMapEdges()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00165">getNumberOfOriginatingProcesses()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00487">putInBoxLevel()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01592">putToMessageStream()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00460">reassignOwnership()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l01626">recursivePrint()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00573">generateLocalBasedMapEdges()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00230">getNumberOfOriginatingProcesses()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00162">insertAllWithExistingLoads()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00552">putInBoxLevel()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01715">putToMessageStream()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00525">reassignOwnership()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01749">recursivePrint()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00186">setWorkload()</a>.</p>
 
 </div>
 </div>
@@ -903,7 +970,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00508">generateLocalBasedMapEdges()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00165">getNumberOfOriginatingProcesses()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00487">putInBoxLevel()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01592">putToMessageStream()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00460">reassignOwnership()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l01626">recursivePrint()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00573">generateLocalBasedMapEdges()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00230">getNumberOfOriginatingProcesses()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00162">insertAllWithExistingLoads()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00552">putInBoxLevel()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01715">putToMessageStream()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00525">reassignOwnership()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01749">recursivePrint()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l00186">setWorkload()</a>.</p>
 
 </div>
 </div>
@@ -990,7 +1057,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00564">adjustLoad()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00156">getNumberOfItems()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00141">insertAll()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01592">putToMessageStream()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l01626">recursivePrint()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00629">adjustLoad()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00221">getNumberOfItems()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l00146">insertAll()</a>, <a class="el" href="BoxTransitSet_8C_source.html#l01715">putToMessageStream()</a>, and <a class="el" href="BoxTransitSet_8C_source.html#l01749">recursivePrint()</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1077,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l01606">getFromMessageStream()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l01729">getFromMessageStream()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l00143">SAMRAI::mesh::VoucherTransitLoad::setWorkload()</a>.</p>
 
 </div>
 </div>
@@ -1069,7 +1136,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ac6d4cc39344a57de1f7503eda09436e4">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00564">adjustLoad()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00629">adjustLoad()</a>.</p>
 
 </div>
 </div>
@@ -1091,6 +1158,8 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 <p>Empty the container. </p>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a58ad7825b4f175f60b22265c9f0e6dca">SAMRAI::mesh::TransitLoad</a>.</p>
+
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00143">SAMRAI::mesh::VoucherTransitLoad::setWorkload()</a>.</p>
 
 </div>
 </div>
@@ -1153,7 +1222,7 @@ BoxInTransitMoreLoad &gt;<br class="typebreak"/>
 <li>source/SAMRAI/mesh/<a class="el" href="BoxTransitSet_8C.html">BoxTransitSet.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 5 Jun 2015 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jan 2016 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

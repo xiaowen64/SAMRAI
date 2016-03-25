@@ -227,7 +227,7 @@ Inheritance diagram for SAMRAI::hier::MappingConnectorAlgorithm:</div>
 
 <p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01583">SAMRAI::tbox::SAMRAI_MPI::dupCommunicator()</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l01608">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>.</p>
 
-<p>Referenced by <a class="el" href="GriddingAlgorithm_8C_source.html#l00054">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="TreeLoadBalancer_8C_source.html#l01387">SAMRAI::mesh::TreeLoadBalancer::setSAMRAI_MPI()</a>, and <a class="el" href="CascadePartitioner_8C_source.html#l00569">SAMRAI::mesh::CascadePartitioner::setSAMRAI_MPI()</a>.</p>
+<p>Referenced by <a class="el" href="GriddingAlgorithm_8C_source.html#l00054">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="TreeLoadBalancer_8C_source.html#l01387">SAMRAI::mesh::TreeLoadBalancer::setSAMRAI_MPI()</a>, and <a class="el" href="CascadePartitioner_8C_source.html#l00772">SAMRAI::mesh::CascadePartitioner::setSAMRAI_MPI()</a>.</p>
 
 </div>
 </div>
@@ -330,7 +330,7 @@ anchor_to_mapped.getParallelState() == <a class="el" href="classSAMRAI_1_1hier_1
 
 <p>References <a class="el" href="Connector_8C_source.html#l01604">SAMRAI::hier::Connector::assertTransposeCorrectness()</a>, <a class="el" href="Connector_8C_source.html#l02205">SAMRAI::hier::Connector::checkOverlapCorrectness()</a>, <a class="el" href="Connector_8C_source.html#l01635">SAMRAI::hier::Connector::checkTransposeCorrectness()</a>, <a class="el" href="Connector_8C_source.html#l01152">SAMRAI::hier::Connector::createLocalTranspose()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::DISTRIBUTED</a>, <a class="el" href="Connector_8h_source.html#l01487">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01642">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="Connector_8h_source.html#l00753">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Connector_8h_source.html#l00780">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l00936">SAMRAI::hier::Connector::getParallelState()</a>, <a class="el" href="Connector_8h_source.html#l01147">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00296">SAMRAI::tbox::SAMRAI_MPI::hasNullCommunicator()</a>, <a class="el" href="Connector_8h_source.html#l01136">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00307">SAMRAI::tbox::SAMRAI_MPI::isCongruentWith()</a>, <a class="el" href="Connector_8C_source.html#l01314">SAMRAI::hier::Connector::isTransposeOf()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxLevelConnectorUtils_8C_source.html#l00171">SAMRAI::hier::BoxLevelConnectorUtils::baseNestsInHead()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>, <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02161">SAMRAI::mesh::BalanceUtilities::prebalanceBoxLevel()</a>.</p>
+<p>Referenced by <a class="el" href="BoxLevelConnectorUtils_8C_source.html#l00171">SAMRAI::hier::BoxLevelConnectorUtils::baseNestsInHead()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>, <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l02242">SAMRAI::mesh::BalanceUtilities::prebalanceBoxLevel()</a>.</p>
 
 </div>
 </div>
@@ -372,7 +372,7 @@ anchor_to_mapped.getParallelState() == <a class="el" href="classSAMRAI_1_1hier_1
 <p>Setup names of timers. </p>
 <p>By default, timers are named "hier::MappingConnectorAlgorithm::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html" title="Algorithms for using MappingConnectors representing changes to a BoxLevel.">MappingConnectorAlgorithm</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". </p>
 
-<p>Referenced by <a class="el" href="CascadePartitioner_8C_source.html#l00059">SAMRAI::mesh::CascadePartitioner::CascadePartitioner()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l02056">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l00054">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00056">MappingConnectorAlgorithm()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l02161">SAMRAI::mesh::BalanceUtilities::prebalanceBoxLevel()</a>, <a class="el" href="TileClustering_8C_source.html#l00037">SAMRAI::mesh::TileClustering::TileClustering()</a>, and <a class="el" href="TreeLoadBalancer_8C_source.html#l00060">SAMRAI::mesh::TreeLoadBalancer::TreeLoadBalancer()</a>.</p>
+<p>Referenced by <a class="el" href="CascadePartitioner_8C_source.html#l00062">SAMRAI::mesh::CascadePartitioner::CascadePartitioner()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l02137">SAMRAI::mesh::BalanceUtilities::constrainMaxBoxSizes()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l00054">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00056">MappingConnectorAlgorithm()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l02242">SAMRAI::mesh::BalanceUtilities::prebalanceBoxLevel()</a>, <a class="el" href="TileClustering_8C_source.html#l00037">SAMRAI::mesh::TileClustering::TileClustering()</a>, and <a class="el" href="TreeLoadBalancer_8C_source.html#l00060">SAMRAI::mesh::TreeLoadBalancer::TreeLoadBalancer()</a>.</p>
 
 </div>
 </div>
@@ -381,7 +381,7 @@ anchor_to_mapped.getParallelState() == <a class="el" href="classSAMRAI_1_1hier_1
 <li>source/SAMRAI/hier/<a class="el" href="MappingConnectorAlgorithm_8C.html">MappingConnectorAlgorithm.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 5 Jun 2015 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jan 2016 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -70,6 +70,8 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#aeaeff2f070f084dcd9d9ec0ec383592d">LoadType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#a3456a0440ca485a0115f9954f040f657">getSumLoad</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#aaea9b78378d24ef8890c66fc32cd4683">insertAll</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;box_container)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#af10fc0186f3f0928a3a1872919d43b95">insertAll</a> (<a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html">TransitLoad</a> &amp;other)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#ad534d6bfd57f7196eee1a4e05bfbf31d">insertAllWithExistingLoads</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;box_container)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#a2653bddc9d4078199cfd094063bcab8c">setWorkload</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;patch_level, const int work_data_id)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#ac9bb6bc830e50bbe214cacbf5d1bf7cc">getNumberOfItems</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#a7cfbdb8a01353a13c601e41b109e5f9c">getNumberOfOriginatingProcesses</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#ae60edef759c6dca92a9e8f4ac37f9092">putToMessageStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;msg) const </td></tr>
@@ -113,7 +115,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="VoucherTransitLoad_8C_source.html#l00956">setTimerPrefix()</a>.</p>
+<p>References <a class="el" href="VoucherTransitLoad_8C_source.html#l01013">setTimerPrefix()</a>.</p>
 
 <p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00107">clone()</a>.</p>
 
@@ -207,7 +209,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a647168789630076733b4d027d3584484">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00758">adjustLoad()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l00997">recursivePrint()</a>.</p>
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00805">adjustLoad()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l01054">recursivePrint()</a>.</p>
 
 </div>
 </div>
@@ -232,6 +234,8 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 
 <p>References <a class="el" href="BoxContainer_8h_source.html#l00706">SAMRAI::hier::BoxContainer::begin()</a>, and <a class="el" href="BoxContainer_8h_source.html#l00717">SAMRAI::hier::BoxContainer::end()</a>.</p>
 
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8h_source.html#l00089">insertAllWithExistingLoads()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="af10fc0186f3f0928a3a1872919d43b95"></a><!-- doxytag: member="SAMRAI::mesh::VoucherTransitLoad::insertAll" ref="af10fc0186f3f0928a3a1872919d43b95" args="(TransitLoad &amp;other)" -->
@@ -249,7 +253,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
       </table>
 </div>
 <div class="memdoc">
-<p>Insert all boxes from the given TransitSet. Changes to other as an implementation side-effect is allowed. This and other are guaranteed to be the same concrete type.<dl><dt><b>Parameters:</b></dt><dd>
+<p>Insert all boxes from the given <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a>. Changes to other as an implementation side-effect is allowed. This and other are guaranteed to be the same concrete type.<dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>[in] Other <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a> container whose implementation matches this one. </td></tr>
   </table>
@@ -258,6 +262,68 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
  </p>
 
 <p>References <a class="el" href="PartitioningParams_8h_source.html#l00075">SAMRAI::mesh::PartitioningParams::getLoadComparisonTol()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad534d6bfd57f7196eee1a4e05bfbf31d"></a><!-- doxytag: member="SAMRAI::mesh::VoucherTransitLoad::insertAllWithExistingLoads" ref="ad534d6bfd57f7196eee1a4e05bfbf31d" args="(const hier::BoxContainer &amp;box_container)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::VoucherTransitLoad::insertAllWithExistingLoads </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box_container</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p> </p>
+
+<p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#afeb30f8e4d00fb8f7dbcffcc4cea1436">SAMRAI::mesh::TransitLoad</a>.</p>
+
+<p>References <a class="el" href="VoucherTransitLoad_8C_source.html#l00117">insertAll()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2653bddc9d4078199cfd094063bcab8c"></a><!-- doxytag: member="SAMRAI::mesh::VoucherTransitLoad::setWorkload" ref="a2653bddc9d4078199cfd094063bcab8c" args="(const hier::PatchLevel &amp;patch_level, const int work_data_id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::VoucherTransitLoad::setWorkload </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>patch_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>work_data_id</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Set Workload values in the the <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a> object. <dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>patch_level</em>&nbsp;</td><td>Level holding workload data </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>work_data_id</em>&nbsp;</td><td>Patch data id for workload data </td></tr>
+  </table>
+  </dd>
+</dl>
+ </p>
+
+<p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a45e96b84d4d1767ca031965c1064bdb1">SAMRAI::mesh::TransitLoad</a>.</p>
+
+<p>References <a class="el" href="PatchLevel_8h_source.html#l01259">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00384">SAMRAI::mesh::BoxTransitSet::clear()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l00986">SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkloadOnCorners()</a>, <a class="el" href="PatchLevel_8h_source.html#l01269">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="TransitLoad_8h_source.html#l00247">SAMRAI::mesh::TransitLoad::getAllowBoxBreaking()</a>, <a class="el" href="BoxId_8h_source.html#l00127">SAMRAI::hier::BoxId::getOwnerRank()</a>, <a class="el" href="TransitLoad_8h_source.html#l00264">SAMRAI::mesh::TransitLoad::getThresholdWidth()</a>, <a class="el" href="BoxTransitSet_8h_source.html#l00364">SAMRAI::mesh::BoxTransitSet::insert()</a>, <a class="el" href="TransitLoad_8h_source.html#l00242">SAMRAI::mesh::TransitLoad::setAllowBoxBreaking()</a>, and <a class="el" href="TransitLoad_8h_source.html#l00259">SAMRAI::mesh::TransitLoad::setThresholdWidth()</a>.</p>
 
 </div>
 </div>
@@ -391,7 +457,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Net load added to this TransitSet. If negative, load decreased. </dd></dl>
  </p>
 
-<p>References <a class="el" href="TransitLoad_8h_source.html#l00108">SAMRAI::mesh::TransitLoad::empty()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00075">SAMRAI::mesh::PartitioningParams::getLoadComparisonTol()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00047">SAMRAI::mesh::PartitioningParams::getMinBoxSize()</a>, <a class="el" href="IntVector_8h_source.html#l01076">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a647168789630076733b4d027d3584484">SAMRAI::mesh::TransitLoad::getSumLoad()</a>, <a class="el" href="VoucherTransitLoad_8h_source.html#l00073">getSumLoad()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="TransitLoad_8h_source.html#l00127">SAMRAI::mesh::TransitLoad::empty()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00075">SAMRAI::mesh::PartitioningParams::getLoadComparisonTol()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00047">SAMRAI::mesh::PartitioningParams::getMinBoxSize()</a>, <a class="el" href="IntVector_8h_source.html#l01076">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a647168789630076733b4d027d3584484">SAMRAI::mesh::TransitLoad::getSumLoad()</a>, <a class="el" href="VoucherTransitLoad_8h_source.html#l00073">getSumLoad()</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -445,7 +511,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ae64bded64f836423f2f1f377d318b5dc">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="VoucherTransitLoad_8C_source.html#l00214">assignToLocalAndPopulateMaps()</a>.</p>
+<p>References <a class="el" href="VoucherTransitLoad_8C_source.html#l00252">assignToLocalAndPopulateMaps()</a>.</p>
 
 </div>
 </div>
@@ -508,7 +574,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 
 <p>References <a class="el" href="Connector_8h_source.html#l00753">SAMRAI::hier::Connector::getBase()</a>.</p>
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00191">assignToLocal()</a>.</p>
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00229">assignToLocal()</a>.</p>
 
 </div>
 </div>
@@ -533,7 +599,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a982ccd9d8ddc95eaa2ae00b75e0a86e6">SAMRAI::mesh::TransitLoad</a>.</p>
 
-<p>References <a class="el" href="BoxTransitSet_8C_source.html#l01536">SAMRAI::mesh::BoxTransitSet::setTimerPrefix()</a>.</p>
+<p>References <a class="el" href="BoxTransitSet_8C_source.html#l01659">SAMRAI::mesh::BoxTransitSet::setTimerPrefix()</a>.</p>
 
 <p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00049">VoucherTransitLoad()</a>.</p>
 
@@ -583,7 +649,7 @@ Inheritance diagram for SAMRAI::mesh::VoucherTransitLoad:</div>
 <li>source/SAMRAI/mesh/<a class="el" href="VoucherTransitLoad_8C.html">VoucherTransitLoad.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 5 Jun 2015 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jan 2016 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
