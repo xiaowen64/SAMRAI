@@ -1190,8 +1190,8 @@ BoxLevelConnectorUtils::addPeriodicImages(
       const Box& level_box = *ni;
       for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
          PeriodicId id(s);
-         const IntVector& try_shift =
-            shift_catalog->shiftNumberToShiftDistance(id);
+         const IntVector try_shift =
+            shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
          Box box = level_box;
          box.shift(try_shift);
          box.grow(box_level_growth);
@@ -1305,8 +1305,8 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          bool images_added(false);
          for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
             PeriodicId id(s);
-            const IntVector& try_shift =
-               shift_catalog->shiftNumberToShiftDistance(id);
+            const IntVector try_shift =
+               shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
             Box box = grown_box;
             box.shift(try_shift);
             if (domain_tree.hasOverlap(box)) {

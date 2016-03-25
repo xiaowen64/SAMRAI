@@ -497,11 +497,12 @@ BoxLevel::computeLocalRedundantData()
    d_local_number_of_boxes = 0;
    d_local_number_of_cells = 0;
 
-   if (int(d_local_bounding_box.size()) != nblocks) {
-      d_local_bounding_box.resize(nblocks, Box(d_grid_geometry->getDim()));
-      d_local_min_box_size.resize(nblocks, max_vec);
-      d_local_max_box_size.resize(nblocks, zero_vec);
-   }
+   d_local_bounding_box.clear();
+   d_local_min_box_size.clear();
+   d_local_max_box_size.clear();
+   d_local_bounding_box.resize(nblocks, Box(d_grid_geometry->getDim()));
+   d_local_min_box_size.resize(nblocks, max_vec);
+   d_local_max_box_size.resize(nblocks, zero_vec);
 
    for (RealBoxConstIterator ni(d_boxes.realBegin());
         ni != d_boxes.realEnd(); ++ni) {

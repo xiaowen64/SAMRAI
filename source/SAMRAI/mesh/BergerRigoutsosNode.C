@@ -762,6 +762,7 @@ TO_BE_LAUNCHED:
             computeCommunicationTreeDegree(static_cast<int>(d_group.size())),
             &d_common->comm_stage,
             this);
+      d_comm_group->setUseBlockingSendToParent(false);
       d_comm_group->setGroupAndRootRank(d_common->mpi_object,
          &d_group[0], static_cast<int>(d_group.size()), d_owner);
       if (d_parent == 0) {
@@ -1032,6 +1033,7 @@ RUN_CHILDREN:
                      static_cast<int>(d_group.size())),
                   &d_common->comm_stage,
                   this);
+            d_comm_group->setUseBlockingSendToParent(false);
             d_comm_group->setGroupAndRootIndex(d_common->mpi_object,
                &dropouts[0], static_cast<int>(dropouts.size()), 0);
             d_common->t_local_tasks->stop();

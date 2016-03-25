@@ -831,12 +831,6 @@ public:
 
    //! @name Methods to modify all Boxes.
    /*
-    ***************************************************************************
-    * TODO: This method puts finer in an inconsistent state by not
-    * updating the attributes depenent on what has been changed.  This
-    * method seems to be an initializer, but it is not clear from the
-    * name or documentation if that is so.  The same goes for coarsenBoxes.
-    ***************************************************************************
     */
    /*!
     * @brief Refine all Boxes of this BoxLevel by ratio placing result into
@@ -852,9 +846,20 @@ public:
       const IntVector& ratio,
       const IntVector& final_ratio) const
    {
+      finer.detachMyHandle();
+      if ( finer.d_globalized_version ) {
+         delete finer.d_globalized_version;
+         finer.d_globalized_version = 0;
+      }
       finer.d_boxes = d_boxes;
       finer.d_boxes.refine(ratio);
+      finer.d_parallel_state = d_parallel_state;
+      if ( finer.d_parallel_state == GLOBALIZED ) {
+         finer.d_global_boxes = d_global_boxes;
+         finer.d_global_boxes.refine(ratio);
+      }
       finer.d_ratio = final_ratio;
+      finer.computeLocalRedundantData();
       return;
    }
 
@@ -872,9 +877,20 @@ public:
       const IntVector& ratio,
       const IntVector& final_ratio) const
    {
+      coarser.detachMyHandle();
+      if ( coarser.d_globalized_version ) {
+         delete coarser.d_globalized_version;
+         coarser.d_globalized_version = 0;
+      }
       coarser.d_boxes = d_boxes;
       coarser.d_boxes.coarsen(ratio);
+      coarser.d_parallel_state = d_parallel_state;
+      if ( coarser.d_parallel_state == GLOBALIZED ) {
+         coarser.d_global_boxes = d_global_boxes;
+         coarser.d_global_boxes.coarsen(ratio);
+      }
       coarser.d_ratio = final_ratio;
+      coarser.computeLocalRedundantData();
       return;
    }
 
@@ -1616,9 +1632,10 @@ private:
     * be able to access this BoxLevel by the handle.
     */
    void
-   detachMyHandle() const
+   detachMyHandle()
    {
       if (d_handle) {
+         clearPersistentOverlapConnectors();
          d_handle->detachMyBoxLevel();
          d_handle.reset();
       }

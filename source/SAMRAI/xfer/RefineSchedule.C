@@ -175,11 +175,7 @@ RefineSchedule::RefineSchedule(
     */
    initializeDomainAndGhostInformation();
 
-   hier::IntVector min_connector_width = d_max_scratch_gcw;
-   min_connector_width.max(d_boundary_fill_ghost_width);
-   if ( d_data_on_patch_border_flag ) {
-      min_connector_width += 1;
-   }
+   hier::IntVector min_connector_width = getMinConnectorWidth();
 
    const hier::Connector& dst_to_src =
       d_dst_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
@@ -368,8 +364,7 @@ RefineSchedule::RefineSchedule(
     */
    initializeDomainAndGhostInformation();
 
-   hier::IntVector min_connector_width = d_max_scratch_gcw;
-   min_connector_width.max(d_boundary_fill_ghost_width);
+   hier::IntVector min_connector_width = getMinConnectorWidth();
 
    if ( d_src_level &&
         d_src_level->getRatioToLevelZero() != d_dst_level->getRatioToLevelZero() ) {
@@ -397,12 +392,6 @@ RefineSchedule::RefineSchedule(
       }
    }
 
-   hier::IntVector min_connector_width_for_recursion(min_connector_width);
-
-   if ( d_data_on_patch_border_flag ) {
-      min_connector_width += 1;
-   }
-
    if ( next_coarser_ln >= 0 ) {
       RefineScheduleConnectorWidthRequestor rscwr;
       if ( d_dst_level->getRatioToLevelZero() != hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() ) {
@@ -414,7 +403,7 @@ RefineSchedule::RefineSchedule(
       }
       rscwr.computeRequiredFineConnectorWidthsForRecursiveRefinement(
          d_fine_connector_widths,
-         min_connector_width_for_recursion,
+         min_connector_width,
          d_max_stencil_width,
          *hierarchy,
          next_coarser_ln+1);
@@ -769,6 +758,9 @@ RefineSchedule::finishScheduleConstruction(
 
    d_coarse_priority_level_schedule.reset(new tbox::Schedule());
    d_fine_priority_level_schedule.reset(new tbox::Schedule());
+
+   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
 
    /*
     * Generate the schedule for filling the boxes in dst_to_fill.
@@ -3607,6 +3599,52 @@ RefineSchedule::getDataOnPatchBorderFlag() const
    }
 
    return rval;
+}
+
+/*
+ **************************************************************************
+ * Calculate the maximum ghost cell width of all destination patch data
+ * components for the purpose of determining overlap criterion.
+ *
+ * When data lives on the border, increment width to create an overlap
+ * in the cell index space.
+ **************************************************************************
+ */
+
+hier::IntVector
+RefineSchedule::getMinConnectorWidth() const
+{
+   const tbox::Dimension& dim(d_dst_level->getDim());
+
+   hier::IntVector width(dim, 0);
+   boost::shared_ptr<hier::PatchDescriptor> pd(
+      d_dst_level->getPatchDescriptor());
+
+   for (int iri = 0; iri < d_number_refine_items; iri++) {
+
+      const int dst_id = d_refine_items[iri]->d_dst;
+      const hier::PatchDataFactory &dst_pdf = *pd->getPatchDataFactory(dst_id);
+
+      if ( dst_pdf.dataLivesOnPatchBorder() ) {
+         width.max(dst_pdf.getGhostCellWidth() + 1);
+      }
+      else {
+         width.max(dst_pdf.getGhostCellWidth());
+      }
+
+      const int scratch_id = d_refine_items[iri]->d_scratch;
+      const hier::PatchDataFactory &scratch_pdf = *pd->getPatchDataFactory(scratch_id);
+
+      if ( scratch_pdf.dataLivesOnPatchBorder() ) {
+         width.max(scratch_pdf.getGhostCellWidth() + 1);
+      }
+      else {
+         width.max(scratch_pdf.getGhostCellWidth());
+      }
+
+   }
+
+   return width;
 }
 
 /*

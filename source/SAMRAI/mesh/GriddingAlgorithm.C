@@ -404,8 +404,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    t_load_balance_setup->start();
 
-   // hier::IntVector patch_cut_factor(d_tag_init_strategy-> getErrorCoarsenRatio());
-   const hier::IntVector patch_cut_factor(dim, 1);
+   hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
 
    /*
     * FIXME: The code for generating the coarsest level's boxes is not
@@ -1654,10 +1653,6 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          d_hierarchy->getRatioToCoarserLevel(new_ln + 1)
          * d_hierarchy->getProperNestingBuffer(tag_ln + 1);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-      oca.assertOverlapCorrectness(tag_to_finer, false, true, true);
-      oca.assertOverlapCorrectness(finer_to_tag, false, true, true);
-#endif
       TBOX_ASSERT(
          tag_to_finer.getConnectorWidth()
          * d_hierarchy->getRatioToCoarserLevel(tag_ln + 1)
@@ -1671,11 +1666,6 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          tag_to_finer,
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          d_hierarchy->getConnector(tag_ln, tag_ln));
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-      oca.assertOverlapCorrectness(tag_to_finer, false, true, false);
-      oca.assertOverlapCorrectness(finer_to_tag, false, true, false);
-#endif
 
       fillTagsFromBoxLevel(
          d_true_tag,
@@ -2649,7 +2639,7 @@ GriddingAlgorithm::readLevelBoxes(
       const hier::IntVector largest_patch_in_tag_space =
          largest_patch / ratio;
 
-      hier::IntVector patch_cut_factor(dim, 1);
+      hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
 
       t_load_balance0->start();
       d_load_balancer0->loadBalanceBoxLevel(
@@ -2679,27 +2669,14 @@ GriddingAlgorithm::readLevelBoxes(
             true);
       }
 
+      const hier::BoxLevelConnectorUtils dlbg_edge_utils;
+      dlbg_edge_utils.addPeriodicImages(
+         new_box_level,
+         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
+         new_to_coarser.getConnectorWidth() );
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
 
-      /*
-       * Periodic relationships exist in new_to_coarser, but are not
-       * complete because new doesn't have any periodic images yet.
-       * Remove these relationships to make new<==>coarser proper
-       * transposes.
-       */
-      new_to_coarser.removePeriodicRelationships();
-
-      const hier::Connector& coarser_to_coarser =
-         d_hierarchy->getConnector(tag_ln, tag_ln);
-      const hier::BoxLevelConnectorUtils dlbg_edge_utils;
-      dlbg_edge_utils.addPeriodicImagesAndRelationships(
-         new_box_level,
-         new_to_coarser,
-         coarser_to_new,
-         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
-         coarser_to_coarser);
-      new_box_level.finalize();
    }
 }
 

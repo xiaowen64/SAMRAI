@@ -1234,7 +1234,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
          BoxContainer referenced_new_nabrs; // Referenced neighbors in new.
 
          /*
-          * Find locally visible new neighbors for all base
+          * Find locally visible new neighbors for all anchor
           * Boxes owned by owner_rank.
           */
          privateModify_findOverlapsForOneProcess(
@@ -1249,7 +1249,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
             old_to_anchor,
             old_to_new,
             anchor_eto_old,
-            old.getRefinementRatio());
+            old_to_new.getHead().getRefinementRatio());
 
          /*
           * Find locally visible anchor neighbors for all new
@@ -1267,7 +1267,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
             anchor_to_new,
             old_to_anchor,
             new_eto_old,
-            old_to_new.getHead().getRefinementRatio());
+            old_to_anchor.getHead().getRefinementRatio());
 
          if (curr_owner != rank) {
             /*
@@ -1356,7 +1356,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const Connector& unmapped_connector_transpose,
    const Connector& mapping_connector,
    InvertedNeighborhoodSet& inverted_nbrhd,
-   const IntVector& refinement_ratio) const
+   const IntVector& head_refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
@@ -1405,7 +1405,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                   if (compare_box_block_id != base_box.getBlockId()) {
                      grid_geometry->transformBox(
                         transformed_compare_box,
-                        refinement_ratio,
+                        head_refinement_ratio,
                         new_nabr.getBlockId(),
                         base_box.getBlockId());
                   }

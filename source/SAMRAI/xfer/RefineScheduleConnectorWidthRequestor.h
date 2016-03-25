@@ -92,8 +92,10 @@ public:
     * change the values of the first initial_dst_ln entries (or create
     * them if missing).
     *
-    * @param data_gcw_on_initial_dst_ln Ghost data width to be filled on
-    * the initial destination level.
+    * @param data_gcw_on_initial_dst_ln Ghost data width to be filled
+    * on the initial destination level.  Important: This input value
+    * should include the 1 cell added for data on patch borders, if it
+    * is needed.
     *
     * @param [out] max_stencil_width Max stencil width used by the
     * refinement operators.

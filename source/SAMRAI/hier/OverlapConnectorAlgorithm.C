@@ -2059,6 +2059,13 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  connector.getBase().getGridGeometry()->transformBox(
+                     nabr_box,
+                     connector.getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
@@ -2080,6 +2087,13 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  connector.getBase().getGridGeometry()->transformBox(
+                     nabr_box,
+                     connector.getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
@@ -2100,6 +2114,13 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  connector.getBase().getGridGeometry()->transformBox(
+                     nabr_box,
+                     connector.getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -2163,6 +2184,13 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  connector.getBase().getGridGeometry()->transformBox(
+                     nabr_box,
+                     connector.getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
@@ -2201,6 +2229,13 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  connector.getBase().getGridGeometry()->transformBox(
+                     nabr_box,
+                     connector.getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
@@ -2221,6 +2256,13 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  connector.getBase().getGridGeometry()->transformBox(
+                     nabr_box,
+                     connector.getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
