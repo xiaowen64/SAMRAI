@@ -230,8 +230,10 @@ CascadePartitioner::loadBalanceBoxLevel(
          }
       }
       if (d_print_steps) {
-         tbox::plog << "CascadePartitioner::loadBalanceBoxLevel effective_cut_factor = "
-                    << effective_cut_factor << std::endl;
+         tbox::plog << d_object_name << "::loadBalanceBoxLevel"
+                    << "  effective_cut_factor=" << effective_cut_factor
+                    << "  d_tile_size=" << d_tile_size
+                    << std::endl;
       }
    }
 

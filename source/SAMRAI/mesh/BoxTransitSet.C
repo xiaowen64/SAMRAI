@@ -721,7 +721,19 @@ BoxTransitSet::adjustLoadByBreaking(
 {
    LoadType actual_transfer = 0;
 
+   if (d_print_steps) {
+      tbox::plog << "  Attempting to bring this bin from "
+                 << getSumLoad() << " to " << ideal_load
+                 << " [" << low_load << ',' << high_load
+                 << "] by breaking."
+                 << std::endl;
+   }
+
    if (getSumLoad() > high_load) {
+      if (d_print_steps) {
+         tbox::plog << "  BoxTransitSet::adjustLoadByBreaking reversing direction."
+                    << std::endl;
+      }
       // The logic below does not handle bi-directional transfers, so handle it here.
       actual_transfer = -hold_bin.adjustLoadByBreaking(
             *this,
