@@ -172,6 +172,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">Transformation</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">Transformation</a> represents generalized transformations between coordinate systems or within coordinate systems.  <a href="classSAMRAI_1_1hier_1_1Transformation.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1UncoveredBoxIterator.html">UncoveredBoxIterator</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An iterator over the uncovered Boxes in a hierarhcy.  <a href="classSAMRAI_1_1hier_1_1UncoveredBoxIterator.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a></td></tr>
@@ -212,28 +215,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#8bb707f5fc3860628bc35e33403fba1e">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;patch)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#a138e9f0a250b1688eb3f7ca667993c5">operator&lt;&lt;</a> (std::ostream &amp;co, const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;r)</td></tr>
-
-<tr><td colspan="2"><br><h2>Variables</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#01a02de56774df4f0b4d1bb274991bfe">t_level_constructor</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#b9265dca22ff1527d4aa5c9dafed922f">t_constructor_setup</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#011228d70e8d592a3218d5c3eed0a7cb">t_constructor_phys_domain</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#79a46803153df6e455cab33a772f5716">t_constructor_touch_boundaries</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#e7180163195885d623130740e45d1ee8">t_constructor_set_geometry</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#c3ad80f056eb8a0f1ef665405422e98d">t_set_patch_touches</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#161d92c7bf87e87cc540d239d083a78f">t_constructor_compute_shifts</a></td></tr>
 
 </table>
 <hr><h2>Enumeration Type Documentation</h2>
@@ -638,113 +619,7 @@ Action to take when Connectors between BoxLevels are not found.
 
 </div>
 </div><p>
-<hr><h2>Variable Documentation</h2>
-<a class="anchor" name="01a02de56774df4f0b4d1bb274991bfe"></a><!-- doxytag: member="SAMRAI::hier::t_level_constructor" ref="01a02de56774df4f0b4d1bb274991bfe" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#01a02de56774df4f0b4d1bb274991bfe">SAMRAI::hier::t_level_constructor</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="b9265dca22ff1527d4aa5c9dafed922f"></a><!-- doxytag: member="SAMRAI::hier::t_constructor_setup" ref="b9265dca22ff1527d4aa5c9dafed922f" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#b9265dca22ff1527d4aa5c9dafed922f">SAMRAI::hier::t_constructor_setup</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="011228d70e8d592a3218d5c3eed0a7cb"></a><!-- doxytag: member="SAMRAI::hier::t_constructor_phys_domain" ref="011228d70e8d592a3218d5c3eed0a7cb" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#011228d70e8d592a3218d5c3eed0a7cb">SAMRAI::hier::t_constructor_phys_domain</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="79a46803153df6e455cab33a772f5716"></a><!-- doxytag: member="SAMRAI::hier::t_constructor_touch_boundaries" ref="79a46803153df6e455cab33a772f5716" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#79a46803153df6e455cab33a772f5716">SAMRAI::hier::t_constructor_touch_boundaries</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="e7180163195885d623130740e45d1ee8"></a><!-- doxytag: member="SAMRAI::hier::t_constructor_set_geometry" ref="e7180163195885d623130740e45d1ee8" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#e7180163195885d623130740e45d1ee8">SAMRAI::hier::t_constructor_set_geometry</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="c3ad80f056eb8a0f1ef665405422e98d"></a><!-- doxytag: member="SAMRAI::hier::t_set_patch_touches" ref="c3ad80f056eb8a0f1ef665405422e98d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#c3ad80f056eb8a0f1ef665405422e98d">SAMRAI::hier::t_set_patch_touches</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="161d92c7bf87e87cc540d239d083a78f"></a><!-- doxytag: member="SAMRAI::hier::t_constructor_compute_shifts" ref="161d92c7bf87e87cc540d239d083a78f" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1hier.html#161d92c7bf87e87cc540d239d083a78f">SAMRAI::hier::t_constructor_compute_shifts</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

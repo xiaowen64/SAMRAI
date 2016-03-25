@@ -678,7 +678,7 @@ d_materials_names.size() == 0 </dd></dl>
 <p>
 This method registers the names of the species for a material_name with the VisIt data writer. 
 <p>
-Species are subcomponents of a material. For example, a simulation with 4 materials (e.g. "copper", "gold", "liquid" and "gas") may have one of the materials (e.g. "gas") that is composed of multiple species (e.g. "nitrogen" and helium"). Each species is associated with a particular material, so it is necessary that the "registerMaterialNames()" method is called before this method.<p>
+Species are subcomponents of a material. For example, a simulation with 4 materials (e.g. "copper", "gold", "liquid" and "gas") may have one of the materials (e.g. "gas") that is composed of multiple species (e.g. "nitrogen" and "helium"). Each species is associated with a particular material, so it is necessary that the "registerMaterialNames()" method is called before this method.<p>
 For each species name registered, there is an associated species fraction, which must be between 0 and 1.0 on each cell. The sum of the species fractions for all species of a given material must equal 1.0 in every cell in which that material appears. In VisIt, the species fractions for a species can be treated as a scalar field and the usual scalar plot operations applied to the field to show "concentrations". So, in the example described above, the percentage of nitrogen in the gas can be displayed in a pseudocolor plot.<p>
 In order to use species with VisIt, the application class needs to inherit from <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a>, an abstract base class which defines an interface for writing out species related fields. A concrete object of the materials data strategy class is responsible for providing an implementation of the method packSpeciesFractionsIntoDoubleBuffer() to write out the species fractions field for each registered species over a given patch.<p>
 An error results and the program will halt if:<ul>
@@ -832,7 +832,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8h.html">VisItDataWriter.h</a><li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8C.html">VisItDataWriter.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

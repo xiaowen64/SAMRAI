@@ -148,7 +148,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Disable MPI usage and run in sequential mode.  <a href="#c87e77678ffb3084bd6d9d063a497942"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eee87ad1f591a3bb3df7f5d5c902c0ff">usingMPI</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> is using MPI.  <a href="#eee87ad1f591a3bb3df7f5d5c902c0ff"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> is using MPI (configured, compiled and initialized).  <a href="#eee87ad1f591a3bb3df7f5d5c902c0ff"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#65c7ef8be8aa31e3c9d615808edb65b0">init</a> (int *argc, char **argv[])</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize MPI and <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a>.  <a href="#65c7ef8be8aa31e3c9d615808edb65b0"></a><br></td></tr>
@@ -162,9 +162,13 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Shut down <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> and, if appropriate, shut down MPI.  <a href="#5da2fc226c1f5b8635947e33c53376cd"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Static MPI wrappers matching MPI interfaces.</div></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#946a15b40e8cb0d502d32b732a36c9cc">Comm_rank</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a> comm, int *rank)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">MPI wrappers that don't use the internal communicator.  <a href="#946a15b40e8cb0d502d32b732a36c9cc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ec1d84397a02bee13860a500e8abd7d5">Comm_size</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a> comm, int *size)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7b4cb0e1b6bbd0e637a009caa583b140">Comm_compare</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a> comm1, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a> comm2, int *result)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">MPI wrappers that don't use the internal communicator.  <a href="#7b4cb0e1b6bbd0e637a009caa583b140"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#2b4269ef32c19dc4f2017d9d2bd6d1e2">Comm_free</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a> *comm)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#f0c5f4041b2ef31dba988093a84c2493">Finalized</a> (int *flag)</td></tr>
@@ -187,10 +191,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">MPI Wtime (if MPI is enabled) or an alternate time calculation.  <a href="#db0d1bdfc1cad2aa72c0719b351815ed"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ea5ba4acec79c0fd7383094b3f086aa3">commWorld</a> = MPI_COMM_NULL</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b291dde884229c3558596c789100c58e">commWorld</a> = MPI_COMM_WORLD</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">MPI communicator constants.  <a href="#ea5ba4acec79c0fd7383094b3f086aa3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#17192432c38efce37dbc69204691af8e">commNull</a> = MPI_COMM_NULL</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#67e6d6d61130222eed33f37725be9b8c">commNull</a> = MPI_COMM_NULL</td></tr>
 
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAI__MPI_1_1Status.html">Status</a></td></tr>
@@ -341,6 +344,7 @@ Get the primary <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAM
 <p>
 This is SAMRAI's primary communication object set up when <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> is initialized. It is used for basic communications that are not associated with another communication object. Various parts of the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library may create and use (and destroy) communicators that are derived from this object.<p>
 The use of this object outside of the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library should be carefully limited to avoid mixing messages.<p>
+After <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#65c7ef8be8aa31e3c9d615808edb65b0">SAMRAI_MPI::init()</a> and before <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#5da2fc226c1f5b8635947e33c53376cd">SAMRAI_MPI::finalize()</a>, the object returned is useable. Otherwise it is intentionally invalid.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#65c7ef8be8aa31e3c9d615808edb65b0">init()</a> </dd></dl>
 
 </div>
@@ -587,6 +591,68 @@ Inequality comparison operator (compares MPI communicator).
 
 </div>
 </div><p>
+<a class="anchor" name="946a15b40e8cb0d502d32b732a36c9cc"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::Comm_rank" ref="946a15b40e8cb0d502d32b732a36c9cc" args="(Comm comm, int *rank)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SAMRAI::tbox::SAMRAI_MPI::Comm_rank           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a>&nbsp;</td>
+          <td class="paramname"> <em>comm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&nbsp;</td>
+          <td class="paramname"> <em>rank</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+MPI wrappers that don't use the internal communicator. 
+<p>
+The purpose of these wrappers is to provide a single place for compile- and run-time toggling of MPI code. The signatures and return values of these methods are identical to the MPI C bindings. These methods will throw an assertion if they are called when MPI is not enabled.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_mpi_is_initialized </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ec1d84397a02bee13860a500e8abd7d5"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::Comm_size" ref="ec1d84397a02bee13860a500e8abd7d5" args="(Comm comm, int *size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SAMRAI::tbox::SAMRAI_MPI::Comm_size           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">Comm</a>&nbsp;</td>
+          <td class="paramname"> <em>comm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="7b4cb0e1b6bbd0e637a009caa583b140"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::Comm_compare" ref="7b4cb0e1b6bbd0e637a009caa583b140" args="(Comm comm1, Comm comm2, int *result)" -->
 <div class="memitem">
 <div class="memproto">
@@ -619,10 +685,6 @@ Inequality comparison operator (compares MPI communicator).
 <div class="memdoc">
 
 <p>
-MPI wrappers that don't use the internal communicator. 
-<p>
-The purpose of these wrappers is to provide a single place for compile- and run-time toggling of MPI code. The signatures and return values of these methods are identical to the MPI C bindings. These methods will throw an assertion if they are called when MPI is not enabled.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>s_mpi_is_initialized </dd></dl>
 
 </div>
 </div><p>
@@ -2037,7 +2099,7 @@ Disabling MPI must be done before calling <a class="el" href="classSAMRAI_1_1tbo
 <div class="memdoc">
 
 <p>
-Whether <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> is using MPI. 
+Whether <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> is using MPI (configured, compiled and initialized). 
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#c87e77678ffb3084bd6d9d063a497942">disableMPI()</a>. </dd></dl>
 
@@ -2155,29 +2217,27 @@ This method frees the MPI communicator duplicated for <a class="el" href="namesp
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="ea5ba4acec79c0fd7383094b3f086aa3"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::commWorld" ref="ea5ba4acec79c0fd7383094b3f086aa3" args="" -->
+<a class="anchor" name="b291dde884229c3558596c789100c58e"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::commWorld" ref="b291dde884229c3558596c789100c58e" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">SAMRAI_MPI::Comm</a> <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ea5ba4acec79c0fd7383094b3f086aa3">SAMRAI::tbox::SAMRAI_MPI::commWorld</a> = MPI_COMM_NULL<code> [static]</code>          </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">SAMRAI_MPI::Comm</a> <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b291dde884229c3558596c789100c58e">SAMRAI::tbox::SAMRAI_MPI::commWorld</a> = MPI_COMM_WORLD<code> [static]</code>          </td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-MPI communicator constants. 
-<p>
 
 </div>
 </div><p>
-<a class="anchor" name="17192432c38efce37dbc69204691af8e"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::commNull" ref="17192432c38efce37dbc69204691af8e" args="" -->
+<a class="anchor" name="67e6d6d61130222eed33f37725be9b8c"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::commNull" ref="67e6d6d61130222eed33f37725be9b8c" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">SAMRAI_MPI::Comm</a> <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#17192432c38efce37dbc69204691af8e">SAMRAI::tbox::SAMRAI_MPI::commNull</a> = MPI_COMM_NULL<code> [static]</code>          </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#6bb237e4bb9b5d727560a64499eedacd">SAMRAI_MPI::Comm</a> <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#67e6d6d61130222eed33f37725be9b8c">SAMRAI::tbox::SAMRAI_MPI::commNull</a> = MPI_COMM_NULL<code> [static]</code>          </td>
         </tr>
       </table>
 </div>
@@ -2189,7 +2249,7 @@ MPI communicator constants.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="SAMRAI__MPI_8h.html">SAMRAI_MPI.h</a><li>source/SAMRAI/tbox/<a class="el" href="SAMRAI__MPI_8C.html">SAMRAI_MPI.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

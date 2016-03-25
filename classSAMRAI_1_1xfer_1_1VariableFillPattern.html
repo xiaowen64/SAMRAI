@@ -53,9 +53,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This pure virtual method provides an interface to calculate overlaps between the destination and source geometries for a copy operation.  <a href="#a9c4860f44215a59a4044858067bbba2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#a1a9d5e8a974c320f46a62417257a7e5">computeFillBoxesOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fill_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;patch_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;data_box, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &amp;patch_data_factory) const =0</td></tr>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#c69826d57b1e80dac2825b9297394000">computeFillBoxesOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fill_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;node_fill_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;patch_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;data_box, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &amp;patch_data_factory) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This pure virtual method provides an interface for computing overlaps which define the space to be filled by a refinement operation.  <a href="#a1a9d5e8a974c320f46a62417257a7e5"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This pure virtual method provides an interface for computing overlaps which define the space to be filled by a refinement operation.  <a href="#c69826d57b1e80dac2825b9297394000"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#b8e60c226adde9ebfca0bd4a4be6d7b7">getStencilWidth</a> ()=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the maximum ghost width of the stencil defined by the <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> implementation.  <a href="#b8e60c226adde9ebfca0bd4a4be6d7b7"></a><br></td></tr>
@@ -192,7 +192,7 @@ Implementations of this method will restrict the calculated BoxOverlap to a cert
 Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html#2f04284a478ef75ee69ad51f2144a5f3">SAMRAI::xfer::BoxGeometryVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html#7784a4bb5b2c3b1b22adf64e72f44f51">SAMRAI::xfer::PatchInteriorVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerCellNoCornersVariableFillPattern.html#8bf31f808c98e7a2d481d39f0d07a911">SAMRAI::pdat::FirstLayerCellNoCornersVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerCellVariableFillPattern.html#541609e9bfad02478ee8936474a71c31">SAMRAI::pdat::FirstLayerCellVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerEdgeVariableFillPattern.html#58d4e678698e4f96088e4e9b0828a04b">SAMRAI::pdat::FirstLayerEdgeVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerNodeVariableFillPattern.html#ebcda23ab141b06d22ba4f5e7b52091b">SAMRAI::pdat::FirstLayerNodeVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#4d4c8de63da8dea2cfddb393ee44860d">SAMRAI::pdat::FirstLayerSideVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1SecondLayerNodeNoCornersVariableFillPattern.html#078e6e5126bd87a8398136684f72c9e2">SAMRAI::pdat::SecondLayerNodeNoCornersVariableFillPattern</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SecondLayerNodeVariableFillPattern.html#ec852925886bdc2c4585485ea960181c">SAMRAI::pdat::SecondLayerNodeVariableFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="a1a9d5e8a974c320f46a62417257a7e5"></a><!-- doxytag: member="SAMRAI::xfer::VariableFillPattern::computeFillBoxesOverlap" ref="a1a9d5e8a974c320f46a62417257a7e5" args="(const hier::BoxContainer &amp;fill_boxes, const hier::Box &amp;patch_box, const hier::Box &amp;data_box, const hier::PatchDataFactory &amp;patch_data_factory) const =0" -->
+<a class="anchor" name="c69826d57b1e80dac2825b9297394000"></a><!-- doxytag: member="SAMRAI::xfer::VariableFillPattern::computeFillBoxesOverlap" ref="c69826d57b1e80dac2825b9297394000" args="(const hier::BoxContainer &amp;fill_boxes, const hier::BoxContainer &amp;node_fill_boxes, const hier::Box &amp;patch_box, const hier::Box &amp;data_box, const hier::PatchDataFactory &amp;patch_data_factory) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -201,6 +201,12 @@ Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFil
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_boxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>node_fill_boxes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -236,6 +242,7 @@ Implementations of this method compute a BoxOverlap that covers a desired subset
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_boxes</em>&nbsp;</td><td>list representing all of the space on a patch or its ghost region that may be filled by a refine operator (cell-centered represtentation) </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>node_fill_boxes</em>&nbsp;</td><td>node-centered representation of fill_boxes </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_box</em>&nbsp;</td><td>box representing the patch where a refine operator will fill data. (cell-centered representation) </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_box</em>&nbsp;</td><td>box representing the full extent of the region covered by a patch data object, including all ghosts (cell-centered representation) </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_data_factory</em>&nbsp;</td><td>patch data factory for the data that is to be filled</td></tr>
@@ -244,7 +251,7 @@ Implementations of this method compute a BoxOverlap that covers a desired subset
 <dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to the calculated overlap object </dd></dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html#73c13593810dcd98a926c9f187b64389">SAMRAI::xfer::BoxGeometryVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html#2646e796018304e0993afcbed686d74b">SAMRAI::xfer::PatchInteriorVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerCellNoCornersVariableFillPattern.html#e3d05fcbd27a0fe636ec0377cb3f2a91">SAMRAI::pdat::FirstLayerCellNoCornersVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerCellVariableFillPattern.html#4ceae971b1807718ae882da329ab44d1">SAMRAI::pdat::FirstLayerCellVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerEdgeVariableFillPattern.html#403fd37fd78f68d1ce136ce8d370d54b">SAMRAI::pdat::FirstLayerEdgeVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerNodeVariableFillPattern.html#2a09f419c1db1273945ff84edf72e11f">SAMRAI::pdat::FirstLayerNodeVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#0e9458c8ac61a783bd5f1fb62cdb50a1">SAMRAI::pdat::FirstLayerSideVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1SecondLayerNodeNoCornersVariableFillPattern.html#4ef3b7f960ed22f8fcae0abfac1d4970">SAMRAI::pdat::SecondLayerNodeNoCornersVariableFillPattern</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SecondLayerNodeVariableFillPattern.html#a7956f80bab1d9d5cc76c1da586a1922">SAMRAI::pdat::SecondLayerNodeVariableFillPattern</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html#3486b1a82c605d03ccd1e49c62be941c">SAMRAI::xfer::BoxGeometryVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html#df3fb71da01a5434adddd1c5a085bb46">SAMRAI::xfer::PatchInteriorVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerCellNoCornersVariableFillPattern.html#4ebfef873698d255c326e0e73a3858b4">SAMRAI::pdat::FirstLayerCellNoCornersVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerCellVariableFillPattern.html#4e01dd7b30c86dd5b2f1b7d508590c07">SAMRAI::pdat::FirstLayerCellVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerEdgeVariableFillPattern.html#2a5eec99f450652d0ffeb64b61c43d74">SAMRAI::pdat::FirstLayerEdgeVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerNodeVariableFillPattern.html#c1ccb75d9790e13ccf0bc35e964c7198">SAMRAI::pdat::FirstLayerNodeVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#35e98cd7ed3795360c99b6e54430d37a">SAMRAI::pdat::FirstLayerSideVariableFillPattern</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1SecondLayerNodeNoCornersVariableFillPattern.html#96476063fe8a745413b764210afadaed">SAMRAI::pdat::SecondLayerNodeNoCornersVariableFillPattern</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SecondLayerNodeVariableFillPattern.html#2f03a5f4bedf4dc7b322a21efdb6db87">SAMRAI::pdat::SecondLayerNodeVariableFillPattern</a>.
 </div>
 </div><p>
 <a class="anchor" name="b8e60c226adde9ebfca0bd4a4be6d7b7"></a><!-- doxytag: member="SAMRAI::xfer::VariableFillPattern::getStencilWidth" ref="b8e60c226adde9ebfca0bd4a4be6d7b7" args="()=0" -->
@@ -295,7 +302,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFil
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="VariableFillPattern_8h.html">VariableFillPattern.h</a><li>source/SAMRAI/xfer/<a class="el" href="VariableFillPattern_8C.html">VariableFillPattern.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

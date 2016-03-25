@@ -44,9 +44,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CommGraphWriter.html#82bbf4d0a1e190ef687e6873b1d81d6f">~CommGraphWriter</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#82bbf4d0a1e190ef687e6873b1d81d6f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CommGraphWriter.html#1f87885fa0060ae99bc2c35a78201e2b">addRecord</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;mpi, int root_rank, size_t number_of_edges, size_t number_of_node_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CommGraphWriter.html#77f21491a4708f7fe47c009f00b101fa">addRecord</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;mpi, size_t number_of_edges, size_t number_of_node_values)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a graph record.  <a href="#1f87885fa0060ae99bc2c35a78201e2b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a graph record.  <a href="#77f21491a4708f7fe47c009f00b101fa"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CommGraphWriter.html#c8a97bbb6c09f0b0b1ad4163161ff766">getNumberOfRecords</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the current number of records.  <a href="#c8a97bbb6c09f0b0b1ad4163161ff766"></a><br></td></tr>
@@ -133,7 +133,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="1f87885fa0060ae99bc2c35a78201e2b"></a><!-- doxytag: member="SAMRAI::tbox::CommGraphWriter::addRecord" ref="1f87885fa0060ae99bc2c35a78201e2b" args="(const SAMRAI_MPI &amp;mpi, int root_rank, size_t number_of_edges, size_t number_of_node_values)" -->
+<a class="anchor" name="77f21491a4708f7fe47c009f00b101fa"></a><!-- doxytag: member="SAMRAI::tbox::CommGraphWriter::addRecord" ref="77f21491a4708f7fe47c009f00b101fa" args="(const SAMRAI_MPI &amp;mpi, size_t number_of_edges, size_t number_of_node_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -142,12 +142,6 @@ Destructor.
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mpi</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>root_rank</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -176,7 +170,6 @@ Add a graph record.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mpi</em>&nbsp;</td><td>Where the graph data is distributed.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>root_rank</em>&nbsp;</td><td>Process responsible for writing the graph</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>number_of_edges</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>number_of_node_values</em>&nbsp;</td><td></td></tr>
   </table>
@@ -326,7 +319,7 @@ Gather data onto the root process and write out text file.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="CommGraphWriter_8h.html">CommGraphWriter.h</a><li>source/SAMRAI/tbox/<a class="el" href="CommGraphWriter_8C.html">CommGraphWriter.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

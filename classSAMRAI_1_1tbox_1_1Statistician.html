@@ -106,7 +106,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#c1b28ed7bd40d6c90f8dc1d076e66c69">printGlobalPatchStatDataFormatted</a> (int patch_stat_id, std::ostream &amp;os, int precision=12)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#626679b85129cbc2745ecc2772e5bbdc">finalize</a> (bool gather_individual_stats_on_proc_0=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d067f3815c2bfb3b7d180e0f784be24c">finalize</a> (bool gather_individual_stats_on_proc_0=false)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#867f7da02846220f4e64e22096428f31">printLocalStatData</a> (std::ostream &amp;os, int precision=12) const </td></tr>
 
@@ -1444,7 +1444,7 @@ Print patch stat data in formatted output to given output stream. Floating point
 
 </div>
 </div><p>
-<a class="anchor" name="626679b85129cbc2745ecc2772e5bbdc"></a><!-- doxytag: member="SAMRAI::tbox::Statistician::finalize" ref="626679b85129cbc2745ecc2772e5bbdc" args="(bool gather_individual_stats_on_proc_0=true)" -->
+<a class="anchor" name="d067f3815c2bfb3b7d180e0f784be24c"></a><!-- doxytag: member="SAMRAI::tbox::Statistician::finalize" ref="d067f3815c2bfb3b7d180e0f784be24c" args="(bool gather_individual_stats_on_proc_0=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1452,7 +1452,7 @@ Print patch stat data in formatted output to given output stream. Floating point
           <td class="memname">void SAMRAI::tbox::Statistician::finalize           </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>gather_individual_stats_on_proc_0</em> = <code>true</code>          </td>
+          <td class="paramname"> <em>gather_individual_stats_on_proc_0</em> = <code>false</code>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -1690,7 +1690,7 @@ Initialize Singleton instance with instance of subclass. This function is used t
 <div class="memdoc">
 
 <p>
-During <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#626679b85129cbc2745ecc2772e5bbdc">finalize()</a> check statistic information on all processors for consistency before generating vectors of data.<p>
+During <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d067f3815c2bfb3b7d180e0f784be24c">finalize()</a> check statistic information on all processors for consistency before generating vectors of data.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd>total_patches.size() == 0 </dd></dl>
 
 </div>
@@ -1771,7 +1771,7 @@ Return true if a patch statistic whose name matches the argument string exists i
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Statistician_8h.html">Statistician.h</a><li>source/SAMRAI/tbox/<a class="el" href="Statistician_8C.html">Statistician.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

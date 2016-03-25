@@ -43,9 +43,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#4d4c8de63da8dea2cfddb393ee44860d">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_patch_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate overlaps between the destination and source geometries according to the fill pattern.  <a href="#4d4c8de63da8dea2cfddb393ee44860d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#0e9458c8ac61a783bd5f1fb62cdb50a1">computeFillBoxesOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fill_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;patch_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;data_box, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &amp;pdf) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#35e98cd7ed3795360c99b6e54430d37a">computeFillBoxesOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fill_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;node_fill_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;patch_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;data_box, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &amp;pdf) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Computes a BoxOverlap object which defines the space to be filled by a refinement operation.  <a href="#0e9458c8ac61a783bd5f1fb62cdb50a1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Computes a BoxOverlap object which defines the space to be filled by a refinement operation.  <a href="#35e98cd7ed3795360c99b6e54430d37a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FirstLayerSideVariableFillPattern.html#cb2ec36033dc32e59de3a4e393892017">getStencilWidth</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the stencil width of 0 in all directions.  <a href="#cb2ec36033dc32e59de3a4e393892017"></a><br></td></tr>
@@ -187,7 +187,7 @@ dynamic_cast&lt;const SideGeometry *&gt;(&amp;src_geometry) != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#a9c4860f44215a59a4044858067bbba2">SAMRAI::xfer::VariableFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="0e9458c8ac61a783bd5f1fb62cdb50a1"></a><!-- doxytag: member="SAMRAI::pdat::FirstLayerSideVariableFillPattern::computeFillBoxesOverlap" ref="0e9458c8ac61a783bd5f1fb62cdb50a1" args="(const hier::BoxContainer &amp;fill_boxes, const hier::Box &amp;patch_box, const hier::Box &amp;data_box, const hier::PatchDataFactory &amp;pdf) const " -->
+<a class="anchor" name="35e98cd7ed3795360c99b6e54430d37a"></a><!-- doxytag: member="SAMRAI::pdat::FirstLayerSideVariableFillPattern::computeFillBoxesOverlap" ref="35e98cd7ed3795360c99b6e54430d37a" args="(const hier::BoxContainer &amp;fill_boxes, const hier::BoxContainer &amp;node_fill_boxes, const hier::Box &amp;patch_box, const hier::Box &amp;data_box, const hier::PatchDataFactory &amp;pdf) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -196,6 +196,12 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#a
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_boxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>node_fill_boxes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -231,6 +237,7 @@ For this implementation, that space is the side-centered intersection between fi
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_boxes</em>&nbsp;</td><td>list representing the all of the space on a patch or its ghost region that may be filled by a refine operator (cell-centered represtentation) </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>node_fill_boxes</em>&nbsp;</td><td>node-centered represenation of fill_boxes </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_box</em>&nbsp;</td><td>box representing the patch where a refine operator will fill data. (cell-centered representation) </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_box</em>&nbsp;</td><td>box representing the full extent of the region covered by a patch data object, including all ghosts (cell-centered representation) </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>pdf</em>&nbsp;</td><td>patch data factory for the data that is to be filled </td></tr>
@@ -238,7 +245,7 @@ For this implementation, that space is the side-centered intersection between fi
 </dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#a1a9d5e8a974c320f46a62417257a7e5">SAMRAI::xfer::VariableFillPattern</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#c69826d57b1e80dac2825b9297394000">SAMRAI::xfer::VariableFillPattern</a>.
 </div>
 </div><p>
 <a class="anchor" name="cb2ec36033dc32e59de3a4e393892017"></a><!-- doxytag: member="SAMRAI::pdat::FirstLayerSideVariableFillPattern::getStencilWidth" ref="cb2ec36033dc32e59de3a4e393892017" args="()" -->
@@ -289,7 +296,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#4
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="FirstLayerSideVariableFillPattern_8h.html">FirstLayerSideVariableFillPattern.h</a><li>source/SAMRAI/pdat/<a class="el" href="FirstLayerSideVariableFillPattern_8C.html">FirstLayerSideVariableFillPattern.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

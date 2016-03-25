@@ -42,9 +42,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#7f3c3cb26660134f1fc9f1e97a4e9293">~RefineTransactionFactory</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#7f3c3cb26660134f1fc9f1e97a4e9293"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#803249e80086142d84a830fe74e0c12a">setRefineItems</a> (const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> **refine_items, int num_refine_items)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#18d2ad140cd8c8f778a51a70e955f011">setRefineItems</a> (const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> *const *refine_items, int num_refine_items)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to set the array of RefineClass::Data items associated with the refine schedule. Typical concrete transactions used by the schedule use this information to communicate data. This operation is called by the refine schedule during the execution of the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#9dc2ddd00c0bfe78e4e03db68ea8b4ca">RefineSchedule::fillData()</a> routine before data communication operations begin.  <a href="#803249e80086142d84a830fe74e0c12a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to set the array of RefineClass::Data items associated with the refine schedule. Typical concrete transactions used by the schedule use this information to communicate data. This operation is called by the refine schedule during the execution of the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#9dc2ddd00c0bfe78e4e03db68ea8b4ca">RefineSchedule::fillData()</a> routine before data communication operations begin.  <a href="#18d2ad140cd8c8f778a51a70e955f011"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#9644e3caff8d851f85cf1a008c0bb9ca">unsetRefineItems</a> ()=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to clear the array of RefineClass::Data items associated with the refine schedule. This operation is called by the refine schedule after data communication operations are complete.  <a href="#9644e3caff8d851f85cf1a008c0bb9ca"></a><br></td></tr>
@@ -115,14 +115,14 @@ Virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="803249e80086142d84a830fe74e0c12a"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::setRefineItems" ref="803249e80086142d84a830fe74e0c12a" args="(const RefineClasses::Data **refine_items, int num_refine_items)=0" -->
+<a class="anchor" name="18d2ad140cd8c8f778a51a70e955f011"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::setRefineItems" ref="18d2ad140cd8c8f778a51a70e955f011" args="(const RefineClasses::Data *const *refine_items, int num_refine_items)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::xfer::RefineTransactionFactory::setRefineItems           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> **&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> *const *&nbsp;</td>
           <td class="paramname"> <em>refine_items</em>, </td>
         </tr>
         <tr>
@@ -145,7 +145,7 @@ Pure virtual function to set the array of RefineClass::Data items associated wit
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#066d3dd7926ebda599080207722e2706">SAMRAI::xfer::StandardRefineTransactionFactory</a>, <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#2bbfbec30007f132fbe0a2ae8621c770">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#4e40d3ff242c9ce7f7f6eb4a7de0aead">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#b7105479f33feec2b0a168df29b60807">SAMRAI::xfer::StandardRefineTransactionFactory</a>, <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#e1b01770aac4abafde4ac2d3257cf2a6">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#8ec07887269fb5c5df2f989bb173a09a">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
 </div>
 </div><p>
 <a class="anchor" name="9644e3caff8d851f85cf1a008c0bb9ca"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::unsetRefineItems" ref="9644e3caff8d851f85cf1a008c0bb9ca" args="()=0" -->
@@ -379,7 +379,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransact
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefineTransactionFactory_8h.html">RefineTransactionFactory.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefineTransactionFactory_8C.html">RefineTransactionFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

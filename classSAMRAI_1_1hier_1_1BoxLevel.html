@@ -180,9 +180,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#c163b80b716511ad09233ffb5576c87e">getLocalNumberOfCells</a> (int rank) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return number of cells local to the given rank.  <a href="#c163b80b716511ad09233ffb5576c87e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#6b4fb122da9b234f4e8accfb64fef6f2">getGlobalNumberOfCells</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">long int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#afc96890ca6771f8580bb155cbddb2b3">getGlobalNumberOfCells</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return global number of cells.  <a href="#6b4fb122da9b234f4e8accfb64fef6f2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return global number of cells.  <a href="#afc96890ca6771f8580bb155cbddb2b3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#a0e3992e8720b4df0bdbbca45546fc1f">getLocalBoundingBox</a> (int block_number) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return bounding box for local Boxes in a block.  <a href="#a0e3992e8720b4df0bdbbca45546fc1f"></a><br></td></tr>
@@ -279,12 +279,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#9eebd53c534a0b42c59cf9cb08f2777e">swap</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;level_a, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;level_b)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Swap the contents of two <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> objects.  <a href="#9eebd53c534a0b42c59cf9cb08f2777e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#aaed3f30bd8d7e0df8f9f743717be600">initializeCallback</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up things for the entire class.  <a href="#aaed3f30bd8d7e0df8f9f743717be600"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#3954367bd91545eb3936a247974550b0">finalizeCallback</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free static timers.  <a href="#3954367bd91545eb3936a247974550b0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#e17fc1942f6de54c13321a9481366cd1">PersistentOverlapConnectors</a></td></tr>
 
@@ -1368,12 +1362,12 @@ Cells in periodic image Boxes are excluded.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="6b4fb122da9b234f4e8accfb64fef6f2"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getGlobalNumberOfCells" ref="6b4fb122da9b234f4e8accfb64fef6f2" args="() const " -->
+<a class="anchor" name="afc96890ca6771f8580bb155cbddb2b3"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getGlobalNumberOfCells" ref="afc96890ca6771f8580bb155cbddb2b3" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::hier::BoxLevel::getGlobalNumberOfCells           </td>
+          <td class="memname">long int SAMRAI::hier::BoxLevel::getGlobalNumberOfCells           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -2698,48 +2692,6 @@ Usage example: <div class="fragment"><pre class="fragment">    std::cout &lt;&lt
 
 </div>
 </div><p>
-<a class="anchor" name="aaed3f30bd8d7e0df8f9f743717be600"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::initializeCallback" ref="aaed3f30bd8d7e0df8f9f743717be600" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void SAMRAI::hier::BoxLevel::initializeCallback           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set up things for the entire class. 
-<p>
-Only called by StartupShutdownManager. 
-</div>
-</div><p>
-<a class="anchor" name="3954367bd91545eb3936a247974550b0"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::finalizeCallback" ref="3954367bd91545eb3936a247974550b0" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void SAMRAI::hier::BoxLevel::finalizeCallback           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Free static timers. 
-<p>
-Only called by StartupShutdownManager. 
-</div>
-</div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
 <a class="anchor" name="e17fc1942f6de54c13321a9481366cd1"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::PersistentOverlapConnectors" ref="e17fc1942f6de54c13321a9481366cd1" args="" -->
 <div class="memitem">
@@ -2758,7 +2710,7 @@ Only called by StartupShutdownManager.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxLevel_8h.html">BoxLevel.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxLevel_8C.html">BoxLevel.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

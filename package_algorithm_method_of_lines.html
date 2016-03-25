@@ -17,7 +17,7 @@
 The routine that integrates the quantities on all patches by a specified timestep is <b>advanceHierarchy</b>. It implements Runge-Kutta integration with information passed between hierarchy levels at each Runge-Kutta step. The user can choose the order of time-accuracy of the Runge-Kutta integrator and can supply the necessary array of increments for each sub-step. The timestep is determined through a Courant-Friedrichs-Lewy (CFL) condition. The patch with the minimum timestep based on this condition defines the timestep used for integration of the entire hierarchy.<p>
 The method is implemented using the Strategy object-oriented design pattern in which the integrator provides the algorithm and the strategy provides a set of virtual functions that plug into the integrator class. The user can interact with the class by explicitly defining the virtual functions contained in the strategy. See the Convection Diffusion example for a demonstration on use of these classes.<ul>
 <li><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">SAMRAI::algs::MethodOfLinesIntegrator</a></li><li><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html">SAMRAI::algs::MethodOfLinesPatchStrategy</a> </li></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

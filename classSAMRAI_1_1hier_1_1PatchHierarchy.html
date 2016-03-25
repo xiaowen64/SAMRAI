@@ -104,6 +104,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3486b34cdc69f143734eba95ea64e51c">getGridGeometry</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the grid geometry.  <a href="#3486b34cdc69f143734eba95ea64e51c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#fa2d18224e3675aec23a7193e4302f32">logMetadataStatistics</a> (const char *note, int ln, int cycle, double level_time, bool log_fine_connector, bool log_coarse_connector) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Log metadata statistics.  <a href="#fa2d18224e3675aec23a7193e4302f32"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#14f01d6036ca0e86e072e5c15f305272">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object and the PatchLevels it contains to the restart database.  <a href="#14f01d6036ca0e86e072e5c15f305272"></a><br></td></tr>
@@ -119,6 +122,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#22724e00331cd7c31fc8da964fbd3c6e">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#22724e00331cd7c31fc8da964fbd3c6e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1UncoveredBoxIterator.html">UncoveredBoxIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#81c2122017dd42c4894547a33aecf168">beginUncovered</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns an iterator to the first uncovered <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this hierarchy.  <a href="#81c2122017dd42c4894547a33aecf168"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1UncoveredBoxIterator.html">UncoveredBoxIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#199b5d88c5a5b2644cff776f96397d6c">endUncovered</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns an iterator to the last uncovered <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this hierarchy.  <a href="#199b5d88c5a5b2644cff776f96397d6c"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Methods related to the hierarchy parameters</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#f9ff252f4477f4305478218c8eff9635">setMaxNumberOfLevels</a> (int max_levels)</td></tr>
 
@@ -1261,6 +1270,72 @@ Get the grid geometry.
 
 </div>
 </div><p>
+<a class="anchor" name="fa2d18224e3675aec23a7193e4302f32"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::logMetadataStatistics" ref="fa2d18224e3675aec23a7193e4302f32" args="(const char *note, int ln, int cycle, double level_time, bool log_fine_connector, bool log_coarse_connector) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::PatchHierarchy::logMetadataStatistics           </td>
+          <td>(</td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>note</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>ln</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>cycle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>level_time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>log_fine_connector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>log_coarse_connector</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Log metadata statistics. 
+<p>
+This is for diagnostic purposes, to be used by developers. Log the statistics for a given level in the hierarchy and Connectors from it.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>note</em>&nbsp;</td><td>Note to be written out. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ln</em>&nbsp;</td><td>Level number to log </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cycle</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_time</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>log_fine_connector</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>log_coarse_connector</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="14f01d6036ca0e86e072e5c15f305272"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::putToRestart" ref="14f01d6036ca0e86e072e5c15f305272" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -1415,9 +1490,51 @@ Get the name of this object.
 
 </div>
 </div><p>
+<a class="anchor" name="81c2122017dd42c4894547a33aecf168"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::beginUncovered" ref="81c2122017dd42c4894547a33aecf168" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1UncoveredBoxIterator.html">UncoveredBoxIterator</a> SAMRAI::hier::PatchHierarchy::beginUncovered           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns an iterator to the first uncovered <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this hierarchy. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="199b5d88c5a5b2644cff776f96397d6c"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::endUncovered" ref="199b5d88c5a5b2644cff776f96397d6c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1UncoveredBoxIterator.html">UncoveredBoxIterator</a> SAMRAI::hier::PatchHierarchy::endUncovered           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns an iterator to the last uncovered <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this hierarchy. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8C.html">PatchHierarchy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

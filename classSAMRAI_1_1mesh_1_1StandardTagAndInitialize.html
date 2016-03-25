@@ -85,7 +85,10 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#5d86d0504e8cfb235c82f06225c7f785">turnOffRichardsonExtrapolation</a> (double time)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#b07fc50b4af1085bbf3d1a64e71d9143">processLevelBeforeRemoval</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#234fd28ed6cc943173ccd18ad3de7c6e">processHierarchyBeforeAddingNewLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;new_box_level)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Process a hierarchy before swapping old and new levels during regrid.  <a href="#234fd28ed6cc943173ccd18ad3de7c6e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#c4b7d24d3a0b74b8470efead57f0b425">processLevelBeforeRemoval</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;())</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -1038,7 +1041,54 @@ Turn off Richardson extrapolation criteria at the specified time programmaticall
 
 </div>
 </div><p>
-<a class="anchor" name="b07fc50b4af1085bbf3d1a64e71d9143"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::processLevelBeforeRemoval" ref="b07fc50b4af1085bbf3d1a64e71d9143" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, int level_number, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;())" -->
+<a class="anchor" name="234fd28ed6cc943173ccd18ad3de7c6e"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::processHierarchyBeforeAddingNewLevel" ref="234fd28ed6cc943173ccd18ad3de7c6e" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; hier::BoxLevel &gt; &amp;new_box_level)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void SAMRAI::mesh::StandardTagAndInitialize::processHierarchyBeforeAddingNewLevel           </td>
+          <td>(</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>hierarchy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>level_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>new_box_level</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Process a hierarchy before swapping old and new levels during regrid. 
+<p>
+During regrid, if user code needs to do any application-specific operations on the PatchHierarchy before a new level is added or an old level is swapped for a new level, this method provides a callback for the user to define such operations. The PatchHierarchy is provided in its state with the old level, if it exists, still in place, while the new BoxLevel is also provided so that the user code can know the boxes that will make up the new level.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The PatchHierarchy being modified. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>The number of the PatchLevel in hierarchy being added or regridded. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>new_box_level</em>&nbsp;</td><td>BoxLevel containing the boxes for the new level </td></tr>
+  </table>
+</dl>
+
+<p>
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#39746df2fc2b547a4f461a2227ae2bc0">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+</div>
+</div><p>
+<a class="anchor" name="c4b7d24d3a0b74b8470efead57f0b425"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::processLevelBeforeRemoval" ref="c4b7d24d3a0b74b8470efead57f0b425" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1051,7 +1101,7 @@ Turn off Richardson extrapolation criteria at the specified time programmaticall
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>, </td>
         </tr>
         <tr>
@@ -1082,12 +1132,12 @@ In some cases user code may wish to process a PatchLevel before it is removed fr
 <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#ec09aa831123ca92682bf9fb22818a6a">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#56ebcc4ed40bb2f6b6a89b3e7ce7af2e">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitialize_8h.html">StandardTagAndInitialize.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

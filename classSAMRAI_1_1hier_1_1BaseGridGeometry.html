@@ -136,9 +136,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#e59b99b58fc078db1c36922ee5e851de">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#e59b99b58fc078db1c36922ee5e851de"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#87e73fcb379aeb33143d75dc9d028167">registerNeighbors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_a, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_b, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#2dd7d97a19db7c8e97402e8518c0af8d">Transformation::RotationIdentifier</a> rotation_b_to_a, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;shift_b_to_a, const int neighbor_type)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#431c8c999ca3e560301ca80596db783a">registerNeighbors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_a, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_b, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#2dd7d97a19db7c8e97402e8518c0af8d">Transformation::RotationIdentifier</a> rotation_b_to_a, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;shift_b_to_a)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a relationship between two neighboring blocks of a multiblock domain.  <a href="#87e73fcb379aeb33143d75dc9d028167"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a relationship between two neighboring blocks of a multiblock domain.  <a href="#431c8c999ca3e560301ca80596db783a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#b2ccb71f6163ba0f739f8fca2c5109f1">getDomainOutsideBlock</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain_outside_block, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> that contains all of the index space of all other blocks in the multiblock domain.  <a href="#b2ccb71f6163ba0f739f8fca2c5109f1"></a><br></td></tr>
@@ -148,12 +148,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#fc696ada5b9f9a5d84544a801dfbb5bb">getSingularityBoxContainer</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> that describes all of the singularities touched by the block indicated by block_id.  <a href="#fc696ada5b9f9a5d84544a801dfbb5bb"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#aec0483604beb9036172bd05f69d6587">getSingularityIndices</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a list of integers indicating all of the singularities touched by the block indicated by block_id.  <a href="#aec0483604beb9036172bd05f69d6587"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#710cc9937538b7fa12880a1b3457b0b2">reducedConnectivityExists</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell if block represented by block_id touches a reduced-connectivity singularity.  <a href="#710cc9937538b7fa12880a1b3457b0b2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#54d295355deb36e3ff8507bcce711691">transformBox</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;output_block, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;input_block) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Modify a box by rotating and shifting from the index space of the transformed_block to the index space of the base_block at the resolution level defined by ratio_to_level_zero.  <a href="#54d295355deb36e3ff8507bcce711691"></a><br></td></tr>
@@ -1640,7 +1634,7 @@ Get the name of this object.
 
 </div>
 </div><p>
-<a class="anchor" name="87e73fcb379aeb33143d75dc9d028167"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::registerNeighbors" ref="87e73fcb379aeb33143d75dc9d028167" args="(const BlockId &amp;block_a, const BlockId &amp;block_b, const Transformation::RotationIdentifier rotation_b_to_a, const IntVector &amp;shift_b_to_a, const int neighbor_type)" -->
+<a class="anchor" name="431c8c999ca3e560301ca80596db783a"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::registerNeighbors" ref="431c8c999ca3e560301ca80596db783a" args="(const BlockId &amp;block_a, const BlockId &amp;block_b, const Transformation::RotationIdentifier rotation_b_to_a, const IntVector &amp;shift_b_to_a)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1666,13 +1660,7 @@ Get the name of this object.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>shift_b_to_a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>neighbor_type</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>shift_b_to_a</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1691,8 +1679,7 @@ Register a relationship between two neighboring blocks of a multiblock domain.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_a</em>&nbsp;</td><td>One block in the relationship </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_b</em>&nbsp;</td><td>The other block </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rotation_b_to_a</em>&nbsp;</td><td>The rotation that aligns block b's index space with block a's </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_b_to_a</em>&nbsp;</td><td>The post-rotation shift to move b into its correct location within a's index space </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>neighbor_type</em>&nbsp;</td><td>The type (codimension) of the neighbor relationship</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_b_to_a</em>&nbsp;</td><td>The post-rotation shift to move b into its correct location within a's index space</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> = shift_b_to_a.getDim() </dd></dl>
@@ -1778,62 +1765,6 @@ Return the number of block singularities in the block configuration.
 Return a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> that describes all of the singularities touched by the block indicated by block_id. 
 <p>
 <dl compact><dt><b>Returns:</b></dt><dd>For every singularity point the block touches, the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> will contain a single-cell box that lies just outside the block domain, touching the block only at the singularity point. For line singularities, the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> will contain boxes of width 1 in all directions except one, lying outside the block's coarse-level domain and touching the domain only along the line of singularity.</dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="aec0483604beb9036172bd05f69d6587"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::getSingularityIndices" ref="aec0483604beb9036172bd05f69d6587" args="(const BlockId &amp;block_id) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt;int&gt;&amp; SAMRAI::hier::BaseGridGeometry::getSingularityIndices           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return a list of integers indicating all of the singularities touched by the block indicated by block_id. 
-<p>
-<dl compact><dt><b>Returns:</b></dt><dd>For every singularity point the block touches, the vector&lt;int&gt; will contain the index of that singularity.</dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="710cc9937538b7fa12880a1b3457b0b2"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::reducedConnectivityExists" ref="710cc9937538b7fa12880a1b3457b0b2" args="(const BlockId &amp;block_id) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::hier::BaseGridGeometry::reducedConnectivityExists           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Tell if block represented by block_id touches a reduced-connectivity singularity. 
-<p>
-<dl compact><dt><b>Returns:</b></dt><dd>True if the block touches reduced connectivity singularity, false if not.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
@@ -2357,7 +2288,7 @@ The holder of all the transfer operators.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BaseGridGeometry_8h.html">BaseGridGeometry.h</a><li>source/SAMRAI/hier/<a class="el" href="BaseGridGeometry_8C.html">BaseGridGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

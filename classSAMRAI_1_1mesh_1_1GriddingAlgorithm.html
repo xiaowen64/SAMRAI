@@ -62,18 +62,6 @@
  <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#63e2f9d894a6b4bf04d7ae396bf7ea67">getLoadBalanceStrategyZero</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to load balance strategy specialized for balancing level zero.  <a href="#63e2f9d894a6b4bf04d7ae396bf7ea67"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#cfba41eb1f88c240e9e691353798e518">setEfficiencyTolerance</a> (const double efficiency_tolerance, const int level_number)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set efficiency tolerance for clustering tags on level.  <a href="#cfba41eb1f88c240e9e691353798e518"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#4f5aa9793e735fd0d171d9924d7781b6">getEfficiencyTolerance</a> (const int level_number) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return efficiency tolerance for clustering tags on level.  <a href="#4f5aa9793e735fd0d171d9924d7781b6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#bb1a0c3a724a4618c62c6d263c38b01c">setCombineEfficiency</a> (const double combine_efficiency, const int level_number)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set combine efficiency for clustering tags on level.  <a href="#bb1a0c3a724a4618c62c6d263c38b01c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#bcc30f82b170111258650c8462af624c">getCombineEfficiency</a> (const int level_number) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return combine efficiency for clustering tags on level.  <a href="#bcc30f82b170111258650c8462af624c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0659732cbfa3531832074b8e1b116c9b">getPatchHierarchy</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to PatchHierarchy data member.  <a href="#0659732cbfa3531832074b8e1b116c9b"></a><br></td></tr>
@@ -109,12 +97,6 @@ Other objects passed to the constructor provide the gridding algorithm with part
 <p>
 <ul>
 <li><b>check_proper_nesting</b> </li></ul>
-<p>
-<ul>
-<li><b>efficiency_tolerance</b> each value specifies the minimum fraction of tagged cells to total cells in boxes used to construct patches on a new level. If the ratio is below the tolerance value, the box may be split into smaller boxes and pieces removed until the ratio becomes greater than or equal to the tolerance. This tolerance helps users control the amount of extra refined cells created (beyond those tagged explicitly) that is typical in patch-based AMR computations. The index of the value in the array corresponds to the number of the level to which the tolerance value applies. If more values are given than the maximum number of levels allowed in the hierarchy, extra values will be ignored. If fewer values are given, then the last value given will be used for each level without a specified input value. For example, if only a single value is specified, then that value will be used on all levels.</li></ul>
-<p>
-<ul>
-<li><b>combine_efficiency</b> each value serves as a threshold for the ratio of the total number of cells in two boxes into which a box may be split and the number of cells in the original box. If that ratio is greater than the combine efficiency, the box will not be split. This tolerance helps users avoids splitting up portions of the domain into into very small patches which can increase the overhead of AMR operations. Multiple values in the array are handled similar to efficiency_tolerance.</li></ul>
 <p>
 <ul>
 <li><b>check_nonrefined_tags</b> controls how to resolve user-specified tags that violate proper nesting. If a tag violates the nesting requirements, its location in index space will not be refined when creating the finer level. This flag allows the user to determine what to do when this occurs. <br>
@@ -155,10 +137,6 @@ Other objects passed to the constructor provide the gridding algorithm with part
 <tr>
 <td>check_proper_nesting </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
 <tr>
-<td>efficiency_tolerance </td><td>array of doubles </td><td>0.8 for each level </td><td>all values &gt; 0.0 &amp;&amp; &lt; 1.0 </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
-<tr>
-<td>combine_efficiency </td><td>array of doubles </td><td>0.8 for each level </td><td>all values &gt; 0.0 &amp;&amp; &lt; 1.0 </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
-<tr>
 <td>check_nonrefined_tags </td><td>string </td><td>"WARN" </td><td>"WARN", "IGNORE", "ERROR" </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
 <tr>
 <td>check_overlapping_patches </td><td>string </td><td>"IGNORE" </td><td>"WARN", "IGNORE", "ERROR" </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
@@ -171,13 +149,6 @@ Other objects passed to the constructor provide the gridding algorithm with part
 </table>
 <p>
 All values read in from a restart database may be overriden by input database values. If no new input database value is given, the restart database value is used.<p>
-The following represents sample input data for a three-level problem:<p>
-<div class="fragment"><pre class="fragment">   <span class="comment">// Optional input: different efficiency tolerance for each coarser level</span>
-   efficiency_tolerance = 0.80e0, 0.85e0, 0.90e0
-
-   <span class="comment">// Optional input: combine efficiency is same for all levels.</span>
-   combine_efficiency = 0.95e0
-</pre></div><p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">mesh::TagAndInitializeStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">mesh::LoadBalanceStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> </dd></dl>
@@ -524,132 +495,6 @@ Return pointer to load balance strategy specialized for balancing level zero.
 
 </div>
 </div><p>
-<a class="anchor" name="cfba41eb1f88c240e9e691353798e518"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::setEfficiencyTolerance" ref="cfba41eb1f88c240e9e691353798e518" args="(const double efficiency_tolerance, const int level_number)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::setEfficiencyTolerance           </td>
-          <td>(</td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>efficiency_tolerance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>level_number</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set efficiency tolerance for clustering tags on level. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>efficiency_tolerance</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) <p>
-(efficiency_tolerance &gt;= 0) &amp;&amp; (efficiency_tolerance &lt;= 1.0) </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="4f5aa9793e735fd0d171d9924d7781b6"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getEfficiencyTolerance" ref="4f5aa9793e735fd0d171d9924d7781b6" args="(const int level_number) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double SAMRAI::mesh::GriddingAlgorithm::getEfficiencyTolerance           </td>
-          <td>(</td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>level_number</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return efficiency tolerance for clustering tags on level. 
-<p>
-<dl compact><dt><b>Returns:</b></dt><dd>efficiency tolerance for clustering tags on level.</dd></dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="bb1a0c3a724a4618c62c6d263c38b01c"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::setCombineEfficiency" ref="bb1a0c3a724a4618c62c6d263c38b01c" args="(const double combine_efficiency, const int level_number)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::setCombineEfficiency           </td>
-          <td>(</td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>combine_efficiency</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>level_number</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set combine efficiency for clustering tags on level. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>combine_efficiency</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) <p>
-(combine_efficiency &gt;= 0) &amp;&amp; (combine_efficiency &lt;= 1.0) </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="bcc30f82b170111258650c8462af624c"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getCombineEfficiency" ref="bcc30f82b170111258650c8462af624c" args="(const int level_number) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double SAMRAI::mesh::GriddingAlgorithm::getCombineEfficiency           </td>
-          <td>(</td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>level_number</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return combine efficiency for clustering tags on level. 
-<p>
-<dl compact><dt><b>Returns:</b></dt><dd>combine efficiency for clustering tags on level.</dd></dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) </dd></dl>
-
-</div>
-</div><p>
 <a class="anchor" name="0659732cbfa3531832074b8e1b116c9b"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getPatchHierarchy" ref="0659732cbfa3531832074b8e1b116c9b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -761,7 +606,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8h.html">GriddingAlgorithm.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8C.html">GriddingAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

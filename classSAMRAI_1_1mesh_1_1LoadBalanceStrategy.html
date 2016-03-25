@@ -30,8 +30,9 @@
 <p><center><img src="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.png" usemap="#SAMRAI::mesh::LoadBalanceStrategy_map" border="0" alt=""></center>
 <map name="SAMRAI::mesh::LoadBalanceStrategy_map">
 <area href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html" alt="SAMRAI::mesh::ChopAndPackLoadBalancer" shape="rect" coords="0,56,261,80">
-<area href="classSAMRAI_1_1mesh_1_1TilePartitioner.html" alt="SAMRAI::mesh::TilePartitioner" shape="rect" coords="271,56,532,80">
-<area href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html" alt="SAMRAI::mesh::TreeLoadBalancer" shape="rect" coords="542,56,803,80">
+<area href="classSAMRAI_1_1mesh_1_1GraphLoadBalancer.html" alt="SAMRAI::mesh::GraphLoadBalancer" shape="rect" coords="271,56,532,80">
+<area href="classSAMRAI_1_1mesh_1_1TilePartitioner.html" alt="SAMRAI::mesh::TilePartitioner" shape="rect" coords="542,56,803,80">
+<area href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html" alt="SAMRAI::mesh::TreeLoadBalancer" shape="rect" coords="813,56,1074,80">
 </map>
 <a href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
@@ -123,7 +124,7 @@ Indicate whether load balancing procedure for given level depends on patch data 
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#2156edcd6cccc24337965fddf91d69b1">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TilePartitioner.html#650c67e3173a8af25375b46e87c8b634">SAMRAI::mesh::TilePartitioner</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#9e4de5cd3e0abdb81dff88323e7093ad">SAMRAI::mesh::TreeLoadBalancer</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#2156edcd6cccc24337965fddf91d69b1">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1GraphLoadBalancer.html#ffaef96d0e746207afe9f5852936cd07">SAMRAI::mesh::GraphLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TilePartitioner.html#650c67e3173a8af25375b46e87c8b634">SAMRAI::mesh::TilePartitioner</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#9e4de5cd3e0abdb81dff88323e7093ad">SAMRAI::mesh::TreeLoadBalancer</a>.
 </div>
 </div><p>
 <a class="anchor" name="2a6934691d740a0930f1644d5271d6b2"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::loadBalanceBoxLevel" ref="2a6934691d740a0930f1644d5271d6b2" args="(hier::BoxLevel &amp;balance_box_level, hier::Connector *balance_to_anchor, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const =0" -->
@@ -219,7 +220,7 @@ The union of the boxes in the balance_box_level is the same before and after the
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#bc7bae6426d7934de9794bdfce19d0b8">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TilePartitioner.html#4546be77107453eef7f824d7ecf8b252">SAMRAI::mesh::TilePartitioner</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#bb213d5d1349c5c4d79c46ad7368531c">SAMRAI::mesh::TreeLoadBalancer</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#bc7bae6426d7934de9794bdfce19d0b8">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1GraphLoadBalancer.html#30120e79facbc939074be8c4640cadb1">SAMRAI::mesh::GraphLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TilePartitioner.html#4546be77107453eef7f824d7ecf8b252">SAMRAI::mesh::TilePartitioner</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#bb213d5d1349c5c4d79c46ad7368531c">SAMRAI::mesh::TreeLoadBalancer</a>.
 </div>
 </div><p>
 <a class="anchor" name="4d2509cc7c30c8364dc1de602b05b636"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::markLoadForPostprocessing" ref="4d2509cc7c30c8364dc1de602b05b636" args="(int rank, double load, int nbox)" -->
@@ -269,7 +270,7 @@ For development only. Not for general use.<p>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="LoadBalanceStrategy_8h.html">LoadBalanceStrategy.h</a><li>source/SAMRAI/mesh/<a class="el" href="LoadBalanceStrategy_8C.html">LoadBalanceStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

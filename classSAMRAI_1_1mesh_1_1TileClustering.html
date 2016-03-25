@@ -40,9 +40,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TileClustering.html#617f1942bd9da47760274fbb87fb3c97">~TileClustering</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#617f1942bd9da47760274fbb87fb3c97"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TileClustering.html#6bb2ebcf0c518af8fc8acdafb520999d">findBoxesContainingTags</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;new_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;tag_to_new, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_gcw)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TileClustering.html#66ad4b801c0cb2edafcb5d90265f9014">findBoxesContainingTags</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;new_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;tag_to_new, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_gcw)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implement the <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> interface method of the same name.  <a href="#6bb2ebcf0c518af8fc8acdafb520999d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implement the <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> interface method of the same name.  <a href="#66ad4b801c0cb2edafcb5d90265f9014"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TileClustering.html#bfac144c5b49bbe9fb21a9e12b74e6b3">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db)</td></tr>
 
@@ -124,7 +124,7 @@ Deallocate internal data.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="6bb2ebcf0c518af8fc8acdafb520999d"></a><!-- doxytag: member="SAMRAI::mesh::TileClustering::findBoxesContainingTags" ref="6bb2ebcf0c518af8fc8acdafb520999d" args="(boost::shared_ptr&lt; hier::BoxLevel &gt; &amp;new_box_level, boost::shared_ptr&lt; hier::Connector &gt; &amp;tag_to_new, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const hier::BoxContainer &amp;bound_boxes, const hier::IntVector &amp;min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_gcw)" -->
+<a class="anchor" name="66ad4b801c0cb2edafcb5d90265f9014"></a><!-- doxytag: member="SAMRAI::mesh::TileClustering::findBoxesContainingTags" ref="66ad4b801c0cb2edafcb5d90265f9014" args="(boost::shared_ptr&lt; hier::BoxLevel &gt; &amp;new_box_level, boost::shared_ptr&lt; hier::Connector &gt; &amp;tag_to_new, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const hier::BoxContainer &amp;bound_boxes, const hier::IntVector &amp;min_box, const hier::IntVector &amp;max_gcw)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -173,18 +173,6 @@ Deallocate internal data.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>efficiency_tol</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>combine_tol</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>max_gcw</em></td><td>&nbsp;</td>
         </tr>
@@ -200,11 +188,9 @@ Deallocate internal data.
 <p>
 Implement the <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> interface method of the same name. 
 <p>
-Create a set of boxes that covers all integer tags on the patch level that match the specified tag value. Each box will be at least as large as the given minimum size and the tolerances will be met.<p>
-The efficiency tolerance is a threshold value for the percentage of tagged cells in each box. If this percentage is below the tolerance, the box will continue to be split into smaller boxes.<p>
-The combine tolerance is a threshold value for the sum of the volumes of two boxes into which a box may be potentially split. If ratio of that sum and the volume of the original box, the box will not be split. 
+Create a set of boxes that covers all integer tags on the patch level that match the specified tag value. Each box will be at least as large as the given minimum size and the tolerances will be met. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#93b5ad0e620615c8f0984373b803ebf3">SAMRAI::mesh::BoxGeneratorStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#cf8c6dc992df070e31714cd3df84fe17">SAMRAI::mesh::BoxGeneratorStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="bfac144c5b49bbe9fb21a9e12b74e6b3"></a><!-- doxytag: member="SAMRAI::mesh::TileClustering::getFromInput" ref="bfac144c5b49bbe9fb21a9e12b74e6b3" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db)" -->
@@ -236,7 +222,7 @@ Read parameters from input database.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="TileClustering_8h.html">TileClustering.h</a><li>source/SAMRAI/mesh/<a class="el" href="TileClustering_8C.html">TileClustering.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

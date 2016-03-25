@@ -65,9 +65,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#6879ff14dd1e9848b9186c1d598aca8d">itemsAreEquivalent</a> (const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> &amp;data1, const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> &amp;data2, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">hier::PatchDescriptor</a> &gt; &amp;descriptor=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">hier::PatchDescriptor</a> &gt;()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compare <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> objects for equivalence; return true if equivalent, else false.  <a href="#6879ff14dd1e9848b9186c1d598aca8d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#612a41104f9394319a2df6b7702a68b5">getRefineItemArraySize</a> () const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the size that has been allocated for the array storing refine items.  <a href="#612a41104f9394319a2df6b7702a68b5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#4bb51bca877be2c10f3dd5d34345a41b">increaseRefineItemArraySize</a> (const int size)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Increase the allocated size of the array storing refine items.  <a href="#4bb51bca877be2c10f3dd5d34345a41b"></a><br></td></tr>
@@ -474,27 +471,6 @@ If a null patch descriptor argument is passed (or ommitted), the descriptor asso
 
 </div>
 </div><p>
-<a class="anchor" name="612a41104f9394319a2df6b7702a68b5"></a><!-- doxytag: member="SAMRAI::xfer::RefineClasses::getRefineItemArraySize" ref="612a41104f9394319a2df6b7702a68b5" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int SAMRAI::xfer::RefineClasses::getRefineItemArraySize           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Get the size that has been allocated for the array storing refine items. 
-<p>
-Note that this is not necessarily the same as the number of registered refine items, which can be retrieved using <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#2e73e1b962706c2fe2d3935185c6fa91">getNumberOfRefineItems()</a>. The refine item array is allocated to a default size and grown when necessary or when <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#4bb51bca877be2c10f3dd5d34345a41b">increaseRefineItemArraySize()</a> is called. 
-</div>
-</div><p>
 <a class="anchor" name="4bb51bca877be2c10f3dd5d34345a41b"></a><!-- doxytag: member="SAMRAI::xfer::RefineClasses::increaseRefineItemArraySize" ref="4bb51bca877be2c10f3dd5d34345a41b" args="(const int size)" -->
 <div class="memitem">
 <div class="memproto">
@@ -589,7 +565,7 @@ Print single refine item to the specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefineClasses_8h.html">RefineClasses.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefineClasses_8C.html">RefineClasses.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -192,7 +192,7 @@ Set the internal SAMRAI_MPI to a duplicate of the given SAMRAI_MPI.
 The given SAMRAI_MPI must have a valid communicator.<p>
 The given SAMRAI_MPI is duplicated for private use. This requires a global communication, so all processes in the communicator must call it. The advantage of a duplicate communicator is that it ensures the communications for the object won't accidentally interact with other communications.<p>
 If the duplicate SAMRAI_MPI it is set, the <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html">TreeLoadBalancer</a> will only balance BoxLevels with congruent SAMRAI_MPI objects and will use the duplicate SAMRAI_MPI for communications. Otherwise, the SAMRAI_MPI of the BoxLevel will be used. The duplicate MPI communicator is freed when the object is destructed, or <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#80ea043fa9206101bebae0be445276be">freeMPICommunicator()</a> is called.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>samrai_mpi.getCommunicator() != <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#17192432c38efce37dbc69204691af8e">tbox::SAMRAI_MPI::commNull</a> </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>samrai_mpi.getCommunicator() != MPI_COMM_NULL </dd></dl>
 
 </div>
 </div><p>
@@ -526,7 +526,7 @@ Insert BoxInTransit into an output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="TreeLoadBalancer_8h.html">TreeLoadBalancer.h</a><li>source/SAMRAI/mesh/<a class="el" href="TreeLoadBalancer_8C.html">TreeLoadBalancer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

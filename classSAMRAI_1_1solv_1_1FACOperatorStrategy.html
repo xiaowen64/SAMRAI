@@ -160,7 +160,7 @@ Restrict the solution quantity to the specified level from the next finer level.
 <p>
 Restrict the residual data to level dest_ln in the destination vector d, from level dest_ln+1 in the source vector s.<p>
 Can assume:<ol type=1>
-<li>dest_ln is not the finest level in the range being solved.</li><li>corresponding solution has been computed on level dest_ln+1.</li><li>the source and destination residual vectors (s and d) may or may not be the same. (This function must work in either case.)</li></ol>
+<li>dest_ln is not the finest level in the range being solved.</li><li>corresponding solution has been computed on level dest_ln+1.</li><li>the source and destination residual vectors may or may not be the same. (This method must work in either case.)</li></ol>
 <p>
 Upon return from this function, the solution on the refined region of the coarse level will represent the coarsened version of the fine solution in a manner that is consistent with the linear system approximation on the composite grid. This function must not change the solution values anywhere except on level dest_ln of the destination vector.<p>
 The source and destination vectors may be the same.<p>
@@ -212,7 +212,7 @@ Restrict the residual quantity to the specified level from the next finer level.
 <p>
 Restrict the residual data to level dest_ln in the destination vector d, from level dest_ln+1 in the source vector s.<p>
 Can assume:<ol type=1>
-<li>dest_ln is not the finest level in the range being solved.</li><li>correspnding residual has been computed on level dest_ln+1.</li><li>the source and destination residual vectors (s and d) may or may not be the same. (This function must work in either case.)</li></ol>
+<li>dest_ln is not the finest level in the range being solved.</li><li>correspnding residual has been computed on level dest_ln+1.</li><li>the source and destination residual vectors may or may not be the same. (This method must work in either case.)</li></ol>
 <p>
 Upon return from this function, the residual on the refined region of the coarse level will represent the coarsened version of the fine residual in a manner that is consistent with the linear system approximation on the composite grid. This function must not change the residual values anywhere except on level dest_ln of the destination vector.<p>
 The source and destination vectors may be the same.<p>
@@ -638,7 +638,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.ht
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="FACOperatorStrategy_8h.html">FACOperatorStrategy.h</a><li>source/SAMRAI/solv/<a class="el" href="FACOperatorStrategy_8C.html">FACOperatorStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

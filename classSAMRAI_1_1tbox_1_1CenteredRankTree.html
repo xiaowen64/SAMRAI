@@ -100,7 +100,7 @@ An example of a tree created is<p>
  *             1 3 5 7 8 10 12 14
  * </pre></div><p>
 The root of tree is the center, rounded up, of the rank in it left and right branches. The exception is the case where we force the first rank to be the root of the entire tree (<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#7c5b6a4f5c4a22bae8fdb4bdf09fe8eb">makeFirstRankTheRoot()</a>).</dd></dl>
-Nodes that are close together in the tree tends to be close together in natural ordering. Without knowing about the underlying message passing network structure, we assume that close natural ordering usually means close together on the network. Thus nodes close together in the tree are also close together on the network. Thus, communication between nearest neighbors in the tree tend to be faster.<p>
+Nodes that are close together in the tree tends to be close together in natural ordering. Without knowing about the underlying message passing network structure, we assume that close natural ordering usually means close together on the network. Thus nodes close together in the tree are also close together on the network. Thus, communication between nearest neighbors in the tree tend to be faster. If the weight of each edge is the difference in ranks of its nodes, the sum of all weights in a tree of N nodes is N*ln(N).<p>
 The tree formed by this class has the property that each and every subtree is composed nodes with contiguous natural ordering. This again benefits communication. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -449,7 +449,7 @@ Default choice is false. To change the choice, this call must be made before <a 
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="CenteredRankTree_8h.html">CenteredRankTree.h</a><li>source/SAMRAI/tbox/<a class="el" href="CenteredRankTree_8C.html">CenteredRankTree.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

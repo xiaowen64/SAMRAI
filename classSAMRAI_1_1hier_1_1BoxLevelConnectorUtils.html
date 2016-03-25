@@ -32,6 +32,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#7bcaa32bb4e11b2c1fee3080a64a2545">BoxLevelConnectorUtils</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor.  <a href="#7bcaa32bb4e11b2c1fee3080a64a2545"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#2ee1f5fd62409eb09e099ce82a1aa5cf">~BoxLevelConnectorUtils</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#2ee1f5fd62409eb09e099ce82a1aa5cf"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#e7c029d73668a17cbcd4decbb1bf0866">setSanityCheckMethodPreconditions</a> (bool do_check)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to run expensive sanity checks on input parameters.  <a href="#e7c029d73668a17cbcd4decbb1bf0866"></a><br></td></tr>
@@ -44,6 +47,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#7d59815e4dfdfaacd8a72c6f2bda8abd">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setup names of timers.  <a href="#7d59815e4dfdfaacd8a72c6f2bda8abd"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#84f4e540d816b2fd5660ea38428456f0">getObjectName</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#84f4e540d816b2fd5660ea38428456f0"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Comparing boxes of two BoxLevels</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#42f1f7020d108fbad46a7853910d0b18">baseNestsInHead</a> (bool *locally_nests, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_swell, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;head_swell, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;head_nesting_margin, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> *domain=0) const </td></tr>
 
@@ -57,6 +63,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#936a0a54222605b44e39ee306d8ba9a7">computeInternalParts</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;internal, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;input_to_internal, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_reference, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;nesting_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are internal to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#936a0a54222605b44e39ee306d8ba9a7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#b742fc9b6c8104a713d1716a9fe3b096">computeNonIntersectingParts</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;remainder, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;input_to_remainder, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_takeaway) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute parts of a level that do not intersect with another level.  <a href="#b742fc9b6c8104a713d1716a9fe3b096"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Setting up common MappingConnectors</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#307c40943177d19883e736a4ac7c6430">makeSortingMap</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;sorted_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;output_map, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;unsorted_box_level, bool sort_boxes_by_corner=true, bool sequentialize_global_indices=true, <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> initial_sequential_index=LocalId::getZero()) const </td></tr>
 
@@ -95,6 +104,27 @@ Objects of this class can be set to perform certain sanity checks on the pre and
 Default constructor. 
 <p>
 By default, sanity checks are disabled. To enable them, see <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#e7c029d73668a17cbcd4decbb1bf0866">setSanityCheckMethodPreconditions()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#d487b8fea1290525313ec0e667aa08a9">setSanityCheckMethodPostconditions()</a>. 
+</div>
+</div><p>
+<a class="anchor" name="2ee1f5fd62409eb09e099ce82a1aa5cf"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::~BoxLevelConnectorUtils" ref="2ee1f5fd62409eb09e099ce82a1aa5cf" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::hier::BoxLevelConnectorUtils::~BoxLevelConnectorUtils           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Destructor. 
+<p>
+
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -439,6 +469,53 @@ This method does not require any communication.<p>
 
 </div>
 </div><p>
+<a class="anchor" name="b742fc9b6c8104a713d1716a9fe3b096"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::computeNonIntersectingParts" ref="b742fc9b6c8104a713d1716a9fe3b096" args="(boost::shared_ptr&lt; BoxLevel &gt; &amp;remainder, boost::shared_ptr&lt; Connector &gt; &amp;input_to_remainder, const Connector &amp;input_to_takeaway) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::BoxLevelConnectorUtils::computeNonIntersectingParts           </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>remainder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_to_remainder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_to_takeaway</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Compute parts of a level that do not intersect with another level. 
+<p>
+Given the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> input_to_takeaway, this method computes the parts of the base level 'input' that do not intersect the head level 'takeaway'. The results are stored in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> 'remainder', with the input_to_remainder <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> storing the overlap relationships between 'input' and 'remainder'.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>remainder</em>&nbsp;</td><td>The non-intersecting parts of input level </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>input_to_remainder</em>&nbsp;</td><td>Overlap connector with width zero </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_to_takeaway</em>&nbsp;</td><td>Overlap connector, may have any width</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>input_to_takeaway is a complete overlap connector </dd></dl>
+<dl compact><dt><b>Postcondition:</b></dt><dd>input_to_remainder.isLocal() </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="2a2e2c35b5c00f2dfd9f6d39566d8554"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::computeBoxesAroundBoundary" ref="2a2e2c35b5c00f2dfd9f6d39566d8554" args="(BoxContainer &amp;boundary, const IntVector &amp;refinement_ratio, const boost::shared_ptr&lt; const BaseGridGeometry &gt; &amp;grid_geometry, const bool simplify_boundary_boxes=true) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -701,9 +778,30 @@ Setup names of timers.
 By default, timers are named "hier::BoxLevelConnectorUtils::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html">BoxLevelConnectorUtils</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". 
 </div>
 </div><p>
+<a class="anchor" name="84f4e540d816b2fd5660ea38428456f0"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::getObjectName" ref="84f4e540d816b2fd5660ea38428456f0" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string SAMRAI::hier::BoxLevelConnectorUtils::getObjectName           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get the name of this object. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxLevelConnectorUtils_8h.html">BoxLevelConnectorUtils.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxLevelConnectorUtils_8C.html">BoxLevelConnectorUtils.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 10 Jan 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
