@@ -8,42 +8,42 @@
   </compound>
   <compound kind="file">
     <name>manual_femutils.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/dox/</path>
     <filename>manual__femutils_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::algs</namespace>
   </compound>
   <compound kind="file">
     <name>manual_hyperbolic.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/dox/</path>
     <filename>manual__hyperbolic_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::algs</namespace>
   </compound>
   <compound kind="file">
     <name>manual_implicit.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/dox/</path>
     <filename>manual__implicit_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::algs</namespace>
   </compound>
   <compound kind="file">
     <name>manual_method_of_lines.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/dox/</path>
     <filename>manual__method__of__lines_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::algs</namespace>
   </compound>
   <compound kind="file">
     <name>manual_time_refinement.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/dox/</path>
     <filename>manual__time__refinement_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::algs</namespace>
   </compound>
   <compound kind="file">
     <name>HyperbolicLevelIntegrator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>HyperbolicLevelIntegrator_8C</filename>
     <includes id="HyperbolicLevelIntegrator_8h" name="HyperbolicLevelIntegrator.h" local="yes" imported="no">SAMRAI/algs/HyperbolicLevelIntegrator.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -80,7 +80,7 @@
   </compound>
   <compound kind="file">
     <name>HyperbolicLevelIntegrator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>HyperbolicLevelIntegrator_8h</filename>
     <includes id="HyperbolicPatchStrategy_8h" name="HyperbolicPatchStrategy.h" local="yes" imported="no">SAMRAI/algs/HyperbolicPatchStrategy.h</includes>
     <includes id="TimeRefinementLevelStrategy_8h" name="TimeRefinementLevelStrategy.h" local="yes" imported="no">SAMRAI/algs/TimeRefinementLevelStrategy.h</includes>
@@ -111,7 +111,7 @@
   </compound>
   <compound kind="file">
     <name>HyperbolicPatchStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>HyperbolicPatchStrategy_8C</filename>
     <includes id="HyperbolicPatchStrategy_8h" name="HyperbolicPatchStrategy.h" local="yes" imported="no">SAMRAI/algs/HyperbolicPatchStrategy.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -120,7 +120,7 @@
   </compound>
   <compound kind="file">
     <name>HyperbolicPatchStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>HyperbolicPatchStrategy_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
@@ -136,7 +136,7 @@
   </compound>
   <compound kind="file">
     <name>ImplicitEquationStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>ImplicitEquationStrategy_8C</filename>
     <includes id="ImplicitEquationStrategy_8h" name="ImplicitEquationStrategy.h" local="yes" imported="no">SAMRAI/algs/ImplicitEquationStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -144,7 +144,7 @@
   </compound>
   <compound kind="file">
     <name>ImplicitEquationStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>ImplicitEquationStrategy_8h</filename>
     <includes id="SAMRAIVectorReal_8h" name="SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/SAMRAIVectorReal.h</includes>
     <class kind="class">SAMRAI::algs::ImplicitEquationStrategy</class>
@@ -153,7 +153,7 @@
   </compound>
   <compound kind="file">
     <name>ImplicitIntegrator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>ImplicitIntegrator_8C</filename>
     <includes id="ImplicitIntegrator_8h" name="ImplicitIntegrator.h" local="yes" imported="no">SAMRAI/algs/ImplicitIntegrator.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -165,7 +165,7 @@
   </compound>
   <compound kind="file">
     <name>ImplicitIntegrator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>ImplicitIntegrator_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="Serializable_8h" name="Serializable.h" local="yes" imported="no">SAMRAI/tbox/Serializable.h</includes>
@@ -180,7 +180,7 @@
   </compound>
   <compound kind="file">
     <name>MethodOfLinesIntegrator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>MethodOfLinesIntegrator_8C</filename>
     <includes id="MethodOfLinesIntegrator_8h" name="MethodOfLinesIntegrator.h" local="yes" imported="no">SAMRAI/algs/MethodOfLinesIntegrator.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -196,7 +196,7 @@
   </compound>
   <compound kind="file">
     <name>MethodOfLinesIntegrator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>MethodOfLinesIntegrator_8h</filename>
     <includes id="CoarsenAlgorithm_8h" name="CoarsenAlgorithm.h" local="yes" imported="no">SAMRAI/xfer/CoarsenAlgorithm.h</includes>
     <includes id="CoarsenSchedule_8h" name="CoarsenSchedule.h" local="yes" imported="no">SAMRAI/xfer/CoarsenSchedule.h</includes>
@@ -219,7 +219,7 @@
   </compound>
   <compound kind="file">
     <name>MethodOfLinesPatchStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>MethodOfLinesPatchStrategy_8C</filename>
     <includes id="MethodOfLinesPatchStrategy_8h" name="MethodOfLinesPatchStrategy.h" local="yes" imported="no">SAMRAI/algs/MethodOfLinesPatchStrategy.h</includes>
     <includes id="VariableDatabase_8h" name="VariableDatabase.h" local="yes" imported="no">SAMRAI/hier/VariableDatabase.h</includes>
@@ -228,7 +228,7 @@
   </compound>
   <compound kind="file">
     <name>MethodOfLinesPatchStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>MethodOfLinesPatchStrategy_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -245,7 +245,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeSumTransaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuteredgeSumTransaction_8C</filename>
     <includes id="OuteredgeSumTransaction_8h" name="OuteredgeSumTransaction.h" local="yes" imported="no">SAMRAI/algs/OuteredgeSumTransaction.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -259,7 +259,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeSumTransaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuteredgeSumTransaction_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -272,7 +272,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeSumTransactionFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuteredgeSumTransactionFactory_8C</filename>
     <includes id="OuteredgeSumTransactionFactory_8h" name="OuteredgeSumTransactionFactory.h" local="yes" imported="no">SAMRAI/algs/OuteredgeSumTransactionFactory.h</includes>
     <includes id="OuteredgeData_8h" name="OuteredgeData.h" local="yes" imported="no">SAMRAI/pdat/OuteredgeData.h</includes>
@@ -282,7 +282,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeSumTransactionFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuteredgeSumTransactionFactory_8h</filename>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
     <includes id="PatchLevel_8h" name="PatchLevel.h" local="yes" imported="no">SAMRAI/hier/PatchLevel.h</includes>
@@ -294,7 +294,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeSumTransaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuternodeSumTransaction_8C</filename>
     <includes id="OuternodeSumTransaction_8h" name="OuternodeSumTransaction.h" local="yes" imported="no">SAMRAI/algs/OuternodeSumTransaction.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -308,7 +308,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeSumTransaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuternodeSumTransaction_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -321,7 +321,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeSumTransactionFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuternodeSumTransactionFactory_8C</filename>
     <includes id="OuternodeSumTransactionFactory_8h" name="OuternodeSumTransactionFactory.h" local="yes" imported="no">SAMRAI/algs/OuternodeSumTransactionFactory.h</includes>
     <includes id="OuternodeData_8h" name="OuternodeData.h" local="yes" imported="no">SAMRAI/pdat/OuternodeData.h</includes>
@@ -331,7 +331,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeSumTransactionFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>OuternodeSumTransactionFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -345,7 +345,7 @@
   </compound>
   <compound kind="file">
     <name>PatchBoundaryEdgeSum.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>PatchBoundaryEdgeSum_8C</filename>
     <includes id="PatchBoundaryEdgeSum_8h" name="PatchBoundaryEdgeSum.h" local="yes" imported="no">SAMRAI/algs/PatchBoundaryEdgeSum.h</includes>
     <includes id="VariableDatabase_8h" name="VariableDatabase.h" local="yes" imported="no">SAMRAI/hier/VariableDatabase.h</includes>
@@ -361,7 +361,7 @@
   </compound>
   <compound kind="file">
     <name>PatchBoundaryEdgeSum.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>PatchBoundaryEdgeSum_8h</filename>
     <includes id="PatchLevel_8h" name="PatchLevel.h" local="yes" imported="no">SAMRAI/hier/PatchLevel.h</includes>
     <includes id="EdgeVariable_8h" name="EdgeVariable.h" local="yes" imported="no">SAMRAI/pdat/EdgeVariable.h</includes>
@@ -375,7 +375,7 @@
   </compound>
   <compound kind="file">
     <name>PatchBoundaryNodeSum.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>PatchBoundaryNodeSum_8C</filename>
     <includes id="PatchBoundaryNodeSum_8h" name="PatchBoundaryNodeSum.h" local="yes" imported="no">SAMRAI/algs/PatchBoundaryNodeSum.h</includes>
     <includes id="VariableDatabase_8h" name="VariableDatabase.h" local="yes" imported="no">SAMRAI/hier/VariableDatabase.h</includes>
@@ -401,7 +401,7 @@
   </compound>
   <compound kind="file">
     <name>PatchBoundaryNodeSum.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>PatchBoundaryNodeSum_8h</filename>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
     <includes id="CoarseFineBoundary_8h" name="CoarseFineBoundary.h" local="yes" imported="no">SAMRAI/hier/CoarseFineBoundary.h</includes>
@@ -419,7 +419,7 @@
   </compound>
   <compound kind="file">
     <name>TimeRefinementIntegrator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>TimeRefinementIntegrator_8C</filename>
     <includes id="TimeRefinementIntegrator_8h" name="TimeRefinementIntegrator.h" local="yes" imported="no">SAMRAI/algs/TimeRefinementIntegrator.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -433,7 +433,7 @@
   </compound>
   <compound kind="file">
     <name>TimeRefinementIntegrator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>TimeRefinementIntegrator_8h</filename>
     <includes id="TimeRefinementLevelStrategy_8h" name="TimeRefinementLevelStrategy.h" local="yes" imported="no">SAMRAI/algs/TimeRefinementLevelStrategy.h</includes>
     <includes id="GriddingAlgorithmStrategy_8h" name="GriddingAlgorithmStrategy.h" local="yes" imported="no">SAMRAI/mesh/GriddingAlgorithmStrategy.h</includes>
@@ -448,7 +448,7 @@
   </compound>
   <compound kind="file">
     <name>TimeRefinementLevelStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>TimeRefinementLevelStrategy_8C</filename>
     <includes id="TimeRefinementLevelStrategy_8h" name="TimeRefinementLevelStrategy.h" local="yes" imported="no">SAMRAI/algs/TimeRefinementLevelStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -456,7 +456,7 @@
   </compound>
   <compound kind="file">
     <name>TimeRefinementLevelStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/</path>
     <filename>TimeRefinementLevelStrategy_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <includes id="PatchLevel_8h" name="PatchLevel.h" local="yes" imported="no">SAMRAI/hier/PatchLevel.h</includes>
@@ -469,7 +469,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryUtilityStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>BoundaryUtilityStrategy_8C</filename>
     <includes id="BoundaryUtilityStrategy_8h" name="BoundaryUtilityStrategy.h" local="yes" imported="no">SAMRAI/appu/BoundaryUtilityStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -477,7 +477,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryUtilityStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>BoundaryUtilityStrategy_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -487,7 +487,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianBoundaryDefines.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>CartesianBoundaryDefines_8h</filename>
     <namespace>Bdry</namespace>
     <namespace>BdryLoc</namespace>
@@ -894,7 +894,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianBoundaryUtilities2.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>CartesianBoundaryUtilities2_8C</filename>
     <includes id="CartesianBoundaryUtilities2_8h" name="CartesianBoundaryUtilities2.h" local="yes" imported="no">SAMRAI/appu/CartesianBoundaryUtilities2.h</includes>
     <includes id="CartesianBoundaryDefines_8h" name="CartesianBoundaryDefines.h" local="yes" imported="no">SAMRAI/appu/CartesianBoundaryDefines.h</includes>
@@ -912,7 +912,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianBoundaryUtilities2.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>CartesianBoundaryUtilities2_8h</filename>
     <includes id="BoundaryUtilityStrategy_8h" name="BoundaryUtilityStrategy.h" local="yes" imported="no">SAMRAI/appu/BoundaryUtilityStrategy.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -927,7 +927,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianBoundaryUtilities3.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>CartesianBoundaryUtilities3_8C</filename>
     <includes id="CartesianBoundaryUtilities3_8h" name="CartesianBoundaryUtilities3.h" local="yes" imported="no">SAMRAI/appu/CartesianBoundaryUtilities3.h</includes>
     <includes id="CartesianBoundaryDefines_8h" name="CartesianBoundaryDefines.h" local="yes" imported="no">SAMRAI/appu/CartesianBoundaryDefines.h</includes>
@@ -946,7 +946,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianBoundaryUtilities3.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>CartesianBoundaryUtilities3_8h</filename>
     <includes id="BoundaryUtilityStrategy_8h" name="BoundaryUtilityStrategy.h" local="yes" imported="no">SAMRAI/appu/BoundaryUtilityStrategy.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -961,21 +961,21 @@
   </compound>
   <compound kind="file">
     <name>manual_boundary.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/dox/</path>
     <filename>manual__boundary_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::appu</namespace>
   </compound>
   <compound kind="file">
     <name>manual_plotting.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/dox/</path>
     <filename>manual__plotting_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::appu</namespace>
   </compound>
   <compound kind="file">
     <name>VisDerivedDataStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>VisDerivedDataStrategy_8C</filename>
     <includes id="VisDerivedDataStrategy_8h" name="VisDerivedDataStrategy.h" local="yes" imported="no">SAMRAI/appu/VisDerivedDataStrategy.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -984,7 +984,7 @@
   </compound>
   <compound kind="file">
     <name>VisDerivedDataStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>VisDerivedDataStrategy_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -995,7 +995,7 @@
   </compound>
   <compound kind="file">
     <name>VisItDataWriter.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>VisItDataWriter_8C</filename>
     <includes id="VisItDataWriter_8h" name="VisItDataWriter.h" local="yes" imported="no">SAMRAI/appu/VisItDataWriter.h</includes>
     <includes id="TimerManager_8h" name="TimerManager.h" local="yes" imported="no">SAMRAI/tbox/TimerManager.h</includes>
@@ -1018,7 +1018,7 @@
   </compound>
   <compound kind="file">
     <name>VisItDataWriter.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>VisItDataWriter_8h</filename>
     <includes id="VisDerivedDataStrategy_8h" name="VisDerivedDataStrategy.h" local="yes" imported="no">SAMRAI/appu/VisDerivedDataStrategy.h</includes>
     <includes id="VisMaterialsDataStrategy_8h" name="VisMaterialsDataStrategy.h" local="yes" imported="no">SAMRAI/appu/VisMaterialsDataStrategy.h</includes>
@@ -1034,7 +1034,7 @@
   </compound>
   <compound kind="file">
     <name>VisMaterialsDataStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>VisMaterialsDataStrategy_8C</filename>
     <includes id="VisMaterialsDataStrategy_8h" name="VisMaterialsDataStrategy.h" local="yes" imported="no">SAMRAI/appu/VisMaterialsDataStrategy.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -1043,7 +1043,7 @@
   </compound>
   <compound kind="file">
     <name>VisMaterialsDataStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/</path>
     <filename>VisMaterialsDataStrategy_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -1054,7 +1054,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellComplexConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellComplexConservativeLinearRefine_8C</filename>
     <includes id="CartesianCellComplexConservativeLinearRefine_8h" name="CartesianCellComplexConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianCellComplexConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1073,7 +1073,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellComplexConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellComplexConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1085,7 +1085,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellComplexLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellComplexLinearRefine_8C</filename>
     <includes id="CartesianCellComplexLinearRefine_8h" name="CartesianCellComplexLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianCellComplexLinearRefine.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1105,7 +1105,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellComplexLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellComplexLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1117,7 +1117,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellComplexWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellComplexWeightedAverage_8C</filename>
     <includes id="CartesianCellComplexWeightedAverage_8h" name="CartesianCellComplexWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianCellComplexWeightedAverage.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1136,7 +1136,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellComplexWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellComplexWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1148,7 +1148,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellDoubleConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellDoubleConservativeLinearRefine_8C</filename>
     <includes id="CartesianCellDoubleConservativeLinearRefine_8h" name="CartesianCellDoubleConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianCellDoubleConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1166,7 +1166,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellDoubleConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellDoubleConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1178,7 +1178,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellDoubleLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellDoubleLinearRefine_8C</filename>
     <includes id="CartesianCellDoubleLinearRefine_8h" name="CartesianCellDoubleLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianCellDoubleLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1196,7 +1196,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellDoubleLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellDoubleLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1208,7 +1208,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellDoubleWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellDoubleWeightedAverage_8C</filename>
     <includes id="CartesianCellDoubleWeightedAverage_8h" name="CartesianCellDoubleWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianCellDoubleWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1226,7 +1226,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellDoubleWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellDoubleWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1238,7 +1238,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellFloatConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellFloatConservativeLinearRefine_8C</filename>
     <includes id="CartesianCellFloatConservativeLinearRefine_8h" name="CartesianCellFloatConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1256,7 +1256,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellFloatConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellFloatConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1268,7 +1268,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellFloatLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellFloatLinearRefine_8C</filename>
     <includes id="CartesianCellFloatLinearRefine_8h" name="CartesianCellFloatLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianCellFloatLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1286,7 +1286,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellFloatLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellFloatLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1298,7 +1298,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellFloatWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellFloatWeightedAverage_8C</filename>
     <includes id="CartesianCellFloatWeightedAverage_8h" name="CartesianCellFloatWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianCellFloatWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1316,7 +1316,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianCellFloatWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianCellFloatWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1328,7 +1328,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeComplexWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeComplexWeightedAverage_8C</filename>
     <includes id="CartesianEdgeComplexWeightedAverage_8h" name="CartesianEdgeComplexWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianEdgeComplexWeightedAverage.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1347,7 +1347,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeComplexWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeComplexWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1359,7 +1359,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeDoubleConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeDoubleConservativeLinearRefine_8C</filename>
     <includes id="CartesianEdgeDoubleConservativeLinearRefine_8h" name="CartesianEdgeDoubleConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianEdgeDoubleConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1377,7 +1377,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeDoubleConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeDoubleConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1389,7 +1389,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeDoubleWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeDoubleWeightedAverage_8C</filename>
     <includes id="CartesianEdgeDoubleWeightedAverage_8h" name="CartesianEdgeDoubleWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianEdgeDoubleWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1407,7 +1407,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeDoubleWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeDoubleWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1419,7 +1419,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeFloatConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeFloatConservativeLinearRefine_8C</filename>
     <includes id="CartesianEdgeFloatConservativeLinearRefine_8h" name="CartesianEdgeFloatConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianEdgeFloatConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1437,7 +1437,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeFloatConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeFloatConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1449,7 +1449,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeFloatWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeFloatWeightedAverage_8C</filename>
     <includes id="CartesianEdgeFloatWeightedAverage_8h" name="CartesianEdgeFloatWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianEdgeFloatWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1467,7 +1467,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianEdgeFloatWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianEdgeFloatWeightedAverage_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -1479,7 +1479,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceComplexWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceComplexWeightedAverage_8C</filename>
     <includes id="CartesianFaceComplexWeightedAverage_8h" name="CartesianFaceComplexWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianFaceComplexWeightedAverage.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1498,7 +1498,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceComplexWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceComplexWeightedAverage_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -1510,7 +1510,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceDoubleConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceDoubleConservativeLinearRefine_8C</filename>
     <includes id="CartesianFaceDoubleConservativeLinearRefine_8h" name="CartesianFaceDoubleConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianFaceDoubleConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1528,7 +1528,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceDoubleConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceDoubleConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1540,7 +1540,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceDoubleWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceDoubleWeightedAverage_8C</filename>
     <includes id="CartesianFaceDoubleWeightedAverage_8h" name="CartesianFaceDoubleWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianFaceDoubleWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1558,7 +1558,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceDoubleWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceDoubleWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1570,7 +1570,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceFloatConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceFloatConservativeLinearRefine_8C</filename>
     <includes id="CartesianFaceFloatConservativeLinearRefine_8h" name="CartesianFaceFloatConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianFaceFloatConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1588,7 +1588,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceFloatConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceFloatConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1600,7 +1600,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceFloatWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceFloatWeightedAverage_8C</filename>
     <includes id="CartesianFaceFloatWeightedAverage_8h" name="CartesianFaceFloatWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianFaceFloatWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1618,7 +1618,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianFaceFloatWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianFaceFloatWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1630,7 +1630,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianGridGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianGridGeometry_8C</filename>
     <includes id="CartesianGridGeometry_8h" name="CartesianGridGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianGridGeometry.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1688,7 +1688,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianGridGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianGridGeometry_8h</filename>
     <includes id="GridGeometry_8h" name="GridGeometry.h" local="yes" imported="no">SAMRAI/geom/GridGeometry.h</includes>
     <includes id="BoundaryBox_8h" name="BoundaryBox.h" local="yes" imported="no">SAMRAI/hier/BoundaryBox.h</includes>
@@ -1703,7 +1703,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianNodeComplexLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianNodeComplexLinearRefine_8C</filename>
     <includes id="CartesianNodeComplexLinearRefine_8h" name="CartesianNodeComplexLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianNodeComplexLinearRefine.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1722,7 +1722,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianNodeComplexLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianNodeComplexLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1734,7 +1734,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianNodeDoubleLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianNodeDoubleLinearRefine_8C</filename>
     <includes id="CartesianNodeDoubleLinearRefine_8h" name="CartesianNodeDoubleLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianNodeDoubleLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1752,7 +1752,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianNodeDoubleLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianNodeDoubleLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1764,7 +1764,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianNodeFloatLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianNodeFloatLinearRefine_8C</filename>
     <includes id="CartesianNodeFloatLinearRefine_8h" name="CartesianNodeFloatLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianNodeFloatLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1782,7 +1782,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianNodeFloatLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianNodeFloatLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1794,7 +1794,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOuterfaceComplexWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOuterfaceComplexWeightedAverage_8C</filename>
     <includes id="CartesianOuterfaceComplexWeightedAverage_8h" name="CartesianOuterfaceComplexWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianOuterfaceComplexWeightedAverage.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1813,7 +1813,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOuterfaceComplexWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOuterfaceComplexWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1825,7 +1825,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOuterfaceDoubleWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOuterfaceDoubleWeightedAverage_8C</filename>
     <includes id="CartesianOuterfaceDoubleWeightedAverage_8h" name="CartesianOuterfaceDoubleWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianOuterfaceDoubleWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1843,7 +1843,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOuterfaceDoubleWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOuterfaceDoubleWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1855,7 +1855,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOuterfaceFloatWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOuterfaceFloatWeightedAverage_8C</filename>
     <includes id="CartesianOuterfaceFloatWeightedAverage_8h" name="CartesianOuterfaceFloatWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianOuterfaceFloatWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1873,7 +1873,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOuterfaceFloatWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOuterfaceFloatWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1885,7 +1885,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOutersideDoubleWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOutersideDoubleWeightedAverage_8C</filename>
     <includes id="CartesianOutersideDoubleWeightedAverage_8h" name="CartesianOutersideDoubleWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianOutersideDoubleWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1903,7 +1903,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianOutersideDoubleWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianOutersideDoubleWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1915,7 +1915,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianPatchGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianPatchGeometry_8C</filename>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -1924,7 +1924,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianPatchGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianPatchGeometry_8h</filename>
     <includes id="PatchGeometry_8h" name="PatchGeometry.h" local="yes" imported="no">SAMRAI/hier/PatchGeometry.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -1934,7 +1934,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideComplexWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideComplexWeightedAverage_8C</filename>
     <includes id="CartesianSideComplexWeightedAverage_8h" name="CartesianSideComplexWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianSideComplexWeightedAverage.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -1953,7 +1953,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideComplexWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideComplexWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1965,7 +1965,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideDoubleConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideDoubleConservativeLinearRefine_8C</filename>
     <includes id="CartesianSideDoubleConservativeLinearRefine_8h" name="CartesianSideDoubleConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianSideDoubleConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -1983,7 +1983,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideDoubleConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideDoubleConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -1995,7 +1995,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideDoubleWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideDoubleWeightedAverage_8C</filename>
     <includes id="CartesianSideDoubleWeightedAverage_8h" name="CartesianSideDoubleWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianSideDoubleWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -2013,7 +2013,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideDoubleWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideDoubleWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -2025,7 +2025,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideFloatConservativeLinearRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideFloatConservativeLinearRefine_8C</filename>
     <includes id="CartesianSideFloatConservativeLinearRefine_8h" name="CartesianSideFloatConservativeLinearRefine.h" local="yes" imported="no">SAMRAI/geom/CartesianSideFloatConservativeLinearRefine.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -2043,7 +2043,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideFloatConservativeLinearRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideFloatConservativeLinearRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -2055,7 +2055,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideFloatWeightedAverage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideFloatWeightedAverage_8C</filename>
     <includes id="CartesianSideFloatWeightedAverage_8h" name="CartesianSideFloatWeightedAverage.h" local="yes" imported="no">SAMRAI/geom/CartesianSideFloatWeightedAverage.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -2073,7 +2073,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianSideFloatWeightedAverage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>CartesianSideFloatWeightedAverage_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -2085,49 +2085,49 @@
   </compound>
   <compound kind="file">
     <name>manual_cartesian.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>manual__cartesian_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>manual_cartesian_grid_geom.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>manual__cartesian__grid__geom_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>manual_cartesian_operators_cell.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>manual__cartesian__operators__cell_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>manual_cartesian_operators_fortran.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>manual__cartesian__operators__fortran_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>manual_cartesian_patch_geom.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>manual__cartesian__patch__geom_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>manual_generic.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>manual__generic_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>GridGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>GridGeometry_8C</filename>
     <includes id="GridGeometry_8h" name="GridGeometry.h" local="yes" imported="no">SAMRAI/geom/GridGeometry.h</includes>
     <includes id="NodeComplexInjection_8h" name="NodeComplexInjection.h" local="yes" imported="no">SAMRAI/pdat/NodeComplexInjection.h</includes>
@@ -2196,7 +2196,7 @@
   </compound>
   <compound kind="file">
     <name>GridGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/</path>
     <filename>GridGeometry_8h</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
@@ -2207,7 +2207,7 @@
   </compound>
   <compound kind="file">
     <name>BaseConnectorAlgorithm.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BaseConnectorAlgorithm_8C</filename>
     <includes id="BaseConnectorAlgorithm_8h" name="BaseConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/BaseConnectorAlgorithm.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2216,7 +2216,7 @@
   </compound>
   <compound kind="file">
     <name>BaseConnectorAlgorithm.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BaseConnectorAlgorithm_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -2228,7 +2228,7 @@
   </compound>
   <compound kind="file">
     <name>BaseGridGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BaseGridGeometry_8C</filename>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
     <includes id="BoundaryLookupTable_8h" name="BoundaryLookupTable.h" local="yes" imported="no">SAMRAI/hier/BoundaryLookupTable.h</includes>
@@ -2251,7 +2251,7 @@
   </compound>
   <compound kind="file">
     <name>BaseGridGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BaseGridGeometry_8h</filename>
     <includes id="Serializable_8h" name="Serializable.h" local="yes" imported="no">SAMRAI/tbox/Serializable.h</includes>
     <includes id="Timer_8h" name="Timer.h" local="yes" imported="no">SAMRAI/tbox/Timer.h</includes>
@@ -2269,7 +2269,7 @@
   </compound>
   <compound kind="file">
     <name>BlockId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BlockId_8C</filename>
     <includes id="BlockId_8h" name="BlockId.h" local="yes" imported="no">SAMRAI/hier/BlockId.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -2278,7 +2278,7 @@
   </compound>
   <compound kind="file">
     <name>BlockId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BlockId_8h</filename>
     <class kind="class">SAMRAI::hier::BlockId</class>
     <namespace>SAMRAI</namespace>
@@ -2286,7 +2286,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryBox.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoundaryBox_8C</filename>
     <includes id="BoundaryBox_8h" name="BoundaryBox.h" local="yes" imported="no">SAMRAI/hier/BoundaryBox.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -2296,7 +2296,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryBox.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoundaryBox_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <class kind="class">SAMRAI::hier::BoundaryBox</class>
@@ -2305,7 +2305,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryBoxUtils.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoundaryBoxUtils_8C</filename>
     <includes id="BoundaryBoxUtils_8h" name="BoundaryBoxUtils.h" local="yes" imported="no">SAMRAI/hier/BoundaryBoxUtils.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -2316,7 +2316,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryBoxUtils.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoundaryBoxUtils_8h</filename>
     <includes id="BoundaryBox_8h" name="BoundaryBox.h" local="yes" imported="no">SAMRAI/hier/BoundaryBox.h</includes>
     <class kind="class">SAMRAI::hier::BoundaryBoxUtils</class>
@@ -2325,7 +2325,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryLookupTable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoundaryLookupTable_8C</filename>
     <includes id="BoundaryLookupTable_8h" name="BoundaryLookupTable.h" local="yes" imported="no">SAMRAI/hier/BoundaryLookupTable.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -2334,7 +2334,7 @@
   </compound>
   <compound kind="file">
     <name>BoundaryLookupTable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoundaryLookupTable_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <class kind="class">SAMRAI::hier::BoundaryLookupTable</class>
@@ -2343,7 +2343,7 @@
   </compound>
   <compound kind="file">
     <name>Box.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Box_8C</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="PeriodicShiftCatalog_8h" name="PeriodicShiftCatalog.h" local="yes" imported="no">SAMRAI/hier/PeriodicShiftCatalog.h</includes>
@@ -2367,7 +2367,7 @@
   </compound>
   <compound kind="file">
     <name>Box.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Box_8h</filename>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -2387,7 +2387,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainer_8C</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <includes id="BoxContainerSingleBlockIterator_8h" name="BoxContainerSingleBlockIterator.h" local="yes" imported="no">SAMRAI/hier/BoxContainerSingleBlockIterator.h</includes>
@@ -2414,7 +2414,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainer_8h</filename>
     <includes id="BlockId_8h" name="BlockId.h" local="yes" imported="no">SAMRAI/hier/BlockId.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -2430,7 +2430,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainerSingleBlockIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainerSingleBlockIterator_8C</filename>
     <includes id="BoxContainerSingleBlockIterator_8h" name="BoxContainerSingleBlockIterator.h" local="yes" imported="no">SAMRAI/hier/BoxContainerSingleBlockIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -2438,7 +2438,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainerSingleBlockIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainerSingleBlockIterator_8h</filename>
     <includes id="BlockId_8h" name="BlockId.h" local="yes" imported="no">SAMRAI/hier/BlockId.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2448,7 +2448,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainerSingleOwnerIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainerSingleOwnerIterator_8C</filename>
     <includes id="BoxContainerSingleOwnerIterator_8h" name="BoxContainerSingleOwnerIterator.h" local="yes" imported="no">SAMRAI/hier/BoxContainerSingleOwnerIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -2456,7 +2456,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainerSingleOwnerIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainerSingleOwnerIterator_8h</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <class kind="class">SAMRAI::hier::BoxContainerSingleOwnerIterator</class>
@@ -2465,7 +2465,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainerUtils.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainerUtils_8C</filename>
     <includes id="BoxContainerUtils_8h" name="BoxContainerUtils.h" local="yes" imported="no">SAMRAI/hier/BoxContainerUtils.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -2475,7 +2475,7 @@
   </compound>
   <compound kind="file">
     <name>BoxContainerUtils.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxContainerUtils_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <class kind="class">SAMRAI::hier::BoxContainerUtils</class>
@@ -2484,7 +2484,7 @@
   </compound>
   <compound kind="file">
     <name>BoxGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxGeometry_8C</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <namespace>SAMRAI</namespace>
@@ -2492,7 +2492,7 @@
   </compound>
   <compound kind="file">
     <name>BoxGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxGeometry_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2504,7 +2504,7 @@
   </compound>
   <compound kind="file">
     <name>BoxId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxId_8C</filename>
     <includes id="BoxId_8h" name="BoxId.h" local="yes" imported="no">SAMRAI/hier/BoxId.h</includes>
     <namespace>SAMRAI</namespace>
@@ -2519,7 +2519,7 @@
   </compound>
   <compound kind="file">
     <name>BoxId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxId_8h</filename>
     <includes id="GlobalId_8h" name="GlobalId.h" local="yes" imported="no">SAMRAI/hier/GlobalId.h</includes>
     <includes id="PeriodicId_8h" name="PeriodicId.h" local="yes" imported="no">SAMRAI/hier/PeriodicId.h</includes>
@@ -2530,7 +2530,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevel.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevel_8C</filename>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2556,7 +2556,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevel.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevel_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2574,7 +2574,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevelConnectorUtils.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevelConnectorUtils_8C</filename>
     <includes id="BoxLevelConnectorUtils_8h" name="BoxLevelConnectorUtils.h" local="yes" imported="no">SAMRAI/hier/BoxLevelConnectorUtils.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2590,7 +2590,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevelConnectorUtils.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevelConnectorUtils_8h</filename>
     <includes id="MappingConnector_8h" name="MappingConnector.h" local="yes" imported="no">SAMRAI/hier/MappingConnector.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -2600,7 +2600,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevelHandle.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevelHandle_8C</filename>
     <includes id="BoxLevelHandle_8h" name="BoxLevelHandle.h" local="yes" imported="no">SAMRAI/hier/BoxLevelHandle.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -2609,7 +2609,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevelHandle.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevelHandle_8h</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <class kind="class">SAMRAI::hier::BoxLevelHandle</class>
@@ -2618,7 +2618,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevelStatistics.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevelStatistics_8C</filename>
     <includes id="BoxLevelStatistics_8h" name="BoxLevelStatistics.h" local="yes" imported="no">SAMRAI/hier/BoxLevelStatistics.h</includes>
     <includes id="RealBoxConstIterator_8h" name="RealBoxConstIterator.h" local="yes" imported="no">SAMRAI/hier/RealBoxConstIterator.h</includes>
@@ -2628,7 +2628,7 @@
   </compound>
   <compound kind="file">
     <name>BoxLevelStatistics.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxLevelStatistics_8h</filename>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
     <class kind="class">SAMRAI::hier::BoxLevelStatistics</class>
@@ -2637,7 +2637,7 @@
   </compound>
   <compound kind="file">
     <name>BoxNeighborhoodCollection.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxNeighborhoodCollection_8C</filename>
     <includes id="BoxNeighborhoodCollection_8h" name="BoxNeighborhoodCollection.h" local="yes" imported="no">SAMRAI/hier/BoxNeighborhoodCollection.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2646,7 +2646,7 @@
   </compound>
   <compound kind="file">
     <name>BoxNeighborhoodCollection.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxNeighborhoodCollection_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2665,7 +2665,7 @@
   </compound>
   <compound kind="file">
     <name>BoxOverlap.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxOverlap_8C</filename>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
     <namespace>SAMRAI</namespace>
@@ -2673,7 +2673,7 @@
   </compound>
   <compound kind="file">
     <name>BoxOverlap.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxOverlap_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Transformation_8h" name="Transformation.h" local="yes" imported="no">SAMRAI/hier/Transformation.h</includes>
@@ -2683,7 +2683,7 @@
   </compound>
   <compound kind="file">
     <name>BoxTree.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxTree_8C</filename>
     <includes id="BoxTree_8h" name="BoxTree.h" local="yes" imported="no">SAMRAI/hier/BoxTree.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2695,7 +2695,7 @@
   </compound>
   <compound kind="file">
     <name>BoxTree.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxTree_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="Timer_8h" name="Timer.h" local="yes" imported="no">SAMRAI/tbox/Timer.h</includes>
@@ -2705,7 +2705,7 @@
   </compound>
   <compound kind="file">
     <name>BoxUtilities.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxUtilities_8C</filename>
     <includes id="BoxUtilities_8h" name="BoxUtilities.h" local="yes" imported="no">SAMRAI/hier/BoxUtilities.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2718,7 +2718,7 @@
   </compound>
   <compound kind="file">
     <name>BoxUtilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>BoxUtilities_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2729,7 +2729,7 @@
   </compound>
   <compound kind="file">
     <name>CoarseFineBoundary.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>CoarseFineBoundary_8C</filename>
     <includes id="CoarseFineBoundary_8h" name="CoarseFineBoundary.h" local="yes" imported="no">SAMRAI/hier/CoarseFineBoundary.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2741,7 +2741,7 @@
   </compound>
   <compound kind="file">
     <name>CoarseFineBoundary.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>CoarseFineBoundary_8h</filename>
     <includes id="Dimension_8h" name="Dimension.h" local="yes" imported="no">SAMRAI/tbox/Dimension.h</includes>
     <includes id="TimerManager_8h" name="TimerManager.h" local="yes" imported="no">SAMRAI/tbox/TimerManager.h</includes>
@@ -2754,7 +2754,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenOperator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>CoarsenOperator_8C</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -2764,7 +2764,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenOperator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>CoarsenOperator_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -2777,7 +2777,7 @@
   </compound>
   <compound kind="file">
     <name>ComponentSelector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>ComponentSelector_8C</filename>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
     <includes id="SAMRAIManager_8h" name="SAMRAIManager.h" local="yes" imported="no">SAMRAI/tbox/SAMRAIManager.h</includes>
@@ -2787,7 +2787,7 @@
   </compound>
   <compound kind="file">
     <name>ComponentSelector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>ComponentSelector_8h</filename>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -2797,7 +2797,7 @@
   </compound>
   <compound kind="file">
     <name>Connector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Connector_8C</filename>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2820,7 +2820,7 @@
   </compound>
   <compound kind="file">
     <name>Connector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Connector_8h</filename>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
     <includes id="BoxLevelHandle_8h" name="BoxLevelHandle.h" local="yes" imported="no">SAMRAI/hier/BoxLevelHandle.h</includes>
@@ -2834,7 +2834,7 @@
   </compound>
   <compound kind="file">
     <name>ConnectorStatistics.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>ConnectorStatistics_8C</filename>
     <includes id="ConnectorStatistics_8h" name="ConnectorStatistics.h" local="yes" imported="no">SAMRAI/hier/ConnectorStatistics.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -2844,7 +2844,7 @@
   </compound>
   <compound kind="file">
     <name>ConnectorStatistics.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>ConnectorStatistics_8h</filename>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
     <class kind="class">SAMRAI::hier::ConnectorStatistics</class>
@@ -2853,42 +2853,42 @@
   </compound>
   <compound kind="file">
     <name>manual_boxes.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/dox/</path>
     <filename>manual__boxes_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::hier</namespace>
   </compound>
   <compound kind="file">
     <name>manual_dlbg.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/dox/</path>
     <filename>manual__dlbg_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::hier</namespace>
   </compound>
   <compound kind="file">
     <name>manual_patches.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/dox/</path>
     <filename>manual__patches_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::hier</namespace>
   </compound>
   <compound kind="file">
     <name>manual_transfer_interfaces.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/dox/</path>
     <filename>manual__transfer__interfaces_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::hier</namespace>
   </compound>
   <compound kind="file">
     <name>manual_variables.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/dox/</path>
     <filename>manual__variables_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::hier</namespace>
   </compound>
   <compound kind="file">
     <name>GlobalId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>GlobalId_8C</filename>
     <includes id="GlobalId_8h" name="GlobalId.h" local="yes" imported="no">SAMRAI/hier/GlobalId.h</includes>
     <namespace>SAMRAI</namespace>
@@ -2903,7 +2903,7 @@
   </compound>
   <compound kind="file">
     <name>GlobalId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>GlobalId_8h</filename>
     <includes id="LocalId_8h" name="LocalId.h" local="yes" imported="no">SAMRAI/hier/LocalId.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -2914,7 +2914,7 @@
   </compound>
   <compound kind="file">
     <name>Index.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Index_8C</filename>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -2924,7 +2924,7 @@
   </compound>
   <compound kind="file">
     <name>Index.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Index_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -2934,7 +2934,7 @@
   </compound>
   <compound kind="file">
     <name>IntVector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>IntVector_8C</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -2957,7 +2957,7 @@
   </compound>
   <compound kind="file">
     <name>IntVector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>IntVector_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="Dimension_8h" name="Dimension.h" local="yes" imported="no">SAMRAI/tbox/Dimension.h</includes>
@@ -2969,7 +2969,7 @@
   </compound>
   <compound kind="file">
     <name>LocalId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>LocalId_8C</filename>
     <includes id="LocalId_8h" name="LocalId.h" local="yes" imported="no">SAMRAI/hier/LocalId.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -2985,7 +2985,7 @@
   </compound>
   <compound kind="file">
     <name>LocalId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>LocalId_8h</filename>
     <class kind="class">SAMRAI::hier::LocalId</class>
     <namespace>SAMRAI</namespace>
@@ -2993,7 +2993,7 @@
   </compound>
   <compound kind="file">
     <name>MappingConnector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>MappingConnector_8C</filename>
     <includes id="MappingConnector_8h" name="MappingConnector.h" local="yes" imported="no">SAMRAI/hier/MappingConnector.h</includes>
     <includes id="BoxLevelConnectorUtils_8h" name="BoxLevelConnectorUtils.h" local="yes" imported="no">SAMRAI/hier/BoxLevelConnectorUtils.h</includes>
@@ -3010,7 +3010,7 @@
   </compound>
   <compound kind="file">
     <name>MappingConnector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>MappingConnector_8h</filename>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
     <class kind="class">SAMRAI::hier::MappingConnector</class>
@@ -3019,7 +3019,7 @@
   </compound>
   <compound kind="file">
     <name>MappingConnectorAlgorithm.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>MappingConnectorAlgorithm_8C</filename>
     <includes id="BoxContainerUtils_8h" name="BoxContainerUtils.h" local="yes" imported="no">SAMRAI/hier/BoxContainerUtils.h</includes>
     <includes id="MappingConnectorAlgorithm_8h" name="MappingConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/MappingConnectorAlgorithm.h</includes>
@@ -3035,7 +3035,7 @@
   </compound>
   <compound kind="file">
     <name>MappingConnectorAlgorithm.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>MappingConnectorAlgorithm_8h</filename>
     <includes id="BaseConnectorAlgorithm_8h" name="BaseConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/BaseConnectorAlgorithm.h</includes>
     <includes id="MappingConnector_8h" name="MappingConnector.h" local="yes" imported="no">SAMRAI/hier/MappingConnector.h</includes>
@@ -3045,7 +3045,7 @@
   </compound>
   <compound kind="file">
     <name>MultiblockBoxTree.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>MultiblockBoxTree_8C</filename>
     <includes id="MultiblockBoxTree_8h" name="MultiblockBoxTree.h" local="yes" imported="no">SAMRAI/hier/MultiblockBoxTree.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -3055,7 +3055,7 @@
   </compound>
   <compound kind="file">
     <name>MultiblockBoxTree.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>MultiblockBoxTree_8h</filename>
     <includes id="BoxTree_8h" name="BoxTree.h" local="yes" imported="no">SAMRAI/hier/BoxTree.h</includes>
     <class kind="class">SAMRAI::hier::MultiblockBoxTree</class>
@@ -3064,7 +3064,7 @@
   </compound>
   <compound kind="file">
     <name>OverlapConnectorAlgorithm.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>OverlapConnectorAlgorithm_8C</filename>
     <includes id="OverlapConnectorAlgorithm_8h" name="OverlapConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/OverlapConnectorAlgorithm.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -3081,7 +3081,7 @@
   </compound>
   <compound kind="file">
     <name>OverlapConnectorAlgorithm.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>OverlapConnectorAlgorithm_8h</filename>
     <includes id="BaseConnectorAlgorithm_8h" name="BaseConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/BaseConnectorAlgorithm.h</includes>
     <class kind="class">SAMRAI::hier::OverlapConnectorAlgorithm</class>
@@ -3090,7 +3090,7 @@
   </compound>
   <compound kind="file">
     <name>Patch.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Patch_8C</filename>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
     <includes id="PatchDataRestartManager_8h" name="PatchDataRestartManager.h" local="yes" imported="no">SAMRAI/hier/PatchDataRestartManager.h</includes>
@@ -3106,7 +3106,7 @@
   </compound>
   <compound kind="file">
     <name>Patch.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Patch_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
@@ -3125,7 +3125,7 @@
   </compound>
   <compound kind="file">
     <name>PatchBoundaries.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchBoundaries_8C</filename>
     <includes id="PatchBoundaries_8h" name="PatchBoundaries.h" local="yes" imported="no">SAMRAI/hier/PatchBoundaries.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3133,7 +3133,7 @@
   </compound>
   <compound kind="file">
     <name>PatchBoundaries.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchBoundaries_8h</filename>
     <includes id="BoundaryBox_8h" name="BoundaryBox.h" local="yes" imported="no">SAMRAI/hier/BoundaryBox.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -3143,7 +3143,7 @@
   </compound>
   <compound kind="file">
     <name>PatchData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchData_8C</filename>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3151,7 +3151,7 @@
   </compound>
   <compound kind="file">
     <name>PatchData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchData_8h</filename>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -3165,7 +3165,7 @@
   </compound>
   <compound kind="file">
     <name>PatchDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchDataFactory_8C</filename>
     <includes id="PatchDataFactory_8h" name="PatchDataFactory.h" local="yes" imported="no">SAMRAI/hier/PatchDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -3174,7 +3174,7 @@
   </compound>
   <compound kind="file">
     <name>PatchDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -3186,7 +3186,7 @@
   </compound>
   <compound kind="file">
     <name>PatchDataRestartManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchDataRestartManager_8C</filename>
     <includes id="PatchDataRestartManager_8h" name="PatchDataRestartManager.h" local="yes" imported="no">SAMRAI/hier/PatchDataRestartManager.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3194,7 +3194,7 @@
   </compound>
   <compound kind="file">
     <name>PatchDataRestartManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchDataRestartManager_8h</filename>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -3204,7 +3204,7 @@
   </compound>
   <compound kind="file">
     <name>PatchDescriptor.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchDescriptor_8C</filename>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
     <includes id="SAMRAIManager_8h" name="SAMRAIManager.h" local="yes" imported="no">SAMRAI/tbox/SAMRAIManager.h</includes>
@@ -3213,7 +3213,7 @@
   </compound>
   <compound kind="file">
     <name>PatchDescriptor.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchDescriptor_8h</filename>
     <includes id="PatchDataFactory_8h" name="PatchDataFactory.h" local="yes" imported="no">SAMRAI/hier/PatchDataFactory.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -3225,7 +3225,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchFactory_8C</filename>
     <includes id="PatchFactory_8h" name="PatchFactory.h" local="yes" imported="no">SAMRAI/hier/PatchFactory.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3233,7 +3233,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -3245,7 +3245,7 @@
   </compound>
   <compound kind="file">
     <name>PatchGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchGeometry_8C</filename>
     <includes id="PatchGeometry_8h" name="PatchGeometry.h" local="yes" imported="no">SAMRAI/hier/PatchGeometry.h</includes>
     <includes id="BoundaryLookupTable_8h" name="BoundaryLookupTable.h" local="yes" imported="no">SAMRAI/hier/BoundaryLookupTable.h</includes>
@@ -3254,7 +3254,7 @@
   </compound>
   <compound kind="file">
     <name>PatchGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchGeometry_8h</filename>
     <includes id="BoundaryBox_8h" name="BoundaryBox.h" local="yes" imported="no">SAMRAI/hier/BoundaryBox.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -3268,7 +3268,7 @@
   </compound>
   <compound kind="file">
     <name>PatchHierarchy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchHierarchy_8C</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <includes id="OverlapConnectorAlgorithm_8h" name="OverlapConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/OverlapConnectorAlgorithm.h</includes>
@@ -3281,7 +3281,7 @@
   </compound>
   <compound kind="file">
     <name>PatchHierarchy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchHierarchy_8h</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
@@ -3303,7 +3303,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevel.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchLevel_8C</filename>
     <includes id="PatchLevel_8h" name="PatchLevel.h" local="yes" imported="no">SAMRAI/hier/PatchLevel.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -3316,7 +3316,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevel.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchLevel_8h</filename>
     <includes id="BoxContainerSingleBlockIterator_8h" name="BoxContainerSingleBlockIterator.h" local="yes" imported="no">SAMRAI/hier/BoxContainerSingleBlockIterator.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -3330,7 +3330,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchLevelFactory_8C</filename>
     <includes id="PatchLevelFactory_8h" name="PatchLevelFactory.h" local="yes" imported="no">SAMRAI/hier/PatchLevelFactory.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3338,7 +3338,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PatchLevelFactory_8h</filename>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -3352,7 +3352,7 @@
   </compound>
   <compound kind="file">
     <name>PeriodicId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PeriodicId_8C</filename>
     <includes id="PeriodicId_8h" name="PeriodicId.h" local="yes" imported="no">SAMRAI/hier/PeriodicId.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3367,7 +3367,7 @@
   </compound>
   <compound kind="file">
     <name>PeriodicId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PeriodicId_8h</filename>
     <class kind="class">SAMRAI::hier::PeriodicId</class>
     <namespace>SAMRAI</namespace>
@@ -3375,7 +3375,7 @@
   </compound>
   <compound kind="file">
     <name>PeriodicShiftCatalog.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PeriodicShiftCatalog_8C</filename>
     <includes id="PeriodicShiftCatalog_8h" name="PeriodicShiftCatalog.h" local="yes" imported="no">SAMRAI/hier/PeriodicShiftCatalog.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -3385,7 +3385,7 @@
   </compound>
   <compound kind="file">
     <name>PeriodicShiftCatalog.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PeriodicShiftCatalog_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="PeriodicId_8h" name="PeriodicId.h" local="yes" imported="no">SAMRAI/hier/PeriodicId.h</includes>
@@ -3397,7 +3397,7 @@
   </compound>
   <compound kind="file">
     <name>PersistentOverlapConnectors.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PersistentOverlapConnectors_8C</filename>
     <includes id="PersistentOverlapConnectors_8h" name="PersistentOverlapConnectors.h" local="yes" imported="no">SAMRAI/hier/PersistentOverlapConnectors.h</includes>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
@@ -3410,7 +3410,7 @@
   </compound>
   <compound kind="file">
     <name>PersistentOverlapConnectors.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>PersistentOverlapConnectors_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <class kind="class">SAMRAI::hier::PersistentOverlapConnectors</class>
@@ -3443,7 +3443,7 @@
   </compound>
   <compound kind="file">
     <name>ProcessorMapping.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>ProcessorMapping_8C</filename>
     <includes id="ProcessorMapping_8h" name="ProcessorMapping.h" local="yes" imported="no">SAMRAI/hier/ProcessorMapping.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -3453,7 +3453,7 @@
   </compound>
   <compound kind="file">
     <name>ProcessorMapping.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>ProcessorMapping_8h</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <class kind="class">SAMRAI::hier::ProcessorMapping</class>
@@ -3462,7 +3462,7 @@
   </compound>
   <compound kind="file">
     <name>RealBoxConstIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>RealBoxConstIterator_8C</filename>
     <includes id="RealBoxConstIterator_8h" name="RealBoxConstIterator.h" local="yes" imported="no">SAMRAI/hier/RealBoxConstIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3470,7 +3470,7 @@
   </compound>
   <compound kind="file">
     <name>RealBoxConstIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>RealBoxConstIterator_8h</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <class kind="class">SAMRAI::hier::RealBoxConstIterator</class>
@@ -3479,7 +3479,7 @@
   </compound>
   <compound kind="file">
     <name>RefineOperator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>RefineOperator_8C</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -3489,7 +3489,7 @@
   </compound>
   <compound kind="file">
     <name>RefineOperator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>RefineOperator_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -3502,7 +3502,7 @@
   </compound>
   <compound kind="file">
     <name>SequentialLocalIdGenerator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>SequentialLocalIdGenerator_8h</filename>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
     <class kind="class">SAMRAI::hier::SequentialLocalIdGenerator</class>
@@ -3511,7 +3511,7 @@
   </compound>
   <compound kind="file">
     <name>SingularityFinder.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>SingularityFinder_8C</filename>
     <includes id="SingularityFinder_8h" name="SingularityFinder.h" local="yes" imported="no">SAMRAI/hier/SingularityFinder.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3519,7 +3519,7 @@
   </compound>
   <compound kind="file">
     <name>SingularityFinder.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>SingularityFinder_8h</filename>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
     <class kind="class">SAMRAI::hier::SingularityFinder</class>
@@ -3528,7 +3528,7 @@
   </compound>
   <compound kind="file">
     <name>TimeInterpolateOperator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>TimeInterpolateOperator_8C</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3536,7 +3536,7 @@
   </compound>
   <compound kind="file">
     <name>TimeInterpolateOperator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>TimeInterpolateOperator_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
@@ -3547,7 +3547,7 @@
   </compound>
   <compound kind="file">
     <name>TransferOperatorRegistry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>TransferOperatorRegistry_8C</filename>
     <includes id="TransferOperatorRegistry_8h" name="TransferOperatorRegistry.h" local="yes" imported="no">SAMRAI/hier/TransferOperatorRegistry.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3555,7 +3555,7 @@
   </compound>
   <compound kind="file">
     <name>TransferOperatorRegistry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>TransferOperatorRegistry_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
@@ -3571,7 +3571,7 @@
   </compound>
   <compound kind="file">
     <name>Transformation.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Transformation_8C</filename>
     <includes id="Transformation_8h" name="Transformation.h" local="yes" imported="no">SAMRAI/hier/Transformation.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -3582,7 +3582,7 @@
   </compound>
   <compound kind="file">
     <name>Transformation.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Transformation_8h</filename>
     <includes id="BlockId_8h" name="BlockId.h" local="yes" imported="no">SAMRAI/hier/BlockId.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -3594,7 +3594,7 @@
   </compound>
   <compound kind="file">
     <name>UncoveredBoxIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>UncoveredBoxIterator_8C</filename>
     <includes id="UncoveredBoxIterator_8h" name="UncoveredBoxIterator.h" local="yes" imported="no">SAMRAI/hier/UncoveredBoxIterator.h</includes>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
@@ -3604,7 +3604,7 @@
   </compound>
   <compound kind="file">
     <name>UncoveredBoxIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>UncoveredBoxIterator_8h</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <class kind="class">SAMRAI::hier::UncoveredBoxIterator</class>
@@ -3613,7 +3613,7 @@
   </compound>
   <compound kind="file">
     <name>Variable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Variable_8C</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3621,7 +3621,7 @@
   </compound>
   <compound kind="file">
     <name>Variable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>Variable_8h</filename>
     <includes id="PatchDataFactory_8h" name="PatchDataFactory.h" local="yes" imported="no">SAMRAI/hier/PatchDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -3631,7 +3631,7 @@
   </compound>
   <compound kind="file">
     <name>VariableContext.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>VariableContext_8C</filename>
     <includes id="VariableContext_8h" name="VariableContext.h" local="yes" imported="no">SAMRAI/hier/VariableContext.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -3640,7 +3640,7 @@
   </compound>
   <compound kind="file">
     <name>VariableContext.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>VariableContext_8h</filename>
     <class kind="class">SAMRAI::hier::VariableContext</class>
     <namespace>SAMRAI</namespace>
@@ -3648,7 +3648,7 @@
   </compound>
   <compound kind="file">
     <name>VariableDatabase.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>VariableDatabase_8C</filename>
     <includes id="VariableDatabase_8h" name="VariableDatabase.h" local="yes" imported="no">SAMRAI/hier/VariableDatabase.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -3659,7 +3659,7 @@
   </compound>
   <compound kind="file">
     <name>VariableDatabase.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/</path>
     <filename>VariableDatabase_8h</filename>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -3672,12 +3672,12 @@
   </compound>
   <compound kind="file">
     <name>mainpage.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/</path>
     <filename>mainpage_8dox</filename>
   </compound>
   <compound kind="file">
     <name>ArrayDataBasicOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataBasicOps_8C</filename>
     <includes id="ArrayDataBasicOps_8h" name="ArrayDataBasicOps.h" local="yes" imported="no">SAMRAI/math/ArrayDataBasicOps.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -3687,7 +3687,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataBasicOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataBasicOps_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -3699,7 +3699,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataMiscellaneousOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataMiscellaneousOpsReal_8C</filename>
     <includes id="ArrayDataMiscellaneousOpsReal_8h" name="ArrayDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataMiscellaneousOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -3709,7 +3709,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataMiscellaneousOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataMiscellaneousOpsReal_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -3720,7 +3720,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataNormOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataNormOpsComplex_8C</filename>
     <includes id="ArrayDataNormOpsComplex_8h" name="ArrayDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsComplex.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -3729,7 +3729,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataNormOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataNormOpsComplex_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -3741,7 +3741,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataNormOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataNormOpsInteger_8C</filename>
     <includes id="ArrayDataNormOpsInteger_8h" name="ArrayDataNormOpsInteger.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsInteger.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -3751,7 +3751,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataNormOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataNormOpsInteger_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -3761,7 +3761,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataNormOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataNormOpsReal_8C</filename>
     <includes id="ArrayDataNormOpsReal_8h" name="ArrayDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -3771,7 +3771,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataNormOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>ArrayDataNormOpsReal_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -3782,14 +3782,14 @@
   </compound>
   <compound kind="file">
     <name>manual_hierarchy.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/dox/</path>
     <filename>manual__hierarchy_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::math</namespace>
   </compound>
   <compound kind="file">
     <name>HierarchyCellDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyCellDataOpsComplex_8C</filename>
     <includes id="HierarchyCellDataOpsComplex_8h" name="HierarchyCellDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyCellDataOpsComplex.h</includes>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
@@ -3801,7 +3801,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyCellDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyCellDataOpsComplex_8h</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <includes id="PatchCellDataOpsComplex_8h" name="PatchCellDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchCellDataOpsComplex.h</includes>
@@ -3814,7 +3814,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyCellDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyCellDataOpsInteger_8C</filename>
     <includes id="HierarchyCellDataOpsInteger_8h" name="HierarchyCellDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyCellDataOpsInteger.h</includes>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
@@ -3826,7 +3826,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyCellDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyCellDataOpsInteger_8h</filename>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
     <includes id="PatchCellDataOpsInteger_8h" name="PatchCellDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchCellDataOpsInteger.h</includes>
@@ -3838,7 +3838,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyCellDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyCellDataOpsReal_8C</filename>
     <includes id="HierarchyCellDataOpsReal_8h" name="HierarchyCellDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyCellDataOpsReal.h</includes>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
@@ -3850,7 +3850,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyCellDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyCellDataOpsReal_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="PatchCellDataOpsReal_8h" name="PatchCellDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchCellDataOpsReal.h</includes>
@@ -3863,7 +3863,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsComplex_8C</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3871,7 +3871,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsComplex_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -3881,7 +3881,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsInteger_8C</filename>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3889,7 +3889,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsInteger_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <class kind="class">SAMRAI::math::HierarchyDataOpsInteger</class>
@@ -3898,7 +3898,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsManager_8C</filename>
     <includes id="HierarchyDataOpsManager_8h" name="HierarchyDataOpsManager.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsManager.h</includes>
     <includes id="HierarchyCellDataOpsReal_8h" name="HierarchyCellDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyCellDataOpsReal.h</includes>
@@ -3928,7 +3928,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsManager_8h</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
@@ -3942,7 +3942,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsReal_8C</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <namespace>SAMRAI</namespace>
@@ -3950,7 +3950,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyDataOpsReal_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <includes id="HierarchyDataOpsReal_8C" name="HierarchyDataOpsReal.C" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.C</includes>
@@ -3960,7 +3960,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyEdgeDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyEdgeDataOpsComplex_8C</filename>
     <includes id="HierarchyEdgeDataOpsComplex_8h" name="HierarchyEdgeDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyEdgeDataOpsComplex.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -3974,7 +3974,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyEdgeDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyEdgeDataOpsComplex_8h</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <includes id="PatchEdgeDataOpsComplex_8h" name="PatchEdgeDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataOpsComplex.h</includes>
@@ -3987,7 +3987,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyEdgeDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyEdgeDataOpsInteger_8C</filename>
     <includes id="HierarchyEdgeDataOpsInteger_8h" name="HierarchyEdgeDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyEdgeDataOpsInteger.h</includes>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
@@ -4001,7 +4001,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyEdgeDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyEdgeDataOpsInteger_8h</filename>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
     <includes id="PatchEdgeDataOpsInteger_8h" name="PatchEdgeDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataOpsInteger.h</includes>
@@ -4013,7 +4013,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyEdgeDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyEdgeDataOpsReal_8C</filename>
     <includes id="HierarchyEdgeDataOpsReal_8h" name="HierarchyEdgeDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyEdgeDataOpsReal.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -4027,7 +4027,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyEdgeDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyEdgeDataOpsReal_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="PatchEdgeDataOpsReal_8h" name="PatchEdgeDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataOpsReal.h</includes>
@@ -4040,7 +4040,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyFaceDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyFaceDataOpsComplex_8C</filename>
     <includes id="HierarchyFaceDataOpsComplex_8h" name="HierarchyFaceDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyFaceDataOpsComplex.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -4054,7 +4054,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyFaceDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyFaceDataOpsComplex_8h</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <includes id="PatchFaceDataOpsComplex_8h" name="PatchFaceDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataOpsComplex.h</includes>
@@ -4067,7 +4067,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyFaceDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyFaceDataOpsInteger_8C</filename>
     <includes id="HierarchyFaceDataOpsInteger_8h" name="HierarchyFaceDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyFaceDataOpsInteger.h</includes>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
@@ -4081,7 +4081,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyFaceDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyFaceDataOpsInteger_8h</filename>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
     <includes id="PatchFaceDataOpsInteger_8h" name="PatchFaceDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataOpsInteger.h</includes>
@@ -4093,7 +4093,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyFaceDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyFaceDataOpsReal_8C</filename>
     <includes id="HierarchyFaceDataOpsReal_8h" name="HierarchyFaceDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyFaceDataOpsReal.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -4107,7 +4107,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyFaceDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyFaceDataOpsReal_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="PatchFaceDataOpsReal_8h" name="PatchFaceDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataOpsReal.h</includes>
@@ -4120,7 +4120,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyNodeDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyNodeDataOpsComplex_8C</filename>
     <includes id="HierarchyNodeDataOpsComplex_8h" name="HierarchyNodeDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyNodeDataOpsComplex.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -4134,7 +4134,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyNodeDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyNodeDataOpsComplex_8h</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <includes id="PatchNodeDataOpsComplex_8h" name="PatchNodeDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataOpsComplex.h</includes>
@@ -4147,7 +4147,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyNodeDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyNodeDataOpsInteger_8C</filename>
     <includes id="HierarchyNodeDataOpsInteger_8h" name="HierarchyNodeDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyNodeDataOpsInteger.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -4161,7 +4161,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyNodeDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyNodeDataOpsInteger_8h</filename>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
     <includes id="PatchNodeDataOpsInteger_8h" name="PatchNodeDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataOpsInteger.h</includes>
@@ -4173,7 +4173,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyNodeDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyNodeDataOpsReal_8C</filename>
     <includes id="HierarchyNodeDataOpsReal_8h" name="HierarchyNodeDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyNodeDataOpsReal.h</includes>
     <includes id="BoxUtilities_8h" name="BoxUtilities.h" local="yes" imported="no">SAMRAI/hier/BoxUtilities.h</includes>
@@ -4187,7 +4187,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchyNodeDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchyNodeDataOpsReal_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="PatchNodeDataOpsReal_8h" name="PatchNodeDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataOpsReal.h</includes>
@@ -4200,7 +4200,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchySideDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchySideDataOpsComplex_8C</filename>
     <includes id="HierarchySideDataOpsComplex_8h" name="HierarchySideDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchySideDataOpsComplex.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -4214,7 +4214,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchySideDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchySideDataOpsComplex_8h</filename>
     <includes id="HierarchyDataOpsComplex_8h" name="HierarchyDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsComplex.h</includes>
     <includes id="PatchSideDataOpsComplex_8h" name="PatchSideDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchSideDataOpsComplex.h</includes>
@@ -4227,7 +4227,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchySideDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchySideDataOpsInteger_8C</filename>
     <includes id="HierarchySideDataOpsInteger_8h" name="HierarchySideDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchySideDataOpsInteger.h</includes>
     <includes id="PatchDescriptor_8h" name="PatchDescriptor.h" local="yes" imported="no">SAMRAI/hier/PatchDescriptor.h</includes>
@@ -4241,7 +4241,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchySideDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchySideDataOpsInteger_8h</filename>
     <includes id="HierarchyDataOpsInteger_8h" name="HierarchyDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsInteger.h</includes>
     <includes id="PatchSideDataOpsInteger_8h" name="PatchSideDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchSideDataOpsInteger.h</includes>
@@ -4253,7 +4253,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchySideDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchySideDataOpsReal_8C</filename>
     <includes id="HierarchySideDataOpsReal_8h" name="HierarchySideDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchySideDataOpsReal.h</includes>
     <includes id="BoxUtilities_8h" name="BoxUtilities.h" local="yes" imported="no">SAMRAI/hier/BoxUtilities.h</includes>
@@ -4266,7 +4266,7 @@
   </compound>
   <compound kind="file">
     <name>HierarchySideDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>HierarchySideDataOpsReal_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="PatchSideDataOpsReal_8h" name="PatchSideDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchSideDataOpsReal.h</includes>
@@ -4279,7 +4279,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataBasicOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataBasicOps_8C</filename>
     <includes id="PatchCellDataBasicOps_8h" name="PatchCellDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchCellDataBasicOps.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4288,7 +4288,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataBasicOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataBasicOps_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="ArrayDataBasicOps_8h" name="ArrayDataBasicOps.h" local="yes" imported="no">SAMRAI/math/ArrayDataBasicOps.h</includes>
@@ -4301,7 +4301,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataMiscellaneousOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataMiscellaneousOpsReal_8C</filename>
     <includes id="PatchCellDataMiscellaneousOpsReal_8h" name="PatchCellDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchCellDataMiscellaneousOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4310,7 +4310,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataMiscellaneousOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataMiscellaneousOpsReal_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="ArrayDataMiscellaneousOpsReal_8h" name="ArrayDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataMiscellaneousOpsReal.h</includes>
@@ -4322,7 +4322,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataNormOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataNormOpsComplex_8C</filename>
     <includes id="PatchCellDataNormOpsComplex_8h" name="PatchCellDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchCellDataNormOpsComplex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -4330,7 +4330,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataNormOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataNormOpsComplex_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="ArrayDataNormOpsComplex_8h" name="ArrayDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsComplex.h</includes>
@@ -4343,7 +4343,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataNormOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataNormOpsReal_8C</filename>
     <includes id="PatchCellDataNormOpsReal_8h" name="PatchCellDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchCellDataNormOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4352,7 +4352,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataNormOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataNormOpsReal_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="ArrayDataNormOpsReal_8h" name="ArrayDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsReal.h</includes>
@@ -4364,7 +4364,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataOpsComplex_8C</filename>
     <includes id="PatchCellDataOpsComplex_8h" name="PatchCellDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchCellDataOpsComplex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -4372,7 +4372,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataOpsComplex_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="PatchCellDataBasicOps_8h" name="PatchCellDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchCellDataBasicOps.h</includes>
@@ -4388,7 +4388,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataOpsInteger_8C</filename>
     <includes id="PatchCellDataOpsInteger_8h" name="PatchCellDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchCellDataOpsInteger.h</includes>
     <namespace>SAMRAI</namespace>
@@ -4396,7 +4396,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataOpsInteger_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="PatchCellDataBasicOps_8h" name="PatchCellDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchCellDataBasicOps.h</includes>
@@ -4411,7 +4411,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataOpsReal_8C</filename>
     <includes id="PatchCellDataOpsReal_8h" name="PatchCellDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchCellDataOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4420,7 +4420,7 @@
   </compound>
   <compound kind="file">
     <name>PatchCellDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchCellDataOpsReal_8h</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="PatchCellDataBasicOps_8h" name="PatchCellDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchCellDataBasicOps.h</includes>
@@ -4436,7 +4436,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataBasicOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataBasicOps_8C</filename>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
     <includes id="PatchEdgeDataBasicOps_8h" name="PatchEdgeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataBasicOps.h</includes>
@@ -4447,7 +4447,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataBasicOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataBasicOps_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -4460,7 +4460,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataMiscellaneousOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataMiscellaneousOpsReal_8C</filename>
     <includes id="PatchEdgeDataMiscellaneousOpsReal_8h" name="PatchEdgeDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataMiscellaneousOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -4471,7 +4471,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataMiscellaneousOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataMiscellaneousOpsReal_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="ArrayDataMiscellaneousOpsReal_8h" name="ArrayDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataMiscellaneousOpsReal.h</includes>
@@ -4483,7 +4483,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataNormOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataNormOpsComplex_8C</filename>
     <includes id="PatchEdgeDataNormOpsComplex_8h" name="PatchEdgeDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataNormOpsComplex.h</includes>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
@@ -4493,7 +4493,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataNormOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataNormOpsComplex_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="ArrayDataNormOpsComplex_8h" name="ArrayDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsComplex.h</includes>
@@ -4506,7 +4506,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataNormOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataNormOpsReal_8C</filename>
     <includes id="PatchEdgeDataNormOpsReal_8h" name="PatchEdgeDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataNormOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -4517,7 +4517,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataNormOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataNormOpsReal_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="ArrayDataNormOpsReal_8h" name="ArrayDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsReal.h</includes>
@@ -4529,7 +4529,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataOpsComplex_8C</filename>
     <includes id="PatchEdgeDataOpsComplex_8h" name="PatchEdgeDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataOpsComplex.h</includes>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
@@ -4538,7 +4538,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataOpsComplex_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="PatchEdgeDataBasicOps_8h" name="PatchEdgeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataBasicOps.h</includes>
@@ -4554,7 +4554,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataOpsInteger_8C</filename>
     <includes id="PatchEdgeDataOpsInteger_8h" name="PatchEdgeDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataOpsInteger.h</includes>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
@@ -4563,7 +4563,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataOpsInteger_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="PatchEdgeDataBasicOps_8h" name="PatchEdgeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataBasicOps.h</includes>
@@ -4578,7 +4578,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataOpsReal_8C</filename>
     <includes id="PatchEdgeDataOpsReal_8h" name="PatchEdgeDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4588,7 +4588,7 @@
   </compound>
   <compound kind="file">
     <name>PatchEdgeDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchEdgeDataOpsReal_8h</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="PatchEdgeDataBasicOps_8h" name="PatchEdgeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchEdgeDataBasicOps.h</includes>
@@ -4604,7 +4604,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataBasicOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataBasicOps_8C</filename>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4615,7 +4615,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataBasicOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataBasicOps_8h</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="ArrayDataBasicOps_8h" name="ArrayDataBasicOps.h" local="yes" imported="no">SAMRAI/math/ArrayDataBasicOps.h</includes>
@@ -4628,7 +4628,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataMiscellaneousOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataMiscellaneousOpsReal_8C</filename>
     <includes id="PatchFaceDataMiscellaneousOpsReal_8h" name="PatchFaceDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataMiscellaneousOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -4639,7 +4639,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataMiscellaneousOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataMiscellaneousOpsReal_8h</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="ArrayDataMiscellaneousOpsReal_8h" name="ArrayDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataMiscellaneousOpsReal.h</includes>
@@ -4651,7 +4651,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataNormOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataNormOpsComplex_8C</filename>
     <includes id="PatchFaceDataNormOpsComplex_8h" name="PatchFaceDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataNormOpsComplex.h</includes>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
@@ -4661,7 +4661,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataNormOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataNormOpsComplex_8h</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="ArrayDataNormOpsComplex_8h" name="ArrayDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsComplex.h</includes>
@@ -4674,7 +4674,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataNormOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataNormOpsReal_8C</filename>
     <includes id="PatchFaceDataNormOpsReal_8h" name="PatchFaceDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataNormOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -4685,7 +4685,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataNormOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataNormOpsReal_8h</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="ArrayDataNormOpsReal_8h" name="ArrayDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsReal.h</includes>
@@ -4697,7 +4697,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataOpsComplex_8C</filename>
     <includes id="PatchFaceDataOpsComplex_8h" name="PatchFaceDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataOpsComplex.h</includes>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
@@ -4706,7 +4706,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataOpsComplex_8h</filename>
     <includes id="PatchFaceDataBasicOps_8h" name="PatchFaceDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataBasicOps.h</includes>
     <includes id="PatchFaceDataNormOpsComplex_8h" name="PatchFaceDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataNormOpsComplex.h</includes>
@@ -4722,7 +4722,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataOpsInteger_8C</filename>
     <includes id="PatchFaceDataOpsInteger_8h" name="PatchFaceDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataOpsInteger.h</includes>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
@@ -4731,7 +4731,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataOpsInteger_8h</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="PatchFaceDataBasicOps_8h" name="PatchFaceDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataBasicOps.h</includes>
@@ -4746,7 +4746,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataOpsReal_8C</filename>
     <includes id="PatchFaceDataOpsReal_8h" name="PatchFaceDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4756,7 +4756,7 @@
   </compound>
   <compound kind="file">
     <name>PatchFaceDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchFaceDataOpsReal_8h</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="PatchFaceDataBasicOps_8h" name="PatchFaceDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchFaceDataBasicOps.h</includes>
@@ -4772,7 +4772,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataBasicOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataBasicOps_8C</filename>
     <includes id="PatchNodeDataBasicOps_8h" name="PatchNodeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataBasicOps.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4782,7 +4782,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataBasicOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataBasicOps_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="ArrayDataBasicOps_8h" name="ArrayDataBasicOps.h" local="yes" imported="no">SAMRAI/math/ArrayDataBasicOps.h</includes>
@@ -4795,7 +4795,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataMiscellaneousOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataMiscellaneousOpsReal_8C</filename>
     <includes id="PatchNodeDataMiscellaneousOpsReal_8h" name="PatchNodeDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataMiscellaneousOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4805,7 +4805,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataMiscellaneousOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataMiscellaneousOpsReal_8h</filename>
     <includes id="ArrayDataMiscellaneousOpsReal_8h" name="ArrayDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataMiscellaneousOpsReal.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -4817,7 +4817,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataNormOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataNormOpsComplex_8C</filename>
     <includes id="PatchNodeDataNormOpsComplex_8h" name="PatchNodeDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataNormOpsComplex.h</includes>
     <includes id="NodeGeometry_8h" name="NodeGeometry.h" local="yes" imported="no">SAMRAI/pdat/NodeGeometry.h</includes>
@@ -4826,7 +4826,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataNormOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataNormOpsComplex_8h</filename>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
     <includes id="ArrayDataNormOpsComplex_8h" name="ArrayDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsComplex.h</includes>
@@ -4839,7 +4839,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataNormOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataNormOpsReal_8C</filename>
     <includes id="PatchNodeDataNormOpsReal_8h" name="PatchNodeDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataNormOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4849,7 +4849,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataNormOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataNormOpsReal_8h</filename>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
     <includes id="ArrayDataNormOpsReal_8h" name="ArrayDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsReal.h</includes>
@@ -4861,7 +4861,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataOpsComplex_8C</filename>
     <includes id="PatchNodeDataOpsComplex_8h" name="PatchNodeDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataOpsComplex.h</includes>
     <includes id="NodeGeometry_8h" name="NodeGeometry.h" local="yes" imported="no">SAMRAI/pdat/NodeGeometry.h</includes>
@@ -4870,7 +4870,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataOpsComplex_8h</filename>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
     <includes id="PatchNodeDataBasicOps_8h" name="PatchNodeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataBasicOps.h</includes>
@@ -4886,7 +4886,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataOpsInteger_8C</filename>
     <includes id="PatchNodeDataOpsInteger_8h" name="PatchNodeDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataOpsInteger.h</includes>
     <includes id="NodeGeometry_8h" name="NodeGeometry.h" local="yes" imported="no">SAMRAI/pdat/NodeGeometry.h</includes>
@@ -4895,7 +4895,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataOpsInteger_8h</filename>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
     <includes id="PatchNodeDataBasicOps_8h" name="PatchNodeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataBasicOps.h</includes>
@@ -4910,7 +4910,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataOpsReal_8C</filename>
     <includes id="PatchNodeDataOpsReal_8h" name="PatchNodeDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -4920,7 +4920,7 @@
   </compound>
   <compound kind="file">
     <name>PatchNodeDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchNodeDataOpsReal_8h</filename>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
     <includes id="PatchNodeDataBasicOps_8h" name="PatchNodeDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchNodeDataBasicOps.h</includes>
@@ -4936,7 +4936,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataBasicOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataBasicOps_8C</filename>
     <includes id="PatchSideDataBasicOps_8h" name="PatchSideDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchSideDataBasicOps.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -4947,7 +4947,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataBasicOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataBasicOps_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="ArrayDataBasicOps_8h" name="ArrayDataBasicOps.h" local="yes" imported="no">SAMRAI/math/ArrayDataBasicOps.h</includes>
@@ -4960,7 +4960,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataMiscellaneousOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataMiscellaneousOpsReal_8C</filename>
     <includes id="PatchSideDataMiscellaneousOpsReal_8h" name="PatchSideDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchSideDataMiscellaneousOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -4971,7 +4971,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataMiscellaneousOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataMiscellaneousOpsReal_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="ArrayDataMiscellaneousOpsReal_8h" name="ArrayDataMiscellaneousOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataMiscellaneousOpsReal.h</includes>
@@ -4983,7 +4983,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataNormOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataNormOpsComplex_8C</filename>
     <includes id="PatchSideDataNormOpsComplex_8h" name="PatchSideDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchSideDataNormOpsComplex.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -4993,7 +4993,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataNormOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataNormOpsComplex_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="ArrayDataNormOpsComplex_8h" name="ArrayDataNormOpsComplex.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsComplex.h</includes>
@@ -5006,7 +5006,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataNormOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataNormOpsReal_8C</filename>
     <includes id="PatchSideDataNormOpsReal_8h" name="PatchSideDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchSideDataNormOpsReal.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -5017,7 +5017,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataNormOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataNormOpsReal_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="ArrayDataNormOpsReal_8h" name="ArrayDataNormOpsReal.h" local="yes" imported="no">SAMRAI/math/ArrayDataNormOpsReal.h</includes>
@@ -5029,7 +5029,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataOpsComplex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataOpsComplex_8C</filename>
     <includes id="PatchSideDataOpsComplex_8h" name="PatchSideDataOpsComplex.h" local="yes" imported="no">SAMRAI/math/PatchSideDataOpsComplex.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -5038,7 +5038,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataOpsComplex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataOpsComplex_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="PatchSideDataBasicOps_8h" name="PatchSideDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchSideDataBasicOps.h</includes>
@@ -5054,7 +5054,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataOpsInteger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataOpsInteger_8C</filename>
     <includes id="PatchSideDataOpsInteger_8h" name="PatchSideDataOpsInteger.h" local="yes" imported="no">SAMRAI/math/PatchSideDataOpsInteger.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -5063,7 +5063,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataOpsInteger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataOpsInteger_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="PatchSideDataBasicOps_8h" name="PatchSideDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchSideDataBasicOps.h</includes>
@@ -5078,7 +5078,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataOpsReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataOpsReal_8C</filename>
     <includes id="PatchSideDataOpsReal_8h" name="PatchSideDataOpsReal.h" local="yes" imported="no">SAMRAI/math/PatchSideDataOpsReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -5088,7 +5088,7 @@
   </compound>
   <compound kind="file">
     <name>PatchSideDataOpsReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/</path>
     <filename>PatchSideDataOpsReal_8h</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="PatchSideDataBasicOps_8h" name="PatchSideDataBasicOps.h" local="yes" imported="no">SAMRAI/math/PatchSideDataBasicOps.h</includes>
@@ -5104,7 +5104,7 @@
   </compound>
   <compound kind="file">
     <name>BalanceBoxBreaker.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BalanceBoxBreaker_8C</filename>
     <includes id="BalanceBoxBreaker_8h" name="BalanceBoxBreaker.h" local="yes" imported="no">SAMRAI/mesh/BalanceBoxBreaker.h</includes>
     <includes id="BoxUtilities_8h" name="BoxUtilities.h" local="yes" imported="no">SAMRAI/hier/BoxUtilities.h</includes>
@@ -5137,7 +5137,7 @@
   </compound>
   <compound kind="file">
     <name>BalanceBoxBreaker.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BalanceBoxBreaker_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -5148,7 +5148,7 @@
   </compound>
   <compound kind="file">
     <name>BalanceUtilities.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BalanceUtilities_8C</filename>
     <includes id="BalanceUtilities_8h" name="BalanceUtilities.h" local="yes" imported="no">SAMRAI/mesh/BalanceUtilities.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -5166,7 +5166,7 @@
   </compound>
   <compound kind="file">
     <name>BalanceUtilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BalanceUtilities_8h</filename>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
@@ -5183,7 +5183,7 @@
   </compound>
   <compound kind="file">
     <name>BergerRigoutsos.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BergerRigoutsos_8C</filename>
     <includes id="BergerRigoutsos_8h" name="BergerRigoutsos.h" local="yes" imported="no">SAMRAI/mesh/BergerRigoutsos.h</includes>
     <includes id="BergerRigoutsosNode_8h" name="BergerRigoutsosNode.h" local="yes" imported="no">SAMRAI/mesh/BergerRigoutsosNode.h</includes>
@@ -5199,7 +5199,7 @@
   </compound>
   <compound kind="file">
     <name>BergerRigoutsos.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BergerRigoutsos_8h</filename>
     <includes id="BoxGeneratorStrategy_8h" name="BoxGeneratorStrategy.h" local="yes" imported="no">SAMRAI/mesh/BoxGeneratorStrategy.h</includes>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
@@ -5215,7 +5215,7 @@
   </compound>
   <compound kind="file">
     <name>BergerRigoutsosNode.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BergerRigoutsosNode_8C</filename>
     <includes id="BergerRigoutsosNode_8h" name="BergerRigoutsosNode.h" local="yes" imported="no">SAMRAI/mesh/BergerRigoutsosNode.h</includes>
     <includes id="BergerRigoutsos_8h" name="BergerRigoutsos.h" local="yes" imported="no">SAMRAI/mesh/BergerRigoutsos.h</includes>
@@ -5232,7 +5232,7 @@
   </compound>
   <compound kind="file">
     <name>BergerRigoutsosNode.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BergerRigoutsosNode_8h</filename>
     <includes id="BergerRigoutsos_8h" name="BergerRigoutsos.h" local="yes" imported="no">SAMRAI/mesh/BergerRigoutsos.h</includes>
     <includes id="AsyncCommGroup_8h" name="AsyncCommGroup.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommGroup.h</includes>
@@ -5246,7 +5246,7 @@
   </compound>
   <compound kind="file">
     <name>BoxGeneratorStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BoxGeneratorStrategy_8C</filename>
     <includes id="BoxGeneratorStrategy_8h" name="BoxGeneratorStrategy.h" local="yes" imported="no">SAMRAI/mesh/BoxGeneratorStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5254,7 +5254,7 @@
   </compound>
   <compound kind="file">
     <name>BoxGeneratorStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BoxGeneratorStrategy_8h</filename>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -5265,7 +5265,7 @@
   </compound>
   <compound kind="file">
     <name>BoxInTransit.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BoxInTransit_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="TransitLoad_8h" name="TransitLoad.h" local="yes" imported="no">SAMRAI/mesh/TransitLoad.h</includes>
@@ -5277,7 +5277,7 @@
   </compound>
   <compound kind="file">
     <name>BoxTransitSet.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BoxTransitSet_8C</filename>
     <includes id="BoxTransitSet_8h" name="BoxTransitSet.h" local="yes" imported="no">SAMRAI/mesh/BoxTransitSet.h</includes>
     <includes id="BalanceUtilities_8h" name="BalanceUtilities.h" local="yes" imported="no">SAMRAI/mesh/BalanceUtilities.h</includes>
@@ -5290,7 +5290,7 @@
   </compound>
   <compound kind="file">
     <name>BoxTransitSet.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>BoxTransitSet_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -5310,7 +5310,7 @@
   </compound>
   <compound kind="file">
     <name>CascadePartitioner.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>CascadePartitioner_8C</filename>
     <includes id="CascadePartitioner_8h" name="CascadePartitioner.h" local="yes" imported="no">SAMRAI/mesh/CascadePartitioner.h</includes>
     <includes id="BoxTransitSet_8h" name="BoxTransitSet.h" local="yes" imported="no">SAMRAI/mesh/BoxTransitSet.h</includes>
@@ -5332,7 +5332,7 @@
   </compound>
   <compound kind="file">
     <name>CascadePartitioner.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>CascadePartitioner_8h</filename>
     <includes id="CascadePartitionerTree_8h" name="CascadePartitionerTree.h" local="yes" imported="no">SAMRAI/mesh/CascadePartitionerTree.h</includes>
     <includes id="MappingConnectorAlgorithm_8h" name="MappingConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/MappingConnectorAlgorithm.h</includes>
@@ -5353,7 +5353,7 @@
   </compound>
   <compound kind="file">
     <name>CascadePartitionerTree.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>CascadePartitionerTree_8C</filename>
     <includes id="CascadePartitionerTree_8h" name="CascadePartitionerTree.h" local="yes" imported="no">SAMRAI/mesh/CascadePartitionerTree.h</includes>
     <includes id="CascadePartitioner_8h" name="CascadePartitioner.h" local="yes" imported="no">SAMRAI/mesh/CascadePartitioner.h</includes>
@@ -5362,7 +5362,7 @@
   </compound>
   <compound kind="file">
     <name>CascadePartitionerTree.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>CascadePartitionerTree_8h</filename>
     <includes id="PartitioningParams_8h" name="PartitioningParams.h" local="yes" imported="no">SAMRAI/mesh/PartitioningParams.h</includes>
     <includes id="TransitLoad_8h" name="TransitLoad.h" local="yes" imported="no">SAMRAI/mesh/TransitLoad.h</includes>
@@ -5375,7 +5375,7 @@
   </compound>
   <compound kind="file">
     <name>ChopAndPackLoadBalancer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>ChopAndPackLoadBalancer_8C</filename>
     <includes id="ChopAndPackLoadBalancer_8h" name="ChopAndPackLoadBalancer.h" local="yes" imported="no">SAMRAI/mesh/ChopAndPackLoadBalancer.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -5406,7 +5406,7 @@
   </compound>
   <compound kind="file">
     <name>ChopAndPackLoadBalancer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>ChopAndPackLoadBalancer_8h</filename>
     <includes id="ProcessorMapping_8h" name="ProcessorMapping.h" local="yes" imported="no">SAMRAI/hier/ProcessorMapping.h</includes>
     <includes id="LoadBalanceStrategy_8h" name="LoadBalanceStrategy.h" local="yes" imported="no">SAMRAI/mesh/LoadBalanceStrategy.h</includes>
@@ -5419,28 +5419,28 @@
   </compound>
   <compound kind="file">
     <name>manual_clustering.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/dox/</path>
     <filename>manual__clustering_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::mesh</namespace>
   </compound>
   <compound kind="file">
     <name>manual_gridding.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/dox/</path>
     <filename>manual__gridding_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::mesh</namespace>
   </compound>
   <compound kind="file">
     <name>manual_load_balance.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/dox/</path>
     <filename>manual__load__balance_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::mesh</namespace>
   </compound>
   <compound kind="file">
     <name>GraphLoadBalancer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GraphLoadBalancer_8C</filename>
     <includes id="GraphLoadBalancer_8h" name="GraphLoadBalancer.h" local="yes" imported="no">SAMRAI/mesh/GraphLoadBalancer.h</includes>
     <includes id="BoxLevelConnectorUtils_8h" name="BoxLevelConnectorUtils.h" local="yes" imported="no">SAMRAI/hier/BoxLevelConnectorUtils.h</includes>
@@ -5452,7 +5452,7 @@
   </compound>
   <compound kind="file">
     <name>GraphLoadBalancer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GraphLoadBalancer_8h</filename>
     <includes id="BalanceUtilities_8h" name="BalanceUtilities.h" local="yes" imported="no">SAMRAI/mesh/BalanceUtilities.h</includes>
     <includes id="LoadBalanceStrategy_8h" name="LoadBalanceStrategy.h" local="yes" imported="no">SAMRAI/mesh/LoadBalanceStrategy.h</includes>
@@ -5474,7 +5474,7 @@
   </compound>
   <compound kind="file">
     <name>GriddingAlgorithm.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GriddingAlgorithm_8C</filename>
     <includes id="GriddingAlgorithm_8h" name="GriddingAlgorithm.h" local="yes" imported="no">SAMRAI/mesh/GriddingAlgorithm.h</includes>
     <includes id="IEEE_8h" name="IEEE.h" local="yes" imported="no">SAMRAI/tbox/IEEE.h</includes>
@@ -5491,7 +5491,7 @@
   </compound>
   <compound kind="file">
     <name>GriddingAlgorithm.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GriddingAlgorithm_8h</filename>
     <includes id="GriddingAlgorithmStrategy_8h" name="GriddingAlgorithmStrategy.h" local="yes" imported="no">SAMRAI/mesh/GriddingAlgorithmStrategy.h</includes>
     <includes id="BoxGeneratorStrategy_8h" name="BoxGeneratorStrategy.h" local="yes" imported="no">SAMRAI/mesh/BoxGeneratorStrategy.h</includes>
@@ -5522,7 +5522,7 @@
   </compound>
   <compound kind="file">
     <name>GriddingAlgorithmConnectorWidthRequestor.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GriddingAlgorithmConnectorWidthRequestor_8C</filename>
     <includes id="GriddingAlgorithmConnectorWidthRequestor_8h" name="GriddingAlgorithmConnectorWidthRequestor.h" local="yes" imported="no">SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -5531,7 +5531,7 @@
   </compound>
   <compound kind="file">
     <name>GriddingAlgorithmConnectorWidthRequestor.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GriddingAlgorithmConnectorWidthRequestor_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <class kind="class">SAMRAI::mesh::GriddingAlgorithmConnectorWidthRequestor</class>
@@ -5540,7 +5540,7 @@
   </compound>
   <compound kind="file">
     <name>GriddingAlgorithmStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GriddingAlgorithmStrategy_8C</filename>
     <includes id="GriddingAlgorithmStrategy_8h" name="GriddingAlgorithmStrategy.h" local="yes" imported="no">SAMRAI/mesh/GriddingAlgorithmStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5548,7 +5548,7 @@
   </compound>
   <compound kind="file">
     <name>GriddingAlgorithmStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>GriddingAlgorithmStrategy_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <includes id="TagAndInitializeStrategy_8h" name="TagAndInitializeStrategy.h" local="yes" imported="no">SAMRAI/mesh/TagAndInitializeStrategy.h</includes>
@@ -5559,7 +5559,7 @@
   </compound>
   <compound kind="file">
     <name>LoadBalanceStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>LoadBalanceStrategy_8C</filename>
     <includes id="LoadBalanceStrategy_8h" name="LoadBalanceStrategy.h" local="yes" imported="no">SAMRAI/mesh/LoadBalanceStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5567,7 +5567,7 @@
   </compound>
   <compound kind="file">
     <name>LoadBalanceStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>LoadBalanceStrategy_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
@@ -5578,7 +5578,7 @@
   </compound>
   <compound kind="file">
     <name>MultiblockGriddingTagger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>MultiblockGriddingTagger_8C</filename>
     <includes id="MultiblockGriddingTagger_8h" name="MultiblockGriddingTagger.h" local="yes" imported="no">SAMRAI/mesh/MultiblockGriddingTagger.h</includes>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
@@ -5591,7 +5591,7 @@
   </compound>
   <compound kind="file">
     <name>MultiblockGriddingTagger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>MultiblockGriddingTagger_8h</filename>
     <includes id="RefinePatchStrategy_8h" name="RefinePatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/RefinePatchStrategy.h</includes>
     <includes id="SingularityPatchStrategy_8h" name="SingularityPatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/SingularityPatchStrategy.h</includes>
@@ -5601,7 +5601,7 @@
   </compound>
   <compound kind="file">
     <name>PartitioningParams.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>PartitioningParams_8C</filename>
     <includes id="PartitioningParams_8h" name="PartitioningParams.h" local="yes" imported="no">SAMRAI/mesh/PartitioningParams.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5616,7 +5616,7 @@
   </compound>
   <compound kind="file">
     <name>PartitioningParams.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>PartitioningParams_8h</filename>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
     <class kind="class">SAMRAI::mesh::PartitioningParams</class>
@@ -5625,7 +5625,7 @@
   </compound>
   <compound kind="file">
     <name>SpatialKey.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>SpatialKey_8C</filename>
     <includes id="SpatialKey_8h" name="SpatialKey.h" local="yes" imported="no">SAMRAI/mesh/SpatialKey.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5640,7 +5640,7 @@
   </compound>
   <compound kind="file">
     <name>SpatialKey.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>SpatialKey_8h</filename>
     <class kind="class">SAMRAI::mesh::SpatialKey</class>
     <namespace>SAMRAI</namespace>
@@ -5648,7 +5648,7 @@
   </compound>
   <compound kind="file">
     <name>StandardTagAndInitialize.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>StandardTagAndInitialize_8C</filename>
     <includes id="StandardTagAndInitialize_8h" name="StandardTagAndInitialize.h" local="yes" imported="no">SAMRAI/mesh/StandardTagAndInitialize.h</includes>
     <includes id="CellIntegerConstantRefine_8h" name="CellIntegerConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/CellIntegerConstantRefine.h</includes>
@@ -5676,7 +5676,7 @@
   </compound>
   <compound kind="file">
     <name>StandardTagAndInitialize.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>StandardTagAndInitialize_8h</filename>
     <includes id="StandardTagAndInitStrategy_8h" name="StandardTagAndInitStrategy.h" local="yes" imported="no">SAMRAI/mesh/StandardTagAndInitStrategy.h</includes>
     <includes id="StandardTagAndInitializeConnectorWidthRequestor_8h" name="StandardTagAndInitializeConnectorWidthRequestor.h" local="yes" imported="no">SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h</includes>
@@ -5687,7 +5687,7 @@
   </compound>
   <compound kind="file">
     <name>StandardTagAndInitializeConnectorWidthRequestor.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>StandardTagAndInitializeConnectorWidthRequestor_8C</filename>
     <includes id="StandardTagAndInitializeConnectorWidthRequestor_8h" name="StandardTagAndInitializeConnectorWidthRequestor.h" local="yes" imported="no">SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h</includes>
     <includes id="RefineScheduleConnectorWidthRequestor_8h" name="RefineScheduleConnectorWidthRequestor.h" local="yes" imported="no">SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h</includes>
@@ -5704,7 +5704,7 @@
   </compound>
   <compound kind="file">
     <name>StandardTagAndInitializeConnectorWidthRequestor.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>StandardTagAndInitializeConnectorWidthRequestor_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <class kind="class">SAMRAI::mesh::StandardTagAndInitializeConnectorWidthRequestor</class>
@@ -5713,7 +5713,7 @@
   </compound>
   <compound kind="file">
     <name>StandardTagAndInitStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>StandardTagAndInitStrategy_8C</filename>
     <includes id="StandardTagAndInitStrategy_8h" name="StandardTagAndInitStrategy.h" local="yes" imported="no">SAMRAI/mesh/StandardTagAndInitStrategy.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -5722,7 +5722,7 @@
   </compound>
   <compound kind="file">
     <name>StandardTagAndInitStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>StandardTagAndInitStrategy_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <includes id="PatchLevel_8h" name="PatchLevel.h" local="yes" imported="no">SAMRAI/hier/PatchLevel.h</includes>
@@ -5732,7 +5732,7 @@
   </compound>
   <compound kind="file">
     <name>TagAndInitializeStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TagAndInitializeStrategy_8C</filename>
     <includes id="TagAndInitializeStrategy_8h" name="TagAndInitializeStrategy.h" local="yes" imported="no">SAMRAI/mesh/TagAndInitializeStrategy.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -5741,7 +5741,7 @@
   </compound>
   <compound kind="file">
     <name>TagAndInitializeStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TagAndInitializeStrategy_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
@@ -5753,7 +5753,7 @@
   </compound>
   <compound kind="file">
     <name>TileClustering.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TileClustering_8C</filename>
     <includes id="TileClustering_8h" name="TileClustering.h" local="yes" imported="no">SAMRAI/mesh/TileClustering.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -5765,7 +5765,7 @@
   </compound>
   <compound kind="file">
     <name>TileClustering.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TileClustering_8h</filename>
     <includes id="OverlapConnectorAlgorithm_8h" name="OverlapConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/OverlapConnectorAlgorithm.h</includes>
     <includes id="MappingConnectorAlgorithm_8h" name="MappingConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/MappingConnectorAlgorithm.h</includes>
@@ -5782,7 +5782,7 @@
   </compound>
   <compound kind="file">
     <name>TransitLoad.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TransitLoad_8C</filename>
     <includes id="TransitLoad_8h" name="TransitLoad.h" local="yes" imported="no">SAMRAI/mesh/TransitLoad.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5790,7 +5790,7 @@
   </compound>
   <compound kind="file">
     <name>TransitLoad.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TransitLoad_8h</filename>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
     <includes id="BoxLevel_8h" name="BoxLevel.h" local="yes" imported="no">SAMRAI/hier/BoxLevel.h</includes>
@@ -5802,7 +5802,7 @@
   </compound>
   <compound kind="file">
     <name>TreeLoadBalancer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TreeLoadBalancer_8C</filename>
     <includes id="TreeLoadBalancer_8h" name="TreeLoadBalancer.h" local="yes" imported="no">SAMRAI/mesh/TreeLoadBalancer.h</includes>
     <includes id="BoxTransitSet_8h" name="BoxTransitSet.h" local="yes" imported="no">SAMRAI/mesh/BoxTransitSet.h</includes>
@@ -5825,7 +5825,7 @@
   </compound>
   <compound kind="file">
     <name>TreeLoadBalancer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>TreeLoadBalancer_8h</filename>
     <includes id="MappingConnectorAlgorithm_8h" name="MappingConnectorAlgorithm.h" local="yes" imported="no">SAMRAI/hier/MappingConnectorAlgorithm.h</includes>
     <includes id="LoadBalanceStrategy_8h" name="LoadBalanceStrategy.h" local="yes" imported="no">SAMRAI/mesh/LoadBalanceStrategy.h</includes>
@@ -5846,7 +5846,7 @@
   </compound>
   <compound kind="file">
     <name>VoucherTransitLoad.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>VoucherTransitLoad_8C</filename>
     <includes id="VoucherTransitLoad_8h" name="VoucherTransitLoad.h" local="yes" imported="no">SAMRAI/mesh/VoucherTransitLoad.h</includes>
     <includes id="BalanceUtilities_8h" name="BalanceUtilities.h" local="yes" imported="no">SAMRAI/mesh/BalanceUtilities.h</includes>
@@ -5858,7 +5858,7 @@
   </compound>
   <compound kind="file">
     <name>VoucherTransitLoad.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/</path>
     <filename>VoucherTransitLoad_8h</filename>
     <includes id="MappingConnector_8h" name="MappingConnector.h" local="yes" imported="no">SAMRAI/hier/MappingConnector.h</includes>
     <includes id="SequentialLocalIdGenerator_8h" name="SequentialLocalIdGenerator.h" local="yes" imported="no">SAMRAI/hier/SequentialLocalIdGenerator.h</includes>
@@ -5872,7 +5872,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayData_8C</filename>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -5887,7 +5887,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayData_8h</filename>
     <includes id="ArrayDataIterator_8h" name="ArrayDataIterator.h" local="yes" imported="no">SAMRAI/pdat/ArrayDataIterator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -5905,7 +5905,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataAccess.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayDataAccess_8C</filename>
     <includes id="ArrayDataAccess_8h" name="ArrayDataAccess.h" local="yes" imported="no">SAMRAI/pdat/ArrayDataAccess.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5927,7 +5927,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataAccess.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayDataAccess_8h</filename>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
     <includes id="MDA__Access_8h" name="MDA_Access.h" local="yes" imported="no">SAMRAI/pdat/MDA_Access.h</includes>
@@ -5938,7 +5938,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayDataIterator_8C</filename>
     <includes id="ArrayDataIterator_8h" name="ArrayDataIterator.h" local="yes" imported="no">SAMRAI/pdat/ArrayDataIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -5946,7 +5946,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayDataIterator_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -5956,7 +5956,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataOperationUtilities.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayDataOperationUtilities_8C</filename>
     <includes id="ArrayDataOperationUtilities_8h" name="ArrayDataOperationUtilities.h" local="yes" imported="no">SAMRAI/pdat/ArrayDataOperationUtilities.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -5966,7 +5966,7 @@
   </compound>
   <compound kind="file">
     <name>ArrayDataOperationUtilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>ArrayDataOperationUtilities_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -5977,7 +5977,7 @@
   </compound>
   <compound kind="file">
     <name>CellComplexConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellComplexConstantRefine_8C</filename>
     <includes id="CellComplexConstantRefine_8h" name="CellComplexConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/CellComplexConstantRefine.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -5996,7 +5996,7 @@
   </compound>
   <compound kind="file">
     <name>CellComplexConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellComplexConstantRefine_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -6008,7 +6008,7 @@
   </compound>
   <compound kind="file">
     <name>CellComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="CellComplexLinearTimeInterpolateOp_8h" name="CellComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/CellComplexLinearTimeInterpolateOp.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -6028,7 +6028,7 @@
   </compound>
   <compound kind="file">
     <name>CellComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::CellComplexLinearTimeInterpolateOp</class>
@@ -6037,7 +6037,7 @@
   </compound>
   <compound kind="file">
     <name>CellData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellData_8C</filename>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6051,7 +6051,7 @@
   </compound>
   <compound kind="file">
     <name>CellData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellData_8h</filename>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
     <includes id="CellIndex_8h" name="CellIndex.h" local="yes" imported="no">SAMRAI/pdat/CellIndex.h</includes>
@@ -6067,7 +6067,7 @@
   </compound>
   <compound kind="file">
     <name>CellDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellDataFactory_8C</filename>
     <includes id="CellDataFactory_8h" name="CellDataFactory.h" local="yes" imported="no">SAMRAI/pdat/CellDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6079,7 +6079,7 @@
   </compound>
   <compound kind="file">
     <name>CellDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -6093,7 +6093,7 @@
   </compound>
   <compound kind="file">
     <name>CellDoubleConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellDoubleConstantRefine_8C</filename>
     <includes id="CellDoubleConstantRefine_8h" name="CellDoubleConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/CellDoubleConstantRefine.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -6110,7 +6110,7 @@
   </compound>
   <compound kind="file">
     <name>CellDoubleConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellDoubleConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6122,7 +6122,7 @@
   </compound>
   <compound kind="file">
     <name>CellDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="CellDoubleLinearTimeInterpolateOp_8h" name="CellDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -6141,7 +6141,7 @@
   </compound>
   <compound kind="file">
     <name>CellDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::CellDoubleLinearTimeInterpolateOp</class>
@@ -6150,7 +6150,7 @@
   </compound>
   <compound kind="file">
     <name>CellFloatConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellFloatConstantRefine_8C</filename>
     <includes id="CellFloatConstantRefine_8h" name="CellFloatConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/CellFloatConstantRefine.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -6167,7 +6167,7 @@
   </compound>
   <compound kind="file">
     <name>CellFloatConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellFloatConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6179,7 +6179,7 @@
   </compound>
   <compound kind="file">
     <name>CellFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="CellFloatLinearTimeInterpolateOp_8h" name="CellFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/CellFloatLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6198,7 +6198,7 @@
   </compound>
   <compound kind="file">
     <name>CellFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::CellFloatLinearTimeInterpolateOp</class>
@@ -6207,7 +6207,7 @@
   </compound>
   <compound kind="file">
     <name>CellGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellGeometry_8C</filename>
     <includes id="CellGeometry_8h" name="CellGeometry.h" local="yes" imported="no">SAMRAI/pdat/CellGeometry.h</includes>
     <includes id="CellIterator_8h" name="CellIterator.h" local="yes" imported="no">SAMRAI/pdat/CellIterator.h</includes>
@@ -6218,7 +6218,7 @@
   </compound>
   <compound kind="file">
     <name>CellGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellGeometry_8h</filename>
     <includes id="CellIndex_8h" name="CellIndex.h" local="yes" imported="no">SAMRAI/pdat/CellIndex.h</includes>
     <includes id="CellOverlap_8h" name="CellOverlap.h" local="yes" imported="no">SAMRAI/pdat/CellOverlap.h</includes>
@@ -6232,7 +6232,7 @@
   </compound>
   <compound kind="file">
     <name>CellIndex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellIndex_8C</filename>
     <includes id="CellIndex_8h" name="CellIndex.h" local="yes" imported="no">SAMRAI/pdat/CellIndex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -6240,7 +6240,7 @@
   </compound>
   <compound kind="file">
     <name>CellIndex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellIndex_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -6251,7 +6251,7 @@
   </compound>
   <compound kind="file">
     <name>CellIntegerConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellIntegerConstantRefine_8C</filename>
     <includes id="CellIntegerConstantRefine_8h" name="CellIntegerConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/CellIntegerConstantRefine.h</includes>
     <includes id="CellData_8h" name="CellData.h" local="yes" imported="no">SAMRAI/pdat/CellData.h</includes>
@@ -6268,7 +6268,7 @@
   </compound>
   <compound kind="file">
     <name>CellIntegerConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellIntegerConstantRefine_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -6280,7 +6280,7 @@
   </compound>
   <compound kind="file">
     <name>CellIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellIterator_8C</filename>
     <includes id="CellIterator_8h" name="CellIterator.h" local="yes" imported="no">SAMRAI/pdat/CellIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -6288,7 +6288,7 @@
   </compound>
   <compound kind="file">
     <name>CellIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellIterator_8h</filename>
     <includes id="CellGeometry_8h" name="CellGeometry.h" local="yes" imported="no">SAMRAI/pdat/CellGeometry.h</includes>
     <includes id="CellIndex_8h" name="CellIndex.h" local="yes" imported="no">SAMRAI/pdat/CellIndex.h</includes>
@@ -6299,7 +6299,7 @@
   </compound>
   <compound kind="file">
     <name>CellOverlap.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellOverlap_8C</filename>
     <includes id="CellOverlap_8h" name="CellOverlap.h" local="yes" imported="no">SAMRAI/pdat/CellOverlap.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -6308,7 +6308,7 @@
   </compound>
   <compound kind="file">
     <name>CellOverlap.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellOverlap_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -6320,7 +6320,7 @@
   </compound>
   <compound kind="file">
     <name>CellVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellVariable_8C</filename>
     <includes id="CellVariable_8h" name="CellVariable.h" local="yes" imported="no">SAMRAI/pdat/CellVariable.h</includes>
     <includes id="CellDataFactory_8h" name="CellDataFactory.h" local="yes" imported="no">SAMRAI/pdat/CellDataFactory.h</includes>
@@ -6331,7 +6331,7 @@
   </compound>
   <compound kind="file">
     <name>CellVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CellVariable_8h</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -6342,7 +6342,7 @@
   </compound>
   <compound kind="file">
     <name>CopyOperation.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CopyOperation_8C</filename>
     <includes id="CopyOperation_8h" name="CopyOperation.h" local="yes" imported="no">SAMRAI/pdat/CopyOperation.h</includes>
     <namespace>SAMRAI</namespace>
@@ -6350,7 +6350,7 @@
   </compound>
   <compound kind="file">
     <name>CopyOperation.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>CopyOperation_8h</filename>
     <includes id="CopyOperation_8C" name="CopyOperation.C" local="yes" imported="no">SAMRAI/pdat/CopyOperation.C</includes>
     <class kind="class">SAMRAI::pdat::CopyOperation</class>
@@ -6359,7 +6359,7 @@
   </compound>
   <compound kind="file">
     <name>DoubleAttributeId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>DoubleAttributeId_8C</filename>
     <includes id="DoubleAttributeId_8h" name="DoubleAttributeId.h" local="yes" imported="no">SAMRAI/pdat/DoubleAttributeId.h</includes>
     <namespace>SAMRAI</namespace>
@@ -6367,7 +6367,7 @@
   </compound>
   <compound kind="file">
     <name>DoubleAttributeId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>DoubleAttributeId_8h</filename>
     <class kind="class">SAMRAI::pdat::DoubleAttributeId</class>
     <namespace>SAMRAI</namespace>
@@ -6375,160 +6375,160 @@
   </compound>
   <compound kind="file">
     <name>manual_array.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>pdat_2dox_2manual__array_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_array.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/dox/</path>
     <filename>math_2dox_2manual__array_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::math</namespace>
   </compound>
   <compound kind="file">
     <name>manual_boxgeometry.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__boxgeometry_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_cell.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>pdat_2dox_2manual__cell_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_cell.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/dox/</path>
     <filename>math_2dox_2manual__cell_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::math</namespace>
   </compound>
   <compound kind="file">
     <name>manual_edge.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__edge_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_face.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__face_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_fortran.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__fortran_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_index.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__index_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_multiblock.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>pdat_2dox_2manual__multiblock_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_multiblock.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/dox/</path>
     <filename>mesh_2dox_2manual__multiblock_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::mesh</namespace>
   </compound>
   <compound kind="file">
     <name>manual_node.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__node_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators_constant_cell.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__operators__constant__cell_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators_constant_outernode.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__operators__constant__outernode_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators_time_interpolate.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__operators__time__interpolate_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators_time_interpolate_cell.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__operators__time__interpolate__cell_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators_time_interpolate_fortran.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__operators__time__interpolate__fortran_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_outeredge.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__outeredge_8dox</filename>
     <namespace>SAMRAI</namespace>
   </compound>
   <compound kind="file">
     <name>manual_outerface.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__outerface_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_outernode.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__outernode_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_outerside.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__outerside_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual_side.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>manual__side_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>EdgeComplexConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeComplexConstantRefine_8C</filename>
     <includes id="EdgeComplexConstantRefine_8h" name="EdgeComplexConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/EdgeComplexConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6546,7 +6546,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeComplexConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeComplexConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6558,7 +6558,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="EdgeComplexLinearTimeInterpolateOp_8h" name="EdgeComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/EdgeComplexLinearTimeInterpolateOp.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -6578,7 +6578,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::EdgeComplexLinearTimeInterpolateOp</class>
@@ -6587,7 +6587,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeData_8C</filename>
     <includes id="EdgeData_8h" name="EdgeData.h" local="yes" imported="no">SAMRAI/pdat/EdgeData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6600,7 +6600,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeData_8h</filename>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -6616,7 +6616,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeDataFactory_8C</filename>
     <includes id="EdgeDataFactory_8h" name="EdgeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/EdgeDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6631,7 +6631,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -6645,7 +6645,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeDoubleConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeDoubleConstantRefine_8C</filename>
     <includes id="EdgeDoubleConstantRefine_8h" name="EdgeDoubleConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/EdgeDoubleConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6662,7 +6662,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeDoubleConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeDoubleConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6674,7 +6674,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="EdgeDoubleLinearTimeInterpolateOp_8h" name="EdgeDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/EdgeDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6693,7 +6693,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::EdgeDoubleLinearTimeInterpolateOp</class>
@@ -6702,7 +6702,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeFloatConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeFloatConstantRefine_8C</filename>
     <includes id="EdgeFloatConstantRefine_8h" name="EdgeFloatConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/EdgeFloatConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6719,7 +6719,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeFloatConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeFloatConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6731,7 +6731,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="EdgeFloatLinearTimeInterpolateOp_8h" name="EdgeFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6750,7 +6750,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::EdgeFloatLinearTimeInterpolateOp</class>
@@ -6759,7 +6759,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeGeometry_8C</filename>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
     <includes id="EdgeIterator_8h" name="EdgeIterator.h" local="yes" imported="no">SAMRAI/pdat/EdgeIterator.h</includes>
@@ -6771,7 +6771,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeGeometry_8h</filename>
     <includes id="EdgeIndex_8h" name="EdgeIndex.h" local="yes" imported="no">SAMRAI/pdat/EdgeIndex.h</includes>
     <includes id="EdgeOverlap_8h" name="EdgeOverlap.h" local="yes" imported="no">SAMRAI/pdat/EdgeOverlap.h</includes>
@@ -6785,7 +6785,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeIndex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeIndex_8C</filename>
     <includes id="EdgeIndex_8h" name="EdgeIndex.h" local="yes" imported="no">SAMRAI/pdat/EdgeIndex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -6793,7 +6793,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeIndex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeIndex_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -6804,7 +6804,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeIntegerConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeIntegerConstantRefine_8C</filename>
     <includes id="EdgeIntegerConstantRefine_8h" name="EdgeIntegerConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/EdgeIntegerConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6821,7 +6821,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeIntegerConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeIntegerConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6833,7 +6833,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeIterator_8C</filename>
     <includes id="EdgeIterator_8h" name="EdgeIterator.h" local="yes" imported="no">SAMRAI/pdat/EdgeIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -6841,7 +6841,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeIterator_8h</filename>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
     <includes id="EdgeIndex_8h" name="EdgeIndex.h" local="yes" imported="no">SAMRAI/pdat/EdgeIndex.h</includes>
@@ -6852,7 +6852,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeOverlap.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeOverlap_8C</filename>
     <includes id="EdgeOverlap_8h" name="EdgeOverlap.h" local="yes" imported="no">SAMRAI/pdat/EdgeOverlap.h</includes>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
@@ -6861,7 +6861,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeOverlap.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeOverlap_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -6873,7 +6873,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeVariable_8C</filename>
     <includes id="EdgeVariable_8h" name="EdgeVariable.h" local="yes" imported="no">SAMRAI/pdat/EdgeVariable.h</includes>
     <includes id="EdgeDataFactory_8h" name="EdgeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/EdgeDataFactory.h</includes>
@@ -6883,7 +6883,7 @@
   </compound>
   <compound kind="file">
     <name>EdgeVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>EdgeVariable_8h</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -6894,7 +6894,7 @@
   </compound>
   <compound kind="file">
     <name>FaceComplexConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceComplexConstantRefine_8C</filename>
     <includes id="FaceComplexConstantRefine_8h" name="FaceComplexConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/FaceComplexConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6911,7 +6911,7 @@
   </compound>
   <compound kind="file">
     <name>FaceComplexConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceComplexConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6923,7 +6923,7 @@
   </compound>
   <compound kind="file">
     <name>FaceComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="FaceComplexLinearTimeInterpolateOp_8h" name="FaceComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h</includes>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
@@ -6943,7 +6943,7 @@
   </compound>
   <compound kind="file">
     <name>FaceComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::FaceComplexLinearTimeInterpolateOp</class>
@@ -6952,7 +6952,7 @@
   </compound>
   <compound kind="file">
     <name>FaceData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceData_8C</filename>
     <includes id="FaceData_8h" name="FaceData.h" local="yes" imported="no">SAMRAI/pdat/FaceData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -6965,7 +6965,7 @@
   </compound>
   <compound kind="file">
     <name>FaceData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceData_8h</filename>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
     <includes id="FaceIndex_8h" name="FaceIndex.h" local="yes" imported="no">SAMRAI/pdat/FaceIndex.h</includes>
@@ -6981,7 +6981,7 @@
   </compound>
   <compound kind="file">
     <name>FaceDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceDataFactory_8C</filename>
     <includes id="FaceDataFactory_8h" name="FaceDataFactory.h" local="yes" imported="no">SAMRAI/pdat/FaceDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -6995,7 +6995,7 @@
   </compound>
   <compound kind="file">
     <name>FaceDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -7009,7 +7009,7 @@
   </compound>
   <compound kind="file">
     <name>FaceDoubleConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceDoubleConstantRefine_8C</filename>
     <includes id="FaceDoubleConstantRefine_8h" name="FaceDoubleConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/FaceDoubleConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7026,7 +7026,7 @@
   </compound>
   <compound kind="file">
     <name>FaceDoubleConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceDoubleConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7038,7 +7038,7 @@
   </compound>
   <compound kind="file">
     <name>FaceDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="FaceDoubleLinearTimeInterpolateOp_8h" name="FaceDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/FaceDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7057,7 +7057,7 @@
   </compound>
   <compound kind="file">
     <name>FaceDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::FaceDoubleLinearTimeInterpolateOp</class>
@@ -7066,7 +7066,7 @@
   </compound>
   <compound kind="file">
     <name>FaceFloatConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceFloatConstantRefine_8C</filename>
     <includes id="FaceFloatConstantRefine_8h" name="FaceFloatConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/FaceFloatConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7083,7 +7083,7 @@
   </compound>
   <compound kind="file">
     <name>FaceFloatConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceFloatConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7095,7 +7095,7 @@
   </compound>
   <compound kind="file">
     <name>FaceFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="FaceFloatLinearTimeInterpolateOp_8h" name="FaceFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/FaceFloatLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7114,7 +7114,7 @@
   </compound>
   <compound kind="file">
     <name>FaceFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::FaceFloatLinearTimeInterpolateOp</class>
@@ -7123,7 +7123,7 @@
   </compound>
   <compound kind="file">
     <name>FaceGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceGeometry_8C</filename>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
     <includes id="FaceIterator_8h" name="FaceIterator.h" local="yes" imported="no">SAMRAI/pdat/FaceIterator.h</includes>
@@ -7134,7 +7134,7 @@
   </compound>
   <compound kind="file">
     <name>FaceGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceGeometry_8h</filename>
     <includes id="FaceIndex_8h" name="FaceIndex.h" local="yes" imported="no">SAMRAI/pdat/FaceIndex.h</includes>
     <includes id="FaceOverlap_8h" name="FaceOverlap.h" local="yes" imported="no">SAMRAI/pdat/FaceOverlap.h</includes>
@@ -7148,7 +7148,7 @@
   </compound>
   <compound kind="file">
     <name>FaceIndex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceIndex_8C</filename>
     <includes id="FaceIndex_8h" name="FaceIndex.h" local="yes" imported="no">SAMRAI/pdat/FaceIndex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -7156,7 +7156,7 @@
   </compound>
   <compound kind="file">
     <name>FaceIndex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceIndex_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -7167,7 +7167,7 @@
   </compound>
   <compound kind="file">
     <name>FaceIntegerConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceIntegerConstantRefine_8C</filename>
     <includes id="FaceIntegerConstantRefine_8h" name="FaceIntegerConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/FaceIntegerConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7184,7 +7184,7 @@
   </compound>
   <compound kind="file">
     <name>FaceIntegerConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceIntegerConstantRefine_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -7196,7 +7196,7 @@
   </compound>
   <compound kind="file">
     <name>FaceIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceIterator_8C</filename>
     <includes id="FaceIterator_8h" name="FaceIterator.h" local="yes" imported="no">SAMRAI/pdat/FaceIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -7204,7 +7204,7 @@
   </compound>
   <compound kind="file">
     <name>FaceIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceIterator_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
@@ -7215,7 +7215,7 @@
   </compound>
   <compound kind="file">
     <name>FaceOverlap.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceOverlap_8C</filename>
     <includes id="FaceOverlap_8h" name="FaceOverlap.h" local="yes" imported="no">SAMRAI/pdat/FaceOverlap.h</includes>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
@@ -7224,7 +7224,7 @@
   </compound>
   <compound kind="file">
     <name>FaceOverlap.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceOverlap_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -7236,7 +7236,7 @@
   </compound>
   <compound kind="file">
     <name>FaceVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceVariable_8C</filename>
     <includes id="FaceVariable_8h" name="FaceVariable.h" local="yes" imported="no">SAMRAI/pdat/FaceVariable.h</includes>
     <includes id="FaceDataFactory_8h" name="FaceDataFactory.h" local="yes" imported="no">SAMRAI/pdat/FaceDataFactory.h</includes>
@@ -7246,7 +7246,7 @@
   </compound>
   <compound kind="file">
     <name>FaceVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FaceVariable_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
@@ -7257,7 +7257,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerCellNoCornersVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerCellNoCornersVariableFillPattern_8C</filename>
     <includes id="FirstLayerCellNoCornersVariableFillPattern_8h" name="FirstLayerCellNoCornersVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/FirstLayerCellNoCornersVariableFillPattern.h</includes>
     <includes id="CellGeometry_8h" name="CellGeometry.h" local="yes" imported="no">SAMRAI/pdat/CellGeometry.h</includes>
@@ -7267,7 +7267,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerCellNoCornersVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerCellNoCornersVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -7285,7 +7285,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerCellVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerCellVariableFillPattern_8C</filename>
     <includes id="FirstLayerCellVariableFillPattern_8h" name="FirstLayerCellVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/FirstLayerCellVariableFillPattern.h</includes>
     <includes id="CellGeometry_8h" name="CellGeometry.h" local="yes" imported="no">SAMRAI/pdat/CellGeometry.h</includes>
@@ -7295,7 +7295,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerCellVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerCellVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -7306,7 +7306,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerEdgeVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerEdgeVariableFillPattern_8C</filename>
     <includes id="FirstLayerEdgeVariableFillPattern_8h" name="FirstLayerEdgeVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/FirstLayerEdgeVariableFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -7317,7 +7317,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerEdgeVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerEdgeVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -7328,7 +7328,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerNodeVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerNodeVariableFillPattern_8C</filename>
     <includes id="FirstLayerNodeVariableFillPattern_8h" name="FirstLayerNodeVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/FirstLayerNodeVariableFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -7339,7 +7339,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerNodeVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerNodeVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -7350,7 +7350,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerSideVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerSideVariableFillPattern_8C</filename>
     <includes id="FirstLayerSideVariableFillPattern_8h" name="FirstLayerSideVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/FirstLayerSideVariableFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -7361,7 +7361,7 @@
   </compound>
   <compound kind="file">
     <name>FirstLayerSideVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>FirstLayerSideVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -7372,7 +7372,7 @@
   </compound>
   <compound kind="file">
     <name>IndexData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IndexData_8C</filename>
     <includes id="IndexData_8h" name="IndexData.h" local="yes" imported="no">SAMRAI/pdat/IndexData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7385,7 +7385,7 @@
   </compound>
   <compound kind="file">
     <name>IndexData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IndexData_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
@@ -7401,7 +7401,7 @@
   </compound>
   <compound kind="file">
     <name>IndexDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IndexDataFactory_8C</filename>
     <includes id="IndexDataFactory_8h" name="IndexDataFactory.h" local="yes" imported="no">SAMRAI/pdat/IndexDataFactory.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7413,7 +7413,7 @@
   </compound>
   <compound kind="file">
     <name>IndexDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IndexDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -7427,7 +7427,7 @@
   </compound>
   <compound kind="file">
     <name>IndexVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IndexVariable_8C</filename>
     <includes id="IndexVariable_8h" name="IndexVariable.h" local="yes" imported="no">SAMRAI/pdat/IndexVariable.h</includes>
     <includes id="IndexDataFactory_8h" name="IndexDataFactory.h" local="yes" imported="no">SAMRAI/pdat/IndexDataFactory.h</includes>
@@ -7437,7 +7437,7 @@
   </compound>
   <compound kind="file">
     <name>IndexVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IndexVariable_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
@@ -7448,7 +7448,7 @@
   </compound>
   <compound kind="file">
     <name>IntegerAttributeId.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IntegerAttributeId_8C</filename>
     <includes id="IntegerAttributeId_8h" name="IntegerAttributeId.h" local="yes" imported="no">SAMRAI/pdat/IntegerAttributeId.h</includes>
     <namespace>SAMRAI</namespace>
@@ -7456,7 +7456,7 @@
   </compound>
   <compound kind="file">
     <name>IntegerAttributeId.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>IntegerAttributeId_8h</filename>
     <class kind="class">SAMRAI::pdat::IntegerAttributeId</class>
     <namespace>SAMRAI</namespace>
@@ -7464,7 +7464,7 @@
   </compound>
   <compound kind="file">
     <name>MDA_Access.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>MDA__Access_8h</filename>
     <class kind="class">MDA_IndexRange</class>
     <class kind="class">MDA_OrderRowMajor</class>
@@ -7474,7 +7474,7 @@
   </compound>
   <compound kind="file">
     <name>NodeComplexInjection.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeComplexInjection_8C</filename>
     <includes id="NodeComplexInjection_8h" name="NodeComplexInjection.h" local="yes" imported="no">SAMRAI/pdat/NodeComplexInjection.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -7492,7 +7492,7 @@
   </compound>
   <compound kind="file">
     <name>NodeComplexInjection.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeComplexInjection_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7504,7 +7504,7 @@
   </compound>
   <compound kind="file">
     <name>NodeComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="NodeComplexLinearTimeInterpolateOp_8h" name="NodeComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/NodeComplexLinearTimeInterpolateOp.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -7524,7 +7524,7 @@
   </compound>
   <compound kind="file">
     <name>NodeComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::NodeComplexLinearTimeInterpolateOp</class>
@@ -7533,7 +7533,7 @@
   </compound>
   <compound kind="file">
     <name>NodeData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeData_8C</filename>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7546,7 +7546,7 @@
   </compound>
   <compound kind="file">
     <name>NodeData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeData_8h</filename>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
     <includes id="NodeIndex_8h" name="NodeIndex.h" local="yes" imported="no">SAMRAI/pdat/NodeIndex.h</includes>
@@ -7562,7 +7562,7 @@
   </compound>
   <compound kind="file">
     <name>NodeDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeDataFactory_8C</filename>
     <includes id="NodeDataFactory_8h" name="NodeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/NodeDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7576,7 +7576,7 @@
   </compound>
   <compound kind="file">
     <name>NodeDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -7590,7 +7590,7 @@
   </compound>
   <compound kind="file">
     <name>NodeDoubleInjection.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeDoubleInjection_8C</filename>
     <includes id="NodeDoubleInjection_8h" name="NodeDoubleInjection.h" local="yes" imported="no">SAMRAI/pdat/NodeDoubleInjection.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7607,7 +7607,7 @@
   </compound>
   <compound kind="file">
     <name>NodeDoubleInjection.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeDoubleInjection_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7619,7 +7619,7 @@
   </compound>
   <compound kind="file">
     <name>NodeDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="NodeDoubleLinearTimeInterpolateOp_8h" name="NodeDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7638,7 +7638,7 @@
   </compound>
   <compound kind="file">
     <name>NodeDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::NodeDoubleLinearTimeInterpolateOp</class>
@@ -7647,7 +7647,7 @@
   </compound>
   <compound kind="file">
     <name>NodeFloatInjection.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeFloatInjection_8C</filename>
     <includes id="NodeFloatInjection_8h" name="NodeFloatInjection.h" local="yes" imported="no">SAMRAI/pdat/NodeFloatInjection.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7664,7 +7664,7 @@
   </compound>
   <compound kind="file">
     <name>NodeFloatInjection.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeFloatInjection_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7676,7 +7676,7 @@
   </compound>
   <compound kind="file">
     <name>NodeFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="NodeFloatLinearTimeInterpolateOp_8h" name="NodeFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/NodeFloatLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7695,7 +7695,7 @@
   </compound>
   <compound kind="file">
     <name>NodeFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::NodeFloatLinearTimeInterpolateOp</class>
@@ -7704,7 +7704,7 @@
   </compound>
   <compound kind="file">
     <name>NodeGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeGeometry_8C</filename>
     <includes id="NodeGeometry_8h" name="NodeGeometry.h" local="yes" imported="no">SAMRAI/pdat/NodeGeometry.h</includes>
     <includes id="NodeIterator_8h" name="NodeIterator.h" local="yes" imported="no">SAMRAI/pdat/NodeIterator.h</includes>
@@ -7715,7 +7715,7 @@
   </compound>
   <compound kind="file">
     <name>NodeGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeGeometry_8h</filename>
     <includes id="NodeIndex_8h" name="NodeIndex.h" local="yes" imported="no">SAMRAI/pdat/NodeIndex.h</includes>
     <includes id="NodeOverlap_8h" name="NodeOverlap.h" local="yes" imported="no">SAMRAI/pdat/NodeOverlap.h</includes>
@@ -7729,7 +7729,7 @@
   </compound>
   <compound kind="file">
     <name>NodeIndex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeIndex_8C</filename>
     <includes id="NodeIndex_8h" name="NodeIndex.h" local="yes" imported="no">SAMRAI/pdat/NodeIndex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -7737,7 +7737,7 @@
   </compound>
   <compound kind="file">
     <name>NodeIndex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeIndex_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -7748,7 +7748,7 @@
   </compound>
   <compound kind="file">
     <name>NodeIntegerInjection.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeIntegerInjection_8C</filename>
     <includes id="NodeIntegerInjection_8h" name="NodeIntegerInjection.h" local="yes" imported="no">SAMRAI/pdat/NodeIntegerInjection.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7765,7 +7765,7 @@
   </compound>
   <compound kind="file">
     <name>NodeIntegerInjection.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeIntegerInjection_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -7777,7 +7777,7 @@
   </compound>
   <compound kind="file">
     <name>NodeIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeIterator_8C</filename>
     <includes id="NodeIterator_8h" name="NodeIterator.h" local="yes" imported="no">SAMRAI/pdat/NodeIterator.h</includes>
     <namespace>SAMRAI</namespace>
@@ -7785,7 +7785,7 @@
   </compound>
   <compound kind="file">
     <name>NodeIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeIterator_8h</filename>
     <includes id="NodeGeometry_8h" name="NodeGeometry.h" local="yes" imported="no">SAMRAI/pdat/NodeGeometry.h</includes>
     <includes id="NodeIndex_8h" name="NodeIndex.h" local="yes" imported="no">SAMRAI/pdat/NodeIndex.h</includes>
@@ -7796,7 +7796,7 @@
   </compound>
   <compound kind="file">
     <name>NodeOverlap.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeOverlap_8C</filename>
     <includes id="NodeOverlap_8h" name="NodeOverlap.h" local="yes" imported="no">SAMRAI/pdat/NodeOverlap.h</includes>
     <namespace>SAMRAI</namespace>
@@ -7804,7 +7804,7 @@
   </compound>
   <compound kind="file">
     <name>NodeOverlap.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeOverlap_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -7816,7 +7816,7 @@
   </compound>
   <compound kind="file">
     <name>NodeVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeVariable_8C</filename>
     <includes id="NodeVariable_8h" name="NodeVariable.h" local="yes" imported="no">SAMRAI/pdat/NodeVariable.h</includes>
     <includes id="NodeDataFactory_8h" name="NodeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/NodeDataFactory.h</includes>
@@ -7826,7 +7826,7 @@
   </compound>
   <compound kind="file">
     <name>NodeVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>NodeVariable_8h</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -7837,7 +7837,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeData_8C</filename>
     <includes id="OuteredgeData_8h" name="OuteredgeData.h" local="yes" imported="no">SAMRAI/pdat/OuteredgeData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7850,7 +7850,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeData_8h</filename>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -7867,7 +7867,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeDataFactory_8C</filename>
     <includes id="EdgeDataFactory_8h" name="EdgeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/EdgeDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7881,7 +7881,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -7895,7 +7895,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeGeometry_8C</filename>
     <includes id="OuteredgeGeometry_8h" name="OuteredgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/OuteredgeGeometry.h</includes>
     <includes id="EdgeGeometry_8h" name="EdgeGeometry.h" local="yes" imported="no">SAMRAI/pdat/EdgeGeometry.h</includes>
@@ -7906,7 +7906,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeGeometry_8h</filename>
     <includes id="EdgeOverlap_8h" name="EdgeOverlap.h" local="yes" imported="no">SAMRAI/pdat/EdgeOverlap.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7919,7 +7919,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeVariable_8C</filename>
     <includes id="OuteredgeVariable_8h" name="OuteredgeVariable.h" local="yes" imported="no">SAMRAI/pdat/OuteredgeVariable.h</includes>
     <includes id="OuteredgeDataFactory_8h" name="OuteredgeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OuteredgeDataFactory.h</includes>
@@ -7929,7 +7929,7 @@
   </compound>
   <compound kind="file">
     <name>OuteredgeVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuteredgeVariable_8h</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -7940,7 +7940,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceComplexConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceComplexConstantRefine_8C</filename>
     <includes id="OuterfaceComplexConstantRefine_8h" name="OuterfaceComplexConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceComplexConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -7957,7 +7957,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceComplexConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceComplexConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -7969,7 +7969,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="OuterfaceComplexLinearTimeInterpolateOp_8h" name="OuterfaceComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceComplexLinearTimeInterpolateOp.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -7989,7 +7989,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::OuterfaceComplexLinearTimeInterpolateOp</class>
@@ -7998,7 +7998,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceData_8C</filename>
     <includes id="OuterfaceData_8h" name="OuterfaceData.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8012,7 +8012,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceData_8h</filename>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -8027,7 +8027,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceDataFactory_8C</filename>
     <includes id="OuterfaceDataFactory_8h" name="OuterfaceDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8041,7 +8041,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -8055,7 +8055,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceDoubleConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceDoubleConstantRefine_8C</filename>
     <includes id="OuterfaceDoubleConstantRefine_8h" name="OuterfaceDoubleConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceDoubleConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8072,7 +8072,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceDoubleConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceDoubleConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8084,7 +8084,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="OuterfaceDoubleLinearTimeInterpolateOp_8h" name="OuterfaceDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="OuterfaceData_8h" name="OuterfaceData.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceData.h</includes>
@@ -8103,7 +8103,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::OuterfaceDoubleLinearTimeInterpolateOp</class>
@@ -8112,7 +8112,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceFloatConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceFloatConstantRefine_8C</filename>
     <includes id="OuterfaceFloatConstantRefine_8h" name="OuterfaceFloatConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceFloatConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8129,7 +8129,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceFloatConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceFloatConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8141,7 +8141,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="OuterfaceFloatLinearTimeInterpolateOp_8h" name="OuterfaceFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceFloatLinearTimeInterpolateOp.h</includes>
     <includes id="OuterfaceData_8h" name="OuterfaceData.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceData.h</includes>
@@ -8160,7 +8160,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::OuterfaceFloatLinearTimeInterpolateOp</class>
@@ -8169,7 +8169,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceGeometry_8C</filename>
     <includes id="OuterfaceGeometry_8h" name="OuterfaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceGeometry.h</includes>
     <includes id="FaceGeometry_8h" name="FaceGeometry.h" local="yes" imported="no">SAMRAI/pdat/FaceGeometry.h</includes>
@@ -8180,7 +8180,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceGeometry_8h</filename>
     <includes id="FaceOverlap_8h" name="FaceOverlap.h" local="yes" imported="no">SAMRAI/pdat/FaceOverlap.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8193,7 +8193,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceIntegerConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceIntegerConstantRefine_8C</filename>
     <includes id="OuterfaceIntegerConstantRefine_8h" name="OuterfaceIntegerConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceIntegerConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8210,7 +8210,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceIntegerConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceIntegerConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8222,7 +8222,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceVariable_8C</filename>
     <includes id="OuterfaceVariable_8h" name="OuterfaceVariable.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceVariable.h</includes>
     <includes id="OuterfaceDataFactory_8h" name="OuterfaceDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OuterfaceDataFactory.h</includes>
@@ -8232,7 +8232,7 @@
   </compound>
   <compound kind="file">
     <name>OuterfaceVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuterfaceVariable_8h</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -8243,7 +8243,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeData_8C</filename>
     <includes id="OuternodeData_8h" name="OuternodeData.h" local="yes" imported="no">SAMRAI/pdat/OuternodeData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8257,7 +8257,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeData_8h</filename>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
     <includes id="NodeData_8h" name="NodeData.h" local="yes" imported="no">SAMRAI/pdat/NodeData.h</includes>
@@ -8273,7 +8273,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeDataFactory_8C</filename>
     <includes id="OuternodeDataFactory_8h" name="OuternodeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OuternodeDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8287,7 +8287,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -8301,7 +8301,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeDoubleInjection.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeDoubleInjection_8C</filename>
     <includes id="OuternodeDoubleInjection_8h" name="OuternodeDoubleInjection.h" local="yes" imported="no">SAMRAI/pdat/OuternodeDoubleInjection.h</includes>
     <includes id="OuternodeData_8h" name="OuternodeData.h" local="yes" imported="no">SAMRAI/pdat/OuternodeData.h</includes>
@@ -8318,7 +8318,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeDoubleInjection.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeDoubleInjection_8h</filename>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8330,7 +8330,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeGeometry_8C</filename>
     <includes id="OuternodeGeometry_8h" name="OuternodeGeometry.h" local="yes" imported="no">SAMRAI/pdat/OuternodeGeometry.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -8341,7 +8341,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeGeometry_8h</filename>
     <includes id="NodeOverlap_8h" name="NodeOverlap.h" local="yes" imported="no">SAMRAI/pdat/NodeOverlap.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8354,7 +8354,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeVariable_8C</filename>
     <includes id="OuternodeVariable_8h" name="OuternodeVariable.h" local="yes" imported="no">SAMRAI/pdat/OuternodeVariable.h</includes>
     <includes id="OuternodeDataFactory_8h" name="OuternodeDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OuternodeDataFactory.h</includes>
@@ -8364,7 +8364,7 @@
   </compound>
   <compound kind="file">
     <name>OuternodeVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OuternodeVariable_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
@@ -8375,7 +8375,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="OutersideComplexLinearTimeInterpolateOp_8h" name="OutersideComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/OutersideComplexLinearTimeInterpolateOp.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -8395,7 +8395,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::OutersideComplexLinearTimeInterpolateOp</class>
@@ -8404,7 +8404,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideData_8C</filename>
     <includes id="OutersideData_8h" name="OutersideData.h" local="yes" imported="no">SAMRAI/pdat/OutersideData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8418,7 +8418,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideData_8h</filename>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -8434,7 +8434,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideDataFactory_8C</filename>
     <includes id="OutersideDataFactory_8h" name="OutersideDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OutersideDataFactory.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8448,7 +8448,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -8462,7 +8462,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="OutersideDoubleLinearTimeInterpolateOp_8h" name="OutersideDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/OutersideDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8481,7 +8481,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::OutersideDoubleLinearTimeInterpolateOp</class>
@@ -8490,7 +8490,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="OutersideFloatLinearTimeInterpolateOp_8h" name="OutersideFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/OutersideFloatLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8509,7 +8509,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::OutersideFloatLinearTimeInterpolateOp</class>
@@ -8518,7 +8518,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideGeometry_8C</filename>
     <includes id="OutersideGeometry_8h" name="OutersideGeometry.h" local="yes" imported="no">SAMRAI/pdat/OutersideGeometry.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -8529,7 +8529,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideGeometry_8h</filename>
     <includes id="SideOverlap_8h" name="SideOverlap.h" local="yes" imported="no">SAMRAI/pdat/SideOverlap.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8542,7 +8542,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideVariable_8C</filename>
     <includes id="OutersideVariable_8h" name="OutersideVariable.h" local="yes" imported="no">SAMRAI/pdat/OutersideVariable.h</includes>
     <includes id="OutersideDataFactory_8h" name="OutersideDataFactory.h" local="yes" imported="no">SAMRAI/pdat/OutersideDataFactory.h</includes>
@@ -8552,7 +8552,7 @@
   </compound>
   <compound kind="file">
     <name>OutersideVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>OutersideVariable_8h</filename>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -8563,7 +8563,7 @@
   </compound>
   <compound kind="file">
     <name>SecondLayerNodeNoCornersVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SecondLayerNodeNoCornersVariableFillPattern_8C</filename>
     <includes id="SecondLayerNodeNoCornersVariableFillPattern_8h" name="SecondLayerNodeNoCornersVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -8574,7 +8574,7 @@
   </compound>
   <compound kind="file">
     <name>SecondLayerNodeNoCornersVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SecondLayerNodeNoCornersVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -8585,7 +8585,7 @@
   </compound>
   <compound kind="file">
     <name>SecondLayerNodeVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SecondLayerNodeVariableFillPattern_8C</filename>
     <includes id="SecondLayerNodeVariableFillPattern_8h" name="SecondLayerNodeVariableFillPattern.h" local="yes" imported="no">SAMRAI/pdat/SecondLayerNodeVariableFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -8596,7 +8596,7 @@
   </compound>
   <compound kind="file">
     <name>SecondLayerNodeVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SecondLayerNodeVariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -8607,7 +8607,7 @@
   </compound>
   <compound kind="file">
     <name>SideComplexConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideComplexConstantRefine_8C</filename>
     <includes id="SideComplexConstantRefine_8h" name="SideComplexConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/SideComplexConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8624,7 +8624,7 @@
   </compound>
   <compound kind="file">
     <name>SideComplexConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideComplexConstantRefine_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -8636,7 +8636,7 @@
   </compound>
   <compound kind="file">
     <name>SideComplexLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideComplexLinearTimeInterpolateOp_8C</filename>
     <includes id="SideComplexLinearTimeInterpolateOp_8h" name="SideComplexLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -8656,7 +8656,7 @@
   </compound>
   <compound kind="file">
     <name>SideComplexLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideComplexLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::SideComplexLinearTimeInterpolateOp</class>
@@ -8665,7 +8665,7 @@
   </compound>
   <compound kind="file">
     <name>SideData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideData_8C</filename>
     <includes id="SideData_8h" name="SideData.h" local="yes" imported="no">SAMRAI/pdat/SideData.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8678,7 +8678,7 @@
   </compound>
   <compound kind="file">
     <name>SideData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideData_8h</filename>
     <includes id="PatchData_8h" name="PatchData.h" local="yes" imported="no">SAMRAI/hier/PatchData.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -8694,7 +8694,7 @@
   </compound>
   <compound kind="file">
     <name>SideDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideDataFactory_8C</filename>
     <includes id="SideDataFactory_8h" name="SideDataFactory.h" local="yes" imported="no">SAMRAI/pdat/SideDataFactory.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8708,7 +8708,7 @@
   </compound>
   <compound kind="file">
     <name>SideDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideDataFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
@@ -8722,7 +8722,7 @@
   </compound>
   <compound kind="file">
     <name>SideDoubleConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideDoubleConstantRefine_8C</filename>
     <includes id="SideDoubleConstantRefine_8h" name="SideDoubleConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/SideDoubleConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8739,7 +8739,7 @@
   </compound>
   <compound kind="file">
     <name>SideDoubleConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideDoubleConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8751,7 +8751,7 @@
   </compound>
   <compound kind="file">
     <name>SideDoubleLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideDoubleLinearTimeInterpolateOp_8C</filename>
     <includes id="SideDoubleLinearTimeInterpolateOp_8h" name="SideDoubleLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8770,7 +8770,7 @@
   </compound>
   <compound kind="file">
     <name>SideDoubleLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideDoubleLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::SideDoubleLinearTimeInterpolateOp</class>
@@ -8779,7 +8779,7 @@
   </compound>
   <compound kind="file">
     <name>SideFloatConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideFloatConstantRefine_8C</filename>
     <includes id="SideFloatConstantRefine_8h" name="SideFloatConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/SideFloatConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8796,7 +8796,7 @@
   </compound>
   <compound kind="file">
     <name>SideFloatConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideFloatConstantRefine_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8808,7 +8808,7 @@
   </compound>
   <compound kind="file">
     <name>SideFloatLinearTimeInterpolateOp.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideFloatLinearTimeInterpolateOp_8C</filename>
     <includes id="SideFloatLinearTimeInterpolateOp_8h" name="SideFloatLinearTimeInterpolateOp.h" local="yes" imported="no">SAMRAI/pdat/SideFloatLinearTimeInterpolateOp.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -8827,7 +8827,7 @@
   </compound>
   <compound kind="file">
     <name>SideFloatLinearTimeInterpolateOp.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideFloatLinearTimeInterpolateOp_8h</filename>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
     <class kind="class">SAMRAI::pdat::SideFloatLinearTimeInterpolateOp</class>
@@ -8836,7 +8836,7 @@
   </compound>
   <compound kind="file">
     <name>SideGeometry.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideGeometry_8C</filename>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
     <includes id="SideIterator_8h" name="SideIterator.h" local="yes" imported="no">SAMRAI/pdat/SideIterator.h</includes>
@@ -8847,7 +8847,7 @@
   </compound>
   <compound kind="file">
     <name>SideGeometry.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideGeometry_8h</filename>
     <includes id="SideIndex_8h" name="SideIndex.h" local="yes" imported="no">SAMRAI/pdat/SideIndex.h</includes>
     <includes id="SideOverlap_8h" name="SideOverlap.h" local="yes" imported="no">SAMRAI/pdat/SideOverlap.h</includes>
@@ -8861,7 +8861,7 @@
   </compound>
   <compound kind="file">
     <name>SideIndex.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideIndex_8C</filename>
     <includes id="SideIndex_8h" name="SideIndex.h" local="yes" imported="no">SAMRAI/pdat/SideIndex.h</includes>
     <namespace>SAMRAI</namespace>
@@ -8869,7 +8869,7 @@
   </compound>
   <compound kind="file">
     <name>SideIndex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideIndex_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -8880,7 +8880,7 @@
   </compound>
   <compound kind="file">
     <name>SideIntegerConstantRefine.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideIntegerConstantRefine_8C</filename>
     <includes id="SideIntegerConstantRefine_8h" name="SideIntegerConstantRefine.h" local="yes" imported="no">SAMRAI/pdat/SideIntegerConstantRefine.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -8897,7 +8897,7 @@
   </compound>
   <compound kind="file">
     <name>SideIntegerConstantRefine.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideIntegerConstantRefine_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -8909,7 +8909,7 @@
   </compound>
   <compound kind="file">
     <name>SideIterator.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideIterator_8C</filename>
     <includes id="SideIterator_8h" name="SideIterator.h" local="yes" imported="no">SAMRAI/pdat/SideIterator.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -8918,7 +8918,7 @@
   </compound>
   <compound kind="file">
     <name>SideIterator.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideIterator_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -8929,7 +8929,7 @@
   </compound>
   <compound kind="file">
     <name>SideOverlap.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideOverlap_8C</filename>
     <includes id="SideOverlap_8h" name="SideOverlap.h" local="yes" imported="no">SAMRAI/pdat/SideOverlap.h</includes>
     <includes id="SideGeometry_8h" name="SideGeometry.h" local="yes" imported="no">SAMRAI/pdat/SideGeometry.h</includes>
@@ -8938,7 +8938,7 @@
   </compound>
   <compound kind="file">
     <name>SideOverlap.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideOverlap_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -8950,7 +8950,7 @@
   </compound>
   <compound kind="file">
     <name>SideVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideVariable_8C</filename>
     <includes id="SideVariable_8h" name="SideVariable.h" local="yes" imported="no">SAMRAI/pdat/SideVariable.h</includes>
     <includes id="SideDataFactory_8h" name="SideDataFactory.h" local="yes" imported="no">SAMRAI/pdat/SideDataFactory.h</includes>
@@ -8960,7 +8960,7 @@
   </compound>
   <compound kind="file">
     <name>SideVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SideVariable_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
@@ -8972,40 +8972,40 @@
   </compound>
   <compound kind="file">
     <name>SparseData.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SparseData_8C</filename>
     <includes id="SparseData_8h" name="SparseData.h" local="yes" imported="no">SAMRAI/pdat/SparseData.h</includes>
   </compound>
   <compound kind="file">
     <name>SparseData.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SparseData_8h</filename>
   </compound>
   <compound kind="file">
     <name>SparseDataFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SparseDataFactory_8C</filename>
     <includes id="SparseDataFactory_8h" name="SparseDataFactory.h" local="yes" imported="no">SAMRAI/pdat/SparseDataFactory.h</includes>
   </compound>
   <compound kind="file">
     <name>SparseDataFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SparseDataFactory_8h</filename>
   </compound>
   <compound kind="file">
     <name>SparseDataVariable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SparseDataVariable_8C</filename>
     <includes id="SparseDataVariable_8h" name="SparseDataVariable.h" local="yes" imported="no">SAMRAI/pdat/SparseDataVariable.h</includes>
   </compound>
   <compound kind="file">
     <name>SparseDataVariable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SparseDataVariable_8h</filename>
   </compound>
   <compound kind="file">
     <name>SumOperation.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SumOperation_8C</filename>
     <includes id="SumOperation_8h" name="SumOperation.h" local="yes" imported="no">SAMRAI/pdat/SumOperation.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9013,7 +9013,7 @@
   </compound>
   <compound kind="file">
     <name>SumOperation.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/</path>
     <filename>SumOperation_8h</filename>
     <includes id="SumOperation_8C" name="SumOperation.C" local="yes" imported="no">SAMRAI/pdat/SumOperation.C</includes>
     <class kind="class">SAMRAI::pdat::SumOperation</class>
@@ -9022,7 +9022,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianRobinBcHelper.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CartesianRobinBcHelper_8C</filename>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
     <includes id="Index_8h" name="Index.h" local="yes" imported="no">SAMRAI/hier/Index.h</includes>
@@ -9043,7 +9043,7 @@
   </compound>
   <compound kind="file">
     <name>CartesianRobinBcHelper.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CartesianRobinBcHelper_8h</filename>
     <includes id="RobinBcCoefStrategy_8h" name="RobinBcCoefStrategy.h" local="yes" imported="no">SAMRAI/solv/RobinBcCoefStrategy.h</includes>
     <includes id="RefinePatchStrategy_8h" name="RefinePatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/RefinePatchStrategy.h</includes>
@@ -9060,7 +9060,7 @@
   </compound>
   <compound kind="file">
     <name>CellPoissonFACOps.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CellPoissonFACOps_8C</filename>
     <includes id="CellPoissonFACOps_8h" name="CellPoissonFACOps.h" local="yes" imported="no">SAMRAI/solv/CellPoissonFACOps.h</includes>
     <includes id="BoundaryBoxUtils_8h" name="BoundaryBoxUtils.h" local="yes" imported="no">SAMRAI/hier/BoundaryBoxUtils.h</includes>
@@ -9100,7 +9100,7 @@
   </compound>
   <compound kind="file">
     <name>CellPoissonFACOps.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CellPoissonFACOps_8h</filename>
     <includes id="CartesianRobinBcHelper_8h" name="CartesianRobinBcHelper.h" local="yes" imported="no">SAMRAI/solv/CartesianRobinBcHelper.h</includes>
     <includes id="FACPreconditioner_8h" name="FACPreconditioner.h" local="yes" imported="no">SAMRAI/solv/FACPreconditioner.h</includes>
@@ -9140,7 +9140,7 @@
   </compound>
   <compound kind="file">
     <name>CellPoissonFACSolver.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CellPoissonFACSolver_8C</filename>
     <includes id="CellVariable_8h" name="CellVariable.h" local="yes" imported="no">SAMRAI/pdat/CellVariable.h</includes>
     <includes id="CellPoissonFACSolver_8h" name="CellPoissonFACSolver.h" local="yes" imported="no">SAMRAI/solv/CellPoissonFACSolver.h</includes>
@@ -9151,7 +9151,7 @@
   </compound>
   <compound kind="file">
     <name>CellPoissonFACSolver.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CellPoissonFACSolver_8h</filename>
     <includes id="FACPreconditioner_8h" name="FACPreconditioner.h" local="yes" imported="no">SAMRAI/solv/FACPreconditioner.h</includes>
     <includes id="CellPoissonFACOps_8h" name="CellPoissonFACOps.h" local="yes" imported="no">SAMRAI/solv/CellPoissonFACOps.h</includes>
@@ -9165,7 +9165,7 @@
   </compound>
   <compound kind="file">
     <name>CellPoissonHypreSolver.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CellPoissonHypreSolver_8C</filename>
     <includes id="CellPoissonHypreSolver_8h" name="CellPoissonHypreSolver.h" local="yes" imported="no">SAMRAI/solv/CellPoissonHypreSolver.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -9200,7 +9200,7 @@
   </compound>
   <compound kind="file">
     <name>CellPoissonHypreSolver.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CellPoissonHypreSolver_8h</filename>
     <includes id="GhostCellRobinBcCoefs_8h" name="GhostCellRobinBcCoefs.h" local="yes" imported="no">SAMRAI/solv/GhostCellRobinBcCoefs.h</includes>
     <includes id="RobinBcCoefStrategy_8h" name="RobinBcCoefStrategy.h" local="yes" imported="no">SAMRAI/solv/RobinBcCoefStrategy.h</includes>
@@ -9228,7 +9228,7 @@
   </compound>
   <compound kind="file">
     <name>CVODEAbstractFunctions.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CVODEAbstractFunctions_8C</filename>
     <includes id="CVODEAbstractFunctions_8h" name="CVODEAbstractFunctions.h" local="yes" imported="no">SAMRAI/solv/CVODEAbstractFunctions.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9236,7 +9236,7 @@
   </compound>
   <compound kind="file">
     <name>CVODEAbstractFunctions.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CVODEAbstractFunctions_8h</filename>
     <includes id="SundialsAbstractVector_8h" name="SundialsAbstractVector.h" local="yes" imported="no">SAMRAI/solv/SundialsAbstractVector.h</includes>
     <class kind="class">SAMRAI::solv::CVODEAbstractFunctions</class>
@@ -9245,7 +9245,7 @@
   </compound>
   <compound kind="file">
     <name>CVODESolver.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CVODESolver_8C</filename>
     <includes id="CVODESolver_8h" name="CVODESolver.h" local="yes" imported="no">SAMRAI/solv/CVODESolver.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9253,7 +9253,7 @@
   </compound>
   <compound kind="file">
     <name>CVODESolver.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>CVODESolver_8h</filename>
     <includes id="CVODEAbstractFunctions_8h" name="CVODEAbstractFunctions.h" local="yes" imported="no">SAMRAI/solv/CVODEAbstractFunctions.h</includes>
     <includes id="SundialsAbstractVector_8h" name="SundialsAbstractVector.h" local="yes" imported="no">SAMRAI/solv/SundialsAbstractVector.h</includes>
@@ -9279,77 +9279,77 @@
   </compound>
   <compound kind="file">
     <name>manual_FAC.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__FAC_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_nonlinear.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__nonlinear_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_packages.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__packages_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_packages_petsc.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__packages__petsc_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_packages_sundials.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__packages__sundials_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_packages_sundials_cvode.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__packages__sundials__cvode_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_packages_sundials_kinsol.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__packages__sundials__kinsol_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_packages_sundials_vector.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__packages__sundials__vector_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_poisson.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__poisson_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual_vectors.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>manual__vectors_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>FACOperatorStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>FACOperatorStrategy_8C</filename>
     <includes id="FACOperatorStrategy_8h" name="FACOperatorStrategy.h" local="yes" imported="no">SAMRAI/solv/FACOperatorStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9357,7 +9357,7 @@
   </compound>
   <compound kind="file">
     <name>FACOperatorStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>FACOperatorStrategy_8h</filename>
     <includes id="SAMRAIVectorReal_8h" name="SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/SAMRAIVectorReal.h</includes>
     <class kind="class">SAMRAI::solv::FACOperatorStrategy</class>
@@ -9366,7 +9366,7 @@
   </compound>
   <compound kind="file">
     <name>FACPreconditioner.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>FACPreconditioner_8C</filename>
     <includes id="HierarchyDataOpsManager_8h" name="HierarchyDataOpsManager.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsManager.h</includes>
     <includes id="FACPreconditioner_8h" name="FACPreconditioner.h" local="yes" imported="no">SAMRAI/solv/FACPreconditioner.h</includes>
@@ -9378,7 +9378,7 @@
   </compound>
   <compound kind="file">
     <name>FACPreconditioner.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>FACPreconditioner_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="FACOperatorStrategy_8h" name="FACOperatorStrategy.h" local="yes" imported="no">SAMRAI/solv/FACOperatorStrategy.h</includes>
@@ -9390,7 +9390,7 @@
   </compound>
   <compound kind="file">
     <name>GhostCellRobinBcCoefs.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>GhostCellRobinBcCoefs_8C</filename>
     <includes id="VariableDatabase_8h" name="VariableDatabase.h" local="yes" imported="no">SAMRAI/hier/VariableDatabase.h</includes>
     <includes id="Variable_8h" name="Variable.h" local="yes" imported="no">SAMRAI/hier/Variable.h</includes>
@@ -9407,7 +9407,7 @@
   </compound>
   <compound kind="file">
     <name>GhostCellRobinBcCoefs.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>GhostCellRobinBcCoefs_8h</filename>
     <includes id="RobinBcCoefStrategy_8h" name="RobinBcCoefStrategy.h" local="yes" imported="no">SAMRAI/solv/RobinBcCoefStrategy.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -9420,7 +9420,7 @@
   </compound>
   <compound kind="file">
     <name>KINSOL_SAMRAIContext.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>KINSOL__SAMRAIContext_8C</filename>
     <includes id="KINSOL__SAMRAIContext_8h" name="KINSOL_SAMRAIContext.h" local="yes" imported="no">SAMRAI/solv/KINSOL_SAMRAIContext.h</includes>
     <includes id="Sundials__SAMRAIVector_8h" name="Sundials_SAMRAIVector.h" local="yes" imported="no">SAMRAI/solv/Sundials_SAMRAIVector.h</includes>
@@ -9431,7 +9431,7 @@
   </compound>
   <compound kind="file">
     <name>KINSOL_SAMRAIContext.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>KINSOL__SAMRAIContext_8h</filename>
     <includes id="NonlinearSolverStrategy_8h" name="NonlinearSolverStrategy.h" local="yes" imported="no">SAMRAI/solv/NonlinearSolverStrategy.h</includes>
     <includes id="KINSOLSolver_8h" name="KINSOLSolver.h" local="yes" imported="no">SAMRAI/solv/KINSOLSolver.h</includes>
@@ -9444,7 +9444,7 @@
   </compound>
   <compound kind="file">
     <name>KINSOLAbstractFunctions.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>KINSOLAbstractFunctions_8C</filename>
     <includes id="KINSOLAbstractFunctions_8h" name="KINSOLAbstractFunctions.h" local="yes" imported="no">SAMRAI/solv/KINSOLAbstractFunctions.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9452,7 +9452,7 @@
   </compound>
   <compound kind="file">
     <name>KINSOLAbstractFunctions.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>KINSOLAbstractFunctions_8h</filename>
     <includes id="SundialsAbstractVector_8h" name="SundialsAbstractVector.h" local="yes" imported="no">SAMRAI/solv/SundialsAbstractVector.h</includes>
     <class kind="class">SAMRAI::solv::KINSOLAbstractFunctions</class>
@@ -9461,7 +9461,7 @@
   </compound>
   <compound kind="file">
     <name>KINSOLSolver.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>KINSOLSolver_8C</filename>
     <includes id="KINSOLSolver_8h" name="KINSOLSolver.h" local="yes" imported="no">SAMRAI/solv/KINSOLSolver.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9469,7 +9469,7 @@
   </compound>
   <compound kind="file">
     <name>KINSOLSolver.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>KINSOLSolver_8h</filename>
     <includes id="SundialsAbstractVector_8h" name="SundialsAbstractVector.h" local="yes" imported="no">SAMRAI/solv/SundialsAbstractVector.h</includes>
     <includes id="KINSOLAbstractFunctions_8h" name="KINSOLAbstractFunctions.h" local="yes" imported="no">SAMRAI/solv/KINSOLAbstractFunctions.h</includes>
@@ -9495,7 +9495,7 @@
   </compound>
   <compound kind="file">
     <name>LocationIndexRobinBcCoefs.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>LocationIndexRobinBcCoefs_8C</filename>
     <includes id="LocationIndexRobinBcCoefs_8h" name="LocationIndexRobinBcCoefs.h" local="yes" imported="no">SAMRAI/solv/LocationIndexRobinBcCoefs.h</includes>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
@@ -9506,7 +9506,7 @@
   </compound>
   <compound kind="file">
     <name>LocationIndexRobinBcCoefs.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>LocationIndexRobinBcCoefs_8h</filename>
     <includes id="RobinBcCoefStrategy_8h" name="RobinBcCoefStrategy.h" local="yes" imported="no">SAMRAI/solv/RobinBcCoefStrategy.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -9519,7 +9519,7 @@
   </compound>
   <compound kind="file">
     <name>NonlinearSolverStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>NonlinearSolverStrategy_8C</filename>
     <includes id="NonlinearSolverStrategy_8h" name="NonlinearSolverStrategy.h" local="yes" imported="no">SAMRAI/solv/NonlinearSolverStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9527,7 +9527,7 @@
   </compound>
   <compound kind="file">
     <name>NonlinearSolverStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>NonlinearSolverStrategy_8h</filename>
     <includes id="SAMRAIVectorReal_8h" name="SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/SAMRAIVectorReal.h</includes>
     <class kind="class">SAMRAI::solv::NonlinearSolverStrategy</class>
@@ -9536,13 +9536,13 @@
   </compound>
   <compound kind="file">
     <name>nvector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>nvector_8h</filename>
     <includes id="solv__NVector_8h" name="solv_NVector.h" local="yes" imported="no">SAMRAI/solv/solv_NVector.h</includes>
   </compound>
   <compound kind="file">
     <name>PETSc_SAMRAIVectorReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>PETSc__SAMRAIVectorReal_8C</filename>
     <includes id="PETSc__SAMRAIVectorReal_8h" name="PETSc_SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/PETSc_SAMRAIVectorReal.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -9560,7 +9560,7 @@
   </compound>
   <compound kind="file">
     <name>PETSc_SAMRAIVectorReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>PETSc__SAMRAIVectorReal_8h</filename>
     <includes id="PETScAbstractVectorReal_8h" name="PETScAbstractVectorReal.h" local="yes" imported="no">SAMRAI/solv/PETScAbstractVectorReal.h</includes>
     <includes id="SAMRAIVectorReal_8h" name="SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/SAMRAIVectorReal.h</includes>
@@ -9571,7 +9571,7 @@
   </compound>
   <compound kind="file">
     <name>PETScAbstractVectorReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>PETScAbstractVectorReal_8C</filename>
     <includes id="PETScAbstractVectorReal_8h" name="PETScAbstractVectorReal.h" local="yes" imported="no">SAMRAI/solv/PETScAbstractVectorReal.h</includes>
     <includes id="IOStream_8h" name="IOStream.h" local="yes" imported="no">SAMRAI/tbox/IOStream.h</includes>
@@ -9589,7 +9589,7 @@
   </compound>
   <compound kind="file">
     <name>PETScAbstractVectorReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>PETScAbstractVectorReal_8h</filename>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
     <includes id="PETScAbstractVectorReal_8C" name="PETScAbstractVectorReal.C" local="yes" imported="no">SAMRAI/solv/PETScAbstractVectorReal.C</includes>
@@ -9599,7 +9599,7 @@
   </compound>
   <compound kind="file">
     <name>PoissonSpecifications.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>PoissonSpecifications_8C</filename>
     <includes id="PoissonSpecifications_8h" name="PoissonSpecifications.h" local="yes" imported="no">SAMRAI/solv/PoissonSpecifications.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9607,7 +9607,7 @@
   </compound>
   <compound kind="file">
     <name>PoissonSpecifications.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>PoissonSpecifications_8h</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <class kind="class">SAMRAI::solv::PoissonSpecifications</class>
@@ -9616,7 +9616,7 @@
   </compound>
   <compound kind="file">
     <name>RobinBcCoefStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>RobinBcCoefStrategy_8C</filename>
     <includes id="RobinBcCoefStrategy_8h" name="RobinBcCoefStrategy.h" local="yes" imported="no">SAMRAI/solv/RobinBcCoefStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9624,7 +9624,7 @@
   </compound>
   <compound kind="file">
     <name>RobinBcCoefStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>RobinBcCoefStrategy_8h</filename>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
     <includes id="BoundaryBox_8h" name="BoundaryBox.h" local="yes" imported="no">SAMRAI/hier/BoundaryBox.h</includes>
@@ -9635,7 +9635,7 @@
   </compound>
   <compound kind="file">
     <name>SAMRAIVectorReal.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SAMRAIVectorReal_8C</filename>
     <includes id="SAMRAIVectorReal_8h" name="SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/SAMRAIVectorReal.h</includes>
     <includes id="HierarchyCellDataOpsReal_8h" name="HierarchyCellDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyCellDataOpsReal.h</includes>
@@ -9658,7 +9658,7 @@
   </compound>
   <compound kind="file">
     <name>SAMRAIVectorReal.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SAMRAIVectorReal_8h</filename>
     <includes id="HierarchyDataOpsReal_8h" name="HierarchyDataOpsReal.h" local="yes" imported="no">SAMRAI/math/HierarchyDataOpsReal.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -9673,7 +9673,7 @@
   </compound>
   <compound kind="file">
     <name>SimpleCellRobinBcCoefs.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SimpleCellRobinBcCoefs_8C</filename>
     <includes id="CartesianPatchGeometry_8h" name="CartesianPatchGeometry.h" local="yes" imported="no">SAMRAI/geom/CartesianPatchGeometry.h</includes>
     <includes id="ArrayDataBasicOps_8h" name="ArrayDataBasicOps.h" local="yes" imported="no">SAMRAI/math/ArrayDataBasicOps.h</includes>
@@ -9689,7 +9689,7 @@
   </compound>
   <compound kind="file">
     <name>SimpleCellRobinBcCoefs.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SimpleCellRobinBcCoefs_8h</filename>
     <includes id="RobinBcCoefStrategy_8h" name="RobinBcCoefStrategy.h" local="yes" imported="no">SAMRAI/solv/RobinBcCoefStrategy.h</includes>
     <includes id="ArrayData_8h" name="ArrayData.h" local="yes" imported="no">SAMRAI/pdat/ArrayData.h</includes>
@@ -9702,7 +9702,7 @@
   </compound>
   <compound kind="file">
     <name>SNES_SAMRAIContext.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SNES__SAMRAIContext_8C</filename>
     <includes id="SNES__SAMRAIContext_8h" name="SNES_SAMRAIContext.h" local="yes" imported="no">SAMRAI/solv/SNES_SAMRAIContext.h</includes>
     <includes id="PETSc__SAMRAIVectorReal_8h" name="PETSc_SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/PETSc_SAMRAIVectorReal.h</includes>
@@ -9713,7 +9713,7 @@
   </compound>
   <compound kind="file">
     <name>SNES_SAMRAIContext.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SNES__SAMRAIContext_8h</filename>
     <includes id="NonlinearSolverStrategy_8h" name="NonlinearSolverStrategy.h" local="yes" imported="no">SAMRAI/solv/NonlinearSolverStrategy.h</includes>
     <includes id="SNESAbstractFunctions_8h" name="SNESAbstractFunctions.h" local="yes" imported="no">SAMRAI/solv/SNESAbstractFunctions.h</includes>
@@ -9726,7 +9726,7 @@
   </compound>
   <compound kind="file">
     <name>SNESAbstractFunctions.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SNESAbstractFunctions_8C</filename>
     <includes id="SNESAbstractFunctions_8h" name="SNESAbstractFunctions.h" local="yes" imported="no">SAMRAI/solv/SNESAbstractFunctions.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9734,7 +9734,7 @@
   </compound>
   <compound kind="file">
     <name>SNESAbstractFunctions.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SNESAbstractFunctions_8h</filename>
     <class kind="class">SAMRAI::solv::SNESAbstractFunctions</class>
     <namespace>SAMRAI</namespace>
@@ -9742,7 +9742,7 @@
   </compound>
   <compound kind="file">
     <name>solv_NVector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>solv__NVector_8C</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <includes id="solv__NVector_8h" name="solv_NVector.h" local="yes" imported="no">SAMRAI/solv/solv_NVector.h</includes>
@@ -9764,7 +9764,7 @@
   </compound>
   <compound kind="file">
     <name>solv_NVector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>solv__NVector_8h</filename>
     <member kind="function">
       <type>void</type>
@@ -9776,7 +9776,7 @@
   </compound>
   <compound kind="file">
     <name>Sundials_SAMRAIVector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>Sundials__SAMRAIVector_8C</filename>
     <includes id="Sundials__SAMRAIVector_8h" name="Sundials_SAMRAIVector.h" local="yes" imported="no">SAMRAI/solv/Sundials_SAMRAIVector.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9791,7 +9791,7 @@
   </compound>
   <compound kind="file">
     <name>Sundials_SAMRAIVector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>Sundials__SAMRAIVector_8h</filename>
     <includes id="SundialsAbstractVector_8h" name="SundialsAbstractVector.h" local="yes" imported="no">SAMRAI/solv/SundialsAbstractVector.h</includes>
     <includes id="SAMRAIVectorReal_8h" name="SAMRAIVectorReal.h" local="yes" imported="no">SAMRAI/solv/SAMRAIVectorReal.h</includes>
@@ -9801,7 +9801,7 @@
   </compound>
   <compound kind="file">
     <name>SundialsAbstractVector.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SundialsAbstractVector_8C</filename>
     <includes id="SundialsAbstractVector_8h" name="SundialsAbstractVector.h" local="yes" imported="no">SAMRAI/solv/SundialsAbstractVector.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -9810,7 +9810,7 @@
   </compound>
   <compound kind="file">
     <name>SundialsAbstractVector.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/</path>
     <filename>SundialsAbstractVector_8h</filename>
     <class kind="class">SAMRAI::solv::SundialsAbstractVector</class>
     <namespace>SAMRAI</namespace>
@@ -9825,7 +9825,7 @@
   </compound>
   <compound kind="file">
     <name>Array.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Array_8C</filename>
     <includes id="Array_8h" name="Array.h" local="yes" imported="no">SAMRAI/tbox/Array.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9833,7 +9833,7 @@
   </compound>
   <compound kind="file">
     <name>Array.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Array_8h</filename>
     <includes id="ReferenceCounter_8h" name="ReferenceCounter.h" local="yes" imported="no">SAMRAI/tbox/ReferenceCounter.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -9845,7 +9845,7 @@
   </compound>
   <compound kind="file">
     <name>ArraySpecial.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>ArraySpecial_8C</filename>
     <includes id="Array_8h" name="Array.h" local="yes" imported="no">SAMRAI/tbox/Array.h</includes>
     <namespace>SAMRAI</namespace>
@@ -9853,7 +9853,7 @@
   </compound>
   <compound kind="file">
     <name>AsyncCommGroup.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>AsyncCommGroup_8C</filename>
     <includes id="AsyncCommGroup_8h" name="AsyncCommGroup.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommGroup.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -9866,7 +9866,7 @@
   </compound>
   <compound kind="file">
     <name>AsyncCommGroup.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>AsyncCommGroup_8h</filename>
     <includes id="AsyncCommStage_8h" name="AsyncCommStage.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommStage.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -9878,7 +9878,7 @@
   </compound>
   <compound kind="file">
     <name>AsyncCommPeer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>AsyncCommPeer_8C</filename>
     <includes id="AsyncCommPeer_8h" name="AsyncCommPeer.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommPeer.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -9891,7 +9891,7 @@
   </compound>
   <compound kind="file">
     <name>AsyncCommPeer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>AsyncCommPeer_8h</filename>
     <includes id="AsyncCommStage_8h" name="AsyncCommStage.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommStage.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -9905,7 +9905,7 @@
   </compound>
   <compound kind="file">
     <name>AsyncCommStage.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>AsyncCommStage_8C</filename>
     <includes id="AsyncCommStage_8h" name="AsyncCommStage.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommStage.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -9919,7 +9919,7 @@
   </compound>
   <compound kind="file">
     <name>AsyncCommStage.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>AsyncCommStage_8h</filename>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
     <includes id="Timer_8h" name="Timer.h" local="yes" imported="no">SAMRAI/tbox/Timer.h</includes>
@@ -9931,7 +9931,7 @@
   </compound>
   <compound kind="file">
     <name>BalancedDepthFirstTree.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>BalancedDepthFirstTree_8C</filename>
     <includes id="BalancedDepthFirstTree_8h" name="BalancedDepthFirstTree.h" local="yes" imported="no">SAMRAI/tbox/BalancedDepthFirstTree.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -9941,7 +9941,7 @@
   </compound>
   <compound kind="file">
     <name>BalancedDepthFirstTree.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>BalancedDepthFirstTree_8h</filename>
     <includes id="RankTreeStrategy_8h" name="RankTreeStrategy.h" local="yes" imported="no">SAMRAI/tbox/RankTreeStrategy.h</includes>
     <class kind="class">SAMRAI::tbox::BalancedDepthFirstTree</class>
@@ -9950,7 +9950,7 @@
   </compound>
   <compound kind="file">
     <name>Boost.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Boost_8h</filename>
     <member kind="define">
       <type>#define</type>
@@ -9969,7 +9969,7 @@
   </compound>
   <compound kind="file">
     <name>BreadthFirstRankTree.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>BreadthFirstRankTree_8C</filename>
     <includes id="BreadthFirstRankTree_8h" name="BreadthFirstRankTree.h" local="yes" imported="no">SAMRAI/tbox/BreadthFirstRankTree.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -9979,7 +9979,7 @@
   </compound>
   <compound kind="file">
     <name>BreadthFirstRankTree.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>BreadthFirstRankTree_8h</filename>
     <includes id="RankTreeStrategy_8h" name="RankTreeStrategy.h" local="yes" imported="no">SAMRAI/tbox/RankTreeStrategy.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -9989,7 +9989,7 @@
   </compound>
   <compound kind="file">
     <name>CenteredRankTree.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>CenteredRankTree_8C</filename>
     <includes id="CenteredRankTree_8h" name="CenteredRankTree.h" local="yes" imported="no">SAMRAI/tbox/CenteredRankTree.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -9998,7 +9998,7 @@
   </compound>
   <compound kind="file">
     <name>CenteredRankTree.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>CenteredRankTree_8h</filename>
     <includes id="RankTreeStrategy_8h" name="RankTreeStrategy.h" local="yes" imported="no">SAMRAI/tbox/RankTreeStrategy.h</includes>
     <class kind="class">SAMRAI::tbox::CenteredRankTree</class>
@@ -10007,7 +10007,7 @@
   </compound>
   <compound kind="file">
     <name>Clock.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Clock_8C</filename>
     <includes id="Clock_8h" name="Clock.h" local="yes" imported="no">SAMRAI/tbox/Clock.h</includes>
     <namespace>SAMRAI</namespace>
@@ -10015,7 +10015,7 @@
   </compound>
   <compound kind="file">
     <name>Clock.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Clock_8h</filename>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
     <class kind="struct">SAMRAI::tbox::Clock</class>
@@ -10024,7 +10024,7 @@
   </compound>
   <compound kind="file">
     <name>CommGraphWriter.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>CommGraphWriter_8C</filename>
     <includes id="CommGraphWriter_8h" name="CommGraphWriter.h" local="yes" imported="no">SAMRAI/tbox/CommGraphWriter.h</includes>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
@@ -10033,7 +10033,7 @@
   </compound>
   <compound kind="file">
     <name>CommGraphWriter.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>CommGraphWriter_8h</filename>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
     <class kind="class">SAMRAI::tbox::CommGraphWriter</class>
@@ -10042,7 +10042,7 @@
   </compound>
   <compound kind="file">
     <name>Complex.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Complex_8h</filename>
     <member kind="typedef">
       <type>std::complex&lt; double &gt;</type>
@@ -10054,7 +10054,7 @@
   </compound>
   <compound kind="file">
     <name>Database.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Database_8C</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -10063,7 +10063,7 @@
   </compound>
   <compound kind="file">
     <name>Database.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Database_8h</filename>
     <includes id="DatabaseBox_8h" name="DatabaseBox.h" local="yes" imported="no">SAMRAI/tbox/DatabaseBox.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -10089,7 +10089,7 @@
   </compound>
   <compound kind="file">
     <name>DatabaseBox.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>DatabaseBox_8C</filename>
     <includes id="DatabaseBox_8h" name="DatabaseBox.h" local="yes" imported="no">SAMRAI/tbox/DatabaseBox.h</includes>
     <namespace>SAMRAI</namespace>
@@ -10097,7 +10097,7 @@
   </compound>
   <compound kind="file">
     <name>DatabaseBox.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>DatabaseBox_8h</filename>
     <includes id="Dimension_8h" name="Dimension.h" local="yes" imported="no">SAMRAI/tbox/Dimension.h</includes>
     <class kind="struct">SAMRAI::tbox::DatabaseBox_POD</class>
@@ -10107,7 +10107,7 @@
   </compound>
   <compound kind="file">
     <name>DatabaseFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>DatabaseFactory_8C</filename>
     <includes id="DatabaseFactory_8h" name="DatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/DatabaseFactory.h</includes>
     <namespace>SAMRAI</namespace>
@@ -10115,7 +10115,7 @@
   </compound>
   <compound kind="file">
     <name>DatabaseFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>DatabaseFactory_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <class kind="class">SAMRAI::tbox::DatabaseFactory</class>
@@ -10124,7 +10124,7 @@
   </compound>
   <compound kind="file">
     <name>Dimension.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Dimension_8C</filename>
     <includes id="Dimension_8h" name="Dimension.h" local="yes" imported="no">SAMRAI/tbox/Dimension.h</includes>
     <namespace>SAMRAI</namespace>
@@ -10139,7 +10139,7 @@
   </compound>
   <compound kind="file">
     <name>Dimension.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Dimension_8h</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <class kind="class">SAMRAI::tbox::Dimension</class>
@@ -10148,133 +10148,133 @@
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>tbox_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/hier/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/hier/dox/</path>
     <filename>hier_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::hier</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/dox/</path>
     <filename>xfer_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::xfer</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>pdat_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/math/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/math/dox/</path>
     <filename>math_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::math</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/mesh/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/mesh/dox/</path>
     <filename>mesh_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::mesh</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/geom/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/geom/dox/</path>
     <filename>geom_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::geom</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/solv/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/solv/dox/</path>
     <filename>solv_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::solv</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/algs/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/algs/dox/</path>
     <filename>algs_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::algs</namespace>
   </compound>
   <compound kind="file">
     <name>manual.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/appu/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/appu/dox/</path>
     <filename>appu_2dox_2manual_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::appu</namespace>
   </compound>
   <compound kind="file">
     <name>manual_base.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__base_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_database.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__database_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_inputdb.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__inputdb_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_memory.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__memory_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_parallel.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__parallel_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_restartdb.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__restartdb_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_stream.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__stream_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>manual_timers.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/dox/</path>
     <filename>manual__timers_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>Grammar.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Grammar_8C</filename>
     <includes id="Dimension_8h" name="Dimension.h" local="yes" imported="no">SAMRAI/tbox/Dimension.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -11443,7 +11443,7 @@
   </compound>
   <compound kind="file">
     <name>Grammar.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Grammar_8h</filename>
     <member kind="define">
       <type>#define</type>
@@ -11890,7 +11890,7 @@
   </compound>
   <compound kind="file">
     <name>HDFDatabase.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>HDFDatabase_8C</filename>
     <includes id="HDFDatabase_8h" name="HDFDatabase.h" local="yes" imported="no">SAMRAI/tbox/HDFDatabase.h</includes>
     <includes id="IOStream_8h" name="IOStream.h" local="yes" imported="no">SAMRAI/tbox/IOStream.h</includes>
@@ -11950,7 +11950,7 @@
   </compound>
   <compound kind="file">
     <name>HDFDatabase.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>HDFDatabase_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="DatabaseBox_8h" name="DatabaseBox.h" local="yes" imported="no">SAMRAI/tbox/DatabaseBox.h</includes>
@@ -11962,7 +11962,7 @@
   </compound>
   <compound kind="file">
     <name>HDFDatabaseFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>HDFDatabaseFactory_8C</filename>
     <includes id="HDFDatabaseFactory_8h" name="HDFDatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/HDFDatabaseFactory.h</includes>
     <includes id="HDFDatabase_8h" name="HDFDatabase.h" local="yes" imported="no">SAMRAI/tbox/HDFDatabase.h</includes>
@@ -11972,7 +11972,7 @@
   </compound>
   <compound kind="file">
     <name>HDFDatabaseFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>HDFDatabaseFactory_8h</filename>
     <includes id="DatabaseFactory_8h" name="DatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/DatabaseFactory.h</includes>
     <class kind="class">SAMRAI::tbox::HDFDatabaseFactory</class>
@@ -11981,7 +11981,7 @@
   </compound>
   <compound kind="file">
     <name>IEEE.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>IEEE_8C</filename>
     <includes id="IEEE_8h" name="IEEE.h" local="yes" imported="no">SAMRAI/tbox/IEEE.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -11991,7 +11991,7 @@
   </compound>
   <compound kind="file">
     <name>IEEE.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>IEEE_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -12001,7 +12001,7 @@
   </compound>
   <compound kind="file">
     <name>InputDatabase.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>InputDatabase_8h</filename>
     <includes id="MemoryDatabase_8h" name="MemoryDatabase.h" local="yes" imported="no">SAMRAI/tbox/MemoryDatabase.h</includes>
     <namespace>SAMRAI</namespace>
@@ -12016,7 +12016,7 @@
   </compound>
   <compound kind="file">
     <name>InputManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>InputManager_8C</filename>
     <includes id="InputManager_8h" name="InputManager.h" local="yes" imported="no">SAMRAI/tbox/InputManager.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -12030,7 +12030,7 @@
   </compound>
   <compound kind="file">
     <name>InputManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>InputManager_8h</filename>
     <includes id="InputDatabase_8h" name="InputDatabase.h" local="yes" imported="no">SAMRAI/tbox/InputDatabase.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -12040,12 +12040,12 @@
   </compound>
   <compound kind="file">
     <name>IOStream.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>IOStream_8h</filename>
   </compound>
   <compound kind="file">
     <name>Logger.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Logger_8C</filename>
     <includes id="Logger_8h" name="Logger.h" local="yes" imported="no">SAMRAI/tbox/Logger.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -12058,7 +12058,7 @@
   </compound>
   <compound kind="file">
     <name>Logger.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Logger_8h</filename>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
     <class kind="class">SAMRAI::tbox::Logger</class>
@@ -12068,14 +12068,14 @@
   </compound>
   <compound kind="file">
     <name>MathUtilities.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MathUtilities_8C</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::tbox</namespace>
   </compound>
   <compound kind="file">
     <name>MathUtilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MathUtilities_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="MathUtilities_8C" name="MathUtilities.C" local="yes" imported="no">SAMRAI/tbox/MathUtilities.C</includes>
@@ -12085,7 +12085,7 @@
   </compound>
   <compound kind="file">
     <name>MathUtilitiesSpecial.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MathUtilitiesSpecial_8C</filename>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
@@ -12116,7 +12116,7 @@
   </compound>
   <compound kind="file">
     <name>MemoryDatabase.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MemoryDatabase_8C</filename>
     <includes id="MemoryDatabase_8h" name="MemoryDatabase.h" local="yes" imported="no">SAMRAI/tbox/MemoryDatabase.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12134,7 +12134,7 @@
   </compound>
   <compound kind="file">
     <name>MemoryDatabase.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MemoryDatabase_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <class kind="class">SAMRAI::tbox::MemoryDatabase</class>
@@ -12143,7 +12143,7 @@
   </compound>
   <compound kind="file">
     <name>MemoryDatabaseFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MemoryDatabaseFactory_8C</filename>
     <includes id="MemoryDatabaseFactory_8h" name="MemoryDatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/MemoryDatabaseFactory.h</includes>
     <includes id="MemoryDatabase_8h" name="MemoryDatabase.h" local="yes" imported="no">SAMRAI/tbox/MemoryDatabase.h</includes>
@@ -12153,7 +12153,7 @@
   </compound>
   <compound kind="file">
     <name>MemoryDatabaseFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MemoryDatabaseFactory_8h</filename>
     <includes id="DatabaseFactory_8h" name="DatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/DatabaseFactory.h</includes>
     <class kind="class">SAMRAI::tbox::MemoryDatabaseFactory</class>
@@ -12162,7 +12162,7 @@
   </compound>
   <compound kind="file">
     <name>MemoryUtilities.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MemoryUtilities_8C</filename>
     <includes id="MemoryUtilities_8h" name="MemoryUtilities.h" local="yes" imported="no">SAMRAI/tbox/MemoryUtilities.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -12174,7 +12174,7 @@
   </compound>
   <compound kind="file">
     <name>MemoryUtilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MemoryUtilities_8h</filename>
     <class kind="struct">SAMRAI::tbox::MemoryUtilities</class>
     <namespace>SAMRAI</namespace>
@@ -12182,7 +12182,7 @@
   </compound>
   <compound kind="file">
     <name>MessageStream.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MessageStream_8C</filename>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12191,7 +12191,7 @@
   </compound>
   <compound kind="file">
     <name>MessageStream.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>MessageStream_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12201,7 +12201,7 @@
   </compound>
   <compound kind="file">
     <name>NullDatabase.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>NullDatabase_8C</filename>
     <includes id="NullDatabase_8h" name="NullDatabase.h" local="yes" imported="no">SAMRAI/tbox/NullDatabase.h</includes>
     <namespace>SAMRAI</namespace>
@@ -12209,7 +12209,7 @@
   </compound>
   <compound kind="file">
     <name>NullDatabase.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>NullDatabase_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12219,7 +12219,7 @@
   </compound>
   <compound kind="file">
     <name>OpenMPUtilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>OpenMPUtilities_8h</filename>
     <member kind="define">
       <type>#define</type>
@@ -12322,7 +12322,7 @@
   </compound>
   <compound kind="file">
     <name>ParallelBuffer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>ParallelBuffer_8C</filename>
     <includes id="ParallelBuffer_8h" name="ParallelBuffer.h" local="yes" imported="no">SAMRAI/tbox/ParallelBuffer.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12332,7 +12332,7 @@
   </compound>
   <compound kind="file">
     <name>ParallelBuffer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>ParallelBuffer_8h</filename>
     <includes id="OpenMPUtilities_8h" name="OpenMPUtilities.h" local="yes" imported="no">SAMRAI/tbox/OpenMPUtilities.h</includes>
     <class kind="class">SAMRAI::tbox::ParallelBuffer</class>
@@ -12341,7 +12341,7 @@
   </compound>
   <compound kind="file">
     <name>Parser.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Parser_8C</filename>
     <includes id="Parser_8h" name="Parser.h" local="yes" imported="no">SAMRAI/tbox/Parser.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -12373,7 +12373,7 @@
   </compound>
   <compound kind="file">
     <name>Parser.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Parser_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <class kind="class">SAMRAI::tbox::Parser</class>
@@ -12382,7 +12382,7 @@
   </compound>
   <compound kind="file">
     <name>PIO.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>PIO_8C</filename>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -12414,7 +12414,7 @@
   </compound>
   <compound kind="file">
     <name>PIO.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>PIO_8h</filename>
     <class kind="struct">SAMRAI::tbox::PIO</class>
     <namespace>SAMRAI</namespace>
@@ -12443,7 +12443,7 @@
   </compound>
   <compound kind="file">
     <name>RankGroup.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>RankGroup_8C</filename>
     <includes id="RankGroup_8h" name="RankGroup.h" local="yes" imported="no">SAMRAI/tbox/RankGroup.h</includes>
     <namespace>SAMRAI</namespace>
@@ -12451,7 +12451,7 @@
   </compound>
   <compound kind="file">
     <name>RankGroup.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>RankGroup_8h</filename>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -12462,7 +12462,7 @@
   </compound>
   <compound kind="file">
     <name>RankTreeStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>RankTreeStrategy_8C</filename>
     <includes id="RankTreeStrategy_8h" name="RankTreeStrategy.h" local="yes" imported="no">SAMRAI/tbox/RankTreeStrategy.h</includes>
     <includes id="MathUtilities_8h" name="MathUtilities.h" local="yes" imported="no">SAMRAI/tbox/MathUtilities.h</includes>
@@ -12471,7 +12471,7 @@
   </compound>
   <compound kind="file">
     <name>RankTreeStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>RankTreeStrategy_8h</filename>
     <includes id="RankGroup_8h" name="RankGroup.h" local="yes" imported="no">SAMRAI/tbox/RankGroup.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12481,7 +12481,7 @@
   </compound>
   <compound kind="file">
     <name>ReferenceCounter.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>ReferenceCounter_8C</filename>
     <includes id="ReferenceCounter_8h" name="ReferenceCounter.h" local="yes" imported="no">SAMRAI/tbox/ReferenceCounter.h</includes>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
@@ -12490,7 +12490,7 @@
   </compound>
   <compound kind="file">
     <name>ReferenceCounter.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>ReferenceCounter_8h</filename>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
     <class kind="class">SAMRAI::tbox::ReferenceCounter</class>
@@ -12499,7 +12499,7 @@
   </compound>
   <compound kind="file">
     <name>RestartManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>RestartManager_8C</filename>
     <includes id="RestartManager_8h" name="RestartManager.h" local="yes" imported="no">SAMRAI/tbox/RestartManager.h</includes>
     <includes id="HDFDatabaseFactory_8h" name="HDFDatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/HDFDatabaseFactory.h</includes>
@@ -12515,7 +12515,7 @@
   </compound>
   <compound kind="file">
     <name>RestartManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>RestartManager_8h</filename>
     <includes id="Serializable_8h" name="Serializable.h" local="yes" imported="no">SAMRAI/tbox/Serializable.h</includes>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
@@ -12526,7 +12526,7 @@
   </compound>
   <compound kind="file">
     <name>SAMRAI_MPI.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SAMRAI__MPI_8C</filename>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
     <includes id="SAMRAIManager_8h" name="SAMRAIManager.h" local="yes" imported="no">SAMRAI/tbox/SAMRAIManager.h</includes>
@@ -12536,7 +12536,7 @@
   </compound>
   <compound kind="file">
     <name>SAMRAI_MPI.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SAMRAI__MPI_8h</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -12703,7 +12703,7 @@
   </compound>
   <compound kind="file">
     <name>SAMRAIManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SAMRAIManager_8C</filename>
     <includes id="SAMRAIManager_8h" name="SAMRAIManager.h" local="yes" imported="no">SAMRAI/tbox/SAMRAIManager.h</includes>
     <includes id="IEEE_8h" name="IEEE.h" local="yes" imported="no">SAMRAI/tbox/IEEE.h</includes>
@@ -12724,7 +12724,7 @@
   </compound>
   <compound kind="file">
     <name>SAMRAIManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SAMRAIManager_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -12734,7 +12734,7 @@
   </compound>
   <compound kind="file">
     <name>Scanner.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Scanner_8C</filename>
     <includes id="Complex_8h" name="Complex.h" local="yes" imported="no">SAMRAI/tbox/Complex.h</includes>
     <includes id="Parser_8h" name="Parser.h" local="yes" imported="no">SAMRAI/tbox/Parser.h</includes>
@@ -13569,7 +13569,7 @@
   </compound>
   <compound kind="file">
     <name>Schedule.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Schedule_8C</filename>
     <includes id="Schedule_8h" name="Schedule.h" local="yes" imported="no">SAMRAI/tbox/Schedule.h</includes>
     <includes id="InputManager_8h" name="InputManager.h" local="yes" imported="no">SAMRAI/tbox/InputManager.h</includes>
@@ -13596,7 +13596,7 @@
   </compound>
   <compound kind="file">
     <name>Schedule.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Schedule_8h</filename>
     <includes id="AsyncCommPeer_8h" name="AsyncCommPeer.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommPeer.h</includes>
     <includes id="AsyncCommStage_8h" name="AsyncCommStage.h" local="yes" imported="no">SAMRAI/tbox/AsyncCommStage.h</includes>
@@ -13609,7 +13609,7 @@
   </compound>
   <compound kind="file">
     <name>Serializable.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Serializable_8C</filename>
     <includes id="Serializable_8h" name="Serializable.h" local="yes" imported="no">SAMRAI/tbox/Serializable.h</includes>
     <namespace>SAMRAI</namespace>
@@ -13617,7 +13617,7 @@
   </compound>
   <compound kind="file">
     <name>Serializable.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Serializable_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <class kind="class">SAMRAI::tbox::Serializable</class>
@@ -13626,7 +13626,7 @@
   </compound>
   <compound kind="file">
     <name>SiloDatabase.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SiloDatabase_8C</filename>
     <includes id="SiloDatabase_8h" name="SiloDatabase.h" local="yes" imported="no">SAMRAI/tbox/SiloDatabase.h</includes>
     <includes id="IOStream_8h" name="IOStream.h" local="yes" imported="no">SAMRAI/tbox/IOStream.h</includes>
@@ -13637,7 +13637,7 @@
   </compound>
   <compound kind="file">
     <name>SiloDatabase.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SiloDatabase_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="DatabaseBox_8h" name="DatabaseBox.h" local="yes" imported="no">SAMRAI/tbox/DatabaseBox.h</includes>
@@ -13649,7 +13649,7 @@
   </compound>
   <compound kind="file">
     <name>SiloDatabaseFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SiloDatabaseFactory_8C</filename>
     <includes id="SiloDatabaseFactory_8h" name="SiloDatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/SiloDatabaseFactory.h</includes>
     <includes id="SiloDatabase_8h" name="SiloDatabase.h" local="yes" imported="no">SAMRAI/tbox/SiloDatabase.h</includes>
@@ -13659,7 +13659,7 @@
   </compound>
   <compound kind="file">
     <name>SiloDatabaseFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>SiloDatabaseFactory_8h</filename>
     <includes id="DatabaseFactory_8h" name="DatabaseFactory.h" local="yes" imported="no">SAMRAI/tbox/DatabaseFactory.h</includes>
     <class kind="class">SAMRAI::tbox::SiloDatabaseFactory</class>
@@ -13668,7 +13668,7 @@
   </compound>
   <compound kind="file">
     <name>StartupShutdownManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>StartupShutdownManager_8C</filename>
     <includes id="StartupShutdownManager_8h" name="StartupShutdownManager.h" local="yes" imported="no">SAMRAI/tbox/StartupShutdownManager.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -13677,7 +13677,7 @@
   </compound>
   <compound kind="file">
     <name>StartupShutdownManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>StartupShutdownManager_8h</filename>
     <class kind="class">SAMRAI::tbox::StartupShutdownManager</class>
     <class kind="class">SAMRAI::tbox::StartupShutdownManager::AbstractHandler</class>
@@ -13687,7 +13687,7 @@
   </compound>
   <compound kind="file">
     <name>Statistic.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Statistic_8C</filename>
     <includes id="Statistic_8h" name="Statistic.h" local="yes" imported="no">SAMRAI/tbox/Statistic.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -13699,7 +13699,7 @@
   </compound>
   <compound kind="file">
     <name>Statistic.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Statistic_8h</filename>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
@@ -13712,7 +13712,7 @@
   </compound>
   <compound kind="file">
     <name>Statistician.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Statistician_8C</filename>
     <includes id="Statistician_8h" name="Statistician.h" local="yes" imported="no">SAMRAI/tbox/Statistician.h</includes>
     <includes id="IOStream_8h" name="IOStream.h" local="yes" imported="no">SAMRAI/tbox/IOStream.h</includes>
@@ -13729,7 +13729,7 @@
   </compound>
   <compound kind="file">
     <name>Statistician.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Statistician_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="Serializable_8h" name="Serializable.h" local="yes" imported="no">SAMRAI/tbox/Serializable.h</includes>
@@ -13741,7 +13741,7 @@
   </compound>
   <compound kind="file">
     <name>StatTransaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>StatTransaction_8C</filename>
     <includes id="StatTransaction_8h" name="StatTransaction.h" local="yes" imported="no">SAMRAI/tbox/StatTransaction.h</includes>
     <namespace>SAMRAI</namespace>
@@ -13749,7 +13749,7 @@
   </compound>
   <compound kind="file">
     <name>StatTransaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>StatTransaction_8h</filename>
     <includes id="Statistic_8h" name="Statistic.h" local="yes" imported="no">SAMRAI/tbox/Statistic.h</includes>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
@@ -13759,7 +13759,7 @@
   </compound>
   <compound kind="file">
     <name>Timer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Timer_8C</filename>
     <includes id="Timer_8h" name="Timer.h" local="yes" imported="no">SAMRAI/tbox/Timer.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -13772,7 +13772,7 @@
   </compound>
   <compound kind="file">
     <name>Timer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Timer_8h</filename>
     <includes id="Clock_8h" name="Clock.h" local="yes" imported="no">SAMRAI/tbox/Clock.h</includes>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
@@ -13783,7 +13783,7 @@
   </compound>
   <compound kind="file">
     <name>TimerManager.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>TimerManager_8C</filename>
     <includes id="TimerManager_8h" name="TimerManager.h" local="yes" imported="no">SAMRAI/tbox/TimerManager.h</includes>
     <includes id="InputDatabase_8h" name="InputDatabase.h" local="yes" imported="no">SAMRAI/tbox/InputDatabase.h</includes>
@@ -13798,7 +13798,7 @@
   </compound>
   <compound kind="file">
     <name>TimerManager.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>TimerManager_8h</filename>
     <includes id="Database_8h" name="Database.h" local="yes" imported="no">SAMRAI/tbox/Database.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -13810,7 +13810,7 @@
   </compound>
   <compound kind="file">
     <name>Tracer.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Tracer_8C</filename>
     <includes id="Tracer_8h" name="Tracer.h" local="yes" imported="no">SAMRAI/tbox/Tracer.h</includes>
     <includes id="PIO_8h" name="PIO.h" local="yes" imported="no">SAMRAI/tbox/PIO.h</includes>
@@ -13819,7 +13819,7 @@
   </compound>
   <compound kind="file">
     <name>Tracer.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Tracer_8h</filename>
     <class kind="class">SAMRAI::tbox::Tracer</class>
     <namespace>SAMRAI</namespace>
@@ -13827,7 +13827,7 @@
   </compound>
   <compound kind="file">
     <name>Transaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Transaction_8C</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <namespace>SAMRAI</namespace>
@@ -13835,7 +13835,7 @@
   </compound>
   <compound kind="file">
     <name>Transaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Transaction_8h</filename>
     <includes id="MessageStream_8h" name="MessageStream.h" local="yes" imported="no">SAMRAI/tbox/MessageStream.h</includes>
     <class kind="class">SAMRAI::tbox::Transaction</class>
@@ -13844,7 +13844,7 @@
   </compound>
   <compound kind="file">
     <name>Utilities.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Utilities_8C</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <includes id="SAMRAI__MPI_8h" name="SAMRAI_MPI.h" local="yes" imported="no">SAMRAI/tbox/SAMRAI_MPI.h</includes>
@@ -13856,7 +13856,7 @@
   </compound>
   <compound kind="file">
     <name>Utilities.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/tbox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/tbox/</path>
     <filename>Utilities_8h</filename>
     <includes id="IOStream_8h" name="IOStream.h" local="yes" imported="no">SAMRAI/tbox/IOStream.h</includes>
     <includes id="Logger_8h" name="Logger.h" local="yes" imported="no">SAMRAI/tbox/Logger.h</includes>
@@ -14048,7 +14048,7 @@
   </compound>
   <compound kind="file">
     <name>BoxGeometryVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>BoxGeometryVariableFillPattern_8C</filename>
     <includes id="BoxGeometryVariableFillPattern_8h" name="BoxGeometryVariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/BoxGeometryVariableFillPattern.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -14057,7 +14057,7 @@
   </compound>
   <compound kind="file">
     <name>BoxGeometryVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>BoxGeometryVariableFillPattern_8h</filename>
     <includes id="VariableFillPattern_8h" name="VariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/VariableFillPattern.h</includes>
     <class kind="class">SAMRAI::xfer::BoxGeometryVariableFillPattern</class>
@@ -14066,7 +14066,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenAlgorithm.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenAlgorithm_8C</filename>
     <includes id="CoarsenAlgorithm_8h" name="CoarsenAlgorithm.h" local="yes" imported="no">SAMRAI/xfer/CoarsenAlgorithm.h</includes>
     <includes id="BoxGeometryVariableFillPattern_8h" name="BoxGeometryVariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/BoxGeometryVariableFillPattern.h</includes>
@@ -14079,7 +14079,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenAlgorithm.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenAlgorithm_8h</filename>
     <includes id="CoarsenClasses_8h" name="CoarsenClasses.h" local="yes" imported="no">SAMRAI/xfer/CoarsenClasses.h</includes>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
@@ -14094,7 +14094,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenClasses.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenClasses_8C</filename>
     <includes id="CoarsenClasses_8h" name="CoarsenClasses.h" local="yes" imported="no">SAMRAI/xfer/CoarsenClasses.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -14106,7 +14106,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenClasses.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenClasses_8h</filename>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
     <includes id="CoarsenOperator_8h" name="CoarsenOperator.h" local="yes" imported="no">SAMRAI/hier/CoarsenOperator.h</includes>
@@ -14118,7 +14118,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenCopyTransaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenCopyTransaction_8C</filename>
     <includes id="CoarsenCopyTransaction_8h" name="CoarsenCopyTransaction.h" local="yes" imported="no">SAMRAI/xfer/CoarsenCopyTransaction.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -14129,7 +14129,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenCopyTransaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenCopyTransaction_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
@@ -14141,7 +14141,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenPatchStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenPatchStrategy_8C</filename>
     <includes id="CoarsenPatchStrategy_8h" name="CoarsenPatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/CoarsenPatchStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -14149,7 +14149,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenPatchStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenPatchStrategy_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -14160,7 +14160,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenSchedule.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenSchedule_8C</filename>
     <includes id="CoarsenSchedule_8h" name="CoarsenSchedule.h" local="yes" imported="no">SAMRAI/xfer/CoarsenSchedule.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -14183,7 +14183,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenSchedule.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenSchedule_8h</filename>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
     <includes id="ComponentSelector_8h" name="ComponentSelector.h" local="yes" imported="no">SAMRAI/hier/ComponentSelector.h</includes>
@@ -14202,7 +14202,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenTransactionFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenTransactionFactory_8C</filename>
     <includes id="CoarsenTransactionFactory_8h" name="CoarsenTransactionFactory.h" local="yes" imported="no">SAMRAI/xfer/CoarsenTransactionFactory.h</includes>
     <namespace>SAMRAI</namespace>
@@ -14210,7 +14210,7 @@
   </compound>
   <compound kind="file">
     <name>CoarsenTransactionFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>CoarsenTransactionFactory_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
@@ -14222,28 +14222,28 @@
   </compound>
   <compound kind="file">
     <name>manual_datamovers.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/dox/</path>
     <filename>manual__datamovers_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::xfer</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/dox/</path>
     <filename>xfer_2dox_2manual__operators_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::xfer</namespace>
   </compound>
   <compound kind="file">
     <name>manual_operators.dox</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/pdat/dox/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/pdat/dox/</path>
     <filename>pdat_2dox_2manual__operators_8dox</filename>
     <namespace>SAMRAI</namespace>
     <namespace>SAMRAI::pdat</namespace>
   </compound>
   <compound kind="file">
     <name>PatchInteriorVariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchInteriorVariableFillPattern_8C</filename>
     <includes id="PatchInteriorVariableFillPattern_8h" name="PatchInteriorVariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchInteriorVariableFillPattern.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -14252,7 +14252,7 @@
   </compound>
   <compound kind="file">
     <name>PatchInteriorVariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchInteriorVariableFillPattern_8h</filename>
     <includes id="VariableFillPattern_8h" name="VariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/VariableFillPattern.h</includes>
     <class kind="class">SAMRAI::xfer::PatchInteriorVariableFillPattern</class>
@@ -14261,7 +14261,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelBorderAndInteriorFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelBorderAndInteriorFillPattern_8C</filename>
     <includes id="PatchLevelBorderAndInteriorFillPattern_8h" name="PatchLevelBorderAndInteriorFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -14273,7 +14273,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelBorderAndInteriorFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelBorderAndInteriorFillPattern_8h</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <class kind="class">SAMRAI::xfer::PatchLevelBorderAndInteriorFillPattern</class>
@@ -14282,7 +14282,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelBorderFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelBorderFillPattern_8C</filename>
     <includes id="PatchLevelBorderFillPattern_8h" name="PatchLevelBorderFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelBorderFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -14294,7 +14294,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelBorderFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelBorderFillPattern_8h</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <class kind="class">SAMRAI::xfer::PatchLevelBorderFillPattern</class>
@@ -14303,7 +14303,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelEnhancedFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelEnhancedFillPattern_8C</filename>
     <includes id="PatchLevelEnhancedFillPattern_8h" name="PatchLevelEnhancedFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelEnhancedFillPattern.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -14315,7 +14315,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelEnhancedFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelEnhancedFillPattern_8h</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
@@ -14325,7 +14325,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelFillPattern_8C</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <namespace>SAMRAI</namespace>
@@ -14333,7 +14333,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelFillPattern_8h</filename>
     <includes id="Connector_8h" name="Connector.h" local="yes" imported="no">SAMRAI/hier/Connector.h</includes>
     <includes id="BoxNeighborhoodCollection_8h" name="BoxNeighborhoodCollection.h" local="yes" imported="no">SAMRAI/hier/BoxNeighborhoodCollection.h</includes>
@@ -14343,7 +14343,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelFullFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelFullFillPattern_8C</filename>
     <includes id="PatchLevelFullFillPattern_8h" name="PatchLevelFullFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFullFillPattern.h</includes>
     <includes id="RealBoxConstIterator_8h" name="RealBoxConstIterator.h" local="yes" imported="no">SAMRAI/hier/RealBoxConstIterator.h</includes>
@@ -14354,7 +14354,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelFullFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelFullFillPattern_8h</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <class kind="class">SAMRAI::xfer::PatchLevelFullFillPattern</class>
@@ -14363,7 +14363,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelInteriorFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelInteriorFillPattern_8C</filename>
     <includes id="PatchLevelInteriorFillPattern_8h" name="PatchLevelInteriorFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelInteriorFillPattern.h</includes>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
@@ -14375,7 +14375,7 @@
   </compound>
   <compound kind="file">
     <name>PatchLevelInteriorFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>PatchLevelInteriorFillPattern_8h</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <class kind="class">SAMRAI::xfer::PatchLevelInteriorFillPattern</class>
@@ -14384,7 +14384,7 @@
   </compound>
   <compound kind="file">
     <name>RefineAlgorithm.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineAlgorithm_8C</filename>
     <includes id="RefineAlgorithm_8h" name="RefineAlgorithm.h" local="yes" imported="no">SAMRAI/xfer/RefineAlgorithm.h</includes>
     <includes id="BoxGeometryVariableFillPattern_8h" name="BoxGeometryVariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/BoxGeometryVariableFillPattern.h</includes>
@@ -14400,7 +14400,7 @@
   </compound>
   <compound kind="file">
     <name>RefineAlgorithm.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineAlgorithm_8h</filename>
     <includes id="RefineClasses_8h" name="RefineClasses.h" local="yes" imported="no">SAMRAI/xfer/RefineClasses.h</includes>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
@@ -14419,7 +14419,7 @@
   </compound>
   <compound kind="file">
     <name>RefineClasses.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineClasses_8C</filename>
     <includes id="RefineClasses_8h" name="RefineClasses.h" local="yes" imported="no">SAMRAI/xfer/RefineClasses.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -14432,7 +14432,7 @@
   </compound>
   <compound kind="file">
     <name>RefineClasses.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineClasses_8h</filename>
     <includes id="RefineOperator_8h" name="RefineOperator.h" local="yes" imported="no">SAMRAI/hier/RefineOperator.h</includes>
     <includes id="TimeInterpolateOperator_8h" name="TimeInterpolateOperator.h" local="yes" imported="no">SAMRAI/hier/TimeInterpolateOperator.h</includes>
@@ -14444,7 +14444,7 @@
   </compound>
   <compound kind="file">
     <name>RefineCopyTransaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineCopyTransaction_8C</filename>
     <includes id="RefineCopyTransaction_8h" name="RefineCopyTransaction.h" local="yes" imported="no">SAMRAI/xfer/RefineCopyTransaction.h</includes>
     <includes id="Patch_8h" name="Patch.h" local="yes" imported="no">SAMRAI/hier/Patch.h</includes>
@@ -14455,7 +14455,7 @@
   </compound>
   <compound kind="file">
     <name>RefineCopyTransaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineCopyTransaction_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="BaseGridGeometry_8h" name="BaseGridGeometry.h" local="yes" imported="no">SAMRAI/hier/BaseGridGeometry.h</includes>
@@ -14467,7 +14467,7 @@
   </compound>
   <compound kind="file">
     <name>RefinePatchStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefinePatchStrategy_8C</filename>
     <includes id="RefinePatchStrategy_8h" name="RefinePatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/RefinePatchStrategy.h</includes>
     <includes id="BoxContainer_8h" name="BoxContainer.h" local="yes" imported="no">SAMRAI/hier/BoxContainer.h</includes>
@@ -14476,7 +14476,7 @@
   </compound>
   <compound kind="file">
     <name>RefinePatchStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefinePatchStrategy_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -14491,7 +14491,7 @@
   </compound>
   <compound kind="file">
     <name>RefineSchedule.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineSchedule_8C</filename>
     <includes id="RefineSchedule_8h" name="RefineSchedule.h" local="yes" imported="no">SAMRAI/xfer/RefineSchedule.h</includes>
     <includes id="BoxGeometryVariableFillPattern_8h" name="BoxGeometryVariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/BoxGeometryVariableFillPattern.h</includes>
@@ -14522,7 +14522,7 @@
   </compound>
   <compound kind="file">
     <name>RefineSchedule.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineSchedule_8h</filename>
     <includes id="PatchLevelFillPattern_8h" name="PatchLevelFillPattern.h" local="yes" imported="no">SAMRAI/xfer/PatchLevelFillPattern.h</includes>
     <includes id="RefineClasses_8h" name="RefineClasses.h" local="yes" imported="no">SAMRAI/xfer/RefineClasses.h</includes>
@@ -14541,7 +14541,7 @@
   </compound>
   <compound kind="file">
     <name>RefineScheduleConnectorWidthRequestor.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineScheduleConnectorWidthRequestor_8C</filename>
     <includes id="RefineScheduleConnectorWidthRequestor_8h" name="RefineScheduleConnectorWidthRequestor.h" local="yes" imported="no">SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h</includes>
     <includes id="RefinePatchStrategy_8h" name="RefinePatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/RefinePatchStrategy.h</includes>
@@ -14551,7 +14551,7 @@
   </compound>
   <compound kind="file">
     <name>RefineScheduleConnectorWidthRequestor.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineScheduleConnectorWidthRequestor_8h</filename>
     <includes id="PatchHierarchy_8h" name="PatchHierarchy.h" local="yes" imported="no">SAMRAI/hier/PatchHierarchy.h</includes>
     <class kind="class">SAMRAI::xfer::RefineScheduleConnectorWidthRequestor</class>
@@ -14560,7 +14560,7 @@
   </compound>
   <compound kind="file">
     <name>RefineTimeTransaction.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineTimeTransaction_8C</filename>
     <includes id="RefineTimeTransaction_8h" name="RefineTimeTransaction.h" local="yes" imported="no">SAMRAI/xfer/RefineTimeTransaction.h</includes>
     <includes id="IntVector_8h" name="IntVector.h" local="yes" imported="no">SAMRAI/hier/IntVector.h</includes>
@@ -14573,7 +14573,7 @@
   </compound>
   <compound kind="file">
     <name>RefineTimeTransaction.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineTimeTransaction_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -14586,7 +14586,7 @@
   </compound>
   <compound kind="file">
     <name>RefineTransactionFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineTransactionFactory_8C</filename>
     <includes id="RefineTransactionFactory_8h" name="RefineTransactionFactory.h" local="yes" imported="no">SAMRAI/xfer/RefineTransactionFactory.h</includes>
     <namespace>SAMRAI</namespace>
@@ -14594,7 +14594,7 @@
   </compound>
   <compound kind="file">
     <name>RefineTransactionFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>RefineTransactionFactory_8h</filename>
     <includes id="Transaction_8h" name="Transaction.h" local="yes" imported="no">SAMRAI/tbox/Transaction.h</includes>
     <includes id="Utilities_8h" name="Utilities.h" local="yes" imported="no">SAMRAI/tbox/Utilities.h</includes>
@@ -14607,7 +14607,7 @@
   </compound>
   <compound kind="file">
     <name>SingularityPatchStrategy.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>SingularityPatchStrategy_8C</filename>
     <includes id="SingularityPatchStrategy_8h" name="SingularityPatchStrategy.h" local="yes" imported="no">SAMRAI/xfer/SingularityPatchStrategy.h</includes>
     <namespace>SAMRAI</namespace>
@@ -14615,7 +14615,7 @@
   </compound>
   <compound kind="file">
     <name>SingularityPatchStrategy.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>SingularityPatchStrategy_8h</filename>
     <class kind="class">SAMRAI::xfer::SingularityPatchStrategy</class>
     <namespace>SAMRAI</namespace>
@@ -14624,7 +14624,7 @@
   </compound>
   <compound kind="file">
     <name>StandardCoarsenTransactionFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>StandardCoarsenTransactionFactory_8C</filename>
     <includes id="StandardCoarsenTransactionFactory_8h" name="StandardCoarsenTransactionFactory.h" local="yes" imported="no">SAMRAI/xfer/StandardCoarsenTransactionFactory.h</includes>
     <includes id="CoarsenCopyTransaction_8h" name="CoarsenCopyTransaction.h" local="yes" imported="no">SAMRAI/xfer/CoarsenCopyTransaction.h</includes>
@@ -14633,7 +14633,7 @@
   </compound>
   <compound kind="file">
     <name>StandardCoarsenTransactionFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>StandardCoarsenTransactionFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -14647,7 +14647,7 @@
   </compound>
   <compound kind="file">
     <name>StandardRefineTransactionFactory.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>StandardRefineTransactionFactory_8C</filename>
     <includes id="StandardRefineTransactionFactory_8h" name="StandardRefineTransactionFactory.h" local="yes" imported="no">SAMRAI/xfer/StandardRefineTransactionFactory.h</includes>
     <includes id="RefineCopyTransaction_8h" name="RefineCopyTransaction.h" local="yes" imported="no">SAMRAI/xfer/RefineCopyTransaction.h</includes>
@@ -14657,7 +14657,7 @@
   </compound>
   <compound kind="file">
     <name>StandardRefineTransactionFactory.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>StandardRefineTransactionFactory_8h</filename>
     <includes id="Box_8h" name="Box.h" local="yes" imported="no">SAMRAI/hier/Box.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>
@@ -14671,7 +14671,7 @@
   </compound>
   <compound kind="file">
     <name>VariableFillPattern.C</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>VariableFillPattern_8C</filename>
     <includes id="VariableFillPattern_8h" name="VariableFillPattern.h" local="yes" imported="no">SAMRAI/xfer/VariableFillPattern.h</includes>
     <namespace>SAMRAI</namespace>
@@ -14679,7 +14679,7 @@
   </compound>
   <compound kind="file">
     <name>VariableFillPattern.h</name>
-    <path>/g/g10/arrighi2/RELEASE/SAMRAI/source/SAMRAI/xfer/</path>
+    <path>/usr/mic/bdiv/arrighi/RELEASE/MASTER/source/SAMRAI/xfer/</path>
     <filename>VariableFillPattern_8h</filename>
     <includes id="BoxGeometry_8h" name="BoxGeometry.h" local="yes" imported="no">SAMRAI/hier/BoxGeometry.h</includes>
     <includes id="BoxOverlap_8h" name="BoxOverlap.h" local="yes" imported="no">SAMRAI/hier/BoxOverlap.h</includes>

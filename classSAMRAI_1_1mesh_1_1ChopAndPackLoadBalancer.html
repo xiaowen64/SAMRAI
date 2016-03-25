@@ -87,6 +87,9 @@ Inheritance diagram for SAMRAI::mesh::ChopAndPackLoadBalancer:</div>
 <li><b>processor_layout</b> Integer array (length = DIM) indicating the way in which the domain should be chopped when a level can be described as a single parallelepiped region (i.e., a box). If no input value is provided, or if the product of these entries does not equal the number of processors, then the processor layout computed will be computed from the size of the domain box and the number of processors in use if necessary.<br/>
  NOTE: The largest patch size constraint specified in the input for the <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html" title="Class GriddingAlgorithm manages AMR patch hierarchy construction operations in SAMRAI...">GriddingAlgorithm</a> object takes precedence over the processor layout specification. That is, if the processor layout indicates that the resulting level patches would be larger than the largest patch size, the layout will be ignored and boxes obeying the patch size constrint will result.</li>
 </ul>
+<ul>
+<li><b>tile_size</b> Tile size when using tile mode. Tile mode restricts box cuts to tile boundaries.</li>
+</ul>
 <p><b> Details: </b> <br/>
  </p>
 <table border="1" cellspacing="3" cellpadding="3">
@@ -135,6 +138,14 @@ Inheritance diagram for SAMRAI::mesh::ChopAndPackLoadBalancer:</div>
 </td><td><p>int[] </p>
 </td><td><p>N/A </p>
 </td><td><p>N/A </p>
+</td><td><p>opt </p>
+</td><td><p>Not written to restart. Value in input db used.  </p>
+</td></tr>
+<tr>
+<td><p>tile_size </p>
+</td><td><p>IntVector </p>
+</td><td><p>1 </p>
+</td><td><p>1- </p>
 </td><td><p>opt </p>
 </td><td><p>Not written to restart. Value in input db used.  </p>
 </td></tr>
@@ -571,7 +582,7 @@ Inheritance diagram for SAMRAI::mesh::ChopAndPackLoadBalancer:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#a2a6934691d740a0930f1644d5271d6b2">SAMRAI::mesh::LoadBalanceStrategy</a>.</p>
 
-<p>References <a class="el" href="BoxLevel_8C_source.html#l00993">SAMRAI::hier::BoxLevel::addBox()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Connector_8h_source.html#l00165">SAMRAI::hier::Connector::clearNeighborhoods()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::DISTRIBUTED</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00305">SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps()</a>, <a class="el" href="BoxLevel_8h_source.html#l00520">SAMRAI::hier::BoxLevel::getGlobalBoxes()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="ProcessorMapping_8h_source.html#l00095">SAMRAI::hier::ProcessorMapping::getProcessorAssignment()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::GLOBALIZED</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="BoxLevel_8C_source.html#l00225">SAMRAI::hier::BoxLevel::initialize()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="BoxContainer_8h_source.html#l01071">SAMRAI::hier::BoxContainer::pushBack()</a>, <a class="el" href="Connector_8C_source.html#l00628">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="Connector_8C_source.html#l00650">SAMRAI::hier::Connector::setHead()</a>, <a class="el" href="BoxLevel_8C_source.html#l00775">SAMRAI::hier::BoxLevel::setParallelState()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00274">TBOX_ASSERT_DIM_OBJDIM_EQUALITY6</a>.</p>
+<p>References <a class="el" href="BoxLevel_8C_source.html#l00993">SAMRAI::hier::BoxLevel::addBox()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Connector_8h_source.html#l00165">SAMRAI::hier::Connector::clearNeighborhoods()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::DISTRIBUTED</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00305">SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps()</a>, <a class="el" href="BoxLevel_8h_source.html#l00520">SAMRAI::hier::BoxLevel::getGlobalBoxes()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="ProcessorMapping_8h_source.html#l00095">SAMRAI::hier::ProcessorMapping::getProcessorAssignment()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::GLOBALIZED</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="BoxLevel_8C_source.html#l00225">SAMRAI::hier::BoxLevel::initialize()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="BoxContainer_8h_source.html#l01071">SAMRAI::hier::BoxContainer::pushBack()</a>, <a class="el" href="Connector_8C_source.html#l00628">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="Connector_8C_source.html#l00650">SAMRAI::hier::Connector::setHead()</a>, <a class="el" href="BoxLevel_8C_source.html#l00775">SAMRAI::hier::BoxLevel::setParallelState()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00274">TBOX_ASSERT_DIM_OBJDIM_EQUALITY6</a>.</p>
 
 </div>
 </div>
@@ -618,7 +629,7 @@ Inheritance diagram for SAMRAI::mesh::ChopAndPackLoadBalancer:</div>
 <li>source/SAMRAI/mesh/<a class="el" href="ChopAndPackLoadBalancer_8C.html">ChopAndPackLoadBalancer.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 26 Jun 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
