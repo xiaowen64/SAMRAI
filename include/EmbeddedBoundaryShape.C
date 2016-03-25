@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShape.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/EmbeddedBoundaryShape.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Base class for analytic embedded Boundaries
 //              
 // 
@@ -47,7 +47,7 @@ template<int DIM> EmbeddedBoundaryShape<DIM>::~EmbeddedBoundaryShape<DIM>()
 template<int DIM> bool 
 EmbeddedBoundaryShape<DIM>::isInside(const double* xyz) const
 {
-   (void) xyz;
+   NULL_USE(xyz);
    TBOX_ERROR("EmbeddedBoundaryShape::isInside(): "
                 << "\nNo implementation provided for this shape."
                 << std::endl);
@@ -61,10 +61,10 @@ EmbeddedBoundaryShape<DIM>::isInside(const int* nx,
                                      const double* origin,
                                      int* inout) const
 {
-   (void) nx;
-   (void) dx;
-   (void) origin;
-   (void) inout;
+   NULL_USE(nx);
+   NULL_USE(dx);
+   NULL_USE(origin);
+   NULL_USE(inout);
 
    TBOX_ERROR("EmbeddedBoundaryShape::isInside(): "
                 << "\nNo implementation provided for this shape. "

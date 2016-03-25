@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/PETScAbstractVectorReal.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/petsc/PETScAbstractVectorReal.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1806 $
-// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Interface to C++ vector implementation for PETSc package.
 //
 
@@ -545,7 +545,7 @@ PETScAbstractVectorReal<TYPE>::vecGetArray(
    Vec x,
    TYPE** a)
 {
-   (void) x;
+   NULL_USE(x);
    *a = NULL;
 
    PetscFunctionReturn(0);
@@ -590,7 +590,7 @@ PETScAbstractVectorReal<TYPE>::vecRestoreArray(
    Vec x,
    TYPE** a)
 {
-   (void) x;
+   NULL_USE(x);
    *a = NULL;
    PetscFunctionReturn(0);
 }
@@ -672,7 +672,7 @@ PETScAbstractVectorReal<TYPE>::vecView(
    TBOX_ASSERT(v != static_cast<Vec>(NULL));
 #endif
 
-   (void) viewer;
+   NULL_USE(viewer);
    PABSVEC_CAST(v)->viewVector();
 
    PetscFunctionReturn(0);
@@ -820,11 +820,11 @@ PETScAbstractVectorReal<TYPE>::vecSetValues(
    const TYPE* y,
    InsertMode iora)
 {
-   (void) x;
-   (void) ni;
-   (void) ix;
-   (void) y;
-   (void) iora;
+   NULL_USE(x);
+   NULL_USE(ni);
+   NULL_USE(ix);
+   NULL_USE(y);
+   NULL_USE(iora);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecSetValues() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -834,7 +834,7 @@ PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecAssemblyBegin(
    Vec vec)
 {
-   (void) vec;
+   NULL_USE(vec);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecAssemblyBegin() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -844,7 +844,7 @@ PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecAssemblyEnd(
    Vec vec)
 {
-   (void) vec;
+   NULL_USE(vec);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecAssemblyEnd() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -855,8 +855,8 @@ PETScAbstractVectorReal<TYPE>::vecSetOption(
    Vec x,
    VecOption op)
 {
-   (void) x;
-   (void) op;
+   NULL_USE(x);
+   NULL_USE(op);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecSetOption() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -870,11 +870,11 @@ PETScAbstractVectorReal<TYPE>::vecSetValuesBlocked(
    const TYPE* y,
    InsertMode iora)
 {
-   (void) x;
-   (void) ni;
-   (void) ix;
-   (void) y;
-   (void) iora;
+   NULL_USE(x);
+   NULL_USE(ni);
+   NULL_USE(ix);
+   NULL_USE(y);
+   NULL_USE(iora);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecSetValuesBlocked() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -885,8 +885,8 @@ PETScAbstractVectorReal<TYPE>::vecPlaceArray(
    Vec vec,
    const TYPE* array)
 {
-   (void) vec;
-   (void) array;
+   NULL_USE(vec);
+   NULL_USE(array);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecPlaceArray() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -897,8 +897,8 @@ PETScAbstractVectorReal<TYPE>::vecReplaceArray(
    Vec vec,
    const TYPE* array)
 {
-   (void) vec;
-   (void) array;
+   NULL_USE(vec);
+   NULL_USE(array);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecReplaceArray() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -908,7 +908,7 @@ PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecReciprocal(
    Vec vec)
 {
-   (void) vec;
+   NULL_USE(vec);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecReciprocal() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -919,8 +919,8 @@ PETScAbstractVectorReal<TYPE>::vecViewNative(
    Vec v,
    PetscViewer viewer)
 {
-   (void) v;
-   (void) viewer;
+   NULL_USE(v);
+   NULL_USE(viewer);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecViewNative() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -930,7 +930,7 @@ PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecConjugate(
    Vec x)
 {
-   (void) x;
+   NULL_USE(x);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecConjugate() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -941,6 +941,8 @@ PETScAbstractVectorReal<TYPE>::vecSetLocalToGlobalMapping(
    Vec x,
    ISLocalToGlobalMapping mapping)
 {
+   NULL_USE(x);
+   NULL_USE(mapping);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecSetLocalToGlobalMapping() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -954,11 +956,11 @@ PETScAbstractVectorReal<TYPE>::vecSetValuesLocal(
    const TYPE* y,
    InsertMode iora)
 {
-   (void) x;
-   (void) ni;
-   (void) ix;
-   (void) y;
-   (void) iora;
+   NULL_USE(x);
+   NULL_USE(ni);
+   NULL_USE(ix);
+   NULL_USE(y);
+   NULL_USE(iora);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecSetValuesLocal() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -968,7 +970,7 @@ PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecResetArray(
    Vec vec)
 {
-   (void) vec;
+   NULL_USE(vec);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecResetArray() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -978,7 +980,7 @@ PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecSetFromOptions(
    Vec vec)
 {
-   (void) vec;
+   NULL_USE(vec);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecSetFromOptions() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -990,9 +992,9 @@ PETScAbstractVectorReal<TYPE>::vecLoad(
    VecType outtype,
    Vec* newvec)
 {
-   (void) viewer;
-   (void) outtype;
-   (void) newvec;
+   NULL_USE(viewer);
+   NULL_USE(outtype);
+   NULL_USE(newvec);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecLoad() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -1004,9 +1006,9 @@ PETScAbstractVectorReal<TYPE>::vecPointwiseMax(
    Vec x,
    Vec y)
 {
-   (void) w;
-   (void) x;
-   (void) y;
+   NULL_USE(w);
+   NULL_USE(x);
+   NULL_USE(y);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecPointwiseMax() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -1018,9 +1020,9 @@ PETScAbstractVectorReal<TYPE>::vecPointwiseMaxAbs(
    Vec x,
    Vec y)
 {
-   (void) w;
-   (void) x;
-   (void) y;
+   NULL_USE(w);
+   NULL_USE(x);
+   NULL_USE(y);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecPointwiseMaxAbs() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -1032,9 +1034,9 @@ PETScAbstractVectorReal<TYPE>::vecPointwiseMin(
    Vec x,
    Vec y)
 {
-   (void) w;
-   (void) x;
-   (void) y;
+   NULL_USE(w);
+   NULL_USE(x);
+   NULL_USE(y);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecPointwiseMin() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }
@@ -1047,10 +1049,10 @@ PETScAbstractVectorReal<TYPE>::vecGetValues(
    const PetscInt* ix,
    PetscScalar* y)
 {
-   (void) x;
-   (void) ni;
-   (void) ix;
-   (void) y;
+   NULL_USE(x);
+   NULL_USE(ni);
+   NULL_USE(ix);
+   NULL_USE(y);
    TBOX_ERROR("PETScAbstractVectorReal<TYPE>::vecGetValues() unimplemented" <<std::endl);
    PetscFunctionReturn(0);
 }

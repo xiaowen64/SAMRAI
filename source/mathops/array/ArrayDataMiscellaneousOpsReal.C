@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataMiscellaneousOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mathops/array/ArrayDataMiscellaneousOpsReal.C $
 // Package:	SAMRAI mathops
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1889 $
+// Modified:	$LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description:	Miscellaneous templated operations for real array data
 //
 
@@ -45,14 +45,14 @@ template<int DIM, class TYPE>
 ArrayDataMiscellaneousOpsReal<DIM,TYPE>::ArrayDataMiscellaneousOpsReal(
    const ArrayDataMiscellaneousOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;	// not implemented (but needed by some compilers)
+   NULL_USE(foo);
 }
 
 template<int DIM, class TYPE>
 void ArrayDataMiscellaneousOpsReal<DIM,TYPE>::operator=(
    const ArrayDataMiscellaneousOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;	// not implemented (but needed by some compilers)
+   NULL_USE(foo);
 }
 
 /*
@@ -363,7 +363,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalarWithControlVolume(
                if (cvd[cv_counter+i0] > 0.0) {
                   dd[d_counter+i0] = ( 
                   (tbox::MathUtilities<TYPE>::Abs(sd[s_counter+i0]) >= alpha) 
-                      ?  1.0 : 0.0 );
+                      ?  1.0F : 0.0F );
                }
             }
 
@@ -467,7 +467,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalar(
             for (int i0 = 0; i0 < box_w[0]; i0++) {
                dd[d_counter+i0] = ( 
                   (tbox::MathUtilities<TYPE>::Abs(sd[s_counter+i0]) >= alpha) 
-                      ?  1.0 : 0.0 );
+                      ?  1.0F : 0.0F );
             }
 
             int dim_jump = 0;
@@ -516,6 +516,11 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocalWithControlVolume(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
+#endif
+
+// Ignore Intel warning about floating point comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
 #endif
 
    int test = 1;
@@ -582,7 +587,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocalWithControlVolume(
                      test = 0;
                      dd[d_counter+i0] = 0.0;
                   } else {
-                     dd[d_counter+i0] = 1.0 / sd[s_counter+i0];
+                     dd[d_counter+i0] = 1.0F / sd[s_counter+i0];
                   }
                }
             }
@@ -636,6 +641,11 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocal(
    const pdat::ArrayData<DIM,TYPE>& src,
    const hier::Box<DIM>& box) const
 {
+// Ignore Intel warning about floating point comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
@@ -688,9 +698,9 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocal(
             for (int i0 = 0; i0 < box_w[0]; i0++) {
                if ( sd[s_counter+i0] == 0.0 ) {
                   test = 0;
-                  dd[d_counter+i0] = 0.0;
+                  dd[d_counter+i0] = 0.0F;
                } else {
-                  dd[d_counter+i0] = 1.0 / sd[s_counter+i0];
+                  dd[d_counter+i0] = 1.0F / sd[s_counter+i0];
                }
             }
 

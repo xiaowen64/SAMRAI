@@ -81,6 +81,40 @@ int foo() { int x = t(); x++; return x; }
 ])
 
 dnl
+dnl Check whether the C++ compiler supports cmath
+dnl
+dnl Variable:	casc_cv_cxx_have_cmath = (yes|no)
+dnl Defines:	(HAVE|LACKS)_CMATH
+dnl
+
+AC_DEFUN([CASC_CXX_CMATH], [
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(whether ${CXX} supports cmath)
+
+   AC_CACHE_VAL(casc_cv_cxx_have_cmath, [
+      AC_LANG_SAVE
+      AC_LANG_CPLUSPLUS
+         AC_TRY_COMPILE([
+#include <cmath>
+void foo() {
+   double temp = std::sin(0.0);
+}
+            ], [/* empty */],
+            casc_cv_cxx_have_cmath=yes,
+            casc_cv_cxx_have_cmath=no)
+         AC_LANG_RESTORE
+      ])
+
+   AC_MSG_RESULT($casc_cv_cxx_have_cmath)
+
+   if test "$casc_cv_cxx_have_cmath" = yes; then
+      AC_DEFINE(HAVE_CMATH)
+   else
+      AC_DEFINE(LACKS_CMATH)
+   fi
+])
+
+dnl
 dnl Check whether the C++ compiler supports template-based complex numbers.
 dnl
 dnl Variable:	casc_cv_cxx_have_template_comlex = (yes|no)
@@ -271,6 +305,7 @@ void trynew() {
          casc_cv_cxx_have_new_placement_operator=no)
       AC_LANG_RESTORE
    ])
+
    AC_MSG_RESULT($casc_cv_cxx_have_new_placement_operator)
 
    if test "$casc_cv_cxx_have_new_placement_operator" = yes; then
@@ -562,6 +597,91 @@ void foo() {
     else
        AC_DEFINE(LACKS_EXCEPTION_HANDLING)
     fi
+])
+
+
+dnl
+dnl Determines which form of isnan is present
+dnl 
+dnl Defines:	(HAVE|LACKS)_CMATH_ISNAN
+dnl             (HAVE|LACKS)_ISNAN
+dnl  	        (HAVE|LACKS)_ISNAND
+dnl  	        (HAVE|LACKS)_INLINE_ISNAND
+dnl
+dnl isnan is part of C99 spec and not necessarily available under
+dnl ISO C++.  Test for some other possible functions.
+dnl
+AC_DEFUN([CASC_CXX_ISNAN], [
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(checking for isnan in cmath)
+
+   AC_LANG_SAVE
+   AC_LANG_CPLUSPLUS
+   AC_TRY_COMPILE([ #include <cmath> ], 
+      [ int test = std::isnan(0.0); ],
+      casc_cv_cxx_have_isnan=yes,
+      casc_cv_cxx_have_isnan=no)
+   AC_LANG_RESTORE
+
+   AC_MSG_RESULT($casc_cv_cxx_have_isnan)
+
+   if test "$casc_cv_cxx_have_isnan" = yes; then
+      AC_DEFINE(HAVE_CMATH_ISNAN)
+   else
+      AC_DEFINE(LACKS_CMATH_ISNAN)
+
+      AC_MSG_CHECKING(checking for isnan in math.h)
+
+      AC_LANG_SAVE
+      AC_LANG_CPLUSPLUS
+      AC_TRY_COMPILE([#include <math.h>], 
+         [int test = isnan(0.0);],
+         casc_cv_cxx_have_isnan=yes,
+         casc_cv_cxx_have_isnan=no)
+      AC_LANG_RESTORE
+
+      AC_MSG_RESULT($casc_cv_cxx_have_isnan)
+
+      if test "$casc_cv_cxx_have_isnan" = yes; then
+         AC_DEFINE(HAVE_ISNAN)
+      else
+         AC_DEFINE(LACKS_ISNAN)
+
+         AC_MSG_CHECKING(checking for __isnand)
+
+         AC_LANG_SAVE
+         AC_LANG_CPLUSPLUS
+         AC_TRY_COMPILE([#include <math.h>],
+            [int test = __isnand(0.0);],
+            casc_cv_cxx_have_isnand=yes,
+            casc_cv_cxx_have_isnand=no)
+         AC_LANG_RESTORE
+  
+         AC_MSG_RESULT($casc_cv_cxx_have_isnand)
+         if test "$casc_cv_cxx_have_isnand" = yes; then
+            AC_DEFINE(HAVE_ISNAND)
+         else
+            AC_DEFINE(LACKS_ISNAND)
+
+            AC_MSG_CHECKING(checking for __inline_isnand)
+
+            AC_LANG_SAVE
+            AC_LANG_CPLUSPLUS
+            AC_TRY_COMPILE([#include <math.h>],
+                 [int test = __inline_isnand(0.0);],
+                casc_cv_cxx_have_inline_isnan=yes,
+                casc_cv_cxx_have_inline_isnan=no)
+              AC_LANG_RESTORE
+
+            AC_MSG_RESULT($casc_cv_cxx_have_inline_isnan)
+            if test "$casc_cv_cxx_have_inline_isnan" = yes; then
+               AC_DEFINE(HAVE_INLINE_ISNAND)
+            else
+               AC_DEFINE(LACKS_INLINE_ISNAND)
+           fi
+	fi
+      fi
+   fi
 ])
 
 

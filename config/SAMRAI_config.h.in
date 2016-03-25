@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/config/SAMRAI_config.h.in $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/config/SAMRAI_config.h.in $
  * Package:     SAMRAI autoconf
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1768 $
- * Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1871 $
+ * Modified:    $LastChangedDate: 2008-01-17 18:06:43 -0800 (Thu, 17 Jan 2008) $
  * Description: SAMRAI configuration file
  */  
 
@@ -145,6 +145,14 @@
 #undef LACKS_NEW_PLACEMENT_OPERATOR
 #endif
 
+#ifndef HAVE_MALLOC_H 
+#undef HAVE_MALLOC_H 
+#endif
+
+#ifndef HAVE_MALLINFO 
+#undef HAVE_MALLINFO
+#endif
+
 /*
  * Control when template implementations (usually the .C file)
  * is included when compiling.
@@ -172,6 +180,24 @@
 #undef HAVE_ISNAN_TEMPLATE
 #endif
 
+/*
+ * Only one of the ISNAN macros should be defined 
+ */
+#ifndef HAVE_CMATH_ISNAN
+#undef HAVE_CMATH_ISNAN
+#endif
+
+#ifndef HAVE_ISNAN
+#undef HAVE_ISNAN
+#endif
+
+#ifndef HAVE_ISNAND
+#undef HAVE_ISNAND
+#endif
+
+#ifndef HAVE_INLINE_ISNAND
+#undef HAVE_INLINE_ISNAND
+#endif
 
 #ifndef LACKS_EXCEPTION_HANDLING
 #undef LACKS_EXCEPTION_HANDLING
@@ -191,6 +217,13 @@
 
 #ifndef RESTRICT_IS_BROKEN
 #undef RESTRICT_IS_BROKEN
+#endif
+
+// If restrict pointer is broken, remove request from code.
+#ifdef RESTRICT_IS_BROKEN
+#define SAMRAI_RESTRICT
+#else
+#define SAMRAI_RESTRICT __restrict__
 #endif
 
 #ifndef NAMESPACE_IS_BROKEN
@@ -228,6 +261,8 @@
 #ifndef OSTRSTREAM_TYPE_IS_BROKEN
 #undef OSTRSTREAM_TYPE_IS_BROKEN
 #endif
+
+
 
 /*
  * X11 libraries

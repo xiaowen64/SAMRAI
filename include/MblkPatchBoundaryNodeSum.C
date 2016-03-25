@@ -423,6 +423,7 @@ template<int DIM> void MblkPatchBoundaryNodeSum<DIM>::setupSum(
 template<int DIM> void MblkPatchBoundaryNodeSum<DIM>::computeSum(
    const bool fill_hanging_nodes) const
 {
+   NULL_USE(fill_hanging_nodes);
 
    if (d_level_setup_called) {
 

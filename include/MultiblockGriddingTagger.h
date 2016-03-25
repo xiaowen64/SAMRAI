@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/multiblock/MultiblockGriddingTagger.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/multiblock/MultiblockGriddingTagger.h $
 // Package:	SAMRAI multiblock
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
  
@@ -146,6 +146,10 @@ public:
       const hier::Box<DIM>& fine_box,
       const hier::IntVector<DIM>& ratio)
    {
+      (void) fine;
+      (void) coarse;
+      (void) fine_box;
+      (void) ratio;
       return;
    }
 

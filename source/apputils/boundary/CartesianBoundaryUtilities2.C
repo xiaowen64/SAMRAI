@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/CartesianBoundaryUtilities2.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/boundary/CartesianBoundaryUtilities2.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: Utility routines for manipulating 2D Cartesian boundary data
 //
 
@@ -26,6 +26,11 @@
 */
 
 extern "C" {
+
+// Disable Intel warnings about extern declarations in C file
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1419)
+#endif
 
 void stufcartbdryloc2d_( const int&, const int&, const int&, const int&,
                          const int&, const int&, const int&, const int& );
@@ -146,6 +151,8 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const tbox::Array<int>& bdry_edge_conds,
    const tbox::Array<double>& bdry_edge_values)
 {
+   NULL_USE(varname);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(!vardata.isNull());
@@ -223,6 +230,8 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const tbox::Array<int>& bdry_node_conds,
    const tbox::Array<double>& bdry_edge_values)
 {
+   NULL_USE(varname);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(!vardata.isNull());
@@ -485,6 +494,10 @@ int CartesianBoundaryUtilities2::checkBdryData(
       pdat::CellIndex<2> check = ic();
       for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
          double offcheckval = checkval + dxfact * (p + 1);
+
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
          if ((*vardata)(check, depth) != offcheckval) {
             num_bad_values++;
             TBOX_WARNING("Bad " << bdry_type_str

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/CartesianBoundaryUtilities3.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/boundary/CartesianBoundaryUtilities3.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1892 $
+// Modified:    $LastChangedDate: 2008-01-23 08:29:36 -0800 (Wed, 23 Jan 2008) $
 // Description: Utility routines for manipulating 3D Cartesian boundary data
 //
 
@@ -26,6 +26,11 @@
 */
 
 extern "C" {
+
+// Disable Intel warnings about extern declarations in C file
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1419)
+#endif
 
 void stufcartbdryloc3d_( const int&, const int&, 
                          const int&, const int&,
@@ -189,6 +194,8 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
    TBOX_ASSERT(bdry_face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
+   
+   NULL_USE(varname);
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -269,6 +276,8 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
 
+   NULL_USE(varname);
+
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
    }
@@ -347,6 +356,8 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_3D_NODES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
+
+   NULL_USE(varname);
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();

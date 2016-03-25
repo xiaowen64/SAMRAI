@@ -21,6 +21,7 @@ if [ -n "$FARCH" ] ; then
     echo $FARCH
     exit 0
 fi
+
 #
 # Try to find uname
 for dir in /bin /usr/bin /usr/local/bin /Cygnus/cygwin-b20/H-i586-cygwin32/bin; do
@@ -62,6 +63,7 @@ for LARCH in $ARCHLIST ; do
    #   LARCH6=`expr "$LARCH" : "\(......\)"`
    case $LARCH in
         SUPER-UX) FARCH=SX4; break ;;
+        Darwin)   FARCH=Darwin; break ;;
 	AIX|RIOS) FARCH=rs6000; break ;;
 	HP-UX) 
  	if [ -a /dev/kmem ] ; then

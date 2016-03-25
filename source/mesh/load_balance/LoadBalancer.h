@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/LoadBalancer.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/LoadBalancer.h $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1860 $
+// Modified:    $LastChangedDate: 2008-01-15 11:19:26 -0800 (Tue, 15 Jan 2008) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
  
@@ -30,78 +30,114 @@ namespace SAMRAI {
     namespace mesh {
 
 /*!
- * @brief Class LoadBalancer<DIM> provides load balancing routines for 
- * AMR hierarchy levels based on either uniform or non-uniform workload
- * estimates.  This class is derived from the abstract base class
- * LoadBalanceStrategy<DIM>; thus, it is a concrete implementation of the
- * load balance Strategy pattern interface.
+ * @brief Class LoadBalancer<DIM> provides load balancing routines for
+ * AMR hierarchy levels based on either uniform or non-uniform
+ * workload estimates.  
+ *
+ * This class is derived from the abstract base class
+ * LoadBalanceStrategy<DIM>; thus, it is a concrete implementation of
+ * the load balance Strategy pattern interface.
  *
  * Load balancing operations, whether based on uniform or non-uniform
- * workloads, can be specified for each level in the hierarchy individually
- * or for the entire hierarchy.  Basic load balance parameters can be set
- * from an input file, while more complex behavior can be set at run-time
- * via member functions, including dynamic reconfiguration of balance
- * operations.
+ * workloads, can be specified for each level in the hierarchy
+ * individually or for the entire hierarchy.  Basic load balance
+ * parameters can be set from an input file, while more complex
+ * behavior can be set at run-time via member functions, including
+ * dynamic reconfiguration of balance operations.
  *
  * Required input keys: NONE
  *
  * Optional input keys, data types, and defaults:
  * 
- *    - \b    processor_layout
- *       Integer array (length = DIM) indicating the way in which the
- *       domain should be chopped when a level can be described as a single
- *       parallelepiped region (i.e., a box). If no input value is provided,
- *       or if the product of these entries does not equal the number of
- *       processors, then the processor layout computed will be computed
- *       from the dimensions of the domain box and the number of processors
- *       in use if necessary.
+ *    - \b processor_layout Integer array (length = DIM) indicating
+ *    the way in which the domain should be chopped when a level can
+ *    be described as a single parallelepiped region (i.e., a box). If
+ *    no input value is provided, or if the product of these entries
+ *    does not equal the number of processors, then the processor
+ *    layout computed will be computed from the dimensions of the
+ *    domain box and the number of processors in use if necessary.
  *
- *       NOTE: The largest patch size constraint specified in the input for
- *       the GriddingAlgorithm<DIM> object takes precedence over the processor
- *       layout specification.  That is, if the processor layout indicates
- *       that the resulting level patches would be larger than the largest
- *       patch size, the layout will be ignored and boxes obeying the patch
- *       size constrint will result.
+ *       NOTE: The largest patch size constraint specified in the
+ *       input for the GriddingAlgorithm<DIM> object takes precedence
+ *       over the processor layout specification.  That is, if the
+ *       processor layout indicates that the resulting level patches
+ *       would be larger than the largest patch size, the layout will
+ *       be ignored and boxes obeying the patch size constrint will
+ *       result.
  *
- *    - \b    bin_pack_method
- *       String value indicating the type of bin packing to use to map patches
- *       to processors.  Currently, two options are supported: "GREEDY",
- *       "SPATIAL". The "GREEDY" process simply maps each patch (box) to
- *       the first processor (bin), in ascending tbox::MPI process number, whose
- *       difference between the average workload and its current workload is
- *       less than the workload of the patch in question. The "SPATIAL"
- *       process first constructs an ordering of the patches (boxes) by
- *       passing a Morton-type curve through the center of each box.  Then,
- *       it attempts to map the patches to processors by assigning patches
- *       that are near each other on the curve to the same processor.  If no
- *       input value is specified, a default value of "SPATIAL" is used.  The
- *       input value will be used for all levels and will remain so until
- *       reset via the setBinPackMethod() member function below.
+ *    - \b bin_pack_method String value indicating the type of bin
+ *    packing to use to map patches to processors.  Currently, two
+ *    options are supported: "GREEDY", "SPATIAL". The "GREEDY" process
+ *    simply maps each patch (box) to the first processor (bin), in
+ *    ascending tbox::MPI process number, whose difference between the
+ *    average workload and its current workload is less than the
+ *    workload of the patch in question. The "SPATIAL" process first
+ *    constructs an ordering of the patches (boxes) by passing a
+ *    Morton-type curve through the center of each box.  Then, it
+ *    attempts to map the patches to processors by assigning patches
+ *    that are near each other on the curve to the same processor.  If
+ *    no input value is specified, a default value of "SPATIAL" is
+ *    used.  The input value will be used for all levels and will
+ *    remain so until reset via the setBinPackMethod() member function
+ *    below.
  *
- *    - \b   max_workload_factor
- *       Double used during the box-splitting phase to determine which boxes
- *       to split.  Specifically, boxes will be chopped if their estimated
- *       workload is greater than max_workload_factor * A, where A is the
- *       average workload (i.e., A = (total work)/(nume processors)).  The
- *       default value for this parameter is 1.0. It can be set to any value
- *       greater than zero, either in the input file or via the
- *       setMaxWorkloadFactor() member function below.   The default or input
- *       value will remain in use for all levels until reset by the member
- *       function.
+ *    - \b max_workload_factor Double array (length = number of
+ *    levels) used during the box-splitting phase to determine which
+ *    boxes to split.  Specifically, boxes will be chopped if their
+ *    estimated workload is greater than max_workload_factor * A,
+ *    where A is the average workload (i.e., A = (total work)/(nume
+ *    processors)).  The default value for this parameter is 1.0. It
+ *    can be set to any value greater than zero, either in the input
+ *    file or via the setMaxWorkloadFactor() member function below.
+ * 
+ *    Example input:
  *
- *       NOTE: Setting this value > 1.0 increases the splitting threshold
- *       which effectively reduces the total number of boxes generated.
- *       Setting it less than 1.0 decreases the splitting threshold and will
- *       generally increase the total number of boxes.
+ *       max_workload_factor = 0.8   
+ * 
+ *       Sets the workload factor to 0.8 for all levels.
  *
- *    - \b ignore_level_box_union_is_single_box
- *       Boolean flag to control chopping of level boxes when the union of 
- *       the input boxes passed to the loadBalanceBoxes() routine is a single box.
- *       The default value is false, which means that the domain will be chopped 
- *       to make patch boxes based on the (single box) union of the boxes describing
- *       the level regardless of the input boxes.  When the value is set to true,
- *       either via the setIgnoreLevelDomainIsSingleBox() function or an input file,
- *       the domain will be chopped by chopping each of the input boxes. 
+ *       max_worklaod_factor = 0.8 , 0.9
+ * 
+ *       Sets the workload factor to 0.8 for level 0 and 0.9 for all
+ *       other levels.
+ *
+ *       NOTE: If a length is less than max levels then finest value 
+ *       specified is use for finer levels.  If length is greater 
+ *       than max levels, the values are ignored.
+ *
+ *       NOTE: Setting this value > 1.0 increases the splitting
+ *       threshold which effectively reduces the total number of boxes
+ *       generated.  Setting it less than 1.0 decreases the splitting
+ *       threshold and will generally increase the total number of
+ *       boxes.
+ *
+ *    - \b workload_tolerance Double array (length = number of levels)
+ *    used during the box-splitting phase to determine which boxes to
+ *    split.  The tolerance value can be use to prevent splitting of
+ *    boxes when the computed box workload is close to the computed
+ *    ideal workload.  A box is split if:
+ *    
+ *    ( box_workload <= ( (1. + workload_tolerance) * ideal_workload ) )
+ *
+ *    Tolerance values should be greater than or equal to 0.0 and less
+ *    then 1.0.  Large values will probably have undesirable results.
+ *    The default value for this parameter is 0.0. It can be set to
+ *    either in the input file or via the setWorkloadTolerance()
+ *    member function below.
+ * 
+ *       NOTE: If a length is less than max levels then finest value 
+ *       specified is use for finer levels.  If length is greater 
+ *       than max levels, the values are ignored.
+ *
+ *    - \b ignore_level_box_union_is_single_box Boolean flag to
+ *    control chopping of level boxes when the union of the input
+ *    boxes passed to the loadBalanceBoxes() routine is a single box.
+ *    The default value is false, which means that the domain will be
+ *    chopped to make patch boxes based on the (single box) union of
+ *    the boxes describing the level regardless of the input boxes.
+ *    When the value is set to true, either via the
+ *    setIgnoreLevelDomainIsSingleBox() function or an input file, the
+ *    domain will be chopped by chopping each of the input boxes.
  *
  *
  * A sample input file entry might look like:
@@ -167,6 +203,22 @@ public:
     */
    void setMaxWorkloadFactor(
       double factor,
+      int level_number = -1);
+
+
+   /*!
+    * Set the workload tolerance for either the specified level or all
+    * hierarchy levels.  See discussion about inputs above for information
+    * on how this value is used during load balancing operations.
+    *
+    * @param factor        Double value of tolerance. The default value is 0.0;
+    *
+    * @param level_number  Optional integer number for level to which factor
+    *                      is applied. If no value is given, the value will
+    *                      be used for all levels.
+    */
+   void setWorkloadTolerance(
+      double tolerance,
       int level_number = -1);
 
    /*!
@@ -374,6 +426,7 @@ private:
     */
    int    getWorkloadDataId(int level_number) const;
    double getMaxWorkloadFactor(int level_number) const;
+   double getWorkloadTolerance(int level_number) const;
    std::string getBinPackMethod(int level_number) const;
 
    /*
@@ -399,6 +452,7 @@ private:
     */
    int    d_master_workload_data_id;
    double d_master_max_workload_factor;
+   double d_master_workload_tolerance;
    std::string d_master_bin_pack_method;
 
    /*
@@ -407,6 +461,7 @@ private:
     */
    tbox::Array<int>    d_workload_data_id;
    tbox::Array<double> d_max_workload_factor;
+   tbox::Array<double> d_workload_tolerance;
    tbox::Array<std::string> d_bin_pack_method;
 
    bool d_opt_for_single_box;

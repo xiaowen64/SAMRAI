@@ -1,10 +1,10 @@
 
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/method_of_lines/MethodOfLinesIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/method_of_lines/MethodOfLinesIntegrator.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Basic method-of-lines time integration algorithm
 //
 
@@ -142,6 +142,7 @@ template<int DIM> MethodOfLinesIntegrator<DIM>::~MethodOfLinesIntegrator()
 template<int DIM> void MethodOfLinesIntegrator<DIM>::initializeIntegrator(
    tbox::Pointer< mesh::GriddingAlgorithm<DIM> > gridding_alg)
 {
+   NULL_USE(gridding_alg);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!gridding_alg.isNull());
 #endif
@@ -231,14 +232,12 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
    TBOX_ASSERT(!(hierarchy.isNull()));
 #endif
 
-  int ln;
-
    /*
     * Stamp data on all levels to current simulation time.
     */
    const int nlevels = hierarchy->getNumberLevels();
 
-   for (ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(!(level.isNull()));
@@ -301,7 +300,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
    
    }  // rksteps loop
 
-   for (ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ln++) {
       copyScratchToCurrent(hierarchy->getPatchLevel(ln));
 
       /* 
@@ -314,7 +313,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
    /*
     * dallocate U_scratch and rhs data
     */
-   for (ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
       level->deallocatePatchData(d_scratch_data);
       level->deallocatePatchData(d_rhs_data);
@@ -507,6 +506,10 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::initializeLevelData(
    const tbox::Pointer< hier::BasePatchLevel<DIM> > old_level, 
    const bool allocate_data)
 {
+
+   NULL_USE(can_be_refined);
+   NULL_USE(allocate_data);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(hierarchy.isNull()));
    TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
@@ -561,6 +564,8 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::resetHierarchyConfiguration
    const int coarsest_level,
    const int finest_level)
 {
+   NULL_USE(finest_level);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(hierarchy.isNull()));
    TBOX_ASSERT( (coarsest_level >= 0)

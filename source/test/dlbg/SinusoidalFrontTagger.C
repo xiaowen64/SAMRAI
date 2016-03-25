@@ -1,14 +1,11 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/SinusoidalFrontTagger.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/test/dlbg/SinusoidalFrontTagger.C $
   Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+  Revision:	$LastChangedRevision: 1873 $
+  Modified:	$LastChangedDate: 2008-01-17 18:33:16 -0800 (Thu, 17 Jan 2008) $
   Description:	SinusoidalFrontTagger class implementation
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "SinusoidalFrontTagger.h"
 #include "MDA_Access.h"

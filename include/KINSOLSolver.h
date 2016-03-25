@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/kinsol/KINSOLSolver.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/kinsol/KINSOLSolver.h $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1765 $
-// Modified:    $LastChangedDate: 2007-12-11 15:15:21 -0800 (Tue, 11 Dec 2007) $
+// Revision:    $LastChangedRevision: 1880 $
+// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
 // Description: Wrapper class for KINSOL solver function calls and data
 //
 
@@ -283,7 +283,7 @@ public:
    void setGlobalStrategy(const int global);
 
    ///
-   void setMaxNewtonStep(const double maxstep);
+   void setMaxNewtonStep(const int maxstep);
 
    ///
    void setNonlinearStepTolerance(const double tol);
@@ -533,7 +533,7 @@ private:
    double d_residual_tol;        // stop tol. on scaled nonlinear residual
    double d_step_tol;            // stop tol. on consecutive step difference
 
-   double d_maxsub;              // number of nonlinear iterations
+   int    d_maxsub;              // number of nonlinear iterations
 				 // between checks by the nonlinear
 				 // residual monitoring alg
 

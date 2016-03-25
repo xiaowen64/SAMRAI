@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/kinsol/KINSOLSolver.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/kinsol/KINSOLSolver.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1806 $
-// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: C++ Wrapper class for KINSOL solver package 
 //
 
@@ -590,7 +590,7 @@ void KINSOLSolver::setGlobalStrategy(const int global)
    d_KINSOL_needs_initialization = true;
 }
 
-void KINSOLSolver::setMaxNewtonStep(const double maxstep)
+void KINSOLSolver::setMaxNewtonStep(const int maxstep)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(maxstep > 0.0);
@@ -823,7 +823,7 @@ void KINSOLSolver::printClassData(std::ostream& os) const
    os << "d_uses_preconditioner = " << d_uses_preconditioner << std::endl;
    os << "d_uses_jac_times_vector = " << d_uses_jac_times_vector << std::endl;
 
-   os << "&d_kin_mem = " << (KINMem*) &d_kin_mem << std::endl;
+   os << "d_kin_mem = " << d_kin_mem << std::endl;
    os << "d_kinsol_log_file = " << (FILE*) d_kinsol_log_file << std::endl;
    os << "d_kinsol_log_file_name = " << d_kinsol_log_file_name << std::endl;
 

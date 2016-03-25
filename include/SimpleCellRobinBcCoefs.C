@@ -2,11 +2,11 @@
 #define included_solv_SimpleCellRobinBcCoefs_C
 
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/SimpleCellRobinBcCoefs.C $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/SimpleCellRobinBcCoefs.C $
  * Package:      SAMRAI solvers
  * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1704 $
- * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:     $LastChangedRevision: 1846 $
+ * Modified:     $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
  * Description:  Level solver for diffusion-like elliptic problems.
  */
 
@@ -190,9 +190,9 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
-   const hier::BoundaryBox<DIM> &bdry_box ,
-   double fill_time ) const
+   const hier::BoundaryBox<DIM> &bdry_box ) const
 {
+   NULL_USE(variable);
 
    t_set_bc_coefs->start();
 
@@ -434,12 +434,12 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
                g(*ai,0) = dirichlet_array_data(*ai,0);
             }
             else {
-	       pdat::FaceIndex<DIM> fi( ai()+offset_to_inside, axis, face );
+	       pdat::FaceIndex<DIM> fi2( ai()+offset_to_inside, axis, face );
                if ( d_diffusion_coef_id == -1 ) {
-                  g(*ai,0) = flux_data(fi,face)/d_diffusion_coef_constant;
+                  g(*ai,0) = flux_data(fi2,face)/d_diffusion_coef_constant;
                }
                else {
-                  g(*ai,0) = flux_data(fi,face)/
+                  g(*ai,0) = flux_data(fi2,face)/
 		    diffcoef_data_ptr->getArrayData(axis)(*ai,0);
                }
             }

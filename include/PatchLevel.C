@@ -1,9 +1,9 @@
 //
-// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchLevel.C $
+// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/PatchLevel.C $
 // Package:   SAMRAI hierarchy
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:   $LastChangedRevision: 1704 $
-// Modified:   $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:   $LastChangedRevision: 1889 $
+// Modified:   $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description:   A collection of patches at one level of the AMR hierarchy
 //
 
@@ -846,13 +846,21 @@ template<int DIM> int PatchLevel<DIM>::recursivePrint( std::ostream &os ,
                                                        const std::string &border ,
                                                        unsigned short depth )
 {
+
+// Disable Intel warnings on conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#pragma warning (disable:857)
+#endif
+
   int npatch = getNumberOfPatches();
   os << border << "Number of patches = " << npatch << "\n";
   if ( depth > 0 ) {
     for ( Iterator pi(this); pi; pi++ ) {
       int pn = *pi;
       os << border << "Patch " << pn << '/' << npatch << "\n";
-      getPatch(pn)->recursivePrint( os, border+"\t", depth-1 );
+      getPatch(pn)->recursivePrint( os, border+"\t", depth - 1);
+
     }
   }
   return 0;

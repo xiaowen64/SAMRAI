@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/special/stl-FundamentalTypes.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/templates/special/stl-FundamentalTypes.C $
 // Package:	SAMRAI templates
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1851 $
+// Modified:	$LastChangedDate: 2008-01-11 16:39:46 -0800 (Fri, 11 Jan 2008) $
 // Description:	Template instantiation for STL containers of int.
 //
 
@@ -85,8 +85,10 @@ template class std::_Rb_tree<int, std::pair<int const, std::vector<int, std::all
 
 // Symbol depends on version of GNU compiler that is being used
 #if __GNUC__ > 3 
+#ifndef __APPLE__
    template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::_M_insert_unique<int*>(int*, int*);
    template void std::fill<int*, int>(int*, int*, int const&);
+#endif
 #else
    template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::insert_unique<int*>(int*, int*);
 #endif

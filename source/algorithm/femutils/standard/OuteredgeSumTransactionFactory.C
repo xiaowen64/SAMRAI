@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/OuteredgeSumTransactionFactory.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/femutils/standard/OuteredgeSumTransactionFactory.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Factory for creating outeredge sum transaction objects
 //
 
@@ -83,8 +83,8 @@ OuteredgeSumTransactionFactory<DIM>::allocate(
    bool use_time_interpolation,
    tbox::Pointer<tbox::Arena> pool ) const
 {
-   (void) box;
-   (void) use_time_interpolation;
+   NULL_USE(box);
+   NULL_USE(use_time_interpolation);
 
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
@@ -114,7 +114,7 @@ void OuteredgeSumTransactionFactory<DIM>::preprocessScratchSpace(
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {
-   (void) fill_time;
+   NULL_USE(fill_time);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!level.isNull());
 #endif

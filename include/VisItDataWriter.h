@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisItDataWriter.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisItDataWriter.h $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1808 $
-// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+// Revision:    $LastChangedRevision: 1848 $
+// Modified:    $LastChangedDate: 2008-01-11 16:26:13 -0800 (Fri, 11 Jan 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
@@ -356,6 +356,10 @@ public:
     * @param scale_factor (optional) scale factor with which to multiply
     *    all data values
     * @param variable_centering (optional) centering of derived data - "CELL" or "NODE"
+    * @param mix type (optional) indicate whether or not the mixed material
+    *    state will be stored, "MIXED", or the default of using cell averages
+    *    "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must
+    *    be provided.
     */
    void registerDerivedPlotQuantity(
       const std::string& variable_name,
@@ -363,7 +367,8 @@ public:
       VisDerivedDataStrategy<DIM>* derived_writer = 
                              (VisDerivedDataStrategy<DIM>*)NULL,
       const double scale_factor = 1.0,
-      const std::string& variable_centering = "CELL");
+      const std::string& variable_centering = "CELL",
+      const std::string& variable_mix_type = "CLEAN");
 
    /*!
     * @brief This method resets the patch_data_index, and/or
@@ -493,12 +498,54 @@ public:
     *
     * An error results and the program will halt if:
     *   - this method is called more than once.
+    *   - the new registerSparseMaterialNames() method is called
     *   - when assertion checking is active, the number of names = 0,
     *     or any material name string is empty.
     *
     * @param material_names tbox::Array of strings: the names of the materials.
     */
    void registerMaterialNames(
+      const tbox::Array<std::string>& material_names);
+
+   /*!
+    * @brief This method registers with the VisIt data writer the
+    * names of materials being used in the simulation.
+    *
+    * When a mesh has materials defined over it, every cell will
+    * contain a fractional amount f (0 <= f <= 1.0) of every material,
+    * called a material fraction or volume fraction.  The sum of all
+    * material fractions for every cell must be 1.0.  Since materials
+    * are defined over a cell, each materials variable is assumed to
+    * be CELL centered.
+    *
+    * In order to use materials with VisIt, the application class
+    * needs to inherit from VisMaterialsDataStrategy<DIM>, an
+    * abstract base class which defines an interface for writing out
+    * various materials related fields.  A concrete object of this
+    * strategy must be registered with the VisIt data writer.  That
+    * concrete object is responsible for providing a concrete
+    * implementation of the method packMaterialFractionsIntoSparseBuffers()
+    * which writes out the material fractions for each registered material
+    * over a given patch.
+    *
+    * VisIt uses the material fractions to calculate interpolated
+    * material boundaries in cells with multiple materials.  Therefore
+    * VisIt can display a material (or materials) as multiple colored
+    * contiguous regions.  In addition, VisIt can intersect this
+    * volume field with a plane and get accurate 2D boundaries within
+    * cells.  If desired, the material fractions for a material can be
+    * treated as a scalar field and the usual scalar field plot tools,
+    * such as pseudocolor and contour, can be applied.
+    *
+    * An error results and the program will halt if:
+    *   - this method is called more than once.
+    *   - the legacy registerMaterialNames() method is called
+    *   - when assertion checking is active, the number of names = 0,
+    *     or any material name string is empty.
+    *
+    * @param material_names tbox::Array of strings: the names of the materials.
+    */
+   void registerSparseMaterialNames(
       const tbox::Array<std::string>& material_names);
 
    /*!
@@ -548,6 +595,21 @@ public:
    void registerSpeciesNames(
       const std::string& material_name,
       const tbox::Array<std::string>& species_names);
+
+    /*!
+     * @brief This method registers expressions that will be embedded in the
+     * VisIt datafiles.
+     *
+     * The three Arrays of strings define the names (or keys) of the
+     * expressions, the expressions, and the types of the expressions
+     * (scalar, vector, tensor). For more information on defining VisIt
+     * expressions see the VisItUsersManual.
+     */
+                                                                                
+    void registerVisItExpressions(
+      const tbox::Array<std::string>& expression_keys,
+      const tbox::Array<std::string>& expressions,
+      const tbox::Array<std::string>& expression_types);
 
    /*!
     * @brief This method causes the VisIt data writer to dump all
@@ -695,6 +757,12 @@ private:
     *   d_start_depth_index - int starting depth for vector data
     *   d_scale_factor - dbl scaling factor
     *   d_derived_writer - ptr to derived data writer (NULL if not DERIVED)
+    *   d_is_material_state_variable - bool, true if mixed state var, in which
+    *       case d_derived_writer must be provided and provide
+    *       packMixedDerivedDataIntoDoubleBuffer
+    *   d_is_species_state_variable - bool, true if mixed state var, in which
+    *       case d_derived_writer must be provided and provide
+    *       packMixedDerivedDataIntoDoubleBuffer
     *
     * Standard information (writer internal):
     *   d_data_type - INT, FLOAT, DOUBLE
@@ -739,6 +807,11 @@ private:
       bool d_is_derived;
       VisDerivedDataStrategy<DIM>* d_derived_writer;
       bool d_is_deformed_coords;
+      // new flag for mixed/clean state variables
+      bool d_is_material_state_variable;
+      // Do we want to extend this for species, or can that fit into the
+      //   material state variable treatment?
+      //bool d_is_species_state_variable;
 
       /*
        * Standard information (writer generated)
@@ -1110,6 +1183,14 @@ private:
     * Boolean that is set to true only in multiblock problems.
     */
    bool d_is_multiblock;
+
+   /*
+    * brief Storage for strings defining VisIt expressions to be embedded in
+    * the plot dump.
+    */
+   tbox::Array<std::string> d_visit_expression_keys;
+   tbox::Array<std::string> d_visit_expressions;
+   tbox::Array<std::string> d_visit_expression_types;
 
    //! @brief Timer for writePlotData().
    tbox::Pointer<tbox::Timer> t_write_plot_data;

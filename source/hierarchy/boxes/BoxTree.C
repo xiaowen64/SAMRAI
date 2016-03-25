@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTree.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/BoxTree.C $
 // Package:     SAMRAI hierarchy
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: Utility class to reduce complexity of box calculus operations.
 //
 
@@ -17,6 +17,10 @@
 #include <iostream>
 #include <iomanip>
 
+// Ignore incorrect Intel warning
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:177)
+#endif
 
 namespace SAMRAI {
    namespace hier {
@@ -246,6 +250,5 @@ template<int DIM> void BoxTree<DIM>::removeIntersections(BoxList<DIM>& fragments
 
 }
 }
-
 
 #endif

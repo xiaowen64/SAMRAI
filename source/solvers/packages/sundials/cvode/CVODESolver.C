@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/cvode/CVODESolver.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/cvode/CVODESolver.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1765 $
-// Modified:    $LastChangedDate: 2007-12-11 15:15:21 -0800 (Tue, 11 Dec 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: C++ Wrapper class for CVODE solver package 
 //
 
@@ -228,6 +228,12 @@ void CVODESolver::initializeCVODE()
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(d_solution_vector == (SundialsAbstractVector*)NULL));
 #endif
+
+// Disable Intel warning on real comparison
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+
    if (d_CVODE_needs_initialization) {
   
       /*
@@ -265,17 +271,6 @@ void CVODESolver::initializeCVODE()
        * CVODE function pointer.
        */
       CVRhsFn RHSFunc = CVODESolver::CVODERHSFuncEval;
-
-      /*
-       * Set (void*) absolute tolerance pointer to be passed
-       * as an argument to CVodeMalloc().
-       */
-      void* absolute_tolerance;
-      if (d_use_scalar_absolute_tolerance) {
-         absolute_tolerance = (void*) &d_absolute_tolerance_scalar;
-      } else {
-         absolute_tolerance = (void*) d_absolute_tolerance_vector;
-      }
 
       /*
        * Free previously allocated CVode memory.  Note that the

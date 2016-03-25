@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/BoundaryNode.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/BoundaryNode.C $
 // Package:     SAMRAI application
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Boundary node struct for embedded boundary implementations.
 //
 
@@ -304,6 +304,7 @@ BoundaryNode<DIM>::setNumOutsideNeighborNodes(
    tbox::Pointer< pdat::NodeData<DIM,int> >& node_flag,
    hier::Index<DIM>& cut_cell_index)
 {
+   NULL_USE(cut_cell_index);
    
    /*
     * Form a 2-cell box with the boundary node at the center.  Look for
@@ -372,7 +373,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
    hier::Index<DIM>& cut_cell_index)
 {
 
-   int i,n;
+   int n;
    
    if (d_num_outside_neighbors < 0) {
       setNumOutsideNeighborNodes(node_flag,
@@ -438,7 +439,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
     */
    d_num_nearest_neighbors = 0;
    if (d_num_outside_neighbors == DIM) {
-      for (i = 0; i < DIM; i++) {
+      for (int i = 0; i < DIM; i++) {
          pdat::NodeIndex<DIM> neighbor = outside_neighbors[i];
          setNearestNeighborNode(neighbor);
       }
@@ -448,7 +449,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
       for (n = 0; n < num_outside_neighbors; n++) {
          dist = 0.;
          hier::Index<DIM> diff_index(0);
-         for (i = 0; i < DIM; i++) {
+         for (int i = 0; i < DIM; i++) {
             diff_index(i) = d_index(i) - outside_neighbors[n](i);
             dist += (double)diff_index(i) * (double)diff_index(i);
          }
@@ -464,7 +465,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
          for (n = 0; n < num_outside_neighbors; n++) {
             dist = 0.;
             hier::Index<DIM> diff_index(0);
-            for (i = 0; i < DIM; i++) {
+            for (int i = 0; i < DIM; i++) {
                diff_index(i) = d_index(i) - 
                   outside_neighbors[n](i);
                dist += (double)diff_index(i) * (double)diff_index(i);

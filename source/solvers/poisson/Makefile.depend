@@ -170,7 +170,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
-	$(INCLUDE_SAM)/BoundaryBox.h					\
+	$(INCLUDE_SAM)/BoundaryBox.h $(INCLUDE_SAM)/BoundaryBoxUtils.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/Box.I	\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
@@ -721,7 +721,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
-	$(INCLUDE_SAM)/BoundaryBox.h					\
+	$(INCLUDE_SAM)/BoundaryBox.h $(INCLUDE_SAM)/BoundaryBoxUtils.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/Box.I	\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
@@ -1269,7 +1269,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
-	$(INCLUDE_SAM)/BoundaryBox.h					\
+	$(INCLUDE_SAM)/BoundaryBox.h $(INCLUDE_SAM)/BoundaryBoxUtils.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/Box.I	\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\

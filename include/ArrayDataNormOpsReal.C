@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataNormOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mathops/array/ArrayDataNormOpsReal.C $
 // Package:	SAMRAI mathops
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1889 $
+// Modified:	$LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description:	Templated array data norm operations.
 //
 
@@ -44,14 +44,14 @@ template<int DIM, class TYPE>
 ArrayDataNormOpsReal<DIM,TYPE>::ArrayDataNormOpsReal(
    const ArrayDataNormOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;	// not implemented (but needed by some compilers)
+   NULL_USE(foo);	// not implemented (but needed by some compilers)
 }
 
 template<int DIM, class TYPE>
 void ArrayDataNormOpsReal<DIM,TYPE>::operator=(
    const ArrayDataNormOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;	// not implemented (but needed by some compilers)
+   NULL_USE(foo);	// not implemented (but needed by some compilers)
 }
 
 /*
@@ -827,6 +827,11 @@ TYPE ArrayDataNormOpsReal<DIM,TYPE>::dotWithControlVolume(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
+#endif
+
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
 #endif
 
    TYPE dprod = 0.0;

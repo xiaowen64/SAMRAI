@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisMaterialsDataStrategy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisMaterialsDataStrategy.h $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1848 $
+// Modified:    $LastChangedDate: 2008-01-11 16:26:13 -0800 (Fri, 11 Jan 2008) $
 // Description: Interface for writing material related data to a VisIt 
 //              dump file.
 //
@@ -26,6 +26,11 @@
 #endif
 #ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
+#endif
+
+#ifndef included_Vector
+#include <vector>
+#define included_Vector
 #endif
 
 namespace SAMRAI {
@@ -121,6 +126,67 @@ public:
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
       const std::string& material_name) const;
+
+   /*!
+    * @brief Pack sparse volume fraction data
+    *
+    * This function, which must be implemented whenever materials are
+    * used if the sparse packing format is to be used. Packing traverses the
+    * patch in a column major order (i.e. (f(x_0,y_0,z_0), f(x_1,y_0,z_0),
+    * f(x_2,y_0,z_0), ...) ). If the current cell is clean, then the material
+    * number of the material occupying the cell should be packed in to the
+    * buffer. If the cell is mixed, then a negative index (i.e., with numbering
+    * begining at -1) into the auxilliary mix_zones, mix_mat, vol_fracs, and
+    * next_mat vectors which will contain the sparse representation of the
+    * volume fractions (VisIt will correct the negative index internally and
+    * offset to a zero based representation).  For each component of a mixed
+    * cell packMaterialFractionsIntoDoubleBuffer() should pack an entry in the
+    * following vectors: mix_zones: the cell number with which the fraction is
+    * associated mix_mat: the material number of the fraction vol_fracs: the
+    * volume fraction of the current material next_mat: either the (positive
+    * but still offset by one) index to the next mixed component within the
+    * auxilliary vectors or a 0, indicating the end of the mixed components for
+    * this cell.
+    *
+    * If a non-zero ghost cell vector was specified when
+    * registerMaterialNames() was invoked, then ghost data
+    * corresponding to this ghost cell vector must be packed into this
+    * double buffer.
+    *
+    * This method will be called once for each patch.
+    *
+    * A enumerated PACK_RETURN_TYPE is used for a return value.  To
+    * save space in the visit data file, you may choose to set the return
+    * value to ALL_ONE to indicate that a single material occupies 100% of
+    * each cell on the patch. Otherwise, MIXTURE should be returned even if
+    * individual cells are not mixed, as this indicates that the patch contains
+    * multiple materials.
+    *
+    * @param buffer Double precision array into which the material
+    *  numbers (or negative indices) are packed.
+    * @param mix_zones std::vector<int> into which the cell number
+    *  associated with the mixed components are packed.
+    * @param mix_mat std::vector<int> into which the material numbers
+    *  of the mixed components are packed.
+    * @param vol_fracs std::vector<double> into which the volume fractions
+    *  (between 0.0 and 1.0) of the mixed components are packed.
+    * @param next_mat std::vector<int> into which the (positive) index of
+    *  the next mixed component or a terminating 0 are packed.
+    * @param patch hier::Patch on which fractions are defined.
+    * @param region hier::Box region over which to pack fractions.
+    * @return The enumeration constant
+    *    VisMaterialsDataStrategy::ALL_ONE,
+    *    or VisMaterialsDataStrategy::MIXTURE.
+    */
+    virtual int packMaterialFractionsIntoSparseBuffers(
+       int *mat_list,
+       std::vector<int>& mix_zones,
+       std::vector<int>& mix_mat,
+       std::vector<double>& vol_fracs,
+       std::vector<int>& next_mat,
+       const hier::Patch<NDIM>& patch,
+       const hier::Box<NDIM>& region) const;
+
 
    /*!
     * @brief This function packs cell-centered species fractions for

@@ -63,3 +63,8 @@ restart-redistribute restart-dir new-restart-dir 5 16
 
 The resulting restart files could then be used to restart the run on
 16 procsessors.
+
+NOTE: The restart-redistribute utility is compiled using the compiler
+and compile options of the node processors.  For machines where the
+host and node are different things means the utilty must be run on the
+node processors (e.g. in a batch file).

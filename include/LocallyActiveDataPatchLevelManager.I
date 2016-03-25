@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/LocallyActiveDataPatchLevelManager.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/variables/LocallyActiveDataPatchLevelManager.I $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Class for managing locally-active data on a single patch level.
 //
 
@@ -429,6 +429,7 @@ template<int DIM> inline
 bool 
 LocallyActiveDataPatchLevelIterator<DIM>::notActivePatch(int patch_number) const
 {
+   (void) patch_number;
    return( (d_patch<d_number_patches) &&
            !( d_mapping->isMappingLocal(d_patch) &&
               ((*d_active_patch_info)[d_patch]->isSet(d_data_index)) ) );

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/multiblock/MultiblockGriddingAlgorithm.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1746 $
-// Modified:    $LastChangedDate: 2007-12-07 11:05:07 -0800 (Fri, 07 Dec 2007) $
+// Revision:    $LastChangedRevision: 1847 $
+// Modified:    $LastChangedDate: 2008-01-11 16:19:57 -0800 (Fri, 11 Jan 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -243,7 +243,7 @@ MultiblockGriddingAlgorithm<DIM>::MultiblockGriddingAlgorithm(
       getTimer("mesh::MultiblockGriddingAlgorithm<DIM>::find_boxes_containing_tags");
    t_remove_intersections_find_proper = tbox::TimerManager::getManager()->
       getTimer("mesh::MultiblockGriddingAlgorithm<DIM>::remove_intersections_find_proper");
-   tbox::Pointer<tbox::Timer> t_intersect_boxes_find_proper = tbox::TimerManager::getManager()->
+   t_intersect_boxes_find_proper = tbox::TimerManager::getManager()->
       getTimer("mesh::MultiblockGriddingAlgorithm<DIM>::intersect_boxes_find_proper");
 
    /*

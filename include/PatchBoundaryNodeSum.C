@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/PatchBoundaryNodeSum.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/femutils/standard/PatchBoundaryNodeSum.C $
 // Package:	SAMRAI algorithms
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Routines for summing node data at patch boundaries
 //
 
@@ -140,6 +140,7 @@ int
 PatchBoundaryNodeSum<DIM>::getNumUniquePatchDataSlots(
    int max_variables_to_register)
 {
+   NULL_USE(max_variables_to_register);
    // all patch data slots used by node boundary sum are static
    // and shared among all objects.
  
@@ -490,15 +491,15 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::setupSum(
                                                 coarsen_op);
       }
 
-      tbox::Pointer< hier::PatchLevel<DIM> > coarsest_level = 
+      tbox::Pointer< hier::PatchLevel<DIM> > coarsest_level_loop = 
          d_hierarchy->getPatchLevel(d_coarsest_level);
 
-      tbox::Pointer<hier::PatchLevel<DIM> > hier_level0 = 
+      tbox::Pointer<hier::PatchLevel<DIM> > hier_level = 
          d_hierarchy->getPatchLevel(0);
 
       d_single_level_sum_schedule[d_coarsest_level] =
          single_level_sum_algorithm.createSchedule(
-                                    coarsest_level,
+                                    coarsest_level_loop,
                                     (xfer::RefinePatchStrategy<DIM>*)NULL,
                                     d_sum_transaction_factory);
 
@@ -535,7 +536,7 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::setupSum(
 
          d_coarse_fine_boundary[fine_level_num].
             computeFromLevel(*(d_cfbdry_tmp_level[fine_level_num]), 
-                             *hier_level0,
+                             *hier_level,
                              hier::IntVector<DIM>(1));
 
       }

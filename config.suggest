@@ -1,10 +1,10 @@
 #!/bin/sh
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/config.suggest $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/config.suggest $
 ## Package:     SAMRAI
 ## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1821 $
-## Modified:    $LastChangedDate: 2007-12-21 08:48:11 -0800 (Fri, 21 Dec 2007) $
+## Revision:    $LastChangedRevision: 1883 $
+## Modified:    $LastChangedDate: 2008-01-22 12:56:02 -0800 (Tue, 22 Jan 2008) $
 ## Description: script to suggest ways to configure SAMRAI
 ##
 
@@ -303,8 +303,7 @@ cat <<-EOF
 # Maintained by Brian Gunney
 ;;
 
-up_xlc) 
-# uP, IBM xlC compilers
+up_xlc) # uP, IBM xlC compilers, run configure with nopoe
 cat <<-EOF
 	--with-CXX=/usr/local/bin/newmpxlC
 	--with-CC=/usr/local/bin/newmpxlc
@@ -315,8 +314,20 @@ cat <<-EOF
 	--without-petsc
 	--without-blaslapack
 	--without-x
+        --disable-rpath
 	EOF
-# Maintained by Steven "GMaster" Smith
+# Maintained by Steven Smith
+;;
+
+
+macosx_gnu) # Apple Mac OS/X, gnu 4.2 compilers from DawrwinPorts
+cat <<-EOF
+      --with-CXX=g++-mp-4.2
+      --with-CC=gcc-mp-4.2
+      --with-F77=gfortran-mp-4.2
+      --with-hdf5=/opt/local
+	EOF
+# Maintained by Steven Smith
 ;;
 
 

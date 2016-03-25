@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/SAMRAIVectorReal.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/vectors/SAMRAIVectorReal.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1880 $
+// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
 // Description: Vector class for data on SAMRAI hierarchy.
 //
 
@@ -165,14 +165,14 @@ template<int DIM, class TYPE>
 SAMRAIVectorReal<DIM,TYPE>::SAMRAIVectorReal(
    const SAMRAIVectorReal<DIM,TYPE>& foo)
 {
-   (void) foo;  // private and not used (but included for stupid compilers)
+   NULL_USE(foo);
 }
 
 template<int DIM, class TYPE>
 void SAMRAIVectorReal<DIM,TYPE>::operator=(
    const SAMRAIVectorReal<DIM,TYPE>& foo)
 {
-   (void) foo;  // private and not used (but included for stupid compilers)
+   NULL_USE(foo);
 }
 
 /*
@@ -759,6 +759,8 @@ void SAMRAIVectorReal<DIM,TYPE>::setRandomValues(const TYPE& width,
 template<int DIM, class TYPE>
 double SAMRAIVectorReal<DIM,TYPE>::L1Norm(bool local_only) const
 {
+   NULL_USE(local_only);
+
    double norm = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
@@ -773,6 +775,8 @@ double SAMRAIVectorReal<DIM,TYPE>::L1Norm(bool local_only) const
 template<int DIM, class TYPE>
 double SAMRAIVectorReal<DIM,TYPE>::L2Norm(bool local_only) const
 {
+   NULL_USE(local_only);
+
    double norm_squared = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
@@ -854,6 +858,8 @@ double SAMRAIVectorReal<DIM,TYPE>::weightedRMSNorm(
 template<int DIM, class TYPE>
 double SAMRAIVectorReal<DIM,TYPE>::maxNorm(bool local_only) const
 {
+   NULL_USE(local_only);
+
    double norm = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
@@ -872,6 +878,8 @@ TYPE SAMRAIVectorReal<DIM,TYPE>::dot(
    const tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > x,
    bool local_only) const 
 {
+   NULL_USE(local_only);
+
    TYPE dprod = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
@@ -949,7 +957,7 @@ TYPE SAMRAIVectorReal<DIM,TYPE>::maxPointwiseDivide(
 	 d_component_operations[i]->maxPointwiseDivide(d_component_data_id[i],
          denom->getComponentDescriptorIndex(i),
 						       true);
-      max = tbox::MathUtilities<double>::Max( max, component_max );
+      max = tbox::MathUtilities<TYPE>::Max( max, component_max );
    }
 
    max = tbox::SAMRAI_MPI::maxReduction(max);

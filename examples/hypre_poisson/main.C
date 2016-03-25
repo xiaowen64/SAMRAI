@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/hypre_poisson/main.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/examples/hypre_poisson/main.C $
  * Package:     SAMRAI tests
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:    $LastChangedRevision: 1875 $
+ * Modified:    $LastChangedDate: 2008-01-18 08:42:08 -0800 (Fri, 18 Jan 2008) $
  * Description: Main program for Hypre Poisson example
  */
 
@@ -70,6 +70,8 @@ int main( int argc, char *argv[] )
     * then there will be memory leaks reported.
     */
    {
+
+      bool converged = true;
 
 
 #if !defined(HAVE_HYPRE)
@@ -256,7 +258,7 @@ int main( int argc, char *argv[] )
       /*
        * Solve.
        */
-      bool converged = hypre_poisson.solvePoisson();
+      converged = hypre_poisson.solvePoisson();
 
       /*
        * Plot.

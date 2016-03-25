@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.C $
 // Package:     SAMRAI data transfer
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1776 $
-// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Refine schedule for locally-active data transfer between AMR levels
 //
 
@@ -1368,8 +1368,6 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
 
    const bool same_level = (dst_level == src_level);
 
-   int nc;
-
    for (int dst_patch_id = 0; dst_patch_id < dst_npatches; dst_patch_id++) {
 
       const hier::Box<DIM>& dst_box = dst_boxes(dst_patch_id); 
@@ -1407,7 +1405,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
          tbox::Array<bool> active_equivalence_class(num_equiv_classes);
          tbox::Array<bool> active_ritem(d_number_refine_items);
 
-         for (nc = 0; nc < num_equiv_classes; nc++) {
+         for (int nc = 0; nc < num_equiv_classes; nc++) {
             active_equivalence_class[nc] = false;
             for (typename tbox::List< typename xfer::RefineClasses<DIM>::Data >::Iterator
                     l(d_refine_classes->getIterator(nc)); l; l++) {

@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/applications/LinAdv/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/test/applications/LinAdv/Makefile.in $
 ## Package:	SAMRAI applications
 ## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1716 $
-## Modified:	$LastChangedDate: 2007-11-26 16:10:27 -0800 (Mon, 26 Nov 2007) $
+## Revision:	$LastChangedRevision: 1870 $
+## Modified:	$LastChangedDate: 2008-01-16 14:41:28 -0800 (Wed, 16 Jan 2008) $
 ## Description:	makefile for linear advection sample application
 ##
 
@@ -58,8 +58,8 @@ check:
 check2d:	main2d
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main2d test-2d.input; \
-		$(RM) -rf  restart-test-2d/restore.00003/nodes.0000[2-9]
-		$(OBJECT)/tools/restart/restart-redistribute $(PWD)/restart-test-2d $(PWD)/restart-redistribute-2d 3 4; \
+		$(RM) -rf  restart-test-2d/restore.000003/nodes.0000[2-9]
+		$(OBJECT)/tools/restart/restart-redistribute $(abspath restart-test-2d) $(abspath restart-redistribute-2d) 3 4; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main2d test-2d.input restart-test-2d 5; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \

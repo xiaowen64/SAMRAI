@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1880 $
+// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -426,6 +426,8 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::resetHierarchyConfigurati
    const int coarsest_level,
    const int finest_level)
 {
+   NULL_USE(finest_level);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!hierarchy.isNull());
    TBOX_ASSERT( (coarsest_level >= 0)
@@ -2040,6 +2042,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::preprocessFluxData(
    const bool last_step)
 {
    NULL_USE(last_step);
+   NULL_USE(cur_time);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!level.isNull());
    TBOX_ASSERT(cur_time <= new_time);
@@ -2438,7 +2441,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::getFromInput(
    } else {
       if (!is_from_restart) {
          d_lag_dt_computation = 
-            db->getDoubleWithDefault("lag_dt_computation",
+            db->getBoolWithDefault("lag_dt_computation",
                                      d_lag_dt_computation);
       }
    }
@@ -2449,7 +2452,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::getFromInput(
    } else {
       if (!is_from_restart) {
          d_use_ghosts_for_dt = 
-            db->getDoubleWithDefault("use_ghosts_for_dt",
+            db->getBoolWithDefault("use_ghosts_for_dt",
                                      d_use_ghosts_for_dt);
          TBOX_WARNING(d_object_name << ":  "
                    << "Key data `use_ghosts_to_compute_dt' not found in input."

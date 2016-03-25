@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/stream/MessageStream.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/stream/MessageStream.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1880 $
+// Modified:	$LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
 // Description:	Fixed-size message buffer used in interprocessor communication
 //
 
@@ -34,6 +34,8 @@ bool MessageStream::s_use_xdr_translation = false;
 
 MessageStream::MessageStream(const int bytes, const StreamMode mode)
 {
+   (void) mode;
+
    d_buffer_size  = bytes;
    d_current_size = 0;
    d_buffer_index = 0;
@@ -54,6 +56,8 @@ MessageStream::MessageStream(const int bytes,
                                       const StreamMode mode,
                                       const bool use_xdr)
 {
+   (void) mode;
+
    d_buffer_size  = bytes;
    d_current_size = 0;
    d_buffer_index = 0;
@@ -205,7 +209,7 @@ void MessageStream::pack(const bool *data, const int n)
    } else {
       char *c_ptr = (char *) ptr;
       for (int i = 0; i < n; i++) {
-         c_ptr[i] = (data[i] ? 1 : 0);
+         c_ptr[i] = (data[i] ? '\001' : '\000');
       }
    }
 }

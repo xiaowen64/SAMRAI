@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/node/HierarchyNodeDataOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mathops/node/HierarchyNodeDataOpsReal.C $
 // Package:     SAMRAI mathops
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1776 $
-// Modified:    $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Templated operations for real node data on multiple levels.
 //
 
@@ -125,14 +125,14 @@ HierarchyNodeDataOpsReal<DIM,TYPE>::HierarchyNodeDataOpsReal(
    const HierarchyNodeDataOpsReal<DIM,TYPE>& foo)
 :  HierarchyDataOpsReal<DIM,TYPE>()
 {
-   (void) foo;  // private and not used (but included for stupid compilers)
+   NULL_USE(foo);
 }
 
 template<int DIM, class TYPE>
 void HierarchyNodeDataOpsReal<DIM,TYPE>::operator=(
    const HierarchyNodeDataOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;  // private and not used (but included for stupid compilers)
+   NULL_USE(foo);
 }
 
 /*

@@ -1,16 +1,22 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/special/MathUtilitiesSpecial.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/templates/special/MathUtilitiesSpecial.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1777 $
-// Modified:	$LastChangedDate: 2007-12-13 16:51:06 -0800 (Thu, 13 Dec 2007) $
+// Revision:	$LastChangedRevision: 1889 $
+// Modified:	$LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description:	MathUtilities routines to set up handlers and get signaling NaNs
 //
 
 #include "tbox/MathUtilities.h"
 
-#include <float.h>
+#ifdef HAVE_CMATH_ISNAN
+#include <cmath>
 #include <math.h>
+#else
+#include <math.h>
+#endif
+
+#include <float.h>
 #include <limits.h>
 
 #include "tbox/Complex.h"
@@ -105,22 +111,67 @@ template<> dcomplex   MathUtilities<dcomplex>::s_epsilon        = dcomplex(DBL_M
 template<>
 bool MathUtilities<float>::isNaN(const float& value)
 {
-   int i = isnan(value);
-   return( (i != 0) ? true : false );
+
+  int i;
+  /* This mess should be fixed when the next C++ standard comes out */
+#if defined(HAVE_CMATH_ISNAN)
+  i = std::isnan(value);
+#elif defined(HAVE_ISNAN)
+  i = isnan(value);
+#elif defined(HAVE_ISNAND)
+  i = __isnanf(value);
+#elif defined(HAVE_INLINE_ISNAND)
+  i = __inline_isnanf(value);
+#else
+  i = value != value;
+#endif
+
+  return( (i != 0) ? true : false );
 }
 
 template<> 
 bool MathUtilities<double>::isNaN(const double& value)
 {
-   int i = isnan(value);
-   return( (i != 0) ? true : false );
+  int i;
+  /* This mess should be fixed when the next C++ standard comes out */
+#if defined(HAVE_CMATH_ISNAN)
+  i = std::isnan(value);
+#elif defined(HAVE_ISNAN)
+  i = isnan(value);
+#elif defined(HAVE_ISNAND)
+  i = __isnand(value);
+#elif defined(HAVE_INLINE_ISNAND)
+  i = __inline_isnand(value);
+#else
+  i = value != value;
+#endif
+
+  return( (i != 0) ? true : false );
 }
 
 template<>
 bool MathUtilities<dcomplex>::isNaN(const dcomplex& value)
 {
-   int i_re = isnan( real(value) );
-   int i_im = isnan( imag(value) );
+
+  int i_re;
+  int i_im;
+#if defined(HAVE_CMATH_ISNAN)
+  i_re = std::isnan( real(value) );
+  i_im = std::isnan( imag(value) );
+#elif defined(HAVE_ISNAN)
+  i_re = isnan( real(value) );
+  i_im = isnan( imag(value) );
+#elif defined(HAVE_ISNAND)
+  i_re = __isnand( real(value) );
+  i_im = __isnand( imag(value) );
+#elif defined(HAVE_INLINE_ISNAND)
+   i_re = __inline_isnand( real(value) );
+   i_im = __inline_isnand( imag(value) );
+#else
+   i_re = real(value) != real(value);
+   i_im = imag(value) != imag(value);
+#endif
+
    return( ( (i_re != 0) || (i_im !=0) ) ? true : false );
 }
 
@@ -205,18 +256,32 @@ bool MathUtilities<bool>::Rand(const bool& low, const bool& width)
 template<> 
 char MathUtilities<char>::Rand(const char& low, const char& width)
 {
+
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
+
    return static_cast<char>( static_cast<double>(width) * drand48() ) + low;
 }
 
 template<> 
 int MathUtilities<int>::Rand(const int& low, const int& width)
 {
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
    return static_cast<int>( static_cast<double>(width) * drand48() ) + low;
 }
 
 template<> 
 float MathUtilities<float>::Rand(const float& low, const float& width)
 {
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
    return width * drand48() + low;
 }
 

@@ -1,5 +1,7 @@
 #include "RedistributedRestartUtility.h"
 
+#ifdef HAVE_HDF5
+
 #include "tbox/List.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
@@ -36,7 +38,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
       char restore_buf[NAME_BUF_SIZE];
       char nodes_buf[NAME_BUF_SIZE];
-      sprintf(restore_buf, "/restore.%05d", restore_num);
+      sprintf(restore_buf, "/restore.%06d", restore_num);
       sprintf(nodes_buf, "/nodes.%05d", total_output_files);
 
       string restart_dirname = output_dirname + restore_buf + nodes_buf;
@@ -529,3 +531,4 @@ void RedistributedRestartUtility::createNewProcessorMapping(
    }
 }
 
+#endif

@@ -1,9 +1,9 @@
 //
-// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/SAMRAI_MPI.h $
+// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/parallel/SAMRAI_MPI.h $
 // Package:  SAMRAI toolbox
 // Copyright:  (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:  $LastChangedRevision: 1768 $
-// Modified:  $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+// Revision:  $LastChangedRevision: 1856 $
+// Modified:  $LastChangedDate: 2008-01-14 10:28:56 -0800 (Mon, 14 Jan 2008) $
 // Description:  Simple utility class for interfacing with MPI
 //
 
@@ -26,6 +26,10 @@
 
 #ifndef MPICH_SKIP_MPICXX
 #define MPICH_SKIP_MPICXX
+#endif
+
+#ifndef OMPI_SKIP_MPICXX
+#define OMPI_SKIP_MPICXX
 #endif
 
 #include "mpi.h"

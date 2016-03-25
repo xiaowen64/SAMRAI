@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/multiblock/MultiblockPatchHierarchy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/multiblock/MultiblockPatchHierarchy.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1887 $
+// Modified:    $LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -873,7 +873,7 @@ bool MultiblockPatchHierarchy<DIM>::areNeighbors(const int a, const int b)
  */
 
 template<int DIM>
-int MultiblockPatchHierarchy<DIM>::getNumberBlocks()
+int MultiblockPatchHierarchy<DIM>::getNumberBlocks() const
 {
    return (d_number_blocks);
 }
@@ -1022,6 +1022,7 @@ MultiblockPatchHierarchy<DIM>::getNeighbors(const int block_number)
 {
    return (d_block_neighbors[block_number]);
 }
+
 
 /*
  * ************************************************************************

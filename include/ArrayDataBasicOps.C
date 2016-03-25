@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataBasicOps.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mathops/array/ArrayDataBasicOps.C $
 // Package:	SAMRAI mathops
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1889 $
+// Modified:	$LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description:	Basic templated opertions for array data.
 //
 
@@ -47,14 +47,14 @@ template<int DIM, class TYPE>
 ArrayDataBasicOps<DIM,TYPE>::ArrayDataBasicOps(
    const ArrayDataBasicOps<DIM,TYPE>& foo)
 {
-   (void) foo;	// not implemented (but needed by some compilers)
+   NULL_USE(foo);	// not implemented (but needed by some compilers)
 }
 
 template<int DIM, class TYPE>
 void ArrayDataBasicOps<DIM,TYPE>::operator=(
    const ArrayDataBasicOps<DIM,TYPE>& foo)
 {
-   (void) foo;	// not implemented (but needed by some compilers)
+   NULL_USE(foo);	// not implemented (but needed by some compilers)
 }
 
 /*
@@ -72,6 +72,11 @@ void ArrayDataBasicOps<DIM,TYPE>::scale(
    const pdat::ArrayData<DIM,TYPE>& src,
    const hier::Box<DIM>& box) const
 {
+// Ignore Intel warning about floating point comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.fillAll(alpha, box);
    } else if (alpha == tbox::MathUtilities<TYPE>::getOne()) {
@@ -174,6 +179,11 @@ void ArrayDataBasicOps<DIM,TYPE>::addScalar(
    const TYPE& alpha, 
    const hier::Box<DIM>& box) const
 {
+// Ignore Intel warning about floating point comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.copy(src, box);
    } else {
@@ -818,6 +828,11 @@ void ArrayDataBasicOps<DIM,TYPE>::linearSum(
    const pdat::ArrayData<DIM,TYPE>& src2,
    const hier::Box<DIM>& box) const
 {
+// Ignore Intel warning about floating point comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());

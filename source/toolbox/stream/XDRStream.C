@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/stream/XDRStream.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/stream/XDRStream.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1880 $
+// Modified:	$LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
 // Description:	Stream class that converts into XDR for portable communication
 //
 
@@ -94,7 +94,7 @@ void XDRStream::pack(const bool *data, const int n)
 {
    char *flags = new char[n];
    for (int i = 0; i < n; i++) {
-      flags[i] = (data[i] ? 1 : 0);
+      flags[i] = (data[i] ? '\001' : '\000');
    }
    if (XDR_PACK_OPAQUE(flags, n)) {
       TBOX_ERROR("XDRStream: Error in encoding bool...\n");
@@ -136,6 +136,9 @@ AbstractStream& XDRStream::operator>>(char& data)
 
 void XDRStream::pack(const char *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_PACK_OPAQUE(data, n)) {
       TBOX_ERROR("XDRStream: Error in encoding char...\n");
    }
@@ -143,6 +146,9 @@ void XDRStream::pack(const char *data, const int n)
 
 void XDRStream::unpack(char *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_UNPACK_OPAQUE(data, n)) {
       TBOX_ERROR("XDRStream: Error in decoding char...\n");
    }
@@ -150,6 +156,7 @@ void XDRStream::unpack(char *data, const int n)
 
 void XDRStream::writeString(const char *data)
 {
+   (void) data;
 #ifdef HAVE_XDR
    if (!xdr_string(d_xdr_stream, (char **) &data, strlen(data))) {
       TBOX_ERROR("XDRStream: Error in writing string...\n");
@@ -180,6 +187,9 @@ AbstractStream& XDRStream::operator>>(dcomplex& data)
 
 void XDRStream::pack(const dcomplex *data, const int n)
 {
+   (void) data;
+   (void) n;
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(sizeof(dcomplex) == 2*sizeof(double));
 #endif
@@ -190,6 +200,9 @@ void XDRStream::pack(const dcomplex *data, const int n)
 
 void XDRStream::unpack(dcomplex *data, const int n)
 {
+   (void) data;
+   (void) n;
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(sizeof(dcomplex) == 2*sizeof(double));
 #endif
@@ -219,7 +232,10 @@ AbstractStream& XDRStream::operator>>(double& data)
 }
 
 void XDRStream::pack(const double *data, const int n)
-{
+{  
+   (void) data;
+   (void) n;
+
    if (XDR_PACK_VECTOR(data, n, double)) {
       TBOX_ERROR("XDRStream: Error in encoding double...\n");
    }
@@ -227,6 +243,9 @@ void XDRStream::pack(const double *data, const int n)
 
 void XDRStream::unpack(double *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_UNPACK_VECTOR(data, n, double)) {
       TBOX_ERROR("XDRStream: Error in decoding double...\n");
    }
@@ -254,6 +273,9 @@ AbstractStream& XDRStream::operator>>(float& data)
 
 void XDRStream::pack(const float *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_PACK_VECTOR(data, n, float)) {
       TBOX_ERROR("XDRStream: Error in encoding float...\n");
    }
@@ -261,6 +283,9 @@ void XDRStream::pack(const float *data, const int n)
 
 void XDRStream::unpack(float *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_UNPACK_VECTOR(data, n, float)) {
       TBOX_ERROR("XDRStream: Error in decoding float...\n");
    }
@@ -288,6 +313,9 @@ AbstractStream& XDRStream::operator>>(int& data)
 
 void XDRStream::pack(const int *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_PACK_VECTOR(data, n, int)) {
       TBOX_ERROR("XDRStream: Error in encoding integer...\n");
    }
@@ -295,6 +323,9 @@ void XDRStream::pack(const int *data, const int n)
 
 void XDRStream::unpack(int *data, const int n)
 {
+   (void) data;
+   (void) n;
+
    if (XDR_UNPACK_VECTOR(data, n, int)) {
       TBOX_ERROR("XDRStream: Error in decoding integer...\n");
    }

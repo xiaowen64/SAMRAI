@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchConfigurationUtilities.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/PatchConfigurationUtilities.C $
 // Package:     SAMRAI hierarchy
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Utilities class with routines for understanding spatial
 //              relationships among patches
 //
@@ -159,9 +159,9 @@ void PatchConfigurationUtilities<DIM>::initialize(
       if ( level.isNull() ) {
 
          for (int ln = d_patch_level_info.size() - 1; ln >= 0; --ln) {
-            tbox::Pointer< PatchLevel<DIM> > level = 
+            tbox::Pointer< PatchLevel<DIM> > t_level = 
                d_patch_hierarchy->getPatchLevel(ln);
-            setPatchLevelInfo( level );
+            setPatchLevelInfo( t_level );
          }
 
       } else {

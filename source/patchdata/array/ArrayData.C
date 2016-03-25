@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/array/ArrayData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/array/ArrayData.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1777 $
-// Modified:	$LastChangedDate: 2007-12-13 16:51:06 -0800 (Thu, 13 Dec 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Templated array data structure supporting patch data types
 //
 
@@ -539,7 +539,7 @@ void ArrayData<DIM,TYPE>::unpackStream(
    const hier::IntVector<DIM>& src_shift)
 {
 
-   (void) src_shift;
+   NULL_USE(src_shift);
 
    const int size = d_depth * dest_box.size();
    tbox::Pointer<tbox::Arena> scratch =
@@ -558,7 +558,7 @@ void ArrayData<DIM,TYPE>::unpackStream(
    const hier::IntVector<DIM>& src_shift)
 {
 
-   (void) src_shift;
+   NULL_USE(src_shift);
 
    const int size = d_depth * dest_boxes.getTotalSizeOfBoxes();
    tbox::Pointer<tbox::Arena> scratch =
@@ -597,7 +597,7 @@ void ArrayData<DIM,TYPE>::unpackStreamAndSum(
    const hier::IntVector<DIM>& src_shift)
 {
 
-   (void) src_shift;
+   NULL_USE(src_shift);
 
    const int size = d_depth * dest_box.size();
    tbox::Pointer<tbox::Arena> scratch =
@@ -616,7 +616,7 @@ void ArrayData<DIM,TYPE>::unpackStreamAndSum(
    const hier::IntVector<DIM>& src_shift)
 {
 
-   (void) src_shift;
+   NULL_USE(src_shift);
 
    const int size = d_depth * dest_boxes.getTotalSizeOfBoxes();
    tbox::Pointer<tbox::Arena> scratch =

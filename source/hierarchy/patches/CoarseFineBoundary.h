@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/CoarseFineBoundary.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/CoarseFineBoundary.h $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1782 $
-// Modified:	$LastChangedDate: 2007-12-17 13:04:51 -0800 (Mon, 17 Dec 2007) $
+// Revision:	$LastChangedRevision: 1887 $
+// Modified:	$LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
 // Description:	For describing coarse-fine boundary interfaces
 //
 
@@ -22,6 +22,9 @@
 #endif
 #ifndef included_hier_BoundaryBox
 #include "BoundaryBox.h"
+#endif
+#ifndef included_hier_MultiblockPatchHierarchy
+#include "MultiblockPatchHierarchy.h"
 #endif
 #ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
@@ -88,6 +91,33 @@ public:
       int ln,
       const IntVector<DIM>& max_ghost_width);
 
+
+   /*!
+    * @brief Construct a CoarseFineBoundary<DIM> object for the specified
+    * level in the given multiblock patch hierarchy.
+    *
+    * @param hierarchy       multiblock atch hierarchy in which the patch
+    *                        level resides.
+    * @param ln              Level number of level of computed coarse-fine
+    *                        boundary.
+    * @param max_ghost_width Max ghost width for which to generate boundary
+    *                        boxes.  The ghost width determines the extent
+    *                        of the boundary boxes along the level domain
+    *                        boundary, similar to regular domain boundary
+    *                        boxes.  Note that as in the case of regular
+    *                        boundary boxes, each box will always be one cell
+    *                        wide in the direction perpendicular to the patch
+    *                        boundary.
+    *
+    * Note that if level number is zero, the coarse-fine boundary will be empty.
+    */
+   CoarseFineBoundary<DIM>(
+      const tbox::Pointer< MultiblockPatchHierarchy<DIM> >& hierarchy,
+      int ln,
+      const IntVector<DIM>& max_ghost_width);
+
+   ~CoarseFineBoundary<DIM>();
+
    /*!
     * @brief Construct a CoarseFineBoundary<DIM> object for the specified
     * level in the given patch hierarchy.
@@ -106,6 +136,29 @@ public:
     */
    void computeFromHierarchy(
       const PatchHierarchy<DIM>& hierarchy,
+      int ln,
+      const IntVector<DIM>& max_ghost_width);
+
+   /*!
+    * @brief Construct a CoarseFineBoundary<DIM> object for the specified
+    * level in the given multiblock patch hierarchy.
+    *
+    * @param hierarchy       Patch hierarchy in which the patch level resides.
+    * @param ln              Level number of level of computed coarse-fine 
+    *                        boundary.
+    * @param max_ghost_width Max ghost width for which to generate boundary
+    *                        boxes.  The ghost width determines the extent
+    *                        of the boundary boxes along the level domain 
+    *                        boundary, similar to regular domain boundary
+    *                        boxes.  Note that as in the case of regular
+    *                        boundary boxes, each box will always be one cell
+    *                        wide in the direction perpendicular to the patch
+    *                        boundary.
+    *
+    * Note that if level number is zero, the coarse-fine boundary will be empty.
+    */
+   void computeFromHierarchy(
+      const MultiblockPatchHierarchy<DIM>& hierarchy,
       int ln,
       const IntVector<DIM>& max_ghost_width);
 
@@ -134,9 +187,34 @@ public:
       const IntVector<DIM>& max_ghost_width);
 
    /*!
+    * @brief Construct a CoarseFineBoundary<DIM> object for the specified
+    * multibock level based on a given level which is assumed to be the
+    * coarsest level (i.e., level zero) in some patch hierarchy.
+    *
+    * @param level           Patch level of computed coarse-fine boundary.
+    * @param level0          Coarsest patch level in hierarchy used to
+    *                        compute coarse-fine boundary.
+    * @param max_ghost_width Max ghost width for which to generate boundary
+    *                        boxes.  The ghost width determines the extent
+    *                        of the boundary boxes along the level domain
+    *                        boundary, similar to regular domain boundary
+    *                        boxes.  Note that as in the case of regular
+    *                        boundary boxes, each box will always be one cell
+    *                        wide in the direction perpendicular to the patch
+    *                        boundary.
+    *
+    * Note that if level and level0 are the same, the coarse-fine boundary
+    * will be empty.
+    */
+   void computeFromLevel(
+      const MultiblockPatchLevel<DIM>& level,
+      const MultiblockPatchLevel<DIM>& level0,
+      const IntVector<DIM>& max_ghost_width);
+
+   /*!
     * @brief Clear all boundary data.
     */
-   void clear();
+   void clear(const int block_number = 0);
 
    //@{
    /*!
@@ -150,12 +228,14 @@ public:
     * The specified patch must exist in the level used to compute
     * the internal state or it is an error.
     *
-    * @param pn            Patch number
-    * @param boundary_type Boundary box type (see BoundaryBox class).    
+    * @param patch_num     Patch number
+    * @param boundary_type Boundary box type (see BoundaryBox class).
+    * @param block_num     Block number (defaults to 0 for non-multiblock case)
     */
    const tbox::Array< BoundaryBox<DIM> >& getBoundaries(
-      int pn,
-      int boundary_type) const;
+      int patch_num,
+      int boundary_type,
+      int block_num = 0) const;
 
    /*!
     * @brief Get an array of node boundary boxes for a specified patch
@@ -164,9 +244,12 @@ public:
     * The specified patch must exist in the level used to compute
     * the internal state or it is an error.
     *
-    * @param pn Patch number
+    * @param patch_num     Patch number
+    * @param block_num     Block number (defaults to 0 for non-multiblock case)
     */
-   const tbox::Array< BoundaryBox<DIM> >& getNodeBoundaries(int pn) const;
+   const tbox::Array< BoundaryBox<DIM> >& getNodeBoundaries(
+      int patch_num,
+      int block_num = 0) const;
 
    /*!
     * @brief Get an array of edge boundary boxes for a specified patch
@@ -176,9 +259,12 @@ public:
     * The specified patch must exist in the level used to compute
     * the internal state or it is an error.
     *
-    * @param pn Patch number
+    * @param patch_num     Patch number
+    * @param block_num     Block number (defaults to 0 for non-multiblock case)
     */
-   const tbox::Array< BoundaryBox<DIM> >& getEdgeBoundaries(int pn) const;
+   const tbox::Array< BoundaryBox<DIM> >& getEdgeBoundaries(
+      int patch_num,
+      int block_num = 0) const;
 
    /*!
     * @brief Get an array of face boundary boxes for a specified patch
@@ -188,9 +274,12 @@ public:
     * The specified patch must exist in the level used to compute
     * the internal state or it is an error.
     *
-    * @param pn Patch number
+    * @param patch_num     Patch number
+    * @param block_num     Block number (defaults to 0 for non-multiblock case)
     */
-   const tbox::Array< BoundaryBox<DIM> >& getFaceBoundaries(int pn) const;
+   const tbox::Array< BoundaryBox<DIM> >& getFaceBoundaries(
+      int patch_num,
+      int block_num = 0) const;
 
    //@}
 
@@ -228,21 +317,43 @@ private:
     * Otherwise, it is set to -1.  We do not use the size of
     * d_boundary_boxes to determine if boundary has been generated
     * because it is possible to have no patch on a level.
+    *
+    * This is stored as an array so that it can be used with a multiblock
+    * hierarchy.  Each entry in the array represents the number of patches
+    * in a particular block on the level.  For single-block cases, the 
+    * array is always of length 1.
     */
-   int d_npatches;
+   tbox::Array<int> d_npatches;
+
+   /*!
+    * @brief Number of blocks in the hierarchy on which coarse-fine boundary
+    * has been computed.
+    */
+   int d_nblocks;
+
+   /*!
+    * @brief pointer to the multiblock hierarchy on which the coarse-fine
+    * boundary was computed.  Alway null in the single block case.
+    */
+   tbox::Pointer<MultiblockPatchHierarchy<DIM> > d_mblk_hierarchy;
 
    /*!
     * @brief Patch boundary boxes describing the coarse-fine boundary.
     *
-    * The outer array, sized by DIM times the number of patches on the level,
-    * representing for each patch, the DIM types of boundary boxes.
-    * The inner array, sized by the number of BoundaryBox<DIM> of
+    * The outer array is sized by the number of blocks in the hierarchy.  This
+    * size is always one for non-multiblock hierarchies.
+    * 
+    * The first inner array, sized by DIM times the number of patches on the
+    * level, representing for each patch, the DIM types of boundary boxes.
+    * The innermost array is sized by the number of BoundaryBox<DIM> of
     * a given type, for a given patch.  So, the array of BoundaryBox<DIM>
-    * of type i for patch number pn is d_boundary_boxes[pn*DIM+(i-1)].
-    * The reason for this is due to the way the boundary boxes are
-    * computed in GridGeometry<DIM>::computeBoundaryGeometry.
+    * of type i for patch number pn in a single block problem is
+    * d_boundary_boxes[0][pn*DIM+(i-1)].  The reason for this is due
+    * to the way the boundary boxes are computed in
+    * GridGeometry<DIM>::computeBoundaryGeometry.
     */
-   tbox::Array< tbox::Array< BoundaryBox<DIM> > > d_boundary_boxes;
+   tbox::Array< tbox::Array< tbox::Array< BoundaryBox<DIM> > > > d_boundary_boxes;
+
 
 };
 

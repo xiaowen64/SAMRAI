@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BinaryTree.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/BinaryTree.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Utility class that provides standard binary tree functions.
 //
 
@@ -425,7 +425,7 @@ template<int DIM> void BinaryTree<DIM>::buildParticipatingCommunicator(
       int root = findRoot();
       int new_root = -1;
       for (int m=0; m<old_np; ++m) {
-         int world_id = world_ranks[m];
+         world_id = world_ranks[m];
          if (world_id == root) {
             new_root = m;
          }

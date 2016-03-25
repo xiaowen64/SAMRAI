@@ -150,20 +150,15 @@ serpa_machine_file='serpa.machines'
 # target computer.  We assume that there is a one-to-one correspondence.
 # If there is not, there may have to be a nested if-structure.
 #
-if echo "${HOST}" | egrep '^(blue|frost)[0-9]' > /dev/null ; then
+if echo "${HOST}" | egrep '^(up)[0-9]' > /dev/null ; then
 
-  # For blue, a specific singleton platform.
   run_multiproc () {
-    MP_RESD="YES"
-    MP_HOSTFILE=""
-    MP_EUILIB=us
-    MP_EUIDEVICE=css0
-    export MP_RESD MP_HOSTFILE MP_EUILIB MP_EUIDEVICE
+    MP_RMPOOL=pdebug
+    export MP_RMPOOL
   # IBM shell functions eat their parameters after the first assignment
   # from them so save the parameters first.
     case "${HOST}" in
-      blue*) proc_per_node=4;;
-      frost*) proc_per_node=16;;
+      up*) proc_per_node=8;;
     esac
     program=${1}; nproc=${2}; shift 2
     nodes=`expr 1 + \( ${nproc} - 1 \) / ${proc_per_node}`
@@ -212,6 +207,7 @@ elif echo "${target_os}" | grep '^osf'	> /dev/null ; then
 elif echo "${target_os}" | grep '^solaris' > /dev/null	\
   || echo "${target_os}" | grep '^irix' > /dev/null	\
   || echo "${target_os}" | grep '^linux' > /dev/null	\
+  || echo "${target_os}" | grep '^darwin' > /dev/null	\
   ; then
 
   # Most platforms fall into this case.

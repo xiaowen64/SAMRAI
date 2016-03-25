@@ -1,5 +1,7 @@
 #include "SAMRAI_config.h"
 
+#ifdef HAVE_HDF5
+
 #include "tbox/Array.h"
 #include "tbox/HDFDatabase.h"
 
@@ -98,3 +100,5 @@ static void readAndWritePatchRestartData(
    const tbox::Pointer<tbox::HDFDatabase>& patch_in_db);
 
 };
+
+#endif

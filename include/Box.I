@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/Box.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/Box.I $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Box representing a portion of the AMR index space
 //
 
@@ -66,11 +66,6 @@ template<int DIM> inline
 Box<DIM>& Box<DIM>::operator=(const tbox::DatabaseBox& box)
 {
    return Box_from_DatabaseBox(box);
-}
-
-template<int DIM> inline
-Box<DIM>::~Box()
-{
 }
 
 template<int DIM> inline
@@ -196,6 +191,14 @@ bool Box<DIM>::contains(const Index<DIM>& p) const
 }
 
 template<int DIM> inline
+bool Box<DIM>::contains(const Box<DIM>& b) const
+{
+   if ( ! contains( b.lower() ) ) return false;
+   if ( ! contains( b.upper() ) ) return false;
+   return(true);
+}
+
+template<int DIM> inline
 Box<DIM>::operator tbox::DatabaseBox()
 {
    return DatabaseBox_from_Box();
@@ -304,6 +307,38 @@ void Box<DIM>::growUpper(const int direction, const int ghosts)
 #endif
    if (!empty()) {
       d_hi(direction) += ghosts;
+   }
+}
+
+template<int DIM> inline
+void Box<DIM>::lengthen(const int direction, const int ghosts)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT( (direction >= 0) && (direction < DIM) );
+#endif
+   if (!empty()) {
+      if ( ghosts > 0 ) {
+         d_hi(direction) += ghosts;
+      }
+      else {
+         d_lo(direction) += ghosts;
+      }
+   }
+}
+
+template<int DIM> inline
+void Box<DIM>::shorten(const int direction, const int ghosts)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT( (direction >= 0) && (direction < DIM) );
+#endif
+   if (!empty()) {
+      if ( ghosts > 0 ) {
+         d_hi(direction) -= ghosts;
+      }
+      else {
+         d_lo(direction) -= ghosts;
+      }
    }
 }
 

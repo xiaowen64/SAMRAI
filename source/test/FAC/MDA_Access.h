@@ -1,8 +1,8 @@
 /*
- * File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/MDA_Access.h $
+ * File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/test/FAC/MDA_Access.h $
  * Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:	$LastChangedRevision: 1704 $
- * Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:	$LastChangedRevision: 1871 $
+ * Modified:	$LastChangedDate: 2008-01-17 18:06:43 -0800 (Thu, 17 Jan 2008) $
  * Description:	Light-weight array class
  */
 
@@ -18,15 +18,6 @@
 #include "tbox/Utilities.h"
 
 using namespace std;
-
-// If restrict pointer is broken, remove request from code.
-/* Definition of __restrict__ is temporarily disabled until
- * it no longer causes a problem on frost/newmpCC.  See SAMRAI
- * bug number 665.
-#ifdef RESTRICT_IS_BROKEN
-#define __restrict__
-#endif
- */
 
 /*!
  * @file
@@ -477,7 +468,7 @@ inline index_t fixedOffset () const {
   return d_fixed_offset;
 }
 inline index_t offset (
-                    index_t i0 ) /* __restrict__ */ const {
+                    index_t i0 ) /* SAMRAI_RESTRICT */ const {
   return i0- this -> beg(0);
   /*
   return
@@ -486,7 +477,7 @@ inline index_t offset (
    */
 }
 inline index_t offset (
-                    index_t i0 , index_t i1 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 ) /* SAMRAI_RESTRICT */ const {
   return
     (i0-this -> d_start[0])*d_total_size[1] +
     (i1-this -> d_start[1]);
@@ -499,7 +490,7 @@ inline index_t offset (
    */
 }
 inline index_t offset (
-                    index_t i0 , index_t i1 , index_t i2 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 ) /* SAMRAI_RESTRICT */ const {
   return
     (i0-this -> d_start[0])*d_total_size[1] +
     (i1-this -> d_start[1])*d_total_size[2] +
@@ -514,7 +505,7 @@ inline index_t offset (
    */
 }
 inline index_t offset (
-                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* SAMRAI_RESTRICT */ const {
   return
     (i0-this -> d_start[0])*d_total_size[1] +
     (i1-this -> d_start[1])*d_total_size[2] +
@@ -536,32 +527,32 @@ inline index_t offset (
  * This is flexible but not efficient!
  * You should use dimension-specific offset computations whenever possible.
  */
-inline index_t offset ( const index_t (&i)[DIM] ) /* __restrict__ */ const {
+inline index_t offset ( const index_t (&i)[DIM] ) /* SAMRAI_RESTRICT */ const {
   int d;
   size_t o = i[DIM-1] - this -> beg(DIM-1);
   for ( d=DIM-2; d>=0; --d ) o += ( i[d] - this -> d_start[d] )*d_total_size[i+1];
   return o;
 }
 inline index_t variableOffset (
-                    index_t i0 ) /* __restrict__ */ const {
+                    index_t i0 ) /* SAMRAI_RESTRICT */ const {
   return
     i0;
 }
 inline index_t variableOffset (
-                    index_t i0 , index_t i1 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 ) /* SAMRAI_RESTRICT */ const {
   return
     i0*d_total_size[1] +
     i1;
 }
 inline index_t variableOffset (
-                    index_t i0 , index_t i1 , index_t i2 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 ) /* SAMRAI_RESTRICT */ const {
   return
     i0*d_total_size[1] +
     i1*d_total_size[2] +
     i2;
 }
 inline index_t variableOffset (
-                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* SAMRAI_RESTRICT */ const {
   return
     i0*d_total_size[1] +
     i1*d_total_size[2] +
@@ -756,7 +747,7 @@ inline index_t fixedOffset () const {
   return d_fixed_offset;
 }
 inline index_t offset (
-                    index_t i0 ) /* __restrict__ */ const {
+                    index_t i0 ) /* SAMRAI_RESTRICT */ const {
   return i0-this->beg(0);
   /*
   return
@@ -765,7 +756,7 @@ inline index_t offset (
    */
 }
 inline index_t offset (
-                    index_t i0 , index_t i1 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 ) /* SAMRAI_RESTRICT */ const {
   return
     (i0-this -> d_start[0]) +
     (i1-this -> d_start[1])*d_total_size[0];
@@ -778,7 +769,7 @@ inline index_t offset (
    */
 }
 inline index_t offset (
-                    index_t i0 , index_t i1 , index_t i2 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 ) /* SAMRAI_RESTRICT */ const {
   return
     (i0-this -> d_start[0]) +
     (i1-this -> d_start[1])*d_total_size[0] +
@@ -793,7 +784,7 @@ inline index_t offset (
    */
 }
 inline index_t offset (
-                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* SAMRAI_RESTRICT */ const {
   return
     (i0-this -> d_start[0]) +
     (i1-this -> d_start[1])*d_total_size[0] +
@@ -815,32 +806,32 @@ inline index_t offset (
  * This is flexible but not efficient!
  * You should use dimension-specific offset computations whenever possible.
  */
-inline index_t offset ( const index_t (&i)[DIM] ) /* __restrict__ */ const {
+inline index_t offset ( const index_t (&i)[DIM] ) /* SAMRAI_RESTRICT */ const {
   int d;
   size_t o = i[0] - this->beg(0);
   for ( d=1; d<DIM; ++d ) o += ( i[d] - this -> d_start[d] )*d_total_size[i-1];
   return o;
 }
 inline index_t variableOffset (
-                    index_t i0 ) /* __restrict__ */ const {
+                    index_t i0 ) /* SAMRAI_RESTRICT */ const {
   return
     i0;
 }
 inline index_t variableOffset (
-                    index_t i0 , index_t i1 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 ) /* SAMRAI_RESTRICT */ const {
   return
     i0 +
     i1*d_total_size[0];
 }
 inline index_t variableOffset (
-                    index_t i0 , index_t i1 , index_t i2 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 ) /* SAMRAI_RESTRICT */ const {
   return
     i0 +
     i1*d_total_size[0] +
     i2*d_total_size[1] ;
 }
 inline index_t variableOffset (
-                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* __restrict__ */ const {
+                    index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* SAMRAI_RESTRICT */ const {
   return
     i0 +
     i1*d_total_size[0] +
@@ -1164,7 +1155,7 @@ const size_t &size(size_t i) const { return d_order.range().size(i); }
    * @brief Grant general access to item in a 1D array.
    */
 inline
-value_t &operator() ( index_t i0 ) /* __restrict__ */ const {
+value_t &operator() ( index_t i0 ) /* SAMRAI_RESTRICT */ const {
   return d_ptr[d_order.offset(i0)];
   /*
   return d_ptr1[i0];
@@ -1175,7 +1166,7 @@ value_t &operator() ( index_t i0 ) /* __restrict__ */ const {
    * @brief Grant general access to item in a 2D array.
    */
 inline
-value_t &operator() ( index_t i0 , index_t i1 ) /* __restrict__ */ const {
+value_t &operator() ( index_t i0 , index_t i1 ) /* SAMRAI_RESTRICT */ const {
   return d_ptr[d_order.offset(i0,i1)];
   // return d_ptr1[d_order.variableOffset(i0,i1)];
 }
@@ -1184,7 +1175,7 @@ value_t &operator() ( index_t i0 , index_t i1 ) /* __restrict__ */ const {
    * @brief Grant general access to item in a 3D array.
    */
 inline
-value_t &operator() ( index_t i0 , index_t i1 , index_t i2 ) /* __restrict__ */ const {
+value_t &operator() ( index_t i0 , index_t i1 , index_t i2 ) /* SAMRAI_RESTRICT */ const {
   return d_ptr[d_order.offset(i0,i1,i2)];
   // return d_ptr1[d_order.variableOffset(i0,i1,i2)];
 }
@@ -1193,7 +1184,7 @@ value_t &operator() ( index_t i0 , index_t i1 , index_t i2 ) /* __restrict__ */ 
    * @brief Grant general access to item in a 4D array.
    */
 inline
-value_t &operator() ( index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* __restrict__ */ const {
+value_t &operator() ( index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* SAMRAI_RESTRICT */ const {
   return d_ptr[d_order.offset(i0,i1,i2,i3)];
   // return d_ptr1[d_order.variableOffset(i0,i1,i2,i3)];
 }
@@ -1209,7 +1200,7 @@ value_t &operator() ( index_t i0 , index_t i1 , index_t i2 , index_t i3 ) /* __r
    * undefined behavior.
    */
 inline
-value_t &operator[] ( index_t i0 ) /* __restrict__ */ const {
+value_t &operator[] ( index_t i0 ) /* SAMRAI_RESTRICT */ const {
   return d_ptr1[i0];
   /*
   return d_ptr[d_order.offset(i0)];
@@ -1266,7 +1257,7 @@ MDA_Access<TYPE,DIM-1,typename OrderType::reduced_order_t> reduce( index_t i ) c
 
 
 //! Pointer to data.
-private: value_t * /* __restrict__ */ d_ptr;
+private: value_t * /* SAMRAI_RESTRICT */ d_ptr;
 /*!
  * @brief Value of @c d_ptr-beg(0), used for optimizing 1D access.
  *
@@ -1279,7 +1270,7 @@ private: value_t * /* __restrict__ */ d_ptr;
  *
  * @see setPtr1()
  */
-private: value_t * /* __restrict__ */ d_ptr1;
+private: value_t * /* SAMRAI_RESTRICT */ d_ptr1;
 private: void setPtr1() {
   /*
    * If the following assert fails, our d_ptr1 optimization may

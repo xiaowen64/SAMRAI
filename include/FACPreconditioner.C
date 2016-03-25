@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/FAC/FACPreconditioner.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/FAC/FACPreconditioner.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: FAC algorithm for solving linear equations on a hierarchy
 //
 
@@ -146,28 +146,31 @@ template<int DIM> void FACPreconditioner<DIM>::deallocateSolverState( )
     * Delete hierarchy-dependent state data.
     */
 
-   d_coarsest_ln = d_finest_ln = -1;
-   d_patch_hierarchy.setNull();
+   if ( ! d_patch_hierarchy.isNull() ) {
 
-   if ( d_error_vector ) {
-     d_error_vector->freeVectorComponents();
-     d_error_vector.setNull();
-   }
-   if ( d_tmp_error ) {
-     d_tmp_error->freeVectorComponents();
-     d_tmp_error.setNull();
-   }
-   if ( d_residual_vector ) {
-     d_residual_vector->freeVectorComponents();
-     d_residual_vector.setNull();
-   }
-   if ( d_tmp_residual ) {
-     d_tmp_residual->freeVectorComponents();
-     d_tmp_residual.setNull();
-   }
+      d_coarsest_ln = d_finest_ln = -1;
+      d_patch_hierarchy.setNull();
 
-   d_controlled_level_ops.setNull();
-   d_fac_operator.deallocateOperatorState();
+      if ( d_error_vector ) {
+         d_error_vector->freeVectorComponents();
+         d_error_vector.setNull();
+      }
+      if ( d_tmp_error ) {
+         d_tmp_error->freeVectorComponents();
+         d_tmp_error.setNull();
+      }
+      if ( d_residual_vector ) {
+         d_residual_vector->freeVectorComponents();
+         d_residual_vector.setNull();
+      }
+      if ( d_tmp_residual ) {
+         d_tmp_residual->freeVectorComponents();
+         d_tmp_residual.setNull();
+      }
+
+      d_controlled_level_ops.setNull();
+      d_fac_operator.deallocateOperatorState();
+   }
 
    return;
 }
@@ -431,6 +434,11 @@ template<int DIM> bool FACPreconditioner<DIM>::solveSystem(
       d_residual_norm = computeFullCompositeResidual( *d_residual_vector ,
                                                       u ,
                                                       f );
+
+// Disable Intel warning on real comparison
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
       if ( d_convergence_factor[d_number_iterations] != 0 ) {
          d_convergence_factor[d_number_iterations]
             = d_residual_norm/d_convergence_factor[d_number_iterations];
@@ -715,6 +723,8 @@ template<int DIM> void FACPreconditioner<DIM>::facCycle(
    int lmax,
    int lmin )
 {
+
+   NULL_USE(u);
 
    int ln;
 

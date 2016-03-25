@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/ElevenPatchInterface.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/ElevenPatchInterface.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: SAMRAI interface to Eleven library
 //              
 //
@@ -76,6 +76,12 @@ void ElevenPatchInterface<DIM>::calculateCutCellInfo(
    const int node_flag_data_id,
    const int cutcell_data_id)
 {
+   NULL_USE(patch);
+   NULL_USE(cell_flag_data_id);
+   NULL_USE(cell_vol_data_id);
+   NULL_USE(node_flag_data_id);
+   NULL_USE(cutcell_data_id);
+   
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
               << "\ninformation." << std::endl);
@@ -92,6 +98,7 @@ template<int DIM>
 bool ElevenPatchInterface<DIM>::isInside(
    const double* xyz) const
 {
+   NULL_USE(xyz);
 
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
@@ -122,6 +129,11 @@ void ElevenPatchInterface<DIM>::isInside(
    const double* origin,
    int* inout) const
 {
+   NULL_USE(nx);
+   NULL_USE(dx);
+   NULL_USE(origin);
+   NULL_USE(inout);
+   
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
               << "\ninformation." << std::endl);
@@ -139,6 +151,8 @@ template<int DIM>
 void ElevenPatchInterface<DIM>::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
+   NULL_USE(db);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!db.isNull());
 #endif

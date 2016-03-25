@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outeredge/OuteredgeData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/outeredge/OuteredgeData.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Templated outeredge centered patch data type
 //
 
@@ -1185,6 +1185,8 @@ void OuteredgeData<DIM,TYPE>::printAxisSide(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
    TBOX_ASSERT((side == 0) || (side == 1));
 #endif
+
+   NULL_USE(prec);
 
    if (axis == face_normal) {
 

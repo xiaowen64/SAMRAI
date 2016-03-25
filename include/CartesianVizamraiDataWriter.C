@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/CartesianVizamraiDataWriter.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/CartesianVizamraiDataWriter.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: Simple tool to facilitate dumping data to file for Vizamrai
 //
 
@@ -1144,6 +1144,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
 	    file  << d_domain_scale_length;
 	 }
 
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
          file << static_cast<int>(buffer[DIM*2]);
 
       }
@@ -1216,11 +1220,9 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
                   /*
                    * Write derived patch data
                    */
-                  int data_id = ipi().d_data_id;
                   int depth_id = ipi().d_depth_id;
                   if ((ln < ipi().d_level_data_id.getSize()) &&
                       (ipi().d_level_data_id[ln] > DATA_TO_VIZ_IS_UNDEFINED)) {
-                     data_id = ipi().d_level_data_id[ln];
                      depth_id = ipi().d_level_depth_id[ln];
                   }
 
@@ -1239,6 +1241,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 
                         if (d_plot_type == DUMP_FLOAT_DATA) {
                            for (int i = 0; i < bsize; i++) {
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
                               fbuffer[i] = static_cast<float>(dbuffer[i]);
                            }
                            file.pack(fbuffer, bsize);
@@ -1259,6 +1265,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 
                      if (d_plot_type == DUMP_FLOAT_DATA) {
                         for (int i = 0; i < bsize; i++) {
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
                            fbuffer[i] = static_cast<float>(dbuffer[i]);
                         }
                         file.pack(fbuffer, bsize);
@@ -1290,6 +1300,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 			   dbuffer);                  
 		     
 			const double scale = ipi().d_scale_factor;
+// Disable Intel warning about real comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
 			if (scale != 1.0) {
 			   for (int i = 0; i < bsize; i++) {
 			      dbuffer[i] *= scale;
@@ -1298,6 +1312,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 			
 			if (d_plot_type == DUMP_FLOAT_DATA) {
 			   for (int i = 0; i < bsize; i++) {
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
 			      fbuffer[i] = static_cast<float>(dbuffer[i]);
 			   }
 			   file.pack(fbuffer, bsize);
@@ -1317,6 +1335,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 			dbuffer);                  
 		     
 		     const double scale = ipi().d_scale_factor;
+// Disable Intel warning about real comparisons
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
 		     if (scale != 1.0) {
 			for (int i = 0; i < bsize; i++) {
 			   dbuffer[i] *= scale;
@@ -1325,6 +1347,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 		     
 		     if (d_plot_type == DUMP_FLOAT_DATA) {
 			for (int i = 0; i < bsize; i++) {
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
 			   fbuffer[i] = static_cast<float>(dbuffer[i]);
 			}
 			file.pack(fbuffer, bsize);

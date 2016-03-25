@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/BalanceUtilities.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/BalanceUtilities.h $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1860 $
+// Modified:    $LastChangedDate: 2008-01-15 11:19:26 -0800 (Tue, 15 Jan 2008) $
 // Description: utility routines useful for load balancing operations
 //
  
@@ -120,6 +120,7 @@ template<int DIM> struct BalanceUtilities
     * @param out_workloads   Output list of box workloads.
     * @param in_boxes        Input boxlist for chopping.
     * @param ideal_workload  Input double ideal box workload, must be > 0.
+    * @param workload_tolerance Input double workload tolerance, must be >= 0 and < 1.0
     * @param min_size        Input integer vector of minimum dimensions for
     *                        output boxes. All entries must be > 0.
     * @param cut_factor      Input integer vector used to create boxes with
@@ -151,6 +152,7 @@ template<int DIM> struct BalanceUtilities
       tbox::List<double>& out_workloads,
       const hier::BoxList<DIM>& in_boxes,
       double ideal_workload,
+      const double workload_tolerance,
       const hier::IntVector<DIM>& min_size,
       const hier::IntVector<DIM>& cut_factor,
       const hier::IntVector<DIM>& bad_interval,
@@ -174,6 +176,7 @@ template<int DIM> struct BalanceUtilities
     * @param work_id         Input integer patch data id for cell-centered 
     *                        double work estimate for each cell.
     * @param ideal_workload  Input double ideal box workload, must be > 0.
+    * @param workload_tolerance Input double workload tolerance, must be >= 0 and < 1.0
     * @param min_size        Input integer vector of minimum dimensions for
     *                        output boxes. All entries must be > 0.
     * @param cut_factor      Input integer vector used to create boxes with
@@ -206,6 +209,7 @@ template<int DIM> struct BalanceUtilities
       const tbox::Pointer< hier::PatchLevel<DIM> >& in_level,
       int work_id,
       double ideal_workload,
+      const double workload_tolerance,
       const hier::IntVector<DIM>& min_size,
       const hier::IntVector<DIM>& cut_factor,
       const hier::IntVector<DIM>& bad_interval,
@@ -372,6 +376,7 @@ private:
       const hier::Box<DIM>& in_box,
       double in_box_workload,
       double ideal_workload,
+      const double workload_tolerance,
       const hier::IntVector<DIM>& min_size,
       const hier::IntVector<DIM>& cut_factor,
       tbox::Array< tbox::Array<bool> >& bad_cut_points);
@@ -384,6 +389,7 @@ private:
       double in_box_workload,
       int work_data_index,
       double ideal_workload,
+      const double workload_tolerance,
       const hier::IntVector<DIM>& min_size,
       const hier::IntVector<DIM>& cut_factor,
       tbox::Array< tbox::Array<bool> >& bad_cut_points);

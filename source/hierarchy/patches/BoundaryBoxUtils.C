@@ -2,8 +2,8 @@
 // File:	$URL$
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2006 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1850 $
+// Modified:	$LastChangedDate: 2008-01-11 16:39:11 -0800 (Fri, 11 Jan 2008) $
 // Description:	Generic utilities for boundary box calculus.
 //
 
@@ -13,6 +13,7 @@
 #include "BoundaryBoxUtils.h"
 #include "Box.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #ifdef DEBUG_NO_INLINE
 // #include "BoundaryBoxUtils.I"
@@ -207,6 +208,103 @@ int BoundaryBoxUtils<DIM>::normalDir() const
 {
    return d_bbox.getLocationIndex()/2;
 }
+
+/*
+************************************************************************
+* Make surface box on boundary using standard boundary box             *
+************************************************************************
+*/
+
+template<int DIM>
+hier::Box<DIM> BoundaryBoxUtils<DIM>::getSurfaceBoxFromBoundaryBox() const
+{
+   if ( d_bbox.getBoundaryType() != 1 ) {
+      TBOX_ERROR("BoundaryBoxUtils::makeSideBoundaryBox\n"
+                 << "called with improper boundary box\n");
+   }
+   hier::Box<DIM> side_index_box = d_bbox.getBox();
+   int location_index = d_bbox.getLocationIndex();
+   if ( location_index%2 == 0 ) {
+      /*
+       * On the min index side, the face indices are one higher
+       * than the boundary cell indices, in the direction normal
+       * to the boundary.
+      */
+      side_index_box.shift(location_index/2,1);
+   }
+   return side_index_box;
+}
+
+/*
+************************************************************************
+* Trim a boundary box so it does not stick out past the corners of a   *
+* patch.                                                               *
+************************************************************************
+*/
+
+template<int DIM> hier::BoundaryBox<DIM> BoundaryBoxUtils<DIM>::trimBoundaryBox(   const hier::Box<DIM> &limit_box ) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT( d_bbox.getBoundaryType() < DIM );
+#endif
+   const hier::Box<DIM> &bbox = d_bbox.getBox();
+   const hier::Index<DIM> &plo = limit_box.lower();
+   const hier::Index<DIM> &pup = limit_box.upper();
+   const hier::Index<DIM> &blo = bbox.lower();
+   const hier::Index<DIM> &bup = bbox.upper();
+   hier::Index<DIM> newlo, newup;
+
+   if ( d_bbox.getBoundaryType() == 1 ) {
+      /*
+       * Loop through directions.
+       * Preserve box size in direction normal to boundary.
+       * Trim box size in direction parallel to boundary.
+       */
+      const int boundary_normal = d_bbox.getLocationIndex()/2;
+      int d;
+      for ( d=0; d<DIM; ++d ) {
+         if ( d == boundary_normal ) {
+            newlo(d) = blo(d);
+            newup(d) = bup(d);
+         }
+         else {
+            // On min side, use max between boundary and patch boxes.
+            newlo(d) = tbox::MathUtilities<int>::Max( blo(d) , plo(d) );
+            // On max side, use min between boundary and patch boxes.
+            newup(d) = tbox::MathUtilities<int>::Min( bup(d) , pup(d) );
+         }
+      }
+   } else if ( d_bbox.getBoundaryType() == 2 ) {
+      /*
+       * Loop through directions.
+       * Preserve box size in direction normal to boundary.
+       * Trim box size in direction parallel to boundary.
+       */
+      const int boundary_dir = d_bbox.getLocationIndex()/4;
+      int d;
+      for ( d=0; d<DIM; ++d ) {
+         if ( d == boundary_dir ) {
+            // On min side, use max between boundary and patch boxes.
+            newlo(d) = tbox::MathUtilities<int>::Max( blo(d) , plo(d) );
+            // On max side, use min between boundary and patch boxes.
+            newup(d) = tbox::MathUtilities<int>::Min( bup(d) , pup(d) );
+         }
+         else {
+            newlo(d) = blo(d);
+            newup(d) = bup(d);
+         }
+      }
+   }
+
+   const hier::Box<DIM> newbox(newlo,newup);
+   const hier::BoundaryBox<DIM> newbbox( newbox,
+                                         d_bbox.getBoundaryType(),
+                                         d_bbox.getLocationIndex() );
+
+   return newbbox;
+}
+
+
 
 }
 }

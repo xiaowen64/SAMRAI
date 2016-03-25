@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineTransactionFactory.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/transfer/datamovers/standard/RefineTransactionFactory.C $
 // Package:	SAMRAI transfer
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Interface for factory objects that create transactions for
 //              refine schedules.
 //
@@ -43,7 +43,7 @@ template<int DIM> RefineTransactionFactory<DIM>::~RefineTransactionFactory()
 template<int DIM> void RefineTransactionFactory<DIM>::setTransactionTime(
    double fill_time)
 {
-   (void) fill_time;
+   NULL_USE(fill_time);
 }
 
 template<int DIM> void RefineTransactionFactory<DIM>::preprocessScratchSpace(
@@ -51,9 +51,9 @@ template<int DIM> void RefineTransactionFactory<DIM>::preprocessScratchSpace(
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {
-   (void) level;
-   (void) fill_time;
-   (void) preprocess_vector;
+   NULL_USE(level);
+   NULL_USE(fill_time);
+   NULL_USE(preprocess_vector);
 }
 
 }

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/Box.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/Box.h $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1785 $
-// Modified:	$LastChangedDate: 2007-12-17 15:05:39 -0800 (Mon, 17 Dec 2007) $
+// Revision:	$LastChangedRevision: 1859 $
+// Modified:	$LastChangedDate: 2008-01-15 07:55:41 -0800 (Tue, 15 Jan 2008) $
 // Description:	Box representing a portion of the AMR index space
 //
 
@@ -172,6 +172,11 @@ public:
    bool contains(const Index<DIM>& p) const;
 
    /**
+    * Check whether a given box lies within the bounds of the box.
+    */
+   bool contains(const Box<DIM>& b) const;
+
+   /**
     * Check whether two boxes represent the same portion of index space.
     */
    int operator==(const Box<DIM>& box) const;
@@ -255,6 +260,20 @@ public:
     * bound of given direction in index space.
     */
    void growUpper(const int direction, const int ghosts);
+
+   /**
+    * Similar to growUpper() and growLower() functions. However, box is
+    * lengthened (never shortened).  The sign of @c ghosts refer to whether
+    * the box is lengthened in the upper or lower side.
+    */
+   void lengthen(const int direction, const int ghosts);
+
+   /**
+    * Similar to growUpper() and growLower() functions. However, box is
+    * shortened (never lengthened).  The sign of @c ghosts refer to whether
+    * the box is shortened in the upper or lower side.
+    */
+   void shorten(const int direction, const int ghosts);
 
    /**
     * Shift a box by the specified amount (a vector of integers).

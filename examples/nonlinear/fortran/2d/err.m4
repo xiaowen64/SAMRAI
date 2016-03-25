@@ -46,8 +46,8 @@ c  Compute error in solution at time t.
       double precision zero,       half,       one
       parameter      ( zero=0.0d0, half=0.5d0, one=1.0d0 )
 
-      intrinsic abs, max
-      double precision abs, max
+      intrinsic ABS, MAX
+      double precision ABS, MAX
 
       localerror = zero
       l2error = zero
@@ -58,11 +58,11 @@ c  Compute error in solution at time t.
          xi = xlo(0) + dx(0)*half
          do i = lo0, hi0
             xterm = xi*(one - xi)
-            solmax = max(solmax,t*xterm*yterm)
-            error_ij = abs(u(i,j) - t*xterm*yterm)
+            solmax = MAX(solmax,t*xterm*yterm)
+            error_ij = ABS(u(i,j) - t*xterm*yterm)
             l2error = l2error + w(i,j)*error_ij**2
             diff = w(i,j)*error_ij
-            localerror = max(localerror, diff)
+            localerror = MAX(localerror, diff)
             xi = xi + dx(0)
          end do
          yj = yj + dx(1)
@@ -75,7 +75,7 @@ c  The max error is scaled by the max of the exact solution.
       localerror = localerror/(dx(0)*dx(1)*solmax)
       l2error = sqrt(l2error)
 
-      maxerror = max(localerror, maxerror)
+      maxerror = MAX(localerror, maxerror)
 
       return
       end

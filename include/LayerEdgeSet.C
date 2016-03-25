@@ -1,8 +1,8 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerEdgeSet.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/dlbg/LayerEdgeSet.C $
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1732 $
- * Modified:    $LastChangedDate: 2007-12-04 09:01:48 -0800 (Tue, 04 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1846 $
+ * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
  * Description: Set of edges in distributed box graph.
  */
 
@@ -270,7 +270,7 @@ void LayerEdgeSet<DIM>::allocateConnectivity( const NodeContainer &nodes,
    NodeContainer empty_container;
    for ( i_node=nodes.begin(); i_node!=nodes.end(); ++i_node ) {
       cnect.insert( cnect.end(),
-#if USE_SORTED_SET
+#ifdef USE_SORTED_SET
                     typename Connectivity::value_type((*i_node).getLocalIndex(),
                                              empty_container)
 #else
@@ -494,7 +494,7 @@ void LayerEdgeSet<DIM>::findEdges_rbbt( const LayerNodeSet<DIM> &head,
 
       const int num_overlaps = overlap_indices.size();
       nabrs_for_box.clear();
-#if USE_SORTED_SET
+#ifdef USE_SORTED_SET
       nabrs_for_box.reserve(num_overlaps);
 #endif
       for ( i=0; i<num_overlaps; ++i ) {
@@ -514,7 +514,7 @@ void LayerEdgeSet<DIM>::findEdges_rbbt( const LayerNodeSet<DIM> &head,
           * also.  Therefore, we can append the nodes sequentially (without
           * searching for their positions in the neighbor container.
           */
-#if USE_SORTED_SET
+#ifdef USE_SORTED_SET
          nabrs_for_box.append(nabr);
 #else
          nabrs_for_box.insert( nabrs_for_box.end(), nabr );
@@ -643,7 +643,7 @@ void LayerEdgeSet<DIM>::findEdges_quadratic( const LayerEdgeSet &other )
                NabrContainer &sthis_node_nabrs =
                   sthis_cnect[sthis_node.getLocalIndex()];
 
-#if USE_SORTED_SET
+#ifdef USE_SORTED_SET
                sthis_node_nabrs.append( other_node );
 #else
                sthis_node_nabrs.insert( sthis_node_nabrs.end(), other_node );
@@ -709,8 +709,8 @@ void LayerEdgeSet<DIM>::findEdges_serial( LayerEdgeSet &other )
 
    const bool outer_is_finer =
       outer_layer.getBaseRefinementRatio() > inner_layer.getBaseRefinementRatio();
-   const hier::IntVector<DIM> outer_inner_ratio = outer_is_finer ?
-     outer_layer.getBaseRefinementRatio()/inner_layer.getBaseRefinementRatio() : hier::IntVector<DIM>(0);
+//   const hier::IntVector<DIM> outer_inner_ratio = outer_is_finer ?
+//     outer_layer.getBaseRefinementRatio()/inner_layer.getBaseRefinementRatio() : hier::IntVector<DIM>(0);
 
    const bool inner_is_finer =
       inner_layer.getBaseRefinementRatio() > outer_layer.getBaseRefinementRatio();
@@ -743,8 +743,6 @@ void LayerEdgeSet<DIM>::findEdges_serial( LayerEdgeSet &other )
          // (*j).getBox().grow(d_gcw);
       }
    }
-
-   NabrContainer dummy_nabr_container;
 
    typename NodeContainer::const_iterator i_outer_node;
    for ( i_outer_node=outer_nodes.begin();

@@ -2,11 +2,11 @@
 #define included_solv_CellPoissonHypreSolver_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonHypreSolver.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonHypreSolver.C $
  * Package:     SAMRAI solvers
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1786 $
- * Modified:    $LastChangedDate: 2007-12-17 19:58:43 -0800 (Mon, 17 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1846 $
+ * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
  * Description: Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -15,6 +15,7 @@
 #ifdef HAVE_HYPRE
 
 #include <stdlib.h>
+#include "BoundaryBoxUtils.h"
 #include "CartesianPatchGeometry.h"
 #include "CartesianGridGeometry.h"
 #include "PatchGeometry.h"
@@ -761,7 +762,6 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
     */
    tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(d_ln);
    const hier::IntVector<DIM> no_ghosts(0);
-   typename hier::PatchLevel<DIM>::Iterator p(level);
    for (typename hier::PatchLevel<DIM>::Iterator pi(*level); pi; pi++ ) {
 
       hier::Patch<DIM> &patch = *level->getPatch(*pi);
@@ -886,11 +886,12 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                TBOX_ERROR(d_object_name << ": Illegal boundary type in "
                           << "CellPoissonHypreSolver<DIM>::setMatrixCoefficients\n");
             }
+            const hier::BoundaryBoxUtils<DIM> bbu(boundary_box);
             const int location_index = boundary_box.getLocationIndex();
             const hier::BoundaryBox<DIM> trimmed_boundary_box =
-               trimBoundaryBox( boundary_box, patch );
+               bbu.trimBoundaryBox( patch.getBox() );
             const hier::Box<DIM> bccoef_box =
-               makeSideBoundaryBox(boundary_box);
+               bbu.getSurfaceBoxFromBoundaryBox();
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                acoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
             tbox::Pointer<pdat::ArrayData<DIM,double> >
@@ -902,8 +903,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                                                      gcoef_data,
                                                      d_physical_bc_variable,
                                                      patch,
-                                                     boundary_box,
-                                                     0.0 );
+                                                     boundary_box);
             pdat::ArrayData<DIM,double> &Ak0_data =
                Ak0->getArrayData(location_index/2,
                                  location_index%2);
@@ -945,10 +945,11 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                           << "CellPoissonHypreSolver<DIM>::setMatrixCoefficients\n");
             }
             const int location_index = boundary_box.getLocationIndex();
+            const hier::BoundaryBoxUtils<DIM> bbu(boundary_box);
             const hier::BoundaryBox<DIM> trimmed_boundary_box =
-               trimBoundaryBox( boundary_box, patch );
+               bbu.trimBoundaryBox( patch.getBox() );
             const hier::Box<DIM> bccoef_box =
-               makeSideBoundaryBox(boundary_box);
+               bbu.getSurfaceBoxFromBoundaryBox();
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                acoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
             tbox::Pointer<pdat::ArrayData<DIM,double> >
@@ -956,16 +957,15 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                gcoef_data = NULL;
             /*
-	      Reset invalid ghost data id to help detect use in setBcCoefs.
-            */
+	     * Reset invalid ghost data id to help detect use in setBcCoefs.
+             */
             d_cf_bc_coef.setGhostDataId( -1 );
             d_cf_bc_coef.setBcCoefs( acoef_data,
                                      bcoef_data,
                                      gcoef_data,
                                      d_coarsefine_bc_variable,
                                      patch,
-                                     boundary_box,
-                                     0.0 );
+                                     boundary_box );
             pdat::ArrayData<DIM,double> &Ak0_data =
                Ak0->getArrayData(location_index/2,
                                  location_index%2);
@@ -1084,22 +1084,22 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::add_gAk0_toRhs(
    for ( int n=0; n<n_bdry_boxes; ++n ) {
 
       const hier::BoundaryBox<DIM> &boundary_box = bdry_boxes[n];
-#if DEBUG_CHECK_ASSERTIONS
+#ifdef DEBUG_CHECK_ASSERTIONS
       if ( boundary_box.getBoundaryType() != 1 ) {
          TBOX_ERROR(d_object_name << ": Illegal boundary type in "
                     << "CellPoissonHypreSolver<DIM>::add_gAk0_toRhs\n");
       }
 #endif
       const int location_index = boundary_box.getLocationIndex();
+      const hier::BoundaryBoxUtils<DIM> bbu(boundary_box);
       const hier::BoundaryBox<DIM> trimmed_boundary_box =
-         trimBoundaryBox( boundary_box, patch );
+         bbu.trimBoundaryBox( patch.getBox() );
       const hier::Index<DIM> &lower = trimmed_boundary_box.getBox().lower();
       const hier::Index<DIM> &upper = trimmed_boundary_box.getBox().upper();
       const hier::Box<DIM> &rhsbox = rhs.getArrayData().getBox();
       const hier::Box<DIM> &Ak0box = Ak0->getArrayData(location_index/2,
                                                   location_index%2).getBox();
-      const hier::Box<DIM> bccoef_box =
-         makeSideBoundaryBox(boundary_box);
+      const hier::Box<DIM> bccoef_box = bbu.getSurfaceBoxFromBoundaryBox();
       tbox::Pointer<pdat::ArrayData<DIM,double> >
          acoef_data = NULL;
       tbox::Pointer<pdat::ArrayData<DIM,double> >
@@ -1111,8 +1111,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::add_gAk0_toRhs(
                                  gcoef_data,
                                  d_physical_bc_variable,
                                  patch,
-                                 boundary_box,
-                                 0.0 );
+                                 boundary_box );
       /*
        * Nomenclature for indices: cel=first-cell, gho=ghost,
        * beg=beginning, end=ending.
@@ -1278,8 +1277,7 @@ template<int DIM> int CellPoissonHypreSolver<DIM>::solveSystem( const int u ,
        */
       d_physical_bc_simple_case.cacheDirichletData(u);
    }
-
-   int converge;
+   
 
    /*
     * Modify right-hand-side to account for boundary conditions and
@@ -1361,16 +1359,16 @@ template<int DIM> int CellPoissonHypreSolver<DIM>::solveSystem( const int u ,
    }
 
    if ( d_use_smg ) {
-      converge = HYPRE_StructSMGSolve(d_mg_data,
-                                      d_matrix,
-                                      d_linear_rhs,
-                                      d_linear_sol);
+      HYPRE_StructSMGSolve(d_mg_data,
+			   d_matrix,
+			   d_linear_rhs,
+			   d_linear_sol);
    } 
    else {
-      converge = HYPRE_StructPFMGSolve(d_mg_data,
-                                       d_matrix,
-                                       d_linear_rhs,
-                                       d_linear_sol);
+      HYPRE_StructPFMGSolve(d_mg_data,
+			    d_matrix,
+			    d_linear_rhs,
+			    d_linear_sol);
    }
 
    if (d_print_solver_info) {
@@ -1584,84 +1582,6 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::adjustBoundaryEntries(
    }
 }
 
-
-
-
-/*
-************************************************************************
-* Trim a boundary box so it does not stick out past the corners of a   *
-* patch.                                                               *
-************************************************************************
-*/
-
-template<int DIM> hier::BoundaryBox<DIM> CellPoissonHypreSolver<DIM>::trimBoundaryBox(
-   const hier::BoundaryBox<DIM> &boundary_box ,
-   const hier::Patch<DIM> &patch ) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( boundary_box.getBoundaryType() == 1 );
-#endif
-   const hier::Box<DIM> &bbox = boundary_box.getBox();
-   const hier::Box<DIM> &pbox = patch.getBox();
-   const hier::Index<DIM> &plo = pbox.lower();
-   const hier::Index<DIM> &pup = pbox.upper();
-   const hier::Index<DIM> &blo = bbox.lower();
-   const hier::Index<DIM> &bup = bbox.upper();
-   const int boundary_normal = boundary_box.getLocationIndex()/2;
-   hier::Index<DIM> newlo, newup;
-   /*
-    * Loop through directions.
-    * Preserve box size in direction normal to boundary.
-    * Trim box size in direction transverse to boundary.
-    */
-   int d;
-   for ( d=0; d<DIM; ++d ) {
-      if ( d == boundary_normal ) {
-         newlo(d) = blo(d);
-         newup(d) = bup(d);
-      }
-      else {
-         // On min side, use max between boundary and patch boxes.
-         newlo(d) = tbox::MathUtilities<int>::Max( blo(d) , plo(d) );
-         // On max side, use min between boundary and patch boxes.
-         newup(d) = tbox::MathUtilities<int>::Min( bup(d) , pup(d) );
-      }
-   }
-   const hier::Box<DIM> newbox(newlo,newup);
-   const hier::BoundaryBox<DIM> newbbox( newbox,
-                                    boundary_box.getBoundaryType(),
-                                    boundary_box.getLocationIndex() );
-   return newbbox;
-}
-
-
-
-/*
-************************************************************************
-* Make surface box on boundary using standard boundary box             *
-************************************************************************
-*/
-
-template<int DIM> hier::Box<DIM> CellPoissonHypreSolver<DIM>::makeSideBoundaryBox(
-   const hier::BoundaryBox<DIM> &boundary_box ) const
-{
-   if ( boundary_box.getBoundaryType() != 1 ) {
-      TBOX_ERROR(d_object_name
-                 << ": CartesianRobinBcHelper<DIM>::makeSideBoundaryBox\n"
-                 << "called with improper boundary box\n");
-   }
-   hier::Box<DIM> face_indices = boundary_box.getBox();
-   int location_index = boundary_box.getLocationIndex();
-   if ( location_index%2 == 0 ) {
-      /*
-       * On the min index side, the face indices are one higher
-       * than the boundary cell indices, in the direction normal
-       * to the boundary.
-       */
-      face_indices.shift(location_index/2,1);
-   }
-   return face_indices;
-}
 
 
 

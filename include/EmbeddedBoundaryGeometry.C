@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1820 $
-// Modified:    $LastChangedDate: 2007-12-21 08:43:36 -0800 (Fri, 21 Dec 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Compute and store geometry information about the 
 //              embedded boundary
 //              
@@ -361,6 +361,9 @@ EmbeddedBoundaryGeometry<DIM>::buildEmbeddedBoundaryOnLevel(
       const tbox::Pointer<hier::PatchHierarchy<DIM> > hierarchy,
       const tbox::Pointer<hier::PatchLevel<DIM> > old_level)
 {
+   NULL_USE(hierarchy);
+   NULL_USE(old_level);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(level.isNull()));
 #endif
@@ -1488,6 +1491,8 @@ EmbeddedBoundaryGeometry<DIM>::postprocessRefine(
    const hier::Box<DIM>& fine_box,
    const hier::IntVector<DIM>& ratio)
 {
+   NULL_USE(coarse);
+
    tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > feboundary =
       fine.getPatchData(d_ebdry_data_id);
    tbox::Pointer< pdat::CellData<DIM,int> > fcell_flag =
@@ -1657,9 +1662,9 @@ EmbeddedBoundaryGeometry<DIM>::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector<DIM>& ghost_width_to_fill)
 {
-   (void) patch;
-   (void) fill_time;
-   (void) ghost_width_to_fill;
+   NULL_USE(patch);
+   NULL_USE(fill_time);
+   NULL_USE(ghost_width_to_fill);
 }
 
 /*
@@ -1960,7 +1965,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
    
    hier::Index<DIM> ic = cut_cell.getIndex();
 
-   int i, n, ilo, ihi;
+   int i, n;
 
    /* 
     * Loop over "edges" in each direction to mark the boundary nodes.
@@ -1978,28 +1983,20 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
          if ((i == 0) && (n == 0)) {
             // nlo = 0,0, nhi = 1,0 
             nhi(0) = 1;
-            ilo = 0;
-            ihi = 1;
          } else if ((i == 0) && (n == 1)) {
             // nlo = 0,1, nhi = 1,1
             nlo(1) = 1;
             nhi(0) = 1;
             nhi(1) = 1;
-            ilo = 2;
-            ihi = 3;
          }
          if ((i == 1) && (n == 0)) {
             // nlo = 0,0  nhi = 0,1
             nhi(1) = 1;
-            ilo = 0;
-            ihi = 2;
          } else if ((i == 1) && (n == 1)) {
             // nlo = 1,0  nhi = 1,1
             nlo(0) = 1;
             nhi(0) = 1;
             nhi(1) = 1;
-            ilo = 1;
-            ihi = 3;
          }
          pdat::NodeIndex<DIM> nodelo(ic,nlo);
          pdat::NodeIndex<DIM> nodehi(ic,nhi);
@@ -2302,7 +2299,6 @@ EmbeddedBoundaryGeometry<DIM>::calculateVolume(
    double& error_estimate) const
 {
 
-   int i,k;
    double volume = 0.;
 
    /*
@@ -2310,7 +2306,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateVolume(
     * of subdivides.  The total number of sub cells will be subcells^DIM.
     */
    int subcells = 1;
-   for (i = 0; i < d_max_subdivides; i++) {
+   for (int i = 0; i < d_max_subdivides; i++) {
       subcells *= 2;
    }
 
@@ -2321,7 +2317,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateVolume(
    double dx[DIM];
    int total_subnodes = 1;
    double subcell_vol = 1.;
-   for (i = 0; i < DIM; i++) {
+   for (int i = 0; i < DIM; i++) {
       nx[i] = subcells + 1;
       dx[i] = (cell_upper[i] - cell_lower[i])/(double)subcells;
       total_subnodes *= (subcells + 1);
@@ -2346,7 +2342,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateVolume(
     *         cell_flag > 0 && < 2^DIM (cut) volume += subcell_vol/2. 
     */
    int two_to_the_ndim = 1;
-   for (i = 0; i < DIM; i++) {
+   for (int i = 0; i < DIM; i++) {
       two_to_the_ndim *= 2;
    }
       
@@ -2357,7 +2353,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateVolume(
       khi = nx[DIM-1]-1;
    }
    
-   for (k = 0; k < khi; k++) {
+   for (int k = 0; k < khi; k++) {
       for (int j = 0; j < nx[1]-1; j++) {
          for (int i = 0; i < nx[0]-1; i++) {
             if (DIM == 2) {
@@ -2541,7 +2537,6 @@ EmbeddedBoundaryGeometry<DIM>::calculateArea(
    const int face,
    double& error_estimate) const
 {
-   int i;
    double area = 0.;
 
    double face_lower[DIM];
@@ -2575,7 +2570,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateArea(
    }
       
    double face_area = 1.0;
-   for (i = 0; i < DIM; i++) {
+   for (int i = 0; i < DIM; i++) {
       if (i == face_dim) {
          if (face_side == 0) {
             face_lower[i] = cell_lower[i];
@@ -2596,7 +2591,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateArea(
     * of subdivides.  The total number of sub cells will be subcells^DIM.
     */
    int subcells = 1;
-   for (i = 0; i < d_max_subdivides; i++) {
+   for (int i = 0; i < d_max_subdivides; i++) {
       subcells *= 2;
    }
 
@@ -2607,7 +2602,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateArea(
    double dx[DIM];
    int total_subnodes = 1;
    double subface_area = 1.;
-   for (i = 0; i < DIM; i++) {
+   for (int i = 0; i < DIM; i++) {
       if (i == face_dim) {
          nx[i] = 1;
          dx[i] = 0.;
@@ -2636,7 +2631,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateArea(
     *         cell_flag > 0 && < 2^DIM (cut) area += subcell_area/2. 
     */
    int two_to_the_ndim = 1;
-   for (i = 0; i < DIM-1; i++) {
+   for (int i = 0; i < DIM-1; i++) {
       two_to_the_ndim *= 2;
    }
       
@@ -3500,9 +3495,9 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
       char *buffer2 = new char[16];
       int patch_id = patch->getPatchNumber();
       sprintf(buffer2, "patch_db[%d]", patch_id);
-      std::string name(buffer2);
+      std::string name2(buffer2);
       delete buffer2;
-      tbox::Pointer<tbox::Database> patch_db = db->putDatabase(name);
+      tbox::Pointer<tbox::Database> patch_db = db->putDatabase(name2);
       
       /*
        * Write solid cells for the patch.
@@ -3541,10 +3536,10 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
          
          char *buffer3 = new char[16];
          sprintf(buffer3, "cut_cell[%d]", cut_cell_ctr);
-         std::string name(buffer3);
+         std::string name3(buffer3);
          delete buffer3;
          tbox::Pointer<tbox::Database> cut_cell_db = 
-            patch_db->putDatabase(name);
+            patch_db->putDatabase(name3);
          
          tbox::Array<int> index;
          index.resizeArray(DIM);
@@ -3685,9 +3680,9 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
       char *buffer2 = new char[16];
       int patch_id = patch->getPatchNumber();
       sprintf(buffer2, "patch_db[%d]", patch_id);
-      std::string name(buffer2);
+      std::string name2(buffer2);
       delete buffer2;
-      tbox::Pointer<tbox::Database> patch_db = db->getDatabase(name);
+      tbox::Pointer<tbox::Database> patch_db = db->getDatabase(name2);
 
       /*
        * Read solid cells from patch_db
@@ -3728,14 +3723,14 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
           */
          char *buffer3 = new char[16];
          sprintf(buffer3, "cut_cell[%d]", i);
-         std::string name(buffer3);
+         std::string name3(buffer3);
          delete buffer3;
    
          /*
           * Access database and data in it.
           */
          tbox::Pointer<tbox::Database> cut_cell_db = 
-            patch_db->getDatabase(name);
+            patch_db->getDatabase(name3);
 
          tbox::Array<int> index_array = cut_cell_db->getIntegerArray("index");
          hier::Index<DIM> index(0);

@@ -414,6 +414,37 @@ Doxygen is available at:  http://www.stack.nl/~dimitri/doxygen
 Graphviz is available at: http://www.graphviz.org/
 
 ****************************************************************************
+                            Platform notes
+****************************************************************************
+
+uP and IBM Power Systems
+------------------------
+
+On the Livermore Computing IBM Power Systems the configure script
+needs to be run with the "nopoe" command in order to correctly
+determine the compiler settings.  For example:
+
+nopoe  ../SAMRAI/configure `eval ../SAMRAI/config.suggest up_xlc` 
+
+The regression test suite needs to be run with the SHELL set to bash
+(or some other non-IBM sh shell).
+
+gmake SHELL=/usr/local/bin/bash checktest
+
+The default sh (/bin/sh) does not work with some of the scripting
+features being used.
+
+Apple Mac OS X
+--------------
+
+Note that this port has limited support by the LLNL SAMRAI team.
+
+SAMRAI was compiled successfully on Leopard.  The GNU 4.2 compilers
+and HDF that are configured using the DarwinPorts port were used and
+Xcode 3.0 installed for MPI.  Note that the X code toolkit from Appple
+does not include fortran which is why an alternative was used.
+
+****************************************************************************
 ****************************************************************************
 *  Looking for list of configure options?  We have encapsulated this in    *
 *  the new ``config.suggest'' tool.                                        *

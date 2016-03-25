@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/LoadBalancer.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/LoadBalancer.C $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1891 $
+// Modified:    $LastChangedDate: 2008-01-22 20:13:13 -0800 (Tue, 22 Jan 2008) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
 
@@ -58,11 +58,13 @@ template<int DIM>  LoadBalancer<DIM>::LoadBalancer(
    d_master_workload_data_id = -1;
 
    d_master_max_workload_factor = 1.0;
+   d_master_workload_tolerance = 0.0;
 
    d_master_bin_pack_method = "SPATIAL";
 
    d_workload_data_id.resizeArray(0);
    d_max_workload_factor.resizeArray(0);
+   d_workload_tolerance.resizeArray(0);
    d_bin_pack_method.resizeArray(0);
 
    d_ignore_level_box_union_is_single_box = false;
@@ -95,11 +97,13 @@ template<int DIM>  LoadBalancer<DIM>::LoadBalancer(
    d_master_workload_data_id = -1;
 
    d_master_max_workload_factor = 1.0;
+   d_master_workload_tolerance = 0.0;
 
    d_master_bin_pack_method = "SPATIAL";
 
    d_workload_data_id.resizeArray(0);
    d_max_workload_factor.resizeArray(0);
+   d_workload_tolerance.resizeArray(0);
    d_bin_pack_method.resizeArray(0);
 
    d_ignore_level_box_union_is_single_box = false;
@@ -159,6 +163,31 @@ template<int DIM> void LoadBalancer<DIM>::setMaxWorkloadFactor(
       d_master_max_workload_factor = factor;
       for (int ln = 0; ln < d_max_workload_factor.getSize(); ln++) {
          d_max_workload_factor[ln] = d_master_max_workload_factor;
+      } 
+   }
+}
+
+template<int DIM> void LoadBalancer<DIM>::setWorkloadTolerance(
+   double tolerance,
+   int level_number)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(tolerance > 0.0);
+#endif
+   if (level_number >= 0) {
+      int asize = d_workload_tolerance.getSize();
+      if (asize < level_number+1) {
+         d_workload_tolerance.resizeArray(level_number+1);
+         for (int i = asize; i < level_number-1; i++) {
+            d_workload_tolerance[i] =
+               d_master_workload_tolerance;
+         }
+         d_workload_tolerance[level_number] = tolerance;
+      }
+   } else {
+      d_master_workload_tolerance = tolerance;
+      for (int ln = 0; ln < d_workload_tolerance.getSize(); ln++) {
+         d_workload_tolerance[ln] = d_master_workload_tolerance;
       } 
    }
 }
@@ -610,6 +639,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithUniformWorkload(
                                                      tmp_work_list,
                                                      tmp_in_boxes_list,
                                                      average_work,
+                                                     getWorkloadTolerance(level_number),
                                                      min_size,
                                                      cut_factor,
                                                      bad_interval,
@@ -751,6 +781,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithNonuniformWorkload(
                                                         tmp_level,
                                                         wrk_indx,
                                                         average_work,
+                                                        getWorkloadTolerance(level_number),
                                                         min_size,
                                                         cut_factor,
                                                         bad_interval,
@@ -812,6 +843,8 @@ template<int DIM> void LoadBalancer<DIM>::printClassData(std::ostream& os) const
       << d_master_workload_data_id << std::endl;
    os << "d_master_max_workload_factor = "
       << d_master_max_workload_factor << std::endl;
+   os << "d_workload_tolerance = "
+      << d_master_workload_tolerance << std::endl;
    os << "d_master_bin_pack_method = "
       << d_master_bin_pack_method << std::endl;
 
@@ -826,6 +859,11 @@ template<int DIM> void LoadBalancer<DIM>::printClassData(std::ostream& os) const
    for (ln = 0; ln < d_max_workload_factor.getSize(); ln++) {
       os << "    d_max_workload_factor[" << ln << "] = "
          << d_max_workload_factor[ln] << std::endl;
+   }
+   os << "d_workload_tolerance..." << std::endl;
+   for (ln = 0; ln < d_workload_tolerance.getSize(); ln++) {
+      os << "    d_workload_tolerance[" << ln << "] = "
+         << d_workload_tolerance[ln] << std::endl;
    }
    os << "d_bin_pack_method..." << std::endl;
    for (ln = 0; ln < d_bin_pack_method.getSize(); ln++) {
@@ -861,15 +899,29 @@ template<int DIM> void LoadBalancer<DIM>::getFromInput(
          d_master_bin_pack_method = "GREEDY";
       }
 
-      d_master_max_workload_factor = 
-         db->getDoubleWithDefault("max_workload_factor", 
-                                  d_master_max_workload_factor);
-      if (d_master_max_workload_factor <= 0.0) {
-         TBOX_WARNING(d_object_name << ": "
-             << "Invalid 'max_workload_factor' value " 
-             << d_master_max_workload_factor 
-             << " found in input. \nDefault 1.0 will be used." << std::endl);
-         d_master_max_workload_factor = 1.0;
+      if(db -> keyExists("max_workload_factor") ) {
+	 d_max_workload_factor = db -> getDoubleArray("max_workload_factor");
+	 for(int i = 0; i < d_max_workload_factor.getSize(); i++) {
+	    if (d_max_workload_factor[i] < 0.0) {
+	       TBOX_ERROR(d_object_name << "Max workload values should be greater than 0");
+	    }
+	 }
+
+	 // Use last entry in array as value for finer levels
+	 d_master_max_workload_factor = d_max_workload_factor[d_max_workload_factor.getSize()-1];
+      }
+
+
+      if(db -> keyExists("workload_tolerance") ) {
+	 d_workload_tolerance = db -> getDoubleArray("workload_tolerance");
+	 for(int i = 0; i < d_workload_tolerance.getSize(); i++) {
+	    if (d_workload_tolerance[i] < 0.0 || d_workload_tolerance[i] >= 1.0) {
+	       TBOX_ERROR(d_object_name << "Workload tolerance should be >= 0 and < 1.0");
+	    }
+	 }
+
+	 // Use last entry in array as value for finer levels
+	 d_master_workload_tolerance = d_workload_tolerance[d_workload_tolerance.getSize()-1];
       }
 
       d_ignore_level_box_union_is_single_box =
@@ -994,6 +1046,18 @@ template<int DIM> double LoadBalancer<DIM>::getMaxWorkloadFactor(int level_numbe
                     d_master_max_workload_factor);
 
    return(factor);
+}
+
+template<int DIM> double LoadBalancer<DIM>::getWorkloadTolerance(int level_number) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(level_number >= 0);
+#endif
+   double tolerance = (level_number < d_workload_tolerance.getSize() ?
+                    d_workload_tolerance[level_number] :
+                    d_master_workload_tolerance);
+
+   return(tolerance);
 }
 
 template<int DIM> std::string LoadBalancer<DIM>::getBinPackMethod(int level_number) const

@@ -1,9 +1,9 @@
 /*
- * File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/FAC/FACOperatorStrategy.h $
+ * File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/FAC/FACOperatorStrategy.h $
  * Package:	SAMRAI solvers
  * Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:	$LastChangedRevision: 1704 $
- * Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:	$LastChangedRevision: 1845 $
+ * Modified:	$LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
  * Description:	Interface to user-defined operations used in FAC solve.
  */
 
@@ -225,8 +225,10 @@ public:
     * @param error error vector
     * @param residual residual vector
     * @param coarsest_ln coarsest level number
+    * @return 0 if solver converged to specified level, nonzero otherwise.
+    *
     */
-   virtual void solveCoarsestLevel(
+   virtual int solveCoarsestLevel(
       SAMRAIVectorReal<DIM,double> &error,
       const SAMRAIVectorReal<DIM,double> &residual,
       int coarsest_ln ) = 0;

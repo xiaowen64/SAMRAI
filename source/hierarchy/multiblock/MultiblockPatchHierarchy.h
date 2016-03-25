@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/multiblock/MultiblockPatchHierarchy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/multiblock/MultiblockPatchHierarchy.h $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1808 $
-// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+// Revision:    $LastChangedRevision: 1887 $
+// Modified:    $LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
 // Description: class to manage multiblocks
 //
 
@@ -146,7 +146,7 @@ public:
    /*!
     * @brief Returns the number of blocks in the multiblock domain.
     */
-   int getNumberBlocks();
+   int getNumberBlocks() const;
 
    /*!
     * @brief Return the number of neighbors a specific block of the Multiblock

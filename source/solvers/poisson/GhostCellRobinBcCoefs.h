@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/GhostCellRobinBcCoefs.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/GhostCellRobinBcCoefs.h $
  * Package:     SAMRAI solver package
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1818 $
- * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1845 $
+ * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
  * Description: Robin boundary condition problem-dependent interfaces
  */
 
@@ -124,8 +124,6 @@ public:
     * @param patch patch requiring bc coefficients
     * @param bdry_box boundary box showing where on the boundary
     *        the coefficient data is needed.
-    * @param fill_time Solution time corresponding to filling,
-    *        for use when coefficients are time-dependent.
     */
    void setBcCoefs (
       tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
@@ -133,8 +131,7 @@ public:
       tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
       const tbox::Pointer< hier::Variable<DIM> > &variable ,
       const hier::Patch<DIM> &patch ,
-      const hier::BoundaryBox<DIM> &bdry_box ,
-      double fill_time=0.0 ) const;
+      const hier::BoundaryBox<DIM> &bdry_box ) const;
 
    hier::IntVector<DIM> numberOfExtensionsFillable() const;
 

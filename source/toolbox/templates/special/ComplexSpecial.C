@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/special/ComplexSpecial.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/templates/special/ComplexSpecial.C $
 // Package:	SAMRAI templates
 // Copyright:	(c) 1997-2004 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1872 $
+// Modified:	$LastChangedDate: 2008-01-17 18:07:52 -0800 (Thu, 17 Jan 2008) $
 // Description:	special template file for complex numbers on SGI with CC
 //
 
@@ -17,11 +17,13 @@ template ostream& std::operator<<(ostream&,const std::complex<double>&);
  * << operator for complex type requires explicit instantiation with KCC
  * versions 3.4 and higher. 
  */
+#ifdef __KCC_VERSION
 #if __KCC_VERSION > 3400   
 template std::basic_ostream< char,std::char_traits<char> > &std::operator <<
      <double, char, std::char_traits<char> >
      (std::basic_ostream<char,std::char_traits<char> > &,
       const std::complex<double> &);
+#endif
 #endif
 
 #if defined(__SUNPRO_CC) 
@@ -52,7 +54,9 @@ template double std::__cmath_power<double>(double, unsigned);
 template double std::arg<double>(std::complex<double> const&);
 #ifdef HAVE_ISNAN_TEMPLATE
 template int __gnu_cxx::isnan<float>(float);
+template int __gnu_cxx::isnan<double>(double);
 template int __gnu_cxx::__capture_isnan<float>(float);
+template int __gnu_cxx::__capture_isnan<double>(double);
 #endif
 #endif
 #endif

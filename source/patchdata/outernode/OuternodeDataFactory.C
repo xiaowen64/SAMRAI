@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outernode/OuternodeDataFactory.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/outernode/OuternodeDataFactory.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$LastChangedRevision: 1776 $
-// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Factory class for creating outernode data objects
 //
 
@@ -64,6 +64,7 @@ template <int DIM, class TYPE>
 tbox::Pointer<hier::PatchDataFactory<DIM> >
 OuternodeDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
+   NULL_USE(ghosts);
    return(new OuternodeDataFactory<DIM,TYPE>(d_depth));
 }
 

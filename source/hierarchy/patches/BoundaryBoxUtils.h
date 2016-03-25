@@ -2,8 +2,8 @@
 // File:	$URL$
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2006 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1844 $
+// Modified:	$LastChangedDate: 2008-01-10 10:16:22 -0800 (Thu, 10 Jan 2008) $
 // Description:	Generic utilities for boundary box calculus.
 //
 
@@ -122,6 +122,44 @@ void shiftBoxInward(
  * all other boundary types.
  */
 int normalDir() const;
+
+/*!
+ * @brief Trim a boundary box so that it does not stick out
+ * past a limiting box in direction transverse to the boundary
+ * normal.
+ *
+ * This method affects the only box dimensions parallel to
+ * the boundary.  For methods affecting other box dimensions,
+ * see stretchBoxToGhostWidth().
+ *
+ * The boundary type of the BoundaryBox that was given to the BoundaryBoxUtils
+ * constructor must be less than DIM.
+ *
+ * @param limit_box Box to not stick past
+ *
+ * @return New trimmed boundary box.
+*/
+hier::BoundaryBox<DIM> trimBoundaryBox(
+   const hier::Box<DIM> &limit_box ) const;
+
+/*!
+ * @brief Return box describing the index space of the outer surface of
+ * a boundary box.
+ *
+ * Define a box describing the indices of the surface of the 
+ * the input boundary box.  A surface is a face in 3D and an edge
+ * in 2D.  These surfaces lie on the boundary itself.
+
+ * The input boundary_box must be of type 1
+ * (see hier::BoundaryBox::getBoundaryType()).
+
+ * This is a utility function for working with the surface
+ * indices coresponding to a boundary box.
+
+ * @return a box to define the face indices corresponding to
+ * boundary_box
+*/
+hier::Box<DIM> getSurfaceBoxFromBoundaryBox() const;
 
 private:
 

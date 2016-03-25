@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxGraph.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/BoxGraph.C $
 // Package:     SAMRAI hierarchy
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Utility class to determines topographical box relationships
 //
 
@@ -370,15 +370,15 @@ template<int DIM> void BoxGraph<DIM>::addEdges(
 {
    for (int i=0; i<dst_ct; ++i) {
       typename BoxGraph<DIM>::GraphNode dst_node = dst[i];
-      Box<DIM> dst = *(dst_node.box);
+      Box<DIM> dstbox = *(dst_node.box);
       int dst_idx = dst_node.idx;
 
       for (int j=0; j<src_ct; ++j) {
          typename BoxGraph<DIM>::GraphNode src_node = src[j];
-         Box<DIM> src = *(src_node.box);
+         Box<DIM> srcbox = *(src_node.box);
          int src_idx = src_node.idx;
 
-         if (dst.intersects(src)) {
+         if (dstbox.intersects(srcbox)) {
 
             //found edge (i,j); so need to insert j in adj(i),
             //if not previously inserted.  (The index could 

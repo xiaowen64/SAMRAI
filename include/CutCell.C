@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CutCell.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/CutCell.C $
 // Package:     SAMRAI application
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Cut cell struct for embedded boundary implementations.
 //
 
@@ -808,6 +808,7 @@ CutCell<DIM>::copySourceItem(hier::Index<DIM>& index,
                         const hier::IntVector<DIM>& src_offset,
                         appu::CutCell<DIM>& src_item)
 {
+   NULL_USE(src_offset);
 
    /*
     * Copy src_item data into *this.  Note that we don't do
@@ -1023,12 +1024,12 @@ CutCell<DIM>::unpackStream(tbox::AbstractStream& stream,
    int* ibuffer = new int[int_buff_size];
    int counter = 0;
    stream.unpack(ibuffer, int_buff_size);
-   pdat::CellIndex<DIM> index;
+   pdat::CellIndex<DIM> cell_index;
    for (i = 0; i < DIM; i++) {
-      index(i) = ibuffer[counter];
+      cell_index(i) = ibuffer[counter];
       counter++;
    }
-   d_index = index + offset;
+   d_index = cell_index + offset;
 
    int d_num_boundary_nodes = ibuffer[counter];
    counter++;
@@ -1036,13 +1037,13 @@ CutCell<DIM>::unpackStream(tbox::AbstractStream& stream,
    if (s_enable_boundary_node_storage) {
 
       for (j = 0; j < d_num_boundary_nodes; j++) {
-         pdat::NodeIndex<DIM> index;
+         pdat::NodeIndex<DIM> node_index;
          for (i = 0; i < DIM; i++) {
-            index(i) = ibuffer[counter];
+            node_index(i) = ibuffer[counter];
             counter++;
          }
          
-         BoundaryNode<DIM> bn(index);
+         BoundaryNode<DIM> bn(node_index);
          
          int iosb = ibuffer[counter];
          counter++;
@@ -1050,10 +1051,10 @@ CutCell<DIM>::unpackStream(tbox::AbstractStream& stream,
          
          for (k = 0; k < DIM; k++) {
             for (i = 0; i < DIM; i++) {
-               index(i) = ibuffer[counter];
+               node_index(i) = ibuffer[counter];
                counter++;
             }
-            bn.setNearestNeighborNode(index);
+            bn.setNearestNeighborNode(node_index);
          }
          d_boundary_nodes[j] = bn;
       }
@@ -1308,25 +1309,25 @@ CutCell<DIM>::getFromDatabase(
    int counter = 0;
 
    database->getIntegerArray("ibuffer", ibuffer, int_buff_size);
-   pdat::CellIndex<DIM> index;
+   pdat::CellIndex<DIM> cell_index;
    for (i = 0; i < DIM; i++) {
-      index(i) = ibuffer[counter];
+      cell_index(i) = ibuffer[counter];
       counter++;
    }
-   d_index = index;
+   d_index = cell_index;
 
    int d_num_boundary_nodes = ibuffer[counter];
    counter++;
 
    if (s_enable_boundary_node_storage) {
       for (j = 0; j < d_num_boundary_nodes; j++) {
-         pdat::NodeIndex<DIM> index;
+         pdat::NodeIndex<DIM> node_index;
          for (i = 0; i < DIM; i++) {
-            index(i) = ibuffer[counter];
+            node_index(i) = ibuffer[counter];
             counter++;
          }
 
-         BoundaryNode<DIM> bn(index);
+         BoundaryNode<DIM> bn(node_index);
          
          int iosb = ibuffer[counter];
          counter++;
@@ -1334,10 +1335,10 @@ CutCell<DIM>::getFromDatabase(
          
          for (k = 0; k < DIM; k++) {
             for (i = 0; i < DIM; i++) {
-               index(i) = ibuffer[counter];
+               node_index(i) = ibuffer[counter];
                counter++;
             }
-            bn.setNearestNeighborNode(index);
+            bn.setNearestNeighborNode(node_index);
          }
          d_boundary_nodes[j] = bn;
       }

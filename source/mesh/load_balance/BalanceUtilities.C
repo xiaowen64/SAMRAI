@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/BalanceUtilities.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/BalanceUtilities.C $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: utility routines useful for load balancing operations
 //
 
@@ -620,12 +620,13 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionUniformSi
    const hier::Box<DIM>& in_box,
    double in_box_workload,
    double ideal_workload,
+   const double workload_tolerance,
    const hier::IntVector<DIM>& min_size,
    const hier::IntVector<DIM>& cut_factor,
    tbox::Array< tbox::Array<bool> >& bad_cut_points)
 {
 
-   if (in_box_workload <= ideal_workload) {
+   if (in_box_workload <= ( (1. + workload_tolerance) * ideal_workload )) {
 
       out_boxes.addItem(in_box);
       out_workloads.addItem(in_box_workload);
@@ -701,6 +702,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionUniformSi
                                                    box_lo,
                                                    box_lo_workload,
                                                    ideal_workload,
+						   workload_tolerance,
                                                    min_size,
                                                    cut_factor,
                                                    bad_cut_points_for_boxlo);
@@ -714,6 +716,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionUniformSi
                                                    box_hi,
                                                    box_hi_workload, 
                                                    ideal_workload,
+						   workload_tolerance,
                                                    min_size,
                                                    cut_factor,
                                                    bad_cut_points_for_boxhi);
@@ -751,12 +754,13 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionNonunifor
    double in_box_workload,
    int work_data_index,
    double ideal_workload,
+   const double workload_tolerance,
    const hier::IntVector<DIM>& min_size,
    const hier::IntVector<DIM>& cut_factor,
    tbox::Array< tbox::Array<bool> >& bad_cut_points)
 {
 
-   if (in_box_workload <= ideal_workload) {
+   if (in_box_workload <= ( (1. + workload_tolerance) * ideal_workload ) ) {
 
       out_boxes.addItem(in_box);
       out_workloads.addItem(in_box_workload);
@@ -840,6 +844,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionNonunifor
                                                       box_lo_workload,
                                                       work_data_index,
                                                       ideal_workload,
+						      workload_tolerance,
                                                       min_size,
                                                       cut_factor,
                                                       bad_cut_points_for_boxlo);
@@ -855,6 +860,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionNonunifor
                                                       box_hi_workload,
                                                       work_data_index,
                                                       ideal_workload,
+						      workload_tolerance,
                                                       min_size,
                                                       cut_factor,
                                                       bad_cut_points_for_boxhi);
@@ -963,6 +969,10 @@ template<int DIM> double BalanceUtilities<DIM>::binPack(
      if (work[iw] > max_work) max_work = work[iw];
    }
 
+// Disable Intel warning on real comparison
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
    return(max_work == 0.0 ? 100.0 : 100.0*avg_work/max_work);
 
 }
@@ -1122,6 +1132,11 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
      if (work[i] > max_work) max_work = work[i];
    }
 
+
+// Disable Intel warning on real comparison
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
    return(max_work == 0.0 ? 100.0 : 100.0*avg_work/max_work);
 
 }
@@ -1142,6 +1157,7 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
    tbox::List<double>& out_workloads,
    const hier::BoxList<DIM>& in_boxes,
    const double ideal_workload,
+   const double workload_tolerance,
    const hier::IntVector<DIM>& min_size,
    const hier::IntVector<DIM>& cut_factor,
    const hier::IntVector<DIM>& bad_interval,
@@ -1149,6 +1165,7 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ideal_workload > 0);
+   TBOX_ASSERT((workload_tolerance  >= 0) && (workload_tolerance  < 1.0));
    TBOX_ASSERT(min_size > hier::IntVector<DIM>(0));
    TBOX_ASSERT(cut_factor > hier::IntVector<DIM>(0));
    TBOX_ASSERT(bad_interval >= hier::IntVector<DIM>(0));
@@ -1169,7 +1186,12 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
 #endif
       double boxwork = (double)box2chop.size();
 
-      if (boxwork > ideal_workload) {
+      if (boxwork <= ( (1.0 + workload_tolerance) * ideal_workload )) {
+
+         out_boxes.addItem(box2chop);
+         out_workloads.addItem(boxwork);
+
+      } else {
 
          tbox::Array< tbox::Array<bool> > bad_cut_points(DIM);
 
@@ -1187,6 +1209,7 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
             box2chop,
             boxwork,
             ideal_workload,
+	    workload_tolerance,
             min_size,
             cut_factor,
             bad_cut_points);
@@ -1194,13 +1217,8 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
          out_boxes.catenateItems(tempboxes);
          out_workloads.catenateItems(temploads);
 
-      } else {
-
-         out_boxes.addItem(box2chop);
-         out_workloads.addItem(boxwork);
 
       }
-
    }
 
 }
@@ -1223,6 +1241,7 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionNonuniform(
    const tbox::Pointer< hier::PatchLevel<DIM> >& in_level,
    int work_id,
    double ideal_workload,
+   const double workload_tolerance,
    const hier::IntVector<DIM>& min_size,
    const hier::IntVector<DIM>& cut_factor,
    const hier::IntVector<DIM>& bad_interval,
@@ -1230,6 +1249,7 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionNonuniform(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ideal_workload > 0);
+   TBOX_ASSERT((workload_tolerance  >= 0) && (workload_tolerance  < 1.0));
    TBOX_ASSERT(min_size > hier::IntVector<DIM>(0));
    TBOX_ASSERT(cut_factor > hier::IntVector<DIM>(0));
    TBOX_ASSERT(bad_interval >= hier::IntVector<DIM>(0));
@@ -1251,7 +1271,12 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionNonuniform(
                                                  work_id, 
                                                  box2chop);
 
-      if (boxwork > ideal_workload) {
+      if (boxwork <= ( (1. + workload_tolerance) * ideal_workload ) ) {
+
+         out_boxes.addItem(box2chop);
+         out_workloads.addItem(boxwork);
+
+      } else {
 
          tbox::Array< tbox::Array<bool> > bad_cut_points(DIM);
 
@@ -1271,19 +1296,15 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionNonuniform(
             boxwork,
             work_id,
             ideal_workload,
+	    workload_tolerance,
             min_size,
             cut_factor,
             bad_cut_points);
 
          out_boxes.catenateItems(tempboxes);
          out_workloads.catenateItems(temploads);
-
-      } else {
-
-         out_boxes.addItem(box2chop);
-         out_workloads.addItem(boxwork);
-
       }
+
 
    }
 
@@ -1351,7 +1372,7 @@ template<int DIM> void BalanceUtilities<DIM>::computeDomainDependentProcessorLay
       for (int k = pnew.getSize()-1; k >=0; k--) {
 
          //  determine i - direction in which d is largest
-         int i = 0;
+         i = 0;
          int nx = d[i];
          for (int j = 0; j < DIM; j++) {
             if (d[j] > nx) i = j;
@@ -1456,7 +1477,7 @@ template<int DIM> void BalanceUtilities<DIM>::computeDomainIndependentProcessorL
            (pnew.getSize() > 0) ) {
 
          //  determine i - direction in which d is largest
-         int i = 0;
+         i = 0;
          int nx = d[i];
          for (int j = 0; j < DIM; j++) {
             if (d[j] > nx) i = j;
@@ -1577,6 +1598,8 @@ template<int DIM> double BalanceUtilities<DIM>::computeLoadBalanceEfficiency(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!level.isNull());
 #endif 
+
+   NULL_USE(os);
 
    int i;
 

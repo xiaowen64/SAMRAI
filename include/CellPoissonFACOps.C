@@ -2,10 +2,10 @@
 #define included_solv_CellPoissonFACOps_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACOps.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonFACOps.C $
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1786 $
- * Modified:    $LastChangedDate: 2007-12-17 19:58:43 -0800 (Mon, 17 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1863 $
+ * Modified:    $LastChangedDate: 2008-01-15 16:53:13 -0800 (Tue, 15 Jan 2008) $
  * Description: Operator class for cell-centered scalar Poisson using FAC
  */
 
@@ -13,6 +13,7 @@
 
 #include IOMANIP_HEADER_FILE
 
+#include "BoundaryBoxUtils.h"
 #include "CartesianGridGeometry.h"
 #include "CartesianPatchGeometry.h"
 #include "Index.h"
@@ -802,8 +803,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::initializeOperatorState (
       tbox::Pointer<hier::PatchLevel<DIM> > level_ptr =
          d_hierarchy->getPatchLevel(ln);
       hier::PatchLevel<DIM> &level = *level_ptr;
-      typename hier::PatchLevel<DIM>::Iterator pi;
-      for ( pi.initialize(level); pi; pi++ ) {
+      for ( typename hier::PatchLevel<DIM>::Iterator pi(level); pi; pi++ ) {
          pn = pi();
          hier::Patch<DIM> &patch = *level.getPatch(pn);
          tbox::Pointer< hier::PatchData<DIM> > fd =
@@ -1135,6 +1135,9 @@ template<int DIM> void CellPoissonFACOps<DIM>::postprocessOneCycle(
    const SAMRAIVectorReal<DIM,double> &current_soln ,
    const SAMRAIVectorReal<DIM,double> &residual )
 {
+   NULL_USE(current_soln);
+   NULL_USE(residual);
+
    if ( d_enable_logging ) {
       if ( d_preconditioner ) {
          /*
@@ -1648,7 +1651,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::ewingFixFlux (
 ********************************************************************
 */
 
-template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel(
+template<int DIM> int CellPoissonFACOps<DIM>::solveCoarsestLevel(
    SAMRAIVectorReal<DIM,double> &data ,
    const SAMRAIVectorReal<DIM,double> &residual ,
    int coarsest_ln )  {
@@ -1656,6 +1659,8 @@ template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel(
    t_solve_coarsest->start();
 
    checkInputPatchDataIndices();
+
+   int return_value = 0;
 
    if ( d_coarse_solver_choice == "jacobi" ) {
       d_residual_tolerance_during_smoothing = d_coarse_solver_tolerance;
@@ -1680,7 +1685,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel(
                  << "' unavailable in "
                  << "scapCellPoissonOps::solveCoarsestLevel.");
 #else
-      solveCoarsestLevel_HYPRE( data, residual, coarsest_ln );
+      return_value = solveCoarsestLevel_HYPRE( data, residual, coarsest_ln );
 #endif
    }
    else {
@@ -1694,7 +1699,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel(
 
    t_solve_coarsest->stop();
 
-   return;
+   return return_value;
 }
 
 
@@ -1707,16 +1712,20 @@ template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel(
 ********************************************************************
 */
 
-template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel_HYPRE(
+template<int DIM> int CellPoissonFACOps<DIM>::solveCoarsestLevel_HYPRE(
    SAMRAIVectorReal<DIM,double> &data ,
    const SAMRAIVectorReal<DIM,double> &residual ,
    int coarsest_ln )  {
+
+   NULL_USE(coarsest_ln);
 
 #ifndef HAVE_HYPRE
       TBOX_ERROR(d_object_name << ": Coarse level solver choice '"
                  << d_coarse_solver_choice
                  << "' unavailable in "
                  << "CellPoissonFACOps::solveCoarsestLevel.");
+
+      return 0;
 #else
 
    checkInputPatchDataIndices();
@@ -1737,9 +1746,8 @@ template<int DIM> void CellPoissonFACOps<DIM>::solveCoarsestLevel_HYPRE(
       << "\titerations: " << d_hypre_solver.getNumberIterations() << "\n"
       << "\tresidual: " << d_hypre_solver.getRelativeResidualNorm() << "\n";
 
+   return !solver_ret;
 #endif
-
-   return;
 
 }
 

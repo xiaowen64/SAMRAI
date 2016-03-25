@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/InputDatabase.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/inputdb/InputDatabase.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1889 $
+// Modified:	$LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -740,6 +740,12 @@ void InputDatabase::putFloatArray(
 float InputDatabase::getFloat(
    const std::string& key)
 {
+
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
+
    float value = 0.0;
    KeyData *keydata = findKeyDataOrExit(key);
 

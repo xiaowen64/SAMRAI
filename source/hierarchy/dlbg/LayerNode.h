@@ -1,8 +1,8 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerNode.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/dlbg/LayerNode.h $
  * Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:    $LastChangedRevision: 1859 $
+ * Modified:    $LastChangedDate: 2008-01-15 07:55:41 -0800 (Tue, 15 Jan 2008) $
  * Description: Node in the distribued box graph.
  */
 
@@ -36,7 +36,7 @@ namespace SAMRAI {
  * Less-than and greater-than comparisons are primarily used for
  * sorting nodes.
  */
-template<int DIM> class LayerNode : public hier::Box<DIM>
+template<int DIM> class LayerNode
 {
 
 public:
@@ -177,6 +177,8 @@ private:
     */
    LocalIndex d_local_index;
 
+   
+   Box<DIM> d_box;
 };
 
 }

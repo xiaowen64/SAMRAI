@@ -1,12 +1,14 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/restart/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/tools/restart/main.C $
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1806 $
-// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
+// Revision:    $LastChangedRevision: 1845 $
+// Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
 // Description: Main program restart-redistribute tool.
 //
 
 #include "SAMRAI_config.h"
+
+
 
 #include "RedistributedRestartUtility.h"
 #include "tbox/HDFDatabase.h"
@@ -20,17 +22,16 @@
 #include <unistd.h>
 using namespace std;
 
+
+
 // Headers for basic SAMRAI objects
 
 #include "tbox/HDFDatabase.h"
 #include "tbox/SAMRAI_MPI.h"
 #include "tbox/RestartManager.h"
 #include "tbox/SAMRAIManager.h"
-// Headers for major algorithm/data structure objects
 
-
-// Header for application-specific algorithm/data structure object
-
+#ifdef HAVE_HDF5
 
 #ifndef NAME_BUFSIZE
 #define NAME_BUFSIZE (32)
@@ -72,7 +73,7 @@ int main( int argc, char *argv[])
    // make string "input-dir/restore.*****
    char restore_buf[NAME_BUFSIZE];
 
-   sprintf(restore_buf,"/restore.%05d",restore_num);
+   sprintf(restore_buf,"/restore.%06d",restore_num);
 
    string restore_dirname;
    if( read_dirname.compare(0, 1, "/") == 0 ) {
@@ -180,3 +181,14 @@ int main( int argc, char *argv[])
    return(0);
 
 }
+
+#else
+
+int main( int argc, char *argv[])
+{
+   std::cerr << "This utility requires HDF to work, it was not found when compiling" << std::endl;
+
+   return(-1);
+}
+
+#endif

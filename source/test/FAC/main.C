@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/main.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/test/FAC/main.C $
   Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1783 $
-  Modified:	$LastChangedDate: 2007-12-17 13:07:31 -0800 (Mon, 17 Dec 2007) $
+  Revision:	$LastChangedRevision: 1878 $
+  Modified:	$LastChangedDate: 2008-01-22 08:25:20 -0800 (Tue, 22 Jan 2008) $
   Description:	Program for poisson solver on adaptive grid using FAC
 */
 
@@ -300,6 +300,8 @@ int main( int argc, char *argv[] )
 		 << endl;
 
       tbox::TimerManager::getManager()->print(tbox::plog);
+#else
+   error_ok=true;
 #endif
 
       if ( error_ok ) {

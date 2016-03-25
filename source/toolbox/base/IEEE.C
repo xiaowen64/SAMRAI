@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/IEEE.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/base/IEEE.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1840 $
+// Modified:	$LastChangedDate: 2008-01-09 13:03:07 -0800 (Wed, 09 Jan 2008) $
 // Description:	IEEE routines to set up handlers and get signaling NaNs
 //
 
@@ -56,7 +56,7 @@ namespace SAMRAI {
 #if defined(HAVE_EXCEPTION_HANDLING)
 static void error_action(int error) 
 {
-   fprintf(stderr, "floating point exception -- program abort!\n");
+   fprintf(stderr, "floating point exception -- program abort! %d\n", error);
    SAMRAI_MPI::abort();
 }
 #endif

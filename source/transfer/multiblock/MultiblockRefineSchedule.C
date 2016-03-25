@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/multiblock/MultiblockRefineSchedule.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/transfer/multiblock/MultiblockRefineSchedule.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -1501,6 +1501,9 @@ void MultiblockRefineSchedule<DIM>::createNeighborCoarseSchedule(
    int dst_block_number,
    int neighbor_counter)
 {
+   NULL_USE(ratio_to_coarser);
+   NULL_USE(hierarchy);
+
    tbox::Pointer< hier::PatchLevel<DIM> > coarse_level = neighbor_coarse_level;
 
    hier::BoxList<DIM> domain_outside_block;
@@ -1591,6 +1594,9 @@ void MultiblockRefineSchedule<DIM>::createCoarseSchedule(
    tbox::Pointer< hier::PatchHierarchy<DIM> >& hierarchy,
    int block_number)
 {
+   NULL_USE(ratio_to_coarser);
+   NULL_USE(hierarchy);
+
    hier::BoxList<DIM> domain_outside_block;
    tbox::List<typename hier::MultiblockPatchHierarchy<DIM>::Neighbor> neighbors =
       d_multiblock_hierarchy->getNeighbors(block_number);
@@ -2080,6 +2086,10 @@ void MultiblockRefineSchedule<DIM>::initializeDestinationVector(
            Iterator rc(refine_classes->getIterator(ne)); rc; rc++) {
 
          typename xfer::RefineClasses<DIM>::Data data = rc();
+
+	 // Intel compiler was issuing a warning about data not being used.
+	 // Which is odd.
+	 NULL_USE(data);
 
          dst_vector.setFlag(data.d_dst);
 

@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonHypreSolver.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonHypreSolver.h $
  * Package:     SAMRAI solvers
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1818 $
- * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1845 $
+ * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
  * Description:	Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -357,48 +357,6 @@ private:
     * nothing is done.
     */
    void getFromInput( tbox::Pointer<tbox::Database> database );
-
-   /*!
-    * @brief Trim a boundary box so that it does not stick out
-    * past a patch domain in direction transverse to the boundary
-    * normal.
-    *
-    * Certain boundary-related operations on ghost-free patch data.
-    * Since the data referenced does not involve ghost cells,
-    * we essentially loop through the index space of the trimmed
-    * boundary box.
-    *
-    * The boundary box trimmed must be of type 1.
-    *
-    * @param boundary_box Boundary box to be trimmed.
-    * @param patch hier::Patch to not stick past
-    *
-    * @return New trimmed boundary box.
-    */
-   hier::BoundaryBox<DIM> trimBoundaryBox(
-      const hier::BoundaryBox<DIM> &boundary_box,
-      const hier::Patch<DIM> &patch ) const;
-
-   /*!
-    * @brief Return box describing the index space of surfaces
-    * defined by a boundary box.
-    *
-    * Define a box describing the indices of the surfaces corresponding
-    * to the input boundary box.  A surface is a face in 3D and an edge
-    * in 2D.  These surfaces lie on the boundary itself.
-    *
-    * The input boundary_box must be of type 1
-    * (see hier::BoundaryBox::getBoundaryType()).
-    *
-    * This is a utility function for working with the surface
-    * indices coresponding to a boundary box.
-    *
-    * @param boundary_box input boundary box
-    * @return a box to define the face indices corresponding to
-    *    boundary_box
-    */
-   hier::Box<DIM> makeSideBoundaryBox(
-      const hier::BoundaryBox<DIM> &boundary_box ) const;
 
    void setupHypreSolver();
    void destroyHypreSolver();

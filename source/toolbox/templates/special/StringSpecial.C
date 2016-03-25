@@ -1,17 +1,19 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/special/StringSpecial.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/templates/special/StringSpecial.C $
 // Package:	SAMRAI templates
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	special template file for strings on SGI with CC
 //
 
 #include <string>
 using namespace std;
 
+#ifdef __KCC_VERSION
 #if __KCC_VERSION > 3400   // KCC v3.4
 #include <iomanip>
+#endif
 #endif
 
 #ifdef HAVE_SPECIAL_STRING_OSTREAM_INSTANTIATION
@@ -22,6 +24,7 @@ template ostream& std::operator<<(ostream& os, const std::basic_string<char>&);
  * << operator for complex type requires explicit instantiation with KCC
  * versions 3.4 and higher.  AMW 2/00
  */
+#ifdef __KCC_VERSION
 #if __KCC_VERSION > 3400   // KCC v3.4
 //template std::basic_ostream< char,std::char_traits<char> > &std::operator <<
 //     <double, char, std::char_traits<char> >
@@ -40,6 +43,7 @@ template std::basic_ostream< char,std::char_traits<char> > &std::flush
 //     basic_string<char, std::char_traits<char>, std::allocator<char>>
 //     (const std::allocator<char> &);
 template __kai::omanip_setfill<char> std::setfill<char>(char);
+#endif
 #endif
 
 #ifdef __DECCXX

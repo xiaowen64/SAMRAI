@@ -1,8 +1,8 @@
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsosNode.C $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/clustering/AsyncBergerRigoutsosNode.C $
  * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1704 $
- * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:     $LastChangedRevision: 1889 $
+ * Modified:     $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
  * Description:  Node in asynchronous Berger-Rigoutsos dendogram
  */
 
@@ -1555,6 +1555,10 @@ void AsyncBergerRigoutsosNode<DIM>::acceptOrSplitBox()
       if ( efficiency >= d_common->efficiency_tol ) {
          d_box_acceptance = accepted_by_calculation;
       }
+// Disable Intel warning on real comparison
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
       else if ( efficiency == 0 ) {
          // No tags!  This should be caught at the dendogram root.
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2469,6 +2473,8 @@ void AsyncBergerRigoutsosNode<DIM>::shareNewEdgesWithOwners()
    tbox::SAMRAI_MPI::status mpi_status;
 
 
+
+
    // Nonblocking send of edge data.
    d_common->t_share_new_edges_send->start();
    tbox::Array<tbox::SAMRAI_MPI::request> mpi_request(edge_messages.size());
@@ -2488,6 +2494,8 @@ void AsyncBergerRigoutsosNode<DIM>::shareNewEdgesWithOwners()
                         &mpi_request[nsend] );
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT( ierr == MPI_SUCCESS );
+#else
+      NULL_USE(ierr);
 #endif
    }
    d_common->t_share_new_edges_send->stop();

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/GriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/gridding/GriddingAlgorithm.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1746 $
-// Modified:    $LastChangedDate: 2007-12-07 11:05:07 -0800 (Fri, 07 Dec 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -969,9 +969,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
         if ( hierarchy->finerLevelExists(level_number) ) {
            tbox::Pointer< hier::PatchLevel<DIM> > fine_level =
               hierarchy->getPatchLevel(fine_level_number);
-           hier::BoxArray<DIM> fine_boxes(fine_level->getBoxes());
-           fine_boxes.coarsen(getRatioToCoarserLevel(fine_level_number));
-           setTagsOnLevel(d_true_tag, patch_level, d_tag_indx, fine_boxes);
+           hier::BoxArray<DIM> fine_box_array(fine_level->getBoxes());
+           fine_box_array.coarsen(getRatioToCoarserLevel(fine_level_number));
+           setTagsOnLevel(d_true_tag, patch_level, d_tag_indx, fine_box_array);
         }
 
         /*

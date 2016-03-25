@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/RestartManager.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/restartdb/RestartManager.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1808 $
-// Modified:	$LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+// Revision:	$LastChangedRevision: 1840 $
+// Modified:	$LastChangedDate: 2008-01-09 13:03:07 -0800 (Wed, 09 Jan 2008) $
 // Description:	An restart manager singleton class 
 //
 
@@ -127,9 +127,9 @@ bool RestartManager::openRestartFile(
    char proc_buf[NAME_BUFSIZE];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE > (1 + 8 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE > (1 + 8 + 1 + 6 + 1) );
 #endif
-   sprintf(restore_buf,"/restore.%05d",restore_num);
+   sprintf(restore_buf,"/restore.%06d",restore_num);
    
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
@@ -347,9 +347,9 @@ std::string RestartManager::createDirs(
    char nodes_buf[NAME_BUFSIZE];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE> (1 + 8 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE> (1 + 8 + 1 + 6 + 1) );
 #endif
-   sprintf(restore_buf, "/restore.%05d", restore_num);
+   sprintf(restore_buf, "/restore.%06d", restore_num);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );

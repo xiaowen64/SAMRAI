@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1806 $
-// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
+// Revision:    $LastChangedRevision: 1846 $
+// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
@@ -51,6 +51,8 @@ template<int DIM> int SNES_SAMRAIContext<DIM>::SNESJacobianSet(SNES snes,
 							       void* ctx)
 {
    NULL_USE(snes);
+   NULL_USE(B);
+   NULL_USE(mstruct);
    int retval = 0;
    if ( ((SNES_SAMRAIContext<DIM>*)ctx)->getUsesExplicitJacobian() ) {
       retval =

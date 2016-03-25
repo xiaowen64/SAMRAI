@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/MemoryUtilities.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/memory/MemoryUtilities.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1854 $
+// Modified:	$LastChangedDate: 2008-01-11 18:10:41 -0800 (Fri, 11 Jan 2008) $
 // Description:	Routines for tracking memory use in SAMRAI.
 //
 
@@ -16,8 +16,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
-
+#endif
 #ifdef HAVE_TAU
 #if (PROFILING_ON || TRACING_ON)
 #include <Profile/Profiler.h>
@@ -52,6 +53,8 @@ double MemoryUtilities::s_max_memory = 0.;
 */
 void MemoryUtilities::printMemoryInfo(std::ostream& os) 
 {
+
+#ifdef HAVE_MALLINFO
    /*
     * NOTE: This was taken directly from John Gyllenhal...
     */
@@ -81,6 +84,8 @@ void MemoryUtilities::printMemoryInfo(std::ostream& os)
       << number_allocated << " allocs, "
       << reserved_mem/(1024.0*1024.0) << "MB reserved ("
       << free_mem << " unused)" << std::endl;
+
+#endif
 }
 
 /*
@@ -94,8 +99,10 @@ void MemoryUtilities::printMemoryInfo(std::ostream& os)
 
 void MemoryUtilities::recordMemoryInfo(double time) 
 {
+   NULL_USE(time);
 
 #ifdef HAVE_TAU
+#ifdef HAVE_MALLINFO
    /*
     * Access information from mallinfo
     */   
@@ -127,7 +134,7 @@ void MemoryUtilities::recordMemoryInfo(double time)
     * Record "used_mem" in MB to tau event.
     */
    TAU_PROFILE_STMT(ue.TriggerEvent(used_mem/(1024.0*1024.0)));
-   
+#endif
 #endif
 }
 

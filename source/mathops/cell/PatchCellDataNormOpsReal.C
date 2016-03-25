@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/cell/PatchCellDataNormOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mathops/cell/PatchCellDataNormOpsReal.C $
 // Package:	SAMRAI mathops
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Templated norm operations for real cell-centered patch data.
 //
 
@@ -42,14 +42,14 @@ template<int DIM, class TYPE>
 PatchCellDataNormOpsReal<DIM,TYPE>::PatchCellDataNormOpsReal(
    const PatchCellDataNormOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;  // not implemented (but needed by some compilers)
+   NULL_USE(foo); 
 }
 
 template<int DIM, class TYPE>
 void PatchCellDataNormOpsReal<DIM,TYPE>::operator=(
    const PatchCellDataNormOpsReal<DIM,TYPE>& foo)
 {
-   (void) foo;  // not implemented (but needed by some compilers)
+   NULL_USE(foo); 
 }
 
 /*

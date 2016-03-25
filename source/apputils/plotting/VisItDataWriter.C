@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisItDataWriter.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisItDataWriter.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $LastChangedRevision: 1820 $
-// Modified:    $LastChangedDate: 2007-12-21 08:43:36 -0800 (Fri, 21 Dec 2007) $
+// Revision:    $LastChangedRevision: 1889 $
+// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
@@ -28,6 +28,12 @@
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
+
+#ifndef included_Vector
+#include <vector>
+#define included_Vector
+#endif
+
 
 
 #define VISIT_NAME_BUFSIZE (128)
@@ -278,7 +284,8 @@ template<int DIM> void VisItDataWriter<DIM>::registerDerivedPlotQuantity(
    const std::string& variable_type,
    VisDerivedDataStrategy<DIM>* derived_writer,
    double scale_factor,
-   const std::string& variable_centering)
+   const std::string& variable_centering,
+   const std::string& variable_mix_type)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!variable_name.empty());
@@ -345,6 +352,12 @@ template<int DIM> void VisItDataWriter<DIM>::registerDerivedPlotQuantity(
          plotitem.d_coord_scale_factor[i] = 1.0;
       }
    }
+
+   if (variable_mix_type=="MIXED")
+   {
+      plotitem.d_is_material_state_variable=true;
+   }
+
 
    /*
     * Set characteristics for derived variable.
@@ -838,6 +851,83 @@ template<int DIM> void VisItDataWriter<DIM>::registerMaterialNames(
 /*
 *************************************************************************
 *                                                                       *
+* Register material names -- names of all the materials (not species)   *
+* being used in the application. Volume fractions (and optionally state *
+* variables) will be written in sparse arrays                           *
+*                                                                       *
+*************************************************************************
+*/
+
+template<int DIM> void VisItDataWriter<DIM>::registerSparseMaterialNames(
+   const tbox::Array<std::string>& material_names)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(material_names.getSize() > 0);
+#endif
+   /*
+    * Check if we have already tried to register materials.
+    */
+   if (d_materials_names.getSize() > 0) {
+      TBOX_ERROR("VisItDataWriter<DIM>::registerSparseMaterialNames"
+                 << "\n    This method has been called more than once."
+                 << "\n    The material names may not change during the"
+                 << "\n    simulation.  ***Exiting" << std::endl);
+   }
+
+
+   /*
+    * Register each of the material names as a plot item with material
+    * characteristics.
+    */
+   int num_materials = material_names.getSize();
+   d_materials_names.resizeArray(num_materials);
+   for (int i = 0; i < num_materials; i++) {
+      if (material_names[i].empty()) {
+         TBOX_ERROR("VisItDataWriter<DIM>::registerMaterialNames"
+                    << "\n    Material: "  << i
+                    << "\n    has an empty name.  A name must be supplied."
+                    << "\n    ***Exiting" << std::endl);
+      }
+      d_materials_names[i] = material_names[i];
+   }
+   // Sparse Structure
+   VisItItem plotitem;
+
+   std::string var_type = "SCALAR";
+   int patch_data_index = VISIT_UNDEFINED_INDEX;
+   int start_depth_index = 0;
+   double scale_factor = 1.0;
+   std::string var_cent = "CELL";
+
+   /*
+    * this plotitem will write out the mat_list and material_packing_type
+    * (=1) the value of mat_list for any zone will be either the material
+    * number if the zone is clean, or a negative value that is the negative
+    * index into mix_mat, vol_frac and next_mat (assuming the indexing of
+    * mix_mat, etc. begin at 1) These arrays will only be written if there are
+    * mixed zones.
+    */
+   initializePlotItem(plotitem,
+                      "materials",
+                      var_type,
+                      patch_data_index,
+                      start_depth_index,
+                      scale_factor,
+                      var_cent);
+   plotitem.d_isa_material = true;
+   plotitem.d_material_name = "sparse_material_list";
+
+   // Use d_is_material_state_variable to mark this as the material list for
+   //   the sparse data writing when volume fractions are written out
+   plotitem.d_is_material_state_variable=true;
+
+   d_plot_items.appendItem(plotitem);
+}
+
+
+/*
+*************************************************************************
+*                                                                       *
 * Register species names for a given material.                          *
 *                                                                       *
 *************************************************************************
@@ -943,6 +1033,37 @@ template<int DIM> void VisItDataWriter<DIM>::registerSpeciesNames(
 
    }
 
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Register VisIt expressions to be embedded in datafile summary         *
+*   This method may be called multiple times to add more expressions    *
+*   as needed.
+*                                                                       *
+*************************************************************************
+*/
+template<int DIM> void VisItDataWriter<DIM>::registerVisItExpressions(
+      const tbox::Array<std::string>& expression_keys,
+      const tbox::Array<std::string>& expressions,
+      const tbox::Array<std::string>& expression_types)
+{
+   if ((expressions.size()>0) &&
+       (expressions.size() == expression_keys.size()) &&
+       (expressions.size() == expression_types.size()))
+   {
+      int num_current_exp=d_visit_expressions.size();
+      d_visit_expressions.resizeArray(num_current_exp+expressions.size());
+      d_visit_expression_keys.resizeArray(num_current_exp+expressions.size());
+      d_visit_expression_types.resizeArray(num_current_exp+expressions.size());
+      for (int i=0;i<expressions.size();++i)
+      {
+         d_visit_expressions[num_current_exp+i]=expressions[i];
+         d_visit_expression_keys[num_current_exp+i]=expression_keys[i];
+         d_visit_expression_types[num_current_exp+i]=expression_types[i];
+      }
+   }
 }
 
 
@@ -1151,8 +1272,7 @@ template<int DIM> void VisItDataWriter<DIM>::initializePlotItem(
 
    plotitem.d_visit_var_name.resizeArray(plotitem.d_depth);
    char temp_buf[VISIT_NAME_BUFSIZE];
-   int i;
-   for (i = 0; i < plotitem.d_depth; i++) {
+   for (int i = 0; i < plotitem.d_depth; i++) {
       if (plotitem.d_depth == 1) {
          plotitem.d_visit_var_name[i] = variable_name;
       } else {
@@ -1168,7 +1288,7 @@ template<int DIM> void VisItDataWriter<DIM>::initializePlotItem(
    /*
     * Initialize min/max information.
     */
-   for (i = 0; i < VISIT_MAX_NUMBER_COMPONENTS; i++) {
+   for (int i = 0; i < VISIT_MAX_NUMBER_COMPONENTS; i++) {
       plotitem.d_master_min_max[i] = (patchMinMaxStruct*)NULL;
    }
 
@@ -1187,7 +1307,11 @@ template<int DIM> void VisItDataWriter<DIM>::initializePlotItem(
    plotitem.d_isa_species = false;
    plotitem.d_parent_material_pointer = (VisItItem*)NULL;
 
+   // default to CLEAN (not mixed data)
+   plotitem.d_is_material_state_variable= false;
+
 }
+
 
 
 
@@ -1202,7 +1326,7 @@ template<int DIM> void VisItDataWriter<DIM>::initializePlotItem(
 *************************************************************************
 */
 
-#define VISIT_FILE_CLUSTER_WRITE_BATON 17
+#define VISIT_FILE_CLUSTER_WRITE_BATON 117
 
 template<int DIM> void VisItDataWriter<DIM>::dumpWriteBarrierBegin()
 {
@@ -1522,6 +1646,11 @@ template<int DIM> void VisItDataWriter<DIM>::writeHDFFiles(
    TBOX_ASSERT(!hierarchy.isNull());
 #endif
 
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
+
    char temp_buf[VISIT_NAME_BUFSIZE];
    std::string dump_dirname;
    tbox::HDFDatabase* visit_HDFFilePointer;
@@ -1541,6 +1670,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeHDFFiles(
    } else {
       d_file_cluster_leader = false;
    }
+
    d_number_file_clusters =
       static_cast<int>( ceil( static_cast<double>(num_procs) /
                               static_cast<double>(d_file_cluster_size) ) );
@@ -1892,139 +2022,318 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
          double *dbuffer = new double[buf_size]; // used to pack var
          float *fbuffer = new float[buf_size]; // copy to float for writing
 
-         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
-
-            /*
-             * If its derived data, pack via the derived writer.
-             * Otherwise, pack with local private method.
-             */
-            bool data_exists_on_patch = false;
-            int patch_data_id = VISIT_UNDEFINED_INDEX;
-            if (ipi().d_is_derived) {
-
-               // derived data
-               data_exists_on_patch =
-                  ipi().d_derived_writer->
-                  packDerivedDataIntoDoubleBuffer(
-                     dbuffer,
-                     patch,
-                     patch.getBox(),
-                     ipi().d_var_name,
-                     depth_id);
-
-            } else {
+         // Check for mixed/clean state variables
+         if (!(ipi().d_is_material_state_variable)) // Conventional variable
+         {
+            for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
 
                /*
-                * Check if patch data id has been reset on the level.  If
-                * not, just use the original registered data id.
+                * If its derived data, pack via the derived writer.
+                * Otherwise, pack with local private method.
                 */
-               patch_data_id = ipi().d_patch_data_index;
-               if (ipi().d_level_patch_data_index.getSize() > level_number) {
-                  patch_data_id =
-                     ipi().d_level_patch_data_index[level_number];
+               bool data_exists_on_patch = false;
+               int patch_data_id = VISIT_UNDEFINED_INDEX;
+               if (ipi().d_is_derived) {
+
+                  // derived data
+                  data_exists_on_patch =
+                     ipi().d_derived_writer->
+                     packDerivedDataIntoDoubleBuffer(
+                        dbuffer,
+                        patch,
+                        patch.getBox(),
+                        ipi().d_var_name,
+                        depth_id);
+
+               } else {
+
+                  /*
+                   * Check if patch data id has been reset on the level.  If
+                   * not, just use the original registered data id.
+                   */
+                  patch_data_id = ipi().d_patch_data_index;
+                  if (ipi().d_level_patch_data_index.getSize() > level_number) {
+                     patch_data_id =
+                        ipi().d_level_patch_data_index[level_number];
+                  }
+
+                  data_exists_on_patch =
+                     patch.checkAllocated(patch_data_id);
+
+                  if (data_exists_on_patch) {
+                     int new_depth_id = ipi().d_start_depth_index + depth_id;
+
+                     // regular (non-derived) data
+                     packPatchDataIntoDoubleBuffer(
+                        patch.getPatchData(patch_data_id),
+                        new_depth_id,
+                        ipi().d_var_data_type,
+                        patch.getBox(),
+                        dbuffer,
+                        ipi().d_var_centering);
+                  }
                }
 
-               data_exists_on_patch =
-                  patch.checkAllocated(patch_data_id);
+               double dmax = tbox::MathUtilities<double>::getMin();
+               double dmin = tbox::MathUtilities<double>::getMax();
 
                if (data_exists_on_patch) {
-                  int new_depth_id = ipi().d_start_depth_index + depth_id;
 
-                  // regular (non-derived) data
-                  packPatchDataIntoDoubleBuffer(
-                     patch.getPatchData(patch_data_id),
-                     new_depth_id,
-                     ipi().d_var_data_type,
-                     patch.getBox(),
-                     dbuffer,
-                     ipi().d_var_centering);
-               }
-            }
+                  /*
+                   * Scale data (while still double)
+                   */
+                  const double scale = ipi().d_scale_factor;
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+                  if (scale != 1.0) {
+                     for (int i = 0; i < buf_size; i++) {
+                        dbuffer[i] *= scale;
+                     }
+                  }
 
-            double dmax = tbox::MathUtilities<double>::getMin();
-            double dmin = tbox::MathUtilities<double>::getMax();
+                  /*
+                   * Determine patch min/max.
+                   */
 
-            if (data_exists_on_patch) {
-
-               /*
-                * Scale data (while still double)
-                */
-               const double scale = ipi().d_scale_factor;
-               if (scale != 1.0) {
                   for (int i = 0; i < buf_size; i++) {
-                     dbuffer[i] *= scale;
+                     if (dbuffer[i] > dmax) {
+                        dmax = dbuffer[i];
+                     }
+                     if (dbuffer[i] < dmin) {
+                        dmin = dbuffer[i];
+                     }
                   }
+
+                  checkFloatMinMax(dmin,
+                                   dmax,
+                                   level_number,
+                                   patch.getPatchNumber(),
+                                   patch_data_id);
+
+                  /*
+                   * Convert buffer from double to float
+                   */
+                  for (int i = 0; i < buf_size; i++) {
+                     fbuffer[i] = static_cast<float>(dbuffer[i]);
+                  }
+
+                  /*
+                   * Write to disk
+                   */
+                  std::string vname = ipi().d_visit_var_name[depth_id];
+                  patch_HDFGroup->putFloatArray(vname,
+                                                fbuffer,
+                                                buf_size);
+
+               } else { // data does not exist on patch
+
+                  dmax = 0.;
+                  dmin = 0.;
+
                }
 
-               /*
-                * Determine patch min/max.
-                */
 
-               int i;
-               for (i = 0; i < buf_size; i++) {
-                  if (dbuffer[i] > dmax) {
-                     dmax = dbuffer[i];
-                  }
-                  if (dbuffer[i] < dmin) {
-                     dmin = dbuffer[i];
-                  }
+               /*
+                * Write min/max summary info
+                */
+               if (tbox::SAMRAI_MPI::getRank() == VISIT_MASTER) {
+                  int gpn = getGlobalPatchNumber(hierarchy,
+                                                 level_number,
+                                                 block_number,
+                                                 patch.getPatchNumber());
+                  ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
+                     data_exists_on_patch;
+                  ipi().d_master_min_max[depth_id][gpn].min = dmin;
+                  ipi().d_master_min_max[depth_id][gpn].max = dmax;
+               } else {
+                  d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
+                     data_exists_on_patch;
+                  d_worker_min_max[d_var_id_ctr].min = dmin;
+                  d_worker_min_max[d_var_id_ctr].max = dmax;
                }
 
-               checkFloatMinMax(dmin,
-                                dmax,
-                                level_number,
-                                patch.getPatchNumber(),
-                                patch_data_id);
 
                /*
-                * Convert buffer from double to float
+                * Increment local var_id counter used for d_mm array.
                 */
-               for (i = 0; i < buf_size; i++) {
-                  fbuffer[i] = static_cast<float>(dbuffer[i]);
+               d_var_id_ctr++;
+
+            } // loop over var depths
+         } // conventional (not material state) variable
+         else // Data is mixed
+         {
+            for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+               std::vector<double> dmix_data;
+
+               /*
+                * If its derived data, pack via the derived writer.
+                * Otherwise, pack with local private method.
+                */
+               bool data_exists_on_patch = false;
+               int patch_data_id = VISIT_UNDEFINED_INDEX;
+               if (ipi().d_is_derived) {
+
+                  // Single function packs clean and mixed data
+                  data_exists_on_patch =
+                     ipi().d_derived_writer->
+                     packMixedDerivedDataIntoDoubleBuffer(
+                        dbuffer,
+                        dmix_data,
+                        patch,
+                        patch.getBox(),
+                        ipi().d_var_name,
+                        depth_id);
+
+               } else {
+                  TBOX_ERROR("Mixed Data must be treated as Derived");
                }
 
+
+               double dmax = tbox::MathUtilities<double>::getMin();
+               double dmin = tbox::MathUtilities<double>::getMax();
+
+               if (data_exists_on_patch) {
+
+                  /*
+                   * Scale data (while still double)
+                   */
+                  const double scale = ipi().d_scale_factor;
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+                  if (scale != 1.0) {
+                     for (int i = 0; i < buf_size; i++) {
+                        dbuffer[i] *= scale;
+                     }
+                     // Scale Mixed data
+                     for (std::vector<double>::iterator mi=dmix_data.begin();
+                          mi!=dmix_data.end();++mi)
+                     {
+                        (*mi)*=scale;
+                     }
+                  }
+
+                  /*
+                   * Determine patch min/max.
+                   */
+
+                  int i;
+                  for (i = 0; i < buf_size; i++) {
+                     if (dbuffer[i] > dmax) {
+                        dmax = dbuffer[i];
+                     }
+                     if (dbuffer[i] < dmin) {
+                        dmin = dbuffer[i];
+                     }
+                  }
+                  // Include mix data in patch min/max
+                  for (std::vector<double>::iterator mi=dmix_data.begin();
+                       mi!=dmix_data.end();++mi)
+                  {
+                     if ((*mi) > dmax) {
+                        dmax = (*mi);
+                     }
+                     if ((*mi) < dmin) {
+                        dmin = (*mi);
+                     }
+                  }
+
+                  checkFloatMinMax(dmin,
+                                   dmax,
+                                   level_number,
+                                   patch.getPatchNumber(),
+                                   patch_data_id);
+
+                  /*
+                   * Convert buffer from double to float
+                   */
+                  for (i = 0; i < buf_size; i++) {
+                     fbuffer[i] = static_cast<float>(dbuffer[i]);
+                  }
+
+                  /*
+                   * Write to disk
+                   */
+                  std::string vname = ipi().d_visit_var_name[depth_id];
+                  patch_HDFGroup->putFloatArray(vname,
+                                                fbuffer,
+                                                buf_size);
+
+                  // If there are no mixed zones in this patch do not write
+                  //   mix_zone, mix_mat, vol_fracs, and next_mat
+                  int mix_buf_size=dmix_data.size();
+                  if (mix_buf_size>0)
+                  {
+                     // copy mixdata to float for writing
+                     // If we had a putFloatVector() this copy could be avoided
+                     float *fmixbuffer = new float[mix_buf_size];
+                     //std::copy(dmix_data.begin(),dmix_data.end(),fmixbuffer);
+                     for (i = 0; i < mix_buf_size; i++) {
+                        fmixbuffer[i] = static_cast<float>(dmix_data[i]);
+                     }
+
+                     /*
+                      * Write Mixed State Variable to disk
+                      * We need to know where to write this
+                      */
+
+                     // Use an HDF Group for all material state data
+                     tbox::Pointer<tbox::HDFDatabase> mat_state_HDFGroup;
+                     if (patch_HDFGroup->isDatabase("material_state"))
+                     {
+                        mat_state_HDFGroup
+                           =patch_HDFGroup->getDatabase("material_state");
+                     }
+                     else
+                     {
+                        mat_state_HDFGroup
+                           =patch_HDFGroup->putDatabase("material_state");
+                     }
+                     mat_state_HDFGroup->putFloatArray(vname,
+                                                       fmixbuffer,
+                                                       mix_buf_size);
+
+                     // For now assume that this buffer cannot be reused.
+                     delete[] fmixbuffer;
+                  }
+
+               } else { // data does not exist on patch
+
+                  dmax = 0.;
+                  dmin = 0.;
+
+               }
+
+
                /*
-                * Write to disk
+                * Write min/max summary info
                 */
-               std::string vname = ipi().d_visit_var_name[depth_id];
-               patch_HDFGroup->putFloatArray(vname,
-                                             fbuffer,
-                                             buf_size);
-
-            } else { // data does not exist on patch
-
-               dmax = 0.;
-               dmin = 0.;
-
-            }
-
-
-            /*
-             * Write min/max summary info
-             */
-            if (tbox::SAMRAI_MPI::getRank() == VISIT_MASTER) {
-               int gpn = getGlobalPatchNumber(hierarchy,
-                                              level_number,
-                                              block_number,
-                                              patch.getPatchNumber());
-               ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
-                  data_exists_on_patch;
-               ipi().d_master_min_max[depth_id][gpn].min = dmin;
-               ipi().d_master_min_max[depth_id][gpn].max = dmax;
-            } else {
-               d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
-                  data_exists_on_patch;
-               d_worker_min_max[d_var_id_ctr].min = dmin;
-               d_worker_min_max[d_var_id_ctr].max = dmax;
-            }
+               if (tbox::SAMRAI_MPI::getRank() == VISIT_MASTER) {
+                  int gpn = getGlobalPatchNumber(hierarchy,
+                                                 level_number,
+                                                 block_number,
+                                                 patch.getPatchNumber());
+                  ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
+                     data_exists_on_patch;
+                  ipi().d_master_min_max[depth_id][gpn].min = dmin;
+                  ipi().d_master_min_max[depth_id][gpn].max = dmax;
+               } else {
+                  d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
+                     data_exists_on_patch;
+                  d_worker_min_max[d_var_id_ctr].min = dmin;
+                  d_worker_min_max[d_var_id_ctr].max = dmax;
+               }
 
 
-            /*
-             * Increment local var_id counter used for d_mm array.
-             */
-            d_var_id_ctr++;
+               /*
+                * Increment local var_id counter used for d_mm array.
+                */
+               d_var_id_ctr++;
 
-         } // loop over var depths
+            } // loop over var depths
+
+         } // material_state variable
 
          delete [] dbuffer;
          delete [] fbuffer;
@@ -2078,8 +2387,19 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
                                       hier::IntVector<DIM>(0),
                                       ipi().d_var_centering);
 
-         double *dbuffer = new double[buf_size]; // used to pack var
-         float *fbuffer = new float[buf_size]; // copy to float for writing
+         // Pointers to buffers for dense packing format
+         double *dbuffer = NULL; // used to pack var
+         float *fbuffer  = NULL;  // copy to float for writing
+         // Pointer to buffer for sparse packing format
+         int *ibuffer    = NULL;   // used to pack mat_list
+
+         // Allocate appropriate memory for packing format
+         if (!(ipi().d_is_material_state_variable)) {
+            dbuffer = new double[buf_size];
+            fbuffer = new float[buf_size];
+         } else {
+            ibuffer = new int[buf_size];
+         }
 
          for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
 
@@ -2095,105 +2415,245 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
                   patch_HDFGroup->putDatabase("materials");
             }
 
-            // create material_name HDF database
-            std::string mname = ipi().d_material_name;
-            material_name_HDFGroup =
-               materials_HDFGroup->putDatabase(mname);
-
-            // create "species" HDF database for material name
-            if (ipi().d_species_names.getSize() > 0) {
-               ipi().d_species_HDFGroup =
-                  material_name_HDFGroup -> putDatabase("species");
-            }
-
-            // pack the buffer with material data
-            int return_code = d_materials_writer->
-               packMaterialFractionsIntoDoubleBuffer(
-                  dbuffer,
-                  patch,
-                  patch.getBox(),
-                  ipi().d_material_name);
-
-
-            // check return code
-            if ((return_code != VisMaterialsDataStrategy<DIM>::VISIT_MIXED)
-                && (return_code !=
-                    VisMaterialsDataStrategy<DIM>::VISIT_ALLONE)
-                && (return_code !=
-                    VisMaterialsDataStrategy<DIM>::VISIT_ALLZERO)) {
-               TBOX_ERROR(
-                  "VisItDataWriter<DIM>::packMaterialsData()"
-                  << "\n    Invalid return value from "
-                  << "packMaterialFractionsIntoDoubleBuffer()\n");
-            }
-
             double dmax = tbox::MathUtilities<double>::getMin();
             double dmin = tbox::MathUtilities<double>::getMax();
             bool data_on_disk = false;
 
-            if (return_code == VisMaterialsDataStrategy<DIM>::VISIT_MIXED) {
+            int return_code;
 
-               data_on_disk = true;
-
+            /*
+             * Method for Sparse representation of materials (and volume
+             *   fractions)
+             */
+            if ((ipi().d_is_material_state_variable))
+            {
                /*
-                * Scale data (while still double)
+                * Sparse packing method
+                * This requires packing an array of integers (mat_list) with
+                *   either the material number of the material occupying the
+                *   current cell, or a (negative) index to a set of auxilliary>                 *   vectors.
+                *   mat_list:  Material occupying clean zone or (negative)
+                *              index to mix_mat, vol_fracs, and next_mat
+                *   mix_zones: Cell with which the mixed data is associated
+                *   mix_mat:   Material number of partial volumes
+                *   vol_fracs: Volume fractions of materials specified by
+                *              mix_mat
+                *   next_mat:  Next index if there are more materials in mixed>                 *              zone, or zero to indicate mixed zone is complete
+                * If the patch is occupied by a single material this can be
+                *   indicated by returning
+                *   VisMaterialsDataStrategy<DIM>::VISIT_ALLONE from
+                *   packMaterialFractionsIntoSparseBuffers(). This will further
+                *   reduce the file size by only writing one entry for mat_list
+                *   which indicates the material for the current patch.
                 */
-               const double scale = ipi().d_scale_factor;
-               if (scale != 1.0) {
-                  for (int i = 0; i < buf_size; i++) {
-                     dbuffer[i] *= scale;
-                  }
-               }
 
-               /*
-                * Determine patch min/max.
-                */
-               int i;
-               for (i = 0; i < buf_size; i++) {
-                  if (dbuffer[i] > dmax) {
-                     dmax = dbuffer[i];
-                  }
-                  if (dbuffer[i] < dmin) {
-                     dmin = dbuffer[i];
-                  }
-               }
+               std::vector<int> mix_zones;
+               std::vector<int> mix_mat;
+               std::vector<double> vol_fracs;
+               std::vector<int> next_mat;
 
-               int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-               checkFloatMinMax(dmin,
-                                dmax,
-                                level_number,
-                                patch.getPatchNumber(),
-                                dummy_pdata_id);
-
-               /*
-                * Convert buffer from double to float
-                */
-               for (i = 0; i < buf_size; i++) {
-                  fbuffer[i] = static_cast<float>(dbuffer[i]);
-               }
+               return_code = d_materials_writer->
+                  packMaterialFractionsIntoSparseBuffers(
+                     ibuffer, mix_zones, mix_mat, vol_fracs, next_mat,
+                     patch, patch.getBox());
 
                /*
                 * Write to disk
                 */
-               std::string vname = ipi().d_material_name;
-               vname = vname + "-fractions";
-               material_name_HDFGroup -> putFloatArray(vname,
-						       fbuffer,
-						       buf_size);
+               // Mark material storage type as dense
+               std::string mtype = "material_packing_type";
+               materials_HDFGroup -> putInteger(mtype,1);
+               std::string vname = "mat_list";
 
-            } else if (return_code ==
-                       VisMaterialsDataStrategy<DIM>::VISIT_ALLONE) {
-
-               data_on_disk = false;
-               dmin = 1.0;
+               // Is the patch "clean" (ALL_ONE)
+               if (return_code==VisMaterialsDataStrategy<DIM>::VISIT_ALLONE)
+               {
+                  materials_HDFGroup -> putIntegerArray(vname,
+                                                        ibuffer,
+                                                        1);
+               }
+               else // Otherwise write full mat_list
+               {
+                  materials_HDFGroup -> putIntegerArray(vname,
+                                                        ibuffer,
+                                                        buf_size);
+               }
+               // The limits should always be 0.0 to 1.0 for volume_fractions
+               //   Do this as a check (?)
                dmax = 1.0;
-
-            } else { // return code == VISIT_ALLZERO
-
-               data_on_disk = false;
                dmin = 0.0;
-               dmax = 0.0;
+               data_on_disk=true;
+               // Are there mixed cells?
+               if (mix_zones.size()>0)
+               {
+#ifdef DEBUG_CHECK_ASSERTIONS
+                  TBOX_ASSERT((mix_zones.size()==mix_mat.size())&&
+                              (mix_zones.size()==vol_fracs.size())&&
+                              (mix_zones.size()==next_mat.size()));
+#endif
 
+                  /*
+                   * Determine patch min/max.
+                   */
+                  for (std::vector<double>::iterator vf=vol_fracs.begin();
+                       vf!=vol_fracs.end();++vf)
+                  {
+                     if ((*vf) > dmax) {
+                        dmax = (*vf);
+                     }
+                     if ((*vf) < dmin) {
+                        dmin = (*vf);
+                     }
+                  }
+
+                  int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
+                  checkFloatMinMax(dmin,
+                                   dmax,
+                                   level_number,
+                                   patch.getPatchNumber(),
+                                   dummy_pdata_id);
+
+
+                  vname = "mix_zones";
+                  materials_HDFGroup -> putIntegerArray(vname,
+                                                        &mix_zones[0],
+                                                        mix_mat.size());
+
+                  vname = "mix_mat";
+                  materials_HDFGroup -> putIntegerArray(vname,
+                                                        &mix_mat[0],
+                                                        mix_mat.size());
+
+                  // allocate buffer for volume fraction data
+                  float *fmix_data_buffer;
+                  fmix_data_buffer = new float[mix_mat.size()];
+                  /*
+                   * Convert buffer from double to float
+                   */
+                  for (unsigned int i = 0; i < vol_fracs.size(); i++) {
+                     fmix_data_buffer[i] = static_cast<float>(vol_fracs[i]);
+                  }
+
+                  vname = "vol_fracs";
+                  materials_HDFGroup -> putFloatArray(vname,
+                                                     fmix_data_buffer,
+                                                     mix_mat.size());
+
+                  vname = "next_mat";
+                  materials_HDFGroup -> putIntegerArray(vname,
+                                                        &next_mat[0],
+                                                        mix_mat.size());
+                  // cleanup buffer
+                  delete[] fmix_data_buffer;
+               }
+            }
+            else // Legacy material format
+            {
+               // Mark material storage type as dense (only once per patch)
+               std::string mtype = "material_packing_type";
+               if (!(materials_HDFGroup -> isInteger(mtype)))
+               {
+                  materials_HDFGroup -> putInteger(mtype,0);
+               }
+
+               // create materials_name HDF database
+               std::string mname = ipi().d_material_name;
+               material_name_HDFGroup =
+                  materials_HDFGroup->putDatabase(mname);
+
+               // create "species" HDF database for material name
+               if (ipi().d_species_names.getSize() > 0) {
+                  ipi().d_species_HDFGroup =
+                     material_name_HDFGroup -> putDatabase("species");
+               }
+
+               // pack the buffer with material data
+               return_code = d_materials_writer->
+                  packMaterialFractionsIntoDoubleBuffer(
+                     dbuffer,
+                     patch,
+                     patch.getBox(),
+                     ipi().d_material_name);
+
+               // check return code
+               if ((return_code != VisMaterialsDataStrategy<DIM>::VISIT_MIXED)
+                   && (return_code !=
+                       VisMaterialsDataStrategy<DIM>::VISIT_ALLONE)
+                   && (return_code !=
+                       VisMaterialsDataStrategy<DIM>::VISIT_ALLZERO)) {
+                  TBOX_ERROR(
+                     "VisItDataWriter<DIM>::packMaterialsData()"
+                     << "\n    Invalid return value from "
+                     << "packMaterialFractionsIntoDoubleBuffer()\n");
+               }
+
+               if (return_code == VisMaterialsDataStrategy<DIM>::VISIT_MIXED) {
+
+                  data_on_disk = true;
+
+                  /*
+                   * Scale data (while still double)
+                   */
+                  const double scale = ipi().d_scale_factor;
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+                  if (scale != 1.0) {
+                     for (int i = 0; i < buf_size; i++) {
+                        dbuffer[i] *= scale;
+                     }
+                  }
+
+                  /*
+                   * Determine patch min/max.
+                   */
+                  int i;
+                  for (i = 0; i < buf_size; i++) {
+                     if (dbuffer[i] > dmax) {
+                        dmax = dbuffer[i];
+                     }
+                     if (dbuffer[i] < dmin) {
+                        dmin = dbuffer[i];
+                     }
+                  }
+
+                  int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
+                  checkFloatMinMax(dmin,
+                                   dmax,
+                                   level_number,
+                                   patch.getPatchNumber(),
+                                   dummy_pdata_id);
+
+                  /*
+                   * Convert buffer from double to float
+                   */
+                  for (i = 0; i < buf_size; i++) {
+                     fbuffer[i] = static_cast<float>(dbuffer[i]);
+                  }
+
+                  /*
+                   * Write to disk
+                   */
+                  std::string vname = ipi().d_material_name;
+                  vname = vname + "-fractions";
+                  material_name_HDFGroup -> putFloatArray(vname,
+                                                          fbuffer,
+                                                          buf_size);
+
+               } else if (return_code ==
+                          VisMaterialsDataStrategy<DIM>::VISIT_ALLONE) {
+
+                  data_on_disk = false;
+                  dmin = 1.0;
+                  dmax = 1.0;
+
+               } else { // return code == VISIT_ALLZERO
+
+                  data_on_disk = false;
+                  dmin = 0.0;
+                  dmax = 0.0;
+
+               }
             }
 
             /*
@@ -2226,8 +2686,16 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
 
          } // loop over var depths
 
-         delete [] fbuffer;
-         delete [] dbuffer;
+         // Dense packing format delete buffers
+         if (!(ipi().d_is_material_state_variable))
+         {
+            delete [] fbuffer;
+            delete [] dbuffer;
+         }
+         else // Delete buffer used for sparse format
+         {
+            delete [] ibuffer;
+         }
 
       } // var is a material
 
@@ -2308,6 +2776,9 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
                 * Scale data (while still double)
                 */
                const double scale = ipi().d_scale_factor;
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
                if (scale != 1.0) {
                   for (int i = 0; i < buf_size; i++) {
                      dbuffer[i] *= scale;
@@ -2317,8 +2788,7 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
                /*
                 * Determine patch min/max.
                 */
-               int i;
-               for (i = 0; i < buf_size; i++) {
+               for (int i = 0; i < buf_size; i++) {
                   if (dbuffer[i] > dmax) {
                      dmax = dbuffer[i];
                   }
@@ -2337,7 +2807,7 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
                /*
                 * Convert buffer from double to float
                 */
-               for (i = 0; i < buf_size; i++) {
+               for (int i = 0; i < buf_size; i++) {
                   fbuffer[i] = static_cast<float>(dbuffer[i]);
                }
 
@@ -2663,6 +3133,10 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       tbox::Array<int> var_centering(d_number_visit_variables);
       tbox::Array<double> var_scale_factors(d_number_visit_variables);
       tbox::Array<int> var_depths(d_number_visit_variables);
+
+      // SGS propose adding array indicating clean/mixed
+      tbox::Array<int> var_material_state_variable(d_number_visit_variables);
+
       int* var_ghosts = new int[d_number_visit_variables * VISIT_FIXED_DIM];
       for (i = 0; i < d_number_visit_variables*VISIT_FIXED_DIM; i++) {
          var_ghosts[i] = 0;
@@ -2690,6 +3164,13 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
                var_ghosts[i*VISIT_FIXED_DIM+dim] =
                   0;
             }
+            if( ipi().d_is_material_state_variable ) {
+               // var_material_state_variable[i] = VISIT_MATERIAL;
+               var_material_state_variable[i] = 1;
+            } else {
+               // var_material_state_variable[i] = VISIT_CLEAN;
+               var_material_state_variable[i] = 0;
+            }
             i++;
          }
       }
@@ -2705,6 +3186,14 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       key_string = "scaling";
       basic_HDFGroup->putDoubleArray(key_string,
                                      var_scale_factors);
+
+      // VCHANGE Visit needs to read this array so it will
+      //         know which variables have mixed material data.
+      // SGS
+      key_string = "material_state_variable";
+      basic_HDFGroup->putIntegerArray(key_string,
+                                      var_material_state_variable);
+
 
       if (d_grid_type == VISIT_DEFORMED) {
          tbox::Array<double> coord_scaling(VISIT_FIXED_DIM);
@@ -2737,6 +3226,28 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
                           VISIT_FIXED_DIM,
                           basic_group_id);
       delete [] var_ghosts;
+
+      // Embed VisIt expressions
+      tbox::Pointer<tbox::HDFDatabase> expression_HDFGroup;
+      if (d_visit_expressions.size()>0)
+      {
+#ifdef DEBUG_CHECK_ASSERTIONS
+         TBOX_ASSERT((d_visit_expressions.size()==d_visit_expression_keys.size()) &&
+                     (d_visit_expressions.size()==d_visit_expression_types.size()));
+#endif
+         std::string expdbname="visit_expressions";
+         expression_HDFGroup =
+                  summary_HDFFilePointer->putDatabase(expdbname);
+         std::string expression_keys("expression_keys");
+         std::string expressions("expressions");
+         std::string expression_types("expression_types");
+         expression_HDFGroup->putStringArray(expression_keys,
+                                            d_visit_expression_keys);
+         expression_HDFGroup->putStringArray(expressions,
+                                            d_visit_expressions);
+         expression_HDFGroup->putStringArray(expression_types,
+                                            d_visit_expression_types);
+      }
 
       /*
        * Write time and data info to BASIC HDF group
@@ -2813,8 +3324,8 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       double dx_curr_lev[DIM];
       double patch_xlo, patch_xhi;
 
-      for(int i = 0; i < DIM; i++) {
-	 dx_curr_lev[DIM] = 0.0;
+      for(i = 0; i < DIM; i++) {
+	 dx_curr_lev[i] = 0.0;
       }
 
       /*
@@ -3102,15 +3613,25 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
                      extents_HDFGroup->putDatabase("materials");
                }
 
-               std::string mname = ipi().d_material_name;
-               // material_name group
+               key_string = ipi().d_material_name;
                tbox::Pointer<tbox::HDFDatabase>
-                  extents_material_name_HDFGroup =
-                  extents_materials_HDFGroup->putDatabase(mname);
+                  extents_material_name_HDFGroup;
+               if (!(ipi().d_is_material_state_variable))
+               {
+                  std::string mname = ipi().d_material_name;
+                  // material_name group
+                  extents_material_name_HDFGroup=
+                     extents_materials_HDFGroup->putDatabase(mname);
+                  key_string+="-Fractions";
+               }
+               else
+               {
+                  // Sparse Format does not need additional group
+                  extents_material_name_HDFGroup=extents_materials_HDFGroup;
+               }
                hid_t extents_material_name_group_id =
-                      extents_material_name_HDFGroup->getGroupId();
+                  extents_material_name_HDFGroup->getGroupId();
 
-               key_string = ipi().d_material_name + "-Fractions";
                HDFputPatchMinMaxStructArray(
                       key_string,
                       ipi().d_master_min_max[comp],
@@ -3937,6 +4458,8 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputIntegerArray2D(
                       data);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
+#else
+      NULL_USE(errf);
 #endif
       errf = H5Sclose(space);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -3998,6 +4521,8 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputDoubleArray2D(
                       data);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
+#else
+      NULL_USE(errf);
 #endif
       errf = H5Sclose(space);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -4067,6 +4592,8 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchExtentsStructArray(
                        intXdType);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
+#else
+      NULL_USE(errf);
 #endif
       errf = H5Tinsert(pe_id,
                        "upper",
@@ -4174,6 +4701,8 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchMapStructArray(
                        H5T_NATIVE_INT);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
+#else
+      NULL_USE(errf);
 #endif
       errf = H5Tinsert(pm_id,
                        "file_cluster_number",
@@ -4271,6 +4800,8 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchMinMaxStructArray(
                        H5T_NATIVE_CHAR);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
+#else
+      NULL_USE(errf);
 #endif
       errf = H5Tinsert(s1_tid,
                        "material_composition_flag",
@@ -4380,6 +4911,8 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputChildParentStructArray(
                        H5T_NATIVE_INT);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
+#else
+      NULL_USE(errf);
 #endif
       errf = H5Tinsert(s1_tid,
                        field_name.c_str(),
@@ -4498,6 +5031,8 @@ template<int DIM> void VisItDataWriter<DIM>::dumpItem(
    os << "d_depth: " << plotitem.d_depth << "\n";
    os << "d_start_depth_index: " << plotitem.d_start_depth_index << "\n";
    os << "d_scale_factor: " << plotitem.d_scale_factor << "\n";
+   os << "d_is_material_state_variable: "
+      << plotitem.d_is_material_state_variable << "\n";
    os << "d_derived_writer ptr: " << plotitem.d_derived_writer << "\n";
 
    int i;

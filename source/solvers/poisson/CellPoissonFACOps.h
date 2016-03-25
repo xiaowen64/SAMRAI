@@ -1,8 +1,8 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACOps.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonFACOps.h $
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1818 $
- * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+ * Revision:    $LastChangedRevision: 1845 $
+ * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
  * Description: Operator class for cell-centered scalar Poisson using FAC
  */
 
@@ -529,7 +529,7 @@ public:
       int ln ,
       int num_sweeps );
 
-   virtual void solveCoarsestLevel(
+   virtual int solveCoarsestLevel(
       SAMRAIVectorReal<DIM,double> &error ,
       const SAMRAIVectorReal<DIM,double> &residual ,
       int coarsest_ln );
@@ -588,7 +588,7 @@ private:
    /*!
     * @brief Solve the coarsest level using HYPRE
     */
-   void solveCoarsestLevel_HYPRE(
+   int solveCoarsestLevel_HYPRE(
       SAMRAIVectorReal<DIM,double> &error ,
       const SAMRAIVectorReal<DIM,double> &residual ,
       int ln );

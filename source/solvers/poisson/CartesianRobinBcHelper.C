@@ -2,11 +2,11 @@
 #define included_solv_CartesianRobinBcHelper_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CartesianRobinBcHelper.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CartesianRobinBcHelper.C $
  * Package:     SAMRAI application utilities
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:    $LastChangedRevision: 1846 $
+ * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -92,6 +92,8 @@ template<int DIM>  CartesianRobinBcHelper<DIM>::CartesianRobinBcHelper(
     d_homogeneous_bc(false)
 {
 
+   NULL_USE(coef_strategy);
+
    t_set_boundary_values_in_cells = tbox::TimerManager::getManager()->
       getTimer("solv::CartesianRobinBcHelper::setBoundaryValuesInCells()");
    t_use_set_bc_coefs = tbox::TimerManager::getManager()->
@@ -127,6 +129,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
    int target_data_id ,
    bool homogeneous_bc ) const
 {
+   NULL_USE(fill_time);
 
    t_set_boundary_values_in_cells->start();
 
@@ -217,9 +220,8 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
    const double *h = pg->getDx();
    const int num_coefs( homogeneous_bc ? 1 : 2 );
    const int zerog = num_coefs == 1;
-   int n;
 
-   for ( n=0; n<n_codim1_boxes; ++n ) {
+   for (int n=0; n<n_codim1_boxes; ++n ) {
 
       const int location_index = codim1_boxes[n].getLocationIndex();
       const int normal_dir = location_index/2;
@@ -627,6 +629,11 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesAtNodes (
    int target_data_id ,
    bool homogeneous_bc ) const
 {
+   NULL_USE(patch);
+   NULL_USE(fill_time);
+   NULL_USE(target_data_id);
+   NULL_USE(homogeneous_bc);
+
    TBOX_ERROR(d_object_name << ": Using incomplete implementation"
               << "CartesianRobinBcHelper<DIM>::setBoundaryValuesAtNodes"
               << "is not implemented because there is not a need for it (yet)"
@@ -717,6 +724,10 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::preprocessRefineBoxes (
       const hier::BoxList<DIM> &fine_boxes ,
       const hier::IntVector<DIM> &ratio )
 {
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_boxes);
+   NULL_USE(ratio);
    return;
 }
 template<int DIM> void CartesianRobinBcHelper<DIM>::preprocessRefine (
@@ -725,6 +736,10 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::preprocessRefine (
       const hier::Box<DIM> &fine_box ,
       const hier::IntVector<DIM> &ratio )
 {
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
    return;
 }
 template<int DIM> void CartesianRobinBcHelper<DIM>::postprocessRefineBoxes (
@@ -733,7 +748,11 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::postprocessRefineBoxes (
       const hier::BoxList<DIM> &fine_box ,
       const hier::IntVector<DIM> &ratio )
 {
-   return;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
+  return;
 }
 template<int DIM> void CartesianRobinBcHelper<DIM>::postprocessRefine (
       hier::Patch<DIM> &fine ,
@@ -741,6 +760,10 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::postprocessRefine (
       const hier::Box<DIM> &fine_boxes ,
       const hier::IntVector<DIM> &ratio )
 {
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_boxes);
+   NULL_USE(ratio);
    return;
 }
 

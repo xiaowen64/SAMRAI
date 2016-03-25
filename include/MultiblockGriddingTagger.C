@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/multiblock/MultiblockGriddingTagger.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/multiblock/MultiblockGriddingTagger.C $
 // Package:	SAMRAI multiblock package
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 1846 $
+// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
 
@@ -67,7 +67,7 @@ void MultiblockGriddingTagger<DIM>::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector<DIM>& ghost_width_to_fill)
 {
-   (void) fill_time;
+   NULL_USE(fill_time);
 
    const tbox::Pointer< pdat::CellData<DIM,int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
@@ -104,7 +104,8 @@ void MultiblockGriddingTagger<DIM>::fillSingularityBoundaryConditions(
    const hier::Box<DIM>& fill_box,
    const hier::BoundaryBox<DIM>& boundary_box)
 {
-   (void) boundary_box;
+   NULL_USE(boundary_box);
+   NULL_USE(fill_time);
 
    const tbox::Pointer< pdat::CellData<DIM,int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);

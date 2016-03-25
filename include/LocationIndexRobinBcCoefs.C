@@ -2,11 +2,11 @@
 #define included_solv_LocationIndexRobinBcCoefs_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/LocationIndexRobinBcCoefs.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/LocationIndexRobinBcCoefs.C $
  * Package:     SAMRAI application utilities
  * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Revision:    $LastChangedRevision: 1846 $
+ * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -30,7 +30,28 @@ namespace SAMRAI {
 
 /*
 ************************************************************************
-* Constructor                                                          *
+* Default constructor                                                  *
+************************************************************************
+*/
+
+template<int DIM>  LocationIndexRobinBcCoefs<DIM>::LocationIndexRobinBcCoefs(
+)
+   : d_object_name("")
+{
+   int i;
+   for ( i=0; i<2*DIM; ++i ) {
+      d_a_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
+      d_b_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
+      d_g_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
+   }
+   return;
+}
+
+
+
+/*
+************************************************************************
+* Constructor using database 
 ************************************************************************
 */
 
@@ -200,9 +221,11 @@ template<int DIM> void LocationIndexRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
-   const hier::BoundaryBox<DIM> &bdry_box ,
-   double fill_time ) const
+   const hier::BoundaryBox<DIM> &bdry_box ) const
 {
+   NULL_USE(variable);
+   NULL_USE(patch);
+
    int location = bdry_box.getLocationIndex();
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT( location >= 0 && location < 2*DIM );
@@ -222,7 +245,8 @@ template<int DIM> void LocationIndexRobinBcCoefs<DIM>::setBcCoefs (
 
 
 
-template<int DIM> hier::IntVector<DIM> LocationIndexRobinBcCoefs<DIM>::numberOfExtensionsFillable() const
+template<int DIM> hier::IntVector<DIM>
+LocationIndexRobinBcCoefs<DIM>::numberOfExtensionsFillable() const
 {
    /*
     * Return some really big number.  We have no limits.
@@ -244,6 +268,26 @@ template<int DIM> void LocationIndexRobinBcCoefs<DIM>::getCoefficients(
    g = d_g_map[i];
    return;
 }
+
+/*
+************************************************************************
+* Assignment operator                                                  *
+************************************************************************
+*/
+
+template<int DIM>
+const LocationIndexRobinBcCoefs<DIM> &LocationIndexRobinBcCoefs<DIM>::operator=(
+   const LocationIndexRobinBcCoefs<DIM> &r )
+{
+   d_object_name = r.d_object_name;
+   for ( size_t i=0; i<2*DIM; ++i ) {
+      d_a_map[i] = r.d_a_map[i];
+      d_b_map[i] = r.d_b_map[i];
+      d_g_map[i] = r.d_g_map[i];
+   }
+   return *this;
+}
+
 
 
 

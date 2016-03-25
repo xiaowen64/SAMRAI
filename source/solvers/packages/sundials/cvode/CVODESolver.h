@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/cvode/CVODESolver.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/cvode/CVODESolver.h $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1750 $
-// Modified:    $LastChangedDate: 2007-12-10 15:19:17 -0800 (Mon, 10 Dec 2007) $
+// Revision:    $LastChangedRevision: 1880 $
+// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
 // Description: Wrapper class for CVODE solver function calls and data
 //
 
@@ -1225,9 +1225,9 @@ private:
    int d_max_order;
    int d_max_num_internal_steps;
    int d_max_num_warnings;
-   int d_init_step_size;
-   int d_max_step_size;
-   int d_min_step_size;
+   double d_init_step_size;
+   double d_max_step_size;
+   double d_min_step_size;
    /*
     * CVSpgmr parameters
     */

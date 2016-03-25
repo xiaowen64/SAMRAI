@@ -247,6 +247,7 @@ libchar:	pdat__ArrayData-NDIM_char${NDIM}.o				\
 	pdat__SideDataFactory-NDIM_char${NDIM}.o			\
 	pdat__SideVariable-NDIM_char${NDIM}.o				\
 	pdat__ArrayDataOperationUtilities-NDIM_char_CopyOperation-char${NDIM}.o\
+	pdat__ArrayDataOperationUtilities-NDIM_char_SumOperation-char${NDIM}.o\
 	tbox__Pointer-pdat__ArrayData-NDIM_char${NDIM}.o		\
 	tbox__Pointer-pdat__CellData-NDIM_char${NDIM}.o			\
 	tbox__Pointer-pdat__CellDataFactory-NDIM_char${NDIM}.o		\
@@ -314,6 +315,7 @@ libbool:	pdat__ArrayData-NDIM_bool${NDIM}.o				\
 	pdat__SideDataFactory-NDIM_bool${NDIM}.o			\
 	pdat__SideVariable-NDIM_bool${NDIM}.o				\
 	pdat__ArrayDataOperationUtilities-NDIM_bool_CopyOperation-bool${NDIM}.o\
+	pdat__ArrayDataOperationUtilities-NDIM_bool_SumOperation-bool${NDIM}.o\
 	tbox__Pointer-pdat__ArrayData-NDIM_bool${NDIM}.o		\
 	tbox__Pointer-pdat__CellData-NDIM_bool${NDIM}.o			\
 	tbox__Pointer-pdat__CellDataFactory-NDIM_bool${NDIM}.o		\

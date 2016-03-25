@@ -111,6 +111,7 @@ libdefault:	BasePatchHierarchy-NDIM${NDIM}.o BasePatchLevel-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Pointer-hier__PatchLevel-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Pointer-hier__Variable-NDIM${NDIM}.o		\
 	tbox__List-tbox__Pointer-hier__Variable-NDIM${NDIM}.o		\
+	tbox__Array-tbox__Array-tbox__Array-hier__BoundaryBox-NDIM${NDIM}.o\
 	tbox__Array-tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIM${NDIM}.o\
 	tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIM${NDIM}.o\
 	tbox__Array-tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIM${NDIM}.o

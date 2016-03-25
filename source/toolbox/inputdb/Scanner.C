@@ -445,13 +445,18 @@ char *yytext;
 #define INITIAL 0
 
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/Scanner.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/inputdb/Scanner.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 
 
 // Description:	Lex scanner description for the SAMRAI input database
 //
+
+// Ignore Intel warnings about unreachable statements
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:177)
+#endif
 
 #include "SAMRAI_config.h"
 #include <stdlib.h>
@@ -516,7 +521,7 @@ static int input YY_PROTO(( void ));
 #endif
 #endif
 
-#if YY_STACK_USED
+#ifdef YY_STACK_USED
 static int yy_start_stack_ptr = 0;
 static int yy_start_stack_depth = 0;
 static int *yy_start_stack = 0;
@@ -1596,7 +1601,7 @@ FILE *file;
 	b->yy_input_file = file;
 	b->yy_fill_buffer = 1;
 
-#if YY_ALWAYS_INTERACTIVE
+#ifdef YY_ALWAYS_INTERACTIVE
 	b->yy_is_interactive = 1;
 #else
 #if YY_NEVER_INTERACTIVE
@@ -1890,7 +1895,7 @@ void *ptr;
 	free( ptr );
 	}
 
-#if YY_MAIN
+#ifdef YY_MAIN
 int main()
 	{
 	yylex();
