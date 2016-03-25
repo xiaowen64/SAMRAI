@@ -1,15 +1,19 @@
-//
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/hierarchy/tbox_Pointer-HierarchyTester.C $
-// Package:	SAMRAI templates
-// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-//
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:
+ *
+ ************************************************************************/
 
-#include "tbox/Pointer.h"
-#include "tbox/Pointer.C"
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Pointer.C"
 #include "HierarchyTester.h"
 
 namespace SAMRAI {
 
-template class tbox::Pointer< HierarchyTester >;
+template class tbox::Pointer<HierarchyTester>;
 
 }

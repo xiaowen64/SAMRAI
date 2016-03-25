@@ -1,23 +1,24 @@
-//
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/restartdb/mainHDF5.C $
-// Package:     SAMRAI test
-// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2104 $
-// Modified:    $LastChangedDate: 2008-04-01 10:02:41 -0700 (Tue, 01 Apr 2008) $
-// Description: Tests HDF database in SAMRAI
-//
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Tests HDF database in SAMRAI
+ *
+ ************************************************************************/
 
-#include "SAMRAI_config.h"
+#include "SAMRAI/SAMRAI_config.h"
 
-#include "tbox/SAMRAIManager.h"
-#include "tbox/Array.h"
-#include "tbox/DatabaseBox.h"
-#include "tbox/Complex.h"
-#include "tbox/HDFDatabase.h"
-#include "tbox/SAMRAI_MPI.h"
-#include "tbox/PIO.h"
-#include "tbox/Pointer.h"
-#include "tbox/RestartManager.h"
+#include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/DatabaseBox.h"
+#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/HDFDatabase.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/RestartManager.h"
 #include <string>
 
 using namespace std;
@@ -25,24 +26,25 @@ using namespace SAMRAI;
 
 #include "database_tests.h"
 
-class RestartTester : public tbox::Serializable 
+class RestartTester:public tbox::Serializable
 {
-public:   
-
-   RestartTester() 
+public:
+   RestartTester()
    {
       tbox::RestartManager::getManager()->registerRestartItem("RestartTester",
-                                                             this);
+         this);
    }
 
-   virtual ~RestartTester() {}
+   virtual ~RestartTester() {
+   }
 
-   void putToDatabase(tbox::Pointer<tbox::Database> db) 
+   void putToDatabase(
+      tbox::Pointer<tbox::Database> db)
    {
       writeTestData(db);
    }
 
-   void getFromDatabase() 
+   void getFromDatabase()
    {
       tbox::Pointer<tbox::Database> root_db =
          tbox::RestartManager::getManager()->getRootDatabase();
@@ -50,17 +52,21 @@ public:
       tbox::Pointer<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
-      } 
+      }
 
       readTestData(db);
    }
 
 };
 
-int main(int argc, char *argv[]) 
+int main(
+   int argc,
+   char* argv[])
 {
    tbox::SAMRAI_MPI::init(&argc, &argv);
+   tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Create block to force pointer deallocation.  If this is not done
@@ -72,45 +78,47 @@ int main(int argc, char *argv[])
 
 #ifdef HAVE_HDF5
 
-      tbox::pout << "\n--- HDF5 database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- HDF5 database tests BEGIN ---" << endl;
 
       tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
 
       RestartTester hdf_tester;
 
-      tbox::pout << "\n--- HDF5 write database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- HDF5 write database tests BEGIN ---" << endl;
 
       setupTestData();
 
       restart_manager->writeRestartFile("test_dir", 0);
 
-      tbox::pout << "\n--- HDF5 write database tests END ---" << endl;
+      tbox::plog << "\n--- HDF5 write database tests END ---" << endl;
 
-      tbox::pout << "\n--- HDF5 read database tests BEGIN ---" <<  endl;
+      tbox::plog << "\n--- HDF5 read database tests BEGIN ---" << endl;
 
       restart_manager->closeRestartFile();
 
-      restart_manager->openRestartFile("test_dir", 0, tbox::SAMRAI_MPI::getNodes());
+      restart_manager->openRestartFile("test_dir",
+         0,
+         mpi.getSize());
 
       hdf_tester.getFromDatabase();
 
       restart_manager->closeRestartFile();
 
-      tbox::pout << "\n--- HDF5 read database tests END ---" << endl;
+      tbox::plog << "\n--- HDF5 read database tests END ---" << endl;
 
-      tbox::pout << "\n--- HDF5 database tests END ---" << endl;
+      tbox::plog << "\n--- HDF5 database tests END ---" << endl;
 
 #endif
 
       if (number_of_failures == 0) {
-	 tbox::pout << "\nPASSED:  HDF5" << endl;
+         tbox::pout << "\nPASSED:  HDF5" << endl;
       }
    }
 
    tbox::SAMRAIManager::shutdown();
+   tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();
 
-   return(number_of_failures);
+   return number_of_failures;
 
 }
-

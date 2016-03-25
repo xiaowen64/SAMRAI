@@ -1,165 +1,79 @@
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/communication/Makefile.in $
-## Package:     SAMRAI tests
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: makefile for SAMRAI communication tests
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for SAMRAI communication tests 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/communication
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/communication
-VPATH         = @top_srcdir@/examples/communication
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
-default: check	
+default: check
 
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
-NUM_TESTS = 36
+NUM_TESTS = 56
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = CommTester.o PatchDataTestStrategy.o main.o \
-		CellDataTest.o \
-		EdgeDataTest.o \
-		FaceDataTest.o \
-		NodeDataTest.o \
-		OuterfaceDataTest.o \
-		OuternodeDataTest.o \
-		OutersideDataTest.o \
-		Pointer-CommTester.o \
-		SideDataTest.o
+CXX_OBJS      = \
+	CommTester.o \
+	PatchDataTestStrategy.o \
+	main.o \
+	VisItDerivedData.o \
+	CellDataTest.o \
+	EdgeDataTest.o \
+	FaceDataTest.o \
+	NodeDataTest.o \
+	OuterfaceDataTest.o \
+	OuternodeDataTest.o \
+	OutersideDataTest.o \
+	Pointer-CommTester.o \
+	SideDataTest.o
 
-test1d:
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-1d
-		$(MAKE) PDIM=1 main-1d
-
-main-1d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI1D) $(LIBSAMRAI) $(LDLIBS) -o test1d
-
-test2d:
-		if test -f stamp-1d; then $(MAKE) clean-check; fi
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
-
-main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o test2d
-
-test3d:
-		if test -f stamp-1d; then $(MAKE) clean-check; fi
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 test-3d
-
-test-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
+main: $(CXX_OBJS) $(LIBSAMRAI)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
-check2d:	test2d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d onode-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d oface-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d oside-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d cell-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d cell-test-refine2d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d cell-test-refine2d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d edge-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d edge-test-refine2d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d edge-test-refine2d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d face-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d face-test-refine2d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d face-test-refine2d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d node-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d node-test-refine2d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d node-test-refine2d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d side-test-coarsen2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d side-test-refine2d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d side-test-refine2d-b.input
+check2d: main
+	@for i in test_inputs/*2d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
 
-check3d:	test3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d onode-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d oface-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d oside-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d cell-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d cell-test-refine3d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d cell-test-refine3d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d edge-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d edge-test-refine3d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d edge-test-refine3d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d face-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d face-test-refine3d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d face-test-refine3d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d node-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d node-test-refine3d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d node-test-refine3d-b.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d side-test-coarsen3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d side-test-refine3d-a.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d side-test-refine3d-b.input
+check3d: main
+	@for i in test_inputs/*3d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) stamp-*d test*d
-
-redo:
-		$(RM) core test*d
+	$(RM) main
+	$(RM) -rf *visit
 
 include $(SRCDIR)/Makefile.depend
+

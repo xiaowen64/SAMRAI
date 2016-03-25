@@ -1,9 +1,15 @@
 #!/usr/bin/perl
-############################################################
-##  c) 1997-2008 Lawrence Livermore National Security, LLC
-##  Perl script for running the vizamrai_cat.sh script
-##  on multiple timesteps.  
-###########################################################
+
+#########################################################################
+##
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
+##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:    Perl script for running the vizamrai_cat.sh script
+##                 on multiple timesteps.  
+##
+#########################################################################
 
 #
 #  Determine path to vizamrai_cat.sh script

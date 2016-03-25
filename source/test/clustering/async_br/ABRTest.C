@@ -1,148 +1,111 @@
-/*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/ABRTest.C $
-  Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
-  Description:	ABRTest class implementation
-*/
-
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   ABRTest class implementation
+ *
+ ************************************************************************/
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
 #include "ABRTest.h"
-#include "CartesianGridGeometry.h"
-#include "HierarchyCellDataOpsReal.h"
-#include "ArrayData.h"
-#include "CellVariable.h"
-#include "NodeData.h"
-#include "NodeVariable.h"
+#include "SAMRAI/geom/CartesianGridGeometry.h"
+#include "SAMRAI/math/HierarchyCellDataOpsReal.h"
+#include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/pdat/NodeData.h"
+#include "SAMRAI/pdat/NodeVariable.h"
 
 #include <iomanip>
 
 using namespace SAMRAI;
 
-template<int DIM>
-ABRTest<DIM>::ABRTest(
-  const string &object_name
-, tbox::Pointer<tbox::Database> database
-)
-: d_name(object_name) ,
-  d_hierarchy() ,
-  d_tagger( object_name+":tagger",
-	    database->isDatabase("sine_tagger") ?
-	    database->getDatabase("sine_tagger").getPointer() : NULL ) ,
-  d_time(0.5)
+ABRTest::ABRTest(
+   const std::string& object_name,
+   const tbox::Dimension& dim,
+   tbox::Pointer<hier::PatchHierarchy> patch_hierarchy,
+   tbox::Pointer<tbox::Database> database):
+   d_name(object_name),
+   d_dim(dim),
+   d_hierarchy(patch_hierarchy),
+   d_tagger(object_name + ":tagger",
+            dim,
+            database->isDatabase("sine_tagger") ?
+            database->getDatabase("sine_tagger").getPointer() : NULL),
+   d_time(0.5)
 {
-  return;
+   d_tagger.resetHierarchyConfiguration(d_hierarchy, 0, 0);
 }
 
-template<int DIM>
-ABRTest<DIM>::~ABRTest()
+ABRTest::~ABRTest()
 {
-  return;
 }
 
-
-
-template<int DIM>
-mesh::StandardTagAndInitStrategy<DIM> *ABRTest<DIM>::getStandardTagAndInitObject()
+mesh::StandardTagAndInitStrategy *ABRTest::getStandardTagAndInitObject()
 {
-  return &d_tagger;
+   return &d_tagger;
 }
-
-
-
 
 /*
-  Deallocate patch data allocated by this class.
-*/
-template<int DIM>
-void ABRTest<DIM>::computeHierarchyData(
-   hier::PatchHierarchy<DIM> &hierarchy,
-   double time )
+ * Deallocate patch data allocated by this class.
+ */
+void ABRTest::computeHierarchyData(
+   hier::PatchHierarchy& hierarchy,
+   double time)
 {
-  d_tagger.computeHierarchyData( hierarchy, time );
-  return;
+   d_tagger.computeHierarchyData(hierarchy, time);
 }
-
-
-
 
 /*
-  Deallocate patch data allocated by this class.
-*/
-template<int DIM>
-void ABRTest<DIM>::deallocatePatchData(
-   hier::PatchHierarchy<DIM> &hierarchy )
+ * Deallocate patch data allocated by this class.
+ */
+void ABRTest::deallocatePatchData(
+   hier::PatchHierarchy& hierarchy)
 {
-  d_tagger.deallocatePatchData( hierarchy );
-  return;
+   d_tagger.deallocatePatchData(hierarchy);
 }
-
-
-
-
 
 /*
-  Deallocate patch data allocated by this class.
-*/
-template<int DIM>
-void ABRTest<DIM>::deallocatePatchData(
-   hier::PatchLevel<DIM> &level )
+ * Deallocate patch data allocated by this class.
+ */
+void ABRTest::deallocatePatchData(
+   hier::PatchLevel& level)
 {
-  d_tagger.deallocatePatchData( level );
-  return;
+   d_tagger.deallocatePatchData(level);
 }
 
-
-
-
-template<int DIM>
-int ABRTest<DIM>::registerVariablesWithPlotter(
-  tbox::Pointer<appu::CartesianVizamraiDataWriter<DIM> > writer )
+#ifdef HAVE_HDF5
+int ABRTest::registerVariablesWithPlotter(
+   tbox::Pointer<appu::VisItDataWriter> writer)
 {
-  if ( ! writer.isNull() )
-    d_tagger.registerVariablesWithPlotter(*writer);
-  return 0;
+   if (!writer.isNull())
+      d_tagger.registerVariablesWithPlotter(*writer);
+   return 0;
 }
-
-
-
-
-template<int DIM>
-int ABRTest<DIM>::registerVariablesWithPlotter(
-  tbox::Pointer<appu::VisItDataWriter<DIM> > writer )
-{
-  if ( ! writer.isNull() )
-    d_tagger.registerVariablesWithPlotter(*writer);
-  return 0;
-}
-
-
-template<int DIM>
-bool ABRTest<DIM>::packDerivedDataIntoDoubleBuffer(
-  double* buffer ,
-  const hier::Patch<DIM> &patch ,
-  const hier::Box<DIM> &region ,
-  const string &variable_name ,
-  int depth_id) const
-{
-  if ( variable_name == "Patch<DIM> level number" ) {
-    double pln = patch.getPatchLevelNumber();
-    int i, size=region.size();
-    for ( i=0; i<size; ++i ) buffer[i] = pln;
-  }
-  else {
-    // Did not register this name.
-    TBOX_ERROR("Unregistered variable name '" << variable_name << "' in\n"
-	       << "ABRTest<DIM>::packDerivedPatchDataIntoDoubleBuffer");
-  }
-
-  return false;
-}
-
-
-#ifdef NDIM
-template class ABRTest<NDIM>;
 #endif
+
+bool ABRTest::packDerivedDataIntoDoubleBuffer(
+   double* buffer,
+   const hier::Patch& patch,
+   const hier::Box& region,
+   const std::string& variable_name,
+   int depth_id) const
+{
+   (void)depth_id;
+
+   if (variable_name == "Patch level number") {
+      double pln = patch.getPatchLevelNumber();
+      int i, size = region.size();
+      for (i = 0; i < size; ++i) buffer[i] = pln;
+   } else {
+      // Did not register this name.
+      TBOX_ERROR(
+         "Unregistered variable name '" << variable_name << "' in\n"
+                                        << "ABRTest::packDerivedPatchDataIntoDoubleBuffer");
+   }
+
+   return false;
+}

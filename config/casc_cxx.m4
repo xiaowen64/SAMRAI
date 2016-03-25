@@ -571,7 +571,7 @@ dnl
 AC_DEFUN([CASC_CXX_EXCEPTION_HANDLING], [
     AC_REQUIRE([AC_PROG_CXX])
     AC_MSG_CHECKING(whether ${CXX} supports exception handling)
-    AC_CACHE_VAL(casc_cxx_have_exception_handling, [
+    AC_CACHE_VAL(casc_cv_cxx_have_exception_handling, [
        AC_LANG_SAVE
        AC_LANG_CPLUSPLUS
        AC_TRY_COMPILE([
@@ -587,12 +587,12 @@ void foo() {
    signal(SIGFPE, byebye);
 }
          ], [/* empty */],
-         casc_cxx_have_exception_handling=yes,
-         casc_cxx_have_exception_handling=no)
+         casc_cv_cxx_have_exception_handling=yes,
+         casc_cv_cxx_have_exception_handling=no)
        AC_LANG_RESTORE
     ])
-    AC_MSG_RESULT($casc_cxx_have_exception_handling)
-    if test "$casc_cxx_have_exception_handling" = yes; then
+    AC_MSG_RESULT($casc_cv_cxx_have_exception_handling)
+    if test "$casc_cv_cxx_have_exception_handling" = yes; then
        AC_DEFINE([HAVE_EXCEPTION_HANDLING],[1],[HAVE_EXCEPTION_HANDLING])
     else
        AC_DEFINE([LACKS_EXCEPTION_HANDLING],[1],[LACKS_EXCEPTION_HANDLING])

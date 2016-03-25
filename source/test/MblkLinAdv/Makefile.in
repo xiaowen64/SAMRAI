@@ -1,97 +1,104 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/MblkLinAdv/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2181 $
-## Modified:	$LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
-## Description:	makefile for linear advection sample application
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for linear advection sample application 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/MblkLinAdv
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/MblkLinAdv
-VPATH         = @top_srcdir@/examples/MblkLinAdv
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
-
 
 default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=0
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+CPPFLAGS_EXTRA= -DTESTING=0
 
 NUM_TESTS     = 2
 
 TEST_NPROCS   = @TEST_NPROCS@
 
 CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o MblkHyperbolicLevelIntegrator.o \
-                MblkHyperbolicPatchStrategy.o Pointer-MblkHyperbolicLevelIntegrator.o \
-                SkeletonCellDoubleConservativeLinearRefine.o Pointer-SkeletonCellDoubleConservativeLinearRefine.o \
-                SkeletonCellDoubleWeightedAverage.o Pointer-SkeletonCellDoubleWeightedAverage.o \
-                SkeletonOutersideDoubleWeightedAverage.o Pointer-SkeletonOutersideDoubleWeightedAverage.o
+	MblkHyperbolicPatchStrategy.o Pointer-MblkHyperbolicLevelIntegrator.o \
+	SkeletonCellDoubleConservativeLinearRefine.o Pointer-SkeletonCellDoubleConservativeLinearRefine.o \
+	SkeletonCellDoubleWeightedAverage.o Pointer-SkeletonCellDoubleWeightedAverage.o \
+	SkeletonOutersideDoubleWeightedAverage.o Pointer-SkeletonOutersideDoubleWeightedAverage.o \
+	SkeletonBoundaryUtilities2.o \
+	SkeletonBoundaryUtilities3.o
 
-C2D_OBJS      = SkeletonBoundaryUtilities2.o
-C3D_OBJS      = SkeletonBoundaryUtilities3.o
+F_OBJS      = upfluxsum2d.o skelbdry2d.o upfluxsum3d.o skelbdry3d.o
 
-F2D_OBJS      = upfluxsum.o skelbdry.o
-F3D_OBJS      = $(F2D_OBJS) 
-
-main2d:
-		if test -f stamp-3d; then $(MAKE) clean ; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
-
-main-2d:	$(CXX_OBJS) $(C2D_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) $(C2D_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
-
-main3d:
-		if test -f stamp-2d; then $(MAKE) clean ; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 main-3d
-
-main-3d:	$(CXX_OBJS) $(C3D_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) $(C3D_OBJS) \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
+	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:
-		$(MAKE) check3d
+	$(MAKE) check3d
 
-check3d:        main3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-                	./main3d wedge-1blk.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-                	./main3d octant-3blk.input;
+check2d:
+
+check3d:       main
+	@for i in test_inputs/*.3d.input ; do \
+	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	       ./main $${i}; \
+	done
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
+
+examples2d: 
+
+examples3d: main
+	@for i in $(SRCDIR)/example_inputs/*.3d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples:
+	$(MAKE) examples2d
+	$(MAKE) examples3d
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean: 
-		$(SAMCLEAN)
-		$(RM) *.f main main2d main3d
+	$(SAMCLEAN)
+	$(RM) *.f main viz*
 
 redo: 
-		$(RM) main2d main3d
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend
 
-FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
+FORTRAN       = $(SRCDIR)/fortran
 M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-skelbdry.o:	$(FORTRAN)/skelbdry.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/skelbdry.m4 > skelbdry.f
-		$(F77) $(FFLAGS) -c skelbdry.f -o $@
+skelbdry2d.o:	$(FORTRAN)/2d/skelbdry2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/2d/skelbdry2d.m4 > skelbdry2d.f
+	$(F77) $(FFLAGS) -c skelbdry2d.f -o $@
 
-upfluxsum.o:	$(FORTRAN)/upfluxsum.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/upfluxsum.m4 > upfluxsum.f
-		$(F77) $(FFLAGS) -c upfluxsum.f -o $@
+upfluxsum2d.o:	$(FORTRAN)/2d/upfluxsum2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/2d/upfluxsum2d.m4 > upfluxsum2d.f
+	$(F77) $(FFLAGS) -c upfluxsum2d.f -o $@
+
+
+skelbdry3d.o:	$(FORTRAN)/3d/skelbdry3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/3d/skelbdry3d.m4 > skelbdry3d.f
+	$(F77) $(FFLAGS) -c skelbdry3d.f -o $@
+
+upfluxsum3d.o:	$(FORTRAN)/3d/upfluxsum3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/3d/upfluxsum3d.m4 > upfluxsum3d.f
+	$(F77) $(FFLAGS) -c upfluxsum3d.f -o $@
 

@@ -1,16 +1,17 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/boundary/Makefile.in $
-## Package:	SAMRAI test
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1917 $
-## Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description:	makefile for boundary utilities sample application
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for boundary utilities sample application 
+##
+#########################################################################
 
-SAMRAI	      = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/boundary
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/boundary
-VPATH         = @top_srcdir@/examples/boundary
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
@@ -20,7 +21,6 @@ include $(OBJECT)/config/Makefile.config
 
 AUTOTEST      = $(SAMRAI)/source/test/boundary
 CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
 NUM_TESTS = 13
 
@@ -28,70 +28,39 @@ TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = main.o BoundaryDataTester.o
 
-main2d:
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
-
-main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
-
-main3d:
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 main-3d
-
-main-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
-check2d:	main2d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d basic2d-flow.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d basic2d-reflect.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d basic2d-dirichlet.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d basic2d-neumann.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d basic2d-periodic01.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d basic2d-periodic11.input
+check2d:	main
+	@for i in test_inputs/*2d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
 
-check3d:	main3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-flow.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-reflect.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-dirichlet.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-neumann.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-periodic010.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-periodic011.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d basic3d-periodic111.input 
+check3d:	main
+	@for i in test_inputs/*3d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
 
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) *main* 
+	$(RM) *main* 
 
 include $(SRCDIR)/Makefile.depend

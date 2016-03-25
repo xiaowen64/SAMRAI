@@ -14,7 +14,7 @@
 dnl File arg-with-environment.m4
 dnl Written by Brian T.N. Gunney
 dnl gunneyb@llnl.gov
-dnl $Id: arg-with-environment.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 dnl IMPORTANT NOTE: This macro was originally written to
 dnl let configure macros check environments so that developers
@@ -26,7 +26,7 @@ dnl
 dnl Therefore, you are encouraged to use the plain autoconf
 dnl macros (AC_ARC_WITH and AC_ARG_ENABLE).
 
-AC_DEFUN([BTNG_ARG_WITH_ENV_WRAPPER],[
+AC_DEFUN([CASC_ARG_WITH_ENV_WRAPPER],[
 dnl This is a high-level macro similar to AC_ARG_WITH but it does
 dnl   a few extra things.
 dnl
@@ -95,7 +95,7 @@ dnl     This is run before caching result.  Generally, this would issue
 dnl     a warning or error as appropriate.  For example, if this macro
 dnl     is used to set the path to a program, you may want to check
 dnl     if that program exist and is executable.
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args $1 and $2
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args $1 and $2
 AC_CACHE_CHECK(for $1,btng_cv_prog_[]translit($1,-,_),[
 AC_ARG_WITH($1,
 ifelse($3,,[  --with-$1	Specify $1 (same as setting $2 in environment)],[$3]))
@@ -159,13 +159,13 @@ if test "${btng_cv_prog_[]translit($1,-,_)+set}" = set ; then
 else
   unset $2
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args $2 and $1
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args $2 and $1
 ])
 
 
 
 
-AC_DEFUN([BTNG_PATH_PROG],[
+AC_DEFUN([CASC_PATH_PROG],[
 dnl This is a high-level macro to find paths to certain programs.
 dnl In addition to (possibly) running AC_ARG_WITH and AC_PATH_PROG it:
 dnl   Allows the path to be set in an environment variable ($1),
@@ -174,15 +174,15 @@ dnl     for avoiding manual configure options setting.
 dnl   Makes sure that the program is executable, if the user explicitly
 dnl     specified it.
 dnl The arguments are (similar to AC_PATH_PROG):
-dnl   1: Variable name to set to the path (used in BTNG_PATH_PROG).
-dnl   2: Name of program being sought (used in BTNG_PATH_PROG).
+dnl   1: Variable name to set to the path (used in CASC_PATH_PROG).
+dnl   2: Name of program being sought (used in CASC_PATH_PROG).
 dnl   3(optional): Commands to set $1 in case neither environment
 dnl      nor command line options are given.  Defaults to a call to
 dnl      AC_PATH_PROG($1,$2).
 dnl   4(optional): Quality check commands to make sure that a
 dnl      sufficiently good program is found.  Defaults to a simple
 dnl      check that the program is executable.
-BTNG_ARG_WITH_ENV_WRAPPER($2,$1,
+CASC_ARG_WITH_ENV_WRAPPER($2,$1,
 [[  --with-$2=PATH	Specify path to $2 program
 			(equivalent to setting $1 in environment)]]dnl
 ,
@@ -206,7 +206,7 @@ fi
 
 
 
-AC_DEFUN([BTNG_ARG_WITH_PREFIX],[
+AC_DEFUN([CASC_ARG_WITH_PREFIX],[
 dnl This is a high-level macro to set the prefix for a
 dnl previously installed package.
 dnl The macro arguments are:
@@ -220,8 +220,8 @@ dnl   run if with_blah is "yes" or "".  They should set or unset
 dnl   the variable named in arg2, depending on what you want
 dnl   the defaul behavior to be in these cases.  The default is
 dnl   to exit with an error.
-# Start macro BTNG_ARG_WITH_PREFIX
-BTNG_ARG_WITH_ENV_WRAPPER($1,$2,
+# Start macro CASC_ARG_WITH_PREFIX
+CASC_ARG_WITH_ENV_WRAPPER($1,$2,
 ifelse([$3],,
 [[  --with-$1=PATH	Specify prefix where $1 is installed
 			(equivalent to setting $2 in the environment)]]
@@ -230,1892 +230,82 @@ ifelse([$4],,
 [[if test "${with_[]translit($1,-,_)}" = yes ; then
   AC_MSG_ERROR([[If you specify --with-$1, you must give it the path as in --with-$1=/installation/path]])
 fi
-BTNG_AC_LOG(environment $2 not defined)
+CASC_AC_LOG(environment $2 not defined)
 ]],[[[$4]]])
 )dnl
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_PREFIX
 ])
 
 
 
 
-dnl $Id: compiler-id.m4 155 2007-05-14 22:09:31Z gunney $
-
-dnl Determines which compiler is being used.
-dnl This check uses the compiler behavior when possible.
-dnl For some compiler, we resort to a best guess,
-dnl because we do not know a foolproof way to get the info.
-
-dnl Much of the information used here came from the very
-dnl helpful predef project (http://predef.sourceforge.net/).
-
-
-
-
-dnl Simple wrappers to allow using BTNG_INFO_CXX_ID_NAMES and
-dnl BTNG_INFO_CC_ID_NAMES without arguments.
-dnl The names CC_ID and CC_VERSION are used for the C compiler id and version.
-dnl The names CXX_ID and CXX_VERSION are used for the C++ compiler id and version.
-AC_DEFUN([BTNG_INFO_CXX_ID],[
-  BTNG_INFO_CXX_ID_NAMES(CXX_ID,CXX_VERSION)
-])
-AC_DEFUN([BTNG_INFO_CC_ID],[
-  BTNG_INFO_CC_ID_NAMES(CC_ID,CC_VERSION)
-])
-AC_DEFUN([BTNG_INFO_CC_CXX_ID],[
-  AC_REQUIRE([BTNG_INFO_CC_ID])
-  AC_REQUIRE([BTNG_INFO_CXX_ID])
-])
-
-
-dnl BTNG_INFO_CXX_ID and BTNG_INFO_C_ID determine which C or C++ compiler
-dnl is being used.
-# Set the variables CXX_ID or C_ID as follows:
-# Gnu		-> gnu
-# SUNWspro	-> sunpro
-# Dec		-> dec
-# KCC		-> kai
-# Intel		-> intel
-# SGI		-> sgi
-# IBM xlc	-> xlc
-
-
-AC_DEFUN([BTNG_INFO_CXX_ID_NAMES],
-dnl Arguments are:
-dnl 1. Name of variable to set to the ID string.
-dnl 2. Name of variable to set to the version number.
-[
-# Start macro BTNG_INFO_CXX_ID_NAMES
-  AC_REQUIRE([AC_PROG_CXXCPP])
-  AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
-  BTNG_AC_LOG(CXXP is $CXX)
-  BTNG_AC_LOG(CXXCPP is $CXXCPP)
-
-  $1=unknown
-  $2=unknown
-
-dnl Do not change the following chain of if blocks into a case statement.
-dnl We may eventually have a compiler that must be tested in a different
-dnl method
-
-
-  # Check if it is a Sun compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is sunpro)
-    AC_EGREP_CPP([^0x[0-9]+],__SUNPRO_CC,
-      $1=sunpro
-      # SUN compiler defines __SUNPRO_CC to the version number.
-      echo __SUNPRO_CC > conftest.C
-      $2=`${CXXCPP} conftest.C | sed -n 2p`
-      rm -f conftest.C
-    )
-  fi
-
-
-  # Check if it is a Intel compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is intel)
-    AC_EGREP_CPP(^yes,
-#ifdef __INTEL_COMPILER
-yes;
-#endif
-,
-      $1=intel
-      # Intel compiler defines __INTEL_COMPILER to the version number.
-      echo __INTEL_COMPILER > conftest.C
-      $2=`${CXXCPP} conftest.C | sed -n 2p`
-      rm -f conftest.C
-    )
-  fi
-
-
-  # Check if it is a GNU compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is gnu)
-    AC_EGREP_CPP(^yes,
-#ifdef __GNUC__
-yes;
-#endif
-,
-    $1=gnu
-    # GNU compilers output version number with option --version.
-    # Alternatively, it also defines the macros __GNUC__,
-    # GNUC_MINOR__ and __GNUC_PATCHLEVEL__
-    [[$2=`$CXX --version | sed -e 's/[^0-9]\{0,\}\([^ ]\{1,\}\).\{0,\}/\1/' -e 1q`]]
-    )
-  fi
-
-
-  # Check if it is a DEC compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is dec)
-    AC_EGREP_CPP(^1,__DECCXX,
-      $1=dec
-      # DEC compiler defines __DECCXX_VER to the version number.
-      echo __DECCXX_VER > conftest.C
-      $2=`${CXXCPP} conftest.C | sed -n 2p`
-      rm -f conftest.C
-    )
-  fi
-
-
-  # Check if it is a KAI compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is kai)
-    AC_EGREP_CPP(^1,__KCC,
-      $1=kai
-      # KCC compiler defines __KCC_VERSION to the version number.
-      echo __KCC_VERSION > conftest.C
-      $2=`${CXXCPP} conftest.C | sed -n 2p`
-      rm -f conftest.C
-    )
-  fi
-
-
-  # Check if it is a SGI compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is sgi)
-    AC_EGREP_CPP(^1,__sgi,
-      $1=sgi
-      # SGI compiler defines _COMPILER_VERSION to the version number.
-      echo _COMPILER_VERSION > conftest.C
-      $2=`${CXXCPP} conftest.C | sed /^\\#/d`
-      rm -f conftest.C
-    )
-  fi
-
-
-  # Check if it is a IBM compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CXX is xlc)
-    AC_EGREP_CPP(^yes,
-#ifdef __xlC__
-yes;
-#endif
-,
-    $1=xlc
-    # IBM compiler defines __xlC__ to the version number.
-    echo __xlC__ > conftest.C
-    $2=`${CXXCPP} conftest.C | sed /^\\#/d`
-    rm -f conftest.C
-    )
-  fi
-
-
-  AC_LANG_RESTORE
-  BTNG_AC_LOG_VAR(CXX_ID CXX_VERSION)
-# End macro BTNG_INFO_CXX_ID_NAMES
-])
-
-
-
-
-
-AC_DEFUN([BTNG_INFO_CC_ID_NAMES],
-dnl Arguments are:
-dnl 1. Name of variable to set to the ID string.
-dnl 2. Name of variable to set to the version number.
-[
-# Start macro BTNG_INFO_CC_ID_NAMES
-  AC_REQUIRE([AC_PROG_CPP])
-  AC_LANG_SAVE
-  AC_LANG_C
-  BTNG_AC_LOG(CC is $CC)
-  BTNG_AC_LOG(CPP is $CPP)
-
-  $1=unknown
-  $2=unknown
-
-dnl Do not change the following chain of if blocks into a case statement.
-dnl We may eventually have a compiler that must be tested in a different
-dnl method
-
-
-  # Check if it is a Sun compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is sunpro)
-    AC_EGREP_CPP([^ 0x[0-9]+],__SUNPRO_C,
-      $1=sunpro
-      # SUN compiler defines __SUNPRO_C to the version number.
-      echo __SUNPRO_C > conftest.c
-      $2=`${CPP} ${CPPFLAGS} conftest.c | sed -n -e 's/^ //' -e 2p`
-      rm -f conftest.c
-    )
-  fi
-
-
-  # Check if it is a Intel compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is intel)
-    AC_EGREP_CPP(^yes,
-#ifdef __INTEL_COMPILER
-yes;
-#endif
-,
-      $1=intel
-      # Intel compiler defines __INTEL_COMPILER to the version number.
-      echo __INTEL_COMPILER > conftest.C
-      $2=`${CPP} conftest.C | sed -n 2p`
-      rm -f conftest.C
-    )
-  fi
-
-
-  # Check if it is a GNU compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is gnu)
-    AC_EGREP_CPP(^yes,
-#ifdef __GNUC__
-yes;
-#endif
-,
-    $1=gnu
-    [[$2=`$CC --version | sed -e 's/[^0-9]\{0,\}\([^ ]\{1,\}\).\{0,\}/\1/' -e 1q`]]
-    )
-  fi
-
-
-  # Check if it is a DEC compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is dec)
-    AC_EGREP_CPP(^ 1,__DECC,
-      $1=dec
-      # DEC compiler defines __DECC_VER to the version number.
-      echo __DECC_VER > conftest.c
-      $2=`${CPP} ${CPPFLAGS} conftest.c | sed -n -e 's/^ //' -e 2p`
-      rm -f conftest.c
-    )
-  fi
-
-
-  # Check if it is a KAI compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is kai)
-    AC_EGREP_CPP(^1,__KCC,
-      $1=kai
-      # KCC compiler defines __KCC_VERSION to the version number.
-      echo __KCC_VERSION > conftest.c
-      $2=`${CPP} ${CPPFLAGS} conftest.c | sed -n 2p`
-      rm -f conftest.c
-    )
-  fi
-
-
-  # Check if it is a SGI compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is sgi)
-    AC_EGREP_CPP(^1,__sgi,
-      $1=sgi
-      # SGI compiler defines _COMPILER_VERSION to the version number.
-      echo _COMPILER_VERSION > conftest.c
-      $2=`${CPP} ${CPPFLAGS} conftest.c | sed /^\\#/d`
-      rm -f conftest.c
-    )
-  fi
-
-
-  # Check if it is a IBM compiler.
-  if test $$1 = unknown; then
-    BTNG_AC_LOG(checking if $CC is xlc)
-    if echo "$host_os" | grep "aix" >/dev/null ; then
-      # The wretched IBM shell does not eval correctly,
-      # so we have to help it with a pre-eval eval statement.
-      ac_cpp=`eval "echo $ac_cpp"`
-      save_ac_cpp=$ac_cpp
-      BTNG_AC_LOG(ac_cpp is temporarily set to $ac_cpp)
-    else
-      save_ac_cpp=
-    fi
-    BTNG_AC_LOG(ac_cpp is $ac_cpp)
-    AC_EGREP_CPP(^yes,
-#ifdef __xlC__
-yes;
-#endif
-,
-    $1=xlc
-    # IBM compiler defines __xlC__ to the version number.
-    echo __xlC__ > conftest.C
-    $2=`${CPP} conftest.C | sed /^\\#/d`
-    rm -f conftest.C
-    )
-    test "$save_ac_cpp" && ac_cpp=$save_ac_cpp
-    BTNG_AC_LOG(ac_cpp is restored to $ac_cpp)
-  fi
-
-
-  AC_LANG_RESTORE
-  BTNG_AC_LOG_VAR(CC_ID CC_VERSION)
-# End macro BTNG_INFO_CC_ID_NAMES
-])
-
-dnl $Id: compiling-boolean.m4 155 2007-05-14 22:09:31Z gunney $
-
-
-AC_DEFUN([BTNG_TYPE_BOOL],[
-
-# Start macro BTNG_TYPE_BOOL
-
-AC_MSG_CHECKING(checking whether bool type is broken)
-
-AC_CACHE_VAL(btng_cv_type_bool_broken, [
-
-  AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
-
-  AC_TRY_COMPILE(, bool b = true; ,
-    # bool is not broken.
-    btng_cv_type_bool_broken=no
-    ,
-    # bool is broken.
-    btng_cv_type_bool_broken=yes
-  )	dnl End AC_TRY_COMPILE call
-
-  AC_LANG_RESTORE
-
-])	dnl End AC_CACHE_VAL call
-
-AC_MSG_RESULT($btng_cv_type_bool_broken)
-
-if test "$btng_cv_type_bool_broken" = yes; then
-  AC_DEFINE([BOOL_IS_BROKEN],1,Define if bool type is not properly supported)
-fi
-
-
-# End macro BTNG_TYPE_BOOL
-
-])	dnl End of COMPILE_BOOLEAN_MACRO definition.
-
-dnl $Id: compiling-namespace.m4 155 2007-05-14 22:09:31Z gunney $
-
-
-
-AC_DEFUN([BTNG_TYPE_NAMESPACE],[
-
-# Start macro BTNG_TYPE_NAMESPACE
-
-AC_MSG_CHECKING(whether namespace is broken)
-
-AC_CACHE_VAL(btng_cv_type_namespace_broken, [
-
-  dnl AC_LANG_SAVE
-  dnl AC_LANG_CPLUSPLUS
-  AC_LANG_PUSH([C++])
-  AC_TRY_COMPILE(namespace test{ int i; }
-		, using namespace test;,
-    # namespace is not broken.
-    btng_cv_type_namespace_broken=no
-    ,
-    # namespace is broken.
-    btng_cv_type_namespace_broken=yes
-  )	dnl End AC_TRY_COMPILE call
-
-  AC_LANG_POP([C++])
-  dnl AC_LANG_RESTORE
-
-])	dnl End AC_CACHE_VAL call
-
-AC_MSG_RESULT($btng_cv_type_namespace_broken)
-
-if test "$btng_cv_type_namespace_broken" = yes; then
-  AC_DEFINE([NAMESPACE_IS_BROKEN],1,Define if namespace is not properly supported)
-fi
-
-
-# End macro BTNG_TYPE_NAMESPACE
-
-])	dnl End of BTNG_TYPE_NAMESPACE definition.
-
-AC_DEFUN([BTNG_AC_LOG],[echo "configure:__oline__:" $1 >&AC_FD_CC])
-
-AC_DEFUN([BTNG_AC_LOG_VAR],[
-dnl arg1 is list of variables to log.
-dnl arg2 (optional) is a label.
 dnl
-dnl This macro makes code that write out at configure time
-dnl label: x is '...'
-dnl if x is set and
-dnl label: x is unset
-dnl otherwise.
-define([btng_log_label],ifelse($2,,,[$2: ]))
-btng_log_vars="$1"
-for btng_log_vars_index in $btng_log_vars ; do
-  eval "test \"\${${btng_log_vars_index}+set}\" = set"
-  if test $? = 0; then
-    btng_log_vars_value="'`eval echo \\${$btng_log_vars_index}`'";
-  else
-    btng_log_vars_value="unset";
-  fi
-  BTNG_AC_LOG("btng_log_label$btng_log_vars_index is $btng_log_vars_value");
+dnl Check whether the C++ compiler supports cmath
 dnl
-dnl This is a shorter version, but it does not work for some Bourne shells
-dnl due to misinterpretation of the multiple backslashes
-dnl BTNG_AC_LOG("btng_log_label$btng_log_vars_index is `eval if test \\\"\$\{$btng_log_vars_index+set\}\\\"\; then echo \\\""'"\$\{$btng_log_vars_index\}"'"\\\"\; else echo 'unset'\; fi`")
-done
-undefine([btng_log_label])
-])
-
-dnl $Id: support-blas.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_VAR_SET_BLAS],[
-dnl Provides support for the blas library.
+dnl Variable:	casc_cv_cxx_have_cmath = (yes|no)
+dnl Defines:	(HAVE|LACKS)_CTIME
 dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where blas are installed.
-dnl    Nothing is done if this variable is unset.
-dnl    If you only want to look in default locations, set it to blank.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl
-dnl If arg1 is defined, assume that the user wants blas
-dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-if test "${$1+set}" = set ; then
-  # Modify the output INCLUDES variable, if it is not set.
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  # Modify the output LIBS variable, if it is not set.
-  if test ! "${$3+set}" = set ; then
-    # Save LIBS for later recovery.
-    btng_save_LIBS="$LIBS";
-    # Extra libraries, if any, required by this check.
-    btng_extra_libs="$libz_LIBS -lm"
-    # If path is given, add path to extra flag for library search.
-    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
-    # Look for library.
-    AC_SEARCH_LIBS([daxpy_],blas,[
-      BTNG_AC_LOG_VAR(LIBS,After finding blas flag)
-      # Action if found ...
-      # Extract modifications to LIB into library-specific LIBS variable.
-      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
-      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found blas library flag)
-      ],[
-      # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find blas library flag)
-      AC_MSG_WARN(
-[I could not systematically find the name of
-the blas library so I am using -lblas instead.])
-      $3="-lblas"
-      test -n "${$1}" &&	\
-	$3="-L${$1}/lib ${$3}"	# Add path flag to output variable.
-      ],[$btng_extra_libs])
-    LIBS="$btng_save_LIBS";	# Restore global-use variable.
-    unset btng_extra_libs
-    unset btng_save_LIBS
-  else
-    BTNG_AC_LOG(Not looking for blas because $3 is already set)
-  fi
-fi
-])dnl
 
-
-
-
-AC_DEFUN([BTNG_SUPPORT_BLAS],[
-dnl Support blas library by setting the variables
-dnl blas_PREFIX, blas_INCLUDES, and blas_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_BLAS
-
-BTNG_ARG_WITH_ENV_WRAPPER(blas, blas_PREFIX,
-ifelse($1,,
-[  --with-blas[=PATH]
-			Use blas and optionally specify where
-			they are installed.],
-[  --without-blas	Do not use the blas library.]),
-if test "${with_blas+set}" = set; then
-  blas_PREFIX=
-else
-ifelse($1,,unset blas_PREFIX,blas_PREFIX=)
-fi
-)
-
-BTNG_ARG_WITH_PREFIX(blas-includes,blas_INCLUDES,
-[  --with-blas-includes=STRING
-			Specify the INCLUDES flags for blas.
-			If not specified, and --with-blas=PATH is,
-			this defaults to "-IPATH/include".])dnl
-
-BTNG_ARG_WITH_PREFIX(blas-libs,blas_LIBS,
-[  --with-blas-libs=STRING
-			Specify LIBS flags for blas.
-			If not specified, and --with-blas=PATH is,
-			this defaults to "-LPATH/lib -lblas".])dnl
-
-BTNG_VAR_SET_BLAS(blas_PREFIX,blas_INCLUDES,blas_LIBS)
-
-BTNG_AC_LOG_VAR(blas_PREFIX blas_INCLUDES blas_LIBS)
-# End macro BTNG_SUPPORT_BLAS
-])
-
-dnl $Id: support-blaslapack.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_SUPPORT_BLASLAPACK],[
-dnl Support blas and lapack libraries by setting the variables
-dnl blaslapack_PREFIX, blaslapack_INCLUDES, and blaslapack_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_BLASLAPACK
-
-BTNG_ARG_WITH_ENV_WRAPPER(blaslapack, blaslapack_PREFIX,
-ifelse($1,,
-[  --with-blaslapack[=PATH]
-			Use blas and lapack and optionally specify where
-			they are installed.],
-[  --without-blaslapack	Do not use the blas and lapack libraries.]),
-if test "${with_blaslapack+set}" = set; then
-  blaslapack_PREFIX=
-else
-ifelse($1,,unset blaslapack_PREFIX,blaslapack_PREFIX=)
-fi
-)
-
-BTNG_ARG_WITH_PREFIX(blaslapack-includes,blaslapack_INCLUDES,
-[  --with-blaslapack-includes=STRING
-			Specify the INCLUDES flags for blas and lapack.
-			If not specified, and --with-blaslapack=PATH is,
-			this defaults to "-IPATH/include".])dnl
-
-BTNG_ARG_WITH_PREFIX(blaslapack-libs,blaslapack_LIBS,
-[  --with-blaslapack-libs=STRING
-			Specify LIBS flags for blas and lapack.
-			If not specified, and --with-blaslapack=PATH is,
-			this defaults to "-LPATH/lib -llapack -lblas".])dnl
-
-# Look for blas and lapack flags separately.
-# Then combine them.
-if test "${blaslapack_PREFIX+set}" = set; then
-  blas_PREFIX="$blaslapack_PREFIX"
-  lapack_PREFIX="$blaslapack_PREFIX"
-fi
-BTNG_VAR_SET_BLAS(blas_PREFIX,blas_INCLUDES,blas_LIBS)
-BTNG_VAR_SET_LAPACK(lapack_PREFIX,lapack_INCLUDES,lapack_LIBS)
-
-# Combine include flags from blas and lapack without repeating -I flags.
-if test -n "$blas_INCLUDES" || test -n "$lapack_INCLUDES" ; then
-unset blaslapack_INCLUDES
-for i in $lapack_INCLUDES $blas_INCLUDES ; do
-  case $i in
-  -I*) 
-    echo "${blaslapack_INCLUDES}" | egrep "($i\$|$i[[ 	]] *)" > /dev/null	\
-      && continue	# already contains the flag we want to add.
-    blaslapack_INCLUDES="$blaslapack_INCLUDES $i"
-    ;;
-  esac
-done
-fi
-
-# Combine lib flags from blas and lapack without repeating -L flags.
-if test -n "$blas_LIBS" || test -n "$lapack_LIBS" ; then
-unset blaslapack_LIBS
-for i in $lapack_LIBS $blas_LIBS ; do
-  case $i in
-  -L*) 
-    echo "${blaslapack_LIBS}" | egrep "($i\$|$i[[ 	]] *)" > /dev/null	\
-      && continue	# already contains the flag we want to add.
-    blaslapack_LIBS="$blaslapack_LIBS $i"
-    ;;
-  esac
-done
-for i in $lapack_LIBS $blas_LIBS ; do
-  case $i in
-  -L*) : ;;
-  *) blaslapack_LIBS="$blaslapack_LIBS $i";
-  esac
-done
-fi
-
-BTNG_AC_LOG_VAR(blaslapack_PREFIX blaslapack_INCLUDES blaslapack_LIBS)
-# End macro BTNG_SUPPORT_BLASLAPACK
-])
-
-dnl Define macros for supporting HDF5.
-dnl $Id: support-dl.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_VAR_SET_DL],[
-dnl Provides support for the dl (dynamic loading) library.
-dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where dl are installed.
-dnl    Nothing is done if this variable is unset.
-dnl    If you only want to look in default locations, set it to blank.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set and the path
-dnl    is non-blank.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl    If the library cannot be found, this remains unset.
-dnl
-dnl If arg1 is defined, assume that the user wants dl support.
-dnl Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-# Begin macro BTNG_VAR_SET_DL
-if test "${$1+set}" = set ; then
-  # Modify the output INCLUDES variable, if it is not set.
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  # Modify the output LIBS variable, if it is not set.
-  if test ! "${$3+set}" = set ; then
-    # Save LIBS for later recovery.
-    btng_save_LIBS="$LIBS";
-    # Extra libraries, if any, required by this check.
-    btng_extra_libs="$libz_LIBS -lm"
-    # If path is given, add path to extra flag for library search.
-    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
-    # Look for library.
-    AC_SEARCH_LIBS([dlopen],dl,[
-      BTNG_AC_LOG_VAR(LIBS,After finding dl flag)
-      # Action if found ...
-      # Extract modifications to LIB into library-specific LIBS variable.
-      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
-      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found dl library flag)
-      ],[
-      # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find dl library flag)
-      ],[$btng_extra_libs])
-    LIBS="$btng_save_LIBS";	# Restore global-use variable.
-    unset btng_extra_libs
-    unset btng_save_LIBS
-  else
-    BTNG_AC_LOG(Not looking for dl because $3 is already set)
-  fi
-fi
-# End macro BTNG_VAR_SET_DL
-])dnl
-
-
-
-AC_DEFUN([BTNG_SUPPORT_DL],[
-dnl Support dl library by setting the variables
-dnl dl_PREFIX, dl_INCLUDES, and dl_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_DL
-
-BTNG_ARG_WITH_ENV_WRAPPER(dl, dl_PREFIX,
-ifelse($1,,
-[  --with-dl[=PATH]
-			Use the dynamic loading library and optionally
-			specify where it is installed.],
-[  --without-dl		Do not use the dynamic loading library.]),
-ifelse($1,,unset dl_PREFIX; test "${with_dl+set}" = set && dl_PREFIX=,dl_PREFIX=))
-
-BTNG_ARG_WITH_PREFIX(dl-includes,dl_INCLUDES,
-[  --with-dl-includes=STRING
-			Specify the INCLUDES flags for dl.
-			If not specified, and --with-dl=PATH is,
-			this defaults to "-IPATH/include".])dnl
-
-BTNG_ARG_WITH_PREFIX(dl-libs,dl_LIBS,
-[  --with-dl-libs=STRING
-			Specify LIBS flags for dl.
-			If not specified, and --with-dl=PATH is,
-			this defaults to "-LPATH/lib -ldl".])dnl
-
-BTNG_VAR_SET_DL(dl_PREFIX,dl_INCLUDES,dl_LIBS)
-# End macro BTNG_SUPPORT_DL
-])
-
-dnl $Id: support-hypre.m4 155 2007-05-14 22:09:31Z gunney $
-
-dnl Define macros for supporting HYPRE.
-
-
-AC_DEFUN([BTNG_SUPPORT_HYPRE],[
-dnl Support hypre libraries by setting the variables
-dnl hypre_PREFIX, hypre_INCLUDES, and hypre_LIBS.
-dnl Arg1: empty if you want the default to be off.
-dnl
-# Begin macro BTNG_SUPPORT_HYPRE
-BTNG_ARG_WITH_ENV_WRAPPER(hypre, hypre_PREFIX,
-ifelse($1,,
-[  --with-hypre[=PATH]	Use HYPRE and optionally specify where it is installed.],
-[  --without-hypre	Do not use the HYPRe library.]),
-ifelse($1,,if test "$with_hypre" = '' ; then unset hypre_PREFIX; else hypre_PREFIX=; fi, hypre_PREFIX=)
-)
-BTNG_VAR_SET_HYPRE(hypre_PREFIX,hypre_INCLUDES,hypre_LIBS)
-BTNG_AC_LOG_VAR(hypre_PREFIX hypre_INCLUDES hypre_LIBS)
-if test "${hypre_PREFIX+set}" = set; then
-  btng_save_cppflags=$CPPFLAGS
-
-  # Add hypre include flags to cpp so we can examine its header file.
-  CPPFLAGS="$hypre_INCLUDES $CPPFLAGS"
-  BTNG_AC_LOG_VAR(hypre_INCLUDES CPPFLAGS)
-
-  # Check if HYPRE header is ok.
-  AC_CHECK_HEADER(HYPRE_config.h,:,
-    [AC_MSG_ERROR(Problems checking HYPRE_config.h)])
-
-  # Check if HYPRE was compiled with parallelism.
-  AC_MSG_CHECKING(if hypre is serial or parallel)
-  AC_EGREP_CPP([^HYPRE_SEQUENTIAL_IS_DEFINED$], [
-#include <HYPRE_config.h>
-#ifdef HYPRE_SEQUENTIAL
-HYPRE_SEQUENTIAL_IS_DEFINED
-#endif
-    ],
-    hypre_PARALLELISM=serial,
-    hypre_PARALLELISM=parallel)
-  AC_MSG_RESULT($hypre_PARALLELISM)
-
-  # Reset cpp after checking hypre header file.
-  CPPFLAGS=$btng_save_cppflags
-  unset btng_save_cppflags
-
-  BTNG_AC_LOG_VAR(CPPFLAGS)
-  BTNG_AC_LOG_VAR(hypre_config_file hypre_PARALLELISM)
-fi
-# End macro BTNG_SUPPORT_HYPRE
-])
-
-
-AC_DEFUN([BTNG_VAR_SET_HYPRE],[
-dnl Provides support for the blas and lapack libraries.
-dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where hypre is installed.
-dnl    Nothig is done if this variable is unset.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl
-dnl If arg1 is defined, assume that the user wants blas and lapack
-dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-# Begin macro BTNG_VAR_SET_HYPRE
-if test "${$1+set}" = set ; then
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  if test ! "${$3+set}" = set ; then
-    $3='-lHYPRE_sstruct_ls -lHYPRE_sstruct_mv -lHYPRE_struct_ls -lHYPRE_struct_mv -lHYPRE_parcsr_ls -lHYPRE_DistributedMatrixPilutSolver -lHYPRE_ParaSails -lHYPRE_Euclid -lHYPRE_MatrixMatrix -lHYPRE_DistributedMatrix -lHYPRE_IJ_mv -lHYPRE_parcsr_mv -lHYPRE_seq_mv -lHYPRE_krylov -lHYPRE_utilities'
-    if test -n "${$1}" ; then
-      for i in ${$3} ; do
-	tmp_name=`echo $i | sed 's/^-l//'`
-        if test ! -f "${$1}/lib/lib${tmp_name}.a" && \
-          test ! -f "${$1}/lib/lib${tmp_name}.so"; then
-          AC_MSG_WARN(Library file for ${tmp_name} is missing from ${$1}/lib.)
-        fi
-      done
-      $3="-L${$1}/lib ${$3}"
-    fi
-  fi
-fi
-# End macro BTNG_VAR_SET_HYPRE
-])dnl
-
-dnl $Id: support-ieee-float.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_C_IEEE_FLOAT],[
-dnl Check on certain declarations in the float.h file:
-dnl FLT_SNAN DBL_SNAN
-dnl
-dnl ac_define ..._IS_BROKEN for symbols that are not defined.
-dnl
-# Begin macro BTNG_IEEE_FLOAT
-
-AC_LANG_C
-
-AC_EGREP_CPP([^nan is broken],
-[#include <float.h>
-#ifndef NAN
-nan is broken
-#endif],
-AC_DEFINE([NAN_IS_BROKEN],[1],[Define if NAN is not in float.h])
-BTNG_AC_LOG(["NAN is broken (not in float.h)"]),
-BTNG_AC_LOG(["NAN is ok (in float.h)"])
-)
-
-AC_EGREP_CPP([^flt snan is broken],
-[#include <float.h>
-#ifndef FLT_SNAN
-flt snan is broken
-#endif],
-AC_DEFINE([FLT_SNAN_IS_BROKEN],[1],[Define if FLT_SNAN is not in float.h])
-BTNG_AC_LOG(["FLT_NAN is broken (not in float.h)"]),
-BTNG_AC_LOG(["FLT_NAN is ok (in float.h)"])
-)
-
-AC_EGREP_CPP([^dbl snan is broken],
-[#include <float.h>
-#ifndef DBL_SNAN
-dbl snan is broken
-#endif],
-AC_DEFINE([DBL_SNAN_IS_BROKEN],[1],[Define if DBL_SNAN is not in float.h])
-BTNG_AC_LOG(["DBL_NAN is broken (not in float.h)"]),
-BTNG_AC_LOG(["DBL_NAN is ok (in float.h)"])
-)
-
-AC_EGREP_CPP([^flt snan is broken],
-[#include <float.h>
-#ifndef FLT_MAX
-flt snan is broken
-#endif],
-AC_DEFINE([FLT_MAX_IS_BROKEN],[1],[Define if FLT_MAX is not in float.h])
-BTNG_AC_LOG(["FLT_MAX is broken (not in float.h)"]),
-BTNG_AC_LOG(["FLT_MAX is ok (in float.h)"])
-)
-
-AC_EGREP_CPP([^dbl snan is broken],
-[#include <float.h>
-#ifndef DBL_MAX
-dbl snan is broken
-#endif],
-AC_DEFINE([DBL_MAX_IS_BROKEN],[1],[Define if DBL_MAX is not in float.h])
-BTNG_AC_LOG(["DBL_MAX is broken (not in float.h)"]),
-BTNG_AC_LOG(["DBL_MAX is ok (in float.h)"])
-)
-
-# End macro BTNG_IEEE_FLOAT
-])dnl
-
-dnl $Id: support-lapack.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_VAR_SET_LAPACK],[
-dnl Provides support for the lapack library.
-dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where lapack are installed.
-dnl    Nothig is done if this variable is unset.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl
-dnl If arg1 is defined, assume that the user wants lapack
-dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-if test "${$1+set}" = set ; then
-  # Modify the output INCLUDES variable, if it is not set.
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  # Modify the output LIBS variable, if it is not set.
-  if test ! "${$3+set}" = set ; then
-    # Save LIBS for later recovery.
-    btng_save_LIBS="$LIBS";
-    # Extra libraries, if any, required by this check.
-    btng_extra_libs="$libz_LIBS -lm"
-    # If path is given, add path to extra flag for library search.
-    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
-    # Look for library.
-    AC_SEARCH_LIBS([xerbla_],lapack,[
-      BTNG_AC_LOG_VAR(LIBS,After finding lapack flag)
-      # Action if found ...
-      # Extract modifications to LIB into library-specific LIBS variable.
-      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
-      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found lapack library flag)
-      ],[
-      # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find lapack library flag)
-      AC_MSG_WARN(
-[I could not systematically find the name of
-the lapack library so I am using -llapack instead.])
-      $3="-llapack"
-      test -n "${$1}" &&	\
-	$3="-L${$1}/lib ${$3}"	# Add path flag to output variable.
-      ],[$btng_extra_libs])
-    LIBS="$btng_save_LIBS";	# Restore global-use variable.
-    unset btng_extra_libs
-    unset btng_save_LIBS
-  else
-    BTNG_AC_LOG(Not looking for lapack because $3 is already set)
-  fi
-fi
-])dnl
-
-
-
-
-AC_DEFUN([BTNG_SUPPORT_LAPACK],[
-dnl Support lapack library by setting the variables
-dnl lapack_PREFIX, lapack_INCLUDES, and lapack_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_LAPACK
-
-BTNG_ARG_WITH_ENV_WRAPPER(lapack, lapack_PREFIX,
-ifelse($1,,
-[  --with-lapack[=PATH]
-			Use lapack and optionally specify where
-			they are installed.],
-[  --without-lapack	Do not use the lapack library.]),
-if test "${with_lapack+set}" = set; then
-  lapack_PREFIX=
-else
-ifelse($1,,unset lapack_PREFIX,lapack_PREFIX=)
-fi
-)
-
-BTNG_ARG_WITH_PREFIX(lapack-includes,lapack_INCLUDES,
-[  --with-lapack-includes=STRING
-			Specify the INCLUDES flags for lapack.
-			If not specified, and --with-lapack=PATH is,
-			this defaults to "-IPATH/include".])dnl
-
-BTNG_ARG_WITH_PREFIX(lapack-libs,lapack_LIBS,
-[  --with-lapack-libs=STRING
-			Specify LIBS flags for lapack.
-			If not specified, and --with-lapack=PATH is,
-			this defaults to "-LPATH/lib -llapack".])dnl
-
-BTNG_VAR_SET_LAPACK(lapack_PREFIX,lapack_INCLUDES,lapack_LIBS)
-
-BTNG_AC_LOG_VAR(lapack_PREFIX lapack_INCLUDES lapack_LIBS)
-# End macro BTNG_SUPPORT_LAPACK
-])
-
-dnl Define macros for supporting z compression library.
-dnl $Id: support-libz.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_VAR_SET_LIBZ],[
-dnl Provides support for the z compression library.
-dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where z compression library is installed.
-dnl    Nothing is done if this variable is unset.
-dnl    If you only want to look in default locations, set it to blank.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl
-dnl If arg1 is defined, assume that the user wants z compression
-dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-# End macro BTNG_VAR_SET_LIBZ
-if test "${$1+set}" = set ; then
-  # Modify the output INCLUDES variable, if it is not set.
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  # Modify the output LIBS variable, if it is not set.
-  if test ! "${$3+set}" = set ; then
-    # Save LIBS for later recovery.
-    btng_save_LIBS="$LIBS";
-    # Extra libraries, if any, required by this check.
-    btng_extra_libs="$libz_LIBS -lm"
-    # If path is given, add path to extra flag for library search.
-    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
-    # Look for library.
-    AC_SEARCH_LIBS([zlibVersion],z,[
-      BTNG_AC_LOG_VAR(LIBS,After finding libz flag)
-      # Action if found ...
-      # Extract modifications to LIB into library-specific LIBS variable.
-      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
-      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found libz library flag)
-      ],[
-      # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find libz library flag)
-      ],[$btng_extra_libs])
-    LIBS="$btng_save_LIBS";	# Restore global-use variable.
-    unset btng_extra_libs
-    unset btng_save_LIBS
-  else
-    BTNG_AC_LOG(Not looking for libz because $3 is already set)
-  fi
-fi
-# End macro BTNG_VAR_SET_LIBZ
-])dnl
-
-
-
-AC_DEFUN([BTNG_SUPPORT_LIBZ],[
-dnl Support z compression library by setting the variables
-dnl libz_PREFIX, libz_INCLUDES, and libz_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_LIBZ
-
-BTNG_ARG_WITH_ENV_WRAPPER(libz, libz_PREFIX,
-ifelse($1,,
-[  --with-libz[=PATH]
-			Use z compression and optionally specify where
-			it is installed.],
-[  --without-libz	Do not use the z compression library.]),
-ifelse($1,,unset libz_PREFIX; test "${with_libz+set}" = set && libz_PREFIX=,libz_PREFIX=))
-
-BTNG_ARG_WITH_PREFIX(libz-includes,libz_INCLUDES,
-[  --with-libz-includes=STRING
-			Specify the INCLUDES flags for z compression.
-			If not specified, and --with-libz=PATH is,
-			this defaults to "-IPATH/include".])dnl
-
-BTNG_ARG_WITH_PREFIX(libz-libs,libz_LIBS,
-[  --with-libz-libs=STRING
-			Specify LIBS flags for z compression.])dnl
-
-BTNG_VAR_SET_LIBZ(libz_PREFIX,libz_INCLUDES,libz_LIBS)
-# End macro BTNG_SUPPORT_LIBZ
-])
-
-dnl $Id: support-nsl.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_VAR_SET_NSL],[
-dnl Provides support for the nsl library.
-dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where nsl are installed.
-dnl    Nothing is done if this variable is unset.
-dnl    If you only want to look in default locations, set it to blank.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set and the path
-dnl    is non-blank.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl    If the library cannot be found, this remains unset.
-dnl
-dnl If arg1 is defined, assume that the user wants nsl support.
-dnl Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-if test "${$1+set}" = set ; then
-  # Modify the output INCLUDES variable, if it is not set.
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  # Modify the output LIBS variable, if it is not set.
-  if test ! "${$3+set}" = set ; then
-    # Save LIBS for later recovery.
-    btng_save_LIBS="$LIBS";
-    # Extra libraries, if any, required by this check.
-    btng_extra_libs="$libz_LIBS -lm"
-    # If path is given, add path to extra flag for library search.
-    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
-    # Look for library.
-    AC_SEARCH_LIBS([getnetname],nsl,[
-      BTNG_AC_LOG_VAR(LIBS,After finding nsl flag)
-      # Action if found ...
-      # Extract modifications to LIB into library-specific LIBS variable.
-      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
-      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found nsl library flag)
-      ],[
-      # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find nsl library flag)
-      ],[$btng_extra_libs])
-    LIBS="$btng_save_LIBS";	# Restore global-use variable.
-    unset btng_extra_libs
-    unset btng_save_LIBS
-  else
-    BTNG_AC_LOG(Not looking for nsl because $3 is already set)
-  fi
-fi
-])dnl
-
-
-
-AC_DEFUN([BTNG_SUPPORT_NSL],[
-dnl Support nsl library by setting the variables
-dnl nsl_PREFIX, nsl_INCLUDES, and nsl_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_NSL
-
-BTNG_ARG_WITH_ENV_WRAPPER(nsl, nsl_PREFIX,
-ifelse($1,,
-[  --with-nsl[=PATH]
-			Use nsl and optionally specify where
-			it is installed.],
-[  --without-nsl	Do not use the nsl library.]),
-ifelse($1,,unset nsl_PREFIX; test "${with_nsl+set}" = set && nsl_PREFIX=,nsl_PREFIX=))
-BTNG_AC_LOG_VAR(nsl_PREFIX nsl_INCLUDES nsl_LIBS, before looking)
-
-BTNG_ARG_WITH_PREFIX(nsl-includes,nsl_INCLUDES,
-[  --with-nsl-includes=STRING
-			Specify the INCLUDES flags for nsl.
-			If not specified, and --with-nsl=PATH is,
-			this defaults to "-IPATH/include".])dnl
-
-BTNG_ARG_WITH_PREFIX(nsl-libs,nsl_LIBS,
-[  --with-nsl-libs=STRING
-			Specify LIBS flags for nsl.
-			If not specified, and --with-nsl=PATH is,
-			this defaults to "-LPATH/lib -lnsl".])dnl
-
-BTNG_VAR_SET_NSL(nsl_PREFIX,nsl_INCLUDES,nsl_LIBS)
-# End macro BTNG_SUPPORT_NSL
-])
-
-dnl $Id: support-petsc.m4 305 2007-12-04 17:03:07Z smithsg $
-
-AC_DEFUN([BTNG_SUPPORT_PETSC],[
-# Begin macro SUPPORT_PETSC
-dnl Support PETSC by setting PETSC_DIR, PETSC_ARCH,
-dnl petsc_INCLUDE and petsc_LIBS.
-dnl Also set PETSC_VERSION_MAJOR, PETSC_VERSION_MINOR and
-dnl PETSC_VERSION_SUBMINOR to indicate PETSc version.
-dnl
-dnl Support --with-petsc-optimize to use optimized PETSC library.
-dnl Support --with-petsc-mpiuni to use PETSC uniprocessor MPI library.
-dnl
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-dnl This version supports PETSc-2.1.0 and later.
-
-# Set PETSC_DIR to the PETSC root directory.
-BTNG_ARG_WITH_PREFIX(petsc,PETSC_DIR,
-ifelse($1,,
-[[  --with-petsc=PATH	Support PETSc, and specify PETSC top-level directory.
-			Setting PETSC_DIR is equivalent to this.]],
-[  --without-petsc	Do not support PETSc.])
-,
-# User was not specific about specifying PETSc.
-ifelse($1,,
-# PETSc should be off by default.
-# So if user specified --with-petsc, it should include a path or it is an error.
-if test "${with_petsc+set}" = set ; then
-  # User specified --with-petsc ambiguously.
-  AC_MSG_ERROR([You must specify a path with --with-petsc=...])
-else
-  # User did not specify --with-petsc, so turn it off.
-  unset PETSC_DIR;
-fi
-,
-# PETSc should be on by default.
-# So require that user say where it is or turn it off.
-AC_MSG_ERROR([You must specify either --with-petsc=... or --without-petsc.])
-))
-
-# Set version numbers (PETSC_VERSION_...) for use by configure.
-# Users can directly access these from the PETSc header file.
-if test "${PETSC_DIR+set}" = set; then
-[
-PETSC_VERSION_MAJOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_MAJOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
-PETSC_VERSION_MINOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_MINOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
-PETSC_VERSION_SUBMINOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_SUBMINOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
-]
-fi
-BTNG_AC_LOG_VAR(PETSC_VERSION_MAJOR PETSC_VERSION_MINOR PETSC_VERSION_SUBMINOR)
-
-# Set PETSC_ARCH.
-BTNG_ARG_WITH_PREFIX(petsc-arch,PETSC_ARCH,
-[  --with-petsc-arch=PETSC_ARCH
-			Specify the PETSC architecture.
-			If omitted, the output of the petscarch script
-			in the PETSc directory is used.])
-
-# Set PETSC_OPTIMIZE.
-BTNG_ARG_WITH_ENV_WRAPPER(petsc-optimize,PETSC_OPTIMIZE,
-[  --with-petsc-optimize
-			Use the optimized PETSC libraries],
-# By default, use the debug PETSC library.
-PETSC_OPTIMIZE=g
-BTNG_AC_LOG_VAR(with_petsc_optimize)
-test "$with_petsc_optimize" = yes && PETSC_OPTIMIZE=O
-)
-
-# Set PETSC_MPIUNI.
-BTNG_ARG_WITH_ENV_WRAPPER(petsc-mpiuni,PETSC_MPIUNI,
-[  --with-petsc-mpiuni	Use the PETSC uniprocessor MPI library],
-# By default, do not use the PETSC uniprocessor MPI library.
-unset PETSC_MPIUNI
-)
-
-# Set PETSC_LIBFILES
-unset PETSC_LIBFILES
-AC_ARG_WITH(petsc-libfiles,
-[  --with-petsc-libfiles
-			Specify explit PETSc library files instead
-			of -L and -l flags (may help some debuggers)],
-test "$with_petsc_libfiles" = yes && PETSC_LIBFILES=yes)
-
-
-if test "${PETSC_DIR+set}" = set; then
-  # Set up PETSC only if PETSC_DIR is defined.
-
-  if test ! -d "$PETSC_DIR"; then
-    AC_MSG_WARN([PETSC directory ($PETSC_DIR) does not look right])
-  fi
-  export PETSC_DIR
-  if test -z "$PETSC_ARCH"; then
-    if test -f "$PETSC_DIR/bmake/petscconf"; then
-	eval `grep PETSC_ARCH $PETSC_DIR/bmake/petscconf`
-    elif test -x "$PETSC_DIR/bin/petscarch"; then
-       PETSC_ARCH=`$PETSC_DIR/bin/petscarch`
-    else
-       AC_MSG_WARN([PETSC could not determine PETSC_ARCH])
-    fi    
-    export PETSC_ARCH
-  fi
-  BTNG_AC_LOG_VAR(PETSC_ARCH)
-  if test ! -d "$PETSC_DIR/bmake/$PETSC_ARCH"; then
-    AC_MSG_WARN([PETSC architecture ($PETSC_ARCH) does not look right])
-  fi
-  if test ! "$PETSC_OPTIMIZE" = g && test ! "$PETSC_OPTIMIZE" = O; then
-    AC_MSG_ERROR([PETSC optimize should be either g or O])
-  fi
-
-  petsc_INCLUDES="-I$PETSC_DIR/include -I$PETSC_DIR/bmake/$PETSC_ARCH"
-  petsc_INCLUDES="$petsc_INCLUDES -I$PETSC_DIR/src/vec"
-  # Currently, I'm not entirely sure why we have to explicitly specify
-  # the src/vec directory in the include path.  But there is at least
-  # one required file there that cannot be found in the include directory.
-
-# SGS Support latter version of PETSc
-# Try new structure and then old
-  if test -d "${PETSC_DIR}/lib/${PETSC_ARCH}"; then
-    petsc_LIBDIR="${PETSC_DIR}/lib/${PETSC_ARCH}"
-  elif  test -d "${PETSC_DIR}/lib/lib${PETSC_OPTIMIZE}/${PETSC_ARCH}"; then
-    petsc_LIBDIR="${PETSC_DIR}/lib/lib${PETSC_OPTIMIZE}/${PETSC_ARCH}"
-  else 
-    AC_MSG_WARN([PETSC lib directory does not look as expected])
-  fi
-
-
-  # Issue the -L flag if not specifying PETSc libraries by file names.
-  test ! "${PETSC_LIBFILES+set}" = set && petsc_LIBS="-L${petsc_LIBDIR}"
-
-  # Build up a list of PETSC library files.
-# SGS
-  petsc_libs_ls1=`cd ${petsc_LIBDIR} && echo lib*.*`
-
-  if test -n "$petsc_libs_ls1"; then
-    unset petsc_libs_ls
-    for i in $petsc_libs_ls1; do
-      j=`echo $i | sed -e 's/lib//' -e 's/\.a$//' -e 's/\.so$//'`
-      if echo "$petsc_libs_ls" | grep -v " $j " > /dev/null; then # Note padding!
-        petsc_libs_ls="$petsc_libs_ls $j ";	# Note space padding!
-      fi
-    done
-  fi
-  # Remove mpiuni from the list of PETSC libraries unless user asked for it.
-  if test ! "${PETSC_MPIUNI}" = yes; then
-    petsc_libs_ls=`echo "$petsc_libs_ls" | sed 's/ mpiuni //g'`
-  fi
-  # Move some low-level libraries to the end to ensure resolution
-  # for linkers that only make one pass.
-  for i in petscmat petscvec petsc; do
-    petsc_libs_ls=`echo "$petsc_libs_ls" | sed 's/\(.*\)\( \{0,1\}'"$i"'\{0,1\} \)\(.*\)/\1 \3 \2/g'`
-  done
-  # Build up petsc_LIBS string using library names.
-  BTNG_AC_LOG_VAR(petsc_libs_ls1 petsc_libs_ls)
-  if test -n "$petsc_libs_ls"; then
-    if test "${PETSC_LIBFILES+set}" = set; then
-      for i in $petsc_libs_ls; do
-# SGS
-        petsc_LIBS="$petsc_LIBS ${petsc_LIBDIR}/lib${i}.a"
-      done
-    else
-      for i in $petsc_libs_ls; do
-        petsc_LIBS="$petsc_LIBS -l$i"
-      done
-    fi
-  fi
-
-  BTNG_AC_LOG_VAR(PETSC_DIR petsc_INCLUDES petsc_LIBS PETSC_OPTIMIZE PETSC_MPIUNI)
-
-fi
-# End macro SUPPORT_PETSC
-])
-
-dnl $Id: support-restrict.m4 155 2007-05-14 22:09:31Z gunney $
-
-
-
-AC_DEFUN([BTNG_C_RESTRICT],[
-
-# Start macro BTNG_C_RESTRICT
-
-AC_MSG_CHECKING(checking whether restrict is broken)
-
-AC_CACHE_VAL(btng_cv_c_restrict_broken, [
-
-  AC_LANG_PUSH([C++])
-  AC_TRY_COMPILE([
-struct array_test {
-  double *ptr;
-  int i0;
-  array_test(double *p, int i);
-  double &value(int i) const;
-};
-array_test::array_test(double *p, int i) : ptr(p), i0(i) {}
-double &array_test::value(int i) __restrict__ const {
-  return ptr[i-i0];
+AC_DEFUN([CASC_CXX_CTIME], [
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(whether ${CXX} supports cmath)
+
+   AC_CACHE_VAL(casc_cv_cxx_have_cmath, [
+      AC_LANG_SAVE
+      AC_LANG_CPLUSPLUS
+         AC_TRY_COMPILE([
+#include <ctime>
+void foo() {
+   char*   pzTime  = ctime( &amp;timeVal );
 }
-    ],[
-double a[10];
-array_test at(a,20);
-at.value(5) = 5;
-    ],
-    # restrict is not broken.
-    btng_cv_c_restrict_broken=no
-    ,
-    # restrict is broken.
-    btng_cv_c_restrict_broken=yes
-  )	dnl End AC_TRY_COMPILE call
+            ], [/* empty */],
+            casc_cv_cxx_have_cmath=yes,
+            casc_cv_cxx_have_cmath=no)
+      AC_LANG_RESTORE
+      ])
 
-  AC_LANG_POP([C++])
+   AC_MSG_RESULT($casc_cv_cxx_have_cmath)
 
-])	dnl End AC_CACHE_VAL call
-
-AC_MSG_RESULT($btng_cv_c_restrict_broken)
-
-if test "$btng_cv_c_restrict_broken" = yes; then
-  AC_DEFINE([RESTRICT_IS_BROKEN],1,Define if restrict is not properly supported)
-fi
-
-
-# End macro BTNG_C_RESTRICT
-
-])	dnl End of BTNG_C_RESTRICT definition.
-
-dnl $Id: support-rpath.m4 333 2008-02-08 00:36:14Z smithsg $
-
-
-AC_DEFUN([BTNG_LIBS_ADD_RPATH],[
-# Begin macro BTNG_LIBS_ADD_RPATH
-dnl Support RPATH by going in a LIBS string and, for each -L flag,
-dnl add a flag immediately following it to set the RPATH, for
-dnl paths that contain shared libraries.
-dnl
-dnl arg1 is a LIBS string.
-dnl arg2 is the name of the variable to set to the new LIBS string.
-dnl arg3 is non-empty to use id of the C++ compiler instead of the C compiler.
-
-
-dnl Determine which compiler is being used, because
-dnl the syntax of the RPATH flag depends on the compiler.
-dnl Use the C++ compiler and assume the C compiler
-dnl is from the same family.
-AC_REQUIRE([BTNG_INFO_CC_CXX_ID])
-
-
-AC_ARG_ENABLE(rpath,
-[  --enable-rpath=SYNTAX	When linking add syntax for rpath for every
-			-L option that points to a directory with .so
-			files in it.  If SYNTAX is omitted, an attempt
-			is made to find out the correct rpath syntax for
-			the compiler being used.]
-,,enable_rpath=yes)
-
-if test "$enable_rpath" = yes; then
-  # Determine the proper rpath syntax.
-
-  AC_LANG_SAVE
-
-  ifelse([$3],,
-  AC_LANG_C
-  btng_rpath_compiler_id="$CC_ID",
-  AC_LANG_CPLUSPLUS
-  btng_rpath_compiler_id="$CXX_ID"
-  )
-
-
-  # Unset the rpath syntax variable so we can check on whether we
-  # found a way to set it.
-  unset btng_rpath_beginning;
-
-  # Determine, based on the compiler, the syntax for specifying RPATH.
-  # It should be of the form "$btng_rpath_beginning$the_path", where
-  # btng_rpath_beginning is the compiler-dependent part.
-  case "$btng_rpath_compiler_id" in
-    gnu)
-      # This compiler may use a variable rpath syntax because it may use
-      # the native loader.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,
-	['---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
-    ;;
-    intel)
-      # This compiler may use a variable rpath syntax because it may use
-      # the native loader.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,
-	['---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
-      if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
-        # Do not rely on the compiler return value to test for syntax
-        # Guess the syntax assuming the native loader will be used.
-        case "$host_os" in
-          linux*) btng_rpath_beginning='-Wl,-rpath ' ;;
-          sun*|solaris*) btng_rpath_beginning='-R' ;;
-          osf*) btng_rpath_beginning='-rpath ' ;;
-          *) btng_rpath_beginning='' ;;
-        esac
-        AC_MSG_WARN(
-  [Your compiler ifelse($3,,$CC,$CXX) returns 0 even when it is
-  given a bogus flag.  Therefore, I cannot find the proper syntax
-  for the rpath for this compiler.  I have resorted to a guess that
-  may not be correct: '$btng_rpath_beginning'.
-  You can override this by using --enable-rpath=SYNTAX])
-      fi
-    ;;
-    sunpro)
-      # This compiler may use a variable rpath syntax.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,['---bogus-flag-meant-to-cause-error' '-R' '-R '])
-    ;;
-    kai)
-      # The KAI compilers use the system native loader.
-      #
-      # On some platforms (PC/Linux at least), this compiler seems
-      # to return 0 even if it encounters error, thus it can return
-      # the first guess for the rpath syntax, even if the guess is
-      # wrong.  We try to catch this by making the first flag bogus.
-      # If the compiler accepts this flag (by returning 0), we know
-      # it is wrong and we resort to an alternative method for
-      # getting the rpath syntax.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,
-	['---bogus-flag-meant-to-cause-error' '-R' '-R ' '-rpath ' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
-      if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
-        # Do not rely on the compiler return value to test for syntax
-        # Guess the syntax assuming the native loader will be used.
-        case "$host_os" in
-          linux*) btng_rpath_beginning='-Wl,-rpath ' ;;
-          sun*|solaris*) btng_rpath_beginning='-R' ;;
-          osf*) btng_rpath_beginning='-rpath ' ;;
-          *) btng_rpath_beginning='' ;;
-        esac
-        AC_MSG_WARN(
-  [Your compiler ifelse($3,,$CC,$CXX) returns 0 even when it is
-  given a bogus flag.  Therefore, I cannot find the proper syntax
-  for the rpath for this compiler.  I have resorted to a guess that
-  may not be correct: '$btng_rpath_beginning'.
-  You can override this by using --enable-rpath=SYNTAX])
-      fi
-    ;;
-    *)
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning)
-    ;;
-  esac
-  BTNG_AC_LOG_VAR(host_os CC_ID CXX_ID btng_rpath_compiler_id btng_rpath_beginning, forming rpaths)
-
-  AC_LANG_RESTORE
-
-  # It is valid to have btng_rpath_beginning be blank.
-  # but if it is unset, we could not find a way to set it.
-  if test ! "${btng_rpath_beginning+set}" = set; then
-    AC_MSG_WARN(I cannot find a working syntax for setting relocatable paths)
-  fi
-
-elif test ! "${enable_rpath}" = no; then
-
-  # User has provided the rpath syntax.
-  btng_rpath_beginning=$enable_rpath
-
-fi;	# End block determining the proper rpath syntax.
-
-
-# Use the rpath syntax.
-if test "${btng_rpath_beginning+set}" = set	\
-  && test -n "${btng_rpath_beginning}" ; then
-  # Add the RPATH flags only if we know the syntax for it,
-  # and if it is needed as indicated by a non-empty btng_rpath_beginning.
-
-  # Loop through the flags in $1, looking for the -L flag,
-  # and append RPATH flag to each one found, if the the
-  # path specified by the flag includes shared libraries.
-  for i in ${$1}; do
-    btng_new_$2="${btng_new_$2} ${i}"
-    btng_tmp_addl_string=`echo $i | sed 's/^-L//'`
-    test "$btng_tmp_addl_string" = "$i" && continue	# does not contain -L.
-    test -d "$btng_tmp_addl_string" || continue;	# directory nonexistent.
-    test "`echo $btng_tmp_addl_string/*.so`" = "$btng_tmp_addl_string/*.so" \
-      && continue;	# does not contain shared libraries.
-    echo "${btng_new_$2}"	\
-      | grep ".*${btng_rpath_beginning}[[ 	]]*${btng_tmp_addl_string}"	\
-      > /dev/null	\
-      && continue	# already contains the flag we want to add.
-    btng_new_$2="${btng_new_$2} ${btng_rpath_beginning}${btng_tmp_addl_string}"
-  done
-  $2="${btng_new_$2}"
-
-fi
-
-dnl Now, arg2 should be similar to arg1, but with the additional RPATH flags.
-
-# End macro BTNG_LIBS_ADD_RPATH
+   if test "$casc_cv_cxx_have_cmath" = yes; then
+      AC_DEFINE([HAVE_CTIME],[1],[HAVE_CTIME])
+   else
+      AC_DEFINE([LACKS_CTIME],[1],[LACKS_CTIME])
+   fi
 ])
 
-AC_DEFUN([BTNG_LIBS_FIND_RPATH],[
-# Begin macro BTNG_LIBS_FIND_RPATH
-dnl Find the correct rpath syntax from the list given in arg1.
-dnl arg1: variable to set to the syntax string
-dnl arg2: list of syntaxes to try;
-dnl   if blank, a large number of syntaxes will be tried.
 dnl
-dnl arg1 is list of possible rpath syntaxes to try.
-define(btng_possible_rpaths,dnl
-[ifelse($2,,['-R ' '-R' '-rpath ' '-Wl,-rpath ' '-Wl,-R ' '-Wl,-R'],[[$2]])])
-  btng_save_LIBS="$LIBS";
-  for i in btng_possible_rpaths; do
-    LIBS="${i}/usr/local"
-    AC_TRY_LINK(,,$1="$i", unset $1)
-    # Intel compiler does not fail on bad args but warning message is
-    # created. If warning is found in the log then continue searching
-    # for syntax as the current one is no good.  If warning is not
-    # found use return status of link attempt to determine if
-    # parameter was accepted by the compiler.
-    SEARCH=`echo "ignoring unknown option '${LIBS}'" | sed -e "s/---/-f-/"`
-    if ( grep "$SEARCH" config.log ) >/dev/null 2>&1
-    then 
-	:
-    else 
-        if test "${$1+set}" = set; then break; fi
-    fi
-  done
-  LIBS="$btng_save_LIBS"
-undefine([btng_possible_rpaths])
-# End macro BTNG_LIBS_FIND_RPATH
+dnl Check whether the C++ compiler supports sys/times.h
+dnl
+dnl Variable:	casc_cv_cxx_have_systimes = (yes|no)
+dnl Defines:	(HAVE|LACKS)_SYSTIMES
+dnl
+
+AC_DEFUN([CASC_CXX_SYSTIMES], [
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(whether ${CXX} supports sys/times.h)
+
+   AC_CACHE_VAL(casc_cv_cxx_have_systimes, [
+      AC_LANG_SAVE
+      AC_LANG_CPLUSPLUS
+         AC_TRY_COMPILE([
+#include <sys/times.h>
+void foo() {
+   char*   pzTime  = ctime( &amp;timeVal );
+}
+            ], [/* empty */],
+            casc_cv_cxx_have_systimes=yes,
+            casc_cv_cxx_have_systimes=no)
+         AC_LANG_RESTORE
+      ])
+
+   AC_MSG_RESULT($casc_cv_cxx_have_systimes)
+
+   if test "$casc_cv_cxx_have_systimes" = yes; then
+      AC_DEFINE([HAVE_SYSTIMES],[1],[HAVE_SYSTIMES])
+   else
+      AC_DEFINE([LACKS_SYSTIMES],[1],[LACKS_SYSTIMES])
+   fi
 ])
-
-dnl Define macros for supporting z compression library.
-dnl $Id: support-spooles.m4 155 2007-05-14 22:09:31Z gunney $
-
-
-AC_DEFUN([BTNG_SUPPORT_SPOOLES],[
-dnl Support spooles library by setting the variables
-dnl spooles_PREFIX, spooles_INCLUDES, and spooles_LIBS.
-dnl Arg1: non-empty if you want the default to be on.
-dnl
-# Begin macro BTNG_SUPPORT_SPOOLES
-
-ifelse($1,,unset spooles_PREFIX,spooles_PREFIX=)
-
-AC_ARG_WITH(spooles,
-ifelse($1,,
-[  --with-spooles[=PATH]
-			Use spooles library and optionally specify where
-			it is installed.],
-[  --without-spooles	Do not use the spooles library.]),
-if test "${with_spooles+set}" = yes ; then
-  spooles_PREFIX=
-elif test "${with_spooles}" = no; then
-  unset spooles_PREFIX;
-else
-  spooles_PREFIX="${with_spooles}"
-fi
-)
-
-if test "${spooles_PREFIX+set}" = set; then
-  # Set spooles_LIBS and spooles_INCLUDE if they are not already set.
-  # Note that we expect library archives and headers to be
-  # directly under spooles_PREFIX rather than subdirectories
-  # lib and include of spooles_PREFIX.
-  if test ! "${spooles_LIBS+set}" = set; then
-    if test ! "${spooles_PREFIX}" = ''; then
-      spooles_LIBS="-L${spooles_PREFIX}"
-    fi
-    spooles_LIBS="${spooles_LIBS} -lspoolesMPI -lspooles"
-  fi
-  if test ! "${spooles_INCLUDES+set}" = set ; then
-    if test ! "${spooles_PREFIX}" = ''; then
-      spooles_INCLUDES="-I${spooles_PREFIX}"
-    fi
-  fi
-fi
-
-BTNG_AC_LOG_VAR(spooles_PREFIX spooles_LIBS spooles_INCLUDES)
-
-# End macro BTNG_SUPPORT_SPOOLES
-])
-
-dnl $Id: variable-header-filenames.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_FIND_CORRECT_HEADER_FILENAME],[
-dnl There is no standard naming convention for STL header files.
-dnl This macro helps to pick the right name out of a list.
-dnl Arg1 is the variable to set to the found file name.
-dnl Arg2 is the list of file names to search
-dnl Arg3 are additional headers to include (for use by AC_TRY_COMPILE)
-dnl Arg4 is the code body to test if the included file works.
-# Start macro $0
-  AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
-  $1=
-  AC_REQUIRE([BTNG_TYPE_NAMESPACE])
-  AC_REQUIRE([BTNG_TYPE_BOOL])
-  CPPFLAGS_SAVE=$CPPFLAGS
-  for file in $2; do
-    AC_CHECK_HEADER($file, btng_header_found=1, unset btng_header_found)
-    if test -n "$btng_header_found"; then
-      AC_MSG_CHECKING(whether $file is the header sought)
-      BTNG_AC_LOG(found header file $file)
-      CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
-      AC_TRY_COMPILE(
-        [
-/* macro $0 checking for $file */
-#ifdef BOOL_IS_BROKEN
-typedef int bool;
-#define true 1
-#define false 0
-#endif
-	$3
-        #include <$file>
-#ifndef NAMESPACE_IS_BROKEN
-using namespace std;
-#endif
-],
-        $4,
-	AC_MSG_RESULT(yes)
-        $1="$file",
-	AC_MSG_RESULT(no)
-      )
-    fi
-    if test -n "${$1}"; then break; fi
-  done
-  AC_LANG_RESTORE
-  CPPFLAGS=$CPPFLAGS_SAVE
-# End macro $0
-])
-
-
-
-
-AC_DEFUN([BTNG_TREAT_VARIABLE_HEADER_FILENAME],[
-dnl BTNG_TREAT_VARIABLE_HEADER_FILENAME is a generic macro
-dnl used by (and using) other macros in this file.
-dnl It determines, from a given list, the correct name of
-dnl a header file required to compile a test code body.
-dnl It takes a list of possible of the header filenames.
-dnl It reports whether each header file is the one sought
-dnl until it finds the one that is.
-dnl If none of the header filenames work:
-dnl   It issues a warning.
-dnl   It defines a ...IS_BROKEN C macro saying so.
-dnl If it finds the first header filename that works:
-dnl   It assigns a variable (..._HEADER_FILE) to the
-dnl   correct filename and call AC_DEFINE for that variable.
-dnl Arguments are:
-dnl  1: a single name representing the header sought.
-dnl  2: a list of possible header filenames.
-dnl  3: other include lines (for use in AC_TRY_COMPILE).
-dnl  4: code to test if the header file is the one being sought.
-dnl
-# Start macro $0
-AC_CACHE_VAL(btng_cv_[]translit($1,[-],[_])[]_header_filename, [
-  AC_ARG_WITH($1-header-file,
-  [  --with-$1-header-file	Specify name of the $1 header file.],
-  btng_cv_[]translit($1,[-],[_])[]_header_filename=$with_[]translit($1,[-],[_])[]_header_file,
-  [BTNG_FIND_CORRECT_HEADER_FILENAME(btng_cv_[]translit($1,[-],[_])[]_header_filename,$2,[$3],[[$4]])]
-  )
-])	dnl End AC_CACHE_VAL call
-# We must be able to find the $1 header file or else.
-translit($1,[-a-z],[_A-Z])[]_HEADER_FILE="$btng_cv_[]translit($1,[-],[_])[]_header_filename"
-if test -z "$translit($1,[-a-z],[_A-Z])[]_HEADER_FILE"; then
-  translit($1,[-],[_])[]_header_is_broken=1
-  AC_MSG_WARN([cannot find a working $1 header file.
-      Names tried: $2
-      If you know the correct hame of this header file,
-      use the option --with-[]$1[]-header-file=FILENAME
-      with configure.])
-  AC_DEFINE(translit($1,[-a-z],[_A-Z])[]_IS_BROKEN,[1],[The $1 header file is broken])
-  BTNG_AC_LOG(header file $1 is broken)
-else
-  unset translit($1,[-],[_])[]_header_is_broken
-  AC_DEFINE_UNQUOTED(translit($1,[-a-z],[_A-Z])[]_HEADER_FILE,<$translit($1,[-a-z],[_A-Z])[]_HEADER_FILE>,
-    [Header file for $1])
-  BTNG_AC_LOG(header file $1 is ok)
-fi
-# End macro $0
-])	dnl end of BTNG_TREAT_VARIABLE_HEADER_FILENAME definition.
-
-
-
-dnl
-dnl These are some STL headers with uncertain names.
-dnl
-
-
-AC_DEFUN([BTNG_STL_STRING_HEADER_FILENAME],[
-# Start macro $0
-dnl dnl AC_MSG_CHECKING(name of the STL string header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-string],
-  [string strings string.h strings.h string.hxx strings.hxx],,
-  [std::string s; s = "sample string";])
-# End macro $0
-])	dnl end of BTNG_STL_STRING_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_SET_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL set header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-set], [set set.h set.hxx],,
-  [set<int> s; s.insert(1);])
-# End macro $0
-])	dnl end of BTNG_STL_SET_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_STACK_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL stack header file)
-AC_REQUIRE([BTNG_INFO_CXX_ID])
-AC_REQUIRE([BTNG_STL_LIST_HEADER_FILENAME])
-btng_stl_stack_test_body='[stack<int> s; s.push(1);]'
-# The Sun compiler version 5.2 does not treat default template
-# arguments correctly.  The STL standard states that for stack,
-# only the first argument is required but this Sun compiler
-# requires the second.
-if test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null || test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x520' > /dev/null ; then
-btng_stl_stack_test_body='[stack<int,list<int> > s; s.push(1);]'
-fi
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-stack], [stack stack.h stack.hxx],,
-  [$btng_stl_stack_test_body])
-# End macro $0
-])	dnl end of BTNG_STL_STACK_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_VECTOR_HEADER_FILENAME],[
-# Start macro $0
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-vector], [vector vector.h vector.hxx],,
-[vector<int> v; v.insert(v.begin(),1);
-vector<char> s; s.insert( s.end(), 10, '\0' );])
-# End macro $0
-])	dnl end of BTNG_STL_VECTOR_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_LIST_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL list header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-list], [list list.h list.hxx],,
-  [list<int> v; v.insert(v.begin(),1);])
-# End macro $0
-])	dnl end of BTNG_STL_LIST_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_MAP_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL map header file)
-AC_REQUIRE([BTNG_INFO_CXX_ID])
-btng_stl_map_test_body='[map<int,int> v; v[0]=1;]'
-# The Sun compiler version 4.2 does not treat default template
-# arguments correctly.  The STL standard states that for map,
-# only the first two arguments are required but the Sun compiler
-# requires the third.
-test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
-btng_stl_map_test_body='[map<int,int,less<int> > v; v[0]=1;]'
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-map], [map map.h map.hxx],,
-  [$btng_stl_map_test_body])
-# End macro $0
-])	dnl end of BTNG_STL_MAP_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_ITERATOR_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL iterator header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-iterator],
-  [iterator iterator.h iterator.hxx],,
-  [int a[10], size; size=distance(a,a+10);])
-dnl  [ostream_iterator<int> v(cout," ");])
-# End macro $0
-])	dnl end of BTNG_STL_ITERATOR_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_ALGO_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL algo header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-algo],
-  [algo algorithm algo.h algorithm.h algo.hxx algorithm.hxx] ,,
-  [int n[10]; find(n,n+10,0);])
-# End macro $0
-])	dnl end of BTNG_STL_ALGO_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_FUNCTION_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL numeric header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-function],
-  [function function.h function.hxx] ,,
-  [int a=1, b=2, c; plus<int> adder; c=adder(a,b);])
-# End macro $0
-])	dnl end of BTNG_STL_FUNCTION_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_NUMERIC_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL numeric header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-numeric],
-  [numeric numeric.h numeric.hxx] ,,
-  [int n[10]; iota(n,n+10,0);])
-# End macro $0
-])	dnl end of BTNG_STL_NUMERIC_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_SSTREAM_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL string stream header file)
-btng_stl_sstream_test_body='/* New syntax */ istringstream ist("a string");'
-dnl We think that the sun 4.2 compiler does not support the syntax,
-dnl but we're not absolutely sure.
-test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
-btng_stl_sstream_test_body='/* Old syntax */ char i[[10]]; istrstream ist(i);'
-test "$CXX_ID" = "gnu" && echo "$CXX_VERSION" | grep '^2.95.2' > /dev/null && \
-btng_stl_sstream_test_body='/* Old syntax */ char i[[10]]; istrstream ist(i);'
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-sstream],
-  [sstream stringstream strstream sstream.h stringstream.h strstream.h sstream.hxx stringstream.hxx strstream.hxx] ,,
-  [$btng_stl_sstream_test_body] )
-# End macro $0
-])      dnl end of BTNG_STL_SSTREAM_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_MULTIMAP_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL multimap header file)
-AC_REQUIRE([BTNG_INFO_CXX_ID])
-btng_stl_multimap_test_body='[multimap<int,int > v; pair<const int,int> thePair(0,1); v.insert(thePair);]'
-test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
-btng_stl_multimap_test_body='[multimap<int,int,less<int> > v; pair<const int,int> thePair(0,1); v.insert(thePair);]'
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-multimap],
-    [multimap mmap multimap.h mmap.h multimap.hxx mmap.hxx map map.h map.hxx],,
-    [$btng_stl_multimap_test_body])
-# End macro $0
-])      dnl end of BTNG_STL_MULTIMAP_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_STL_PAIR_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the STL pair header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-pair], [pair pair.h pair.hxx],,
-  [pair<int,int> s(0,1);])
-# End macro $0
-])      dnl end of BTNG_STL_PAIR_HEADER_FILENAME definition.
-
-
-
-
-dnl
-dnl These are some stream-related headers with uncertain names.
-dnl
-
-
-AC_DEFUN([BTNG_IOSTREAM_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the iostream header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([iostream],
-  [iostream iostream.h iostream.hxx],,
-  [ostream &co=cout; // test ostream declaration
-   istream &ci=cin; // test istream declaration
-   cout<<"test"<<endl; // test extraction operator
-   ])
-# End macro $0
-])	dnl end of BTNG_IOSTREAM_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_FSTREAM_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the fstream header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([fstream],
-  [fstream fstream.h fstream.hxx],,
-  [fstream iost("theStream",ios::app);])
-# End macro $0
-])	dnl end of BTNG_FSTREAM_HEADER_FILENAME definition.
-
-
-AC_DEFUN([BTNG_IOMANIP_HEADER_FILENAME],[
-# Start macro $0
-dnl AC_MSG_CHECKING(name of the iomanip header file)
-AC_REQUIRE([BTNG_IOSTREAM_HEADER_FILENAME])
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([iomanip],
-  [iomanip iomanip.h iomanip.hxx],[#include IOSTREAM_HEADER_FILE],
-  [cout<<setw(13)<<endl;])
-# End macro $0
-])	dnl end of BTNG_IOMANIP_HEADER_FILENAME definition.
 
 
 dnl
@@ -2691,7 +881,7 @@ dnl
 AC_DEFUN([CASC_CXX_EXCEPTION_HANDLING], [
     AC_REQUIRE([AC_PROG_CXX])
     AC_MSG_CHECKING(whether ${CXX} supports exception handling)
-    AC_CACHE_VAL(casc_cxx_have_exception_handling, [
+    AC_CACHE_VAL(casc_cv_cxx_have_exception_handling, [
        AC_LANG_SAVE
        AC_LANG_CPLUSPLUS
        AC_TRY_COMPILE([
@@ -2707,12 +897,12 @@ void foo() {
    signal(SIGFPE, byebye);
 }
          ], [/* empty */],
-         casc_cxx_have_exception_handling=yes,
-         casc_cxx_have_exception_handling=no)
+         casc_cv_cxx_have_exception_handling=yes,
+         casc_cv_cxx_have_exception_handling=no)
        AC_LANG_RESTORE
     ])
-    AC_MSG_RESULT($casc_cxx_have_exception_handling)
-    if test "$casc_cxx_have_exception_handling" = yes; then
+    AC_MSG_RESULT($casc_cv_cxx_have_exception_handling)
+    if test "$casc_cv_cxx_have_exception_handling" = yes; then
        AC_DEFINE([HAVE_EXCEPTION_HANDLING],[1],[HAVE_EXCEPTION_HANDLING])
     else
        AC_DEFINE([LACKS_EXCEPTION_HANDLING],[1],[LACKS_EXCEPTION_HANDLING])
@@ -2839,648 +1029,6 @@ template int __gnu_cxx::__capture_isnan<float>(float);
    fi
 ])
 
-
-dnl ******************************************************************
-dnl * CASC_PROG_F77 searches the PATH for an available Fortran 77
-dnl * compiler. It assigns the name of the compiler to F77.
-dnl ******************************************************************
-
-AC_DEFUN([CASC_PROG_F77],
-[
-   if test -z "$F77"; then
-      AC_CHECK_PROGS(F77, f77 g77 xlf cf77 if77 nf77)
-      test -z "$F77" && AC_MSG_ERROR([no acceptable f77 found in \$PATH])
-      FFLAGS="-g -O"
-      AC_SUBST(FFLAGS)
-   fi
-])dnl
-
-
-dnl **********************************************************************
-dnl * CASC_PROG_FPP searches the PATH for a preprocessor for Fortran files
-dnl * with preprocessor directives
-dnl **********************************************************************
-
-AC_DEFUN([CASC_PROG_FPP],
-[
-   AC_CHECK_PROGS(FPP, fpp cpp "$CC -E" "cc -E" "gcc -E")
-   test -z "$FPP" && AC_MSG_ERROR([no acceptable fpp found in \$PATH])
-])dnl
-
-
-dnl **********************************************************************
-dnl * CASC_CHECK_F77_PP checks whether the preprocessor needs to
-dnl * be called before calling the compiler for Fortran files with
-dnl * preprocessor directives.  If the preprocessor is necessary,
-dnl * F77NEEDSPP is set to "yes", otherwise it is set to "no"
-dnl **********************************************************************
-
-AC_DEFUN([CASC_CHECK_F77_PP],
-[
-   AC_REQUIRE([CASC_PROG_F77])
-
-   rm -f testpp.o
-
-   AC_MSG_CHECKING(whether $FPP needs to be called before $F77)
-
-   # This is a dumb little fortran program with C preprocessor calls
-   # It will compile only if $F77 has a built-in preprocessor
-
-   cat > testpp.F << EOF
-#define FOO 3
-	program testpp
-	integer num
-        integer sum
-        num = FOO
-#ifdef FOO
-        sum = num + num
-#else
-        sum = num + num + num
-#endif
-        end 
-EOF
-
-   # Compile the program and set $F77NEEDSPP appropriately
-   $F77 -DBAR -c testpp.F  > /dev/null 2>&1
-   if test -f testpp.o; then 
-      F77NEEDSPP=no 
-   else 
-      F77NEEDSPP=yes 
-   fi
-
-   AC_MSG_RESULT($F77NEEDSPP)
-   rm -f testpp.o testpp.F
-
-   AC_SUBST(F77NEEDSPP)
-])dnl
-
-
-
-dnl **********************************************************************
-dnl * CASC_CHECK_LIB_FORTRAN(LIBRARY, [, ACTION-IF-FOUND [,
-dnl *                        ACTION-IF-NOT-FOUND [, OTHER-LIBRARIEs]]])
-dnl * 
-dnl * Checks whether LIBRARY can be used to link a sample C function
-dnl * that contains a call to a sample Fortran 77 function. If linking
-dnl * is successful, ACTION-IF-FOUND is executed, otherwise
-dnl * ACTION-IF-NOT-FOUND is executed.  The default for ACTION-IF-FOUND is
-dnl * to add -lLIBRARY to $LIBS.  The default for ACTION-IF-NOT-FOUND is
-dnl * nothing.  OTHER-LIBRARIES can include the full names of libraries in
-dnl * the current directory, -l flags specifying other libraries, -L tags
-dnl * specifying the location of libraries (This macro may not check the
-dnl * same lib directories as would be checked by the linker by default on
-dnl * the command line.), and/or the names of object files, all separated
-dnl * by a space, whatever might be necessary for successful linkage.
-dnl **********************************************************************
-
-AC_DEFUN([CASC_CHECK_LIB_FORTRAN],
-[
-   # This macro needs a f77 compiler and knowledge of the name-mangling scheme
-   AC_REQUIRE([CASC_PROG_F77])
-   AC_REQUIRE([PAC_GET_FORTNAMES])
-
-   if test -z "$FORTRANNAMES" ; then
-      NAMESTYLE="FORTRANNOUNDERSCORE"
-   else
-      NAMESTYLE=$FORTRANNAMES
-   fi
-
-   # This is a little subroutine to be called later by a C main function
-   cat > testflib_.f << EOF
-        subroutine testflib(i)
-        integer i
-        print *, "This tests which libraries work"
-        return
-        end
-EOF
-
-   $F77 -c testflib_.f > /dev/null 2>&1
-
-   # Mangle testflib's name appropriatiately
-   case $NAMESTYLE in
-      FORTRANDOUBLEUNDERSCORE)
-         THIS_FUNCTION=testflib_;;
-
-      FORTRANUNDERSCORE)
-         THIS_FUNCTION=testflib_;;
-
-      FORTRANCAPS)
-         THIS_FUNCTION=TESTFLIB;;
-
-      FORTRANNOUNDERSCORE)
-         THIS_FUNCTION=testflib;;
-
-   esac
-
-   # Checks if the LIBRARY from the argument list can be used to link
-   # a C test program with testflib
-   AC_CHECK_LIB($1, $THIS_FUNCTION, $2, $3, testflib_.o $4)
-
-   rm -f testflib_.o testflib_.f
-
-])dnl
-
-
-dnl ********************************************************************* 
-dnl * CASC_SET_F77LIBS sets the necessary library flags for linking C and
-dnl * Fortran 77 codes with the C linker.  The necessary -l flags are put 
-dnl * into the variable F77LIBS, and the necessary -L flags are put into  
-dnl * the variable F77LIBDIRS.  This macro first checks to see if the
-dnl * shell variable $F77LIBS is already set.  If so, the preset value is
-dnl * used.  Otherwise this macro only works for known architectures.
-dnl *********************************************************************
-
-AC_DEFUN([CASC_SET_F77LIBS],
-[
-   AC_REQUIRE([CASC_GUESS_ARCH])
-   AC_REQUIRE([CASC_PROG_F77])
-
-   if test -z "$casc_f77_libs"; then
-      case $ARCH in 
-         sun4 | solaris)
-            case $F77 in
-               *g77)
-                   CASC_CHECK_LIB_FORTRAN(f2c,
-                                          F77LIBDIRS="-L/home/casc/g77/lib"
-                                          F77LIBS="-lf2c"
-                                          , ,
-                                          -L/home/casc/g77/lib -lf2c);;
-               *)
-                  CASC_CHECK_LIB_FORTRAN(sunmath,
-                                   F77LIBDIRS="-L/opt/SUNWspro/SC5.0/lib"
-                                   F77LIBS="-lF77 -lsunmath"
-                                   , ,
-                                   -L/opt/SUNWspro/SC5.0/lib -lF77 -lsunmath);;
-               esac
-         ;;
-         alpha)
-            CASC_CHECK_LIB_FORTRAN(for, F77LIBS="-lfor", , );;
-
-         rs6000)
-            CASC_CHECK_LIB_FORTRAN(xlf90, F77LIBS="-lxlf90", , );;
-
-         IRIX64 | iris4d)
-            CASC_CHECK_LIB_FORTRAN(I77, 
-                                  F77LIBS="-lF77 -lU77 -lI77 -lisam", ,
-                                  -lF77 -lU77 -lI77 -lisam);;
-
-         *)
-            AC_MSG_WARN(
-[unable to set F77LIBFLAGS.  They must be set as a shell variable or
- with a command-line option])
-         ;;             
-
-      esac
-
-   else
-      if test -n "$casc_f77_lib_dirs"; then
-         for casc_lib_dir in $casc_f77_lib_dirs; do
-            F77LIBDIRS="-L$casc_lib_dir $F77LIBDIRS"       
-         done
-      fi
-
-      for casc_lib in $casc_f77_libs; do
-         F77LIBS="$F77LIBS -l$casc_lib"
-      done
-   fi
-
-   F77LIBFLAGS="$F77LIBDIRS $F77LIBS"
-])dnl
-
-
-dnl *********************************************************************
-dnl * CASC_FIND_F77LIBS may be a replacement for CASC_SET_F77LIBS.  This
-dnl * macro automatically finds the flags necessary to located the 
-dnl * libraries needed for a Fortran/C interface.  It is more robust than
-dnl * CASC_SET_F77LIBS, because it is not based on the architecture name.
-dnl * The test is performed directly on the Fortran compiler using the
-dnl * macro LF_FLIBS. When CASC_FIND_F77LIBS is included in configure.in,
-dnl * it will set the variable F77LIBFLAGS to be a list of flags, which 
-dnl * will probably be a set of -L, -R, -l, and -u flags, as well as
-dnl * perhaps the absolute paths of some libraries.  The drawback to this
-dnl * macro is that it will usually insert some flags (mostly -L flags) 
-dnl * that aren't needed, but hopefully they will be harmless.  I haven't
-dnl * seen the extra flags that are included by this macro break anything
-dnl * yet.  Hopefully more testing on more machines will give confidence
-dnl * that this really works and will be able to set up the Fortran links
-dnl * on an unknown system.  If this macro sets up nothing, then
-dnl * CASC_SET_F77LIBS is called as a backup
-dnl *********************************************************************
-
-AC_DEFUN([CASC_FIND_F77LIBS],
-[
-   AC_CACHE_CHECK([for Fortran libraries], casc_cv_f77flags,
-   [
-      if test -z "$F77LIBFLAGS"; then
-         dnl * LF_FLIBS creates variable $flibs_result containing a list of 
-         dnl * flags related to the Fortran compiler
-         LF_FLIBS
-         for casc_flag in $flibs_result; do
-
-            dnl * Here we sort the flags in $flibs_result
-            case $casc_flag in
-            [-l* | /*)]
-               casc_f77_libs="$casc_f77_libs $casc_flag"
-            ;;
-            [-L*)]
-               casc_f77_dirs="$casc_flag $casc_f77_dirs"
-            ;;
-            [*)]
-               casc_other_flags="$casc_other_flags $casc_flag"
-            ;;
-            esac
-         done
-
-         F77LIBFLAGS="$casc_other_flags $casc_f77_dirs"
-
-
-         if test -n "`echo $F77LIBFLAGS | grep '\-R/'`"; then
-            F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-R\//-R \//'`
-         fi
-	 
-	 dnl Strip off quotes.  This was needed for mpi wrappers.
-         dnl This is potentially bad.
-         F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/\"//'`
-         casc_f77_libs=`echo $casc_f77_libs | sed 's/\"//'`
-
-         dnl * each -l flag is checked using CASC_CHECK_LIB_FORTRAN, until
-         dnl * successful linking of a test program is accomplished, at which
-         dnl * time the loop is broken.  If successful linking does not occur,
-         dnl * CASC_CHECK_LIB will check for the library's existence and add
-         dnl * to F77LIBFLAGS if it exists.  All libraries listed by explicit
-         dnl * path are added to F77LIBFLAGS
-         for casc_flag in $casc_f77_libs; do
-
-            case $casc_flag in
-
-            [/*)]
-               if test -f "$casc_flag"; then
-                  F77LIBFLAGS="$F77LIBFLAGS $casc_flag"
-               fi
-            ;;
-
-            [-l*)]
-
-               casc_lib_name=`echo "$casc_flag" | sed 's/-l//g'`
-               CASC_CHECK_LIB_FORTRAN($casc_lib_name,
-                  F77LIBFLAGS="$F77LIBFLAGS $casc_flag"
-                  casc_result=yes,
-                  F77LIBFLAGS="$F77LIBFLAGS $casc_flag",
-                  $F77LIBFLAGS)
- 
-            if test "$casc_result" = yes; then 
-               casc_result=
-               break
-            fi
-            ;;
-         esac
-         done
- 
-         # if this macro didn't work call CASC_SET_F77LIBS
-         if test -z "$F77LIBFLAGS"; then
-            CASC_SET_F77LIBS
-
-         fi        
-
-         dnl if PGI remove the include of the gcc libs, 
-         dnl causes problem with Intel compilers
-         if test -n "`echo $F77 | grep pgf77`"; then
-            F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-lgcc//g'`
-         fi
-
-         dnl * On IBM don't use the links to poe library directories coming
-         dnl * out of the fortran compiler
-         if test -n "`echo $F77LIBFLAGS | grep xlf`"; then
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/lib\/threads//g'`
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/usr\/lpp\/ppe.poe\/lib\/threads//g'`
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/usr\/lpp\/ppe.poe\/lib\/ip//g'`
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/usr\/lpp\/ppe.poe\/lib//g'`
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/usr\/lpp\/ppe.poe\/lib//g'`
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-lmpi_r//g'`
-             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-lvtd_r//g'`
-         fi
-      fi
-
-      casc_cv_f77flags=$F77LIBFLAGS
-   ])
-
-   dnl in case we are getting library flags from cached values
-   F77LIBFLAGS=$casc_cv_f77flags
-
-   AC_SUBST(F77LIBFLAGS)
-
-])dnl
-
-
-dnl * The following are macros copied from outside sources
-
-
-dnl ********************************************************************
-dnl * CASC_GET_FORTNAMES is a wrapper for the macro PAC_GET_FORTNAMES.
-dnl * The two can be used interchangeably.
-dnl *
-dnl * PAC_GET_FORTNAMES is distributed with mpich.  It checks what format
-dnl * is used to call Fortran subroutines in C functions.  This macro
-dnl * defines the shell variable $FORTRANNAMES and creates -D  
-dnl * preprocessor flags that tell what the Fortran name-mangling is.  The
-dnl * preprocessor macros defined are FORTRAN_DOUBLE_UNDERSCORE,
-dnl * FORTRAN_UNDERSCORE, FORTRAN_CAPS, and FORTRAN_NO_UNDERSCORE.  The
-dnl * possible values for FORTRANNAMES are the same words without
-dnl * underscores.
-dnl * 
-dnl * Changes:
-dnl *    AC_DEFINE lines to define preprocessor macros that are assigned
-dnl *    to DEFS added by Noah Elliott May 18, 1998
-dnl ********************************************************************
-
-AC_DEFUN([CASC_GET_FORTNAMES],
-[
-   PAC_GET_FORTNAMES
-])dnl
-
-AC_DEFUN([PAC_GET_FORTNAMES],[
-   # Check for strange behavior of Fortran.  For example, some FreeBSD
-   # systems use f2c to implement f77, and the version of f2c that they
-   # use generates TWO (!!!) trailing underscores 
-   # Currently, WDEF is not used but could be...
-   #
-   # Eventually, we want to be able to override the choices here and
-   # force a particular form.  This is particularly useful in systems
-   # where a Fortran compiler option is used to force a particular
-   # external name format (rs6000 xlf, for example).
-   cat > confftest.f <<EOF
-       subroutine mpir_init_fop( a )
-       integer a
-       a = 1
-       return
-       end
-EOF
-   $F77 $FFLAGS -c confftest.f > /dev/null 2>&1
-   if test ! -s confftest.o ; then
-        AC_MSG_ERROR([Unable to compile a Fortran test program])
-        NOF77=1
-        HAS_FORTRAN=0
-   elif test -z "$FORTRANNAMES" ; then
-    # We have to be careful here, since the name may occur in several  
-    # forms.  We try to handle this by testing for several forms
-    # directly.
-    if test $arch_CRAY ; then
-     # Cray doesn't accept -a ...
-     nameform1=`strings confftest.o | grep mpir_init_fop_  | head -1`
-     nameform2=`strings confftest.o | grep MPIR_INIT_FOP   | head -1`
-     nameform3=`strings confftest.o | grep mpir_init_fop   | head -1`
-     nameform4=`strings confftest.o | grep mpir_init_fop__ | head -1`
-    else
-     nameform1=`strings -a confftest.o | grep mpir_init_fop_  | head -1`
-     nameform2=`strings -a confftest.o | grep MPIR_INIT_FOP   | head -1`
-     nameform3=`strings -a confftest.o | grep mpir_init_fop   | head -1`
-     nameform4=`strings -a confftest.o | grep mpir_init_fop__ | head -1`
-    fi
-    /bin/rm -f confftest.f confftest.o
-    AC_MSG_CHECKING(Fortran external names)
-    if test -n "$nameform4" ; then
-        AC_DEFINE([FORTRAN_DOUBLE_UNDERSCORE],[1],[FORTRAN_DOUBLE_UNDERSCORE])
-        AC_MSG_RESULT(lowercase with one or two trailing underscores)
-        FORTRANNAMES="FORTRANDOUBLEUNDERSCORE"
-    elif test -n "$nameform1" ; then
-        # We don't set this in CFLAGS; it is a default case
-        AC_DEFINE([FORTRAN_UNDERSCORE],[1],[FORTRAN_UNDERSCORE])
-        AC_MSG_RESULT(lowercase with a trailing underscore)
-        FORTRANNAMES="FORTRANUNDERSCORE"
-    elif test -n "$nameform2" ; then
-        AC_DEFINE([FORTRAN_CAPS],[1],[FORTRAN_CAPS])
-        AC_MSG_RESULT(uppercase)
-        FORTRANNAMES="FORTRANCAPS"
-    elif test -n "$nameform3" ; then
-        AC_DEFINE([FORTRAN_NO_UNDERSCORE],[1],[FORTRAN_NO_UNDERSCORE])
-        AC_MSG_RESULT(lowercase)
-        FORTRANNAMES="FORTRANNOUNDERSCORE"
-    else
-        AC_MSG_RESULT(unknown)
-#       print_error "If you have problems linking, try using the -nof77 option"
-#        print_error "to configure and rebuild MPICH."
-        NOF77=1
-        HAS_FORTRAN=0
-    fi
-    fi
-    rm -f confftest.f confftest.o
-    if test -n "$FORTRANNAMES" ; then
-        WDEF="-D$FORTRANNAMES"
-    fi  
-    ])dnl
-
-
-dnl ****************************************************************
-dnl * LF_FLIBS was copied from E. Gkioulekas' autotools package for use in
-dnl * CASC_FIND_F77LIBS.  It's probably not good to be used all by itself.
-dnl * It uses the output the Fortran compiler gives when given a -v flag
-dnl * to produce a list of flags that the Fortran compiler uses.  From
-dnl * this list CASC_FIND_F77LIBS sets up the Fortran/C interface flags.
-dnl *
-dnl * Changes:
-dnl * AC_SUBST(FLIBS) suppressed by N. Elliott 7-10-98
-dnl *****************************************************************
-   
-AC_DEFUN([LF_FLIBS],[
-  dnl AC_MSG_CHECKING(for Fortran libraries)
-  dnl
-  dnl Write a minimal program and compile it with -v. I don't know
-  dnl what to do if your compiler doesn't have -v
-  dnl
-  dnl changequote(, )dnl
-  echo "      END" > conftest.f
-  foutput=`${F77-f77} -v -o conftest conftest.f 2>&1`
-  dnl
-  dnl The easiest thing to do for xlf output is to replace all the commas
-  dnl with spaces.  Try to only do that if the output is really from xlf,
-  dnl since doing that causes problems on other systems.
-  dnl
-  xlf_p=`echo $foutput | grep xlfentry`
-  if test -n "$xlf_p"; then
-    foutput=`echo $foutput | sed 's/,/ /g'`
-  fi
-  ifc_p=`echo $foutput | grep ifc`
-  ifort_p=`echo $foutput | grep ifort`
-  if test -n "$ifort_p" -o -n "$ifc_p"; then
-    foutput=`echo $foutput | sed 's/\\\/ \-u\/ \___get\/ /g'`
-  fi
-  dnl
-  ld_run_path=`echo $foutput | \
-
-    [sed -n -e 's/^.*LD_RUN_PATH *= *\([^ ]*\).*/\1/p'`]
-  dnl
-  dnl We are only supposed to find this on Solaris systems...
-  dnl Uh, the run path should be absolute, shouldn't it?
-  dnl
-  case "$ld_run_path" in
-
-    /*)
-
-      if test "$ac_cv_prog_gcc" = yes; then
-
-        ld_run_path="-Xlinker -R -Xlinker $ld_run_path"
-      else
-        ld_run_path="-R $ld_run_path"
-      fi
-    ;;
-
-    *)
-      ld_run_path=
-    ;;
-  esac
-
-  dnl
-  flibs=
-  lflags=
-  dnl
-  dnl If want_arg is set, we know we want the arg to be added to the list,
-  dnl so we don't have to examine it.
-  dnl
-  want_arg=
-  dnl
-  for arg in $foutput; do
-    old_want_arg=$want_arg
-    want_arg=
-  dnl
-  dnl None of the options that take arguments expect the argument to
-  dnl start with a -, so pretend we didn't see anything special.
-  dnl
-    if test -n "$old_want_arg"; then
-      case "$arg" in
-        -*)
-        old_want_arg=
-        ;;
-      esac
-    fi
-
-    case "$old_want_arg" in
-      '')
-        case $arg in
-        /*.a)
-          exists=false
-          for f in $lflags; do
-            if test x$arg = x$f; then
-              exists=true
-            fi
-          done
-          if $exists; then
-            arg=
-          else
-            lflags="$lflags $arg"
-          fi
-        ;;
-        -bI:*)
-          exists=false
-          for f in $lflags; do
-            if test x$arg = x$f; then
-              exists=true
-            fi
-          done
-          if $exists; then
-            arg=
-          else
-            if test "$ac_cv_prog_gcc" = yes; then
-              lflags="$lflags -Xlinker $arg"
-            else
-              lflags="$lflags $arg"
-            fi
-          fi
-        ;;
-        -lang* | -lcrt0.o | -lc )
-          arg=
-        ;;
-        [-[lLR])]
-          want_arg=$arg
-          arg=
-        ;;
-        [-[lLR]*)]
-          exists=false
-          for f in $lflags; do
-            if test x$arg = x$f; then
-              exists=true
-            fi
-          done
-          if $exists; then
-            arg=
-          else
-            case "$arg" in
-              -lkernel32)
-                case "$canonical_host_type" in
-                  *-*-cygwin32)
-                  ;;
-                  *)
-                    lflags="$lflags $arg"
-                  ;;
-                esac
-              ;;
-              -lm)
-              ;;
-              *)
-                lflags="$lflags $arg"
-              ;;
-            esac
-          fi
-        ;;
-        -u)
-          want_arg=$arg
-          arg=
-        ;;
-        -Y)
-          want_arg=$arg
-          arg=
-        ;;
-        *)
-          arg=
-        ;;
-        esac
-      ;;
-      [-[lLR])]
-        arg="$old_want_arg $arg"
-      ;;
-      -u)
-        arg="-u $arg"
-      ;;
-      -Y)
-
-  dnl
-  dnl Should probably try to ensure unique directory options here too.
-  dnl This probably only applies to Solaris systems, and then will only
-  dnl work with gcc...
-  dnl
-        arg=`echo $arg | sed -e 's%^P,%%'`
-        SAVE_IFS=$IFS
-        IFS=:
-        list=
-        for elt in $arg; do
-        list="$list -L$elt"
-        done
-        IFS=$SAVE_IFS
-        arg="$list"
-      ;;
-    esac
-  dnl
-
-    if test -n "$arg"; then
-      flibs="$flibs $arg"
-    fi
-  done
-  if test -n "$ld_run_path"; then
-    flibs_result="$ld_run_path $flibs"
-  else
-    flibs_result="$flibs"
-  fi
-  dnl changequote([, ])dnl
-  rm -f conftest.f conftest.o conftest
-  dnl
-  dnl Phew! Done! Now, output the result
-  dnl
-
-  FLIBS="$flibs_result"
-  dnl AC_MSG_RESULT([$FLIBS])
-dnl  AC_SUBST(FLIBS)
-])dnl
-
-
 dnl Define a macro for supporting HDF5
 
 AC_DEFUN([CASC_SUPPORT_HDF5],[
@@ -3539,7 +1087,7 @@ if test "${hdf5_PREFIX+set}" = set; then
    AC_LANG_PUSH(C++)
    CASC_PUSH_COMPILER_STATE
    # NOTE lib z and m were from BTNG macro.
-   LIBS="${LIBS} ${hdf5_LIBS} $libz_LIBS -lm "
+   LIBS="${LIBS} ${hdf5_LIBS} $zlib_LIBS $szlib_LIBS -lm "
    CXXFLAGS="${CXXFLAGS} ${hdf5_INCLUDES}"
    AC_LINK_IFELSE([
       #include "hdf5.h"
@@ -4442,7 +1990,7 @@ AC_DEFUN([CASC_PROG_MPICC],
 
 
 dnl ********************************************************************
-dnl * CASC_PROG_MPICXX searches the PATH for an available MPI C++ 
+dnl * CASC_PROG_MPICXX searches the PATH for an available MPI C++
 dnl * compiler wraparound.  It assigns the name to MPICXX.
 dnl ********************************************************************
 
@@ -4454,7 +2002,7 @@ AC_DEFUN([CASC_PROG_MPICXX],
 
 
 dnl **********************************************************************
-dnl * CASC_PROG_MPIF77 searches the PATH for an available MPI Fortran 77 
+dnl * CASC_PROG_MPIF77 searches the PATH for an available MPI Fortran 77
 dnl * compiler wraparound.  It assigns the name to MPIF77.
 dnl **********************************************************************
 
@@ -4498,14 +2046,14 @@ AC_DEFUN([CASC_CHECK_MPIF77_PP],
         sum = rank + rank
 #endif
         call MPI_FINALIZE(mpierr)
-        end 
+        end
 EOF
 
-   $MPIF77 -DBAR -c testppmp.F 
-   if test -f testppmp.o; then 
-      MPIF77NEEDSPP=no 
-   else 
-      MPIF77NEEDSPP=yes 
+   $MPIF77 -DBAR -c testppmp.F
+   if test -f testppmp.o; then
+      MPIF77NEEDSPP=no
+   else
+      MPIF77NEEDSPP=yes
    fi
 
    echo $MPIF77NEEDSPP
@@ -4515,7 +2063,7 @@ EOF
 
 
 dnl *********************************************************************
-dnl * CASC_SET_MPI sets up the needed MPI library and directory flags.   
+dnl * CASC_SET_MPI sets up the needed MPI library and directory flags.
 dnl * The location of the file mpi.h is put into the variable MPIINCLUDE
 dnl * as a -I flag.  The -l flags that specify the needed libraries and
 dnl * the -L flags that specify the paths of those libraries are placed in
@@ -4525,8 +2073,8 @@ dnl * --with-mpi-libs, and --with-mpi-lib-dirs command-line options when
 dnl * invoking configure.  Only one directory should be specified with
 dnl * --with-mpi-include, while any number of directories can be specified
 dnl * by --with-mpi-lib-dirs.  Any number of libraries can be specified
-dnl * with --with-mpi-libs, and the libraries must be referred to by their 
-dnl * base names, so libmpi.a is just mpi.  It is adviseable to use all 
+dnl * with --with-mpi-libs, and the libraries must be referred to by their
+dnl * base names, so libmpi.a is just mpi.  It is adviseable to use all
 dnl * three --with flags whenever one is used, because it is likely that
 dnl * when one is chosen it will mess up the automatic choices for the
 dnl * other two.  If the architecture is unknown, or if the needed MPI
@@ -4534,11 +2082,11 @@ dnl * settings for the current architecture are not known, then the naive
 dnl * settings of MPILIBS="-lmpi" and MPILIBDIRS="-L/usr/local/mpi/lib"
 dnl * are tested, and if they exist they are used, otherwise the MPILIB*
 dnl * variables are left blank.  In the case of rs6000, the variable
-dnl * MPIFLAGS is also set. 
+dnl * MPIFLAGS is also set.
 dnl **********************************************************************
- 
+
 AC_DEFUN([CASC_SET_MPI],
-[
+        [
 
    dnl * If called from within CASC_FIND_MPI, then the configure-line
    dnl * options will already exist.  This ifdef creates them otherwise.
@@ -4546,12 +2094,12 @@ AC_DEFUN([CASC_SET_MPI],
       [AC_ARG_WITH(mpi-include, [  --with-mpi-include=DIR  mpi.h is in DIR],
                   casc_mpi_include_dir=$withval)
 
-      AC_ARG_WITH(mpi-libs, 
+      AC_ARG_WITH(mpi-libs,
 [  --with-mpi-libs=LIBS    LIBS is space-separated list of library names
                           needed for MPI, e.g. \"nsl socket mpi\"],
                   casc_mpi_libs=$withval)
 
-      AC_ARG_WITH(mpi-lib-dirs, 
+      AC_ARG_WITH(mpi-lib-dirs,
 [  --with-mpi-lib-dirs=DIRS
                           DIRS is space-separated list of directories
                           containing the libraries specified by
@@ -4571,7 +2119,7 @@ AC_DEFUN([CASC_SET_MPI],
                    if test -z "$casc_mpi_include_dir"; then
                       casc_mpi_include_dir=/usr/local/mpi/lam/h
                    fi
-                   
+
                    if test -z "$casc_mpi_lib_dirs"; then
                       casc_mpi_lib_dirs="/usr/local/mpi/lam/lib"
                    fi
@@ -4589,7 +2137,7 @@ AC_DEFUN([CASC_SET_MPI],
                      casc_mpi_lib_dirs="/usr/local/mpi/mpich/lib/solaris/ch_p4 \
                                        /usr/lib"
                   fi
-            
+
                casc_mpi_libs="nsl socket mpi";;
                esac
 
@@ -4613,7 +2161,7 @@ AC_DEFUN([CASC_SET_MPI],
 
             casc_mpi_libs="mpich gs";;
 
-         rs6000) 
+         rs6000)
 
 dnl            if test -z "$casc_mpi_include_dir"; then
 dnl               casc_mpi_include_dir=/usr/lpp/ppe.poe/include
@@ -4629,7 +2177,7 @@ dnl            fi
 
             MPIFLAGS="-binitfini:poe_remote_main";;
 
-         IRIX64 | iris4d) 
+         IRIX64 | iris4d)
             if test -z "$casc_mpi_include_dir"; then
                casc_mpi_include_dir=/usr/local/mpi/include
             fi
@@ -4640,8 +2188,8 @@ dnl            fi
                casc_mpi_lib_dirs=/usr/local/mpi/lib/IRIX64/ch_p4
             fi
 
-            casc_mpi_libs=mpi;; 
-        
+            casc_mpi_libs=mpi;;
+
          *)
 AC_MSG_WARN([trying naive MPI settings - can use --with flags to change])
             if test -z "$casc_mpi_include_dir"; then
@@ -4691,7 +2239,7 @@ dnl * MPICC is not set manually, then this macro will not work.
 dnl *
 dnl * One may question why these settings would need to be determined if
 dnl * there already is mpicc available, and that is a valid question.  I
-dnl * can think of a couple of reasons one may want to use these settings 
+dnl * can think of a couple of reasons one may want to use these settings
 dnl * rather than using mpicc directly.  First, these settings allow you
 dnl * to choose the C compiler you wish to use rather than using whatever
 dnl * compiler is written into mpicc.  Also, the settings determined by
@@ -4710,9 +2258,9 @@ dnl * whenever one is called.  In addition, the option --with-mpi-flags is
 dnl * available here to set any other flags that may be needed, but it
 dnl * does not override the automatic test.  Flags set by --with-mpi-flags
 dnl * will be added to the variable MPIFLAGS.  This way, if the macro, for
-dnl * whatever reason, leaves off a necessary flag, the flag can be added 
+dnl * whatever reason, leaves off a necessary flag, the flag can be added
 dnl * to MPIFLAGS without eliminating anything else.  The other variables
-dnl * set are MPIINCLUDE, MPILIBS, and MPILIBDIRS, just as in 
+dnl * set are MPIINCLUDE, MPILIBS, and MPILIBDIRS, just as in
 dnl * CASC_SET_MPI.  This macro also incorporates CASC_SET_MPI as a backup
 dnl * plan, where if there is no mpicc, it will use the settings
 dnl * determined by architecture name in CASC_SET_MPI
@@ -4745,7 +2293,7 @@ AC_DEFUN([CASC_FIND_MPI],
       MPIFLAGS=$casc_cv_mpi_flags
       AC_MSG_RESULT("\(cached\) $MPIFLAGS")
    else
-   
+
 
       dnl * Set up user options.  If user uses any of the fist three options,
       dnl * then automatic tests are not run.
@@ -4757,8 +2305,8 @@ AC_DEFUN([CASC_FIND_MPI],
                   done; casc_user_chose_mpi=yes)
 
       AC_ARG_WITH(mpi-libs,
-[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names 
-                          needed for MPI, e.g. \"nsl socket mpi\"],  
+[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names
+                          needed for MPI, e.g. \"nsl socket mpi\"],
                   for mpi_lib in $withval; do
                      MPILIBS="$MPILIBS -l$mpi_lib"
                   done; casc_user_chose_mpi=yes)
@@ -4773,7 +2321,7 @@ AC_DEFUN([CASC_FIND_MPI],
                      MPILIBDIRS="-L$mpi_lib_dir $MPILIBDIRS"
                   done; casc_user_chose_mpi=yes)
 
-      dnl * --with-mpi-flags only adds to automatic selections, 
+      dnl * --with-mpi-flags only adds to automatic selections,
       dnl * does not override
 
       AC_ARG_WITH(mpi-flags,
@@ -4803,10 +2351,10 @@ AC_DEFUN([CASC_FIND_MPI],
          dnl * When $MPICC is there, run the automatic test
          dnl * here begins the hairy stuff
 
-         else      
- 
+         else
+
             dnl changequote(, )dnl
-  
+
             dnl * Create a minimal MPI program.  It will be compiled using
             dnl * $MPICC with verbose output.
             cat > mpconftest.c << EOF
@@ -4864,7 +2412,7 @@ EOF
             xlc_p=`echo $cc_output | grep xlcentry`
             if test -n "$xlc_p"; then
                casc_compiler_is_xlc=yes
-            fi 
+            fi
             rm -rf cc_conftest*
 
             dnl * $MPICC might not produce '-lmpi', but we still need it.
@@ -4891,9 +2439,9 @@ EOF
             dnl * and kept once, it is discarded if it appears again
 
             for casc_arg in $casc_mpoutput; do
- 
+
                casc_old_want_arg=$casc_want_arg
-               casc_want_arg=  
+               casc_want_arg=
 
                if test -n "$casc_old_want_arg"; then
                   case "$casc_arg" in
@@ -5012,7 +2560,7 @@ EOF
                      dnl * then the flag is assigned to $MPIINCLUDE
                      if test -z "$MPIINCLUDE"; then
                         casc_cppflags="$casc_cppflags $casc_arg"
-                        casc_include_dir=`echo "$casc_arg" | sed 's/-I//g'` 
+                        casc_include_dir=`echo "$casc_arg" | sed 's/-I//g'`
 
                         SAVE_CPPFLAGS="$CPPFLAGS"
                         CPPFLAGS="$casc_cppflags"
@@ -5050,7 +2598,7 @@ EOF
                   ;;
                   esac
 
-                  dnl * Upcoming test needs $LIBS to contain the flags 
+                  dnl * Upcoming test needs $LIBS to contain the flags
                   dnl * we've found
                   LIBS_SAVE=$LIBS
                   LIBS="$MPIINCLUDE $casc_mpflags $casc_mplibdirs $casc_mplibs"
@@ -5099,10 +2647,10 @@ dnl ])dnl
             MPIFLAGS="$MPIFLAGS $casc_mpflags"
 
             dnl * IBM MPI uses /usr/lpp/ppe.poe/libc.a instead of /lib/libc.a
-            dnl * so we need to make sure that -L/lib is not part of the 
+            dnl * so we need to make sure that -L/lib is not part of the
             dnl * linking line when we use IBM MPI.  This only appears in
             dnl * configure when CASC_FIND_MPI is called first.
-	    dnl            ifdef([AC_PROVIDE_CASC_FIND_F77LIBS], 
+	    dnl            ifdef([AC_PROVIDE_CASC_FIND_F77LIBS],
             dnl               if test -n "`echo $F77LIBFLAGS | grep '\-L/lib '`"; then
             dnl                  if test -n "`echo $F77LIBFLAGS | grep xlf`"; then
             dnl                     F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/lib //g'`
@@ -5162,11 +2710,11 @@ dnl ])dnl
 
 dnl ********************************************************************
 dnl * CASC_FIND_MPI_ALPHA is a special case of CASC_FIND_MPI for the
-dnl * compass cluster.  The original CASC_FIND_MPI looks for existence 
-dnl * of mpCC and mpiCC.  If the former is found it uses native (proprietary) 
-dnl * mpi and if the latter is found, it uses mpich.  The DECs are a 
+dnl * compass cluster.  The original CASC_FIND_MPI looks for existence
+dnl * of mpCC and mpiCC.  If the former is found it uses native (proprietary)
+dnl * mpi and if the latter is found, it uses mpich.  The DECs are a
 dnl * special case because mpCC does not exist and mpiCC does, but we want
-dnl * to use the native version by default.  Therefore, the original macro 
+dnl * to use the native version by default.  Therefore, the original macro
 dnl * did not work for this case so I added this one to deal with it.
 dnl * AMW 9/00
 dnl ********************************************************************
@@ -5198,7 +2746,7 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
       MPIFLAGS=$casc_cv_mpi_flags
       AC_MSG_RESULT("\(cached\) $MPIFLAGS")
    else
-   
+
 
       dnl * Set up user options.  If user uses any of the fist three options,
       dnl * then automatic tests are not run.
@@ -5210,8 +2758,8 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
                   done; casc_user_chose_mpi=yes)
 
       AC_ARG_WITH(mpi-libs,
-[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names 
-                          needed for MPI, e.g. \"nsl socket mpi\"],  
+[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names
+                          needed for MPI, e.g. \"nsl socket mpi\"],
                   for mpi_lib in $withval; do
                      MPILIBS="$MPILIBS -l$mpi_lib"
                   done; casc_user_chose_mpi=yes)
@@ -5226,7 +2774,7 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
                      MPILIBDIRS="-L$mpi_lib_dir $MPILIBDIRS"
                   done; casc_user_chose_mpi=yes)
 
-      dnl * --with-mpi-flags only adds to automatic selections, 
+      dnl * --with-mpi-flags only adds to automatic selections,
       dnl * does not override
 
       AC_ARG_WITH(mpi-flags,
@@ -5236,10 +2784,10 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
 
 
       if test "$casc_user_chose_mpi" = "no"; then
- 
+
          dnl * Set defaults for Compass cluster here.  This is the point where
-         dnl * we call CASC_SET_MPI in CASC_FIND_MPI macro. 
- 
+         dnl * we call CASC_SET_MPI in CASC_FIND_MPI macro.
+
          casc_mpi_include_dir=
          casc_mpi_lib_dirs=
          casc_mpi_libs="mpi rt rpc gs pthread"
@@ -5334,6 +2882,703 @@ fi
 
 ])dnl End definition of CASC_SUPPORT_SILO
 
+dnl Define a macro for supporting VALGRIND
+
+AC_DEFUN([CASC_SUPPORT_VALGRIND],[
+
+# Begin CASC_SUPPORT_VALGRIND
+# Defines valgrind_EXE
+AC_ARG_WITH(valgrind,
+[ --with-valgrind[=PATH]  Use VALGRIND and optionally specify where VALGRIND is installed.],
+, with_valgrind=no)
+
+case "$with_valgrind" in
+  no)
+    AC_MSG_NOTICE([configuring without VALGRIND support])
+    : Do nothing
+  ;;
+  yes)
+    # VALGRIND install path was not specified.
+    # Look in a couple of standard locations to probe if 
+    # VALGRIND header files are there.
+    AC_MSG_CHECKING([for VALGRIND installation])
+    for dir in /usr /usr/local; do
+      if test -f ${dir}/bin/valgrind; then
+        valgrind_PREFIX=${dir}
+        break
+      fi
+    done
+    AC_MSG_RESULT([$valgrind_PREFIX])
+  ;;
+  *)
+    # VALGRIND install path was specified.
+    AC_MSG_CHECKING([for VALGRIND installation])
+    valgrind_PREFIX=$with_valgrind
+    ;;
+esac
+
+if test "${valgrind_PREFIX+set}" = set 
+then
+   valgrind_EXE="${valgrind_PREFIX}/bin/valgrind"
+   if test -f ${valgrind_PREFIX}/bin/valgrind; then
+      AC_MSG_RESULT([$valgrind_PREFIX])
+   else
+      AC_MSG_RESULT([$valgrind_PREFIX])
+      AC_MSG_ERROR([VALGRIND not found in $with_valgrind])
+   fi
+fi
+
+# END CASC_SUPPORT_VALGRIND
+
+])dnl End definition of CASC_SUPPORT_VALGRIND
+
+dnl Define macros for supporting XLC 
+
+AC_DEFUN([CASC_CXX_STD_FILL_N_RETURNS_VOID],[
+
+# Begin CASC_CXX_STD_FILL_N_RETURNS_VOID
+# Defines CASC_STD_FILL_N_RETURNS_VOID
+
+# Check if std::fill_n returns a void, older XLC compilers do this.
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(whether std:fill_n returns void)
+   AC_LANG_PUSH(C++)
+   CASC_PUSH_COMPILER_STATE
+   AC_COMPILE_IFELSE([
+
+      #include <vector>
+
+      template void std::fill_n<unsigned int*, int, int>(unsigned int*, int, int const&);      
+
+      ], 
+      casc_std_fill_n_returns_void=yes,
+      casc_std_fill_n_returns_void=no)
+   CASC_POP_COMPILER_STATE
+   AC_LANG_POP
+   AC_MSG_RESULT($casc_std_fill_n_returns_void)
+
+   if test "$casc_std_fill_n_returns_void" = yes; then
+      AC_DEFINE([CASC_STD_FILL_N_RETURNS_VOID], 1, [Define if std::fill_n returns void])
+   fi
+
+
+# END CASC_CXX_STD_FILL_N_RETURNS_VOID
+
+])dnl End definition of CASC_CXX_STD_FILL_N_RETURNS_VOID
+
+
+
+
+
+
+# ===========================================================================
+#
+# SYNOPSIS
+#
+#   CHECK_SZLIB()
+#
+# DESCRIPTION
+#
+#   This macro searches for an installed szlib library. If nothing was
+#   specified when calling configure, it searches first in /usr/local and
+#   then in /usr. If the --with-szlib=DIR is specified, it will try to find
+#   it in DIR/include/szlib.h and DIR/lib/libsz.a. If --without-szlib is
+#   specified, the library is not searched at all.
+#
+#   If either the header file (szlib.h) or the library (libsz) is not found,
+#   the configuration exits on error, asking for a valid szlib installation
+#   directory or --without-szlib.
+#
+#   The macro defines the symbol HAVE_LIBSZ if the library is found. You
+#   should use autoheader to include a definition for this symbol in a
+#   config.h file. Sample usage in a C/C++ source is as follows:
+#
+#     #ifdef HAVE_LIBSZ
+#     #include <szlib.h>
+#     #endif /* HAVE_LIBSZ */
+#
+
+AC_DEFUN([CHECK_SZLIB],
+#
+# DEFINES :
+#	        szlib_PREFIX
+#		szlib_INCLUDES
+#		szlib_LIBS
+#
+[AC_MSG_CHECKING(if szlib is wanted)
+AC_ARG_WITH(szlib,
+[  --with-szlib=DIR root directory path of szlib installation [DIR defaults to
+                    /usr/local or /usr if not found in /usr/local]
+  --without-szlib to disable szlib usage completely [the default]],
+[if test "$withval" != no ; then
+  AC_MSG_RESULT(yes)
+  if test "$withval" == yes ;
+  then
+     SZLIB_HOME=/usr/local
+  else
+     SZLIB_HOME="$withval"
+  fi
+  if test ! -d "$SZLIB_HOME"
+  then
+    AC_MSG_WARN([Sorry, $SZLIB_HOME does not exist, checking usual places])
+    SZLIB_HOME=/usr/local
+    if test ! -f "${SZLIB_HOME}/include/szlib.h"
+    then
+       SZLIB_HOME=/usr
+    fi
+  fi
+else
+  AC_MSG_RESULT(no)
+fi])
+
+#
+# Locate szlib, if wanted
+#
+if test -n "${SZLIB_HOME}"
+then
+        SZLIB_OLD_LDFLAGS=$LDFLAGS
+        SZLIB_OLD_CPPFLAGS=$LDFLAGS
+        LDFLAGS="$LDFLAGS -L${SZLIB_HOME}/lib"
+        CPPFLAGS="$CPPFLAGS -I${SZLIB_HOME}/include"
+        AC_LANG_SAVE
+        AC_LANG_C
+        AC_CHECK_LIB(z, inflateEnd, [szlib_cv_libsz=yes], [szlib_cv_libsz=no])
+        AC_CHECK_HEADER(szlib.h, [szlib_cv_szlib_h=yes], [szlib_cv_szlib_h=no])
+        AC_LANG_RESTORE
+        if test "$szlib_cv_libsz" = "yes" -a "$szlib_cv_szlib_h" = "yes"
+        then
+	        szlib_PREFIX="${SZLIB_HOME}"
+		szlib_INCLUDES="-I${SZLIB_HOME}/include"
+		szlib_LIBS="-L${SZLIB_HOME}/lib -lsz"
+                #
+                # If both library and header were found, use them
+                #
+                AC_CHECK_LIB(z, inflateEnd)
+                AC_MSG_CHECKING(szlib in ${SZLIB_HOME})
+                AC_MSG_RESULT(ok)
+        else
+                #
+                # If either header or library was not found, revert and bomb
+                #
+                AC_MSG_CHECKING(szlib in ${SZLIB_HOME})
+                LDFLAGS="$SZLIB_OLD_LDFLAGS"
+                CPPFLAGS="$SZLIB_OLD_CPPFLAGS"
+                AC_MSG_RESULT(failed)
+                AC_MSG_ERROR(either specify a valid szlib installation with --with-szlib=DIR or disable szlib usage with --without-szlib)
+        fi
+fi
+
+])
+
+# ===========================================================================
+#           http://www.nongnu.org/autoconf-archive/check_zlib.html
+# ===========================================================================
+#
+# SYNOPSIS
+#
+#   CHECK_ZLIB()
+#
+# DESCRIPTION
+#
+#   This macro searches for an installed zlib library. If nothing was
+#   specified when calling configure, it searches first in /usr/local and
+#   then in /usr. If the --with-zlib=DIR is specified, it will try to find
+#   it in DIR/include/zlib.h and DIR/lib/libz.a. If --without-zlib is
+#   specified, the library is not searched at all.
+#
+#   If either the header file (zlib.h) or the library (libz) is not found,
+#   the configuration exits on error, asking for a valid zlib installation
+#   directory or --without-zlib.
+#
+#   The macro defines the symbol HAVE_LIBZ if the library is found. You
+#   should use autoheader to include a definition for this symbol in a
+#   config.h file. Sample usage in a C/C++ source is as follows:
+#
+#     #ifdef HAVE_LIBZ
+#     #include <zlib.h>
+#     #endif /* HAVE_LIBZ */
+#
+# LICENSE
+#
+#   Copyright (c) 2008 Loic Dachary <loic@senga.org>
+#
+#   This program is free software; you can redistribute it and/or modify it
+#   under the terms of the GNU General Public License as published by the
+#   Free Software Foundation; either version 2 of the License, or (at your
+#   option) any later version.
+#
+#   This program is distributed in the hope that it will be useful, but
+#   WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#   Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License along
+#   with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+#   As a special exception, the respective Autoconf Macro's copyright owner
+#   gives unlimited permission to copy, distribute and modify the configure
+#   scripts that are the output of Autoconf when processing the Macro. You
+#   need not follow the terms of the GNU General Public License when using
+#   or distributing such scripts, even though portions of the text of the
+#   Macro appear in them. The GNU General Public License (GPL) does govern
+#   all other use of the material that constitutes the Autoconf Macro.
+#
+#   This special exception to the GPL applies to versions of the Autoconf
+#   Macro released by the Autoconf Archive. When you make and distribute a
+#   modified version of the Autoconf Macro, you may extend this special
+#   exception to the GPL to apply to your modified version as well.
+
+AC_DEFUN([CHECK_ZLIB],
+#
+# DEFINES :
+#	        zlib_PREFIX
+#		zlib_INCLUDES
+#		zlib_LIBS
+#
+[AC_MSG_CHECKING(if zlib is wanted)
+AC_ARG_WITH(zlib,
+[  --with-zlib=DIR root directory path of zlib installation [DIR defaults to
+                    /usr/local or /usr if not found in /usr/local]
+  --without-zlib to disable zlib usage completely [the default]],
+[if test "$withval" != no ; then
+  AC_MSG_RESULT(yes)
+  if test "$withval" == yes ;
+  then
+     ZLIB_HOME=/usr/local
+  else
+     ZLIB_HOME="$withval"
+  fi
+  if test ! -d "$ZLIB_HOME"
+  then
+    AC_MSG_WARN([Sorry, $ZLIB_HOME does not exist, checking usual places])
+    ZLIB_HOME=/usr/local
+    if test ! -f "${ZLIB_HOME}/include/zlib.h"
+    then
+       ZLIB_HOME=/usr
+    fi
+  fi
+else
+  AC_MSG_RESULT(no)
+fi],
+  [AC_MSG_RESULT(no)]
+)
+
+
+#
+# Locate zlib, if wanted
+#
+if test -n "${ZLIB_HOME}"
+then
+        ZLIB_OLD_LDFLAGS=$LDFLAGS
+        ZLIB_OLD_CPPFLAGS=$LDFLAGS
+        LDFLAGS="$LDFLAGS -L${ZLIB_HOME}/lib"
+        CPPFLAGS="$CPPFLAGS -I${ZLIB_HOME}/include"
+        AC_LANG_SAVE
+        AC_LANG_C
+        AC_CHECK_LIB(z, inflateEnd, [zlib_cv_libz=yes], [zlib_cv_libz=no])
+        AC_CHECK_HEADER(zlib.h, [zlib_cv_zlib_h=yes], [zlib_cv_zlib_h=no])
+        AC_LANG_RESTORE
+        if test "$zlib_cv_libz" = "yes" -a "$zlib_cv_zlib_h" = "yes"
+        then
+	        zlib_PREFIX="${ZLIB_HOME}"
+		zlib_INCLUDES="-I${ZLIB_HOME}/include"
+		zlib_LIBS="-L${ZLIB_HOME}/lib -lz"
+                #
+                # If both library and header were found, use them
+                #
+                AC_CHECK_LIB(z, inflateEnd)
+                AC_MSG_CHECKING(zlib in ${ZLIB_HOME})
+                AC_MSG_RESULT(ok)
+        else
+                #
+                # If either header or library was not found, revert and bomb
+                #
+                AC_MSG_CHECKING(zlib in ${ZLIB_HOME})
+                LDFLAGS="$ZLIB_OLD_LDFLAGS"
+                CPPFLAGS="$ZLIB_OLD_CPPFLAGS"
+                AC_MSG_RESULT(failed)
+                AC_MSG_ERROR(either specify a valid zlib installation with --with-zlib=DIR or disable zlib usage with --without-zlib)
+        fi
+fi
+
+])
+
+dnl $Id$
+
+dnl Determines which compiler is being used.
+dnl This check uses the compiler behavior when possible.
+dnl For some compiler, we resort to a best guess,
+dnl because we do not know a foolproof way to get the info.
+
+dnl Much of the information used here came from the very
+dnl helpful predef project (http://predef.sourceforge.net/).
+
+
+
+
+dnl Simple wrappers to allow using CASC_INFO_CXX_ID_NAMES and
+dnl CASC_INFO_CC_ID_NAMES without arguments.
+dnl The names CC_ID and CC_VERSION are used for the C compiler id and version.
+dnl The names CXX_ID and CXX_VERSION are used for the C++ compiler id and version.
+AC_DEFUN([CASC_INFO_CXX_ID],[
+  CASC_INFO_CXX_ID_NAMES(CXX_ID,CXX_VERSION)
+])
+AC_DEFUN([CASC_INFO_CC_ID],[
+  CASC_INFO_CC_ID_NAMES(CC_ID,CC_VERSION)
+])
+AC_DEFUN([CASC_INFO_CC_CXX_ID],[
+  AC_REQUIRE([CASC_INFO_CC_ID])
+  AC_REQUIRE([CASC_INFO_CXX_ID])
+])
+
+
+dnl CASC_INFO_CXX_ID and CASC_INFO_C_ID determine which C or C++ compiler
+dnl is being used.
+# Set the variables CXX_ID or C_ID as follows:
+# Gnu		-> gnu
+# SUNWspro	-> sunpro
+# Dec		-> dec
+# KCC		-> kai
+# Intel		-> intel
+# SGI		-> sgi
+# IBM xlc	-> xlc
+
+
+AC_DEFUN([CASC_INFO_CXX_ID_NAMES],
+dnl Arguments are:
+dnl 1. Name of variable to set to the ID string.
+dnl 2. Name of variable to set to the version number.
+[
+# Start macro CASC_INFO_CXX_ID_NAMES
+  AC_REQUIRE([AC_PROG_CXXCPP])
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  CASC_AC_LOG(CXXP is $CXX)
+  CASC_AC_LOG(CXXCPP is $CXXCPP)
+
+  $1=unknown
+  $2=unknown
+
+dnl Do not change the following chain of if blocks into a case statement.
+dnl We may eventually have a compiler that must be tested in a different
+dnl method
+
+
+  # Check if it is a Sun compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is sunpro)
+    AC_EGREP_CPP([^0x[0-9]+],__SUNPRO_CC,
+      $1=sunpro
+      # SUN compiler defines __SUNPRO_CC to the version number.
+      echo __SUNPRO_CC > conftest.C
+      $2=`${CXXCPP} conftest.C | sed -n 2p`
+      rm -f conftest.C
+    )
+  fi
+
+
+  # Check if it is a Intel compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is intel)
+    AC_EGREP_CPP(^yes,
+#ifdef __INTEL_COMPILER
+yes;
+#endif
+,
+      $1=intel
+      # Intel compiler defines __INTEL_COMPILER to the version number.
+      echo __INTEL_COMPILER > conftest.C
+      $2=`${CXXCPP} conftest.C | sed -n 2p`
+      rm -f conftest.C
+    )
+  fi
+
+
+  # Check if it is a GNU compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is gnu)
+    AC_EGREP_CPP(^yes,
+#ifdef __GNUC__
+yes;
+#endif
+,
+    $1=gnu
+    # GNU compilers output version number with option --version.
+    # Alternatively, it also defines the macros __GNUC__,
+    # GNUC_MINOR__ and __GNUC_PATCHLEVEL__
+    [[$2=`$CXX --version | sed -e 's/[^0-9]\{0,\}\([^ ]\{1,\}\).\{0,\}/\1/' -e 1q`]]
+    )
+  fi
+
+
+  # Check if it is a DEC compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is dec)
+    AC_EGREP_CPP(^1,__DECCXX,
+      $1=dec
+      # DEC compiler defines __DECCXX_VER to the version number.
+      echo __DECCXX_VER > conftest.C
+      $2=`${CXXCPP} conftest.C | sed -n 2p`
+      rm -f conftest.C
+    )
+  fi
+
+
+  # Check if it is a KAI compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is kai)
+    AC_EGREP_CPP(^1,__KCC,
+      $1=kai
+      # KCC compiler defines __KCC_VERSION to the version number.
+      echo __KCC_VERSION > conftest.C
+      $2=`${CXXCPP} conftest.C | sed -n 2p`
+      rm -f conftest.C
+    )
+  fi
+
+
+  # Check if it is a SGI compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is sgi)
+    AC_EGREP_CPP(^1,__sgi,
+      $1=sgi
+      # SGI compiler defines _COMPILER_VERSION to the version number.
+      echo _COMPILER_VERSION > conftest.C
+      $2=`${CXXCPP} conftest.C | sed /^\\#/d`
+      rm -f conftest.C
+    )
+  fi
+
+
+  # Check if it is a IBM compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CXX is xlc)
+    AC_EGREP_CPP(^yes,
+#ifdef __xlC__
+yes;
+#endif
+,
+    $1=xlc
+    # IBM compiler defines __xlC__ to the version number.
+    echo __xlC__ > conftest.C
+    $2=`${CXXCPP} conftest.C | sed /^\\#/d`
+    rm -f conftest.C
+    )
+  fi
+
+
+  AC_LANG_RESTORE
+  CASC_AC_LOG_VAR(CXX_ID CXX_VERSION)
+# End macro CASC_INFO_CXX_ID_NAMES
+])
+
+
+
+
+
+AC_DEFUN([CASC_INFO_CC_ID_NAMES],
+dnl Arguments are:
+dnl 1. Name of variable to set to the ID string.
+dnl 2. Name of variable to set to the version number.
+[
+# Start macro CASC_INFO_CC_ID_NAMES
+  AC_REQUIRE([AC_PROG_CPP])
+  AC_LANG_SAVE
+  AC_LANG_C
+  CASC_AC_LOG(CC is $CC)
+  CASC_AC_LOG(CPP is $CPP)
+
+  $1=unknown
+  $2=unknown
+
+dnl Do not change the following chain of if blocks into a case statement.
+dnl We may eventually have a compiler that must be tested in a different
+dnl method
+
+
+  # Check if it is a Sun compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is sunpro)
+    AC_EGREP_CPP([^ 0x[0-9]+],__SUNPRO_C,
+      $1=sunpro
+      # SUN compiler defines __SUNPRO_C to the version number.
+      echo __SUNPRO_C > conftest.c
+      $2=`${CPP} ${CPPFLAGS} conftest.c | sed -n -e 's/^ //' -e 2p`
+      rm -f conftest.c
+    )
+  fi
+
+
+  # Check if it is a Intel compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is intel)
+    AC_EGREP_CPP(^yes,
+#ifdef __INTEL_COMPILER
+yes;
+#endif
+,
+      $1=intel
+      # Intel compiler defines __INTEL_COMPILER to the version number.
+      echo __INTEL_COMPILER > conftest.C
+      $2=`${CPP} conftest.C | sed -n 2p`
+      rm -f conftest.C
+    )
+  fi
+
+
+  # Check if it is a GNU compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is gnu)
+    AC_EGREP_CPP(^yes,
+#ifdef __GNUC__
+yes;
+#endif
+,
+    $1=gnu
+    [[$2=`$CC --version | sed -e 's/[^0-9]\{0,\}\([^ ]\{1,\}\).\{0,\}/\1/' -e 1q`]]
+    )
+  fi
+
+
+  # Check if it is a DEC compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is dec)
+    AC_EGREP_CPP(^ 1,__DECC,
+      $1=dec
+      # DEC compiler defines __DECC_VER to the version number.
+      echo __DECC_VER > conftest.c
+      $2=`${CPP} ${CPPFLAGS} conftest.c | sed -n -e 's/^ //' -e 2p`
+      rm -f conftest.c
+    )
+  fi
+
+
+  # Check if it is a KAI compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is kai)
+    AC_EGREP_CPP(^1,__KCC,
+      $1=kai
+      # KCC compiler defines __KCC_VERSION to the version number.
+      echo __KCC_VERSION > conftest.c
+      $2=`${CPP} ${CPPFLAGS} conftest.c | sed -n 2p`
+      rm -f conftest.c
+    )
+  fi
+
+
+  # Check if it is a SGI compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is sgi)
+    AC_EGREP_CPP(^1,__sgi,
+      $1=sgi
+      # SGI compiler defines _COMPILER_VERSION to the version number.
+      echo _COMPILER_VERSION > conftest.c
+      $2=`${CPP} ${CPPFLAGS} conftest.c | sed /^\\#/d`
+      rm -f conftest.c
+    )
+  fi
+
+
+  # Check if it is a IBM compiler.
+  if test $$1 = unknown; then
+    CASC_AC_LOG(checking if $CC is xlc)
+    if echo "$host_os" | grep "aix" >/dev/null ; then
+      # The wretched IBM shell does not eval correctly,
+      # so we have to help it with a pre-eval eval statement.
+      ac_cpp=`eval "echo $ac_cpp"`
+      save_ac_cpp=$ac_cpp
+      CASC_AC_LOG(ac_cpp is temporarily set to $ac_cpp)
+    else
+      save_ac_cpp=
+    fi
+    CASC_AC_LOG(ac_cpp is $ac_cpp)
+    AC_EGREP_CPP(^yes,
+#ifdef __xlC__
+yes;
+#endif
+,
+    $1=xlc
+    # IBM compiler defines __xlC__ to the version number.
+    echo __xlC__ > conftest.C
+    $2=`${CPP} conftest.C | sed /^\\#/d`
+    rm -f conftest.C
+    )
+    test "$save_ac_cpp" && ac_cpp=$save_ac_cpp
+    CASC_AC_LOG(ac_cpp is restored to $ac_cpp)
+  fi
+
+
+  AC_LANG_RESTORE
+  CASC_AC_LOG_VAR(CC_ID CC_VERSION)
+# End macro CASC_INFO_CC_ID_NAMES
+])
+
+dnl $Id$
+
+
+AC_DEFUN([CASC_TYPE_BOOL],[
+
+# Start macro CASC_TYPE_BOOL
+
+AC_MSG_CHECKING(checking whether bool type is broken)
+
+AC_CACHE_VAL(btng_cv_type_bool_broken, [
+
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+
+  AC_TRY_COMPILE(, bool b = true; ,
+    # bool is not broken.
+    btng_cv_type_bool_broken=no
+    ,
+    # bool is broken.
+    btng_cv_type_bool_broken=yes
+  )	dnl End AC_TRY_COMPILE call
+
+  AC_LANG_RESTORE
+
+])	dnl End AC_CACHE_VAL call
+
+AC_MSG_RESULT($btng_cv_type_bool_broken)
+
+if test "$btng_cv_type_bool_broken" = yes; then
+  AC_DEFINE([BOOL_IS_BROKEN],1,Define if bool type is not properly supported)
+fi
+
+
+# End macro CASC_TYPE_BOOL
+
+])	dnl End of COMPILE_BOOLEAN_MACRO definition.
+
+AC_DEFUN([CASC_AC_LOG],[echo "configure:__oline__:" $1 >&AC_FD_CC])
+
+AC_DEFUN([CASC_AC_LOG_VAR],[
+dnl arg1 is list of variables to log.
+dnl arg2 (optional) is a label.
+dnl
+dnl This macro makes code that write out at configure time
+dnl label: x is '...'
+dnl if x is set and
+dnl label: x is unset
+dnl otherwise.
+define([btng_log_label],ifelse($2,,,[$2: ]))
+btng_log_vars="$1"
+for btng_log_vars_index in $btng_log_vars ; do
+  eval "test \"\${${btng_log_vars_index}+set}\" = set"
+  if test $? = 0; then
+    btng_log_vars_value="'`eval echo \\${$btng_log_vars_index}`'";
+  else
+    btng_log_vars_value="unset";
+  fi
+  CASC_AC_LOG("btng_log_label$btng_log_vars_index is $btng_log_vars_value");
+dnl
+dnl This is a shorter version, but it does not work for some Bourne shells
+dnl due to misinterpretation of the multiple backslashes
+dnl CASC_AC_LOG("btng_log_label$btng_log_vars_index is `eval if test \\\"\$\{$btng_log_vars_index+set\}\\\"\; then echo \\\""'"\$\{$btng_log_vars_index\}"'"\\\"\; else echo 'unset'\; fi`")
+done
+undefine([btng_log_label])
+])
+
 dnl Define a macro for supporting generalized serial-parallel run.
 
 
@@ -5377,11 +3622,11 @@ case "$with_parallel_run_bin" in
     PARALLEL_RUN_BIN="$with_parallel_run_bin"
     ;;
 esac
-BTNG_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin given)
+CASC_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin given)
 
 ],[
 unset PARALLEL_RUN_BIN;
-BTNG_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin NOT given)
+CASC_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin NOT given)
 ])
 # If PARALLEL_RUN_BIN is unset, guess it.
 if test ! "${PARALLEL_RUN_BIN+set}" = set; then
@@ -5391,7 +3636,7 @@ if test ! "${PARALLEL_RUN_BIN+set}" = set; then
     *) PARALLEL_RUN_BIN=mpirun
     ;;
   esac
-  BTNG_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, after setting PARALLEL_RUN_BIN)
+  CASC_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, after setting PARALLEL_RUN_BIN)
 fi
 AC_SUBST(PARALLEL_RUN_BIN)
 
@@ -5796,14 +4041,317 @@ dnl Settings to make before running the above.
 btng_serpa_dir_name=`echo ']btng_serpa_run_fn[' | sed -e ['s:^\([^/]*\)$:./\1:'] -e ['s:/[^/]*$::']`;
 btng_serpa_machine_file="${btng_serpa_dir_name}/serpa.machines"
 DISTCLEANFILES="$DISTCLEANFILES ${btng_serpa_machine_file}"
-BTNG_AC_LOG_VAR(btng_serpa_machine_file DISTCLEANFILES, in support-serpa-run)
+CASC_AC_LOG_VAR(btng_serpa_machine_file DISTCLEANFILES, in support-serpa-run)
 
 
 undefine([btng_serpa_run_fn])
 
 
 # End macro $0
-])dnl End BTNG_SUPPORT_SERPA macro.
+])dnl End CASC_SUPPORT_SERPA macro.
+
+dnl Define a macro for supporting BOOST
+
+AC_DEFUN([CASC_SUPPORT_BOOST],[
+
+# Begin CASC_SUPPORT_BOOST
+# Defines boost_PREFIX boost_INCLUDES and boost_LIBS.
+AC_ARG_WITH(boost,
+[ --with-boost[=PATH]  Use BOOST and specify where BOOST is installed.],
+, with_boost=no)
+
+case "$with_boost" in
+  no)
+    AC_MSG_NOTICE([configuring without BOOST support])
+    : Do nothing
+  ;;
+  yes)
+    # BOOST install path was not specified.
+    # Look in a couple of standard locations to probe if 
+    # BOOST header files are there.
+    AC_MSG_CHECKING([for BOOST installation])
+    for dir in /usr /usr/local; do
+      if test -f ${dir}/include/boost/tr1/unordered_map.hpp; then
+        boost_PREFIX=${dir}
+        break
+      fi
+    done
+    AC_MSG_RESULT([$boost_PREFIX])
+  ;;
+  *)
+    # BOOST install path was specified.
+    AC_MSG_CHECKING([for BOOST installation])
+
+    if test -f ${with_boost}/include/boost/tr1/unordered_map.hpp; then
+        boost_PREFIX=$with_boost
+        boost_INCLUDES="-I${boost_PREFIX}/include"
+        dnl Do not have to set boost_LIBS because SAMRAI does not need it (yet).
+        dnl boost_LIBS="-L${boost_PREFIX}/lib -lboost_regex"
+        AC_MSG_RESULT([$boost_PREFIX])
+    else
+        AC_MSG_RESULT([$boost_PREFIX])
+        AC_MSG_ERROR([BOOST not found in $with_boost])
+    fi
+  ;;
+esac
+
+
+# END CASC_SUPPORT_BOOST
+
+])dnl End definition of CASC_SUPPORT_BOOST
+
+
+dnl
+dnl  File:           $HeadURL$
+dnl  Package:        SAMRAI
+dnl  Copyright:      (c) 1997-2010 Lawrence Livermore National Security, LLC
+dnl  Date:           $Date$
+dnl  Revision:       $LastChangedRevision$
+dnl  Modified:       $LastChangedDate$ 
+dnl  Description:    Misc SAMRAI macros
+dnl
+
+AC_DEFUN_ONCE([SAMRAI_MISC],[
+
+AC_ARG_ENABLE([box_counting],
+[AS_HELP_STRING([--enable-box_counting],
+   [Turns on Box and MappedBox telemetry.])],
+   [
+      if test "x$enableval" = "xyes"; then
+         CPPFLAGS_EXTRA="-DBOX_TELEMETRY $CPPFLAGS_EXTRA"
+      elif test "x$enableval" = "x"; then
+         CPPFLAGS_EXTRA="-DBOX_TELEMETRY $CPPFLAGS_EXTRA"
+      fi
+   ],)
+]
+)
+
+dnl Define a macro for supporting Thread Building Blocks
+
+AC_DEFUN([SAMRAI_SUPPORT_TBB],[
+
+# Begin SAMRAI_SUPPORT_TBB
+# Defines tbb_PREFIX tbb_INCLUDES and tbb_LIBS.
+AC_ARG_WITH([tbb], 
+   [AS_HELP_STRING([--with-tbb], 
+      [Use Thread Building Blocks])],
+   [],
+   [with_tbb=no])
+
+AC_ARG_WITH([tbb-include],
+   AS_HELP_STRING([--with-tbb-include=DIR], [tbb.h is in DIR]), 
+
+      for tbb_dir in $withval; do
+         TBBINCLUDE="$TBBINCLUDE -I$withval"
+      done;
+      have_tbb=yes
+)
+   
+AC_ARG_WITH( [tbb-lib-dirs],
+   AS_HELP_STRING([--with-tbb-lib-dirs=DIRS],
+                  [DIRS is a space-separated list of directories containing the libraries specified by \'--with-tbb-libs\']),
+
+      for tbb_lib_dir in $withval; do
+         TBBLIBDIRS="-L$tbb_lib_dir $TBBLIBDIRS"
+      done; 
+      have_tbb=yes
+)
+
+AC_ARG_WITH([tbb-libs],
+   AS_HELP_STRING([--with-tbb-libs=LIBS], 
+                  [LIBS is a space-separated list of library names needed for Thread Building Blocks, e.g., \"tbb tbbmalloc\"]),
+
+      for tbb_lib in $withval; do
+         TBBLIBS="$TBBLIBS -l$tbb_lib"
+      done; 
+      have_tbb=yes
+)
+
+dnl
+dnl check if we're disabling tbb support
+dnl
+if test "$with_tbb" = "no" ; then
+    AC_MSG_NOTICE([configuring without Thread Building Blocks support])
+else
+    AC_MSG_CHECKING([for Thread Building Blocks installation])
+
+    if test -f ${with_tbb_include}/tbb.h; then
+        AC_MSG_RESULT([$TBBINCLUDE])
+    else
+        AC_MSG_RESULT([$TBBINCLUDE])
+        AC_MSG_ERROR([TBB not found in $with_tbb_include])
+    fi
+
+    if test -f ${with_tbb_lib_dirs}/libtbb.so; then
+        AC_MSG_RESULT([$TBBLIBDIRS])
+    else
+        AC_MSG_RESULT([$TBBLIBDIRS])
+        AC_MSG_ERROR([TBB libs not found in $with_tbb_lib_dirs])
+    fi
+fi
+
+dnl Test compiling an TBB application
+dnl
+dnl NOTE that AC_SEARCH_LIBS didn't work completely so
+dnl use a more complicated example program to see
+dnl if that will catch when TBB is not working.  Using one of the TBB
+dnl short tests for this.
+
+if test "${TBBINCLUDE+set}" = set; then
+
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(whether Thread Building Blocks link works)
+   AC_LANG_PUSH(C++)
+   CASC_PUSH_COMPILER_STATE
+   LIBS="${LIBS} ${TBBLIBDIRS} ${TBBLIBS}"
+   CXXFLAGS="${CXXFLAGS} ${TBBINCLUDE}"
+   AC_LINK_IFELSE([
+/*
+    Copyright 2005-2011 Intel Corporation.  All Rights Reserved.
+
+    This file is part of Threading Building Blocks.
+
+    Threading Building Blocks is free software; you can redistribute it
+    and/or modify it under the terms of the GNU General Public License
+    version 2 as published by the Free Software Foundation.
+
+    Threading Building Blocks is distributed in the hope that it will be
+    useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Threading Building Blocks; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    As a special exception, you may use this file as part of a free software
+    library without restriction.  Specifically, if other files instantiate
+    templates or use macros or inline functions from this file, or you compile
+    this file and link it with other files to produce an executable, this
+    file does not by itself cause the resulting executable to be covered by
+    the GNU General Public License.  This exception does not however
+    invalidate any other reasons why the executable file might be covered by
+    the GNU General Public License.
+*/
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include "tbb/parallel_for.h"
+#include "tbb/blocked_range.h"
+
+using namespace tbb;
+using namespace std;
+static const size_t N = 23;
+
+class SubStringFinder {
+  const string str;
+  size_t *max_array;
+  size_t *pos_array;
+public: 
+  void operator() ( const blocked_range<size_t>& r ) const { 
+    for ( size_t i = r.begin(); i != r.end(); ++i ) {
+      size_t max_size = 0, max_pos = 0;
+      for (size_t j = 0; j < str.size(); ++j)
+      if (j != i) {
+        size_t limit = str.size()-max(i,j);
+        for (size_t k = 0; k < limit; ++k) {
+          if (str[[i + k]] != str[[j + k]]) break;
+          if (k > max_size) {
+            max_size = k;
+            max_pos = j;
+          }
+        }
+      }
+      max_array[[i]] = max_size;
+      pos_array[[i]] = max_pos;
+    }
+  }
+  SubStringFinder(string &s, size_t *m, size_t *p) :
+    str(s), max_array(m), pos_array(p) { }
+};
+
+int main() {
+
+  string str[[N]] = { string("a"), string("b") };
+  for (size_t i = 2; i < N; ++i) str[[i]] = str[[i-1]]+str[[i-2]];
+  string &to_scan = str[[N-1]]; 
+  size_t num_elem = to_scan.size();
+
+  size_t *max = new size_t[[num_elem]];
+  size_t *pos = new size_t[[num_elem]];
+
+  parallel_for(blocked_range<size_t>(0, num_elem ),
+               SubStringFinder( to_scan, max, pos ) );
+
+  for (size_t i = 0; i < num_elem; ++i)
+    cout << " " << max[[i]] << "(" << pos[[i]] << ")" << endl;
+  delete[[]] pos;
+  delete[[]] max;
+  return 0;
+}
+      ], 
+      samrai_tbb_compile=yes,
+      samrai_tbb_compile=no)
+   CASC_POP_COMPILER_STATE
+   AC_LANG_POP
+   AC_MSG_RESULT($samrai_tbb_compile)
+
+   if test "$samrai_tbb_compile" = no; then
+      AC_MSG_ERROR([TBB compile/link test failed])
+   fi
+fi
+
+# END SAMRAI_SUPPORT_TBB
+
+])dnl End definition of SAMRAI_SUPPORT_TBB
+
+
+dnl
+dnl  File:           $HeadURL$
+dnl  Package:        SAMRAI
+dnl  Copyright:      (c) 1997-2011 Lawrence Livermore National Security, LLC
+dnl  Date:           $Date$
+dnl  Revision:       $LastChangedRevision$
+dnl  Modified:       $LastChangedDate$ 
+dnl  Description:    Macro to control whether timers are compile into or
+dnl                  out of SAMRAI
+dnl               
+dnl                  Variable: samrai_enable_timers
+dnl                  DEFINES:  ENABLE_SAMRAI_TIMERS
+dnl
+
+AC_DEFUN_ONCE([SAMRAI_TIMERS],[
+
+# Begin SAMRAI_TIMERS
+# Defines ENABLE_SAMRAI_TIMERS if --enable-timers is specified.  This is
+# turned on by default 
+
+AC_MSG_CHECKING([if SAMRAI Timers are enabled])
+AC_ARG_ENABLE([timers],
+[AS_HELP_STRING([--disable-timers],
+   [Disable SAMRAI Timers.])],
+   [
+      if test "x$enableval" = "xno"; then
+         samrai_enable_timers="$enableval"
+      fi
+   ], [
+      samrai_enable_timers="yes"
+   ])
+
+dnl By default, the timers are enabled.  Explicitly disabling them
+dnl means that we will not compile the timers into the code.  All
+dnl timer calls will essentially be no-ops.
+dnl
+dnl However, if timers are enabled, we'll define this symbol and
+dnl timers will be built into the code. 
+
+AS_IF([test "x$samrai_enable_timers" = "xyes"], [
+   AC_DEFINE([ENABLE_SAMRAI_TIMERS],[1],[ENABLE_SAMRAI_TIMERS])
+])
+AC_MSG_RESULT([$samrai_enable_timers])
+]
+)
 
 AC_DEFUN([SAMRAI_SPLIT_LIBS_STRING],[
 dnl
@@ -5831,4 +4379,1298 @@ if test -n "${$1}"; then
   done
 fi
 ])
+
+dnl $Id$
+
+AC_DEFUN([CASC_VAR_SET_BLAS],[
+dnl Provides support for the blas library.
+dnl
+dnl Arguments are:
+dnl 1. Name of variable to set to path where blas are installed.
+dnl    Nothing is done if this variable is unset.
+dnl    If you only want to look in default locations, set it to blank.
+dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl
+dnl If arg1 is defined, assume that the user wants blas
+dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
+dnl
+if test "${$1+set}" = set ; then
+  # Modify the output INCLUDES variable, if it is not set.
+  if test ! "${$2+set}" = set ; then
+    test -n "${$1}" && $2="-I${$1}/include"
+  fi
+  # Modify the output LIBS variable, if it is not set.
+  if test ! "${$3+set}" = set ; then
+    # Save LIBS for later recovery.
+    btng_save_LIBS="$LIBS";
+    # Extra libraries, if any, required by this check.
+    btng_extra_libs="$libz_LIBS -lm"
+    # If path is given, add path to extra flag for library search.
+    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
+    # Look for library.
+    AC_SEARCH_LIBS([daxpy_],blas,[
+      CASC_AC_LOG_VAR(LIBS,After finding blas flag)
+      # Action if found ...
+      # Extract modifications to LIB into library-specific LIBS variable.
+      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
+      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
+      CASC_AC_LOG_VAR($3, Found blas library flag)
+      ],[
+      # Action if NOT found ...
+      CASC_AC_LOG_VAR($3, Did not find blas library flag)
+      AC_MSG_WARN(
+[I could not systematically find the name of
+the blas library so I am using -lblas instead.])
+      $3="-lblas"
+      test -n "${$1}" &&	\
+	$3="-L${$1}/lib ${$3}"	# Add path flag to output variable.
+      ],[$btng_extra_libs])
+    LIBS="$btng_save_LIBS";	# Restore global-use variable.
+    unset btng_extra_libs
+    unset btng_save_LIBS
+  else
+    CASC_AC_LOG(Not looking for blas because $3 is already set)
+  fi
+fi
+])dnl
+
+
+
+
+AC_DEFUN([CASC_SUPPORT_BLAS],[
+dnl Support blas library by setting the variables
+dnl blas_PREFIX, blas_INCLUDES, and blas_LIBS.
+dnl Arg1: non-empty if you want the default to be on.
+dnl
+# Begin macro CASC_SUPPORT_BLAS
+
+CASC_ARG_WITH_ENV_WRAPPER(blas, blas_PREFIX,
+ifelse($1,,
+[  --with-blas[=PATH]
+			Use blas and optionally specify where
+			they are installed.],
+[  --without-blas	Do not use the blas library.]),
+if test "${with_blas+set}" = set; then
+  blas_PREFIX=
+else
+ifelse($1,,unset blas_PREFIX,blas_PREFIX=)
+fi
+)
+
+CASC_ARG_WITH_PREFIX(blas-includes,blas_INCLUDES,
+[  --with-blas-includes=STRING
+			Specify the INCLUDES flags for blas.
+			If not specified, and --with-blas=PATH is,
+			this defaults to "-IPATH/include".])dnl
+
+CASC_ARG_WITH_PREFIX(blas-libs,blas_LIBS,
+[  --with-blas-libs=STRING
+			Specify LIBS flags for blas.
+			If not specified, and --with-blas=PATH is,
+			this defaults to "-LPATH/lib -lblas".])dnl
+
+CASC_VAR_SET_BLAS(blas_PREFIX,blas_INCLUDES,blas_LIBS)
+
+CASC_AC_LOG_VAR(blas_PREFIX blas_INCLUDES blas_LIBS)
+# End macro CASC_SUPPORT_BLAS
+])
+
+dnl Define macros for supporting HDF5.
+dnl $Id$
+
+AC_DEFUN([CASC_VAR_SET_DL],[
+dnl Provides support for the dl (dynamic loading) library.
+dnl
+dnl Arguments are:
+dnl 1. Name of variable to set to path where dl are installed.
+dnl    Nothing is done if this variable is unset.
+dnl    If you only want to look in default locations, set it to blank.
+dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
+dnl    This variable is modified ONLY if it is NOT set and the path
+dnl    is non-blank.
+dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl    If the library cannot be found, this remains unset.
+dnl
+dnl If arg1 is defined, assume that the user wants dl support.
+dnl Do so by assigning arg2 and arg3 if they are not defined.
+dnl
+# Begin macro CASC_VAR_SET_DL
+if test "${$1+set}" = set ; then
+  # Modify the output INCLUDES variable, if it is not set.
+  if test ! "${$2+set}" = set ; then
+    test -n "${$1}" && $2="-I${$1}/include"
+  fi
+  # Modify the output LIBS variable, if it is not set.
+  if test ! "${$3+set}" = set ; then
+    # Save LIBS for later recovery.
+    btng_save_LIBS="$LIBS";
+    # Extra libraries, if any, required by this check.
+    btng_extra_libs="$libz_LIBS -lm"
+    # If path is given, add path to extra flag for library search.
+    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
+    # Look for library.
+    AC_SEARCH_LIBS([dlopen],dl,[
+      CASC_AC_LOG_VAR(LIBS,After finding dl flag)
+      # Action if found ...
+      # Extract modifications to LIB into library-specific LIBS variable.
+      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
+      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
+      CASC_AC_LOG_VAR($3, Found dl library flag)
+      ],[
+      # Action if NOT found ...
+      CASC_AC_LOG_VAR($3, Did not find dl library flag)
+      ],[$btng_extra_libs])
+    LIBS="$btng_save_LIBS";	# Restore global-use variable.
+    unset btng_extra_libs
+    unset btng_save_LIBS
+  else
+    CASC_AC_LOG(Not looking for dl because $3 is already set)
+  fi
+fi
+# End macro CASC_VAR_SET_DL
+])dnl
+
+
+
+AC_DEFUN([CASC_SUPPORT_DL],[
+dnl Support dl library by setting the variables
+dnl dl_PREFIX, dl_INCLUDES, and dl_LIBS.
+dnl Arg1: non-empty if you want the default to be on.
+dnl
+# Begin macro CASC_SUPPORT_DL
+
+CASC_ARG_WITH_ENV_WRAPPER(dl, dl_PREFIX,
+ifelse($1,,
+[  --with-dl[=PATH]
+			Use the dynamic loading library and optionally
+			specify where it is installed.],
+[  --without-dl		Do not use the dynamic loading library.]),
+ifelse($1,,unset dl_PREFIX; test "${with_dl+set}" = set && dl_PREFIX=,dl_PREFIX=))
+
+CASC_ARG_WITH_PREFIX(dl-includes,dl_INCLUDES,
+[  --with-dl-includes=STRING
+			Specify the INCLUDES flags for dl.
+			If not specified, and --with-dl=PATH is,
+			this defaults to "-IPATH/include".])dnl
+
+CASC_ARG_WITH_PREFIX(dl-libs,dl_LIBS,
+[  --with-dl-libs=STRING
+			Specify LIBS flags for dl.
+			If not specified, and --with-dl=PATH is,
+			this defaults to "-LPATH/lib -ldl".])dnl
+
+CASC_VAR_SET_DL(dl_PREFIX,dl_INCLUDES,dl_LIBS)
+# End macro CASC_SUPPORT_DL
+])
+
+dnl $Id$
+
+dnl Define macros for supporting HYPRE.
+
+
+AC_DEFUN([CASC_SUPPORT_HYPRE],[
+dnl Support hypre libraries by setting the variables
+dnl hypre_PREFIX, hypre_INCLUDES, and hypre_LIBS.
+dnl Arg1: empty if you want the default to be off.
+dnl
+# Begin macro CASC_SUPPORT_HYPRE
+CASC_ARG_WITH_ENV_WRAPPER(hypre, hypre_PREFIX,
+ifelse($1,,
+[  --with-hypre[=PATH]	Use HYPRE and optionally specify where it is installed.],
+[  --without-hypre	Do not use the HYPRe library.]),
+ifelse($1,,if test "$with_hypre" = '' ; then unset hypre_PREFIX; else hypre_PREFIX=; fi, hypre_PREFIX=)
+)
+CASC_VAR_SET_HYPRE(hypre_PREFIX,hypre_INCLUDES,hypre_LIBS)
+CASC_AC_LOG_VAR(hypre_PREFIX hypre_INCLUDES hypre_LIBS)
+if test "${hypre_PREFIX+set}" = set; then
+  btng_save_cppflags=$CPPFLAGS
+
+  # Add hypre include flags to cpp so we can examine its header file.
+  CPPFLAGS="$hypre_INCLUDES $CPPFLAGS"
+  CASC_AC_LOG_VAR(hypre_INCLUDES CPPFLAGS)
+
+  # Check if HYPRE header is ok.
+  AC_CHECK_HEADER(HYPRE_config.h,:,
+    [AC_MSG_ERROR(Problems checking HYPRE_config.h)])
+
+  # Check if HYPRE was compiled with parallelism.
+  AC_MSG_CHECKING(if hypre is serial or parallel)
+  AC_EGREP_CPP([^HYPRE_SEQUENTIAL_IS_DEFINED$], [
+#include <HYPRE_config.h>
+#ifdef HYPRE_SEQUENTIAL
+HYPRE_SEQUENTIAL_IS_DEFINED
+#endif
+    ],
+    hypre_PARALLELISM=serial,
+    hypre_PARALLELISM=parallel)
+  AC_MSG_RESULT($hypre_PARALLELISM)
+
+  # Reset cpp after checking hypre header file.
+  CPPFLAGS=$btng_save_cppflags
+  unset btng_save_cppflags
+
+  CASC_AC_LOG_VAR(CPPFLAGS)
+  CASC_AC_LOG_VAR(hypre_config_file hypre_PARALLELISM)
+fi
+# End macro CASC_SUPPORT_HYPRE
+])
+
+
+AC_DEFUN([CASC_VAR_SET_HYPRE],[
+dnl Provides support for the blas and lapack libraries.
+dnl
+dnl Arguments are:
+dnl 1. Name of variable to set to path where hypre is installed.
+dnl    Nothig is done if this variable is unset.
+dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl
+dnl If arg1 is defined, assume that the user wants blas and lapack
+dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
+dnl
+# Begin macro CASC_VAR_SET_HYPRE
+if test "${$1+set}" = set ; then
+  if test ! "${$2+set}" = set ; then
+    test -n "${$1}" && $2="-I${$1}/include"
+  fi
+  if test ! "${$3+set}" = set ; then
+    $3='-lHYPRE'
+    if test -n "${$1}" ; then
+      for i in ${$3} ; do
+	tmp_name=`echo $i | sed 's/^-l//'`
+        if test ! -f "${$1}/lib/lib${tmp_name}.a" && \
+          test ! -f "${$1}/lib/lib${tmp_name}.so"; then
+          AC_MSG_WARN(Library file for ${tmp_name} is missing from ${$1}/lib.)
+        fi
+      done
+      $3="-L${$1}/lib ${$3}"
+    fi
+  fi
+fi
+# End macro CASC_VAR_SET_HYPRE
+])dnl
+
+dnl $Id$
+
+AC_DEFUN([CASC_C_IEEE_FLOAT],[
+dnl Check on certain declarations in the float.h file:
+dnl FLT_SNAN DBL_SNAN
+dnl
+dnl ac_define ..._IS_BROKEN for symbols that are not defined.
+dnl
+# Begin macro CASC_IEEE_FLOAT
+
+AC_LANG_C
+
+AC_EGREP_CPP([^nan is broken],
+[#include <float.h>
+#ifndef NAN
+nan is broken
+#endif],
+AC_DEFINE([NAN_IS_BROKEN],[1],[Define if NAN is not in float.h])
+CASC_AC_LOG(["NAN is broken (not in float.h)"]),
+CASC_AC_LOG(["NAN is ok (in float.h)"])
+)
+
+AC_EGREP_CPP([^flt snan is broken],
+[#include <float.h>
+#ifndef FLT_SNAN
+flt snan is broken
+#endif],
+AC_DEFINE([FLT_SNAN_IS_BROKEN],[1],[Define if FLT_SNAN is not in float.h])
+CASC_AC_LOG(["FLT_NAN is broken (not in float.h)"]),
+CASC_AC_LOG(["FLT_NAN is ok (in float.h)"])
+)
+
+AC_EGREP_CPP([^dbl snan is broken],
+[#include <float.h>
+#ifndef DBL_SNAN
+dbl snan is broken
+#endif],
+AC_DEFINE([DBL_SNAN_IS_BROKEN],[1],[Define if DBL_SNAN is not in float.h])
+CASC_AC_LOG(["DBL_NAN is broken (not in float.h)"]),
+CASC_AC_LOG(["DBL_NAN is ok (in float.h)"])
+)
+
+AC_EGREP_CPP([^flt snan is broken],
+[#include <float.h>
+#ifndef FLT_MAX
+flt snan is broken
+#endif],
+AC_DEFINE([FLT_MAX_IS_BROKEN],[1],[Define if FLT_MAX is not in float.h])
+CASC_AC_LOG(["FLT_MAX is broken (not in float.h)"]),
+CASC_AC_LOG(["FLT_MAX is ok (in float.h)"])
+)
+
+AC_EGREP_CPP([^dbl snan is broken],
+[#include <float.h>
+#ifndef DBL_MAX
+dbl snan is broken
+#endif],
+AC_DEFINE([DBL_MAX_IS_BROKEN],[1],[Define if DBL_MAX is not in float.h])
+CASC_AC_LOG(["DBL_MAX is broken (not in float.h)"]),
+CASC_AC_LOG(["DBL_MAX is ok (in float.h)"])
+)
+
+# End macro CASC_IEEE_FLOAT
+])dnl
+
+dnl $Id$
+
+AC_DEFUN([CASC_VAR_SET_LAPACK],[
+dnl Provides support for the lapack library.
+dnl
+dnl Arguments are:
+dnl 1. Name of variable to set to path where lapack are installed.
+dnl    Nothig is done if this variable is unset.
+dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl
+dnl If arg1 is defined, assume that the user wants lapack
+dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
+dnl
+if test "${$1+set}" = set ; then
+  # Modify the output INCLUDES variable, if it is not set.
+  if test ! "${$2+set}" = set ; then
+    test -n "${$1}" && $2="-I${$1}/include"
+  fi
+  # Modify the output LIBS variable, if it is not set.
+  if test ! "${$3+set}" = set ; then
+    # Save LIBS for later recovery.
+    btng_save_LIBS="$LIBS";
+    # Extra libraries, if any, required by this check.
+    btng_extra_libs="$libz_LIBS -lm"
+    # If path is given, add path to extra flag for library search.
+    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
+    # Look for library.
+    AC_SEARCH_LIBS([xerbla_],lapack,[
+      CASC_AC_LOG_VAR(LIBS,After finding lapack flag)
+      # Action if found ...
+      # Extract modifications to LIB into library-specific LIBS variable.
+      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
+      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
+      CASC_AC_LOG_VAR($3, Found lapack library flag)
+      ],[
+      # Action if NOT found ...
+      CASC_AC_LOG_VAR($3, Did not find lapack library flag)
+      AC_MSG_WARN(
+[I could not systematically find the name of
+the lapack library so I am using -llapack instead.])
+      $3="-llapack"
+      test -n "${$1}" &&	\
+	$3="-L${$1}/lib ${$3}"	# Add path flag to output variable.
+      ],[$btng_extra_libs])
+    LIBS="$btng_save_LIBS";	# Restore global-use variable.
+    unset btng_extra_libs
+    unset btng_save_LIBS
+  else
+    CASC_AC_LOG(Not looking for lapack because $3 is already set)
+  fi
+fi
+])dnl
+
+
+
+
+AC_DEFUN([CASC_SUPPORT_LAPACK],[
+dnl Support lapack library by setting the variables
+dnl lapack_PREFIX, lapack_INCLUDES, and lapack_LIBS.
+dnl Arg1: non-empty if you want the default to be on.
+dnl
+# Begin macro CASC_SUPPORT_LAPACK
+
+CASC_ARG_WITH_ENV_WRAPPER(lapack, lapack_PREFIX,
+ifelse($1,,
+[  --with-lapack[=PATH]
+			Use lapack and optionally specify where
+			they are installed.],
+[  --without-lapack	Do not use the lapack library.]),
+if test "${with_lapack+set}" = set; then
+  lapack_PREFIX=
+else
+ifelse($1,,unset lapack_PREFIX,lapack_PREFIX=)
+fi
+)
+
+CASC_ARG_WITH_PREFIX(lapack-includes,lapack_INCLUDES,
+[  --with-lapack-includes=STRING
+			Specify the INCLUDES flags for lapack.
+			If not specified, and --with-lapack=PATH is,
+			this defaults to "-IPATH/include".])dnl
+
+CASC_ARG_WITH_PREFIX(lapack-libs,lapack_LIBS,
+[  --with-lapack-libs=STRING
+			Specify LIBS flags for lapack.
+			If not specified, and --with-lapack=PATH is,
+			this defaults to "-LPATH/lib -llapack".])dnl
+
+CASC_VAR_SET_LAPACK(lapack_PREFIX,lapack_INCLUDES,lapack_LIBS)
+
+CASC_AC_LOG_VAR(lapack_PREFIX lapack_INCLUDES lapack_LIBS)
+# End macro CASC_SUPPORT_LAPACK
+])
+
+dnl $Id$
+
+AC_DEFUN([CASC_VAR_SET_NSL],[
+dnl Provides support for the nsl library.
+dnl
+dnl Arguments are:
+dnl 1. Name of variable to set to path where nsl are installed.
+dnl    Nothing is done if this variable is unset.
+dnl    If you only want to look in default locations, set it to blank.
+dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
+dnl    This variable is modified ONLY if it is NOT set and the path
+dnl    is non-blank.
+dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
+dnl    This variable is modified ONLY if it is NOT set.
+dnl    If the library cannot be found, this remains unset.
+dnl
+dnl If arg1 is defined, assume that the user wants nsl support.
+dnl Do so by assigning arg2 and arg3 if they are not defined.
+dnl
+if test "${$1+set}" = set ; then
+  # Modify the output INCLUDES variable, if it is not set.
+  if test ! "${$2+set}" = set ; then
+    test -n "${$1}" && $2="-I${$1}/include"
+  fi
+  # Modify the output LIBS variable, if it is not set.
+  if test ! "${$3+set}" = set ; then
+    # Save LIBS for later recovery.
+    btng_save_LIBS="$LIBS";
+    # Extra libraries, if any, required by this check.
+    btng_extra_libs="$libz_LIBS -lm"
+    # If path is given, add path to extra flag for library search.
+    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
+    # Look for library.
+    AC_SEARCH_LIBS([getnetname],nsl,[
+      CASC_AC_LOG_VAR(LIBS,After finding nsl flag)
+      # Action if found ...
+      # Extract modifications to LIB into library-specific LIBS variable.
+      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
+      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
+      CASC_AC_LOG_VAR($3, Found nsl library flag)
+      ],[
+      # Action if NOT found ...
+      CASC_AC_LOG_VAR($3, Did not find nsl library flag)
+      ],[$btng_extra_libs])
+    LIBS="$btng_save_LIBS";	# Restore global-use variable.
+    unset btng_extra_libs
+    unset btng_save_LIBS
+  else
+    CASC_AC_LOG(Not looking for nsl because $3 is already set)
+  fi
+fi
+])dnl
+
+
+
+AC_DEFUN([CASC_SUPPORT_NSL],[
+dnl Support nsl library by setting the variables
+dnl nsl_PREFIX, nsl_INCLUDES, and nsl_LIBS.
+dnl Arg1: non-empty if you want the default to be on.
+dnl
+# Begin macro CASC_SUPPORT_NSL
+
+CASC_ARG_WITH_ENV_WRAPPER(nsl, nsl_PREFIX,
+ifelse($1,,
+[  --with-nsl[=PATH]
+			Use nsl and optionally specify where
+			it is installed.],
+[  --without-nsl	Do not use the nsl library.]),
+ifelse($1,,unset nsl_PREFIX; test "${with_nsl+set}" = set && nsl_PREFIX=,nsl_PREFIX=))
+CASC_AC_LOG_VAR(nsl_PREFIX nsl_INCLUDES nsl_LIBS, before looking)
+
+CASC_ARG_WITH_PREFIX(nsl-includes,nsl_INCLUDES,
+[  --with-nsl-includes=STRING
+			Specify the INCLUDES flags for nsl.
+			If not specified, and --with-nsl=PATH is,
+			this defaults to "-IPATH/include".])dnl
+
+CASC_ARG_WITH_PREFIX(nsl-libs,nsl_LIBS,
+[  --with-nsl-libs=STRING
+			Specify LIBS flags for nsl.
+			If not specified, and --with-nsl=PATH is,
+			this defaults to "-LPATH/lib -lnsl".])dnl
+
+CASC_VAR_SET_NSL(nsl_PREFIX,nsl_INCLUDES,nsl_LIBS)
+# End macro CASC_SUPPORT_NSL
+])
+
+dnl $Id$
+
+AC_DEFUN([CASC_SUPPORT_PETSC],[
+# Begin macro SUPPORT_PETSC
+dnl Support PETSC by setting PETSC_DIR, PETSC_ARCH,
+dnl petsc_INCLUDE and petsc_LIBS.
+dnl Also set PETSC_VERSION_MAJOR, PETSC_VERSION_MINOR and
+dnl PETSC_VERSION_SUBMINOR to indicate PETSc version.
+dnl
+dnl Support --with-petsc-optimize to use optimized PETSC library.
+dnl Support --with-petsc-mpiuni to use PETSC uniprocessor MPI library.
+dnl
+dnl Arg1: non-empty if you want the default to be on.
+dnl
+dnl This version supports PETSc-2.1.0 and later.
+
+# Set PETSC_DIR to the PETSC root directory.
+CASC_ARG_WITH_PREFIX(petsc,PETSC_DIR,
+ifelse($1,,
+[[  --with-petsc=PATH	Support PETSc, and specify PETSC top-level directory.
+			Setting PETSC_DIR is equivalent to this.]],
+[  --without-petsc	Do not support PETSc.])
+,
+# User was not specific about specifying PETSc.
+ifelse($1,,
+# PETSc should be off by default.
+# So if user specified --with-petsc, it should include a path or it is an error.
+if test "${with_petsc+set}" = set ; then
+  # User specified --with-petsc ambiguously.
+  AC_MSG_ERROR([You must specify a path with --with-petsc=...])
+else
+  # User did not specify --with-petsc, so turn it off.
+  unset PETSC_DIR;
+fi
+,
+# PETSc should be on by default.
+# So require that user say where it is or turn it off.
+AC_MSG_ERROR([You must specify either --with-petsc=... or --without-petsc.])
+))
+
+# Set version numbers (PETSC_VERSION_...) for use by configure.
+# Users can directly access these from the PETSc header file.
+if test "${PETSC_DIR+set}" = set; then
+[
+PETSC_VERSION_MAJOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_MAJOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
+PETSC_VERSION_MINOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_MINOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
+PETSC_VERSION_SUBMINOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_SUBMINOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
+]
+fi
+CASC_AC_LOG_VAR(PETSC_VERSION_MAJOR PETSC_VERSION_MINOR PETSC_VERSION_SUBMINOR)
+
+# Set PETSC_ARCH.
+CASC_ARG_WITH_PREFIX(petsc-arch,PETSC_ARCH,
+[  --with-petsc-arch=PETSC_ARCH
+			Specify the PETSC architecture.
+			If omitted, the output of the petscarch script
+			in the PETSc directory is used.])
+
+# Set PETSC_OPTIMIZE.
+CASC_ARG_WITH_ENV_WRAPPER(petsc-optimize,PETSC_OPTIMIZE,
+[  --with-petsc-optimize
+			Use the optimized PETSC libraries],
+# By default, use the debug PETSC library.
+PETSC_OPTIMIZE=g
+CASC_AC_LOG_VAR(with_petsc_optimize)
+test "$with_petsc_optimize" = yes && PETSC_OPTIMIZE=O
+)
+
+# Set PETSC_MPIUNI.
+CASC_ARG_WITH_ENV_WRAPPER(petsc-mpiuni,PETSC_MPIUNI,
+[  --with-petsc-mpiuni	Use the PETSC uniprocessor MPI library],
+# By default, do not use the PETSC uniprocessor MPI library.
+unset PETSC_MPIUNI
+)
+
+# Set PETSC_LIBFILES
+unset PETSC_LIBFILES
+AC_ARG_WITH(petsc-libfiles,
+[  --with-petsc-libfiles
+			Specify explit PETSc library files instead
+			of -L and -l flags (may help some debuggers)],
+test "$with_petsc_libfiles" = yes && PETSC_LIBFILES=yes)
+
+
+if test "${PETSC_DIR+set}" = set; then
+  # Set up PETSC only if PETSC_DIR is defined.
+
+  if test ! -d "$PETSC_DIR"; then
+    AC_MSG_WARN([PETSC directory ($PETSC_DIR) does not look right])
+  fi
+  export PETSC_DIR
+  if test -z "$PETSC_ARCH"; then
+    if test -f "$PETSC_DIR/bmake/petscconf"; then
+	eval `grep PETSC_ARCH $PETSC_DIR/bmake/petscconf`
+    elif test -x "$PETSC_DIR/bin/petscarch"; then
+       PETSC_ARCH=`$PETSC_DIR/bin/petscarch`
+    else
+       AC_MSG_WARN([PETSC could not determine PETSC_ARCH])
+    fi    
+    export PETSC_ARCH
+  fi
+  CASC_AC_LOG_VAR(PETSC_ARCH)
+  if test ! -d "$PETSC_DIR/bmake/$PETSC_ARCH"; then
+    AC_MSG_WARN([PETSC architecture ($PETSC_ARCH) does not look right])
+  fi
+  if test ! "$PETSC_OPTIMIZE" = g && test ! "$PETSC_OPTIMIZE" = O; then
+    AC_MSG_ERROR([PETSC optimize should be either g or O])
+  fi
+
+  petsc_INCLUDES="-I$PETSC_DIR/include -I$PETSC_DIR/bmake/$PETSC_ARCH"
+  petsc_INCLUDES="$petsc_INCLUDES -I$PETSC_DIR/src/vec"
+  # Currently, I'm not entirely sure why we have to explicitly specify
+  # the src/vec directory in the include path.  But there is at least
+  # one required file there that cannot be found in the include directory.
+
+# SGS Support latter version of PETSc
+# Try new structure and then old
+  if test -d "${PETSC_DIR}/lib/${PETSC_ARCH}"; then
+    petsc_LIBDIR="${PETSC_DIR}/lib/${PETSC_ARCH}"
+  elif  test -d "${PETSC_DIR}/lib/lib${PETSC_OPTIMIZE}/${PETSC_ARCH}"; then
+    petsc_LIBDIR="${PETSC_DIR}/lib/lib${PETSC_OPTIMIZE}/${PETSC_ARCH}"
+  else 
+    AC_MSG_WARN([PETSC lib directory does not look as expected])
+  fi
+
+
+  # Issue the -L flag if not specifying PETSc libraries by file names.
+  test ! "${PETSC_LIBFILES+set}" = set && petsc_LIBS="-L${petsc_LIBDIR}"
+
+  # Build up a list of PETSC library files.
+# SGS
+  petsc_libs_ls1=`cd ${petsc_LIBDIR} && echo lib*.*`
+
+  if test -n "$petsc_libs_ls1"; then
+    unset petsc_libs_ls
+    for i in $petsc_libs_ls1; do
+      j=`echo $i | sed -e 's/lib//' -e 's/\.a$//' -e 's/\.so$//'`
+      if echo "$petsc_libs_ls" | grep -v " $j " > /dev/null; then # Note padding!
+        petsc_libs_ls="$petsc_libs_ls $j ";	# Note space padding!
+      fi
+    done
+  fi
+  # Remove mpiuni from the list of PETSC libraries unless user asked for it.
+  if test ! "${PETSC_MPIUNI}" = yes; then
+    petsc_libs_ls=`echo "$petsc_libs_ls" | sed 's/ mpiuni //g'`
+  fi
+  # Move some low-level libraries to the end to ensure resolution
+  # for linkers that only make one pass.
+  for i in petscmat petscvec petsc; do
+    petsc_libs_ls=`echo "$petsc_libs_ls" | sed 's/\(.*\)\( \{0,1\}'"$i"'\{0,1\} \)\(.*\)/\1 \3 \2/g'`
+  done
+  # Build up petsc_LIBS string using library names.
+  CASC_AC_LOG_VAR(petsc_libs_ls1 petsc_libs_ls)
+  if test -n "$petsc_libs_ls"; then
+    if test "${PETSC_LIBFILES+set}" = set; then
+      for i in $petsc_libs_ls; do
+# SGS
+        petsc_LIBS="$petsc_LIBS ${petsc_LIBDIR}/lib${i}.a"
+      done
+    else
+      for i in $petsc_libs_ls; do
+        petsc_LIBS="$petsc_LIBS -l$i"
+      done
+    fi
+  fi
+
+  CASC_AC_LOG_VAR(PETSC_DIR petsc_INCLUDES petsc_LIBS PETSC_OPTIMIZE PETSC_MPIUNI)
+
+fi
+# End macro SUPPORT_PETSC
+])
+
+dnl $Id$
+
+
+
+AC_DEFUN([CASC_C_RESTRICT],[
+
+# Start macro CASC_C_RESTRICT
+
+AC_MSG_CHECKING(checking whether restrict is broken)
+
+AC_CACHE_VAL(btng_cv_c_restrict_broken, [
+
+  AC_LANG_PUSH([C++])
+  AC_TRY_COMPILE([
+struct array_test {
+  double *ptr;
+  int i0;
+  array_test(double *p, int i);
+  double &value(int i) const;
+};
+array_test::array_test(double *p, int i) : ptr(p), i0(i) {}
+double &array_test::value(int i) __restrict__ const {
+  return ptr[i-i0];
+}
+    ],[
+double a[10];
+array_test at(a,20);
+at.value(5) = 5;
+    ],
+    # restrict is not broken.
+    btng_cv_c_restrict_broken=no
+    ,
+    # restrict is broken.
+    btng_cv_c_restrict_broken=yes
+  )	dnl End AC_TRY_COMPILE call
+
+  AC_LANG_POP([C++])
+
+])	dnl End AC_CACHE_VAL call
+
+AC_MSG_RESULT($btng_cv_c_restrict_broken)
+
+if test "$btng_cv_c_restrict_broken" = yes; then
+  AC_DEFINE([RESTRICT_IS_BROKEN],1,Define if restrict is not properly supported)
+fi
+
+
+# End macro CASC_C_RESTRICT
+
+])	dnl End of CASC_C_RESTRICT definition.
+
+dnl $Id$
+
+
+AC_DEFUN([CASC_LIBS_ADD_RPATH],[
+# Begin macro CASC_LIBS_ADD_RPATH
+dnl Support RPATH by going in a LIBS string and, for each -L flag,
+dnl add a flag immediately following it to set the RPATH, for
+dnl paths that contain shared libraries.
+dnl
+dnl arg1 is a LIBS string.
+dnl arg2 is the name of the variable to set to the new LIBS string.
+dnl arg3 is non-empty to use id of the C++ compiler instead of the C compiler.
+
+
+dnl Determine which compiler is being used, because
+dnl the syntax of the RPATH flag depends on the compiler.
+dnl Use the C++ compiler and assume the C compiler
+dnl is from the same family.
+AC_REQUIRE([CASC_INFO_CC_CXX_ID])
+
+
+AC_ARG_ENABLE(rpath,
+[  --enable-rpath=SYNTAX	When linking add syntax for rpath for every
+			-L option that points to a directory with .so
+			files in it.  If SYNTAX is omitted, an attempt
+			is made to find out the correct rpath syntax for
+			the compiler being used.]
+,,enable_rpath=yes)
+
+if test "$enable_rpath" = yes; then
+  # Determine the proper rpath syntax.
+
+  AC_LANG_SAVE
+
+  ifelse([$3],,
+  AC_LANG_C
+  btng_rpath_compiler_id="$CC_ID",
+  AC_LANG_CPLUSPLUS
+  btng_rpath_compiler_id="$CXX_ID"
+  )
+
+
+  # Unset the rpath syntax variable so we can check on whether we
+  # found a way to set it.
+  unset btng_rpath_beginning;
+
+  # Determine, based on the compiler, the syntax for specifying RPATH.
+  # It should be of the form "$btng_rpath_beginning$the_path", where
+  # btng_rpath_beginning is the compiler-dependent part.
+  case "$btng_rpath_compiler_id" in
+    gnu)
+      # This compiler may use a variable rpath syntax because it may use
+      # the native loader.
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,
+	['---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
+    ;;
+    intel)
+      # This compiler may use a variable rpath syntax because it may use
+      # the native loader.
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,
+	['---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
+      if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
+        # Do not rely on the compiler return value to test for syntax
+        # Guess the syntax assuming the native loader will be used.
+        case "$host_os" in
+          linux*) btng_rpath_beginning='-Wl,-rpath ' ;;
+          sun*|solaris*) btng_rpath_beginning='-R' ;;
+          osf*) btng_rpath_beginning='-rpath ' ;;
+          *) btng_rpath_beginning='' ;;
+        esac
+        AC_MSG_WARN(
+  [Your compiler ifelse($3,,$CC,$CXX) returns 0 even when it is
+  given a bogus flag.  Therefore, I cannot find the proper syntax
+  for the rpath for this compiler.  I have resorted to a guess that
+  may not be correct: '$btng_rpath_beginning'.
+  You can override this by using --enable-rpath=SYNTAX])
+      fi
+    ;;
+    sunpro)
+      # This compiler may use a variable rpath syntax.
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,['---bogus-flag-meant-to-cause-error' '-R' '-R '])
+    ;;
+    kai)
+      # The KAI compilers use the system native loader.
+      #
+      # On some platforms (PC/Linux at least), this compiler seems
+      # to return 0 even if it encounters error, thus it can return
+      # the first guess for the rpath syntax, even if the guess is
+      # wrong.  We try to catch this by making the first flag bogus.
+      # If the compiler accepts this flag (by returning 0), we know
+      # it is wrong and we resort to an alternative method for
+      # getting the rpath syntax.
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,
+	['---bogus-flag-meant-to-cause-error' '-R' '-R ' '-rpath ' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
+      if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
+        # Do not rely on the compiler return value to test for syntax
+        # Guess the syntax assuming the native loader will be used.
+        case "$host_os" in
+          linux*) btng_rpath_beginning='-Wl,-rpath ' ;;
+          sun*|solaris*) btng_rpath_beginning='-R' ;;
+          osf*) btng_rpath_beginning='-rpath ' ;;
+          *) btng_rpath_beginning='' ;;
+        esac
+        AC_MSG_WARN(
+  [Your compiler ifelse($3,,$CC,$CXX) returns 0 even when it is
+  given a bogus flag.  Therefore, I cannot find the proper syntax
+  for the rpath for this compiler.  I have resorted to a guess that
+  may not be correct: '$btng_rpath_beginning'.
+  You can override this by using --enable-rpath=SYNTAX])
+      fi
+    ;;
+    *)
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning)
+    ;;
+  esac
+  CASC_AC_LOG_VAR(host_os CC_ID CXX_ID btng_rpath_compiler_id btng_rpath_beginning, forming rpaths)
+
+  AC_LANG_RESTORE
+
+  # It is valid to have btng_rpath_beginning be blank.
+  # but if it is unset, we could not find a way to set it.
+  if test ! "${btng_rpath_beginning+set}" = set; then
+    AC_MSG_WARN(I cannot find a working syntax for setting relocatable paths)
+  fi
+
+elif test ! "${enable_rpath}" = no; then
+
+  # User has provided the rpath syntax.
+  btng_rpath_beginning=$enable_rpath
+
+fi;	# End block determining the proper rpath syntax.
+
+
+# Use the rpath syntax.
+if test "${btng_rpath_beginning+set}" = set	\
+  && test -n "${btng_rpath_beginning}" ; then
+  # Add the RPATH flags only if we know the syntax for it,
+  # and if it is needed as indicated by a non-empty btng_rpath_beginning.
+
+  # Loop through the flags in $1, looking for the -L flag,
+  # and append RPATH flag to each one found, if the the
+  # path specified by the flag includes shared libraries.
+  for i in ${$1}; do
+    btng_new_$2="${btng_new_$2} ${i}"
+    btng_tmp_addl_string=`echo $i | sed 's/^-L//'`
+    test "$btng_tmp_addl_string" = "$i" && continue	# does not contain -L.
+    test -d "$btng_tmp_addl_string" || continue;	# directory nonexistent.
+    test "`echo $btng_tmp_addl_string/*.so`" = "$btng_tmp_addl_string/*.so" \
+      && continue;	# does not contain shared libraries.
+    echo "${btng_new_$2}"	\
+      | grep ".*${btng_rpath_beginning}[[ 	]]*${btng_tmp_addl_string}"	\
+      > /dev/null	\
+      && continue	# already contains the flag we want to add.
+    btng_new_$2="${btng_new_$2} ${btng_rpath_beginning}${btng_tmp_addl_string}"
+  done
+  $2="${btng_new_$2}"
+
+fi
+
+dnl Now, arg2 should be similar to arg1, but with the additional RPATH flags.
+
+# End macro CASC_LIBS_ADD_RPATH
+])
+
+AC_DEFUN([CASC_LIBS_FIND_RPATH],[
+# Begin macro CASC_LIBS_FIND_RPATH
+dnl Find the correct rpath syntax from the list given in arg1.
+dnl arg1: variable to set to the syntax string
+dnl arg2: list of syntaxes to try;
+dnl   if blank, a large number of syntaxes will be tried.
+dnl
+dnl arg1 is list of possible rpath syntaxes to try.
+define(btng_possible_rpaths,dnl
+[ifelse($2,,['-R ' '-R' '-rpath ' '-Wl,-rpath ' '-Wl,-R ' '-Wl,-R'],[[$2]])])
+  btng_save_LIBS="$LIBS";
+  for i in btng_possible_rpaths; do
+    LIBS="${i}/usr/local"
+    AC_TRY_LINK(,,$1="$i", unset $1)
+    # Intel compiler does not fail on bad args but warning message is
+    # created. If warning is found in the log then continue searching
+    # for syntax as the current one is no good.  If warning is not
+    # found use return status of link attempt to determine if
+    # parameter was accepted by the compiler.
+    SEARCH=`echo "ignoring unknown option '${LIBS}'" | sed -e "s/---/-f-/"`
+    if ( grep "$SEARCH" config.log ) >/dev/null 2>&1
+    then 
+	:
+    else 
+        if test "${$1+set}" = set; then break; fi
+    fi
+  done
+  LIBS="$btng_save_LIBS"
+undefine([btng_possible_rpaths])
+# End macro CASC_LIBS_FIND_RPATH
+])
+
+dnl Define macros for supporting z compression library.
+dnl $Id$
+
+
+AC_DEFUN([CASC_SUPPORT_SPOOLES],[
+dnl Support spooles library by setting the variables
+dnl spooles_PREFIX, spooles_INCLUDES, and spooles_LIBS.
+dnl Arg1: non-empty if you want the default to be on.
+dnl
+# Begin macro CASC_SUPPORT_SPOOLES
+
+ifelse($1,,unset spooles_PREFIX,spooles_PREFIX=)
+
+AC_ARG_WITH(spooles,
+ifelse($1,,
+[  --with-spooles[=PATH]
+			Use spooles library and optionally specify where
+			it is installed.],
+[  --without-spooles	Do not use the spooles library.]),
+if test "${with_spooles+set}" = yes ; then
+  spooles_PREFIX=
+elif test "${with_spooles}" = no; then
+  unset spooles_PREFIX;
+else
+  spooles_PREFIX="${with_spooles}"
+fi
+)
+
+if test "${spooles_PREFIX+set}" = set; then
+  # Set spooles_LIBS and spooles_INCLUDE if they are not already set.
+  # Note that we expect library archives and headers to be
+  # directly under spooles_PREFIX rather than subdirectories
+  # lib and include of spooles_PREFIX.
+  if test ! "${spooles_LIBS+set}" = set; then
+    if test ! "${spooles_PREFIX}" = ''; then
+      spooles_LIBS="-L${spooles_PREFIX}"
+    fi
+    spooles_LIBS="${spooles_LIBS} -lspoolesMPI -lspooles"
+  fi
+  if test ! "${spooles_INCLUDES+set}" = set ; then
+    if test ! "${spooles_PREFIX}" = ''; then
+      spooles_INCLUDES="-I${spooles_PREFIX}"
+    fi
+  fi
+fi
+
+CASC_AC_LOG_VAR(spooles_PREFIX spooles_LIBS spooles_INCLUDES)
+
+# End macro CASC_SUPPORT_SPOOLES
+])
+
+dnl $Id$
+
+AC_DEFUN([CASC_FIND_CORRECT_HEADER_FILENAME],[
+dnl There is no standard naming convention for STL header files.
+dnl This macro helps to pick the right name out of a list.
+dnl Arg1 is the variable to set to the found file name.
+dnl Arg2 is the list of file names to search
+dnl Arg3 are additional headers to include (for use by AC_TRY_COMPILE)
+dnl Arg4 is the code body to test if the included file works.
+# Start macro $0
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  $1=
+  AC_REQUIRE([CASC_TYPE_BOOL])
+  CPPFLAGS_SAVE=$CPPFLAGS
+  for file in $2; do
+    AC_CHECK_HEADER($file, btng_header_found=1, unset btng_header_found)
+    if test -n "$btng_header_found"; then
+      AC_MSG_CHECKING(whether $file is the header sought)
+      CASC_AC_LOG(found header file $file)
+      CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
+      AC_TRY_COMPILE(
+        [
+/* macro $0 checking for $file */
+#ifdef BOOL_IS_BROKEN
+typedef int bool;
+#define true 1
+#define false 0
+#endif
+	$3
+        #include <$file>
+using namespace std;
+],
+        $4,
+	AC_MSG_RESULT(yes)
+        $1="$file",
+	AC_MSG_RESULT(no)
+      )
+    fi
+    if test -n "${$1}"; then break; fi
+  done
+  AC_LANG_RESTORE
+  CPPFLAGS=$CPPFLAGS_SAVE
+# End macro $0
+])
+
+
+
+
+AC_DEFUN([CASC_TREAT_VARIABLE_HEADER_FILENAME],[
+dnl CASC_TREAT_VARIABLE_HEADER_FILENAME is a generic macro
+dnl used by (and using) other macros in this file.
+dnl It determines, from a given list, the correct name of
+dnl a header file required to compile a test code body.
+dnl It takes a list of possible of the header filenames.
+dnl It reports whether each header file is the one sought
+dnl until it finds the one that is.
+dnl If none of the header filenames work:
+dnl   It issues a warning.
+dnl   It defines a ...IS_BROKEN C macro saying so.
+dnl If it finds the first header filename that works:
+dnl   It assigns a variable (..._HEADER_FILE) to the
+dnl   correct filename and call AC_DEFINE for that variable.
+dnl Arguments are:
+dnl  1: a single name representing the header sought.
+dnl  2: a list of possible header filenames.
+dnl  3: other include lines (for use in AC_TRY_COMPILE).
+dnl  4: code to test if the header file is the one being sought.
+dnl
+# Start macro $0
+AC_CACHE_VAL(btng_cv_[]translit($1,[-],[_])[]_header_filename, [
+  AC_ARG_WITH($1-header-file,
+  [  --with-$1-header-file	Specify name of the $1 header file.],
+  btng_cv_[]translit($1,[-],[_])[]_header_filename=$with_[]translit($1,[-],[_])[]_header_file,
+  [CASC_FIND_CORRECT_HEADER_FILENAME(btng_cv_[]translit($1,[-],[_])[]_header_filename,$2,[$3],[[$4]])]
+  )
+])	dnl End AC_CACHE_VAL call
+# We must be able to find the $1 header file or else.
+translit($1,[-a-z],[_A-Z])[]_HEADER_FILE="$btng_cv_[]translit($1,[-],[_])[]_header_filename"
+if test -z "$translit($1,[-a-z],[_A-Z])[]_HEADER_FILE"; then
+  translit($1,[-],[_])[]_header_is_broken=1
+  AC_MSG_WARN([cannot find a working $1 header file.
+      Names tried: $2
+      If you know the correct hame of this header file,
+      use the option --with-[]$1[]-header-file=FILENAME
+      with configure.])
+  AC_DEFINE(translit($1,[-a-z],[_A-Z])[]_IS_BROKEN,[1],[The $1 header file is broken])
+  CASC_AC_LOG(header file $1 is broken)
+else
+  unset translit($1,[-],[_])[]_header_is_broken
+  AC_DEFINE_UNQUOTED(translit($1,[-a-z],[_A-Z])[]_HEADER_FILE,<$translit($1,[-a-z],[_A-Z])[]_HEADER_FILE>,
+    [Header file for $1])
+  CASC_AC_LOG(header file $1 is ok)
+fi
+# End macro $0
+])	dnl end of CASC_TREAT_VARIABLE_HEADER_FILENAME definition.
+
+
+
+dnl
+dnl These are some STL headers with uncertain names.
+dnl
+
+
+AC_DEFUN([CASC_STL_STRING_HEADER_FILENAME],[
+# Start macro $0
+dnl dnl AC_MSG_CHECKING(name of the STL string header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-string],
+  [string strings string.h strings.h string.hxx strings.hxx],,
+  [std::string s; s = "sample string";])
+# End macro $0
+])	dnl end of CASC_STL_STRING_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_SET_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL set header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-set], [set set.h set.hxx],,
+  [set<int> s; s.insert(1);])
+# End macro $0
+])	dnl end of CASC_STL_SET_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_STACK_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL stack header file)
+AC_REQUIRE([CASC_INFO_CXX_ID])
+AC_REQUIRE([CASC_STL_LIST_HEADER_FILENAME])
+btng_stl_stack_test_body='[stack<int> s; s.push(1);]'
+# The Sun compiler version 5.2 does not treat default template
+# arguments correctly.  The STL standard states that for stack,
+# only the first argument is required but this Sun compiler
+# requires the second.
+if test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null || test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x520' > /dev/null ; then
+btng_stl_stack_test_body='[stack<int,list<int> > s; s.push(1);]'
+fi
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-stack], [stack stack.h stack.hxx],,
+  [$btng_stl_stack_test_body])
+# End macro $0
+])	dnl end of CASC_STL_STACK_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_VECTOR_HEADER_FILENAME],[
+# Start macro $0
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-vector], [vector vector.h vector.hxx],,
+[vector<int> v; v.insert(v.begin(),1);
+vector<char> s; s.insert( s.end(), 10, '\0' );])
+# End macro $0
+])	dnl end of CASC_STL_VECTOR_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_LIST_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL list header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-list], [list list.h list.hxx],,
+  [list<int> v; v.insert(v.begin(),1);])
+# End macro $0
+])	dnl end of CASC_STL_LIST_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_MAP_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL map header file)
+AC_REQUIRE([CASC_INFO_CXX_ID])
+btng_stl_map_test_body='[map<int,int> v; v[0]=1;]'
+# The Sun compiler version 4.2 does not treat default template
+# arguments correctly.  The STL standard states that for map,
+# only the first two arguments are required but the Sun compiler
+# requires the third.
+test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
+btng_stl_map_test_body='[map<int,int,less<int> > v; v[0]=1;]'
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-map], [map map.h map.hxx],,
+  [$btng_stl_map_test_body])
+# End macro $0
+])	dnl end of CASC_STL_MAP_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_ITERATOR_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL iterator header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-iterator],
+  [iterator iterator.h iterator.hxx],,
+  [int a[10], size; size=distance(a,a+10);])
+dnl  [ostream_iterator<int> v(cout," ");])
+# End macro $0
+])	dnl end of CASC_STL_ITERATOR_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_ALGO_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL algo header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-algo],
+  [algo algorithm algo.h algorithm.h algo.hxx algorithm.hxx] ,,
+  [int n[10]; find(n,n+10,0);])
+# End macro $0
+])	dnl end of CASC_STL_ALGO_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_FUNCTION_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL numeric header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-function],
+  [function function.h function.hxx] ,,
+  [int a=1, b=2, c; plus<int> adder; c=adder(a,b);])
+# End macro $0
+])	dnl end of CASC_STL_FUNCTION_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_NUMERIC_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL numeric header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-numeric],
+  [numeric numeric.h numeric.hxx] ,,
+  [int n[10]; iota(n,n+10,0);])
+# End macro $0
+])	dnl end of CASC_STL_NUMERIC_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_SSTREAM_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL string stream header file)
+btng_stl_sstream_test_body='/* New syntax */ istringstream ist("a string");'
+dnl We think that the sun 4.2 compiler does not support the syntax,
+dnl but we're not absolutely sure.
+test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
+btng_stl_sstream_test_body='/* Old syntax */ char i[[10]]; istrstream ist(i);'
+test "$CXX_ID" = "gnu" && echo "$CXX_VERSION" | grep '^2.95.2' > /dev/null && \
+btng_stl_sstream_test_body='/* Old syntax */ char i[[10]]; istrstream ist(i);'
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-sstream],
+  [sstream stringstream strstream sstream.h stringstream.h strstream.h sstream.hxx stringstream.hxx strstream.hxx] ,,
+  [$btng_stl_sstream_test_body] )
+# End macro $0
+])      dnl end of CASC_STL_SSTREAM_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_MULTIMAP_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL multimap header file)
+AC_REQUIRE([CASC_INFO_CXX_ID])
+btng_stl_multimap_test_body='[multimap<int,int > v; pair<const int,int> thePair(0,1); v.insert(thePair);]'
+test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
+btng_stl_multimap_test_body='[multimap<int,int,less<int> > v; pair<const int,int> thePair(0,1); v.insert(thePair);]'
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-multimap],
+    [multimap mmap multimap.h mmap.h multimap.hxx mmap.hxx map map.h map.hxx],,
+    [$btng_stl_multimap_test_body])
+# End macro $0
+])      dnl end of CASC_STL_MULTIMAP_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_STL_PAIR_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the STL pair header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-pair], [pair pair.h pair.hxx],,
+  [pair<int,int> s(0,1);])
+# End macro $0
+])      dnl end of CASC_STL_PAIR_HEADER_FILENAME definition.
+
+
+
+
+dnl
+dnl These are some stream-related headers with uncertain names.
+dnl
+
+
+AC_DEFUN([CASC_IOSTREAM_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the iostream header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([iostream],
+  [iostream iostream.h iostream.hxx],,
+  [ostream &co=cout; // test ostream declaration
+   istream &ci=cin; // test istream declaration
+   cout<<"test"<<endl; // test extraction operator
+   ])
+# End macro $0
+])	dnl end of CASC_IOSTREAM_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_FSTREAM_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the fstream header file)
+CASC_TREAT_VARIABLE_HEADER_FILENAME([fstream],
+  [fstream fstream.h fstream.hxx],,
+  [fstream iost("theStream",ios::app);])
+# End macro $0
+])	dnl end of CASC_FSTREAM_HEADER_FILENAME definition.
+
+
+AC_DEFUN([CASC_IOMANIP_HEADER_FILENAME],[
+# Start macro $0
+dnl AC_MSG_CHECKING(name of the iomanip header file)
+AC_REQUIRE([CASC_IOSTREAM_HEADER_FILENAME])
+CASC_TREAT_VARIABLE_HEADER_FILENAME([iomanip],
+  [iomanip iomanip.h iomanip.hxx],[#include IOSTREAM_HEADER_FILE],
+  [cout<<setw(13)<<endl;])
+# End macro $0
+])	dnl end of CASC_IOMANIP_HEADER_FILENAME definition.
+
 

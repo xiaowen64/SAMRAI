@@ -1,16 +1,17 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/test/sundials/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2316 $
-## Modified:	$LastChangedDate: 2008-08-05 11:54:45 -0700 (Tue, 05 Aug 2008) $
-## Description:	makefile for cvode sample application
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for cvode sample application 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/sundials
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/sundials
-VPATH         = @top_srcdir@/examples/sundials
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
@@ -19,63 +20,48 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
 CXX_OBJS      = main.o CVODEModel.o tbox_Pointer-CVODEModel.o
-F2D_OBJS      = FACjacobian2d.o 
-F3D_OBJS      = FACjacobian3d.o 
+F_OBJS        = FACjacobian2d.o FACjacobian3d.o 
 
 NUM_TESTS = 4
 
 TEST_NPROCS = @TEST_NPROCS@
 
-main2d:
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
- 
-main-2d:	$(CXX_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
- 
-main3d:
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 main-3d
- 
-main-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
+	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
+
+checkcompile:   main
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
-check2d:	main2d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d cvode-2d-dir.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d cvode-2d-neu.input; 
+check2d:	main
+	@for i in test_inputs/*2d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
 
-check3d:	main3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d cvode-3d-dir.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d cvode-3d-neu.input; 
+check3d:	main
+	@for i in test_inputs/*3d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
 
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:
-		$(RM) *.o main2d main3d 
+	$(RM) *.o main
 
 include $(SRCDIR)/Makefile.depend
 
@@ -83,11 +69,11 @@ FORTRAN       = $(SRCDIR)
 M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
 FACjacobian2d.o:	$(FORTRAN)/FACjacobian2d.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian2d.m4 > FACjacobian2d.f
-		$(F77) $(FFLAGS) -c FACjacobian2d.f -o $@
+	$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian2d.m4 > FACjacobian2d.f
+	$(F77) $(FFLAGS) -c FACjacobian2d.f -o $@
 
 FACjacobian3d.o:	$(FORTRAN)/FACjacobian3d.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian3d.m4 > FACjacobian3d.f
-		$(F77) $(FFLAGS) -c FACjacobian3d.f -o $@
+	$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian3d.m4 > FACjacobian3d.f
+	$(F77) $(FFLAGS) -c FACjacobian3d.f -o $@
 
 

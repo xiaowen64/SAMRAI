@@ -1,13 +1,17 @@
-# Commands to create the autoconf configure script
-
-if [ ! -d acmacros ] 
-then
-	svn checkout file:///usr/casc/samrai/gunney/svnrepo/acmacros/branches/0.3 acmacros
-else
-	svn update acmacros
-fi
+#!/bin/bash
+#########################################################################
+##
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
+##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   Commands to create the autoconf configure script
+##
+#########################################################################
 
 rm -fr autom4te.cache
-aclocal -I `pwd`/config -I `pwd`/acmacros --output=config/aclocal.m4
+rm -fr config/aclocal.m4
+aclocal -I `pwd`/config --output=config/aclocal.m4
 autoheader -I config
+sed -i -e 's/^\(#undef \(PACKAGE\|VERSION\)\)/\/\/ Removed due to name conflict \1/' config/SAMRAI_config.h.in
 autoconf -I config

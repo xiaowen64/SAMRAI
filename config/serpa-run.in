@@ -139,6 +139,12 @@ target_vendor=@target_vendor@
 # Determine the machine file name.
 serpa_machine_file='serpa.machines'
 
+# If valgrind is being used this will be executable to invoke
+SAMRAI_VALGRIND_EXE=@valgrind_EXE@
+if [ "$SAMRAI_VALGRIND_EXE" != "" ];  then
+   export SAMRAI_VALGRIND_EXE
+   SAMRAI_MEMCHECK_EXE=$dir_name/@top_srcdir@/source/scripts/memcheck
+fi
 
 # Define a function to run a program in parallel.
 # We have to do this because different environments require different syntaxes.
@@ -153,18 +159,15 @@ serpa_machine_file='serpa.machines'
 if echo "${HOST}" | egrep '^(up)[0-9]' > /dev/null ; then
 
   run_multiproc () {
-  #    MP_RMPOOL=pdebug
-  #    export MP_RMPOOL
   # IBM shell functions eat their parameters after the first assignment
   # from them so save the parameters first.
     case "${HOST}" in
       up*) proc_per_node=8;;
     esac
+    export LDR_CNTRL="LARGE_PAGE_DATA=Y"
     program=${1}; nproc=${2}; shift 2
     nodes=`expr 1 + \( ${nproc} - 1 \) / ${proc_per_node}`
-    com="${additional_env} ${parallelrun_prog} ${program}"
-    com="${com} -rmpool 0 -nodes ${nodes} -procs ${nproc} ${@}"
-    # com="${program} ${@} -procs ${nproc}"
+    com="${additional_env} ${program} -nodes ${nodes} -procs ${nproc} ${@}"
     echo ${com}
     eval ${com} ${output_redirection_string} ${errors_redirection_string}
     return ${?}
@@ -182,12 +185,35 @@ elif echo "${HOST}" | grep '^tc2k' > /dev/null ; then
     return ${?}
   }
 
-elif echo "${HOST}" | egrep '^(atlas|zeus|thunder)[0-9]' > /dev/null ; then
+elif echo "${HOST}" | egrep '^(atlas|rzzeus|rzalastor)[0-9]' > /dev/null ; then
 
   # For LC Linux clusters using srun.
   run_multiproc () {
     program=${1}; nproc=${2}; shift 2
-    com="${additional_env} srun -n${nproc} ${program} ${@}"
+    if [ -n "${REGRESSION}" ] ; then
+      cmd="mpirun -np ${nproc}"
+    else
+      cmd="srun -n${nproc}"
+    fi
+    #com="${additional_env} srun -n${nproc} ${program} ${@}"
+    com="${cmd} ${program} ${@}"
+    echo ${com}
+    eval ${com} ${output_redirection_string} ${errors_redirection_string}
+    return ${?}
+  }
+
+elif echo "${HOSTNAME}" | egrep '^(ubgl|bgl|dawn|rzdawndev)[0-9]' > /dev/null ; then
+
+  # ubgl has a different way to use mpirun (contributed by Susan Hazlett)
+  run_multiproc() {
+    cwd=`pwd`
+    program=${1}; nproc=${2}; shift 2
+    if [ x"${@}" = x ] ; then
+      args=""
+    else
+      args="-args \"${@}\""
+    fi
+    com="mpirun -np ${nproc} -exe ${program} -cwd ${cwd} ${args}"
     echo ${com}
     eval ${com} ${output_redirection_string} ${errors_redirection_string}
     return ${?}
@@ -208,13 +234,18 @@ elif echo "${target_os}" | grep '^solaris' > /dev/null	\
   || echo "${target_os}" | grep '^irix' > /dev/null	\
   || echo "${target_os}" | grep '^linux' > /dev/null	\
   || echo "${target_os}" | grep '^darwin' > /dev/null	\
+  || echo "${target_os}" | grep '^cygwin' > /dev/null	\
   ; then
 
   # Most platforms fall into this case.
   run_multiproc () {
     program=${1}; nproc=${2}; shift 2
     com="${additional_env} ${parallelrun_prog}"
-    com="${com} -machinefile ${dir_name}/${serpa_machine_file} -np ${nproc} ${program} ${@}"
+    if [ "$SAMRAI_VALGRIND_EXE" = "" ];  then
+	com="${com} -machinefile ${dir_name}/${serpa_machine_file} -np ${nproc} ${program} ${@}"
+    else
+	com="${com} -machinefile ${dir_name}/${serpa_machine_file} -np ${nproc} ${SAMRAI_MEMCHECK_EXE} ${program} ${@}"
+    fi
     echo ${com}
     eval ${com} ${output_redirection_string} ${errors_redirection_string}
     return ${?}

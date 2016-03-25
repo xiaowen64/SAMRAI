@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/ieee/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1917 $
-## Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description:	makefile for ieee test case 
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for ieee test case 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
@@ -19,7 +20,6 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=2  -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
 NUM_TESTS = 1
 
@@ -27,29 +27,28 @@ TEST_NPROCS   = @TEST_NPROCS@
 
 CXX_OBJS      = ieee_test.o
 
-ieee:		$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI) $(LDLIBS) -o $@
+main:		$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(LIBSAMRAI) $(LDLIBS) -o $@
 
-check:		ieee
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-                ./ieee
+check:		main
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
 
 check2d:
-		$(MAKE) check
+	$(MAKE) check
 
 check3d:
-		$(MAKE) check
+	$(MAKE) check
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
 
 clean:
-		$(SAMCLEAN)
-		$(RM) ieee
+	$(SAMCLEAN)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

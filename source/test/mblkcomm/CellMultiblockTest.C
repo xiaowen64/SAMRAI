@@ -1,0 +1,560 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   AMR communication tests for cell-centered patch data
+ *
+ ************************************************************************/
+
+#include "CellMultiblockTest.h"
+
+#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
+#include "SAMRAI/hier/PatchGeometry.h"
+#include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/pdat/CellDoubleConstantRefine.h"
+
+#include "MultiblockTester.h"
+
+using namespace SAMRAI;
+
+CellMultiblockTest::CellMultiblockTest(
+   const string& object_name,
+   const tbox::Dimension& dim,
+   tbox::Pointer<tbox::Database> main_input_db,
+   bool do_refine,
+   bool do_coarsen,
+   const string& refine_option):
+   PatchMultiblockTestStrategy(dim),
+   d_dim(dim)
+{
+   NULL_USE(do_refine);
+   NULL_USE(do_coarsen);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!refine_option.empty());
+#endif
+
+   d_object_name = object_name;
+
+   d_refine_option = refine_option;
+
+   d_finest_level_number = main_input_db->
+      getDatabase("PatchHierarchy")->
+      getInteger("max_levels") - 1;
+
+   //int num_blocks = main_input_db->getDatabase("BlockGridGeometry")->
+   //   getInteger("num_blocks");
+
+   //d_skel_grid_geometry.resizeArray(num_blocks);
+
+   char geom_name[32];
+
+   sprintf(geom_name, "BlockGridGeometry");
+
+   if (main_input_db->keyExists(geom_name)) {
+      getGridGeometry() = new hier::GridGeometry(
+            dim,
+            geom_name,
+            tbox::Pointer<hier::TransferOperatorRegistry>(
+               new geom::SAMRAITransferOperatorRegistry(dim)),
+            main_input_db->getDatabase(geom_name));
+
+   } else {
+      TBOX_ERROR("CellMultiblockTest: could not find entry `"
+         << geom_name << "' in input.");
+   }
+
+   readTestInput(main_input_db->getDatabase("CellMultiblockTest"));
+}
+
+CellMultiblockTest::~CellMultiblockTest()
+{
+
+}
+
+void CellMultiblockTest::readTestInput(
+   tbox::Pointer<tbox::Database> db)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!db.isNull());
+#endif
+
+   /*
+    * Base class reads variable parameters and boxes to refine.
+    */
+
+   readVariableInput(db->getDatabase("VariableData"));
+   readRefinementInput(db->getDatabase("RefinementData"));
+}
+
+void CellMultiblockTest::registerVariables(
+   MultiblockTester* commtest)
+{
+   TBOX_ASSERT(commtest != (MultiblockTester *)NULL);
+
+   int nvars = d_variable_src_name.getSize();
+
+   d_variables.resizeArray(nvars);
+
+   for (int i = 0; i < nvars; i++) {
+      d_variables[i] =
+         new pdat::CellVariable<double>(d_dim,
+                                        d_variable_src_name[i],
+                                        d_variable_depth[i]);
+
+      commtest->registerVariable(d_variables[i],
+         d_variables[i],
+         d_variable_src_ghosts[i],
+         d_variable_dst_ghosts[i],
+         getGridGeometry(),
+         d_variable_refine_op[i]);
+
+   }
+
+}
+
+void CellMultiblockTest::initializeDataOnPatch(
+   hier::Patch& patch,
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const int level_number,
+   const hier::BlockId& block_id,
+   char src_or_dst)
+{
+   NULL_USE(hierarchy);
+   NULL_USE(src_or_dst);
+
+   if ((d_refine_option == "INTERIOR_FROM_SAME_LEVEL")
+       || ((d_refine_option == "INTERIOR_FROM_COARSER_LEVEL")
+           && (level_number < d_finest_level_number))) {
+
+      for (int i = 0; i < d_variables.getSize(); i++) {
+
+         tbox::Pointer<pdat::CellData<double> > cell_data =
+            patch.getPatchData(d_variables[i], getDataContext());
+
+         hier::Box dbox = cell_data->getGhostBox();
+
+         cell_data->fillAll((double)block_id.getBlockValue());
+
+      }
+   }
+}
+
+void CellMultiblockTest::tagCellsToRefine(
+   hier::Patch& patch,
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   int level_number,
+   int tag_index)
+{
+   (void)hierarchy;
+
+   /*
+    * Base class sets tags in box array for each level.
+    */
+   tagCellsInInputBoxes(patch, level_number, tag_index);
+
+}
+
+void CellMultiblockTest::setPhysicalBoundaryConditions(
+   hier::Patch& patch,
+   const double time,
+   const hier::IntVector& gcw_to_fill) const
+{
+   (void)time;
+
+   tbox::Pointer<hier::PatchGeometry>
+   pgeom = patch.getPatchGeometry();
+
+   const tbox::Array<hier::BoundaryBox> node_bdry =
+      pgeom->getCodimensionBoundaries(d_dim.getValue());
+   const int num_node_bdry_boxes = node_bdry.getSize();
+
+   tbox::Array<hier::BoundaryBox> edge_bdry;
+   int num_edge_bdry_boxes = 0;
+   if (d_dim > tbox::Dimension(1)) {
+      edge_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 1);
+      num_edge_bdry_boxes = edge_bdry.getSize();
+   }
+
+   tbox::Array<hier::BoundaryBox> face_bdry;
+   int num_face_bdry_boxes = 0;
+   if (d_dim == tbox::Dimension(3)) {
+      face_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 2);
+      num_face_bdry_boxes = face_bdry.getSize();
+   }
+
+   for (int i = 0; i < d_variables.getSize(); i++) {
+
+      tbox::Pointer<pdat::CellData<double> > cell_data =
+         patch.getPatchData(d_variables[i], getDataContext());
+
+      /*
+       * Set node boundary data.
+       */
+      for (int ni = 0; ni < num_node_bdry_boxes; ni++) {
+
+         hier::Box fill_box = pgeom->getBoundaryFillBox(node_bdry[ni],
+               patch.getBox(),
+               gcw_to_fill);
+
+         if (!node_bdry[ni].getIsMultiblockSingularity()) {
+            cell_data->fillAll((double)(node_bdry[ni].getLocationIndex() + 100),
+               fill_box);
+         }
+      }
+
+      if (d_dim > tbox::Dimension(1)) {
+         /*
+          * Set edge boundary data.
+          */
+         for (int ei = 0; ei < num_edge_bdry_boxes; ei++) {
+
+            hier::Box fill_box = pgeom->getBoundaryFillBox(edge_bdry[ei],
+                  patch.getBox(),
+                  gcw_to_fill);
+
+            if (!edge_bdry[ei].getIsMultiblockSingularity()) {
+               cell_data->fillAll((double)(edge_bdry[ei].getLocationIndex()
+                                           + 100),
+                  fill_box);
+            }
+         }
+      }
+
+      if (d_dim == tbox::Dimension(3)) {
+         /*
+          * Set face boundary data.
+          */
+         for (int fi = 0; fi < num_face_bdry_boxes; fi++) {
+
+            hier::Box fill_box = pgeom->getBoundaryFillBox(face_bdry[fi],
+                  patch.getBox(),
+                  gcw_to_fill);
+
+            if (!face_bdry[fi].getIsMultiblockSingularity()) {
+               cell_data->fillAll((double)(face_bdry[fi].getLocationIndex()
+                                           + 100),
+                  fill_box);
+            }
+         }
+      }
+
+   }
+
+}
+
+void CellMultiblockTest::fillSingularityBoundaryConditions(
+   hier::Patch& patch,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
+   const hier::Box& fill_box,
+   const hier::BoundaryBox& bbox,
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+{
+   const tbox::Dimension& dim = fill_box.getDim();
+
+   const hier::BoxId& dst_mb_id = patch.getBox().getId();
+
+   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      grid_geometry->getNeighbors(patch_blk_id);
+
+   for (int i = 0; i < d_variables.getSize(); i++) {
+
+      tbox::Pointer<pdat::CellData<double> > cell_data =
+         patch.getPatchData(d_variables[i], getDataContext());
+
+      hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
+      cell_data->fillAll(0.0, sing_fill_box);
+
+      int depth = cell_data->getDepth();
+      int num_encon_used = 0;
+
+      if (grid_geometry->hasEnhancedConnectivity()) {
+
+         hier::Connector::ConstNeighborhoodIterator ni =
+            dst_to_encon.findLocal(dst_mb_id);
+
+         if (ni != dst_to_encon.end()) {
+
+            for (hier::Connector::ConstNeighborIterator ei = dst_to_encon.begin(ni);
+                 ei != dst_to_encon.end(ni); ++ei) {
+
+               tbox::Pointer<hier::Patch> encon_patch(
+                  encon_level.getPatch(ei->getId()));
+
+               const hier::BlockId& encon_blk_id = ei->getBlockId();
+
+               hier::Transformation::RotationIdentifier rotation =
+                  hier::Transformation::NO_ROTATE;
+               hier::IntVector offset(dim);
+
+               for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+                    nbri(neighbors); nbri; nbri++) {
+
+                  if (nbri().getBlockId() == encon_blk_id) {
+                     rotation = nbri().getRotationIdentifier();
+                     offset = nbri().getShift();
+                     break;
+                  }
+               }
+
+               offset *= patch.getPatchGeometry()->getRatio();
+
+               hier::Transformation transformation(rotation, offset);
+               hier::Box encon_patch_box(encon_patch->getBox());
+               transformation.transform(encon_patch_box);
+
+               hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+               if (!encon_fill_box.empty()) {
+
+                  const hier::Transformation::RotationIdentifier back_rotate =
+                     hier::Transformation::getReverseRotationIdentifier(
+                        rotation, dim);
+
+                  hier::IntVector back_shift(dim);
+
+                  hier::Transformation::calculateReverseShift(
+                     back_shift, offset, rotation);
+
+                  hier::Transformation back_trans(back_rotate, back_shift);
+
+                  tbox::Pointer<pdat::CellData<double> > sing_data(
+                     encon_patch->getPatchData(d_variables[i], getDataContext()));
+
+                  for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
+                     pdat::CellIndex src_index(ci());
+                     pdat::CellGeometry::transform(src_index, back_trans);
+                     for (int d = 0; d < depth; d++) {
+                        (*cell_data)(ci(), d) += (*sing_data)(src_index, d);
+                     }
+                  }
+
+                  ++num_encon_used;
+               }
+            }
+         }
+      }
+
+      if (num_encon_used) {
+         for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
+            for (int d = 0; d < depth; d++) {
+               (*cell_data)(ci(), d) /= num_encon_used;
+            }
+         }
+      } else {
+         cell_data->fillAll(
+            (double)bbox.getLocationIndex() + 200.0, fill_box);
+      }
+   }
+}
+
+void CellMultiblockTest::postprocessRefine(
+   hier::Patch& fine,
+   const hier::Patch& coarse,
+   const tbox::Pointer<hier::VariableContext>& context,
+   const hier::Box& fine_box,
+   const hier::IntVector& ratio) const
+{
+   const tbox::Dimension& dim(fine.getDim());
+
+   pdat::CellDoubleConstantRefine ref_op(dim);
+
+   for (int i = 0; i < d_variables.getSize(); i++) {
+
+      int id = hier::VariableDatabase::getDatabase()->
+         mapVariableAndContextToIndex(d_variables[i], context);
+
+      ref_op.refine(fine, coarse, id, id, fine_box, ratio);
+   }
+}
+/*
+ *************************************************************************
+ *
+ * Verify results of communication operations.  This test must be
+ * consistent with data initialization and boundary operations above.
+ *
+ *************************************************************************
+ */
+bool CellMultiblockTest::verifyResults(
+   const hier::Patch& patch,
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const int level_number,
+   const hier::BlockId& block_id)
+{
+
+   tbox::plog << "\nEntering CellMultiblockTest::verifyResults..." << endl;
+   tbox::plog << "level_number = " << level_number << endl;
+   tbox::plog << "Patch box = " << patch.getBox() << endl;
+
+   hier::IntVector tgcw(d_dim, 0);
+   for (int i = 0; i < d_variables.getSize(); i++) {
+      tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
+         getGhostCellWidth());
+   }
+   hier::Box pbox = patch.getBox();
+
+   tbox::Pointer<pdat::CellData<double> > solution(
+      new pdat::CellData<double>(pbox, 1, tgcw));
+
+   hier::Box tbox(pbox);
+   tbox.grow(tgcw);
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      hierarchy->getGridGeometry()->getNeighbors(block_id);
+   hier::BoxContainer singularity(
+      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
+
+   hier::IntVector ratio =
+      hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
+
+   singularity.refine(ratio);
+
+   bool test_failed = false;
+
+   for (int i = 0; i < d_variables.getSize(); i++) {
+
+      double correct = (double)block_id.getBlockValue();
+
+      tbox::Pointer<pdat::CellData<double> > cell_data =
+         patch.getPatchData(d_variables[i], getDataContext());
+      int depth = cell_data->getDepth();
+
+      for (pdat::CellIterator ci(pbox); ci; ci++) {
+         for (int d = 0; d < depth; d++) {
+            double result = (*cell_data)(ci(), d);
+
+            if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               tbox::perr << "Test FAILED: ...."
+                          << " : cell index = " << ci() << endl;
+               tbox::perr << "    Variable = " << d_variable_src_name[i]
+                          << " : depth index = " << d << endl;
+               tbox::perr << "    result = " << result
+                          << " : correct = " << correct << endl;
+               test_failed = true;
+            }
+         }
+      }
+
+      hier::Box gbox = cell_data->getGhostBox();
+
+      for (tbox::List<hier::GridGeometry::Neighbor>::
+           Iterator ne(neighbors); ne; ne++) {
+
+         correct = ne().getBlockId().getBlockValue();
+
+         if (ne().isSingularity()) continue;
+
+         hier::BoxContainer neighbor_ghost(ne().getTransformedDomain());
+         neighbor_ghost.refine(ratio);
+         neighbor_ghost.intersectBoxes(gbox);
+
+         for (hier::BoxContainer::Iterator ng(neighbor_ghost);
+              ng != neighbor_ghost.end(); ++ng) {
+
+            for (pdat::CellIterator ci(ng()); ci; ci++) {
+               for (int d = 0; d < depth; d++) {
+                  double result = (*cell_data)(ci(), d);
+
+                  if (!tbox::MathUtilities<double>::equalEps(correct,
+                         result)) {
+                     tbox::perr << "Test FAILED: ...."
+                                << " : cell index = " << ci() << endl;
+                     tbox::perr << "    Variable = " << d_variable_src_name[i]
+                                << " : depth index = " << d << endl;
+                     tbox::perr << "    result = " << result
+                                << " : correct = " << correct << endl;
+                     test_failed = true;
+                  }
+               }
+            }
+         }
+      }
+
+      tbox::Pointer<hier::PatchGeometry> pgeom =
+         patch.getPatchGeometry();
+
+      for (int b = 0; b < d_dim.getValue(); b++) {
+         tbox::Array<hier::BoundaryBox> bdry =
+            pgeom->getCodimensionBoundaries(b + 1);
+
+         for (int k = 0; k < bdry.size(); k++) {
+            hier::Box fill_box = pgeom->getBoundaryFillBox(bdry[k],
+                  patch.getBox(),
+                  tgcw);
+            fill_box = fill_box * gbox;
+
+            if (bdry[k].getIsMultiblockSingularity()) {
+               correct = 0.0;
+
+               int num_sing_neighbors = 0;
+               for (tbox::List
+                    <hier::GridGeometry::Neighbor>::
+                    Iterator ns(neighbors); ns; ns++) {
+                  if (ns().isSingularity()) {
+                     hier::BoxContainer neighbor_ghost(
+                        ns().getTransformedDomain());
+                     neighbor_ghost.refine(ratio);
+                     neighbor_ghost.intersectBoxes(fill_box);
+                     if (neighbor_ghost.size()) {
+                        num_sing_neighbors++;
+                        correct += ns().getBlockId().getBlockValue();
+                     }
+                  }
+               }
+
+               if (num_sing_neighbors == 0) {
+
+                  correct = (double)bdry[k].getLocationIndex() + 200.0;
+
+               } else {
+
+                  correct /= (double)num_sing_neighbors;
+
+               }
+
+            } else {
+               correct = (double)(bdry[k].getLocationIndex() + 100);
+            }
+
+            for (pdat::CellIterator ci(fill_box); ci; ci++) {
+               for (int d = 0; d < depth; d++) {
+                  double result = (*cell_data)(ci(), d);
+
+                  if (!tbox::MathUtilities<double>::equalEps(correct,
+                         result)) {
+                     tbox::perr << "Test FAILED: ...."
+                                << " : cell index = " << ci() << endl;
+                     tbox::perr << "    Variable = " << d_variable_src_name[i]
+                                << " : depth index = " << d << endl;
+                     tbox::perr << "    result = " << result
+                                << " : correct = " << correct << endl;
+                     test_failed = true;
+                  }
+               }
+            }
+
+         }
+      }
+
+   }
+
+   if (!test_failed) {
+      tbox::plog << "CellMultiblockTest Successful!" << endl;
+   } else {
+      tbox::perr << "Multiblock CellMultiblockTest FAILED: \n" << endl;
+   }
+
+   solution.setNull();   // just to be anal...
+
+   tbox::plog << "\nExiting CellMultiblockTest::verifyResults..." << endl;
+   tbox::plog << "level_number = " << level_number << endl;
+   tbox::plog << "Patch box = " << patch.getBox() << endl << endl;
+
+   return !test_failed;
+}

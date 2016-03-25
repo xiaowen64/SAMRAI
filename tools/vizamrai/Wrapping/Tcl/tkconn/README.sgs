@@ -1,4 +1,0 @@
-Steven G. Smith 3/25/99
-
-Uncommented the last line of the file to prevent starting up 
-when sourced, makes it work as a package.

@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/clustering/parallel_br/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2181 $
-## Modified:	$LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
-## Description:	makefile for Euler gas dynamics sample application
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for Euler gas dynamics sample application 
+##
+#########################################################################
 
 SAMRAI	      = @top_srcdir@
 SRCDIR        = @top_srcdir@/examples/Euler
@@ -20,7 +21,6 @@ include $(OBJECT)/config/Makefile.config
 
 AUTOTEST      = $(SAMRAI)/source/test/applications
 CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
 NUM_TESTS = 3
 
@@ -46,23 +46,21 @@ check:
 	$(MAKE) check2d
 	$(MAKE) check3d
 
-check2d:main2d
-	sh gen-input-files.sh
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-	./main2d test-2d-append-1.input; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-	./main2d test-2d-append-2.input; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-	./main2d test-2d-append-3.input
+check2d:	main2d
+	@for i in test_inputs/*2d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main2d $${i};	\
+	done
 
 check3d:
 
+checkcompile: main2d main3d
+
 checktest:
-	rm -rf makecheck.logfile
-	$(MAKE) check >& makecheck.logfile
-	cat makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-	rm -rf makecheck.logfile
+	rm -f makecheck.logfile
 
 clean-check:
 	$(RM) *.f test-*d-append-*.input core

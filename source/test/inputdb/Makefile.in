@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/inputdb/Makefile.in $
-## Package:     SAMRAI test
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: makefile for testing the input database driver
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for testing the input database driver 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
@@ -20,16 +21,18 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DNDIM=2  -DTESTING=1
 
-inputdb:	inputdb.o $(LIBSAMRAIDEPEND)
+main:	inputdb.o $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) inputdb.o $(LIBSAMRAI) $(LDLIBS) -o $@
 
 NUM_TESTS = 1
 
 TEST_NPROCS = @TEST_NPROCS@ 
 
-check:		inputdb
+checkcompile: main
+
+check:		checkcompile
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./inputdb inputdb.input
+			./main inputdb.input
 
 check2d:
 		$(MAKE) check
@@ -38,14 +41,13 @@ check3d:
 		$(MAKE) check
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
+		rm -f makecheck.logfile
+		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+		rm -f makecheck.logfile
 
 clean:
 		$(SAMCLEAN)
-		$(RM) inputdb 
+		$(RM) main
 
 include $(SRCDIR)/Makefile.depend

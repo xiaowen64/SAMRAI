@@ -1,617 +1,588 @@
-/*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/dlbg/SinusoidalFrontTagger.C $
-  Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 2043 $
-  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
-  Description:	SinusoidalFrontTagger class implementation
-*/
-
-
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   SinusoidalFrontTagger class implementation
+ *
+ ************************************************************************/
 #include "SinusoidalFrontTagger.h"
-#include "MDA_Access.h"
-#include "CartesianGridGeometry.h"
-#include "HierarchyCellDataOpsReal.h"
-#include "ArrayData.h"
-#include "CellVariable.h"
-#include "NodeData.h"
-#include "NodeVariable.h"
+
+#include "SAMRAI/geom/CartesianGridGeometry.h"
+#include "SAMRAI/geom/CartesianPatchGeometry.h"
+#include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/math/HierarchyCellDataOpsReal.h"
+#include "SAMRAI/pdat/MDA_Access.h"
+#include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/pdat/NodeData.h"
+#include "SAMRAI/pdat/NodeVariable.h"
+#include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <iomanip>
 
 using namespace SAMRAI;
 
-
-
-template<int DIM>
-SinusoidalFrontTagger<DIM>::SinusoidalFrontTagger(
-  const string &object_name
-, tbox::Database *database
-)
-: d_name(object_name) ,
-  d_hierarchy() ,
-  d_period( 1.0 ) ,
-  d_amplitude( 0.2 ) ,
-  d_adaption_buffer(1),
-  d_allocate_data(true) ,
-  d_time(0.5)
+SinusoidalFrontTagger::SinusoidalFrontTagger(
+   const std::string& object_name,
+   const tbox::Dimension& dim,
+   tbox::Database* database):
+   d_name(object_name),
+   d_dim(dim),
+   d_hierarchy(),
+   d_period(1.0),
+   d_amplitude(0.2),
+   d_ghost_cell_width(dim, 0),
+   d_buffer_cells(dim, 1),
+   d_allocate_data(true),
+   d_time(0.5)
 {
-  hier::VariableDatabase<DIM> *variable_db = hier::VariableDatabase<DIM>::getDatabase();
+   hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 #ifdef DEBUG_CHECK_ASSERTIONS
-  TBOX_ASSERT( variable_db != NULL );
+   TBOX_ASSERT(variable_db != NULL);
 #endif
 
-  tbox::Array<double> init_disp;
-  tbox::Array<double> velocity;
+   tbox::Array<double> init_disp;
+   tbox::Array<double> velocity;
 
-  if ( database != NULL ) {
-    d_allocate_data
-      = database->getBoolWithDefault( "allocate_data" ,
-				      d_allocate_data );
-    d_adaption_buffer
-      = database->getIntegerWithDefault( "adaption_buffer" ,
-					 d_adaption_buffer );
-    d_period
-      = database->getDoubleWithDefault( "period" ,
-					 d_period );
-    if ( database->isDouble("init_disp") ) {
-       init_disp
-          = database->getDoubleArray( "init_disp" );
-    }
-    if ( database->isDouble("velocity") ) {
-       velocity
-          = database->getDoubleArray( "velocity" );
-    }
-    d_amplitude
-      = database->getDoubleWithDefault( "amplitude" ,
-					 d_amplitude );
-    d_time
-      = database->getDoubleWithDefault( "time" ,
-					 d_time );
-  }
-
-  for ( int idim=0; idim<DIM; ++idim ) {
-     d_init_disp[idim] = idim < init_disp.size() ? init_disp[idim] : 0.0;
-     d_velocity[idim] = idim < velocity.size() ? velocity[idim] : 0.0;
-  }
-
-  const string context_name = d_name + string(":context");
-  d_context = variable_db->getContext(context_name);
-
-  const hier::IntVector<DIM> ghost(0);
-
-  tbox::Pointer<hier::Variable<DIM> > dist_var =
-    new pdat::NodeVariable<DIM,double>(d_name+":dist");
-  d_dist_id = variable_db->registerVariableAndContext( dist_var,
-						       d_context,
-						       ghost);
-
-  tbox::Pointer<hier::Variable<DIM> > tag_var =
-    new pdat::CellVariable<DIM,int>(d_name+":tag");
-  d_tag_id = variable_db->registerVariableAndContext( tag_var,
-						      d_context,
-						      ghost);
-
-  return;
-}
-
-
-
-template<int DIM>
-SinusoidalFrontTagger<DIM>::~SinusoidalFrontTagger()
-{
-  return;
-}
-
-
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::initializeLevelData (
-  /*! Hierarchy to initialize */
-  const tbox::Pointer< hier::BasePatchHierarchy<DIM> > base_hierarchy ,
-  /*! Level to initialize */
-  const int ln ,
-  const double init_data_time ,
-  const bool can_be_refined ,
-  /*! Whether level is being introduced for the first time */
-  const bool initial_time ,
-  /*! Level to copy data from */
-  const tbox::Pointer< hier::BasePatchLevel<DIM> > old_base_level ,
-  const bool allocate_data )
-{
-
-   tbox::Pointer<hier::PatchHierarchy<DIM> > hierarchy = base_hierarchy;
-   tbox::Pointer<hier::PatchLevel<DIM> > old_level = old_base_level;
-   if ( ! old_base_level.isNull() ) {
-      TBOX_ASSERT( ! old_level.isNull() );
+   if (database != NULL) {
+      d_allocate_data =
+         database->getBoolWithDefault("allocate_data",
+            d_allocate_data);
+      if (database->isInteger("buffer_cells")) {
+         database->getIntegerArray("buffer_cells",
+            &d_buffer_cells[0], d_dim.getValue());
+      }
+      for (int ln = 0; true; ++ln) {
+         std::string name("buffer_space_");
+         name = name + tbox::Utilities::intToString(ln);
+         if (database->isDouble(name)) {
+            d_buffer_space.resizeArray(d_dim.getValue() * (ln + 1));
+            database->getDoubleArray(name, &d_buffer_space[d_dim.getValue() * ln], d_dim.getValue());
+         } else {
+            break;
+         }
+      }
+      d_period =
+         database->getDoubleWithDefault("period",
+            d_period);
+      if (database->isDouble("init_disp")) {
+         init_disp =
+            database->getDoubleArray("init_disp");
+      }
+      if (database->isDouble("velocity")) {
+         velocity =
+            database->getDoubleArray("velocity");
+      }
+      d_amplitude =
+         database->getDoubleWithDefault("amplitude",
+            d_amplitude);
+      d_time =
+         database->getDoubleWithDefault("time",
+            d_time);
    }
-   TBOX_ASSERT( ! hierarchy.isNull() );
 
-  /*
-    Reference the level object with the given index from the hierarchy.
-  */
-  tbox::Pointer<hier::PatchLevel<DIM> > level
-    = hierarchy->getPatchLevel(ln);
-  typename hier::PatchLevel<DIM>::Iterator pi;
-  for ( pi.initialize(level); pi; pi++ ) {
-     hier::Patch<DIM> &patch = *level->getPatch(*pi);
-     initializePatchData( patch,
-                          init_data_time,
-                          initial_time,
-                          allocate_data );
-  }
+   for (int idim = 0; idim < d_dim.getValue(); ++idim) {
+      d_init_disp[idim] = idim < init_disp.size() ? init_disp[idim] : 0.0;
+      d_velocity[idim] = idim < velocity.size() ? velocity[idim] : 0.0;
+   }
+
+   const std::string context_name = d_name + std::string(":context");
+   d_context = variable_db->getContext(context_name);
+
+   if (database->isInteger("ghost_cell_width")) {
+      database->getIntegerArray("ghost_cell_width",
+         &d_ghost_cell_width[0], d_dim.getValue());
+   }
+
+   tbox::Pointer<hier::Variable> dist_var(
+      new pdat::NodeVariable<double>(dim, d_name + ":dist"));
+   d_dist_id = variable_db->registerVariableAndContext(dist_var,
+         d_context,
+         d_ghost_cell_width);
+
+   tbox::Pointer<hier::Variable> tag_var(
+      new pdat::CellVariable<int>(dim, d_name + ":tag"));
+   d_tag_id = variable_db->registerVariableAndContext(tag_var,
+         d_context,
+         d_ghost_cell_width);
+
+   t_setup = tbox::TimerManager::getManager()->
+      getTimer("apps::SinusoidalFrontTagger::setup");
+   t_node_pos = tbox::TimerManager::getManager()->
+      getTimer("apps::SinusoidalFrontTagger::node_pos");
+   t_distance = tbox::TimerManager::getManager()->
+      getTimer("apps::SinusoidalFrontTagger::distance");
+   t_tag_cells = tbox::TimerManager::getManager()->
+      getTimer("apps::SinusoidalFrontTagger::tag_cells");
+   t_copy = tbox::TimerManager::getManager()->
+      getTimer("apps::SinusoidalFrontTagger::copy");
+}
+
+SinusoidalFrontTagger::~SinusoidalFrontTagger()
+{
+}
+
+void SinusoidalFrontTagger::initializeLevelData(
+   /*! Hierarchy to initialize */
+   const tbox::Pointer<hier::PatchHierarchy> base_hierarchy,
+   /*! Level to initialize */
+   const int ln,
+   const double init_data_time,
+   const bool can_be_refined,
+   /*! Whether level is being introduced for the first time */
+   const bool initial_time,
+   /*! Level to copy data from */
+   const tbox::Pointer<hier::PatchLevel> old_base_level,
+   const bool allocate_data)
+{
+   NULL_USE(can_be_refined);
+
+   tbox::Pointer<hier::PatchHierarchy> hierarchy = base_hierarchy;
+   tbox::Pointer<hier::PatchLevel> old_level = old_base_level;
+   if (!old_base_level.isNull()) {
+      TBOX_ASSERT(!old_level.isNull());
+   }
+   TBOX_ASSERT(!hierarchy.isNull());
+
+   /*
+    * Reference the level object with the given index from the hierarchy.
+    */
+   tbox::Pointer<hier::PatchLevel> level =
+      hierarchy->getPatchLevel(ln);
+
+   for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
+      hier::Patch& patch = **pi;
+      initializePatchData(patch,
+         init_data_time,
+         initial_time,
+         allocate_data);
+   }
 
 #if 0
-  if ( d_allocate_data ) {
-    /*
-      If instructed, allocate all patch data on the level.
-      Allocate only persistent data.  Scratch data will
-      generally be allocated and deallocated as needed.
-    */
-    if ( allocate_data ) {
-      level->allocatePatchData( d_dist_id );
-      level->allocatePatchData( d_tag_id );
-    }
-    computeLevelData( hierarchy, ln, d_time/*init_data_time*/,
-		      d_dist_id, d_tag_id, old_level );
-  }
+   if (d_allocate_data) {
+      /*
+       * If instructed, allocate all patch data on the level.
+       * Allocate only persistent data.  Scratch data will
+       * generally be allocated and deallocated as needed.
+       */
+      if (allocate_data) {
+         level->allocatePatchData(d_dist_id);
+         level->allocatePatchData(d_tag_id);
+      }
+      computeLevelData(hierarchy, ln, d_time /*init_data_time*/,
+         d_dist_id, d_tag_id, old_level);
+   }
 #endif
-
-  return;
 }
 
-
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::initializePatchData (
-  /*! Hierarchy to initialize */
-  hier::Patch<DIM> &patch ,
-  const double init_data_time ,
-  const bool initial_time ,
-  const bool allocate_data )
+void SinusoidalFrontTagger::initializePatchData(
+   hier::Patch& patch,
+   const double init_data_time,
+   const bool initial_time,
+   const bool allocate_data)
 {
+   NULL_USE(initial_time);
 
-  if ( d_allocate_data ) {
-    /*
-      If instructed, allocate all patch data on the level.
-      Allocate only persistent data.  Scratch data will
-      generally be allocated and deallocated as needed.
-    */
-    if ( allocate_data ) {
-      patch.allocatePatchData( d_dist_id );
-      patch.allocatePatchData( d_tag_id );
-      tbox::Pointer<pdat::NodeData<DIM,double> > dist_data =
-         patch.getPatchData(d_dist_id);
-      tbox::Pointer<pdat::CellData<DIM,int> > tag_data =
-         patch.getPatchData(d_tag_id);
-      TBOX_ASSERT( ! dist_data.isNull() );
-      TBOX_ASSERT( ! tag_data.isNull() );
-      computePatchData( patch, init_data_time,
-                        dist_data.getPointer(), tag_data.getPointer() );
-    }
-  }
-
-  return;
+   if (d_allocate_data) {
+      /*
+       * If instructed, allocate all patch data on the level.
+       * Allocate only persistent data.  Scratch data will
+       * generally be allocated and deallocated as needed.
+       */
+      if (allocate_data) {
+         if (!patch.checkAllocated(d_dist_id)) {
+            patch.allocatePatchData(d_dist_id);
+         }
+         if (!patch.checkAllocated(d_tag_id)) {
+            patch.allocatePatchData(d_tag_id);
+         }
+         tbox::Pointer<pdat::NodeData<double> > dist_data =
+            patch.getPatchData(d_dist_id);
+         tbox::Pointer<pdat::CellData<int> > tag_data =
+            patch.getPatchData(d_tag_id);
+         TBOX_ASSERT(!dist_data.isNull());
+         TBOX_ASSERT(!tag_data.isNull());
+         computePatchData(patch, init_data_time,
+            dist_data.getPointer(), tag_data.getPointer());
+      }
+   }
 }
 
-
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::resetHierarchyConfiguration (
-  /*! New hierarchy */ tbox::Pointer<hier::BasePatchHierarchy<DIM> > new_hierarchy ,
-  /*! Coarsest level */ int coarsest_level ,
-  /*! Finest level */ int finest_level )
+void SinusoidalFrontTagger::resetHierarchyConfiguration(
+   /*! New hierarchy */ tbox::Pointer<hier::PatchHierarchy> new_hierarchy,
+   /*! Coarsest level */ int coarsest_level,
+   /*! Finest level */ int finest_level)
 {
-  d_hierarchy = new_hierarchy;
-  TBOX_ASSERT( ! d_hierarchy.isNull() );
-  return;
+   NULL_USE(coarsest_level);
+   NULL_USE(finest_level);
+   d_hierarchy = new_hierarchy;
+   TBOX_ASSERT(!d_hierarchy.isNull());
 }
 
-
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::applyGradientDetector(
-  const tbox::Pointer<hier::BasePatchHierarchy<DIM> > base_hierarchy_,
-  const int ln,
-  const double error_data_time,
-  const int tag_index,
-  const bool initial_time,
-  const bool uses_richardson_extrapolation )
+void SinusoidalFrontTagger::applyGradientDetector(
+   const tbox::Pointer<hier::PatchHierarchy> base_hierarchy_,
+   const int ln,
+   const double error_data_time,
+   const int tag_index,
+   const bool initial_time,
+   const bool uses_richardson_extrapolation)
 {
-   tbox::Pointer<hier::PatchHierarchy<DIM> > hierarchy_ = base_hierarchy_;
-   TBOX_ASSERT( ! hierarchy_.isNull() );
-  tbox::Pointer<hier::PatchLevel<DIM> > level_ = hierarchy_->getPatchLevel(ln);
-   TBOX_ASSERT( ! level_.isNull() );
+   NULL_USE(initial_time);
+   NULL_USE(uses_richardson_extrapolation);
+   tbox::Pointer<hier::PatchHierarchy> hierarchy_ = base_hierarchy_;
+   TBOX_ASSERT(!hierarchy_.isNull());
+   tbox::Pointer<hier::PatchLevel> level_ = hierarchy_->getPatchLevel(ln);
+   TBOX_ASSERT(!level_.isNull());
 
-  hier::PatchLevel<DIM> &level = *level_;
+   hier::PatchLevel& level = *level_;
 
-  typename hier::PatchLevel<DIM>::Iterator pi;
-  for ( pi.initialize(level); pi; pi++ ) {
-    const int pn = pi();
-    hier::Patch<DIM> &patch = *level.getPatch(pn);
+   for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
+      hier::Patch& patch = **pi;
 
-    tbox::Pointer<hier::PatchData<DIM>  >
-      tag_data = patch.getPatchData( tag_index );
-    if ( tag_data.isNull() ) {
-      TBOX_ERROR("Data index " << tag_index
-		 << " does not exist for patch.\n");
-    }
-    tbox::Pointer<pdat::CellData<DIM,int> > tag_cell_data_ = tag_data;
-    if ( tag_cell_data_.isNull() ) {
-      TBOX_ERROR("Data index " << tag_index
-		 << " is not cell int data.\n");
-    }
+      tbox::Pointer<hier::PatchData>
+      tag_data = patch.getPatchData(tag_index);
+      if (tag_data.isNull()) {
+         TBOX_ERROR("Data index " << tag_index
+                                  << " does not exist for patch.\n");
+      }
+      tbox::Pointer<pdat::CellData<int> > tag_cell_data_ = tag_data;
+      if (tag_cell_data_.isNull()) {
+         TBOX_ERROR("Data index " << tag_index
+                                  << " is not cell int data.\n");
+      }
 
-    if ( d_allocate_data ) {
-      // Use internally stored data.
-      tbox::Pointer<pdat::CellData<DIM,int> >
-	saved_tag_data = patch.getPatchData( d_tag_id );
-      tag_cell_data_->copy( *saved_tag_data );
-      // overlayTagData( *saved_tag_data, *tag_cell_data_ );
-    }
-    else {
-      // Compute tag data for patch.
-      computePatchData( patch,
-                        error_data_time,
-                        NULL,
-                        tag_cell_data_.getPointer() );
-    }
-	
-  }
+      if (d_allocate_data) {
+         // Use internally stored data.
+         tbox::Pointer<hier::PatchData>
+         saved_tag_data = patch.getPatchData(d_tag_id);
+         tag_cell_data_->copy(*saved_tag_data);
+      } else {
+         // Compute tag data for patch.
+         computePatchData(patch,
+            error_data_time,
+            NULL,
+            tag_cell_data_.getPointer());
+      }
 
-  return;
+   }
 }
-
-
-
 
 /*
-  Deallocate patch data allocated by this class.
-*/
+ * Deallocate patch data allocated by this class.
+ */
 
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::deallocatePatchData(
-   hier::PatchHierarchy<DIM> &hierarchy )
+void SinusoidalFrontTagger::deallocatePatchData(
+   hier::PatchHierarchy& hierarchy)
 {
-  int ln;
-  for ( ln=0; ln<hierarchy.getNumberOfLevels(); ++ln ) {
-     tbox::Pointer<hier::PatchLevel<DIM> > level = hierarchy.getPatchLevel(ln);
-    deallocatePatchData( *level );
-  }
-  return;
+   int ln;
+   for (ln = 0; ln < hierarchy.getNumberOfLevels(); ++ln) {
+      tbox::Pointer<hier::PatchLevel> level = hierarchy.getPatchLevel(ln);
+      deallocatePatchData(*level);
+   }
 }
 
-
-
-
-
 /*
-  Deallocate patch data allocated by this class.
-*/
+ * Deallocate patch data allocated by this class.
+ */
 
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::deallocatePatchData(
-   hier::PatchLevel<DIM> &level )
+void SinusoidalFrontTagger::deallocatePatchData(
+   hier::PatchLevel& level)
 {
-  level.deallocatePatchData(d_dist_id);
-  level.deallocatePatchData(d_tag_id);
-  return;
+   level.deallocatePatchData(d_dist_id);
+   level.deallocatePatchData(d_tag_id);
 }
 
-
-
-
 /*
-  Deallocate patch data allocated by this class.
-*/
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::computeHierarchyData(
-   hier::PatchHierarchy<DIM> &hierarchy,
-   double time )
+ * Deallocate patch data allocated by this class.
+ */
+void SinusoidalFrontTagger::computeHierarchyData(
+   hier::PatchHierarchy& hierarchy,
+   double time)
 {
    d_time = time;
-   if ( ! d_allocate_data ) return;
-   for ( int ln=0; ln<hierarchy.getNumberOfLevels(); ++ln ) {
-      computeLevelData( hierarchy, ln, time, d_dist_id, d_tag_id );
+   if (!d_allocate_data) return;
+
+   for (int ln = 0; ln < hierarchy.getNumberOfLevels(); ++ln) {
+      computeLevelData(hierarchy, ln, time, d_dist_id, d_tag_id);
    }
-  return;
 }
-
-
-
-
 
 /*
-  Compute the solution data for a level.
-  Can copy data from old level (if any) to support
-  initializeLevelData().
-*/
+ * Compute the solution data for a level.
+ * Can copy data from old level (if any) to support
+ * initializeLevelData().
+ */
 
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::computeLevelData(
-  const hier::PatchHierarchy<DIM> &hierarchy,
-  const int ln,
-  const double time,
-  const int dist_id,
-  const int tag_id,
-  const tbox::Pointer<hier::PatchLevel<DIM> > &old_level ) const
+void SinusoidalFrontTagger::computeLevelData(
+   const hier::PatchHierarchy& hierarchy,
+   const int ln,
+   const double time,
+   const int dist_id,
+   const int tag_id,
+   const tbox::Pointer<hier::PatchLevel>& old_level) const
 {
+   NULL_USE(old_level);
 
-  const tbox::Pointer<hier::PatchLevel<DIM> > level =
-     hierarchy.getPatchLevel(ln);
+   const tbox::Pointer<hier::PatchLevel> level =
+      hierarchy.getPatchLevel(ln);
 
-  /*
-    Initialize data in all patches in the level.
-  */
-  typename hier::PatchLevel<DIM>::Iterator pi;
-  for ( pi.initialize(level); pi; pi++ ) {
-    int pn = *pi;
-    hier::Patch<DIM> &patch = *(level->getPatch(pn));
-    tbox::Pointer<pdat::NodeData<DIM,double> > dist_data = ( dist_id >= 0 ) ?
-      patch.getPatchData(dist_id) : tbox::Pointer<hier::PatchData<DIM> >(NULL);
-    tbox::Pointer<pdat::CellData<DIM,int> > tag_data = ( tag_id >= 0 ) ?
-      patch.getPatchData(tag_id) : tbox::Pointer<hier::PatchData<DIM> >(NULL);
-    computePatchData( patch, time,
-		      dist_data.getPointer(),
-		      tag_data.getPointer());
-  }
-
-  return;
+   /*
+    * Initialize data in all patches in the level.
+    */
+   for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
+      hier::Patch& patch = **pi;
+      tbox::Pointer<pdat::NodeData<double> > dist_data = (dist_id >= 0) ?
+         patch.getPatchData(dist_id) : tbox::Pointer<hier::PatchData>(NULL);
+      tbox::Pointer<pdat::CellData<int> > tag_data = (tag_id >= 0) ?
+         patch.getPatchData(tag_id) : tbox::Pointer<hier::PatchData>(NULL);
+      computePatchData(patch, time,
+         dist_data.getPointer(),
+         tag_data.getPointer());
+   }
 }
 
+/*
+ * Compute the solution data for a patch.
+ */
 
-
-
-
-
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::overlayTagData(
-   const pdat::CellData<DIM,int> &src,
-   pdat::CellData<DIM,int> &dst ) const
+void SinusoidalFrontTagger::computePatchData(
+   const hier::Patch& patch,
+   const double time,
+   pdat::NodeData<double>* dist_data,
+   pdat::CellData<int>* tag_data) const
 {
-   hier::Box<DIM> ibox( src.getGhostBox() * dst.getGhostBox() );
-   typename hier::Box<DIM>::Iterator bi(ibox);
-   for ( ; bi; bi++ ) {
-      if ( src(*bi) != 0 ) {
-         dst(*bi) = src(*bi);
+
+   t_setup->start();
+
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(patch.inHierarchy());
+
+   const int ln = patch.getPatchLevelNumber();
+   const tbox::Pointer<hier::PatchLevel> level =
+      d_hierarchy->getPatchLevel(ln);
+   const hier::IntVector& ratio(level->getRatioToLevelZero());
+
+   const hier::Box& pbox = patch.getBox();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
+      patch.getPatchGeometry();
+
+   const double* xlo = patch_geom->getXLower();
+
+   const double* dx = patch_geom->getDx();
+
+   // Compute the size of buffer to tag around cells crossing front.
+   hier::IntVector buffer(d_buffer_cells);
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      if (d_buffer_space.size() > ln * d_dim.getValue() + i) {
+         int space_based_buffer =
+            int(d_buffer_space[ln * d_dim.getValue() + i] / dx[i] + 0.5);
+         if (space_based_buffer > buffer(i)) buffer(i) = space_based_buffer;
       }
    }
-   return;
-}
-
-
-
-
-
-/*
-  Compute the solution data for a patch.
-*/
-
-
-template<int DIM>
-void SinusoidalFrontTagger<DIM>::computePatchData(
-  const hier::Patch<DIM> &patch,
-  const double time,
-  pdat::NodeData<DIM,double> *dist_data,
-  pdat::CellData<DIM,int> *tag_data) const
-{
-
-   hier::Box<DIM> pbox = patch.getBox();
-   tbox::Pointer<geom::CartesianPatchGeometry<DIM> > patch_geom
-      = patch.getPatchGeometry();
-
-   const double *xlo = patch_geom->getXLower();
-   const double *dx = patch_geom->getDx();
+   // std::cout << "buffer for ln of " << ln << " is " << buffer << std::endl;
 
    /*
-     We need at least d_adaption_buffer ghost cells to compute
-     the tags, but the data does not have as many ghost cells.
-     So we create temporary patch data with the required "ghost"
-     buffer for computing tag values.  (We could give the real
-     data the required ghost cells, but that may affect the
-     regridding algorithm I'm testing.)
-   */
-   hier::IntVector<DIM> required_tmp_buffer(d_adaption_buffer);
-   pdat::NodeData<DIM,double> tmp_dist( pbox, 1, required_tmp_buffer );
-   pdat::CellData<DIM,int> tmp_tag( pbox, 1, required_tmp_buffer );
-
+    * We need at least buffer ghost cells to compute
+    * the tags, but the data does not have as many ghost cells.
+    * So we create temporary patch data with the required "ghost"
+    * buffer for computing tag values.  (We could give the real
+    * data the required ghost cells, but that may affect the
+    * regridding algorithm I'm testing.)
+    */
+   hier::IntVector required_tmp_buffer(buffer);
+   required_tmp_buffer *= ratio;
+   pdat::NodeData<double> tmp_dist(pbox, 1, required_tmp_buffer);
+   pdat::CellData<int> tmp_tag(pbox, 1, required_tmp_buffer);
 
    /*
-     Determine what x-node-index contains the sinusoidal front.
-   */
+    * Determine what x-node-index contains the sinusoidal front.
+    */
 
-   const double wave_number = 2*3.141592654/d_period;
-   double wave_offset[DIM];
-   for ( int idim=0; idim<DIM; ++idim )
-      wave_offset[idim] = 2*3.141592654*0;
+   const double wave_number = 2 * 3.141592654 / d_period;
 
-   int i;
+   t_setup->stop();
 
-   hier::Box<DIM> front_box = pdat::NodeGeometry<DIM>::toNodeBox(tmp_dist.getGhostBox());
+   t_node_pos->start();
+
+   hier::Box front_box = pbox;
+   front_box.grow(required_tmp_buffer);
+   front_box.growUpper(hier::IntVector(d_dim, 1));
+   // Squash front_box to a single plane.
    front_box.upper(0) = front_box.lower(0);
-   pdat::ArrayData<DIM,double> front_x_(front_box,1);
-   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > front_x(
-      front_x_.getPointer(0) ,
-      (const int*)front_x_.getBox().lower() ,
-      (const int*)front_x_.getBox().upper() );
+   const int ifront = front_box.lower(0);
 
-   i = front_box.lower(0);
-#if NDIM == 2
-   for ( int j=front_box.lower(1); j<=front_box.upper(1); ++j ) {
-      double y = xlo[1] + dx[1]*(j-pbox.lower(1));
-      double siny = sin(wave_number*(y + d_init_disp[1] - d_velocity[1]*time));
-      double fx = d_amplitude*siny + d_init_disp[0] + d_velocity[0]*time;
-      front_x(i,j) = fx;
-      // cout << i << '\t' << j << '\t' << y << '\t' << front_x(i,j) << endl;
-   }
-#elif NDIM == 3
-   for ( int k=front_box.lower(2); k<=front_box.upper(2); ++k ) {
-      double z = xlo[2] + dx[2]*(k-pbox.lower(2));
-      double sinz = sin(wave_number*(z + d_init_disp[2] - d_velocity[2]*time));
-      for ( int j=front_box.lower(1); j<=front_box.upper(1); ++j ) {
-	 double y = xlo[1] + dx[1]*(j-pbox.lower(1));
-	 double siny = sin(wave_number*(y + d_init_disp[1] + d_velocity[1]*time));
-	 double fx = d_amplitude*siny*sinz + d_init_disp[0] + d_velocity[0]*time;
-	 front_x(i,j,k) = fx;
-	 // cout << i << '\t' << j << '\t' << k << '\t' << y << '\t' << z << '\t' << front_x(i,j,k) << endl;
+   pdat::ArrayData<int> front_i_(front_box, 1);
+
+   MDA_Access<int, 2, MDA_OrderColMajor<2> > front_i2;
+   MDA_Access<int, 3, MDA_OrderColMajor<3> > front_i3;
+   if (d_dim == tbox::Dimension(2)) {
+      front_i2 = MDA_Access<int, 2, MDA_OrderColMajor<2> >(
+            front_i_.getPointer(0),
+            &front_i_.getBox().lower()[0],
+            &front_i_.getBox().upper()[0]);
+      for (int j = front_i2.beg(1); j < front_i2.end(1); ++j) {
+         double y = xlo[1] + dx[1] * (j - pbox.lower(1));
+         double siny =
+            sin(wave_number * (y + d_init_disp[1] - d_velocity[1] * time));
+         double fx = d_amplitude * siny + d_init_disp[0] + d_velocity[0] * time;
+         front_i2(ifront, j) = int((fx - xlo[0]) / dx[0]) + pbox.lower(0);
+         // std::cout << i << '\t' << j << '\t' << y << '\t' << front_i(i,j) << std::endl;
+      }
+   } else if (d_dim == tbox::Dimension(3)) {
+      front_i3 = MDA_Access<int, 3, MDA_OrderColMajor<3> >(
+            front_i_.getPointer(0),
+            &front_i_.getBox().lower()[0],
+            &front_i_.getBox().upper()[0]);
+      for (int k = front_i3.beg(2); k < front_i3.end(2); ++k) {
+         double z = xlo[2] + dx[2] * (k - pbox.lower(2));
+         double sinz =
+            sin(wave_number * (z + d_init_disp[2] - d_velocity[2] * time));
+         for (int j = front_i3.beg(1); j < front_i3.end(1); ++j) {
+            double y = xlo[1] + dx[1] * (j - pbox.lower(1));
+            double siny =
+               sin(wave_number * (y + d_init_disp[1] + d_velocity[1] * time));
+            double fx = d_amplitude * siny * sinz + d_init_disp[0]
+               + d_velocity[0] * time;
+            front_i3(ifront, j, k) = int((fx - xlo[0]) / dx[0]) + pbox.lower(0);
+            // std::cout << i << '\t' << j << '\t' << k << '\t' << y << '\t' << z << '\t' << front_i(i,j,k) << std::endl;
+         }
       }
    }
-#endif
 
-   typename pdat::NodeData<DIM,double>::Iterator ni(tmp_dist.getGhostBox());
-   for ( ; ni; ni++ ) {
-      const pdat::NodeIndex<DIM> &index = *ni;
-#if NDIM == 2
-      tmp_dist(index) = xlo[0] + (index(0)-pbox.lower(0))*dx[0]
-	 - front_x( front_box.lower(0), index(1) );
-#elif NDIM == 3
-      tmp_dist(index) = xlo[0] + (index(0)-pbox.lower(0))*dx[0]
-	 - front_x( front_box.lower(0), index(1), index(2) );
-#endif
+   t_node_pos->stop();
+
+   if (dist_data != NULL) {
+      t_distance->start();
+
+      pdat::NodeData<double>::Iterator ni(tmp_dist.getGhostBox());
+      for ( ; ni; ni++) {
+         const pdat::NodeIndex& index = *ni;
+         if (d_dim == tbox::Dimension(2)) {
+            tmp_dist(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
+               - front_i2(ifront, index(1)) * dx[0];
+         } else if (d_dim == tbox::Dimension(3)) {
+            tmp_dist(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
+               - front_i3(ifront, index(1), index(2)) * dx[0];
+         }
+      }
+      // tmp_dist.print(tmp_dist.getBox(),0,plog);
+
+      t_distance->stop();
    }
-   // tmp_dist.print(tmp_dist.getBox(),0,plog);
 
-   tmp_tag.fill(0);
+   if (tag_data != NULL) {
 
-   const hier::IntVector<DIM> tag_growth(d_adaption_buffer);
+      t_tag_cells->start();
 
-   typename pdat::CellData<DIM,double>::Iterator ci(tmp_dist.getGhostBox());
-   for ( ; ci; ci++ ) {
-      const pdat::CellIndex<DIM> &index = *ci;
+      tag_data->fill(0);
 
-      double node_x_lo = xlo[0] + (index(0)  -pbox.lower(0))*dx[0];
-      double node_x_up = xlo[0] + (index(0)+1-pbox.lower(0))*dx[0];
+      const hier::IntVector tag_growth(buffer);
 
-#if NDIM == 2
-      bool on_lo_side =
-	 node_x_lo <= front_x(front_box.lower(0), index(1)  ) ||
-	 node_x_lo <= front_x(front_box.lower(0), index(1)+1) ;
-      bool on_up_side =
-	 node_x_up >= front_x(front_box.lower(0), index(1)  ) ||
-	 node_x_up >= front_x(front_box.lower(0), index(1)+1) ;
-#elif NDIM == 3
-      bool on_lo_side =
-	 node_x_lo <= front_x(front_box.lower(0), index(1)  , index(2)  ) ||
-	 node_x_lo <= front_x(front_box.lower(0), index(1)+1, index(2)  ) ||
-	 node_x_lo <= front_x(front_box.lower(0), index(1)  , index(2)+1) ||
-	 node_x_lo <= front_x(front_box.lower(0), index(1)+1, index(2)+1) ;
-      bool on_up_side =
-	 node_x_up >= front_x(front_box.lower(0), index(1)  , index(2)  ) ||
-	 node_x_up >= front_x(front_box.lower(0), index(1)+1, index(2)  ) ||
-	 node_x_up >= front_x(front_box.lower(0), index(1)  , index(2)+1) ||
-	 node_x_up >= front_x(front_box.lower(0), index(1)+1, index(2)+1) ;
-#endif
-
-      if ( on_lo_side && on_up_side ) {
-	 // cout << "Tagging " << index << endl;
-	 hier::Box<DIM> tag_box( index, index );
-	 tag_box.grow(tag_growth);
-	 tag_box = tag_box * tmp_tag.getGhostBox();
-	 tmp_tag.fill( 1, tag_box );
+      if (d_dim == tbox::Dimension(2)) {
+         MDA_Access<int, 2, MDA_OrderColMajor<2> > tag_aa(
+            tag_data->getPointer(0),
+            &tag_data->getGhostBox().lower()[0],
+            &tag_data->getGhostBox().upper()[0]);
+         for (int j = pbox.lower(1); j <= pbox.upper(1); ++j) {
+            int mini = front_i2(ifront, j) - buffer(0);
+            int maxi = front_i2(ifront, j) + buffer(0);
+            if (mini < pbox.lower() (0)) mini = pbox.lower() (0);
+            if (maxi > pbox.upper() (0)) maxi = pbox.upper() (0);
+            for (int i = mini; i <= maxi; ++i) {
+               tag_aa(i, j) = 1;
+            }
+         }
+      } else if (d_dim == tbox::Dimension(3)) {
+         MDA_Access<int, 3, MDA_OrderColMajor<3> > tag_aa(
+            tag_data->getPointer(0),
+            &tag_data->getGhostBox().lower()[0],
+            &tag_data->getGhostBox().upper()[0]);
+         for (int k = pbox.lower(2); k <= pbox.upper(2); ++k) {
+            for (int j = pbox.lower(1); j <= pbox.upper(1); ++j) {
+               int mini = front_i3(ifront, j, k) - buffer(0);
+               int maxi = front_i3(ifront, j, k) + buffer(0);
+               if (mini < pbox.lower() (0)) mini = pbox.lower() (0);
+               if (maxi > pbox.upper() (0)) maxi = pbox.upper() (0);
+               for (int i = mini; i <= maxi; ++i) {
+                  tag_aa(i, j, k) = 1;
+               }
+            }
+         }
       }
 
+      t_tag_cells->stop();
+
    }
+
+   t_copy->start();
 
    /*
-     Copy computed data to output.  Recall that the convention is
-     to send in a NULL pointer to indicate that data is not wanted.
-   */
-   if ( dist_data != NULL ) {
+    * Copy computed data to output.  Recall that the convention is
+    * to send in a NULL pointer to indicate that data is not wanted.
+    */
+   if (dist_data != NULL) {
       dist_data->copy(tmp_dist);
    }
-   if ( tag_data != NULL ) {
-      tag_data->copy(tmp_tag);
+
+   t_copy->stop();
+}
+
+#ifdef HAVE_HDF5
+int SinusoidalFrontTagger::registerVariablesWithPlotter(
+   appu::VisItDataWriter& writer)
+{
+   /*
+    * Register variables with plotter.
+    */
+   if (d_allocate_data) {
+      writer.registerPlotQuantity("Distance to front", "SCALAR", d_dist_id);
+      writer.registerPlotQuantity("Tag value", "SCALAR", d_tag_id);
+   } else {
+      writer.registerDerivedPlotQuantity("Distance to front", "SCALAR", this,
+         // hier::IntVector(0),
+         1.0,
+         "NODE");
+      writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
    }
-
-  return;
+   return 0;
 }
-
-
-
-
-
-
-template<int DIM>
-int SinusoidalFrontTagger<DIM>::registerVariablesWithPlotter(
-  appu::CartesianVizamraiDataWriter<DIM> &writer )
-{
-  /*
-    Register variables with plotter.
-  */
-  if ( d_allocate_data ) {
-    writer.registerPlotScalar("Distance to front", d_dist_id);
-    writer.registerPlotScalar("Tag value", d_tag_id);
-  }
-  else {
-    writer.registerDerivedPlotScalar("Distance to front", this);
-    writer.registerDerivedPlotScalar("Tag value", this);
-  }
-  return 0;
-}
-
-
-
-
-
-
-template<int DIM>
-int SinusoidalFrontTagger<DIM>::registerVariablesWithPlotter(
-  appu::VisItDataWriter<DIM> &writer )
-{
-  /*
-    Register variables with plotter.
-  */
-  if ( d_allocate_data ) {
-    writer.registerPlotQuantity("Distance to front", "SCALAR", d_dist_id);
-    writer.registerPlotQuantity("Tag value", "SCALAR", d_tag_id);
-  }
-  else {
-    writer.registerDerivedPlotQuantity("Distance to front", "SCALAR", this,
-				       1.0,
-				       "NODE");
-    writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
-  }
-  return 0;
-}
-
-
-
-
-
-
-template<int DIM>
-bool SinusoidalFrontTagger<DIM>::packDerivedDataIntoDoubleBuffer(
-  double *buffer,
-  const hier::Patch<DIM> &patch,
-  const hier::Box<DIM> &region,
-  const string &variable_name,
-  int depth_index) const
-{
-   TBOX_ASSERT( d_allocate_data == false );
-  if ( variable_name == "Distance to front" ) {
-    pdat::NodeData<DIM,double> dist_data( patch.getBox(), 1, hier::IntVector<DIM>(0) );
-    computePatchData( patch, d_time, &dist_data, NULL );
-    for ( typename pdat::NodeData<DIM,double>::Iterator ci(patch.getBox()); ci; ci++ ) {
-      *(buffer++) = dist_data(*ci);
-    }
-  }
-  else if ( variable_name == "Tag value" ) {
-    pdat::CellData<DIM,int> tag_data( patch.getBox() , 1, hier::IntVector<DIM>(0));
-    computePatchData( patch, d_time, NULL, &tag_data );
-    for ( typename pdat::CellData<DIM,double>::Iterator ci(patch.getBox()); ci; ci++ ) {
-      *(buffer++) = tag_data(*ci);
-    }
-  }
-  else {
-    TBOX_ERROR("Unrecognized name " << variable_name);
-  }
-return true;
-}
-
-
-#ifdef NDIM
-template class SinusoidalFrontTagger<NDIM>;
 #endif
+
+bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
+   double* buffer,
+   const hier::Patch& patch,
+   const hier::Box& region,
+   const std::string& variable_name,
+   int depth_index) const
+{
+   (void)region;
+   (void)depth_index;
+
+   TBOX_ASSERT(d_allocate_data == false);
+   if (variable_name == "Distance to front") {
+      pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
+                                          0));
+      computePatchData(patch, d_time, &dist_data, NULL);
+      for (pdat::NodeData<double>::Iterator ci(patch.getBox()); ci; ci++) {
+         *(buffer++) = dist_data(*ci);
+      }
+   } else if (variable_name == "Tag value") {
+      pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      computePatchData(patch, d_time, NULL, &tag_data);
+      for (pdat::CellData<double>::Iterator ci(patch.getBox()); ci; ci++) {
+         *(buffer++) = tag_data(*ci);
+      }
+   } else {
+      TBOX_ERROR("Unrecognized name " << variable_name);
+   }
+   return true;
+}
+
+void SinusoidalFrontTagger::setTime(
+   double time)
+{
+   d_time = time;
+}

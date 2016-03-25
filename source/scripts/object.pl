@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/object.pl $
-## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: perl script to create Makefile.objects.tmp files from .C files
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   perl script to create Makefile.objects.tmp files from .C files 
+##
+#########################################################################
 
 #
 # Usage: object.pl <.C files>
@@ -34,7 +35,7 @@ if ($TARGET eq "libdefault") {
     print OUTFILE "##\n";
     print OUTFILE "## File:\tMakefile.objects\n";
     print OUTFILE "## Package:\tSAMRAI\n";
-    print OUTFILE "## Copyright:\t(c) 1997-2008 Lawrence Livermore National Security, LLC\n";
+    print OUTFILE "## Copyright:\t(c) 1997-2011 Lawrence Livermore National Security, LLC\n";
     print OUTFILE "## Release:\t\$N${EMPTY}ame:  \$\n";
     print OUTFILE "## Revision:\t\$R${EMPTY}evision: \$\n";
     print OUTFILE "## Modified:\t\$D${EMPTY}ate: \$\n";

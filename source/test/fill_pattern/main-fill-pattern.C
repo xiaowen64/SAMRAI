@@ -1,35 +1,36 @@
-//
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/test/fill_pattern/main-fill_pattern.C $
-// Package:     SAMRAI test
-// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2901 $
-// Modified:    $LastChangedDate: 2009-02-12 15:21:53 -0800 (Thu, 12 Feb 2009) $// Description: Main program for testing SAMRAI VariableFillPatterns
-//
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   $LastChangedDate
+ *
+ ************************************************************************/
 
+#include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI_config.h"
-
-#include "SkeletonGridGeometry.h"
-#include "CellData.h"
-#include "CellVariable.h"
-#include "NodeData.h"
-#include "NodeVariable.h"
-#include "FirstLayerCellFillPattern.h"
-#include "FirstLayerCellNoCornersFillPattern.h"
-#include "SecondLayerNodeFillPattern.h"
-#include "SecondLayerNodeNoCornersFillPattern.h"
-#include "RefineAlgorithm.h"
-#include "BoxArray.h"
-#include "PatchHierarchy.h"
-#include "tbox/SAMRAIManager.h"
+#include "SAMRAI/geom/SkeletonGridGeometry.h"
+#include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/pdat/NodeData.h"
+#include "SAMRAI/pdat/NodeVariable.h"
+#include "SAMRAI/pdat/FirstLayerCellVariableFillPattern.h"
+#include "SAMRAI/pdat/FirstLayerCellNoCornersVariableFillPattern.h"
+#include "SAMRAI/pdat/SecondLayerNodeVariableFillPattern.h"
+#include "SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/PatchHierarchy.h"
+#include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include <cstring>
-#include <vector>
+#include <stdlib.h>
 
 using namespace std;
 using namespace SAMRAI;
-
-
 
 /*
  *
@@ -37,7 +38,9 @@ using namespace SAMRAI;
  *
  */
 
-void txt2boxes(const char* txt, hier::BoxArray<NDIM>& boxes)
+void txt2boxes(
+   const char* txt,
+   hier::BoxContainer& boxes)
 {
    // algorithm:
    // find width
@@ -50,10 +53,10 @@ void txt2boxes(const char* txt, hier::BoxArray<NDIM>& boxes)
    // translate coordinates into cell-centered, lower-left origin based
 
    int width = -1;
-   for (unsigned int idx = 0; idx < strlen(txt)-1; idx++) {
-      if ( ('x' == txt[idx]  || '.' == txt[idx]) &&
-           ('.' == txt[idx+1] || '|' == txt[idx+1]) ) {
-         width = idx+1;
+   for (unsigned int idx = 0; idx < strlen(txt) - 1; idx++) {
+      if (('x' == txt[idx] || '.' == txt[idx]) &&
+          ('.' == txt[idx + 1] || '|' == txt[idx + 1])) {
+         width = idx + 1;
          break;
       }
    }
@@ -62,72 +65,56 @@ void txt2boxes(const char* txt, hier::BoxArray<NDIM>& boxes)
       exit(1);
    }
 
-   int height = strlen(txt)/width;
+   int height = static_cast<int>(strlen(txt)) / width;
 
    // Find cell height
-   int cell_height = (height-1)/2;
-   int cell_max = cell_height-1;
+   int cell_height = (height - 1) / 2;
+   int cell_max = cell_height - 1;
 
    // make vector of x locations
-//   vector<pair<int,int> > ix;
-   tbox::List<hier::IntVector<NDIM> > ix;
+   vector<pair<int, int> > ix;
    for (unsigned int idx = 0; idx < strlen(txt); idx++) {
       if ('x' == txt[idx]) {
          int j = idx / width;
-         int i = idx - j*width;
-         hier::IntVector<NDIM> pt;
-         pt(0) = i;
-         pt(1) = j; 
-//         ix.push_back(pair<int,int>(i,j));
-         ix.appendItem(pt);
+         int i = idx - j * width;
+         ix.push_back(pair<int, int>(i, j));
       }
    }
 
    // foreach x1 in x
-//   vector< pair<int,int> >::iterator it;
-//   for (it = ix.begin(); it != ix.end(); it++) {
-   for (tbox::List<hier::IntVector<NDIM> >::Iterator it(ix); it; it++) {
+   vector<pair<int, int> >::iterator it;
+   for (it = ix.begin(); it != ix.end(); it++) {
 
-//      vector< pair<int,int> >::iterator it2;
+      vector<pair<int, int> >::iterator it2;
 
       // We need to gather all potential boxes rooted here, and then
       // only take the smallest one.
 
-//      vector< hier::Box<NDIM> > boxes_here;
-//      boxes_here.clear();
-      hier::BoxList<NDIM> boxes_here;
+      vector<hier::Box> boxes_here;
+      boxes_here.clear();
 
-//      for (it2 = ix.begin(); it2 != ix.end(); it2++) {
-      for (tbox::List<hier::IntVector<NDIM> >::Iterator it2(ix); it2; it2++) {
+      for (it2 = ix.begin(); it2 != ix.end(); it2++) {
 
-//         if (it2->first > it->first &&
-//             it2->second > it->second) {
-         if (it2()(0) > it()(0) &&
-             it2()(1) > it()(1)) {
+         if (it2->first > it->first &&
+             it2->second > it->second) {
 
             bool isbox = true;
 
             // If the two other corners exist, and...
-//            int i1 = it->first;
-//            int j1 = it2->second;
-            int i1 = it()(0);
-            int j1 = it2()(1);
-            int idx1 = j1*width +i1;
+            int i1 = it->first;
+            int j1 = it2->second;
+            int idx1 = j1 * width + i1;
             if (txt[idx1] != 'x') isbox = false;
 
-//            int i2 = it2->first;
-//            int j2 = it->second;
-            int i2 = it2()(0);
-            int j2 = it()(1);
-            int idx2 = j2*width +i2;
+            int i2 = it2->first;
+            int j2 = it->second;
+            int idx2 = j2 * width + i2;
             if (txt[idx2] != 'x') isbox = false;
 
             // ...interior cells contain no corners
-//            for (int i = it->first+1; i < it2->first; i++) {
-//               for (int j = it->second+1; j < it2->second; j++) {
-            for (int i = it()(0)+1; i < it2()(0); i++) {
-               for (int j = it()(1)+1; j < it2()(1); j++) {
-                  int idx = j*width +i;
+            for (int i = it->first + 1; i < it2->first; i++) {
+               for (int j = it->second + 1; j < it2->second; j++) {
+                  int idx = j * width + i;
                   if ('x' == txt[idx]) isbox = false;
                   if ('-' == txt[idx]) isbox = false;
                   if ('|' == txt[idx]) isbox = false;
@@ -137,31 +124,26 @@ void txt2boxes(const char* txt, hier::BoxArray<NDIM>& boxes)
             if (isbox) {
 
                // Translate indices into node centered coords
-//               int i0 = it->first/4;
-//               int i1 = it2->first/4;
-//               int j0 = it->second/2;
-//               int j1 = it2->second/2;
-               int i0 = it()(0)/4;
-               i1 = it2()(0)/4;
-               int j0 = it()(1)/2;
-               j1 = it2()(1)/2;
+               int i0 = it->first / 4;
+               i1 = it2->first / 4;
+               int j0 = it->second / 2;
+               j1 = it2->second / 2;
 
                i1--;
                j1--;
 
                // Flip coordinates vertically.
-               j0 = cell_max-j0;
-               j1 = cell_max-j1;
+               j0 = cell_max - j0;
+               j1 = cell_max - j1;
 
                // Lower left uses j1, upper right j0
                int tmp = j1;
                j1 = j0;
                j0 = tmp;
 
-               hier::Box<NDIM> abox(hier::Index<NDIM>(i0,j0),
-                                    hier::Index<NDIM>(i1,j1));
-//               boxes_here.push_back(abox);
-               boxes_here.appendItem(abox);
+               hier::Box abox(hier::Index(i0, j0),
+                              hier::Index(i1, j1));
+               boxes_here.push_back(abox);
             }
          }
       }
@@ -169,39 +151,34 @@ void txt2boxes(const char* txt, hier::BoxArray<NDIM>& boxes)
       // Find smallest box at this 'x'
       if (boxes_here.size()) {
 
-//         hier::Box<NDIM> smallest_box(boxes_here[0]);
-         hier::Box<NDIM> smallest_box(boxes_here.getFirstItem());
+         hier::Box smallest_box(boxes_here[0]);
 
-//         for (vector< hier::Box<NDIM> >::iterator it = boxes_here.begin();
-//              it != boxes_here.end(); it++) {
-         for (hier::BoxList<NDIM>::Iterator itb(boxes_here); itb; itb++) {
-//            if ((*it).numberCells() < smallest_box.numberCells()) {
-//               smallest_box = *it;
-            if (itb().numberCells() < smallest_box.numberCells()) {
-               smallest_box = itb();
+         for (vector<hier::Box>::iterator itb = boxes_here.begin();
+              itb != boxes_here.end(); itb++) {
+            if ((*itb).numberCells() < smallest_box.numberCells()) {
+               smallest_box = *itb;
             }
          }
 
-         boxes.resizeBoxArray(boxes.getNumberOfBoxes()+1);
-         int bidx = boxes.getNumberOfBoxes()-1;
-         boxes[bidx] = smallest_box;
+         boxes.pushBack(smallest_box);
       }
 
    }
 
    // Shift all boxes into SAMRAI coordinates
-   for (int idx = 0; idx < boxes.getNumberOfBoxes(); idx++) {
-      boxes[idx].shift(-hier::IntVector<NDIM>(2));
+   for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      itr().shift(-hier::IntVector(tbox::Dimension(2), 2));
    }
 }
 
-int txt_width(const char* txt)
+int txt_width(
+   const char* txt)
 {
    int width = -1;
-   for (unsigned int idx = 0; idx < strlen(txt)-1; idx++) {
-      if ( ('x' == txt[idx]  || '.' == txt[idx]) &&
-           ('.' == txt[idx+1] || '|' == txt[idx+1]) ) {
-         width = idx+1;
+   for (unsigned int idx = 0; idx < strlen(txt) - 1; idx++) {
+      if (('x' == txt[idx] || '.' == txt[idx]) &&
+          ('.' == txt[idx + 1] || '|' == txt[idx + 1])) {
+         width = idx + 1;
          break;
       }
    }
@@ -212,20 +189,21 @@ int txt_width(const char* txt)
    return width;
 }
 
-bool txt_next_val(const char* txt,
-                  int& idx,
-                  const hier::PatchData<NDIM>& data,
-                  int* datapt,
-                  bool is_node)
+bool txt_next_val(
+   const char* txt,
+   int& idx,
+   const hier::PatchData& data,
+   int* datapt,
+   bool is_node)
 {
    // Find text size
    int txt_w = txt_width(txt);
-   int txt_h = strlen(txt)/txt_w;
+   int txt_h = static_cast<int>(strlen(txt)) / txt_w;
 
    // Find grid size
-   int grid_height = (txt_h-1)/2;
-   int grid_width = (txt_w-1)/4;
-   int grid_max = grid_height-1;
+   int grid_height = (txt_h - 1) / 2;
+   int grid_width = (txt_w - 1) / 4;
+   int grid_max = grid_height - 1;
 
    int cnt_max = 10000; // limit infinite loop possibility
    int cnt = 0;
@@ -236,9 +214,9 @@ bool txt_next_val(const char* txt,
       //
 
       //const hier::Box& ghost_box = data.getGhostBox();
-      hier::Box<NDIM> ghost_box;
+      hier::Box ghost_box(data.getGhostBox().getDim());
       if (is_node) {
-         ghost_box = pdat::NodeGeometry<NDIM>::toNodeBox(data.getGhostBox());
+         ghost_box = pdat::NodeGeometry::toNodeBox(data.getGhostBox());
       } else {
          ghost_box = data.getGhostBox();
       }
@@ -246,14 +224,15 @@ bool txt_next_val(const char* txt,
       int domain_i = idx % ghost_box.numberCells(0);
       int domain_j = idx / ghost_box.numberCells(0);
 
-      hier::Box<NDIM> shifted_box(hier::Box<NDIM>::shift(ghost_box,
-                                      hier::IntVector<NDIM>(2)));
+      tbox::Dimension dim(ghost_box.getDim());
+      hier::Box shifted_box(hier::Box::shift(ghost_box,
+                               hier::IntVector(dim, 2)));
       // Translate domain coordinates into grid zone coordintes
-      int di = shifted_box.lower()(0);
-      int dj = shifted_box.lower()(1);
+      int di = shifted_box.lower() (0);
+      int dj = shifted_box.lower() (1);
 
-      int grid_i = domain_i +di;
-      int grid_j = domain_j +dj;
+      int grid_i = domain_i + di;
+      int grid_j = domain_j + dj;
 
       // If we outside the grid, there cannot be a value here
       if (grid_i < 0 || grid_j < 0) {
@@ -266,15 +245,15 @@ bool txt_next_val(const char* txt,
       }
       // Translate grid coords to text coordinates.  Text coordinates
       // have j increasing downwards.
-      int txt_zone_i = grid_i*4+2;
-      int txt_zone_j = (grid_max-grid_j)*2+1;
+      int txt_zone_i = grid_i * 4 + 2;
+      int txt_zone_j = (grid_max - grid_j) * 2 + 1;
 
-      int txt_node_i = grid_i*4;
-      int txt_node_j = (grid_max-grid_j)*2+2;
+      int txt_node_i = grid_i * 4;
+      int txt_node_j = (grid_max - grid_j) * 2 + 2;
 
       // Translate text coordinates to txt idx
-      unsigned int txt_zone_idx = txt_zone_i+txt_zone_j*txt_w;
-      int txt_node_idx = txt_node_i+txt_node_j*txt_w;
+      unsigned int txt_zone_idx = txt_zone_i + txt_zone_j * txt_w;
+      int txt_node_idx = txt_node_i + txt_node_j * txt_w;
 
       // If we're past the end of the txt, return false
       if (txt_zone_idx > strlen(txt)) {
@@ -308,7 +287,7 @@ bool txt_next_val(const char* txt,
 
       idx++; // advance to next domain idx
 
-   } while ( cnt++ < cnt_max );
+   } while (cnt++ < cnt_max);
 
    cout << "Data reading loop exceeded maximum iterations"
         << __LINE__ << " in "
@@ -317,175 +296,170 @@ bool txt_next_val(const char* txt,
    exit(1);
 }
 
-
-void txt2data(const char* txt,
-              const hier::PatchData<NDIM>& data,
-              int* datptr,
-              bool zero_out,
-              bool is_node)
+void txt2data(
+   const char* txt,
+   const hier::PatchData& data,
+   int* datptr,
+   bool zero_out,
+   bool is_node)
 {
-   if (zero_out) memset(datptr, 0., data.getGhostBox().size()*sizeof(int));
+   if (zero_out) memset(datptr, 0, data.getGhostBox().size() * sizeof(int));
 
    int idx = 0;
    int datapt;
 
-   while ( txt_next_val(txt, idx, data, &datapt, is_node) ) {
+   while (txt_next_val(txt, idx, data, &datapt, is_node)) {
       datptr[idx++] = datapt;
    }
 }
 
-
 /*
-  Acceptance test cases.  First iteration at an executable
-  specification of the desired change.
-*/
+ * Acceptance test cases.  First iteration at an executable
+ * specification of the desired change.
+ */
 
-bool SingleLevelTestCase(const char* levelboxes_txt,
-                         const char* initialdata_txt[],
-                         const char* finaldata_txt[],
-                         tbox::Pointer<hier::Variable<NDIM> > variable, 
-                         tbox::Pointer<xfer::VariableFillPattern<NDIM> > fill_pattern)
+bool SingleLevelTestCase(
+   const char* levelboxes_txt,
+   const char* initialdata_txt[],
+   const char* finaldata_txt[],
+   tbox::Pointer<hier::Variable> variable,
+   tbox::Pointer<xfer::VariableFillPattern> fill_pattern,
+   tbox::Dimension& dim)
 {
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const std::string& pattern_name = fill_pattern->getPatternName();
 
-   hier::BoxArray<NDIM> level_boxes;
+   hier::BoxContainer level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
-   hier::Box<NDIM> domain_box;
-   for (int i = 0; i < level_boxes.getNumberOfBoxes(); i++) {
-      domain_box += level_boxes[i];
+   hier::BoxContainer domain_boxes;
+   hier::LocalId domain_id(0);
+   for (hier::BoxContainer::Iterator itr(level_boxes); itr != level_boxes.end(); ++itr) {
+      domain_boxes.pushBack(hier::Box(*itr, domain_id++, 0));
    }
 
-   hier::BoxArray<NDIM> physical_domain(domain_box);
+   tbox::Pointer<geom::SkeletonGridGeometry> geom(
+      new geom::SkeletonGridGeometry("GridGeometry", domain_boxes));
 
-   tbox::Pointer<geom::SkeletonGridGeometry<NDIM> > geom =
-      new geom::SkeletonGridGeometry<NDIM>("GridGeometry", level_boxes);
+   tbox::Pointer<hier::PatchHierarchy> hierarchy(new
+                                                 hier::PatchHierarchy("hier",
+                                                    geom));
 
-   tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy = new
-      hier::PatchHierarchy<NDIM>("hier", geom);
+   hier::BoxLevel mblevel(hier::IntVector(dim, 1), geom);
 
-//   hier::MappedBoxHierarchy &lh = hierarchy->getMappedBoxHierarchy();
-
-
-//   lh.setMappedBoxLevelParameters(0,
-//                                  hier::IntVector<NDIM>(1),
-//                                  hier::IntVector<NDIM>(1),
-//                                  hier::IntVector<NDIM>(1));
-
-//   hier::MappedBoxLevel mblevel( NULL, hier::IntVector<NDIM>(1) );
-
-
-   const int num_nodes = tbox::SAMRAI_MPI::getNodes();
+   const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
-//   hier::GlobalId::LocalIndex local_id = 0;
-   tbox::Array<int> mapping(num_boxes);
-   for ( int i=0; i<num_boxes; ++i ) {
+   hier::LocalId local_id(0);
+   tbox::Array<int> local_indices(mpi.getSize(), 0);
+   hier::BoxContainer::Iterator level_boxes_itr(level_boxes);
+   for (int i = 0; i < num_boxes; ++i, level_boxes_itr++) {
 
+      int proc;
       if (i < num_boxes / num_nodes) {
-         mapping[i] = 0;
+         proc = 0;
       } else {
-         mapping[i] = 1;
+         proc = 1;
+      }
+
+      if (proc == mpi.getRank()) {
+         mblevel.addBox(hier::Box(*level_boxes_itr, local_id, proc));
+         local_id++;
       }
 
    }
 
-   hier::ProcessorMapping proc_mapping(mapping);
-
    int level_no = 0;
-   hierarchy->makeNewPatchLevel(level_no, hier::IntVector<NDIM>(1),
-                                level_boxes, proc_mapping);
+   hierarchy->makeNewPatchLevel(level_no, mblevel);
 
-   tbox::Pointer<hier::PatchLevel<NDIM> > level = hierarchy->getPatchLevel(0);
+   tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(0);
 
    // There is one variable-context pair with a gcw of 2
-   
-   xfer::RefineAlgorithm<NDIM> refine_alg;
+
+   xfer::RefineAlgorithm refine_alg(dim);
 
    tbox::Pointer<hier::VariableContext> context =
-      hier::VariableDatabase<NDIM>::getDatabase()->getContext("CONTEXT");
+      hier::VariableDatabase::getDatabase()->getContext("CONTEXT");
 
-   hier::IntVector<NDIM> ghost_cell_width(2);
+   hier::IntVector ghost_cell_width(dim, 2);
 
    int data_id =
-      hier::VariableDatabase<NDIM>::getDatabase()->registerVariableAndContext(
+      hier::VariableDatabase::getDatabase()->registerVariableAndContext(
          variable, context, ghost_cell_width);
 
-   refine_alg.registerRefine(data_id, data_id, data_id, NULL, fill_pattern);
+   refine_alg.registerRefine(data_id, data_id, data_id,
+      SAMRAI::tbox::Pointer<SAMRAI::hier::RefineOperator>(NULL),
+      fill_pattern);
 
    level->allocatePatchData(data_id);
 
-   TBOX_ASSERT(tbox::SAMRAI_MPI::getNodes() <= 2);
+   TBOX_ASSERT(mpi.getSize() <= 2);
 
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       // Loop over each patch and initialize data
-      for (hier::PatchLevel<NDIM>::Iterator p(level); p; p++) {
-         tbox::Pointer<hier::Patch<NDIM> > patch(level->getPatch(p()));  
-         tbox::Pointer<pdat::CellData<NDIM,int> > cdata  =
+      for (hier::PatchLevel::Iterator p(level); p; p++) {
+         tbox::Pointer<hier::Patch> patch(*p);
+         tbox::Pointer<pdat::CellData<int> > cdata =
             patch->getPatchData(data_id);
 
-         int data_txt_id = p();
-//         if (tbox::SAMRAI_MPI::getRank() == 1) {
-//            data_txt_id += (num_boxes / num_nodes);
-//         }
+         int data_txt_id = patch->getBox().getLocalId().getValue();
+         if (mpi.getRank() == 1) {
+            data_txt_id += (num_boxes / num_nodes);
+         }
 
          txt2data(initialdata_txt[data_txt_id], *cdata,
-                  cdata->getPointer(), false, false);
+            cdata->getPointer(), false, false);
       }
    } else if (pattern_name == "SECOND_LAYER_NODE_NO_CORNERS_FILL_PATTERN" ||
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
       // Loop over each patch and initialize data
-      for (hier::PatchLevel<NDIM>::Iterator p(level); p; p++) {
-         tbox::Pointer<hier::Patch<NDIM> > patch(level->getPatch(p()));
-         tbox::Pointer<pdat::NodeData<NDIM,int> > ndata  =
+      for (hier::PatchLevel::Iterator p(level); p; p++) {
+         tbox::Pointer<hier::Patch> patch(*p);
+         tbox::Pointer<pdat::NodeData<int> > ndata =
             patch->getPatchData(data_id);
 
-         int data_txt_id = p();
-//         if (tbox::SAMRAI_MPI::getRank() == 1) {
-//            data_txt_id += (num_boxes / num_nodes);
-//         }
+         int data_txt_id = patch->getBox().getLocalId().getValue();
+         if (mpi.getRank() == 1) {
+            data_txt_id += (num_boxes / num_nodes);
+         }
 
          txt2data(initialdata_txt[data_txt_id], *ndata,
-                  ndata->getPointer(), false, true);
+            ndata->getPointer(), false, true);
       }
    }
-/*
-   hier::OverlapConnectorUtil connect_util(dim);
 
-   hier::Connector peer_cnect;
-   peer_cnect.initialize(*(level->getMappedBoxLevel()),
-                         *(level->getMappedBoxLevel()),
-                         hier::IntVector<NDIM>(2));
-  
-   connect_util.findEdges(peer_cnect);
-*/
+   // Cache Connector required for the schedule generation.
+   level->getBoxLevel()->getPersistentOverlapConnectors().
+   findOrCreateConnector(
+      *(level->getBoxLevel()),
+      hier::IntVector(dim, 2));
+
    // Create and run comm schedule
    refine_alg.createSchedule(level)->fillData(0.0, false);
 
    // Check for expected data
    bool failed = false;
 
-
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
-      for (hier::PatchLevel<NDIM>::Iterator p(level); p; p++) {
-         tbox::Pointer<hier::Patch<NDIM> > patch(level->getPatch(p()));
-         tbox::Pointer<pdat::CellData<NDIM,int> > cdata  =
+      for (hier::PatchLevel::Iterator p(level); p; p++) {
+         tbox::Pointer<hier::Patch> patch(*p);
+         tbox::Pointer<pdat::CellData<int> > cdata =
             patch->getPatchData(data_id);
 
-         pdat::CellData<NDIM,int> expected(cdata->getBox(),
-                                              cdata->getDepth(),
-                                              ghost_cell_width);
+         pdat::CellData<int> expected(cdata->getBox(),
+                                      cdata->getDepth(),
+                                      ghost_cell_width);
 
-         int data_txt_id = p();
-//         if (tbox::SAMRAI_MPI::getRank() == 1) {
-//            data_txt_id += (num_boxes / num_nodes);
-//         }
+         int data_txt_id = patch->getBox().getLocalId().getValue();
+         if (mpi.getRank() == 1) {
+            data_txt_id += (num_boxes / num_nodes);
+         }
 
          txt2data(finaldata_txt[data_txt_id],
-                  expected, expected.getPointer(), false, false);
+            expected, expected.getPointer(), false, false);
 
-         for (pdat::CellData<NDIM,int>::Iterator ci(cdata->getGhostBox());
+         for (pdat::CellData<int>::Iterator ci(cdata->getGhostBox());
               ci; ci++) {
             if ((*cdata)(ci()) != expected(ci())) {
                failed = true;
@@ -495,24 +469,24 @@ bool SingleLevelTestCase(const char* levelboxes_txt,
       }
    } else if (pattern_name == "SECOND_LAYER_NODE_NO_CORNERS_FILL_PATTERN" ||
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
-      for (hier::PatchLevel<NDIM>::Iterator p(level); p; p++) {
-         tbox::Pointer<hier::Patch<NDIM> > patch(level->getPatch(p()));
-         tbox::Pointer<pdat::NodeData<NDIM,int> > ndata  =
+      for (hier::PatchLevel::Iterator p(level); p; p++) {
+         tbox::Pointer<hier::Patch> patch(*p);
+         tbox::Pointer<pdat::NodeData<int> > ndata =
             patch->getPatchData(data_id);
 
-         pdat::NodeData<NDIM,int> expected(ndata->getBox(),
-                                              ndata->getDepth(),
-                                              ghost_cell_width);
+         pdat::NodeData<int> expected(ndata->getBox(),
+                                      ndata->getDepth(),
+                                      ghost_cell_width);
 
-         int data_txt_id = p();
-//         if (tbox::SAMRAI_MPI::getRank() == 1) {
-//            data_txt_id += (num_boxes / num_nodes);
-//         }
+         int data_txt_id = patch->getBox().getLocalId().getValue();
+         if (mpi.getRank() == 1) {
+            data_txt_id += (num_boxes / num_nodes);
+         }
 
          txt2data(finaldata_txt[data_txt_id],
-                  expected, expected.getPointer(), false, true);
+            expected, expected.getPointer(), false, true);
 
-         for (pdat::NodeData<NDIM,int>::Iterator ni(ndata->getGhostBox());
+         for (pdat::NodeData<int>::Iterator ni(ndata->getGhostBox());
               ni; ni++) {
             if ((*ndata)(ni()) != expected(ni())) {
                failed = true;
@@ -523,16 +497,15 @@ bool SingleLevelTestCase(const char* levelboxes_txt,
    }
 
    if (failed) {
-      tbox::perr << "FAILED: - Test of "<< pattern_name << endl;
+      tbox::perr << "FAILED: - Test of " << pattern_name << endl;
    }
 
-   return failed; 
+   return failed;
 }
 
-
 /*
-  This tests FirstLayerCellNoCornersFillPattern ..
-*/
+ * This tests FirstLayerCellNoCornersVariableFillPattern ..
+ */
 
 bool Test_FirstLayerCellNoCornersVariableFillPattern()
 {
@@ -556,7 +529,7 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 2 data before comm
 
@@ -580,7 +553,7 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 3 data before comm
 
@@ -604,10 +577,10 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 0 data before comm
-   
+
    const char* initial0_txt =
       ". . . . . . . . . . . . . . . . ."
       ". 2 . 2 . 2 . 2 . 2 . 2 .   .   ." // 7
@@ -628,7 +601,7 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 1 data before comm
 
@@ -652,7 +625,7 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // expected patch 2 data after comm
 
@@ -676,10 +649,10 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // expected patch 3 data after comm
-   
+
    const char* final3_txt =
       ". . . . . . . . . . . . . . . . ."
       ".   .   .   .   .   .   .   .   ." // 7
@@ -700,10 +673,10 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // expected patch 0 data after comm
-   
+
    const char* final0_txt =
       ". . . . . . . . . . . . . . . . ."
       ". 2 . 2 . 2 . 2 . 2 . 2 .   .   ." // 7
@@ -724,7 +697,7 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // expected patch 1 data after comm
 
@@ -748,30 +721,31 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
+   const char* initial_txt[4] = { initial0_txt, initial1_txt,
+                                  initial2_txt, initial3_txt };
+   const char* final_txt[4] = { final0_txt, final1_txt,
+                                final2_txt, final3_txt };
+   tbox::Dimension dim(2);
 
-   const char* initial_txt[4] = {initial0_txt, initial1_txt,
-                                 initial2_txt, initial3_txt};
-   const char* final_txt[4] = {final0_txt, final1_txt,
-                               final2_txt, final3_txt};
+   tbox::Pointer<pdat::CellVariable<int> > var(
+      new pdat::CellVariable<int>(dim, "1cellnocorners"));
 
-   tbox::Pointer<pdat::CellVariable<NDIM,int> > var =
-      new pdat::CellVariable<NDIM,int>("1cellnocorners");
-
-   tbox::Pointer<pdat::FirstLayerCellNoCornersFillPattern<NDIM> > fill_pattern =
-      new pdat::FirstLayerCellNoCornersFillPattern<NDIM>();
+   tbox::Pointer<pdat::FirstLayerCellNoCornersVariableFillPattern> fill_pattern(
+      new pdat::FirstLayerCellNoCornersVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,
-                              initial_txt,
-                              final_txt,
-                              var,
-                              fill_pattern);
+      initial_txt,
+      final_txt,
+      var,
+      fill_pattern,
+      dim);
 }
 
 /*
-  This tests FirstLayerCellFillPattern
-*/
+ * This tests FirstLayerCellVariableFillPattern
+ */
 
 bool Test_FirstLayerCellVariableFillPattern()
 {
@@ -795,7 +769,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 0 data before comm
 
@@ -819,7 +793,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 1 data before comm
 
@@ -843,7 +817,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 2 data before comm
 
@@ -867,7 +841,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
    // patch 3 data before comm
 
@@ -891,8 +865,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
-
+   ;
 
    const char* final0_txt =
       ". . . . . . . . . . . . . . . . ."
@@ -914,8 +887,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
-
+   ;
 
    // expected patch 1 data after comm
 
@@ -939,8 +911,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
-
+   ;
 
    // expected patch 2 data after comm
 
@@ -964,8 +935,7 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
-
+   ;
 
    // expected patch 3 data after comm
 
@@ -989,28 +959,28 @@ bool Test_FirstLayerCellVariableFillPattern()
       ". . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7
-      ;
+   ;
 
+   const char* initial_txt[4] = { initial0_txt, initial1_txt,
+                                  initial2_txt, initial3_txt };
+   const char* final_txt[4] = { final0_txt, final1_txt,
+                                final2_txt, final3_txt };
 
-   const char* initial_txt[4] = {initial0_txt, initial1_txt,
-                                 initial2_txt, initial3_txt};
-   const char* final_txt[4] = {final0_txt, final1_txt,
-                               final2_txt, final3_txt};
+   tbox::Dimension dim(2);
 
-   tbox::Pointer<pdat::CellVariable<NDIM,int> > var =
-      new pdat::CellVariable<NDIM,int>("1cell");
+   tbox::Pointer<pdat::CellVariable<int> > var(
+      new pdat::CellVariable<int>(dim, "1cell"));
 
-   tbox::Pointer<pdat::FirstLayerCellFillPattern<NDIM> > fill_pattern =
-      new pdat::FirstLayerCellFillPattern<NDIM>();
+   tbox::Pointer<pdat::FirstLayerCellVariableFillPattern> fill_pattern(
+      new pdat::FirstLayerCellVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,
-                              initial_txt,
-                              final_txt,
-                              var,
-                              fill_pattern);
+      initial_txt,
+      final_txt,
+      var,
+      fill_pattern,
+      dim);
 }
-
-
 
 bool Test_SecondLayerNodeNoCornersVariableFillPattern()
 {
@@ -1038,7 +1008,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 0 data before comm
 
@@ -1066,7 +1036,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 1 data before comm
 
@@ -1094,7 +1064,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 2 data before comm
 
@@ -1122,7 +1092,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 3 data before comm
 
@@ -1150,8 +1120,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
-
+   ;
 
    const char* final0_txt =
       ". . . . . . . . . . . . . . . . . . . . ."
@@ -1177,7 +1146,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // expected patch 1 data after comm
 
@@ -1205,8 +1174,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
-
+   ;
 
    // expected patch 2 data after comm
 
@@ -1234,8 +1202,7 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
-
+   ;
 
    // expected patch 3 data after comm
 
@@ -1263,25 +1230,28 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
-   const char* initial_txt[4] = {initial0_txt, initial1_txt,
-                                 initial2_txt, initial3_txt};
-   const char* final_txt[4] = {final0_txt, final1_txt,
-                               final2_txt, final3_txt};
+   const char* initial_txt[4] = { initial0_txt, initial1_txt,
+                                  initial2_txt, initial3_txt };
+   const char* final_txt[4] = { final0_txt, final1_txt,
+                                final2_txt, final3_txt };
 
-   tbox::Pointer<pdat::NodeVariable<NDIM,int> > var =
-      new pdat::NodeVariable<NDIM,int>("secondnodenocorners");
+   tbox::Dimension dim(2);
 
-   tbox::Pointer<pdat::SecondLayerNodeNoCornersFillPattern<NDIM> >
-   fill_pattern =
-      new pdat::SecondLayerNodeNoCornersFillPattern<NDIM>();
+   tbox::Pointer<pdat::NodeVariable<int> > var(
+      new pdat::NodeVariable<int>(dim, "secondnodenocorners"));
+
+   tbox::Pointer<pdat::SecondLayerNodeNoCornersVariableFillPattern>
+   fill_pattern(
+      new pdat::SecondLayerNodeNoCornersVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,
-                              initial_txt,
-                              final_txt,
-                              var,
-                              fill_pattern);
+      initial_txt,
+      final_txt,
+      var,
+      fill_pattern,
+      dim);
 }
 
 bool Test_SecondLayerNodeVariableFillPattern()
@@ -1310,7 +1280,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 0 data before comm
 
@@ -1338,7 +1308,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 1 data before comm
 
@@ -1366,7 +1336,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 2 data before comm
 
@@ -1394,7 +1364,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // patch 3 data before comm
 
@@ -1422,8 +1392,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
-
+   ;
 
    const char* final0_txt =
       ". . . . . . . . . . . . . . . . . . . . ."
@@ -1449,7 +1418,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
    // expected patch 1 data after comm
 
@@ -1477,8 +1446,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
-
+   ;
 
    // expected patch 2 data after comm
 
@@ -1506,8 +1474,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
-
+   ;
 
    // expected patch 3 data after comm
 
@@ -1535,45 +1502,52 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ". . . . . . . . . . . . . . . . . . . . ."
 
       // 0   1   2   3   4   5   6   7   8   9
-      ;
+   ;
 
-   const char* initial_txt[4] = {initial0_txt, initial1_txt,
-                                 initial2_txt, initial3_txt};
-   const char* final_txt[4] = {final0_txt, final1_txt,
-                               final2_txt, final3_txt};
+   const char* initial_txt[4] = { initial0_txt, initial1_txt,
+                                  initial2_txt, initial3_txt };
+   const char* final_txt[4] = { final0_txt, final1_txt,
+                                final2_txt, final3_txt };
 
-   tbox::Pointer<pdat::NodeVariable<NDIM,int> > var =
-      new pdat::NodeVariable<NDIM,int>("secondnode");
+   tbox::Dimension dim(2);
 
-   tbox::Pointer<pdat::SecondLayerNodeFillPattern<NDIM> >
-   fill_pattern =
-      new pdat::SecondLayerNodeFillPattern<NDIM>();
+   tbox::Pointer<pdat::NodeVariable<int> > var(
+      new pdat::NodeVariable<int>(dim, "secondnode"));
+
+   tbox::Pointer<pdat::SecondLayerNodeVariableFillPattern>
+   fill_pattern(
+      new pdat::SecondLayerNodeVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,
-                              initial_txt,
-                              final_txt,
-                              var,
-                              fill_pattern);
+      initial_txt,
+      final_txt,
+      var,
+      fill_pattern,
+      dim);
 }
 
-int main(int argc, char* argv[])
+int main(
+   int argc,
+   char* argv[])
 {
-   tbox::SAMRAI_MPI::init(&argc,&argv);
+   tbox::SAMRAI_MPI::init(&argc, &argv);
+   tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
 
    int failures = 0;
-   
+
    failures += Test_FirstLayerCellNoCornersVariableFillPattern();
    failures += Test_FirstLayerCellVariableFillPattern();
    failures += Test_SecondLayerNodeNoCornersVariableFillPattern();
    failures += Test_SecondLayerNodeVariableFillPattern();
 
-   if (failures == 0) { 
+   if (failures == 0) {
       tbox::pout << "\nPASSED:  fill_pattern" << endl;
    }
 
    tbox::SAMRAIManager::shutdown();
+   tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();
-   
-   return(failures);
+
+   return failures;
 }

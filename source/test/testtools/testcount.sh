@@ -1,13 +1,13 @@
 #!/bin/sh
-
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/testtools/testcount.sh $
-## Package:     SAMRAI test
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedVersion$
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: script for testing the number of tests passed
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   script for testing the number of tests passed 
+##
+#########################################################################
 
 num_tests=`echo $1 |  sed -e 's/,/ /g' | wc -w`
 num_tests=`expr $num_tests \* $2`

@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/test/fill_pattern/Makefile.in $
-## Package:	SAMRAI test
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2984 $
-## Modified:	$LastChangedDate: 2009-03-05 10:54:07 -0800 (Thu, 05 Mar 2009) $
-## Description:	makefile for the fill_pattern tests 
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for the fill_pattern tests 
+##
+#########################################################################
 
 SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
@@ -14,7 +15,7 @@ VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
-CPPFLAGS_EXTRA  = -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA  = -DDISPLAY -DTESTING=1
 
 default: check
 
@@ -24,18 +25,15 @@ NUM_TESTS = 1
 
 TEST_NPROCS = @TEST_NPROCS@
 
-main2d:
-	@echo "Make sure all files were compiled with PDIM=2..."
-	$(MAKE) PDIM=2 main-fill-pattern-2d
+CXX_OBJS = main-fill-pattern.o
 
-# main:	main-fill-pattern.o $(LIBSAMRAIDEPEND)
-#	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-fill_pattern.o $(LIBSAMRAI) $(LDLIBS) -o $@
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-main-fill-pattern-2d:  main-fill-pattern.o  $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-fill-pattern.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
 
-check:		main2d
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main2d
+check:		main
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
 
 check2d:
 	$(MAKE) check
@@ -43,16 +41,16 @@ check2d:
 check3d:
 	$(MAKE) check
 
-checkcompile: main2d
+checkcompile: main
 
 checktest:
 		rm -f makecheck.logfile
-		$(MAKE) check 2>&1 | $(SAMRAI)/source/test/testtools/stee makecheck.logfile
+		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 		rm -f makecheck.logfile
 
 clean: 
 		$(SAMCLEAN)
-		$(RM) main2d
+		$(RM) main
 
 include $(SRCDIR)/Makefile.depend

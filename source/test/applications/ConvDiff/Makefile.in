@@ -1,16 +1,17 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/applications/ConvDiff/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2181 $
-## Modified:	$LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
-## Description:	makefile for Convection-Diffusion ODE sample application
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for Convection-Diffusion ODE sample application 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/ConvDiff
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/applications/ConvDiff
-VPATH         = @top_srcdir@/examples/ConvDiff
+VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
 
@@ -19,84 +20,103 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 AUTOTEST      = $(SAMRAI)/source/test/applications
-CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+CPPFLAGS_EXTRA= -I$(AUTOTEST) -DTESTING=1
 
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = main.o ConvDiff.o MainRestartData.o AutoTester.o
-F77_OBJS      = compute_rhs.o init.o rkstep.o tag_cells.o 
+F77_OBJS      = compute_rhs2d.o init2d.o rkstep2d.o tag_cells2d.o \
+		compute_rhs3d.o init3d.o rkstep3d.o tag_cells3d.o
 
-main2d:		
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
 
-main-2d:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)  
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
-
-main3d:		
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 main-3d
-
-main-3d:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS)	\
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+main:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS)	\
+	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
-check2d:	main2d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main2d test-2d.input
+check2d:	main
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input;
 
-check3d:	main3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main3d test-3d.input
+check3d:	main
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.3d.input;
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
+
+examples2d: main
+	@for i in $(SRCDIR)/example_inputs/*.2d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples3d: main
+	@for i in $(SRCDIR)/example_inputs/*.3d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples:
+	$(MAKE) examples2d
+	$(MAKE) examples3d
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) *.f main2d main3d 
+	$(RM) *.f main
+	$(RM) -rf test*restart
 
 redo:
-		$(RM) core main*d
+	$(RM) core main*d
 
 include $(SRCDIR)/Makefile.depend
 
 AutoTester.o:	$(AUTOTEST)/AutoTester.C
-		$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(AUTOTEST)/AutoTester.C \
-		-o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(AUTOTEST)/AutoTester.C -o $@
 
-FORTRAN		= $(SRCDIR)/fortran/$(PDIM)d
+FORTRAN		= $(SRCDIR)/fortran
 M4DIRS		= -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-compute_rhs.o:	$(FORTRAN)/compute_rhs.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs.m4 > compute_rhs.f
-		$(F77) $(FFLAGS) -c compute_rhs.f -o $@
+compute_rhs2d.o:	$(FORTRAN)/compute_rhs2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs2d.m4 > compute_rhs2d.f
+	$(F77) $(FFLAGS) -c compute_rhs2d.f -o $@
 
-init.o:		$(FORTRAN)/init.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/init.m4 > init.f
-		$(F77) $(FFLAGS) -c init.f -o $@
+init2d.o:		$(FORTRAN)/init2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/init2d.m4 > init2d.f
+	$(F77) $(FFLAGS) -c init2d.f -o $@
 
-tag_cells.o:	$(FORTRAN)/tag_cells.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/tag_cells.m4 > tag_cells.f
-		$(F77) $(FFLAGS) -c tag_cells.f -o $@
+tag_cells2d.o:	$(FORTRAN)/tag_cells2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/tag_cells2d.m4 > tag_cells2d.f
+	$(F77) $(FFLAGS) -c tag_cells2d.f -o $@
 
-rkstep.o:	$(FORTRAN)/rkstep.m4
-		$(M4) $(M4DIRS) $(FORTRAN)/rkstep.m4 > rkstep.f
-		$(F77) $(FFLAGS) -c rkstep.f -o $@
+rkstep2d.o:	$(FORTRAN)/rkstep2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/rkstep2d.m4 > rkstep2d.f
+	$(F77) $(FFLAGS) -c rkstep2d.f -o $@
+
+
+compute_rhs3d.o:	$(FORTRAN)/compute_rhs3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs3d.m4 > compute_rhs3d.f
+	$(F77) $(FFLAGS) -c compute_rhs3d.f -o $@
+
+init3d.o:		$(FORTRAN)/init3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/init3d.m4 > init3d.f
+	$(F77) $(FFLAGS) -c init3d.f -o $@
+
+tag_cells3d.o:	$(FORTRAN)/tag_cells3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/tag_cells3d.m4 > tag_cells3d.f
+	$(F77) $(FFLAGS) -c tag_cells3d.f -o $@
+
+rkstep3d.o:	$(FORTRAN)/rkstep3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/rkstep3d.m4 > rkstep3d.f
+	$(F77) $(FFLAGS) -c rkstep3d.f -o $@
 

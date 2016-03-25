@@ -1,126 +1,119 @@
-/*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/DLBGTest.h $
-  Copyright:	(c) 1997-2000 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
-  Description:	DLBGTest class declaration
-*/
-
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   DLBGTest class declaration
+ *
+ ************************************************************************/
 #ifndef included_DLBGTest
 #define included_DLBGTest
 
-
 #include <string>
-using namespace std;
 
-#include "tbox/Pointer.h"
-#include "tbox/Database.h"
-
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Database.h"
 
 /*
-  SAMRAI classes
-*/
-#include "CartesianVizamraiDataWriter.h"
-#include "VisItDataWriter.h"
-#include "VisDerivedDataStrategy.h"
-#include "Patch.h"
-#include "PatchHierarchy.h"
-#include "PatchLevel.h"
-#include "CartesianRobinBcHelper.h"
-#include "RobinBcCoefStrategy.h"
+ * SAMRAI classes
+ */
+#include "SAMRAI/appu/VisItDataWriter.h"
+#include "SAMRAI/appu/VisDerivedDataStrategy.h"
+#include "SAMRAI/hier/Patch.h"
+#include "SAMRAI/hier/PatchHierarchy.h"
+#include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/solv/CartesianRobinBcHelper.h"
+#include "SAMRAI/solv/RobinBcCoefStrategy.h"
 #include "SinusoidalFrontTagger.h"
-
 
 using namespace SAMRAI;
 
-
 /*!
-  @brief Class to test new PIND algorithm.
-*/
-template<int DIM>
-class DLBGTest
-  : public appu::VisDerivedDataStrategy<DIM>
+ * @brief Class to test new PIND algorithm.
+ */
+class DLBGTest:
+   public appu::VisDerivedDataStrategy
 {
 
 public:
+   /*!
+    * @brief Constructor.
+    */
+   DLBGTest(
+      const std::string& object_name,
+      const tbox::Dimension& dim,
+      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy,
+      SAMRAI::tbox::Pointer<SAMRAI::tbox::Database> database);
 
-  /*!
-    @brief Constructor.
-  */
-  DLBGTest(
-    /*! Ojbect name */
-    const string &object_name ,
-    /*! Input database */
-    SAMRAI::tbox::Pointer<SAMRAI::tbox::Database> database );
+   ~DLBGTest();
 
-  ~DLBGTest();
+   mesh::StandardTagAndInitStrategy *
+   getStandardTagAndInitObject();
 
+   //@{ @name SAMRAI::appu::VisDerivedDataStrategy virtuals
 
+   virtual bool
+   packDerivedDataIntoDoubleBuffer(
+      double* buffer,
+      const hier::Patch& patch,
+      const hier::Box& region,
+      const std::string& variable_name,
+      int depth_id) const;
 
-  mesh::StandardTagAndInitStrategy<DIM> *getStandardTagAndInitObject();
-
-
-
-
-  //@{ @name SAMRAI::appu::VisDerivedDataStrategy<DIM> virtuals
-
-  virtual bool packDerivedDataIntoDoubleBuffer(
-    double* buffer ,
-    const hier::Patch<DIM> &patch ,
-    const hier::Box<DIM> &region ,
-    const string &variable_name ,
-    int depth_id) const;
-
-  //@}
-
-
+   //@}
 
 public:
+   /*
+    * Deallocate patch data allocated by this class.
+    */
+   void
+   computeHierarchyData(
+      hier::PatchHierarchy& hierarchy,
+      double time);
 
-  /*
-    Deallocate patch data allocated by this class.
-  */
-   void computeHierarchyData( hier::PatchHierarchy<DIM> &hierarchy,
-                              double time );
+   /*!
+    * @brief Deallocate internally managed patch data on level.
+    */
+   void
+   deallocatePatchData(
+      hier::PatchLevel& level);
 
-  /*!
-    @brief Deallocate internally managed patch data on level.
-  */
-  void deallocatePatchData( hier::PatchLevel<DIM> &level );
+   /*!
+    * @brief Deallocate internally managed patch data on hierarchy.
+    */
+   void
+   deallocatePatchData(
+      hier::PatchHierarchy& hierarchy);
 
-  /*!
-    @brief Deallocate internally managed patch data on hierarchy.
-  */
-  void deallocatePatchData( hier::PatchHierarchy<DIM> &hierarchy );
+#ifdef HAVE_HDF5
+   /*!
+    * @brief Tell a VisIt plotter which data to write for this class.
+    */
+   int
+   registerVariablesWithPlotter(
+      tbox::Pointer<appu::VisItDataWriter> writer);
+#endif
 
-  /*!
-    @brief Tell a Vizamrai plotter which data to write for this class.
-  */
-  int registerVariablesWithPlotter(
-    tbox::Pointer<appu::CartesianVizamraiDataWriter<DIM> > writer
-    );
-  /*!
-    @brief Tell a VisIt plotter which data to write for this class.
-  */
-  int registerVariablesWithPlotter(
-    tbox::Pointer<appu::VisItDataWriter<DIM> > writer
-    );
-
-
+   /*!
+    * @brief Test refinement accuracy (assuming DLBG is used).
+    */
+   void
+   checkDataRefinement(
+      hier::PatchHierarchy& hierarchy);
 
 private:
+   std::string d_name;
+   const tbox::Dimension d_dim;
+   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
 
-  string d_name;
-  tbox::Pointer<hier::PatchHierarchy<DIM> > d_hierarchy;
+   SinusoidalFrontTagger d_tagger;
 
-  SinusoidalFrontTagger<DIM> d_tagger;
-
-  /*!
-    @brief Front time.
-  */
-  double d_time;
+   /*!
+    * @brief Front time.
+    */
+   double d_time;
 
 };
 
-
-#endif	// included_DLBGTest
+#endif  // included_DLBGTest

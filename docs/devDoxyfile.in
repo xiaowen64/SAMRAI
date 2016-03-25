@@ -450,21 +450,21 @@ WARN_LOGFILE           = devdox.warnings
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @top_srcdir@/source/mainpage.dox \
-	                 @top_srcdir@/source/toolbox \
-                         @top_srcdir@/source/hierarchy \
-                         @top_srcdir@/source/transfer \
-                         @top_srcdir@/source/patchdata \
-                         @top_srcdir@/source/mathops \
-                         @top_srcdir@/source/mesh \
-                         @top_srcdir@/source/geometry \
-                         @top_srcdir@/source/solvers \
-                         @top_srcdir@/source/algorithm \
-                         @top_srcdir@/source/apputils \
-                         @top_srcdir@/source/apputils/boundary/CartesianBoundaryUtilities2.h \
-                         @top_srcdir@/source/apputils/boundary/CartesianBoundaryUtilities2.C \
-                         @top_srcdir@/source/apputils/boundary/CartesianBoundaryUtilities3.h \
-                         @top_srcdir@/source/apputils/boundary/CartesianBoundaryUtilities3.C
+INPUT                  = @top_srcdir@/source/SAMRAI/mainpage.dox \
+	                 @top_srcdir@/source/SAMRAI/tbox \
+                         @top_srcdir@/source/SAMRAI/hier \
+                         @top_srcdir@/source/SAMRAI/xfer \
+                         @top_srcdir@/source/SAMRAI/pdat \
+                         @top_srcdir@/source/SAMRAI/math \
+                         @top_srcdir@/source/SAMRAI/mesh \
+                         @top_srcdir@/source/SAMRAI/geom \
+                         @top_srcdir@/source/SAMRAI/solv \
+                         @top_srcdir@/source/SAMRAI/algs \
+                         @top_srcdir@/source/SAMRAI/appu \
+                         @top_srcdir@/source/SAMRAI/appu/CartesianBoundaryUtilities2.h \
+                         @top_srcdir@/source/SAMRAI/appu/CartesianBoundaryUtilities2.C \
+                         @top_srcdir@/source/SAMRAI/appu/CartesianBoundaryUtilities3.h \
+                         @top_srcdir@/source/SAMRAI/appu/CartesianBoundaryUtilities3.C
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -506,14 +506,16 @@ EXCLUDE_PATTERNS       = *README* \
                          *.old \
                          *.dxx \
                          *.m4 \
-                         *[123].? \
-                         */[123]d/* \
+                         */.svn/* \
+                         */.git/* \
                          */OLD/* \
+                         */NEW/* \
                          */BAK/* \
                          */SAVE/* \
                          */OBS/* \
                          DescribedClass.[hCI] \
-			 */templates/*
+			             */templates/* \
+			             */fortran/*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
@@ -1101,7 +1103,7 @@ PERL_PATH              = @SAMRAI_PERL@
 # fallback. It is recommended to install and use dot, since it yields more 
 # powerful graphs.
 
-CLASS_DIAGRAMS         = YES
+CLASS_DIAGRAMS         = NO
 
 # If set to YES, the inheritance and collaboration graphs will hide 
 # inheritance and usage relations if the target is undocumented 
@@ -1171,7 +1173,7 @@ CALL_GRAPH             = NO
 # If the GRAPHICAL_HIERARCHY and HAVE_DOT tags are set to YES then doxygen 
 # will graphical hierarchy of all classes instead of a textual one.
 
-GRAPHICAL_HIERARCHY    = NO
+GRAPHICAL_HIERARCHY    = YES
 
 # If the DIRECTORY_GRAPH, SHOW_DIRECTORIES and HAVE_DOT tags are set to YES 
 # then doxygen will show the dependencies a directory has on other directories 

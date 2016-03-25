@@ -1,19 +1,20 @@
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/object.sh $
-## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: shell script to update Makefile.objects files for templates
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   shell script to update Makefile.objects files for templates 
+##
+#########################################################################
 
 #
 # Generate object information in the template subdrectories
 #
 
 PERL=${PERL:-perl}
-DIFF="$PERL ../../scripts/cmp.pl"
-OBJECTPL="$PERL ../../../scripts/object.pl"
+DIFF="$PERL ../../../scripts/cmp.pl"
+OBJECTPL="$PERL ../../../../scripts/object.pl"
 
 SRCDIR=../$1
 DIR=$2

@@ -1,22 +1,23 @@
-//
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/branches/smith84/source/test/restartdb/main-HDF5.C $
-// Package:     SAMRAI test
-// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2104 $
-// Modified:    $LastChangedDate: 2008-04-01 10:02:41 -0700 (Tue, 01 Apr 2008) $
-// Description: Some simple generic database test functions 
-//
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Some simple generic database test functions
+ *
+ ************************************************************************/
 
-#include "SAMRAI_config.h"
+#include "SAMRAI/SAMRAI_config.h"
 
-#include "tbox/SAMRAIManager.h"
-#include "tbox/Array.h"
-#include "tbox/DatabaseBox.h"
-#include "tbox/Complex.h"
-#include "tbox/SAMRAI_MPI.h"
-#include "tbox/PIO.h"
-#include "tbox/Pointer.h"
-#include "tbox/RestartManager.h"
+#include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/DatabaseBox.h"
+#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/RestartManager.h"
 #include <string>
 
 using namespace std;
@@ -28,20 +29,28 @@ extern int number_of_failures;
 /**
  * Write database and test contents.
  */
-void setupTestData(void);
+void
+setupTestData(
+   void);
 
 /**
  * Write database and test contents.
  */
-void writeTestData(tbox::Pointer<tbox::Database> db);
+void
+writeTestData(
+   tbox::Pointer<tbox::Database> db);
 
 /**
  * Read database and test contents.
  */
-void readTestData(tbox::Pointer<tbox::Database> db);
+void
+readTestData(
+   tbox::Pointer<tbox::Database> db);
 
 /**
  * Test contents of database.
  */
-void testDatabaseContents(tbox::Pointer<tbox::Database> db,
-                          const string& tag);
+void
+testDatabaseContents(
+   tbox::Pointer<tbox::Database> db,
+   const string& tag);

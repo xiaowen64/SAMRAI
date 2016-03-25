@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/applications/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1917 $
-## Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description:	makefile for the applications directory
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for the applications directory 
+##
+#########################################################################
 
 SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
@@ -16,7 +17,7 @@ default: library
 
 include $(OBJECT)/config/Makefile.config
 
-SUBDIRS = Euler LinAdv ConvDiff
+SUBDIRS = LinAdv Euler ConvDiff
 
 library:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -33,6 +34,8 @@ check:
 check2d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 check3d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+checkcompile:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checktest:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

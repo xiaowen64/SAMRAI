@@ -1,0 +1,250 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Templated miscellaneous operations for real side-centered data.
+ *
+ ************************************************************************/
+
+#ifndef included_math_PatchSideDataMiscellaneousOpsReal_C
+#define included_math_PatchSideDataMiscellaneousOpsReal_C
+
+#include "SAMRAI/math/PatchSideDataMiscellaneousOpsReal.h"
+#include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/pdat/SideGeometry.h"
+
+namespace SAMRAI {
+namespace math {
+
+template<class TYPE>
+PatchSideDataMiscellaneousOpsReal<TYPE>::PatchSideDataMiscellaneousOpsReal()
+{
+}
+
+template<class TYPE>
+PatchSideDataMiscellaneousOpsReal<TYPE>::~PatchSideDataMiscellaneousOpsReal()
+{
+}
+
+/*
+ *************************************************************************
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
+ *************************************************************************
+ */
+
+template<class TYPE>
+PatchSideDataMiscellaneousOpsReal<TYPE>::PatchSideDataMiscellaneousOpsReal(
+   const PatchSideDataMiscellaneousOpsReal<TYPE>& foo)
+{
+   NULL_USE(foo);
+}
+
+template<class TYPE>
+void PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
+   const PatchSideDataMiscellaneousOpsReal<TYPE>& foo)
+{
+   NULL_USE(foo);
+}
+
+/*
+ *************************************************************************
+ *
+ * Templated miscellaneous opertions for real side-centered data.
+ *
+ *************************************************************************
+ */
+
+template<class TYPE>
+int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+   const tbox::Pointer<pdat::SideData<TYPE> >& data1,
+   const tbox::Pointer<pdat::SideData<TYPE> >& data2,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::SideData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
+#endif
+   int retval = 1;
+   const tbox::Dimension& dim(data1->getDim());
+
+   const hier::IntVector& directions = data1->getDirectionVector();
+   if (cvol.isNull()) {
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (directions(d)) {
+            const hier::Box side_box =
+               pdat::SideGeometry::toSideBox(box, d);
+            retval = tbox::MathUtilities<int>::Min(retval,
+                  d_array_ops.computeConstrProdPos(
+                     data1->getArrayData(d),
+                     data2->getArrayData(d),
+                     side_box));
+         }
+      }
+   } else {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      TBOX_ASSERT(directions ==
+         hier::IntVector::min(directions, cvol->getDirectionVector()));
+#endif
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (directions(d)) {
+            const hier::Box side_box =
+               pdat::SideGeometry::toSideBox(box, d);
+            retval = tbox::MathUtilities<int>::Min(retval,
+                  d_array_ops.computeConstrProdPosWithControlVolume(
+                     data1->getArrayData(d),
+                     data2->getArrayData(d),
+                     cvol->getArrayData(d),
+                     side_box));
+         }
+      }
+   }
+   return retval;
+}
+
+template<class TYPE>
+void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+   const TYPE& alpha,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::SideData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
+#endif
+   const tbox::Dimension& dim(dst->getDim());
+
+   const hier::IntVector& directions = dst->getDirectionVector();
+   if (cvol.isNull()) {
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (directions(d)) {
+            const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
+            d_array_ops.compareToScalar(dst->getArrayData(d),
+               src->getArrayData(d),
+               alpha,
+               side_box);
+         }
+      }
+   } else {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      TBOX_ASSERT(directions ==
+         hier::IntVector::min(directions, cvol->getDirectionVector()));
+#endif
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (directions(d)) {
+            const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
+            d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
+               src->getArrayData(d),
+               alpha,
+               cvol->getArrayData(d),
+               side_box);
+         }
+      }
+   }
+}
+
+template<class TYPE>
+int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::SideData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
+#endif
+   const tbox::Dimension& dim(dst->getDim());
+
+   const hier::IntVector& directions = dst->getDirectionVector();
+   int retval = 1;
+   if (cvol.isNull()) {
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (directions(d)) {
+            const hier::Box side_box =
+               pdat::SideGeometry::toSideBox(box, d);
+            retval = tbox::MathUtilities<int>::Min(retval,
+                  d_array_ops.testReciprocal(
+                     dst->getArrayData(d),
+                     src->getArrayData(d),
+                     side_box));
+         }
+      }
+   } else {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      TBOX_ASSERT(directions ==
+         hier::IntVector::min(directions, cvol->getDirectionVector()));
+#endif
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (directions(d)) {
+            const hier::Box side_box =
+               pdat::SideGeometry::toSideBox(box, d);
+            retval = tbox::MathUtilities<int>::Min(retval,
+                  d_array_ops.testReciprocalWithControlVolume(
+                     dst->getArrayData(d),
+                     src->getArrayData(d),
+                     cvol->getArrayData(d),
+                     side_box));
+         }
+      }
+   }
+   return retval;
+}
+
+template<class TYPE>
+TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+   const tbox::Pointer<pdat::SideData<TYPE> >& numer,
+   const tbox::Pointer<pdat::SideData<TYPE> >& denom,
+   const hier::Box& box) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+#endif
+   const tbox::Dimension& dim(numer->getDim());
+
+   TYPE retval = 0.0;
+   for (int d = 0; d < dim.getValue(); d++) {
+      const hier::Box side_box =
+         pdat::SideGeometry::toSideBox(box, d);
+      TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
+            denom->getArrayData(d),
+            side_box);
+      retval = tbox::MathUtilities<TYPE>::Max(retval, dirval);
+   }
+   return retval;
+}
+
+template<class TYPE>
+TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+   const tbox::Pointer<pdat::SideData<TYPE> >& numer,
+   const tbox::Pointer<pdat::SideData<TYPE> >& denom,
+   const hier::Box& box) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+#endif
+   const tbox::Dimension& dim(numer->getDim());
+
+   TYPE retval = 0.0;
+   for (int d = 0; d < dim.getValue(); d++) {
+      const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
+      TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
+            denom->getArrayData(d),
+            side_box);
+      retval = tbox::MathUtilities<TYPE>::Min(retval, dirval);
+   }
+   return retval;
+}
+
+}
+}
+#endif

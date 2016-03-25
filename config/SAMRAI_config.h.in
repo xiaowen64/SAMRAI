@@ -5,13 +5,16 @@
 #ifndef INCLUDED_SAMRAI_CONFIG_H
 #define INCLUDED_SAMRAI_CONFIG_H
 
-#define SAMRAI_VERSION_MAJOR 2
-#define SAMRAI_VERSION_MINOR 4
-#define SAMRAI_VERSION_PATCHLEVEL 4
+#define SAMRAI_VERSION_MAJOR 3
+#define SAMRAI_VERSION_MINOR 3
+#define SAMRAI_VERSION_PATCHLEVEL 2
 
 
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
+
+/* Define if std::fill_n returns void */
+#undef CASC_STD_FILL_N_RETURNS_VOID
 
 /* Define if DBL_MAX is not in float.h */
 #undef DBL_MAX_IS_BROKEN
@@ -19,14 +22,20 @@
 /* Define if DBL_SNAN is not in float.h */
 #undef DBL_SNAN_IS_BROKEN
 
-/* Enable assertion checking for debug mode */
+/* Enable assertion checking */
 #undef DEBUG_CHECK_ASSERTIONS
+
+/* Enable SAMRAI developer assertion checking */
+#undef DEBUG_CHECK_DEV_ASSERTIONS
+
+/* Enable assertion checking for dimensions */
+#undef DEBUG_CHECK_DIM_ASSERTIONS
 
 /* Initialize new memory to undefined values in debug mode */
 #undef DEBUG_INITIALIZE_UNDEFINED
 
-/* Disable inlining for debug mode */
-#undef DEBUG_NO_INLINE
+/* ENABLE_SAMRAI_TIMERS */
+#undef ENABLE_SAMRAI_TIMERS
 
 /* Define to dummy `main' function (if any) required to link to the Fortran
    libraries. */
@@ -48,26 +57,11 @@
 /* Define if FLT_SNAN is not in float.h */
 #undef FLT_SNAN_IS_BROKEN
 
-/* FORTRAN_CAPS */
-#undef FORTRAN_CAPS
+/* BLAS library is available so use it */
+#undef HAVE_BLAS
 
-/* FORTRAN_DOUBLE_UNDERSCORE */
-#undef FORTRAN_DOUBLE_UNDERSCORE
-
-/* FORTRAN_NO_UNDERSCORE */
-#undef FORTRAN_NO_UNDERSCORE
-
-/* FORTRAN_UNDERSCORE */
-#undef FORTRAN_UNDERSCORE
-
-/* BLASLAPACK library is available so use it */
-#undef HAVE_BLASLAPACK
-
-/* Build SAMRAI with instantiated bool datatypes */
-#undef HAVE_BOOL
-
-/* Build SAMRAI with instantiated char datatypes */
-#undef HAVE_CHAR
+/* BOOST headers are available to use */
+#undef HAVE_BOOST_HEADERS
 
 /* HAVE_CMATH */
 #undef HAVE_CMATH
@@ -75,20 +69,11 @@
 /* HAVE_CMATH_ISNAN */
 #undef HAVE_CMATH_ISNAN
 
-/* Configured with Cubes library */
-#undef HAVE_CUBES
-
-/* Build SAMRAI with instantiated double-complex datatypes */
-#undef HAVE_DCOMPLEX
-
-/* Configured with Eleven library */
-#undef HAVE_ELEVEN
+/* HAVE_CTIME */
+#undef HAVE_CTIME
 
 /* HAVE_EXCEPTION_HANDLING */
 #undef HAVE_EXCEPTION_HANDLING
-
-/* Build SAMRAI with instantiated float datatypes */
-#undef HAVE_FLOAT
 
 /* HDF5 library is available so use it */
 #undef HAVE_HDF5
@@ -116,6 +101,12 @@
 
 /* HAVE_ISO_SSTREAM */
 #undef HAVE_ISO_SSTREAM
+
+/* LAPACK library is available so use it */
+#undef HAVE_LAPACK
+
+/* Define to 1 if you have the `z' library (-lz). */
+#undef HAVE_LIBZ
 
 /* Define if you have the 'mallinfo' function. */
 #undef HAVE_MALLINFO
@@ -177,11 +168,17 @@
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 
+/* Define to 1 if you have the <sys/times.h> header file. */
+#undef HAVE_SYS_TIMES_H
+
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
 /* HAVE_TAU */
 #undef HAVE_TAU
+
+/* Thread Building Blocks are available to use */
+#undef HAVE_TBB
 
 /* HAVE_TEMPLATE_COMPLEX */
 #undef HAVE_TEMPLATE_COMPLEX
@@ -228,11 +225,8 @@
 /* LACKS_CMATH_ISNAN */
 #undef LACKS_CMATH_ISNAN
 
-/* Configured without Cubes library */
-#undef LACKS_CUBES
-
-/* Configured without Eleven library */
-#undef LACKS_ELEVEN
+/* LACKS_CTIME */
+#undef LACKS_CTIME
 
 /* LACKS_EXCEPTION_HANDLING */
 #undef LACKS_EXCEPTION_HANDLING
@@ -300,9 +294,6 @@
 /* LACK_ISO_SSTREAM */
 #undef LACK_ISO_SSTREAM
 
-/* Define if namespace is not properly supported */
-#undef NAMESPACE_IS_BROKEN
-
 /* Define if NAN is not in float.h */
 #undef NAN_IS_BROKEN
 
@@ -313,22 +304,28 @@
 #undef OSTRSTREAM_TYPE_IS_BROKEN
 
 /* Define to the address where bug reports for this package should be sent. */
-#undef PACKAGE_BUGREPORT
+// Removed due to name conflict #undef PACKAGE_BUGREPORT
 
 /* Define to the full name of this package. */
-#undef PACKAGE_NAME
+// Removed due to name conflict #undef PACKAGE_NAME
 
 /* Define to the full name and version of this package. */
-#undef PACKAGE_STRING
+// Removed due to name conflict #undef PACKAGE_STRING
 
 /* Define to the one symbol short name of this package. */
-#undef PACKAGE_TARNAME
+// Removed due to name conflict #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#undef PACKAGE_VERSION
+// Removed due to name conflict #undef PACKAGE_VERSION
 
 /* Define if restrict is not properly supported */
 #undef RESTRICT_IS_BROKEN
+
+/* Enable inlining of methods */
+#undef SAMRAI_INLINE
+
+/* Maximum dimension allowed */
+#undef SAMRAI_MAXIMUM_DIMENSION
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
@@ -345,6 +342,33 @@
 /* Kludgey thing inserted by configure.in */
 #undef _POWER
 
+/* Configure for compiling on BGL family of machines */
+#undef __BGL_FAMILY__
+
+
+
+/*
+ * Prevent inclusion of mpi C++ bindings in mpi.h includes.
+ * This is done in here rather than SAMRAI_MPI.h since other
+ * files include MPI.h, such as PETSc and hypre.
+ */
+#ifndef MPI_NO_CPPBIND
+#define MPI_NO_CPPBIND
+#endif
+
+#ifndef MPICH_SKIP_MPICXX
+#define MPICH_SKIP_MPICXX
+#endif
+
+#ifndef OMPI_SKIP_MPICXX
+#define OMPI_SKIP_MPICXX
+#endif
+
+#ifdef SAMRAI_INLINE
+#define SAMRAI_INLINE_KEYWORD inline
+#else
+#define SAMRAI_INLINE_KEYWORD 
+#endif
 
 /********************************************************************/
 /********************* Hardwired defines ****************************/

@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/config/Makefile.config.in $
-## Package:     SAMRAI makefile system
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 2195 $
-## Modified:    $LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
-## Description: configuration makefile included by all SAMRAI makefiles
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   configuration makefile included by all SAMRAI makefiles 
+##
+#########################################################################
 
 @TAU_INCLUDE@
 
@@ -48,106 +49,32 @@ SHELL         = /bin/sh
 
 SAMRAI_TARGET=@SAMRAI_TARGET@
 
-INCLUDE_SAM   = $(SAMRAI)/include
+INCLUDE_SAM   = $(SAMRAI)/source
 LIB_SAM       = $(OBJECT)/lib
 BIN_SAM       = $(OBJECT)/bin
 
 LIB_SUFFIX=@LIB_SUFFIX@
 
-# For use in dependency lists to check of SAMRAI has been rebuilt
-LIBSAMRAIDEPEND   = \
-	$(LIB_SAM)/libSAMRAI$(LIB_SUFFIX)
-
-LIBSAMRAI     = \
-	$(LIB_SAM)/libSAMRAI$(LIB_SUFFIX)
+#
+# GNUMake script to reverse strings.  This is recursive.
+#
+reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
 
 #
-# Only include special library if building with one of 
-# the optional types.
-#
-SAMRAI_ENABLE_SPECIAL=@SAMRAI_ENABLE_SPECIAL@
+# List of packages to process. 
+# 
+# Packages available : appu algs solv geom mesh math pdat xfer hier tbox
+SAMRAI_LIBRARIES:=@SAMRAI_LIBRARIES@
+SAMRAI_LIBRARIES_R:=$(call reverse,@SAMRAI_LIBRARIES@)
 
-ifeq (${SAMRAI_ENABLE_SPECIAL},yes)
+LIBSAMRAI=$(addsuffix $(LIB_SUFFIX),$(addprefix $(LIB_SAM)/libSAMRAI_,$(SAMRAI_LIBRARIES)))
 
-LIBSAMRAI1D = \
-	$(LIB_SAM)/libSAMRAI1d_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_math_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_math_special$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_pdat_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_pdat_special$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_hier$(LIB_SUFFIX)
-
-LIBSAMRAI2D = \
-	$(LIB_SAM)/libSAMRAI2d_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_math_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_math_special$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_pdat_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_pdat_special$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_hier$(LIB_SUFFIX)
-
-LIBSAMRAI3D = \
-	$(LIB_SAM)/libSAMRAI3d_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_math_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_math_special$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_pdat_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_pdat_special$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_hier$(LIB_SUFFIX)
-
-else
-
-LIBSAMRAI1D = \
-	$(LIB_SAM)/libSAMRAI1d_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_math_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_pdat_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI1d_hier$(LIB_SUFFIX)
-
-LIBSAMRAI2D = \
-	$(LIB_SAM)/libSAMRAI2d_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_math_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_pdat_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI2d_hier$(LIB_SUFFIX)
-
-LIBSAMRAI3D = \
-	$(LIB_SAM)/libSAMRAI3d_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_math_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_pdat_std$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI3d_hier$(LIB_SUFFIX)
-
-endif
+LIBSAMRAIDEPEND   = $(LIBSAMRAI)
 
 M4	      =	@M4@
 RM            = rm -fr
 CP            = cp
+TEE           = tee
 XARGS	      = @XARGS@
 
 F77           = @F77@
@@ -157,12 +84,9 @@ CC            = @CC@
 CFLAGS        = @C_FLAGS@ $(CFLAGS_EXTRA)
 
 CXX           = @CXX@
-ifeq (${ALLOW_IMPLICIT_TEMPLATES},yes)
 CXXFLAGS      =	@CXX_FLAGS@ $(CXXFLAGS_EXTRA)
-else
-CXXFLAGS      =	@CXX_FLAGS@ @CXX_FLAGS_NO_TEMPLATE_INST@ $(CXXFLAGS_EXTRA)
-endif
 
+CPPFLAGS_EXTRA= @CPPFLAGS_EXTRA@
 CPPFLAGS      = @CPPFLAGS@ -I. -I$(OBJECT)/include -I$(INCLUDE_SAM) @INC_PATH@ $(CPPFLAGS_EXTRA)
 
 AR	      = @AR@
@@ -173,9 +97,7 @@ LDLIBS        = $(LDLIBS_EXTRA) @LIB_NAME@
 CXXLD_FLAGS   = -L$(LIB_SAM) @CXXLD_FLAGS@ @LIB_PATH@ $(LDFLAGS_EXTRA)
 CXXLDLIBS     = $(LDLIBS_EXTRA) @LIB_NAME@
 
-SAMRAI_M4_FLAGS = -DSAMRAI_FORTDIR=$(SAMRAI)/include
-
-IMPLICIT_TEMPLATE_INSTANTIATION=@IMPLICIT_TEMPLATE_INSTANTIATION@
+SAMRAI_M4_FLAGS = -DSAMRAI_FORTDIR=$(INCLUDE_SAM)/SAMRAI/pdat/fortran
 
 # Are object files dependent on template implementation files (.C)
 DEPENDS_ON_TEMPLATE_IMPLEMENTATION=@DEPENDS_ON_TEMPLATE_IMPLEMENTATION@
@@ -187,11 +109,12 @@ DEVELOPER_MAKEFILE=@DEVELOPER_MAKEFILE@
 # Rules used in all directories.
 ######################################################################
 
-SAMCLEAN=@$(RM) *.o *.ii *.int.c *.log *.log.* stamp-* core core.* stats -r ti_files ii_files
+SAMCLEAN=@$(RM) *.o *.ii *.int.c *.log *.log.* stamp-* core core.* stats -r ti_files ii_files \
+		*.valgrind
 
 # Used to control which types are created.
-# Default is double, integer.  Optional are bool, float, complex, char
-SAMRAI_LIBRARY_TARGETS=libdefault @SAMRAI_OPTIONAL_LIBS@
+# Default is double, integer, bool, float, complex, char
+SAMRAI_LIBRARY_TARGETS=libdefault
 
 ######################################################################
 # Rules for SAMRAI developer builds only.
@@ -200,10 +123,9 @@ SAMRAI_LIBRARY_TARGETS=libdefault @SAMRAI_OPTIONAL_LIBS@
 
 ifeq (${DEVELOPER_MAKEFILE},yes)
 
-Makefile: $(SRCDIR)/Makefile.in  $(OBJECT)/config.status
+Makefile: $(SAMRAI)/$(SUBDIR)/Makefile.in  $(OBJECT)/config.status
 	cd $(OBJECT) && $(SHELL) ./config.status --file=$(SUBDIR)/$@
 
 endif
-
 
 

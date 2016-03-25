@@ -1,16 +1,17 @@
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/mblkcomm/Makefile.in $
-## Package:     SAMRAI tests
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: makefile for SAMRAI multiblock tests
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for SAMRAI multiblock tests 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/mblkcomm
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/mblkcomm
-VPATH         = @top_srcdir@/examples/mblkcomm
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
@@ -19,92 +20,54 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
-NUM_TESTS = 10
+NUM_TESTS = 25
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = MultiblockTester.o PatchMultiblockTestStrategy.o main.o \
-		CellMultiblockTest.o \
-		EdgeMultiblockTest.o \
-		FaceMultiblockTest.o \
-		NodeMultiblockTest.o \
-		Pointer-MultiblockTester.o \
-		SideMultiblockTest.o
+CXX_OBJS      = MultiblockTester.o \
+	PatchMultiblockTestStrategy.o \
+	main.o \
+	CellMultiblockTest.o \
+	EdgeMultiblockTest.o \
+	FaceMultiblockTest.o \
+	NodeMultiblockTest.o \
+	Pointer-MultiblockTester.o \
+	SideMultiblockTest.o
 
-test1d:
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-1d
-		$(MAKE) PDIM=1 main-1d
 
-main-1d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI1D) $(LIBSAMRAI) $(LDLIBS) -o test1d
-
-test2d:
-		if test -f stamp-1d; then $(MAKE) clean-check; fi
-		if test -f stamp-3d; then $(MAKE) clean-check; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
-
-main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o test2d
-
-test3d:
-		if test -f stamp-1d; then $(MAKE) clean-check; fi
-		if test -f stamp-2d; then $(MAKE) clean-check; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 test-3d
-
-test-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
-check2d:	test2d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d cell-2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d edge-2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d face-2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d node-2d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test2d side-2d.input;
+check2d:	main
+	@for i in test_inputs/*2d*.input ; do	\
+	   $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	       ./main $${i};	\
+	done
 
-check3d:	test3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d cell-3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d edge-3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d face-3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d node-3d.input; \
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./test3d side-3d.input;
+check3d:	main
+	@for i in test_inputs/*3d*.input ; do	\
+	   $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	       ./main $${i};	\
+	done
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) stamp-*d test*d
-
-redo:
-		$(RM) core test*d
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

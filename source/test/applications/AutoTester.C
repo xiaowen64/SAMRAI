@@ -1,255 +1,86 @@
-//
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/applications/AutoTester.C $
-// Package:     SAMRAI applications
-// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
-// Description: Class used for auto testing applications 
-//
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+ *                Description:   Class used for auto testing applications
+ *
+ ************************************************************************/
 
 #include "AutoTester.h"
 
-#include "Box.h"
-#include "BoxArray.h"
-#include "BoxList.h"
-#include "PatchLevel.h"
-#include "tbox/List.h"
-#include "tbox/MathUtilities.h"
+#include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/tbox/List.h"
+#include "SAMRAI/tbox/MathUtilities.h"
 
-
-AutoTester::AutoTester(const string& object_name,
-                       tbox::Pointer<tbox::Database> input_db)
+AutoTester::AutoTester(
+   const std::string& object_name,
+   const tbox::Dimension& dim,
+   tbox::Pointer<tbox::Database> input_db):
+   d_dim(dim)
+#ifdef HAVE_HDF5
+   ,
+   d_hdf_db("AutoTesterDatabase")
+#endif
 {
-   d_object_name    = object_name;
-   d_test_fluxes    = false;
-   d_test_iter_num  = 10;
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   d_object_name = object_name;
+   d_test_fluxes = false;
+   d_test_iter_num = 10;
    d_output_correct = false;
 
    d_write_patch_boxes = false;
-   d_read_patch_boxes  = false;
+   d_read_patch_boxes = false;
    d_test_patch_boxes_at_steps.resizeArray(0);
-   d_simplify_test_boxes = false;
-
    d_test_patch_boxes_step_count = 0;
 
    getFromInput(input_db);
 
+   const std::string hdf_filename =
+      d_test_patch_boxes_filename
+      + "." + tbox::Utilities::nodeToString(mpi.getSize())
+      + "." + tbox::Utilities::processorToString(mpi.getRank());
+
+#ifdef HAVE_HDF5
    if (d_read_patch_boxes) {
-      d_io_box_utility =
-         new hier::BoxIOUtility<NDIM>(d_test_patch_boxes_filename,
-                          hier::BoxIOUtility<NDIM>::READ);
+      d_hdf_db.open(hdf_filename);
       if (d_output_correct) {
-         d_io_box_utility->printBoxes(tbox::pout);
+         d_hdf_db.printClassData(tbox::pout);
       }
-      
+
    }
 
    if (d_write_patch_boxes) {
-      d_io_box_utility =
-         new hier::BoxIOUtility<NDIM>(d_test_patch_boxes_filename,
-                          hier::BoxIOUtility<NDIM>::WRITE);
+      d_hdf_db.create(hdf_filename);
    }
+#endif
 
 }
 
 AutoTester::~AutoTester()
 {
-   if (d_write_patch_boxes) {
-      d_io_box_utility->writeLevelBoxesDatabase();
-   }
-
-   if (d_io_box_utility )
-      delete d_io_box_utility;
 }
 
 /*
-******************************************************************
-*                                                                *
-*  Method "evalTestData" compares the result of the run with     *
-*  the correct result for runs with the TimeRefinementIntegrator *
-*  and HyperbolicLevelIntegrator.                                *
-*                                                                *
-******************************************************************
-*/
-int AutoTester::evalTestData( 
-   int iter, 
-   const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy, 
-   const tbox::Pointer<algs::TimeRefinementIntegrator<NDIM> > tri, 
-   const tbox::Pointer<algs::HyperbolicLevelIntegrator<NDIM> > hli, 
-   const tbox::Pointer<mesh::GriddingAlgorithm<NDIM> > ga)
-{
-
-   int num_failures = 0;
-
-   /*
-    * Compare "correct_result" array to the computed result on specified 
-    * iteration.
-    */
-   if (iter == d_test_iter_num && !d_test_fluxes) { 
-
-      /*
-       * set precision of output stream.
-       */
-      tbox::pout.precision(12);
-
-      /*
-       * determine level.
-       */
-      int nlevels = hierarchy->getNumberOfLevels() - 1;
-      tbox::Pointer<hier::PatchLevel<NDIM> > level = 
-	 hierarchy->getPatchLevel(nlevels);
-
-      /*
-       * Test 0: Time Refinement Integrator
-       */
-      double time = tri->getIntegratorTime();
-      if (d_correct_result.getSize() > 0) {
-         if (d_output_correct) {
-            tbox::pout << "Test 0: Time Refinement Integrator "
-                 << "\n   computed result: " << time;
-            
-            tbox::pout  << "\n   specified result = " 
-                  << d_correct_result[0];
-         }
-         tbox::pout << endl;
-      
-         if (tbox::MathUtilities<double>::equalEps(time,d_correct_result[0]) ) {
-            tbox::pout << "Test 0: Time Refinement check successful" << endl;
-         } else {
-            tbox::perr << "Test 0 FAILED: Check Time Refinement Integrator" << endl;
-            num_failures++;
-         }
-      }
-      
-
-      /*
-       * Test 1: Time Refinement Integrator
-       */
-      double dt = tri->getLevelDtMax(nlevels);
-      if (d_correct_result.getSize() > 1) {
-         if (d_output_correct) {
-            tbox::pout << "Test 1: Time Refinement Integrator "
-                 << "\n   computed result: " << dt;
-            tbox::pout  << "\n   specified result = " 
-                  << d_correct_result[1];
-         }
-         tbox::pout << endl;
-      
-         if (tbox::MathUtilities<double>::equalEps(dt,d_correct_result[1]) ) {
-            tbox::pout << "Test 1: Time Refinement check successful" << endl;
-         } else {
-            tbox::perr << "Test 1 FAILED: Check Time Refinement Integrator" << endl;
-            num_failures++;
-         }
-      }
-
- 
-      /*
-       * Test 2: Hyperbolic Level Integrator
-       */
-      dt = hli->getLevelDt(level,time,false);
-      if (d_correct_result.getSize() > 2) {
-         if (d_output_correct) {
-            tbox::pout << "Test 2: Hyperbolic Level Integrator "
-                 << "\n   computed result: " << dt;
-            
-            tbox::pout  << "\n   specified result = " 
-                  << d_correct_result[2];
-	 }
-	 tbox::pout << endl;
-      
-         if (tbox::MathUtilities<double>::equalEps(dt,d_correct_result[2]) ) {
-            tbox::pout << "Test 2: Hyperbolic Level Int check successful" << endl;
-         } else {
-            tbox::perr << "Test 2 FAILED: Check Hyperbolic Level Integrator" << endl;
-            num_failures++;
-         }
-      }
-      
-
-      /*
-       * Test 3: Gridding Algorithm
-       */
-      int n = ga->getMaxLevels();
-      if (d_output_correct) {
-         tbox::pout << "Test 3: Gridding Algorithm "
-              << "\n   computed result: " << n;
-         tbox::pout << "\n   correct result = " << nlevels+1;
-         tbox::pout << endl; 
-      }
-      if (n == (nlevels+1) ) {
-         tbox::pout << "Test 3: Gridding Algorithm check successful" << endl;
-      } else {
-         tbox::perr << "Test 3 FAILED: Check Gridding Algorithm" << endl;
-         num_failures++;
-      }
-
-   }
-
-   if ( (d_test_patch_boxes_at_steps.getSize() > d_test_patch_boxes_step_count)     && (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] == iter) ) 
-   {
-
-      int num_levels = hierarchy->getNumberOfLevels();
-
-      if (d_read_patch_boxes) {
-
-         if (d_output_correct) {
-            d_io_box_utility->printBoxes(tbox::pout);
-         }
-
-         for (int ln = 0; ln < num_levels; ln++) {
-            hier::BoxArray<NDIM> test_boxes;
-            d_io_box_utility->getLevelBoxes(test_boxes,
-                                            ln,
-                                            d_test_patch_boxes_step_count);
-
-            num_failures +=checkHierarchyBoxes(hierarchy,
-                                               ln,
-                                               test_boxes,
-                                               iter);
-         }
-
-
-      }
-
-      if (d_write_patch_boxes) {
-
-         for (int ln = 0; ln < num_levels; ln++) {
-	    tbox::Pointer<hier::PatchLevel<NDIM> > level 
-	       = hierarchy->getPatchLevel(ln);
-            d_io_box_utility->
-               putLevelBoxes(level->getBoxes(),
-			     ln,
-                             d_test_patch_boxes_step_count);
-         }
-
-         if (d_output_correct) {
-            d_io_box_utility->printBoxes(tbox::pout);
-         }
-      }
-
-      d_test_patch_boxes_step_count++;
-
-   }
-
-   return(num_failures);
-}
-
-/*
-******************************************************************
-*                                                                *
-*  Method "evalTestData" compares the result of the run with     *
-*  the correct result for runs with the MethodOfLinesIntegrator. *
-*                                                                *
-******************************************************************
-*/
+ ******************************************************************
+ *
+ *  Method "evalTestData" compares the result of the run with
+ *  the correct result for runs with the TimeRefinementIntegrator
+ *  and HyperbolicLevelIntegrator.
+ *
+ ******************************************************************
+ */
 int AutoTester::evalTestData(
    int iter,
-   const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
-   double time,
-   const tbox::Pointer<algs::MethodOfLinesIntegrator<NDIM> > mol,
-   const tbox::Pointer<mesh::GriddingAlgorithm<NDIM> > ga)
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const tbox::Pointer<algs::TimeRefinementIntegrator> tri,
+   const tbox::Pointer<algs::HyperbolicLevelIntegrator> hli,
+   const tbox::Pointer<mesh::GriddingAlgorithm> ga)
 {
+   NULL_USE(ga);
 
    int num_failures = 0;
 
@@ -262,31 +93,240 @@ int AutoTester::evalTestData(
       /*
        * set precision of output stream.
        */
-      tbox::pout.precision(12);
+      tbox::plog.precision(12);
 
       /*
        * determine level.
        */
       int nlevels = hierarchy->getNumberOfLevels() - 1;
-      tbox::Pointer<hier::PatchLevel<NDIM> > level =
+      tbox::Pointer<hier::PatchLevel> level =
+         hierarchy->getPatchLevel(nlevels);
+
+      /*
+       * Test 0: Time Refinement Integrator
+       */
+      double time = tri->getIntegratorTime();
+      if (d_correct_result.getSize() > 0) {
+         if (d_output_correct) {
+            tbox::plog << "Test 0: Time Refinement Integrator "
+                       << "\n   computed result: " << time;
+
+            tbox::plog << "\n   specified result = "
+                       << d_correct_result[0];
+         }
+         tbox::plog << std::endl;
+
+         if (tbox::MathUtilities<double>::equalEps(time,
+                d_correct_result[0])) {
+            tbox::plog << "Test 0: Time Refinement check successful"
+                       << std::endl;
+         } else {
+            tbox::perr << "Test 0 FAILED: Check Time Refinement Integrator"
+                       << std::endl;
+            num_failures++;
+         }
+      }
+
+      /*
+       * Test 1: Time Refinement Integrator
+       */
+      double dt = tri->getLevelDtMax(nlevels);
+      if (d_correct_result.getSize() > 1) {
+         if (d_output_correct) {
+            tbox::plog << "Test 1: Time Refinement Integrator "
+                       << "\n   computed result: " << dt;
+            tbox::plog << "\n   specified result = "
+                       << d_correct_result[1];
+         }
+         tbox::plog << std::endl;
+
+         if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[1])) {
+            tbox::plog << "Test 1: Time Refinement check successful"
+                       << std::endl;
+         } else {
+            tbox::perr << "Test 1 FAILED: Check Time Refinement Integrator"
+                       << std::endl;
+            num_failures++;
+         }
+      }
+
+      /*
+       * Test 2: Hyperbolic Level Integrator
+       */
+      dt = hli->getLevelDt(level, time, false);
+      if (d_correct_result.getSize() > 2) {
+         if (d_output_correct) {
+            tbox::plog << "Test 2: Hyperbolic Level Integrator "
+                       << "\n   computed result: " << dt;
+
+            tbox::plog << "\n   specified result = "
+                       << d_correct_result[2];
+         }
+         tbox::plog << std::endl;
+
+         if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[2])) {
+            tbox::plog << "Test 2: Hyperbolic Level Int check successful"
+                       << std::endl;
+         } else {
+            tbox::perr << "Test 2 FAILED: Check Hyperbolic Level Integrator"
+                       << std::endl;
+            num_failures++;
+         }
+      }
+
+      /*
+       * Test 3: Gridding Algorithm
+       */
+      int n = hierarchy->getMaxNumberOfLevels();
+      if (d_output_correct) {
+         tbox::plog << "Test 3: Gridding Algorithm "
+                    << "\n   computed result: " << n;
+         tbox::plog << "\n   correct result = " << nlevels + 1;
+         tbox::plog << std::endl;
+      }
+      if (n == (nlevels + 1)) {
+         tbox::plog << "Test 3: Gridding Algorithm check successful"
+                    << std::endl;
+      } else {
+         tbox::perr << "Test 3 FAILED: Check Gridding Algorithm" << std::endl;
+         num_failures++;
+      }
+
+   }
+
+   if ((d_test_patch_boxes_at_steps.getSize() >
+        d_test_patch_boxes_step_count) &&
+       (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] == iter)) {
+
+      int num_levels = hierarchy->getNumberOfLevels();
+
+#ifdef HAVE_HDF5
+      if (d_read_patch_boxes) {
+
+         if (d_output_correct) {
+            d_hdf_db.printClassData(tbox::pout);
+         }
+
+         const std::string step_name =
+            std::string("step_number_") + tbox::Utilities::intToString(
+               d_test_patch_boxes_step_count,
+               2);
+         std::cout << std::endl;
+         tbox::Pointer<tbox::Database> step_db =
+            d_hdf_db.getDatabase(step_name);
+
+         /*
+          * FIXME: This check give false positives!!!!!
+          * It writes the same file regardless of the number of processors.
+          * We should be checking against base runs with the same number of processors,
+          * compare different data.
+          */
+         for (int ln = 0; ln < num_levels; ln++) {
+
+            const std::string level_name =
+               std::string("level_number_") + tbox::Utilities::levelToString(ln);
+            tbox::Pointer<tbox::Database> level_db =
+               step_db->getDatabase(level_name);
+            hier::BoxLevel correct_mapped_box_level(d_dim);
+            tbox::ConstPointer<hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
+            correct_mapped_box_level.getFromDatabase(*level_db,
+               grid_geometry);
+
+            num_failures += checkHierarchyBoxes(hierarchy,
+                  ln,
+                  correct_mapped_box_level,
+                  iter);
+         }
+
+      }
+
+      if (d_write_patch_boxes) {
+
+         const std::string step_name =
+            std::string("step_number_") + tbox::Utilities::intToString(
+               d_test_patch_boxes_step_count,
+               2);
+         std::cout << std::endl;
+         tbox::Pointer<tbox::Database> step_db =
+            d_hdf_db.putDatabase(step_name);
+
+         for (int ln = 0; ln < num_levels; ln++) {
+            tbox::Pointer<hier::PatchLevel> level =
+               hierarchy->getPatchLevel(ln);
+
+            const std::string level_name =
+               std::string("level_number_") + tbox::Utilities::levelToString(ln);
+            tbox::Pointer<tbox::Database> level_db =
+               step_db->putDatabase(level_name);
+            level->getBoxLevel()->putToDatabase(*level_db);
+         }
+
+         if (d_output_correct) {
+            d_hdf_db.printClassData(tbox::pout);
+         }
+      }
+#endif
+
+      d_test_patch_boxes_step_count++;
+
+   }
+
+   return num_failures;
+}
+
+/*
+ ******************************************************************
+ *
+ *  Method "evalTestData" compares the result of the run with
+ *  the correct result for runs with the MethodOfLinesIntegrator.
+ *
+ ******************************************************************
+ */
+int AutoTester::evalTestData(
+   int iter,
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   double time,
+   const tbox::Pointer<algs::MethodOfLinesIntegrator> mol,
+   const tbox::Pointer<mesh::GriddingAlgorithm> ga)
+{
+   NULL_USE(ga);
+
+   int num_failures = 0;
+
+   /*
+    * Compare "correct_result" array to the computed result on specified
+    * iteration.
+    */
+   if (iter == d_test_iter_num && !d_test_fluxes) {
+
+      /*
+       * set precision of output stream.
+       */
+      tbox::plog.precision(12);
+
+      /*
+       * determine level.
+       */
+      int nlevels = hierarchy->getNumberOfLevels() - 1;
+      tbox::Pointer<hier::PatchLevel> level =
          hierarchy->getPatchLevel(nlevels);
 
       /*
        * Test 0: Time test
        */
       if (d_output_correct) {
-         tbox::pout << "Test 0: Simulation Time: "
-              << "\n   computed result: " << time;
+         tbox::plog << "Test 0: Simulation Time: "
+                    << "\n   computed result: " << time;
          if (d_correct_result.getSize() > 0) {
-            tbox::pout  << "\n   specified result = "
-                  << d_correct_result[0];
+            tbox::plog << "\n   specified result = "
+                       << d_correct_result[0];
          }
-         tbox::pout << endl;
+         tbox::plog << std::endl;
       }
-      if (tbox::MathUtilities<double>::equalEps(time,d_correct_result[0]) ) {
-         tbox::pout << "Test 0: Simulation Time check successful" << endl;
+      if (tbox::MathUtilities<double>::equalEps(time, d_correct_result[0])) {
+         tbox::plog << "Test 0: Simulation Time check successful" << std::endl;
       } else {
-         tbox::perr << "Test 0 FAILED: Simulation time incorrect" << endl;
+         tbox::perr << "Test 0 FAILED: Simulation time incorrect" << std::endl;
          num_failures++;
       }
 
@@ -295,106 +335,131 @@ int AutoTester::evalTestData(
        */
       double dt = mol->getTimestep(hierarchy, time);
       if (d_output_correct) {
-         tbox::pout << "Test 1: Method of Lines Integrator "
-              << "\n   computed result: " << dt;
+         tbox::plog << "Test 1: Method of Lines Integrator "
+                    << "\n   computed result: " << dt;
          if (d_correct_result.getSize() > 1) {
-            tbox::pout  << "\n   specified result = "
-                  << d_correct_result[1];
+            tbox::plog << "\n   specified result = "
+                       << d_correct_result[1];
          }
-         tbox::pout << endl;
+         tbox::plog << std::endl;
       }
-      if (tbox::MathUtilities<double>::equalEps(dt,d_correct_result[1]) ) {
-         tbox::pout << "Test 1: MOL Int check successful" << endl;
+      if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[1])) {
+         tbox::plog << "Test 1: MOL Int check successful" << std::endl;
       } else {
-         tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator" << endl;
+         tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
+                    << std::endl;
          num_failures++;
       }
 
       /*
        * Test 2: Gridding Algorithm
        */
-      int n = ga->getMaxLevels();
+      int n = hierarchy->getMaxNumberOfLevels();
       if (d_output_correct) {
-         tbox::pout << "Test 2: Gridding Algorithm "
-              << "\n   computed result: " << n;
-         tbox::pout << "\n   correct result = " << nlevels+1;
-         tbox::pout << endl;
+         tbox::plog << "Test 2: Gridding Algorithm "
+                    << "\n   computed result: " << n;
+         tbox::plog << "\n   correct result = " << nlevels + 1;
+         tbox::plog << std::endl;
       }
-      if (n == (nlevels+1) ) {
-         tbox::pout << "Test 2: Gridding Alg check successful" << endl;
+      if (n == (nlevels + 1)) {
+         tbox::plog << "Test 2: Gridding Alg check successful" << std::endl;
       } else {
-         tbox::perr << "Test 2 FAILED: Check Gridding Algorithm" << endl;
+         tbox::perr << "Test 2 FAILED: Check Gridding Algorithm" << std::endl;
          num_failures++;
       }
 
    }
 
-   if ( (d_test_patch_boxes_at_steps.getSize() > 0) &&
-        (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] ==
-         iter) ) {
+   if ((d_test_patch_boxes_at_steps.getSize() > 0) &&
+       (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] == iter)) {
 
       int num_levels = hierarchy->getNumberOfLevels();
 
+#ifdef HAVE_HDF5
       if (d_read_patch_boxes) {
 
          if (d_output_correct) {
-            d_io_box_utility->printBoxes(tbox::pout);
+            d_hdf_db.printClassData(tbox::pout);
          }
+
+         const std::string step_name =
+            std::string("step_number_") + tbox::Utilities::intToString(
+               d_test_patch_boxes_step_count,
+               2);
+         std::cout << std::endl;
+         tbox::Pointer<tbox::Database> step_db =
+            d_hdf_db.getDatabase(step_name);
 
          for (int ln = 0; ln < num_levels; ln++) {
-            hier::BoxArray<NDIM> test_boxes;
-            d_io_box_utility->getLevelBoxes(test_boxes,
-                                            ln,
-                                            d_test_patch_boxes_step_count);
+
+            const std::string level_name =
+               std::string("level_number_") + tbox::Utilities::levelToString(ln);
+            tbox::Pointer<tbox::Database> level_db =
+               step_db->getDatabase(level_name);
+            hier::BoxLevel correct_mapped_box_level(d_dim);
+            tbox::ConstPointer<hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
+            correct_mapped_box_level.getFromDatabase(*level_db,
+               grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
-                                                ln,
-                                                test_boxes,
-                                                iter);
+                  ln,
+                  correct_mapped_box_level,
+                  iter);
          }
-
 
       }
 
       if (d_write_patch_boxes) {
 
          if (d_output_correct) {
-            d_io_box_utility->printBoxes(tbox::pout);
+            d_hdf_db.printClassData(tbox::pout);
          }
 
+         const std::string step_name =
+            std::string("step_number_") + tbox::Utilities::intToString(
+               d_test_patch_boxes_step_count,
+               2);
+         std::cout << std::endl;
+         tbox::Pointer<tbox::Database> step_db =
+            d_hdf_db.putDatabase(step_name);
+
          for (int ln = 0; ln < num_levels; ln++) {
-            tbox::Pointer<hier::PatchLevel<NDIM> > level 
-	       = hierarchy->getPatchLevel(ln);
-            d_io_box_utility->
-               putLevelBoxes(level->getBoxes(),
-                             ln,
-                             d_test_patch_boxes_step_count);
+            tbox::Pointer<hier::PatchLevel> level =
+               hierarchy->getPatchLevel(ln);
+
+            const std::string level_name =
+               std::string("level_number_") + tbox::Utilities::levelToString(ln);
+            tbox::Pointer<tbox::Database> level_db =
+               step_db->putDatabase(level_name);
+            level->getBoxLevel()->putToDatabase(*level_db);
          }
 
       }
+#endif
 
       d_test_patch_boxes_step_count++;
 
    }
 
-   return(num_failures);
+   return num_failures;
 }
 
 /*
-******************************************************************
-*                                                                *
-*  Get test parameters from input.                               *
-*                                                                *
-******************************************************************
-*/
+ ******************************************************************
+ *
+ *  Get test parameters from input.
+ *
+ ******************************************************************
+ */
 
-void AutoTester::getFromInput(tbox::Pointer<tbox::Database> input_db)
+void AutoTester::getFromInput(
+   tbox::Pointer<tbox::Database> input_db)
 {
-   tbox::Pointer<tbox::Database> tester_db = 
+   tbox::Pointer<tbox::Database> tester_db =
       input_db->getDatabase(d_object_name);
 
-   /* 
-    * Read testing parameters from testing_db 
+   /*
+    * Read testing parameters from testing_db
     */
    if (tester_db->keyExists("test_fluxes")) {
       d_test_fluxes = tester_db->getBool("test_fluxes");
@@ -412,54 +477,53 @@ void AutoTester::getFromInput(tbox::Pointer<tbox::Database> input_db)
    }
    if (d_read_patch_boxes && d_write_patch_boxes) {
       tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
-           << "Cannot 'read_patch_boxes' and 'write_patch_boxes' \n"
-           << "at the same time." << endl;
+                 << "Cannot 'read_patch_boxes' and 'write_patch_boxes' \n"
+                 << "at the same time." << std::endl;
    }
    if (d_read_patch_boxes || d_write_patch_boxes) {
       if (!tester_db->keyExists("test_patch_boxes_at_steps")) {
          tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
-              << "Must provide 'test_patch_boxes_at_steps' data." << endl;
+                    << "Must provide 'test_patch_boxes_at_steps' data."
+                    << std::endl;
       } else {
-         d_test_patch_boxes_at_steps = 
+         d_test_patch_boxes_at_steps =
             tester_db->getIntegerArray("test_patch_boxes_at_steps");
       }
       if (!tester_db->keyExists("test_patch_boxes_filename")) {
          tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
-              << "Must provide 'test_patch_boxes_filename' data." << endl;
+                    << "Must provide 'test_patch_boxes_filename' data."
+                    << std::endl;
       } else {
          d_test_patch_boxes_filename =
             tester_db->getString("test_patch_boxes_filename");
-      }
-      if (tester_db->keyExists("simplify_test_boxes")) {
-         d_simplify_test_boxes = tester_db->getBool("simplify_test_boxes");
       }
    }
 
    if (d_test_fluxes) {
 
-      /* 
-       * Read expected result for flux test... 
+      /*
+       * Read expected result for flux test...
        * Fluxes not verified in this routine.  Rather, we let it
        * write the result and do a "diff" within the script
        */
 
-     tbox::pout << "Do a diff on the resulting *.dat file to verify result."  
-          << endl;
+      tbox::pout << "Do a diff on the resulting *.dat file to verify result."
+                 << std::endl;
 
    } else {
 
-      /* 
-       * Read correct_result array for timestep test... 
+      /*
+       * Read correct_result array for timestep test...
        */
       if (tester_db->keyExists("correct_result")) {
          d_correct_result = tester_db->getDoubleArray("correct_result");
       } else {
          TBOX_WARNING("main.C: TESTING is on but no `correct_result' array"
-               << "is given in input file." << endl);
+            << "is given in input file." << std::endl);
       }
 
       /* Specify whether to output "correct_result" result */
- 
+
       if (tester_db->keyExists("output_correct")) {
          d_output_correct = tester_db->getBool("output_correct");
       }
@@ -468,151 +532,69 @@ void AutoTester::getFromInput(tbox::Pointer<tbox::Database> input_db)
 
 }
 
-static void getBoxListsSortedBySize(tbox::Array<hier::BoxList<NDIM> >& sorted_boxarrays,
-                                    hier::BoxList<NDIM>& in_boxlist) 
-{
-   in_boxlist.sortDescendingBoxSizes(); 
-   
-   tbox::List<int> num_box_sizes;
-   int check_size = 0;
-   if (in_boxlist.getNumberOfItems() > 0) {
-      check_size = in_boxlist.getFirstItem().size();
-   }
-   num_box_sizes.appendItem(0);
-   for (hier::BoxList<NDIM>::Iterator lin(in_boxlist); lin; lin++) {
-      if (lin().size() == check_size) {
-         (num_box_sizes.getLastItem())++;
-      } else {
-         check_size = lin().size();
-         num_box_sizes.appendItem(1);
-      }
-   }
-
-   sorted_boxarrays.resizeArray(num_box_sizes.getNumberOfItems());
-
-   hier::BoxList<NDIM>::Iterator lin2s(in_boxlist);
-   int isort = 0;
-   for (tbox::List<int>::Iterator lbs(num_box_sizes); lbs; lbs++) {
-      int num_boxes = lbs();
-      for (int ib = 0; ib < num_boxes; ib++) {
-         hier::Box<NDIM> check_box = lin2s();
-         sorted_boxarrays[isort].appendItem(check_box);
-         lin2s++;
-      }
-      isort++;
-   } 
-}
-
 int AutoTester::checkHierarchyBoxes(
-   const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    int level_number,
-   const hier::BoxArray<NDIM>& test_boxes,
+   const hier::BoxLevel& correct_mapped_box_level,
    int iter)
 {
- 
-   hier::BoxList<NDIM> master_boxes(test_boxes);
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   tbox::Pointer<hier::PatchLevel<NDIM> > level 
-      = hierarchy->getPatchLevel(level_number);
-   hier::BoxList<NDIM> hier_boxes(level->getBoxes());
+   const tbox::Pointer<hier::PatchLevel> patch_level =
+      hierarchy->getPatchLevel(level_number);
+   const hier::BoxLevel& mapped_box_level =
+      *patch_level->getBoxLevel();
 
-   if (d_simplify_test_boxes) {
-      master_boxes.simplifyBoxes();
-      hier_boxes.simplifyBoxes();
+   const int local_exact_match =
+      mapped_box_level == correct_mapped_box_level;
+
+   int global_exact_match = local_exact_match;
+   if (mpi.getSize() > 1) {
+      mpi.AllReduce(&global_exact_match, 1, MPI_MIN);
    }
-
-   tbox::Array<hier::BoxList<NDIM> > sorted_master_boxes;
-   getBoxListsSortedBySize(sorted_master_boxes, master_boxes);
-
-   tbox::Array<hier::BoxList<NDIM> > sorted_boxes;
-   getBoxListsSortedBySize(sorted_boxes, hier_boxes);
-
-   int i;
 
    /*
-    * Check to make sure sorted_boxes and sorted_master_boxes are
-    * identical.  If not, write an error message.
+    * Check to make sure hierarchy's BoxLevel and
+    * correct_mapped_box_level are identical.  If not, write an error
+    * message.
     */
 
-   bool total_match = 
-      (hier_boxes.getNumberOfItems() == master_boxes.getNumberOfItems());
-
-   bool bin_match = 
-      (sorted_boxes.getSize() == sorted_master_boxes.getSize());
-   
-   bool bin_count_match = true;
-   if (total_match && bin_match) {
-      for (i = 0; i < sorted_boxes.getSize(); i++) {
-         bin_count_match = bin_count_match &&
-            (sorted_boxes[i].getNumberOfItems() ==
-             sorted_master_boxes[i].getNumberOfItems());
-      }
-   } 
-
    int num_failures = 0;
-   
-   if (total_match && bin_match && bin_count_match) {
-      tbox::pout << "Test 4: Level " << level_number
-           << " Boxes check successful for step " << iter
-           << endl << endl;
+
+   if (local_exact_match && global_exact_match) {
+      tbox::plog << "Test 4: Level " << level_number
+                 << " BoxLevel check successful for step " << iter
+                 << std::endl << std::endl;
    } else {
       tbox::perr << "Test 4: FAILED: Level " << level_number
-           << " hier::Box configuration doesn't match at step " << iter 
-           << endl << endl;
+                 << " hier::BoxLevel configuration doesn't match at step " << iter
+                 << std::endl << std::endl;
       num_failures++;
    }
-  
+
    if (d_output_correct) {
 
-      tbox::pout << "-------------------------------------------------------" 
-           << endl;
+      tbox::pout << "-------------------------------------------------------"
+                 << std::endl;
 
-      if (!total_match) {
-         tbox::pout << "TOTAL NUMBER OF BOXES DOES NOT MATCH " 
-              << "ON LEVEL: " << level_number << endl;
+      if (!local_exact_match) {
+         tbox::pout << "LOCAL MAPPED BOX LEVEL DOES NOT MATCH "
+                    << "ON LEVEL: " << level_number << std::endl;
       }
-      tbox::pout << "Total number of boxes: " << endl;
-      tbox::pout << "   hier::PatchLevel boxes -- " << hier_boxes.getNumberOfItems()
-           << "   Test boxes -- " << master_boxes.getNumberOfItems() 
-           << endl;
 
-      if (!bin_match) {
-         tbox::pout << "NUMBER OF BOX SIZES DOES NOT MATCH " 
-              << "ON LEVEL: " << level_number << endl;
+      if (!global_exact_match) {
+         tbox::pout << "GLOBAL MAPPED BOX LEVEL DOES NOT MATCH "
+                    << "ON LEVEL: " << level_number << std::endl;
       }
-      tbox::pout << "Number of box sizes: " << endl;
-      tbox::pout << "   hier::PatchLevel boxes -- " << sorted_boxes.getSize()
-           << "   Test boxes -- " << sorted_master_boxes.getSize()
-           << endl;
-
-      if (!bin_count_match) {
-         tbox::pout << "BOX SIZE DISTRIBUTION DOES NOT MATCH!" << endl;
-      }
-      for (i = 0; i < sorted_boxes.getSize(); i++) {
-         tbox::pout << "PatchLevel has " 
-              << sorted_boxes[i].getNumberOfItems()
-              << " boxes";
-         if (sorted_boxes[i].getNumberOfItems() > 0) {
-            tbox::pout << " of size = " 
-                 << sorted_boxes[i].getFirstItem().size();
-         }
-         tbox::pout << endl;
-      }
-      for (i = 0; i < sorted_master_boxes.getSize(); i++) {
-         tbox::pout << "Test boxes have "
-              << sorted_master_boxes[i].getNumberOfItems()
-             << " boxes";
-         if (sorted_master_boxes[i].getNumberOfItems() > 0) {
-            tbox::pout << " of size = " 
-                 << sorted_master_boxes[i].getFirstItem().size();
-         }
-         tbox::pout << endl;
-      }
+      tbox::pout << "BoxLevel: " << std::endl;
+      mapped_box_level.recursivePrint(tbox::pout, "", 3);
+      tbox::pout << "correct BoxLevel: " << std::endl;
+      correct_mapped_box_level.recursivePrint(tbox::pout, "", 3);
 
       tbox::pout << "-------------------------------------------------------"
-           << endl << endl;
+                 << std::endl << std::endl;
 
    }
 
-   return (num_failures);
+   return num_failures;
 }

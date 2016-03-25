@@ -1,87 +1,84 @@
-/*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/dlbg/main.C $
-  Copyright:	(c) 1997-2003 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 2043 $
-  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
-  Description:	Test program for asynchronous BR implementation
-*/
-
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Test program for asynchronous BR implementation
+ *
+ ************************************************************************/
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <string>
-#include "SAMRAI_config.h"
-#include "tbox/SAMRAIManager.h"
-#include "tbox/SAMRAI_MPI.h"
+#include "SAMRAI/SAMRAI_config.h"
 
 /*
-  Headers for basic SAMRAI objects used in this code.
-*/
-#include "tbox/SAMRAIManager.h"
-#include "tbox/Array.h"
-#include "tbox/Database.h"
-#include "tbox/InputManager.h"
-#include "tbox/SAMRAI_MPI.h"
-#include "tbox/PIO.h"
-#include "tbox/Pointer.h"
-#include "tbox/RestartManager.h"
-#include "tbox/Statistician.h"
-#include "tbox/TimerManager.h"
-#include "tbox/Utilities.h"
+ * Headers for basic SAMRAI objects used in this code.
+ */
+#include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/InputManager.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/RestartManager.h"
+#include "SAMRAI/tbox/Statistician.h"
+#include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 /*
-  Headers for major algorithm/data structure objects from SAMRAI
-*/
-#include "CartesianVizamraiDataWriter.h"
-#include "VisItDataWriter.h"
-#include "CartesianGridGeometry.h"
-#include "BoxList.h"
-#include "GridGeometry.h"
-#include "LayerEdgeSet.h"
-#include "PatchHierarchy.h"
-#include "VariableDatabase.h"
-#include "AsyncBergerRigoutsos.h"
-#include "BergerRigoutsos.h"
-#include "GriddingAlgorithm.h"
-#include "StandardTagAndInitialize.h"
-#include "LoadBalancer.h"
-#include "FACPreconditioner.h"
+ * Headers for major algorithm/data structure objects from SAMRAI
+ */
+#include "SAMRAI/appu/VisItDataWriter.h"
+#include "SAMRAI/geom/CartesianGridGeometry.h"
+#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/PatchHierarchy.h"
+#include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/mesh/GriddingAlgorithm.h"
+#include "SAMRAI/mesh/StandardTagAndInitialize.h"
+#include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/solv/FACPreconditioner.h"
 #include "DLBGTest.h"
-
+#include "SAMRAI/xfer/RefineSchedule.h"
+#include "SAMRAI/xfer/CoarsenSchedule.h"
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 
 #include "get-input-filename.h"
 
-#ifndef LACKS_NAMESPACE
 using namespace SAMRAI;
 using namespace tbox;
 using namespace hier;
 using namespace mesh;
-#endif
 
+static int
+createAndTestDLBG(
+   tbox::Database& main_db,
+   const tbox::Dimension& dim,
+   PatchHierarchy& patch_hierarchy);
 
-int createAndTestDLBG( tbox::Database &main_db,
-                       PatchHierarchy<NDIM> &patch_hierarchy );
-
-
-int main( int argc, char **argv )
+int main(
+   int argc,
+   char** argv)
 {
-   string input_filename;
+   std::string input_filename;
 
    /*
-     Initialize MPI, process argv, and initialize SAMRAI
-   */
+    * Initialize MPI, process argv, and initialize SAMRAI
+    */
    tbox::SAMRAI_MPI::init(&argc, &argv);
-   if ( get_input_filename(&argc, argv, input_filename) == 1 ) {
-      cout << "Usage: " << argv[0]
-	   << " <input file>."
-	   << endl;
+   if (get_input_filename(&argc, argv, input_filename) == 1) {
+      std::cout << "Usage: " << argv[0]
+                << " <input file>."
+                << std::endl;
       tbox::SAMRAI_MPI::finalize();
       return 0;
    }
+   tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
 
    /*
@@ -89,22 +86,20 @@ int main( int argc, char **argv )
     * then there will be memory leaks reported.
     */
    {
+      tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
+      tbox::plog << "Input file is " << input_filename << std::endl;
 
-      tbox::pout << "Input file is " << input_filename << endl;
-
-
-      string case_name;
-      if ( argc >= 2 ) {
-	 case_name = argv[1];
+      std::string case_name;
+      if (argc >= 2) {
+         case_name = argv[1];
       }
 
-
       /*
-	Create input database and parse all data in input file into it.
-      */
+       * Create input database and parse all data in input file into it.
+       */
 
-      tbox::Pointer<tbox::Database> input_db = new tbox::InputDatabase("input_db");
+      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -113,538 +108,519 @@ int main( int argc, char **argv )
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-	 tbox::Pointer<tbox::Database> global_db =
-	    input_db->getDatabase("GlobalInputs");
-	 if (global_db->keyExists("tag_clustering_method")) {
-	    string tag_clustering_method =
-	       global_db->getString("tag_clustering_method");
-	    mesh::BergerRigoutsos<NDIM>::setClusteringOption(tag_clustering_method);
-	 }
-	 if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
-	    bool flag = global_db->
-	       getBool("call_abort_in_serial_instead_of_exit");
-	    tbox::SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(flag);
-	 }
+         tbox::Pointer<tbox::Database> global_db =
+            input_db->getDatabase("GlobalInputs");
+         if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
+            bool flag = global_db->
+               getBool("call_abort_in_serial_instead_of_exit");
+            tbox::SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(flag);
+         }
       }
 
-
       /*
-	Get the Main database part of the input database.
-	This database contains information relevant to main.
-      */
+       * Get the Main database part of the input database.
+       * This database contains information relevant to main.
+       */
 
       tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
-      tbox::plog << "Main database:" << endl; main_db->printClassData(tbox::plog);
 
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      tbox::plog << "Main database:" << endl;
+      main_db->printClassData(tbox::plog);
 
-      if ( input_db->isDatabase("TimerManager") ) {
-	 tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      int verbose = main_db->getIntegerWithDefault("verbose", 0);
+
+      if (input_db->isDatabase("TimerManager")) {
+         tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
       }
 
+      /*
+       * Base filename info.
+       */
+
+      std::string base_name = main_db->getStringWithDefault("base_name", "fp");
 
       /*
-	Base filename info.
-      */
-
-      string base_name = main_db->getStringWithDefault("base_name", "fp");
-
-
-      /*
-	Modify basename for this particular run.
-	Add the number of processes and the case name.
-      */
-      if ( ! case_name.empty() ) {
-	 base_name = base_name + '-' + case_name;
+       * Modify basename for this particular run.
+       * Add the number of processes and the case name.
+       */
+      if (!case_name.empty()) {
+         base_name = base_name + '-' + case_name;
       }
-      if ( tbox::SAMRAI_MPI::getNodes() > 1 ) {
-	 base_name = base_name + '-' +
-	    tbox::Utilities::intToString( tbox::SAMRAI_MPI::getNodes(), 5 );
+      if (mpi.getSize() > 1) {
+         base_name = base_name + '-'
+            + tbox::Utilities::intToString(mpi.getSize(), 5);
       }
-      tbox::pout << "Added case name (" << case_name << ") and nprocs ("
-		 << tbox::SAMRAI_MPI::getNodes() << ") to base name -> '"
-		 << base_name << "'\n";
+      tbox::plog << "Added case name (" << case_name << ") and nprocs ("
+                 << mpi.getSize() << ") to base name -> '"
+                 << base_name << "'\n";
 
       /*
-	Set the vis filename, defaults to base_name.
-      */
-      string vis_filename
-	 = main_db->getStringWithDefault("vis_filename", base_name);
-
+       * Set the vis filename, defaults to base_name.
+       */
+      std::string vis_filename =
+         main_db->getStringWithDefault("vis_filename", base_name);
 
       /*
-	Log file info.
-      */
+       * Log file info.
+       */
 
-      string log_filename
-	 = main_db->getStringWithDefault("log_filename", base_name+".log");
+      std::string log_filename =
+         main_db->getStringWithDefault("log_filename", base_name + ".log");
       bool log_all = false;
       log_all = main_db->getBoolWithDefault("log_all", log_all);
-      if ( log_all && tbox::SAMRAI_MPI::getNodes() > 1 ) {
-	 tbox::PIO::logAllNodes(log_filename);
-      }
-      else {
-	 tbox::PIO::logOnlyNodeZero(log_filename);
+      if (log_all && mpi.getSize() > 1) {
+         tbox::PIO::logAllNodes(log_filename);
+      } else {
+         tbox::PIO::logOnlyNodeZero(log_filename);
       }
 
-
-      if ( ! case_name.empty() ) {
-	 tbox::plog << "Added case name (" << case_name << ") and nprocs ("
-		    << tbox::SAMRAI_MPI::getNodes() << ") to base name -> '"
-		    << base_name << "'\n";
+      if (!case_name.empty()) {
+         tbox::plog << "Added case name (" << case_name << ") and nprocs ("
+                    << mpi.getSize() << ") to base name -> '"
+                    << base_name << "'\n";
       }
-      tbox::pout << "Running on " << tbox::SAMRAI_MPI::getNodes() << " processes.\n";
-
+      tbox::plog << "Running on " << mpi.getSize()
+                 << " processes.\n";
 
       /*
-	Choose which BR implementation to use.
-      */
+       * Choose which BR implementation to use.
+       */
       char which_br = 'o';
       which_br = main_db->getCharWithDefault("which_br", which_br);
-      tbox::pout << "which_br is " << which_br << endl;
-
+      tbox::plog << "which_br is " << which_br << std::endl;
 
       int ln;
 
-
-      int plot_step = main_db->getIntegerWithDefault("plot_step", 0 );
-
+      int plot_step = main_db->getIntegerWithDefault("plot_step", 0);
 
       /*
-	Create a patch hierarchy for use later.
-	This object is a required input for these objects: abrtest.
-      */
-      tbox::Pointer<hier::PatchHierarchy<NDIM> > patch_hierarchy;
+       * Create a patch hierarchy for use later.
+       * This object is a required input for these objects: dlbgtest.
+       */
+      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy;
       {
-	 /*
-	   Create a grid geometry required for the
-	   hier::PatchHierarchy<NDIM> object.
-	 */
-	 tbox::Pointer<geom::CartesianGridGeometry<NDIM> > grid_geometry =
-	    new geom::CartesianGridGeometry<NDIM>("CartesianGridGeometry",
-						  input_db->getDatabase("CartesianGridGeometry"));
-	 tbox::plog << "Grid Geometry:" << endl;
-	 grid_geometry->printClassData(tbox::plog);
-	 patch_hierarchy =
-	    new hier::PatchHierarchy<NDIM>("Patch Hierarchy", grid_geometry);
+         /*
+          * Create a grid geometry required for the
+          * hier::PatchHierarchy object.
+          */
+         tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+            new geom::CartesianGridGeometry(dim,
+               std::string("CartesianGridGeometry"),
+               input_db->getDatabase("CartesianGridGeometry")));
+         tbox::plog << "Grid Geometry:" << std::endl;
+         grid_geometry->printClassData(tbox::plog);
+         patch_hierarchy =
+            new hier::PatchHierarchy("Patch Hierarchy", grid_geometry,
+               input_db->getDatabase("PatchHierarchy"));
       }
 
-
-
       /*
-	Create the problem-specific object implementing the required
-	SAMRAI virtual functions.
-      */
-      tbox::plog << "Creating abrtest.\n";
-      DLBGTest<NDIM> abrtest ( "DLBGTest" ,
-			       input_db->getDatabase("DLBGTest") );
-
-
+       * Create the problem-specific object implementing the required
+       * SAMRAI virtual functions.
+       */
+      tbox::plog << "Creating dlbgtest.\n";
+      DLBGTest dlbgtest("DLBGTest",
+                        dim,
+                        patch_hierarchy,
+                        input_db->getDatabase("DLBGTest"));
 
       tbox::plog << "Creating box generator.\n";
-      tbox::Pointer<mesh::BergerRigoutsos<NDIM> > old_br =
-	 new mesh::BergerRigoutsos<NDIM>();
-      tbox::Pointer<mesh::AsyncBergerRigoutsos<NDIM> > new_br =
-	 new mesh::AsyncBergerRigoutsos<NDIM> ( input_db->isDatabase("AsyncBergerRigoutsos") ?
-						input_db->getDatabase("AsyncBergerRigoutsos") :
-						tbox::Pointer<tbox::Database>(NULL) );
+      tbox::Pointer<mesh::BergerRigoutsos> new_br(
+         new mesh::BergerRigoutsos(dim,
+            input_db->isDatabase("BergerRigoutsos") ?
+            input_db->getDatabase("BergerRigoutsos") :
+            tbox::Pointer<tbox::Database>(NULL)));
+      new_br->setMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      tbox::Pointer<mesh::BoxGeneratorStrategy<NDIM> > box_generator = which_br == 'o' ?
-	 tbox::Pointer<mesh::BoxGeneratorStrategy<NDIM> >(old_br) :
-	 tbox::Pointer<mesh::BoxGeneratorStrategy<NDIM> >(new_br) ;
-      TBOX_ASSERT( !box_generator.isNull() );
+      tbox::Pointer<mesh::BoxGeneratorStrategy> box_generator =
+         tbox::Pointer<mesh::BoxGeneratorStrategy>(new_br);
+      TBOX_ASSERT(!box_generator.isNull());
 
       tbox::plog << "Creating grid algorithm.\n";
-      tbox::Pointer<mesh::GriddingAlgorithm<NDIM> > gridding_algorithm;
+      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm;
       {
-	 /*
-	   Create the tag-and-initializer, box-generator and load-balancer
-	   object references required by the gridding_algorithm object.
-	 */
-	 tbox::Pointer<mesh::StandardTagAndInitialize<NDIM> > tag_and_initializer =
-	    new mesh::StandardTagAndInitialize<NDIM>(
-	       "CellTaggingMethod" ,
-	       tbox::Pointer<mesh::StandardTagAndInitStrategy<NDIM> >(abrtest.getStandardTagAndInitObject(),false) ,
-	       input_db->getDatabase("StandardTagAndInitialize")
-	       );
-	 tbox::Pointer<mesh::LoadBalancer<NDIM> > load_balancer =
-	    new mesh::LoadBalancer<NDIM>("load balancer",
-					 input_db->getDatabase("LoadBalancer"));
+         /*
+          * Create the tag-and-initializer, box-generator and load-balancer
+          * object references required by the gridding_algorithm object.
+          */
+         tbox::Pointer<mesh::StandardTagAndInitialize> tag_and_initializer(
+            new mesh::StandardTagAndInitialize(
+               dim,
+               "CellTaggingMethod",
+               tbox::Pointer<mesh::StandardTagAndInitStrategy>(
+                  dlbgtest.getStandardTagAndInitObject(),
+                  false),
+               input_db->getDatabase("StandardTagAndInitialize")
+               ));
 
-	 /*
-	   Create the gridding algorithm used to generate the SAMR grid
-	   and create the grid.
-	 */
-	 gridding_algorithm =
-	    new mesh::GriddingAlgorithm<NDIM>("Gridding Algorithm",
-					      input_db->getDatabase("GriddingAlgorithm"),
-					      tag_and_initializer,
-					      box_generator,
-					      load_balancer);
-	 tbox::plog << "Gridding algorithm:" << endl;
-	 gridding_algorithm->printClassData(tbox::plog);
+         tbox::Pointer<mesh::TreeLoadBalancer> tree_load_balancer(
+            new mesh::TreeLoadBalancer(dim,
+               "load balancer",
+               input_db->getDatabase("TreeLoadBalancer")));
+         tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         tbox::Pointer<mesh::LoadBalanceStrategy> load_balancer =
+            tbox::Pointer<mesh::LoadBalanceStrategy>(tree_load_balancer);
+         TBOX_ASSERT(!load_balancer.isNull());
+
+         /*
+          * Create the gridding algorithm used to generate the SAMR grid
+          * and create the grid.
+          */
+         gridding_algorithm =
+            new mesh::GriddingAlgorithm(
+               patch_hierarchy,
+               "Distributed Gridding Algorithm",
+               input_db->getDatabase("GriddingAlgorithm"),
+               tag_and_initializer,
+               box_generator,
+               load_balancer);
+         tbox::plog << "Gridding algorithm:" << std::endl;
+         gridding_algorithm->printClassData(tbox::plog);
 
       }
+
+      bool check_dlbg_in_main = false;
+      check_dlbg_in_main = main_db->getBoolWithDefault("check_dlbg_in_main",
+            check_dlbg_in_main);
 
       bool log_hierarchy = false;
       log_hierarchy = main_db->getBoolWithDefault("log_hierarchy",
-						  log_hierarchy);
-      int num_steps = main_db->getIntegerWithDefault("num_steps",0);
+            log_hierarchy);
+      int num_steps = main_db->getIntegerWithDefault("num_steps", 0);
 
       /*
-	After setting up the problem and initializing the object states,
-	we print the input database and variable database contents
-	to the log file.
-      */
-      tbox::plog << "\nCheck input data:" << endl;
-      tbox::plog << "Input database..." << endl;
+       * After setting up the problem and initializing the object states,
+       * we print the input database and variable database contents
+       * to the log file.
+       */
+      tbox::plog << "\nCheck input data:" << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
-      hier::VariableDatabase<NDIM>::getDatabase()->printClassData(tbox::plog);
+      tbox::plog << "\nVariable database..." << std::endl;
+      hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
+
+      tbox::Array<int> tag_buffer(10);
+      for (int i = 0; i < tag_buffer.size(); ++i) tag_buffer[i] = 0;
+      if (main_db->isInteger("tag_buffer")) {
+         tag_buffer = main_db->getIntegerArray("tag_buffer");
+      }
 
       /*
-	Make the patch levels.
-      */
+       * Make the patch levels.
+       */
 
       tbox::Pointer<tbox::Timer> t_generate_mesh =
-	 tbox::TimerManager::getManager()->
-	 getTimer("apps::main::generate_mesh");
+         tbox::TimerManager::getManager()->
+         getTimer("apps::main::generate_mesh");
       t_generate_mesh->start();
-      gridding_algorithm->makeCoarsestLevel(patch_hierarchy,0.0);
-      bool done=false;
-      for (ln = 0; gridding_algorithm->levelCanBeRefined(ln) && !done; ln++) {
-	 tbox::pout << "Adding finer levels with ln = " << ln << endl;
-	 tbox::Pointer<hier::PatchLevel<NDIM> > level_ =
-	    patch_hierarchy->getPatchLevel(ln);
-	 gridding_algorithm->makeFinerLevel( patch_hierarchy ,
-					     /* simulation time */ 0.0 ,
-					     /* whether initial time */ true ,
-					     /* tag buffer size */ 0 );
-	 tbox::pout << "Just added finer level " << ln << " -> " << ln+1;
-	 if ( patch_hierarchy->getNumberOfLevels() < ln+2 ) {
-	    tbox::pout << " (no new level!)" << endl;
-	 }
-	 else {
-	    tbox::Pointer<hier::PatchLevel<NDIM> > finer_level_ =
-	       patch_hierarchy->getPatchLevel(ln+1);
-	    tbox::pout
-	       << " (" << level_->getNumberOfPatches()
-	       << " -> " << finer_level_->getNumberOfPatches()
-	       << " patches)"
-	       << endl;
-	 }
-	 done = !(patch_hierarchy->finerLevelExists(ln));
-     
+      gridding_algorithm->makeCoarsestLevel(0.0);
+      bool done = false;
+      for (ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done; ln++) {
+         tbox::plog << "Adding finer levels with ln = " << ln << std::endl;
+         tbox::Pointer<hier::PatchLevel> level_ =
+            patch_hierarchy->getPatchLevel(ln);
+         gridding_algorithm->makeFinerLevel(
+            /* simulation time */ 0.0,
+            /* whether initial time */ true,
+            /* tag buffer size */ tag_buffer[ln]);
+         tbox::plog << "Just added finer level " << ln << " -> " << ln + 1;
+         if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
+            tbox::plog << " (no new level!)" << std::endl;
+         } else {
+            tbox::Pointer<hier::PatchLevel> finer_level_ =
+               patch_hierarchy->getPatchLevel(ln + 1);
+            tbox::plog
+            << " (" << level_->getGlobalNumberOfPatches()
+            << " -> " << finer_level_->getGlobalNumberOfPatches()
+            << " patches)"
+            << std::endl;
+         }
+         done = !(patch_hierarchy->finerLevelExists(ln));
+
       }
       t_generate_mesh->stop();
 
-
-      if ( tbox::SAMRAI_MPI::getRank() == 0 ) {
-	 tbox::pout << "Hierarchy generated:" << endl;
-	 patch_hierarchy->recursivePrint( tbox::pout, string("    "), 1 );
+      if (mpi.getRank() == 0) {
+         tbox::plog << "Hierarchy generated:" << std::endl;
+         patch_hierarchy->recursivePrint(tbox::plog, std::string("    "), 1);
       }
-      if ( log_hierarchy ) {
-	 tbox::plog << "Hierarchy generated:" << endl;
-	 patch_hierarchy->recursivePrint( tbox::plog, string("H-> "), 3 );
+      if (log_hierarchy) {
+         tbox::plog << "Hierarchy generated:" << std::endl;
+         patch_hierarchy->recursivePrint(
+            tbox::plog, std::string("H-> "), 2);
       }
-
-
-
 
       /*
-	Write a plot file.
-      */
+       * Write a plot file.
+       */
       /* Get the output filename. */
-      if ( plot_step > 0 ) {
-	 if(0) {
-	    /* Create the vizamrai data writer. */
-	    tbox::Pointer<appu::CartesianVizamraiDataWriter<NDIM> > viz_data_writer =
-	       new appu::CartesianVizamraiDataWriter<NDIM>("Viz Writer");
-	    /* Register variables with plotter. */
-	    abrtest.registerVariablesWithPlotter(viz_data_writer);
-	    /*
-	      Tell the plotter about the refinement ratios.
-	      This must be done once (and again each time the data changes).
-	    */
-	    for ( int ln=1; ln<patch_hierarchy->getNumberOfLevels(); ln++ ) {
-	       tbox::Pointer<hier::PatchLevel<NDIM> >
-		  level_ =patch_hierarchy->getPatchLevel(ln);
-	       const hier::IntVector<NDIM> &lratio =
-		  level_->getRatioToCoarserLevel();
-	       viz_data_writer->setRatioToCoarserLevel(ln, lratio);
-	    }
-	    /* Write the plot file. */
-	    viz_data_writer->writePlotData( patch_hierarchy , vis_filename );
-	 }
-	 {
-	    const string visit_filename = vis_filename+".visit";
-	    /* Create the VisIt data writer. */
-	    tbox::Pointer<appu::VisItDataWriter<NDIM> > visit_data_writer =
-	       new appu::VisItDataWriter<NDIM>("VisIt Writer", visit_filename);
-	    /* Register variables with plotter. */
-	    abrtest.registerVariablesWithPlotter(visit_data_writer);
-	    /* Write the plot file. */
-	    visit_data_writer->writePlotData( patch_hierarchy , 0 );
-	 }
+      if (plot_step > 0) {
+#ifdef HAVE_HDF5
+         const std::string visit_filename = vis_filename + ".visit";
+         /* Create the VisIt data writer. */
+         tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
+            new appu::VisItDataWriter(dim, "VisIt Writer", visit_filename));
+         /* Register variables with plotter. */
+         dlbgtest.registerVariablesWithPlotter(visit_data_writer);
+         /* Write the plot file. */
+         visit_data_writer->writePlotData(patch_hierarchy, 0);
+#endif
       }
 
-
-      createAndTestDLBG( *main_db, *patch_hierarchy );
+      if (check_dlbg_in_main)
+         createAndTestDLBG(*main_db, dim, *patch_hierarchy);
 
       /*
-	Adapt the grid.
-      */
-      tbox::Array<int> tag_buffer(10);
-      for ( int i=0; i<tag_buffer.size(); ++i ) tag_buffer[i] = 1;
+       * Adapt the grid.
+       */
 
+      for (int istep = 0; istep < num_steps; ++istep) {
 
+         tbox::plog << "Adaption number " << istep << std::endl;
+         if (verbose > 0 && mpi.getRank() == 0) {
+            tbox::pout << "Adaption number " << istep << std::endl;
+         }
 
-      for ( int istep=0; istep<num_steps; ++istep ) {
+         // Recompute the front-dependent data at next time step.
+         dlbgtest.computeHierarchyData(*patch_hierarchy,
+            double(istep + 1));
 
-	 tbox::pout << "Adaption number " << istep << endl;
+         tbox::Array<double>
+         regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
+         for (int i = 0; i < regrid_start_time.size(); ++i)
+            regrid_start_time[i] = istep;
 
-	 // Recompute the front-dependent data at next time step.
-	 abrtest.computeHierarchyData( *patch_hierarchy,
-				       double(istep+1) );
+         gridding_algorithm->regridAllFinerLevels(
+            0,
+            double(istep),
+            tag_buffer,
+            regrid_start_time);
 
+         patch_hierarchy->recursivePrint(tbox::plog, std::string("    "), 1);
+         if (log_hierarchy) {
+            tbox::plog << "Hierarchy adapted:" << std::endl;
+            patch_hierarchy->recursivePrint(
+               tbox::plog, std::string("H-> "), 2);
+         }
+         if (verbose > 5 && mpi.getRank() == 0) {
+            patch_hierarchy->recursivePrint(tbox::pout, std::string("    "), 1);
+            if (log_hierarchy) {
+               tbox::plog << "Hierarchy adapted:" << std::endl;
+               patch_hierarchy->recursivePrint(
+                  tbox::pout, std::string("H-> "), 2);
+            }
+         }
 
-	 tbox::Array<double> regrid_start_time(0);
-	 for ( int i=0; i<regrid_start_time.size(); ++i )
-	    regrid_start_time[i] = istep;
+         if (plot_step > 0 && (istep + 1) % plot_step == 0) {
+#ifdef HAVE_HDF5
+            const std::string visit_filename = vis_filename + ".visit";
+            /* Create the VisIt data writer. */
+            tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
+               new appu::VisItDataWriter(dim, "VisIt Writer", visit_filename));
+            /* Register variables with plotter. */
+            dlbgtest.registerVariablesWithPlotter(visit_data_writer);
+            /* Write the plot file. */
+            visit_data_writer->writePlotData(patch_hierarchy, istep + 1);
+#endif
+         }
 
-	 gridding_algorithm->regridAllFinerLevels( patch_hierarchy,
-						   0,
-						   double(istep+1),
-						   tag_buffer,
-						   regrid_start_time );
-
-
-	 if ( tbox::SAMRAI_MPI::getRank() == 0 ) {
-	    patch_hierarchy->recursivePrint( tbox::pout, string("    "), 1 );
-	 }
-	 if ( log_hierarchy ) {
-	    tbox::plog << "Hierarchy adapted:" << endl;
-	    patch_hierarchy->recursivePrint( tbox::plog, string("H-> "), 3 );
-	 }
-
-
-	 if ( plot_step > 0 && (istep+1)%plot_step == 0  ) {
-	    if(0) {
-	       /* Create the vizamrai data writer. */
-	       tbox::Pointer<appu::CartesianVizamraiDataWriter<NDIM> > viz_data_writer =
-		  new appu::CartesianVizamraiDataWriter<NDIM>("Viz Writer");
-	       /* Register variables with plotter. */
-	       abrtest.registerVariablesWithPlotter(viz_data_writer);
-	       /*
-		 Tell the plotter about the refinement ratios.
-		 This must be done once (and again each time the data changes).
-	       */
-	       for ( int ln=1; ln<patch_hierarchy->getNumberOfLevels(); ln++ ) {
-		  tbox::Pointer<hier::PatchLevel<NDIM> >
-		     level_ =patch_hierarchy->getPatchLevel(ln);
-		  const hier::IntVector<NDIM> &lratio =
-		     level_->getRatioToCoarserLevel();
-		  viz_data_writer->setRatioToCoarserLevel(ln, lratio);
-	       }
-	       /* Write the plot file. */
-	       viz_data_writer->writePlotData( patch_hierarchy , vis_filename );
-	    }
-	    {
-	       const string visit_filename = vis_filename+".visit";
-	       /* Create the VisIt data writer. */
-	       tbox::Pointer<appu::VisItDataWriter<NDIM> > visit_data_writer =
-		  new appu::VisItDataWriter<NDIM>("VisIt Writer", visit_filename);
-	       /* Register variables with plotter. */
-	       abrtest.registerVariablesWithPlotter(visit_data_writer);
-	       /* Write the plot file. */
-	       visit_data_writer->writePlotData( patch_hierarchy , istep+1 );
-	    }
-	 }
-
-	 createAndTestDLBG( *main_db, *patch_hierarchy );
+         if (check_dlbg_in_main)
+            createAndTestDLBG(*main_db, dim, *patch_hierarchy);
 
       }
-
-
-
 
       tbox::TimerManager::getManager()->print(tbox::plog);
 
-
-      tbox::pout << "\nPASSED:  DLBG" << endl;
+      tbox::pout << "\nPASSED:  DLBG" << std::endl;
 
       /*
-	Exit properly by shutting down services in correct order.
-      */
-      tbox::plog << "\nShutting down..." << endl;
-
+       * Exit properly by shutting down services in correct order.
+       */
+      tbox::plog << "\nShutting down..." << std::endl;
    }
+
    tbox::SAMRAIManager::shutdown();
+   tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();
 
-
-   return(0);
+   return 0;
 }
 
-
-
-
-int createAndTestDLBG( tbox::Database &main_db,
-                       PatchHierarchy<NDIM> &patch_hierarchy )
+static int createAndTestDLBG(
+   tbox::Database& main_db,
+   const tbox::Dimension& dim,
+   PatchHierarchy& patch_hierarchy)
 {
    /*
-     Generate the nested-level box-graph.
-   */
+    * Generate the nested-level box-graph.
+    */
 
    const bool build_cross_edge =
-      main_db.getBoolWithDefault("build_cross_edge", false );
+      main_db.getBoolWithDefault("build_cross_edge", false);
    const bool build_peer_edge =
-      main_db.getBoolWithDefault("build_peer_edge", false );
+      main_db.getBoolWithDefault("build_peer_edge", false);
 
-   const bool globalize_node_sets =
-      main_db.getBoolWithDefault("globalize_node_sets", false );
+   const bool globalize_mapped_box_levels =
+      main_db.getBoolWithDefault("globalize_mapped_box_levels", false);
 
    const int node_log_detail =
-      main_db.getIntegerWithDefault("node_log_detail", -1 );
+      main_db.getIntegerWithDefault("node_log_detail", -1);
    const int edge_log_detail =
-      main_db.getIntegerWithDefault("edge_log_detail", -1 );
+      main_db.getIntegerWithDefault("edge_log_detail", -1);
 
-   tbox::Pointer<tbox::Timer> t_generate_nlbg_in_parallel =
-      tbox::TimerManager::getManager()->
-      getTimer("apps::main::generate_nlbg_in_parallel");
+   pout << "Generating boxgraph in parallel." << std::endl;
 
-   pout << "Generating boxgraph in parallel." << endl;
-
-   //hier_NestedLevelBoxGraphX boxgraph("test boxgraph");
-
-   LayerNodeSet<NDIM> *node_sets = NULL;
-   LayerEdgeSet<NDIM> *crse_edge_sets = NULL;
-   LayerEdgeSet<NDIM> *fine_edge_sets = NULL;
-   LayerEdgeSet<NDIM> *peer_edge_sets = NULL;
+   Connector* crse_connectors = NULL;
+   Connector* fine_connectors = NULL;
+   Connector* peer_connectors = NULL;
 
    int ln;
 
-   node_sets = new LayerNodeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
-   if ( build_peer_edge ) {
-      peer_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
+   tbox::Array<BoxLevel> mapped_box_levels(
+      patch_hierarchy.getNumberOfLevels(), BoxLevel(dim));
+   if (build_peer_edge) {
+      peer_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
    }
-   if ( build_cross_edge ) {
-      crse_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
-      fine_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
+   if (build_cross_edge) {
+      crse_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
+      fine_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
    }
 
    /*
-     Set the layer nodes.
-   */
-   for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
-      Pointer<PatchLevel<NDIM> > level_ptr = patch_hierarchy.getPatchLevel(ln);
-      PatchLevel<NDIM> &level = *level_ptr;
-      node_sets[ln].setTo(level);
+    * Set the mapped_box_level nodes.
+    */
+   for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
+      Pointer<PatchLevel> level_ptr = patch_hierarchy.getPatchLevel(ln);
+      PatchLevel& level = *level_ptr;
+      mapped_box_levels[ln] = *level.getBoxLevel();
       plog << "****************************************\n";
-      plog << "node_sets[" << ln << "]:\n";
+      plog << "mapped_box_levels[" << ln << "]:\n";
       plog << "****************************************\n";
-      node_sets[ln].printClassData( plog, node_log_detail );
-      if ( globalize_node_sets ) {
-	 pout << "Globalizing NodeSet " << ln << ".\n";
-	 node_sets[ln].setParallelState(LayerNodeSet<NDIM>::GLOBALIZED);
+      mapped_box_levels[ln].recursivePrint(plog, "", node_log_detail);
+      if (globalize_mapped_box_levels) {
+         pout << "Globalizing BoxLevel " << ln << ".\n";
+         mapped_box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
       }
-      pout << "NodeSet " << ln << " done.\n";
+      pout << "BoxLevel " << ln << " done.\n";
    }
 
    /*
-     Compute the cross edges by searching globalized node layers.
-   */
-   if ( build_cross_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
-	 Pointer<PatchLevel<NDIM> > level_ptr = patch_hierarchy.getPatchLevel(ln);
-	 PatchLevel<NDIM> &level = *level_ptr;
-	 if ( ln < patch_hierarchy.getNumberOfLevels()-1 ) {
-	    fine_edge_sets[ln].initialize(LayerEdgeSet<NDIM>::DISTRIBUTED,
-					  node_sets[ln],
-					  node_sets[ln+1].getRefinementRatio(),
-					  IntVector<NDIM>(1) );
-	 }
-	 if ( ln > 0 ) {
-	    crse_edge_sets[ln].initialize(LayerEdgeSet<NDIM>::DISTRIBUTED,
-					  node_sets[ln],
-					  node_sets[ln-1].getRefinementRatio(),
-					  level.getRatioToCoarserLevel() );
-	    crse_edge_sets[ln].attachPartner(fine_edge_sets[ln-1]);
-	    crse_edge_sets[ln].findEdges();
-	    if ( edge_log_detail >= 0 ) {
-	       plog << "****************************************\n";
-	       plog << "fine_edge_sets[" << ln-1 << "]:\n";
-	       plog << "****************************************\n";
-	       fine_edge_sets[ln-1].printClassData( plog, edge_log_detail );
-	       plog << "****************************************\n";
-	       plog << "crse_edge_sets[" << ln << "]:\n";
-	       plog << "****************************************\n";
-	       crse_edge_sets[ln].printClassData( plog, edge_log_detail );
-	    }
-	 }
+    * Compute the cross edges by searching globalized node mapped_box_levels.
+    */
+   hier::OverlapConnectorAlgorithm oca;
+   if (build_cross_edge) {
+      for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
+         Pointer<PatchLevel> level_ptr = patch_hierarchy.getPatchLevel(ln);
+         PatchLevel& level = *level_ptr;
+         if (ln < patch_hierarchy.getNumberOfLevels() - 1) {
+            fine_connectors[ln].setBase(mapped_box_levels[ln]);
+            fine_connectors[ln].setHead(mapped_box_levels[ln + 1]);
+            fine_connectors[ln].setWidth(IntVector(dim, 1), true);
+            oca.findOverlaps(fine_connectors[ln]);
+         }
+         if (ln > 0) {
+            crse_connectors[ln].setBase(mapped_box_levels[ln]);
+            crse_connectors[ln].setHead(mapped_box_levels[ln - 1]);
+            crse_connectors[ln].setWidth(level.getRatioToCoarserLevel(), true);
+            oca.findOverlaps(crse_connectors[ln]);
+            if (edge_log_detail >= 0) {
+               plog << "****************************************\n";
+               plog << "fine_connectors[" << ln - 1 << "]:\n";
+               plog << "****************************************\n";
+               fine_connectors[ln - 1].recursivePrint(plog, "", edge_log_detail);
+               plog << "****************************************\n";
+               plog << "crse_connectors[" << ln << "]:\n";
+               plog << "****************************************\n";
+               crse_connectors[ln].recursivePrint(plog, "", edge_log_detail);
+            }
+         }
       }
    }
-
 
    /*
-     Compute the peer edges by bridging centered on the coarse edge
-     if available, or by searching globalized node layers.
-   */
-   if ( build_peer_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
-	 peer_edge_sets[ln].initialize(LayerEdgeSet<NDIM>::DISTRIBUTED,
-				       node_sets[ln],
-				       node_sets[ln].getRefinementRatio(),
-				       IntVector<NDIM>(1) );
-	 peer_edge_sets[ln].attachPartner(peer_edge_sets[ln]);
-	 if ( build_cross_edge && ln > 0 ) {
-	    peer_edge_sets[ln].bridge( fine_edge_sets[ln-1], fine_edge_sets[ln-1] );
-	    // peer_edge_sets[ln].findEdges();
-	 }
-	 else {
-	    peer_edge_sets[ln].findEdges();
-	 }
-	 if ( edge_log_detail >= 0 ) {
-	    plog << "****************************************\n";
-	    plog << "peer_edge_sets[" << ln << "]:\n";
-	    plog << "****************************************\n";
-	    peer_edge_sets[ln].printClassData( plog, edge_log_detail );
-	 }
+    * Compute the peer edges.  Use bridging operation centered on the coarse edge
+    * if available.  Else, search globalized node mapped_box_levels.
+    */
+   if (build_peer_edge) {
+      for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
+         peer_connectors[ln].setBase(mapped_box_levels[ln]);
+         peer_connectors[ln].setHead(mapped_box_levels[ln]);
+         peer_connectors[ln].setWidth(IntVector(dim, 1), true);
+         if (build_cross_edge && ln > 0) {
+            // plog << " Bridging for level " << ln << std::endl;
+            oca.bridge(
+               peer_connectors[ln],
+               crse_connectors[ln],
+               fine_connectors[ln - 1],
+               crse_connectors[ln],
+               fine_connectors[ln - 1]);
+         } else {
+            oca.findOverlaps(peer_connectors[ln]);
+         }
+         if (edge_log_detail >= 0) {
+            plog << "****************************************\n";
+            plog << "peer_connectors[" << ln << "]:\n";
+            plog << "****************************************\n";
+            peer_connectors[ln].recursivePrint(plog, "", edge_log_detail);
+         }
       }
    }
-
-
 
    /*
-     Check for accuracy.
-   */
+    * Check for accuracy.
+    */
 
-   if ( build_cross_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels()-1; ++ln ) {
-	 fine_edge_sets[ln].checkNodeConsistency();
-	 plog << "fine_edge_sets[" << ln   << "] passed checkNodeConsistency().\n";
-	 crse_edge_sets[ln+1].checkNodeConsistency();
-	 plog << "crse_edge_sets[" << ln+1 << "] passed checkNodeConsistency().\n";
-	 fine_edge_sets[ln].checkConnectivity(node_sets[ln+1]);
-	 plog << "fine_edge_sets[" << ln   << "] passed checkConnectivity().\n";
-	 crse_edge_sets[ln+1].checkConnectivity(node_sets[ln]);
-	 plog << "crse_edge_sets[" << ln+1 << "] passed checkConnectivity().\n";
+   if (build_cross_edge) {
+      for (ln = 0; ln < patch_hierarchy.getNumberOfLevels() - 1; ++ln) {
+         fine_connectors[ln].assertConsistencyWithBase();
+         plog << "fine_connectors[" << ln
+              << "] passed assertConsistencyWithBase().\n";
+         fine_connectors[ln].assertConsistencyWithHead();
+         plog << "fine_connectors[" << ln
+              << "] passed assertConsistencyWithHead().\n";
+         crse_connectors[ln + 1].assertConsistencyWithBase();
+         plog << "crse_connectors[" << ln + 1
+              << "] passed assertConsistencyWithBase().\n";
+         crse_connectors[ln + 1].assertConsistencyWithHead();
+         plog << "crse_connectors[" << ln + 1
+              << "] passed assertConsistencyWithHead().\n";
+         oca.assertOverlapCorrectness(fine_connectors[ln]);
+         plog << "fine_connectors[" << ln
+              << "] passed assertOverlapCorrectness().\n";
+         oca.assertOverlapCorrectness(crse_connectors[ln + 1]);
+         plog << "crse_connectors[" << ln + 1
+              << "] passed assertOverlapCorrectness().\n";
       }
    }
 
-   if ( build_peer_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
-	 peer_edge_sets[ln].checkNodeConsistency();
-	 plog << "peer_edge_sets[" << ln << "] passed checkNodeConsistency().\n";
-	 peer_edge_sets[ln].checkConnectivity(node_sets[ln]);
-	 plog << "peer_edge_sets[" << ln << "] passed checkConnectivity().\n";
+   if (build_peer_edge) {
+      for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
+         peer_connectors[ln].assertConsistencyWithBase();
+         plog << "peer_connectors[" << ln
+              << "] passed assertConsistencyWithBase().\n";
+         peer_connectors[ln].assertConsistencyWithHead();
+         plog << "peer_connectors[" << ln
+              << "] passed assertConsistencyWithHead().\n";
+         oca.assertOverlapCorrectness(peer_connectors[ln]);
+         plog << "peer_connectors[" << ln
+              << "] passed assertOverlapCorrectness().\n";
       }
    }
 
+   plog
+   << "=====================================================================\n";
+   plog << "PatchHierarchy:\n";
+   plog
+   << "=====================================================================\n";
+   patch_hierarchy.recursivePrint(plog, "", 2);
 
-   if ( node_sets      ) delete [] node_sets     ;
-   if ( crse_edge_sets ) delete [] crse_edge_sets;
-   if ( fine_edge_sets ) delete [] fine_edge_sets;
-   if ( peer_edge_sets ) delete [] peer_edge_sets;
+   mapped_box_levels.clear();
+
+   if (crse_connectors) delete[] crse_connectors;
+   if (fine_connectors) delete[] fine_connectors;
+   if (peer_connectors) delete[] peer_connectors;
 
    return 0;
 }

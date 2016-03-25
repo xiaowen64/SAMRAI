@@ -23,14 +23,6 @@ xfer RefineSchedule.h
 xfer RefineTimeTransaction.h
 xfer TimeInterpolateOperator.h
 xfer TransactionFactory.h
-xfer LocallyActiveDataCoarsenAlgorithm.h
-xfer LocallyActiveDataCoarsenPatchStrategy.h
-xfer LocallyActiveDataCoarsenSchedule.h
-xfer LocallyActiveDataFillBox.h
-xfer LocallyActiveDataFillBoxSet.h
-xfer LocallyActiveDataRefineAlgorithm.h
-xfer LocallyActiveDataRefinePatchStrategy.h
-xfer LocallyActiveDataRefineSchedule.h
 mblk MBUtilities.h
 mblk MultiblockCoarsenSchedule.h
 mblk MultiblockRefineAlgorithm.h
@@ -93,7 +85,7 @@ tbox HDFDatabase.h
 tbox FileStream.h
 tbox MessageStream.h
 tbox XDRStream.h
-tbox AbstractStream.h
+tbox MessageStream.h
 tbox IOStream.h
 tbox Schedule.h
 tbox RelaunchableJob.h
@@ -380,5 +372,3 @@ hier PatchDataFactory.h
 hier BoxOverlap.h
 hier PatchLevel.h
 hier PatchFactory.h
-hier LocallyActiveDataPatchLevelManager.h
-hier LocallyActiveVariableDatabase.h

@@ -12,7 +12,7 @@ AC_DEFUN([CASC_PROG_MPICC],
 
 
 dnl ********************************************************************
-dnl * CASC_PROG_MPICXX searches the PATH for an available MPI C++ 
+dnl * CASC_PROG_MPICXX searches the PATH for an available MPI C++
 dnl * compiler wraparound.  It assigns the name to MPICXX.
 dnl ********************************************************************
 
@@ -24,7 +24,7 @@ AC_DEFUN([CASC_PROG_MPICXX],
 
 
 dnl **********************************************************************
-dnl * CASC_PROG_MPIF77 searches the PATH for an available MPI Fortran 77 
+dnl * CASC_PROG_MPIF77 searches the PATH for an available MPI Fortran 77
 dnl * compiler wraparound.  It assigns the name to MPIF77.
 dnl **********************************************************************
 
@@ -68,14 +68,14 @@ AC_DEFUN([CASC_CHECK_MPIF77_PP],
         sum = rank + rank
 #endif
         call MPI_FINALIZE(mpierr)
-        end 
+        end
 EOF
 
-   $MPIF77 -DBAR -c testppmp.F 
-   if test -f testppmp.o; then 
-      MPIF77NEEDSPP=no 
-   else 
-      MPIF77NEEDSPP=yes 
+   $MPIF77 -DBAR -c testppmp.F
+   if test -f testppmp.o; then
+      MPIF77NEEDSPP=no
+   else
+      MPIF77NEEDSPP=yes
    fi
 
    echo $MPIF77NEEDSPP
@@ -85,7 +85,7 @@ EOF
 
 
 dnl *********************************************************************
-dnl * CASC_SET_MPI sets up the needed MPI library and directory flags.   
+dnl * CASC_SET_MPI sets up the needed MPI library and directory flags.
 dnl * The location of the file mpi.h is put into the variable MPIINCLUDE
 dnl * as a -I flag.  The -l flags that specify the needed libraries and
 dnl * the -L flags that specify the paths of those libraries are placed in
@@ -95,8 +95,8 @@ dnl * --with-mpi-libs, and --with-mpi-lib-dirs command-line options when
 dnl * invoking configure.  Only one directory should be specified with
 dnl * --with-mpi-include, while any number of directories can be specified
 dnl * by --with-mpi-lib-dirs.  Any number of libraries can be specified
-dnl * with --with-mpi-libs, and the libraries must be referred to by their 
-dnl * base names, so libmpi.a is just mpi.  It is adviseable to use all 
+dnl * with --with-mpi-libs, and the libraries must be referred to by their
+dnl * base names, so libmpi.a is just mpi.  It is adviseable to use all
 dnl * three --with flags whenever one is used, because it is likely that
 dnl * when one is chosen it will mess up the automatic choices for the
 dnl * other two.  If the architecture is unknown, or if the needed MPI
@@ -104,11 +104,11 @@ dnl * settings for the current architecture are not known, then the naive
 dnl * settings of MPILIBS="-lmpi" and MPILIBDIRS="-L/usr/local/mpi/lib"
 dnl * are tested, and if they exist they are used, otherwise the MPILIB*
 dnl * variables are left blank.  In the case of rs6000, the variable
-dnl * MPIFLAGS is also set. 
+dnl * MPIFLAGS is also set.
 dnl **********************************************************************
- 
+
 AC_DEFUN([CASC_SET_MPI],
-[
+        [
 
    dnl * If called from within CASC_FIND_MPI, then the configure-line
    dnl * options will already exist.  This ifdef creates them otherwise.
@@ -116,12 +116,12 @@ AC_DEFUN([CASC_SET_MPI],
       [AC_ARG_WITH(mpi-include, [  --with-mpi-include=DIR  mpi.h is in DIR],
                   casc_mpi_include_dir=$withval)
 
-      AC_ARG_WITH(mpi-libs, 
+      AC_ARG_WITH(mpi-libs,
 [  --with-mpi-libs=LIBS    LIBS is space-separated list of library names
                           needed for MPI, e.g. \"nsl socket mpi\"],
                   casc_mpi_libs=$withval)
 
-      AC_ARG_WITH(mpi-lib-dirs, 
+      AC_ARG_WITH(mpi-lib-dirs,
 [  --with-mpi-lib-dirs=DIRS
                           DIRS is space-separated list of directories
                           containing the libraries specified by
@@ -141,7 +141,7 @@ AC_DEFUN([CASC_SET_MPI],
                    if test -z "$casc_mpi_include_dir"; then
                       casc_mpi_include_dir=/usr/local/mpi/lam/h
                    fi
-                   
+
                    if test -z "$casc_mpi_lib_dirs"; then
                       casc_mpi_lib_dirs="/usr/local/mpi/lam/lib"
                    fi
@@ -159,7 +159,7 @@ AC_DEFUN([CASC_SET_MPI],
                      casc_mpi_lib_dirs="/usr/local/mpi/mpich/lib/solaris/ch_p4 \
                                        /usr/lib"
                   fi
-            
+
                casc_mpi_libs="nsl socket mpi";;
                esac
 
@@ -183,7 +183,7 @@ AC_DEFUN([CASC_SET_MPI],
 
             casc_mpi_libs="mpich gs";;
 
-         rs6000) 
+         rs6000)
 
 dnl            if test -z "$casc_mpi_include_dir"; then
 dnl               casc_mpi_include_dir=/usr/lpp/ppe.poe/include
@@ -199,7 +199,7 @@ dnl            fi
 
             MPIFLAGS="-binitfini:poe_remote_main";;
 
-         IRIX64 | iris4d) 
+         IRIX64 | iris4d)
             if test -z "$casc_mpi_include_dir"; then
                casc_mpi_include_dir=/usr/local/mpi/include
             fi
@@ -210,8 +210,8 @@ dnl            fi
                casc_mpi_lib_dirs=/usr/local/mpi/lib/IRIX64/ch_p4
             fi
 
-            casc_mpi_libs=mpi;; 
-        
+            casc_mpi_libs=mpi;;
+
          *)
 AC_MSG_WARN([trying naive MPI settings - can use --with flags to change])
             if test -z "$casc_mpi_include_dir"; then
@@ -261,7 +261,7 @@ dnl * MPICC is not set manually, then this macro will not work.
 dnl *
 dnl * One may question why these settings would need to be determined if
 dnl * there already is mpicc available, and that is a valid question.  I
-dnl * can think of a couple of reasons one may want to use these settings 
+dnl * can think of a couple of reasons one may want to use these settings
 dnl * rather than using mpicc directly.  First, these settings allow you
 dnl * to choose the C compiler you wish to use rather than using whatever
 dnl * compiler is written into mpicc.  Also, the settings determined by
@@ -280,9 +280,9 @@ dnl * whenever one is called.  In addition, the option --with-mpi-flags is
 dnl * available here to set any other flags that may be needed, but it
 dnl * does not override the automatic test.  Flags set by --with-mpi-flags
 dnl * will be added to the variable MPIFLAGS.  This way, if the macro, for
-dnl * whatever reason, leaves off a necessary flag, the flag can be added 
+dnl * whatever reason, leaves off a necessary flag, the flag can be added
 dnl * to MPIFLAGS without eliminating anything else.  The other variables
-dnl * set are MPIINCLUDE, MPILIBS, and MPILIBDIRS, just as in 
+dnl * set are MPIINCLUDE, MPILIBS, and MPILIBDIRS, just as in
 dnl * CASC_SET_MPI.  This macro also incorporates CASC_SET_MPI as a backup
 dnl * plan, where if there is no mpicc, it will use the settings
 dnl * determined by architecture name in CASC_SET_MPI
@@ -315,7 +315,7 @@ AC_DEFUN([CASC_FIND_MPI],
       MPIFLAGS=$casc_cv_mpi_flags
       AC_MSG_RESULT("\(cached\) $MPIFLAGS")
    else
-   
+
 
       dnl * Set up user options.  If user uses any of the fist three options,
       dnl * then automatic tests are not run.
@@ -327,8 +327,8 @@ AC_DEFUN([CASC_FIND_MPI],
                   done; casc_user_chose_mpi=yes)
 
       AC_ARG_WITH(mpi-libs,
-[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names 
-                          needed for MPI, e.g. \"nsl socket mpi\"],  
+[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names
+                          needed for MPI, e.g. \"nsl socket mpi\"],
                   for mpi_lib in $withval; do
                      MPILIBS="$MPILIBS -l$mpi_lib"
                   done; casc_user_chose_mpi=yes)
@@ -343,7 +343,7 @@ AC_DEFUN([CASC_FIND_MPI],
                      MPILIBDIRS="-L$mpi_lib_dir $MPILIBDIRS"
                   done; casc_user_chose_mpi=yes)
 
-      dnl * --with-mpi-flags only adds to automatic selections, 
+      dnl * --with-mpi-flags only adds to automatic selections,
       dnl * does not override
 
       AC_ARG_WITH(mpi-flags,
@@ -373,10 +373,10 @@ AC_DEFUN([CASC_FIND_MPI],
          dnl * When $MPICC is there, run the automatic test
          dnl * here begins the hairy stuff
 
-         else      
- 
+         else
+
             dnl changequote(, )dnl
-  
+
             dnl * Create a minimal MPI program.  It will be compiled using
             dnl * $MPICC with verbose output.
             cat > mpconftest.c << EOF
@@ -434,7 +434,7 @@ EOF
             xlc_p=`echo $cc_output | grep xlcentry`
             if test -n "$xlc_p"; then
                casc_compiler_is_xlc=yes
-            fi 
+            fi
             rm -rf cc_conftest*
 
             dnl * $MPICC might not produce '-lmpi', but we still need it.
@@ -461,9 +461,9 @@ EOF
             dnl * and kept once, it is discarded if it appears again
 
             for casc_arg in $casc_mpoutput; do
- 
+
                casc_old_want_arg=$casc_want_arg
-               casc_want_arg=  
+               casc_want_arg=
 
                if test -n "$casc_old_want_arg"; then
                   case "$casc_arg" in
@@ -582,7 +582,7 @@ EOF
                      dnl * then the flag is assigned to $MPIINCLUDE
                      if test -z "$MPIINCLUDE"; then
                         casc_cppflags="$casc_cppflags $casc_arg"
-                        casc_include_dir=`echo "$casc_arg" | sed 's/-I//g'` 
+                        casc_include_dir=`echo "$casc_arg" | sed 's/-I//g'`
 
                         SAVE_CPPFLAGS="$CPPFLAGS"
                         CPPFLAGS="$casc_cppflags"
@@ -620,7 +620,7 @@ EOF
                   ;;
                   esac
 
-                  dnl * Upcoming test needs $LIBS to contain the flags 
+                  dnl * Upcoming test needs $LIBS to contain the flags
                   dnl * we've found
                   LIBS_SAVE=$LIBS
                   LIBS="$MPIINCLUDE $casc_mpflags $casc_mplibdirs $casc_mplibs"
@@ -669,10 +669,10 @@ dnl ])dnl
             MPIFLAGS="$MPIFLAGS $casc_mpflags"
 
             dnl * IBM MPI uses /usr/lpp/ppe.poe/libc.a instead of /lib/libc.a
-            dnl * so we need to make sure that -L/lib is not part of the 
+            dnl * so we need to make sure that -L/lib is not part of the
             dnl * linking line when we use IBM MPI.  This only appears in
             dnl * configure when CASC_FIND_MPI is called first.
-	    dnl            ifdef([AC_PROVIDE_CASC_FIND_F77LIBS], 
+	    dnl            ifdef([AC_PROVIDE_CASC_FIND_F77LIBS],
             dnl               if test -n "`echo $F77LIBFLAGS | grep '\-L/lib '`"; then
             dnl                  if test -n "`echo $F77LIBFLAGS | grep xlf`"; then
             dnl                     F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-L\/lib //g'`
@@ -732,11 +732,11 @@ dnl ])dnl
 
 dnl ********************************************************************
 dnl * CASC_FIND_MPI_ALPHA is a special case of CASC_FIND_MPI for the
-dnl * compass cluster.  The original CASC_FIND_MPI looks for existence 
-dnl * of mpCC and mpiCC.  If the former is found it uses native (proprietary) 
-dnl * mpi and if the latter is found, it uses mpich.  The DECs are a 
+dnl * compass cluster.  The original CASC_FIND_MPI looks for existence
+dnl * of mpCC and mpiCC.  If the former is found it uses native (proprietary)
+dnl * mpi and if the latter is found, it uses mpich.  The DECs are a
 dnl * special case because mpCC does not exist and mpiCC does, but we want
-dnl * to use the native version by default.  Therefore, the original macro 
+dnl * to use the native version by default.  Therefore, the original macro
 dnl * did not work for this case so I added this one to deal with it.
 dnl * AMW 9/00
 dnl ********************************************************************
@@ -768,7 +768,7 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
       MPIFLAGS=$casc_cv_mpi_flags
       AC_MSG_RESULT("\(cached\) $MPIFLAGS")
    else
-   
+
 
       dnl * Set up user options.  If user uses any of the fist three options,
       dnl * then automatic tests are not run.
@@ -780,8 +780,8 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
                   done; casc_user_chose_mpi=yes)
 
       AC_ARG_WITH(mpi-libs,
-[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names 
-                          needed for MPI, e.g. \"nsl socket mpi\"],  
+[  --with-mpi-libs=LIBS    LIBS is space-separated list of library names
+                          needed for MPI, e.g. \"nsl socket mpi\"],
                   for mpi_lib in $withval; do
                      MPILIBS="$MPILIBS -l$mpi_lib"
                   done; casc_user_chose_mpi=yes)
@@ -796,7 +796,7 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
                      MPILIBDIRS="-L$mpi_lib_dir $MPILIBDIRS"
                   done; casc_user_chose_mpi=yes)
 
-      dnl * --with-mpi-flags only adds to automatic selections, 
+      dnl * --with-mpi-flags only adds to automatic selections,
       dnl * does not override
 
       AC_ARG_WITH(mpi-flags,
@@ -806,10 +806,10 @@ AC_DEFUN([CASC_FIND_MPI_ALPHA],
 
 
       if test "$casc_user_chose_mpi" = "no"; then
- 
+
          dnl * Set defaults for Compass cluster here.  This is the point where
-         dnl * we call CASC_SET_MPI in CASC_FIND_MPI macro. 
- 
+         dnl * we call CASC_SET_MPI in CASC_FIND_MPI macro.
+
          casc_mpi_include_dir=
          casc_mpi_lib_dirs=
          casc_mpi_libs="mpi rt rpc gs pthread"

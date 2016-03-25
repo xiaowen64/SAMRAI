@@ -1,11 +1,12 @@
-//
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/applications/Euler/RP_test/testY-3-3d.input $
-// Package:     SAMRAI application
-// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-// Description: Input for testing Euler Riemann solvers in 3d code (Y direction)
-//
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Input for testing Euler Riemann solvers in 3d code (Y direction) 
+ *
+ ************************************************************************/
 
 #include "euler_const.input"
 
@@ -58,13 +59,13 @@ Euler {
 }
 
 Main {
+   dim = 3
+   base_name = "testY-3-3d"
 // log file parameters
-   log_file_name    = "testY-3-3d.log"
    log_all_nodes    = TRUE
 
 // visualization dump parameters
    viz_dump_interval        = 75        // zero to turn off
-   viz_dump_filename        = "testY-3-3d"
 
 // 1d MATLAB plot parameters
    matlab_plot_1d           = TRUE     // default is FALSE
@@ -75,7 +76,6 @@ Main {
 
 // restart dump parameters
    restart_interval         = 25        // zero to turn off
-   restart_write_dirname    = "testY-3-3d_restart"
  
    run_time_plotting = FALSE
 }
@@ -92,7 +92,7 @@ CartesianGeometry {
    x_up         = 0.04e0 , 0.5e0 , 0.04e0 // upper end of computational domain.
 }
 
-GriddingAlgorithm {
+PatchHierarchy {
    max_levels               = 1       // Maximum number of levels in hierarchy.
 
    largest_patch_size {
@@ -102,6 +102,9 @@ GriddingAlgorithm {
    smallest_patch_size {
       level_0 = 4,4,4
    }
+}
+
+GriddingAlgorithm {
 }
 
 HyperbolicLevelIntegrator {

@@ -1,12 +1,13 @@
 #! /usr/bin/perl
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/updateXd.pl $
-## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: shell script to update 1d, 2d, and 3d sed files
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   shell script to update 1d, 2d, and 3d sed files 
+##
+#########################################################################
 
 #
 # Convert all files of the form "*X.*.sed" into their dimension-dependent
@@ -23,7 +24,7 @@ use Cwd;
 
 my $pwd = cwd;
 die basename($0) . " should not be run from your current directory"
-    if $pwd =~ m:\b(examples|source/test|source/scripts)(/|$):;
+    if $pwd =~ m:\b(source/test|source/scripts)(/|$):;
 
 
 my $debug = 0;
@@ -42,7 +43,7 @@ sub selectm4file {
     # This subroutine selects the dimensional m4 files in a find command,
     # excluding certain directories.
     # Do not run in applications directory.
-    if ( $File::Find::name =~ m!/(examples|test|scripts|CVS|[123]d)$!o ) {
+    if ( $File::Find::name =~ m!/(test|scripts|CVS|\.hg|[123]d)$!o ) {
 	$File::Find::prune = true;
     }
     elsif ( -f && m/.*[123]d\.m4$/o ) {

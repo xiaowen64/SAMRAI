@@ -1,12 +1,13 @@
 #!/bin/sh
+#########################################################################
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/change_copyright $
-## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description: bash script to update copyright dates in SAMRAI files
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   bash script to update copyright dates in SAMRAI files
+##
+#########################################################################
 
 # Note: this may work with sh but I have not tested it. sh probably
 # won't be able to handle a large number of files in the "for"
@@ -28,7 +29,7 @@
 #=============================================================================
 # First find all the files with old copyright dates
 #=============================================================================
-find . -type f ! -name \*.svn\* -exec grep -l "1997-2008" {} \; > files
+find . -type f ! -name \*.svn\* -exec grep -l "1997-2011" {} \; > files
 
 #=============================================================================
 # Replace the old copyright dates with new dates
@@ -37,7 +38,7 @@ for i in `cat files`
 do
     echo $i
     cp $i $i.sed.bak
-    sed "s/1997-2008/1997-2008/" $i.sed.bak > $i
+    sed "s/1997-2011/1997-2011/" $i.sed.bak > $i
 done
 
 #=============================================================================

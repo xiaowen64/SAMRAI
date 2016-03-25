@@ -1,0 +1,74 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Describes boundaries for a patch
+ *
+ ************************************************************************/
+
+#ifndef included_hier_PatchBoundaries_C
+#define included_hier_PatchBoundaries_C
+
+#include "SAMRAI/hier/PatchBoundaries.h"
+
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/PatchBoundaries.I"
+#endif
+
+namespace SAMRAI {
+namespace hier {
+
+/*
+ *************************************************************************
+ *
+ * Constructor leaves the arrays empty.
+ *
+ *************************************************************************
+ */
+PatchBoundaries::PatchBoundaries(
+   const tbox::Dimension& dim):
+   d_dim(dim),
+   d_array_of_bboxes(dim.getValue())
+{
+}
+
+/*
+ *************************************************************************
+ *
+ * Copy constructor
+ *
+ *************************************************************************
+ */
+PatchBoundaries::PatchBoundaries(
+   const PatchBoundaries& r):
+   d_dim(r.d_dim),
+   d_array_of_bboxes(r.d_dim.getValue())
+{
+   for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+      d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
+   }
+}
+
+/*
+ *************************************************************************
+ *
+ * Assignment operator
+ *
+ *************************************************************************
+ */
+const PatchBoundaries&
+PatchBoundaries::operator = (const PatchBoundaries& r)
+{
+   for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+      d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
+   }
+
+   return *this;
+}
+
+} // SAMRAI namespace
+} // hier namespace
+
+#endif

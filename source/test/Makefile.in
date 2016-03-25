@@ -1,33 +1,64 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/Makefile.in $
-## Package:	SAMRAI test
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2249 $
-## Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
-## Description:	makefile for testing parts of SAMRAI library
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for testing parts of SAMRAI library 
+##
+#########################################################################
 
-SAMRAI	      = @top_srcdir@
+SAMRAI         = @top_srcdir@
 SRCDIR        = @srcdir@
 OBJECT        = ../..
 SUBDIR        = source/test
 
-SUBDIRS = logger async_comm \
-	applications boundary communication clustering dataops dataaccess \
-	dlbg emb_bdry FAC hierarchy hypre ieee inputdb restartdb  \
-	locally_active \
-	mblkcomm MblkLinAdv nonlinear patchbdrysum patch_configuration pointer \
-        sundials schedules timers variables vector indexdata
+SUBDIRS = \
+   pointer \
+   logger \
+   ieee \
+   dimension \
+   dataaccess \
+   inputdb \
+   restartdb \
+   timers \
+   variables \
+   indexdata \
+   sparsedata \
+   transformation \
+   samrai_mpi \
+   async_comm \
+   mapped_box_set_iterators \
+   hierarchy \
+   MappingConnector \
+   mblktree \
+   MappedBoxLevelConnectorUtilsTests \
+   clustering \
+   LoadBalanceCorrectness \
+   dlbg \
+   communication \
+   patchbdrysum \
+   dataops \
+   hypre \
+   FAC_nonadaptive \
+   FAC_adaptive \
+   vector \
+   sundials \
+   boundary \
+   performance \
+   mblkcomm \
+   MblkEuler \
+   MblkLinAdv \
+   nonlinear \
+   rank_group \
+   fill_pattern \
+   applications 
 
-default: check	
+default: check 
 
 include $(OBJECT)/config/Makefile.config
 
 library:
-lib1d:
-lib2d:
-lib3d:
-libXd:
 
 check:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -38,8 +69,15 @@ check2d:
 check3d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 
-checktest:
+checkcompile:
+	@echo "Starting " $@ " in source/test at `date`"
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	@echo "Completed " $@ " in source/test at `date`"
+
+checktest:
+	@echo "Starting " $@ " in source/test at `date`"
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	@echo "Completed " $@ " in source/test at `date`"
 
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

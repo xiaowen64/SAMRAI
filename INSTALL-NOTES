@@ -1,18 +1,17 @@
 ****************************************************************************
-*  Copyright 1997-2008                                                     *
+*  Copyright 1997-2011                                                     *
 *  Lawrence Livermore National Security, LLC.                            *
 *  All rights reserved.                                                    *
 ****************************************************************************
 ****************************************************************************
 *                                                                          *
 *     Structured Adaptive Mesh Refinement Applications Infrastructure      *
-*                           Version 2.1.0
 *                   http://www.llnl.gov/CASC/SAMRAI                        *
 *                                                                          *
 ****************************************************************************
 *    For installation help, see INSTALL-NOTES.                             *
 *    For release notes, see RELEASE-NOTES.                                 *
-*    For copyright information, see COPYRIGHT-STATEMENT.                   *
+*    For copyright information, see COPYRIGHT and COPYING.LESSER.          *
 *    For code and user documentation, see files in /docs directory         *
 *    For help and information about updates and releases, please send      *
 *        email to samrai@llnl.gov                                          *
@@ -133,13 +132,10 @@ configuration options.
 The configuration script will create a number of files in the ``objs'' object
 directory, including config, include, lib, and source directories.  The source
 directory contains Makefiles that will be used to compile the SAMRAI code.  The
-config and include subdirectories contain the following files:
+config and include subdirectories contain the following file paths:
 
-		objs/
-			config/
-				Makefile.config
-			include/
-				SAMRAI_config.h
+		config/Makefile.config
+		include/SAMRAI/SAMRAI_config.h
 
 These two files contain the configuration information required for the SAMRAI
 build.  You may edit these files to fix options that were incorrectly set by
@@ -159,13 +155,11 @@ only those sections for a specified problem dimension.
 	(a) cd objs
 	(b) gmake library
 
-or
-
-	(a) cd objs
-	(b) gmake lib2d lib3d
-
 Get a cup of coffee.  Go watch ``The Simpsons.''  Compiling all of the
-SAMRAI distribution will take from twenty minutes to well over an hour.
+SAMRAI distribution will take from twenty minutes to well over an hour, unless
+you have a more modern operating system and can take advantage of the
+parallelism in gmake.  Then building SAMRAI will build in significantly shorter
+amount of time.
 
 You may also re-make the archive via ``gmake archive'' or remove all object
 and library files via ``gmake clean''.
@@ -221,10 +215,7 @@ Use the help message from the configure script:
 to list all available configuration options.  
 
 The default configuration builds support for SAMRAI datatypes based on
-double and int.  To add support for bool, char, dcomplex, and/or float
-add a flag to enable that type (e.g. --enable-bool --enable-dcomplex
-will add the C++ bool type and complex<double> types to the
-build).
+bool, char, int, float, double, and dcomplex.
 
 Substitute the locations of the the various packages you wish to
 include.  SAMRAI optionally uses a number of specialized high-level
@@ -320,29 +311,37 @@ arguments.
 
 Tool 		Version(s)
 --------------  --------------------------------------  
-gcc		3.3.2, 4.2.2  
+gcc		3.4.6, 4.1.2, 4.5.0
 
 ilx		6.0.0.3
 
-icc		8.0.058, 9.1.049
+icc		9.1.045, 9.1.049, 11.1.059
 
-xlc		????
+xlc	        v7.0, v9.0	
 
-pathscale	Does not currently work.  Appears to be a compiler bug.
+pathscale	Does not currently work.  Core dumps and produces incorrect results.
 
-HDF5		1.4.4, 1.4.5, 1.6.5, 1.8.1
+PGI             Does not currently work.
 
-MPICH 		1.2.5.2, 1.2.7
+Boost		1.45.0
 
-PETSc 		2.3.3 (this version is required)
+HDF5		1.6.5, 1.8.5
+
+MPICH2          1.0.7    (MPICH1 is no longer supported and 
+	                  has bugs which will hang SAMRAI)
+
+OpenMPI	        1.2.8
+
+PETSc 	        2.3.3    (this version is required if PETSc is used)
 
 Sundials        2.3.0
 
-hypre 		1.13.0b, 2.2.0b
+hypre           2.2.0b, 2.6.0b
 
 Visit		1.8.0
 
-doxygen		1.5.1
+doxygen	        1.5.7
+
 graphviz	2.6
 
 
@@ -504,7 +503,7 @@ the default XCode compilers must be overridden):
 *  Looking for list of configure options?  We have encapsulated this in    *
 *  the new ``config.suggest'' tool.                                        *
 *                                                                          *
-*  SEE DISCUSSION UNDER "CONFIGURE OPTIONS" AT LINE 194 ABOVE.             *
+*  SEE DISCUSSION UNDER "CONFIGURE OPTIONS" AT LINE 216 ABOVE.             *
 ****************************************************************************
 ****************************************************************************
 

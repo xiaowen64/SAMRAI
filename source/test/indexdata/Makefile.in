@@ -1,15 +1,16 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/test/vector/Makefile.in $
-## Package:	SAMRAI algorithm
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2231 $
-## Modified:	$LastChangedDate: 2008-06-27 12:45:19 -0700 (Fri, 27 Jun 2008) $
-## Description:	makefile for test of patch data and vector operations
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for test of index data 
+##
+#########################################################################
 
 SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
-SUBDIR        = source/test/vector
+SUBDIR        = source/test/indexdata
 VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
@@ -19,9 +20,7 @@ OBJECT        = ../../..
 #
 ALLOW_IMPLICIT_TEMPLATES = yes
 
-
-
-default: main
+default: check
 
 include $(OBJECT)/config/Makefile.config
 
@@ -29,10 +28,12 @@ CPPFLAGS_EXTRA= -DTESTING=1
 
 main:		main.o $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o $(COBJS) \
-			$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+		$(LIBSAMRAI) $(LDLIBS) -o $@
 NUM_TESTS = 1
 
 TEST_NPROCS = @TEST_NPROCS@
+
+checkcompile: main
 
 check:
 		$(MAKE) check2d
@@ -42,17 +43,14 @@ check2d:	main
 
 check3d:
 
-
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
+		rm -f makecheck.logfile
+		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
-
+		rm -f makecheck.logfile
 
 clean: 
 	$(SAMCLEAN)
-	@$(RM) *.f *vtest*
+	@$(RM) *.f main*
 
 include $(SRCDIR)/Makefile.depend

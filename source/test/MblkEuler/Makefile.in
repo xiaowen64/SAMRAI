@@ -1,26 +1,25 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/test/MblkEuler/Makefile.in $
-## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 986 $
-## Modified:	$LastChangedDate: 2006-02-16 16:06:29 -0800 (Thu, 16 Feb 2006) $
-## Description:	makefile for multiblock sample application
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for multiblock sample application 
+##
+#########################################################################
 
 SAMRAI        = @top_srcdir@
-SRCDIR        = @top_srcdir@/examples/MblkEuler
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/MblkEuler
-VPATH         = @top_srcdir@/examples/MblkEuler
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
-
 
 default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=0
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
 
 NUM_TESTS     = 1
 
@@ -29,56 +28,53 @@ TEST_NPROCS   = @TEST_NPROCS@
 CXX_OBJS      = MblkGeometry.o main.o MblkEuler.o MblkHyperbolicLevelIntegrator.o \
                 MblkHyperbolicPatchStrategy.o Pointer-MblkHyperbolicLevelIntegrator.o
 
-F2D_OBJS      = upfluxsum.o boundaryconditions.o
-F3D_OBJS      = $(F2D_OBJS) 
+F_OBJS      = upfluxsum.o boundaryconditions.o
 
-main2d:
-		if test -f stamp-3d; then $(MAKE) clean ; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-2d
-
-main-2d:	$(CXX_OBJS) $(C2D_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) $(C2D_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
-
-main3d:
-		if test -f stamp-2d; then $(MAKE) clean ; fi
-		touch stamp-3d
-		$(MAKE) PDIM=3 main-3d
-
-main-3d:	$(CXX_OBJS) $(C3D_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) $(C3D_OBJS) \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
+	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:
-		$(MAKE) check3d
+	$(MAKE) check3d
 
-check3d:        main3d
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-                	./main3d octant-3blk.input;
+check3d:	main
+	@for i in test_inputs/*.3d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples3d: main
+	@for i in test_inputs/*.3d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples:
+	$(MAKE) examples3d	
+
+checkcompile: main
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -f makecheck.logfile
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean: 
-		$(SAMCLEAN)
-		$(RM) *.f main main2d main3d
+	$(SAMCLEAN)
+	$(RM) *.f main viz*
 
 redo: 
-		$(RM) main2d main3d
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend
 
-boundaryconditions.o:	$(SRCDIR)/boundaryconditions.f
-		$(F77) $(FFLAGS) -c $(SRCDIR)/boundaryconditions.f -o $@
+boundaryconditions.o:	$(SRCDIR)/boundaryconditions.f $(SRCDIR)/bc_common.f
+	$(F77) $(FFLAGS) -c $(SRCDIR)/boundaryconditions.f -o $@
 
 upfluxsum.o:	$(SRCDIR)/upfluxsum.f
-		$(F77) $(FFLAGS) -c $(SRCDIR)/upfluxsum.f -o $@
+	$(F77) $(FFLAGS) -c $(SRCDIR)/upfluxsum.f -o $@
 

@@ -1,11 +1,12 @@
+#########################################################################
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/variables/Makefile.in $
-## Package:	SAMRAI tests
-## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1917 $
-## Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
-## Description:	makefile for testing variable database operations
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
 ##
+## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Description:   makefile for testing variable database operations 
+##
+#########################################################################
 
 SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
@@ -19,43 +20,38 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA	= -DNDIM=$(PDIM) -DTESTING=1
-#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
 CXX_OBJS	= main-var_db.o
 
-vdbtest2:	
-		if test -f stamp-3d; then $(MAKE) clean-check ; fi
-		touch stamp-2d
-		$(MAKE) PDIM=2 main-var_db2
-
-main-var_db2:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
-		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o vdbtest2
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+	$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
 NUM_TESTS  = 1
 
 TEST_NPROCS = @TEST_NPROCS@
 
+checkcompile: main
+
 check:
 		$(MAKE) check2d
 		$(MAKE) check3d
 
-check2d:	vdbtest2 
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./vdbtest2
+check2d:	checkcompile
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
 
 check3d:
 
 checktest:
-		rm -rf makecheck.logfile
-		$(MAKE) check >& makecheck.logfile
-		cat makecheck.logfile
+		rm -f makecheck.logfile
+		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-		rm -rf makecheck.logfile
+		rm -f makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) *.f vdbtest*
+		$(RM) *.f main*
 
 include $(SRCDIR)/Makefile.depend
