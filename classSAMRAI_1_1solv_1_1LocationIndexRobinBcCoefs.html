@@ -33,15 +33,18 @@ Inheritance diagram for SAMRAI::solv::LocationIndexRobinBcCoefs&lt; DIM &gt;:<p>
 <center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center><a href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#612b1d9a5927e548821899385b50a232">LocationIndexRobinBcCoefs</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor.  <a href="#612b1d9a5927e548821899385b50a232"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#e09d8c3012854d6935b88809c580e4f8">LocationIndexRobinBcCoefs</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#e09d8c3012854d6935b88809c580e4f8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor using database.  <a href="#e09d8c3012854d6935b88809c580e4f8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#2977df6a42a5a4bc168175d523066093">~LocationIndexRobinBcCoefs</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#2977df6a42a5a4bc168175d523066093"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#5ace497cd2959274296274a3a607d4bf">setBcCoefs</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;acoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;bcoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;gcoef_data, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>&lt; DIM &gt; &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a>&lt; DIM &gt; &amp;bdry_box, double fill_time=0.0) const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#395ec2cf1b396136af9cc124ffbd66c4">setBcCoefs</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;acoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;bcoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;gcoef_data, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>&lt; DIM &gt; &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a>&lt; DIM &gt; &amp;bdry_box) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to fill arrays of Robin boundary condition coefficients at a patch boundary.  <a href="#5ace497cd2959274296274a3a607d4bf"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to fill arrays of Robin boundary condition coefficients at a patch boundary.  <a href="#395ec2cf1b396136af9cc124ffbd66c4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#65f04d81e20f4c8cca4b3b8b17cf6340">numberOfExtensionsFillable</a> () const</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#cbea2e29780d6974e85b773464d97b08">setBoundaryValue</a> (int location_index, double value)</td></tr>
@@ -56,6 +59,9 @@ Inheritance diagram for SAMRAI::solv::LocationIndexRobinBcCoefs&lt; DIM &gt;:<p>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#aa19334eae4c29947b11c8f2a600462a">getCoefficients</a> (int location_index, double &amp;<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#453a82a7a55a9a28e2c19962f1abf6fa">a</a>, double &amp;<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#e621b6d97e8da0c5028d78a69a4452bf">b</a>, double &amp;<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#34cb3de4879ab966bef34a9678efd968">g</a>) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Access coefficients.  <a href="#aa19334eae4c29947b11c8f2a600462a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">LocationIndexRobinBcCoefs</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#2ef1112967b31fd5ece20a03e7bc003f">operator=</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">LocationIndexRobinBcCoefs</a> &amp;r)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assignment operator.  <a href="#2ef1112967b31fd5ece20a03e7bc003f"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;int DIM&gt;<br>
@@ -74,6 +80,29 @@ Before this class is used in to provide the boundary condition coefficients, you
  * </pre></div> 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" name="612b1d9a5927e548821899385b50a232"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs" ref="612b1d9a5927e548821899385b50a232" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">SAMRAI::solv::LocationIndexRobinBcCoefs</a>&lt; DIM &gt;::<a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">LocationIndexRobinBcCoefs</a>           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Default constructor. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="e09d8c3012854d6935b88809c580e4f8"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs" ref="e09d8c3012854d6935b88809c580e4f8" args="(const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; database)" -->
 <div class="memitem">
 <div class="memproto">
@@ -102,7 +131,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Constructor. 
+Constructor using database. 
 <p>
 
 </div>
@@ -132,7 +161,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="5ace497cd2959274296274a3a607d4bf"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::setBcCoefs" ref="5ace497cd2959274296274a3a607d4bf" args="(tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;acoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;bcoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;gcoef_data, const tbox::Pointer&lt; hier::Variable&lt; DIM &gt; &gt; &amp;variable, const hier::Patch&lt; DIM &gt; &amp;patch, const hier::BoundaryBox&lt; DIM &gt; &amp;bdry_box, double fill_time=0.0) const" -->
+<a class="anchor" name="395ec2cf1b396136af9cc124ffbd66c4"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::setBcCoefs" ref="395ec2cf1b396136af9cc124ffbd66c4" args="(tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;acoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;bcoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;gcoef_data, const tbox::Pointer&lt; hier::Variable&lt; DIM &gt; &gt; &amp;variable, const hier::Patch&lt; DIM &gt; &amp;patch, const hier::BoundaryBox&lt; DIM &gt; &amp;bdry_box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -172,13 +201,7 @@ template&lt;int DIM&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a>&lt; DIM &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>bdry_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>fill_time</em> = <code>0.0</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>bdry_box</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -192,7 +215,7 @@ template&lt;int DIM&gt; </div>
 <p>
 Function to fill arrays of Robin boundary condition coefficients at a patch boundary. 
 <p>
-This implementation of the virtual function <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#8c8eb30a032609af7b319a506c611788">RobinBcCoefStrategy&lt;DIM&gt;::setBcCoefs()</a> fills the coefficient arrays with constant values set according to the location index of the boundary box.<p>
+This implementation of the virtual function <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#b970730dd1046577178c5da2b46a0925">RobinBcCoefStrategy&lt;DIM&gt;::setBcCoefs()</a> fills the coefficient arrays with constant values set according to the location index of the boundary box.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>acoef_data</em>&nbsp;</td><td>boundary coefficient data. This is defined to include index range for the boundary faces on the boundary box <code>bdry_box</code>. If this is a null pointer, then the calling function is not interested in a, and you can disregard it. </td></tr>
@@ -206,7 +229,7 @@ This implementation of the virtual function <a class="el" href="classSAMRAI_1_1s
 </dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#8c8eb30a032609af7b319a506c611788">SAMRAI::solv::RobinBcCoefStrategy&lt; DIM &gt;</a>.
+Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#b970730dd1046577178c5da2b46a0925">SAMRAI::solv::RobinBcCoefStrategy&lt; DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="65f04d81e20f4c8cca4b3b8b17cf6340"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::numberOfExtensionsFillable" ref="65f04d81e20f4c8cca4b3b8b17cf6340" args="() const" -->
@@ -410,9 +433,33 @@ Access coefficients.
 
 </div>
 </div><p>
+<a class="anchor" name="2ef1112967b31fd5ece20a03e7bc003f"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::operator=" ref="2ef1112967b31fd5ece20a03e7bc003f" args="(const LocationIndexRobinBcCoefs &amp;r)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">LocationIndexRobinBcCoefs</a>&lt; DIM &gt; &amp; <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">SAMRAI::solv::LocationIndexRobinBcCoefs</a>&lt; DIM &gt;::operator=           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html">LocationIndexRobinBcCoefs</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>r</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Assignment operator. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="LocationIndexRobinBcCoefs_8h.html">LocationIndexRobinBcCoefs.h</a><li>source/solvers/poisson/<a class="el" href="LocationIndexRobinBcCoefs_8C.html">LocationIndexRobinBcCoefs.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:57:16 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:33 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

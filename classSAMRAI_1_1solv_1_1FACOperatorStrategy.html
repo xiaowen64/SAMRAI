@@ -52,9 +52,9 @@ Inheritance diagram for SAMRAI::solv::FACOperatorStrategy&lt; DIM &gt;:<p><cente
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#1e2fc412e2e37d99ae2b02e0f0bd20f9">smoothError</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;error, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;residual, int ln, int num_sweeps)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform a given number of relaxations on the error.  <a href="#1e2fc412e2e37d99ae2b02e0f0bd20f9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#f13bb0fca35c1210a9fc132688567792">solveCoarsestLevel</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;error, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;residual, int coarsest_ln)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#c769cd5e362eaac6a4fe98e72014a260">solveCoarsestLevel</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;error, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;residual, int coarsest_ln)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve the residual equation Ae=r on the coarsest level in the FAC iteration.  <a href="#f13bb0fca35c1210a9fc132688567792"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve the residual equation Ae=r on the coarsest level in the FAC iteration.  <a href="#c769cd5e362eaac6a4fe98e72014a260"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#615a2a68de28d7ae77ce709d7bf4b631">computeCompositeResidualOnLevel</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;residual, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;solution, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;rhs, int ln, bool error_equation_indicator)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute composite grid residual on a single level.  <a href="#615a2a68de28d7ae77ce709d7bf4b631"></a><br></td></tr>
@@ -362,14 +362,14 @@ Final step before leaving function.<ul>
 Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#1a9c510030b0cad4b7fa180407b8ef6a">SAMRAI::solv::CellPoissonFACOps&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="f13bb0fca35c1210a9fc132688567792"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::solveCoarsestLevel" ref="f13bb0fca35c1210a9fc132688567792" args="(SAMRAIVectorReal&lt; DIM, double &gt; &amp;error, const SAMRAIVectorReal&lt; DIM, double &gt; &amp;residual, int coarsest_ln)=0" -->
+<a class="anchor" name="c769cd5e362eaac6a4fe98e72014a260"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::solveCoarsestLevel" ref="c769cd5e362eaac6a4fe98e72014a260" args="(SAMRAIVectorReal&lt; DIM, double &gt; &amp;error, const SAMRAIVectorReal&lt; DIM, double &gt; &amp;residual, int coarsest_ln)=0" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">SAMRAI::solv::FACOperatorStrategy</a>&lt; DIM &gt;::solveCoarsestLevel           </td>
+          <td class="memname">virtual int <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">SAMRAI::solv::FACOperatorStrategy</a>&lt; DIM &gt;::solveCoarsestLevel           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; DIM, double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>error</em>, </td>
@@ -407,9 +407,10 @@ This routine must fill boundary values for given solution quantity on all patche
     <tr><td valign="top"></td><td valign="top"><em>coarsest_ln</em>&nbsp;</td><td>coarsest level number </td></tr>
   </table>
 </dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>0 if solver converged to specified level, nonzero otherwise. </dd></dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#03f26a8ca53dadb1db23a418dc3171b0">SAMRAI::solv::CellPoissonFACOps&lt; DIM &gt;</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#34288379b247e9f7177525b977f376da">SAMRAI::solv::CellPoissonFACOps&lt; DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="615a2a68de28d7ae77ce709d7bf4b631"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::computeCompositeResidualOnLevel" ref="615a2a68de28d7ae77ce709d7bf4b631" args="(SAMRAIVectorReal&lt; DIM, double &gt; &amp;residual, const SAMRAIVectorReal&lt; DIM, double &gt; &amp;solution, const SAMRAIVectorReal&lt; DIM, double &gt; &amp;rhs, int ln, bool error_equation_indicator)=0" -->
@@ -663,7 +664,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.ht
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/FAC/<a class="el" href="FACOperatorStrategy_8h.html">FACOperatorStrategy.h</a><li>source/solvers/FAC/<a class="el" href="FACOperatorStrategy_8C.html">FACOperatorStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:57:15 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:32 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

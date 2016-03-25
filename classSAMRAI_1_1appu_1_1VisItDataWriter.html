@@ -44,9 +44,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#020be1ba510c66fef0d93469c9ebbc8c">registerPlotQuantity</a> (const std::string &amp;variable_name, const std::string &amp;variable_type, const int patch_data_index, const int start_depth_index=0, const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;UNKNOWN&quot;)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers a variable with the VisIt data writer.  <a href="#020be1ba510c66fef0d93469c9ebbc8c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#c7954a646a6b99ac2400923851e967b4">registerDerivedPlotQuantity</a> (const std::string &amp;variable_name, const std::string &amp;variable_type, <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a>&lt; DIM &gt; *derived_writer=(<a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a>&lt; DIM &gt; *)(0), const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#aab425398fd5073c46b937e6be2eb742">registerDerivedPlotQuantity</a> (const std::string &amp;variable_name, const std::string &amp;variable_type, <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a>&lt; DIM &gt; *derived_writer=(<a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a>&lt; DIM &gt; *)(0), const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;, const std::string &amp;variable_mix_type=&quot;CLEAN&quot;)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers a derived variable with the VisIt data writer.  <a href="#c7954a646a6b99ac2400923851e967b4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers a derived variable with the VisIt data writer.  <a href="#aab425398fd5073c46b937e6be2eb742"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#9d192a301f7bfeef37e0814b21608f61">resetLevelPlotQuantity</a> (const std::string &amp;variable_name, const int level_number, const int patch_data_index, const int start_depth_index=0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method resets the patch_data_index, and/or the depth_index, at a specific level, of a previously registered plot variable.  <a href="#9d192a301f7bfeef37e0814b21608f61"></a><br></td></tr>
@@ -59,9 +59,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#af78a3d783885ff16f7631acc5a8e5a3">registerMaterialNames</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;material_names)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers with the VisIt data writer the names of materials being used in the simulation.  <a href="#af78a3d783885ff16f7631acc5a8e5a3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#8a75ae791792f3df690e2454991e9a6b">registerSparseMaterialNames</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;material_names)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers with the VisIt data writer the names of materials being used in the simulation.  <a href="#8a75ae791792f3df690e2454991e9a6b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#5b2a7a56854555f3793371bf567504dd">registerSpeciesNames</a> (const std::string &amp;material_name, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;species_names)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers the names of the species for a material_name with the VisIt data writer.  <a href="#5b2a7a56854555f3793371bf567504dd"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#54e24c39ef6415ab916ade783343c334">registerVisItExpressions</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expression_keys, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expressions, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expression_types)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers expressions that will be embedded in the VisIt datafiles.  <a href="#54e24c39ef6415ab916ade783343c334"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#fbd4f92bf05480c87eb54220736ee1f5">writePlotData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html">hier::BasePatchHierarchy</a>&lt; DIM &gt; &gt; hierarchy, int time_step, double simulation_time=0.0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method causes the VisIt data writer to dump all registered data. The appropriate packing methods will be invoked for material-related data and derived data.  <a href="#fbd4f92bf05480c87eb54220736ee1f5"></a><br></td></tr>
@@ -88,10 +94,10 @@ A brief summary of the basic steps typically involved in using the VDW are:<p>
 <li>Register hierarchy variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#020be1ba510c66fef0d93469c9ebbc8c">registerPlotQuantity()</a>. The variables registered may be scalar, vector, or tensor (depth 1, DIM, and DIM*DIM, respectively) which is specified in the argument list. All variables require a string identifier and an index into the patch data array on the AMR hierarchy. Optionally, a start depth index may be supplied to plot a single component of a multi-component field (i.e. a scalar quantity within a vector, or a vector within a tensor). A scale factor may also optionally be specified. Lastly, for user-defined data that is not cell or node type, the proper centering (cell or node) for the data may be supplied.</li></ul>
 <p>
 <ul>
-<li>If using derived data, set a default user-defined derived data writer using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#875b3116a83a89a75e3f801623bf4f77">setDefaultDerivedDataWriter()</a>. A derived data writer may also optionally be specified in the call to <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#c7954a646a6b99ac2400923851e967b4">registerDerivedPlotQuantity()</a>; if so, this derived data writer will be used for the variable being registered. If no derived writer is specified in the registration call, the default derived data writer will be used.</li></ul>
+<li>If using derived data, set a default user-defined derived data writer using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#875b3116a83a89a75e3f801623bf4f77">setDefaultDerivedDataWriter()</a>. A derived data writer may also optionally be specified in the call to <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#aab425398fd5073c46b937e6be2eb742">registerDerivedPlotQuantity()</a>; if so, this derived data writer will be used for the variable being registered. If no derived writer is specified in the registration call, the default derived data writer will be used.</li></ul>
 <p>
 <ul>
-<li>Register derived variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#c7954a646a6b99ac2400923851e967b4">registerDerivedPlotQuantity()</a>. All derived variables require a string identifier. Optionally, a VisDerivedDataStrategy&lt;DIM&gt; object, a scale factor, and centering and may be specified. By default By default, the data is assumed to be cell-centered.</li></ul>
+<li>Register derived variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#aab425398fd5073c46b937e6be2eb742">registerDerivedPlotQuantity()</a>. All derived variables require a string identifier. Optionally, a VisDerivedDataStrategy&lt;DIM&gt; object, a scale factor, and centering and may be specified. By default By default, the data is assumed to be cell-centered.</li></ul>
 <p>
 <ul>
 <li>The <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#9d192a301f7bfeef37e0814b21608f61">resetLevelPlotQuantity()</a> method is provided for cases when a variable lives at different patch data indices on different levels. Invoking this method redefines the patch data array index for a given variable on a given level that will be written to a visit dump file. Before this method is called, the variable must be registered using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#020be1ba510c66fef0d93469c9ebbc8c">registerPlotQuantity()</a> method.</li></ul>
@@ -216,7 +222,7 @@ template&lt;int DIM&gt; </div>
 <p>
 This method sets the default data writer to use for derived data. 
 <p>
-If a non-null derived data writer is supplied by the member function <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#c7954a646a6b99ac2400923851e967b4">registerDerivedPlotQuantity()</a> it will be used in place of the one given here.<p>
+If a non-null derived data writer is supplied by the member function <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#aab425398fd5073c46b937e6be2eb742">registerDerivedPlotQuantity()</a> it will be used in place of the one given here.<p>
 An error results and the program will halt if:<ul>
 <li>assertion checking is active and the default_derived_writer pointer is null.</li></ul>
 <p>
@@ -333,7 +339,7 @@ An error results and the program will halt if:<ul>
 
 </div>
 </div><p>
-<a class="anchor" name="c7954a646a6b99ac2400923851e967b4"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerDerivedPlotQuantity" ref="c7954a646a6b99ac2400923851e967b4" args="(const std::string &amp;variable_name, const std::string &amp;variable_type, VisDerivedDataStrategy&lt; DIM &gt; *derived_writer=(VisDerivedDataStrategy&lt; DIM &gt; *)(0), const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;)" -->
+<a class="anchor" name="aab425398fd5073c46b937e6be2eb742"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerDerivedPlotQuantity" ref="aab425398fd5073c46b937e6be2eb742" args="(const std::string &amp;variable_name, const std::string &amp;variable_type, VisDerivedDataStrategy&lt; DIM &gt; *derived_writer=(VisDerivedDataStrategy&lt; DIM &gt; *)(0), const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;, const std::string &amp;variable_mix_type=&quot;CLEAN&quot;)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -367,7 +373,13 @@ template&lt;int DIM&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>variable_centering</em> = <code>&quot;CELL&quot;</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>variable_centering</em> = <code>&quot;CELL&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>variable_mix_type</em> = <code>&quot;CLEAN&quot;</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -393,6 +405,7 @@ An error results and the program will halt if:<ul>
     <tr><td valign="top"></td><td valign="top"><em>derived_writer</em>&nbsp;</td><td>(optional) derived data strategy object to use to calculate this derived data - will use default derived data object if not supplied </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>scale_factor</em>&nbsp;</td><td>(optional) scale factor with which to multiply all data values </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>variable_centering</em>&nbsp;</td><td>(optional) centering of derived data - "CELL" or "NODE" </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mix</em>&nbsp;</td><td>type (optional) indicate whether or not the mixed material state will be stored, "MIXED", or the default of using cell averages "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must be provided. </td></tr>
   </table>
 </dl>
 
@@ -489,7 +502,7 @@ The patch data index must correspond to an DIM dimensional vector that defines t
 An error results and the program will halt if:<ul>
 <li>the patch data array index is invalid.</li><li>the depth of the patch data index is less than DIM.</li></ul>
 <p>
-If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#c7954a646a6b99ac2400923851e967b4">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
+If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#aab425398fd5073c46b937e6be2eb742">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>patch_data_index</em>&nbsp;</td><td>patch data index of the coordinate data. </td></tr>
@@ -542,7 +555,7 @@ template&lt;int DIM&gt; </div>
 Same as above method, but allows registration of single coordinate for deformed structured AMR grids (moving grids). 
 <p>
 The coordinate number should be 0, 1, or 2 for X, Y, and Z directions, respectively. The patch data index must either be a scalar, or a vector with an appropriate depth index. A scale factor may be used to scale grid data.<p>
-If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#c7954a646a6b99ac2400923851e967b4">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
+If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#aab425398fd5073c46b937e6be2eb742">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>coordinate_number</em>&nbsp;</td><td>must be 0 or 1 for 2D, or 0,1,2 for 3D. </td></tr>
@@ -580,7 +593,42 @@ In order to use materials with VisIt, the application class needs to inherit fro
 VisIt uses the material fractions to calculate interpolated material boundaries in cells with multiple materials. Therefore VisIt can display a material (or materials) as multiple colored contiguous regions. In addition, VisIt can intersect this volume field with a plane and get accurate 2D boundaries within cells. If desired, the material fractions for a material can be treated as a scalar field and the usual scalar field plot tools, such as pseudocolor and contour, can be applied.<p>
 Because species are a subset of materials, it is required that the material names be registered before any species names are registered. New materials may not be added during the simulation; that is, this method should only be called once.<p>
 An error results and the program will halt if:<ul>
-<li>this method is called more than once.</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
+<li>this method is called more than once.</li><li>the new <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#8a75ae791792f3df690e2454991e9a6b">registerSparseMaterialNames()</a> method is called</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="8a75ae791792f3df690e2454991e9a6b"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerSparseMaterialNames" ref="8a75ae791792f3df690e2454991e9a6b" args="(const tbox::Array&lt; std::string &gt; &amp;material_names)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html">SAMRAI::appu::VisItDataWriter</a>&lt; DIM &gt;::registerSparseMaterialNames           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>material_names</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+This method registers with the VisIt data writer the names of materials being used in the simulation. 
+<p>
+When a mesh has materials defined over it, every cell will contain a fractional amount f (0 &lt;= f &lt;= 1.0) of every material, called a material fraction or volume fraction. The sum of all material fractions for every cell must be 1.0. Since materials are defined over a cell, each materials variable is assumed to be CELL centered.<p>
+In order to use materials with VisIt, the application class needs to inherit from VisMaterialsDataStrategy&lt;DIM&gt;, an abstract base class which defines an interface for writing out various materials related fields. A concrete object of this strategy must be registered with the VisIt data writer. That concrete object is responsible for providing a concrete implementation of the method packMaterialFractionsIntoSparseBuffers() which writes out the material fractions for each registered material over a given patch.<p>
+VisIt uses the material fractions to calculate interpolated material boundaries in cells with multiple materials. Therefore VisIt can display a material (or materials) as multiple colored contiguous regions. In addition, VisIt can intersect this volume field with a plane and get accurate 2D boundaries within cells. If desired, the material fractions for a material can be treated as a scalar field and the usual scalar field plot tools, such as pseudocolor and contour, can be applied.<p>
+An error results and the program will halt if:<ul>
+<li>this method is called more than once.</li><li>the legacy <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#af78a3d783885ff16f7631acc5a8e5a3">registerMaterialNames()</a> method is called</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -633,6 +681,45 @@ An error results and the program will halt if:<ul>
   </table>
 </dl>
 
+</div>
+</div><p>
+<a class="anchor" name="54e24c39ef6415ab916ade783343c334"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerVisItExpressions" ref="54e24c39ef6415ab916ade783343c334" args="(const tbox::Array&lt; std::string &gt; &amp;expression_keys, const tbox::Array&lt; std::string &gt; &amp;expressions, const tbox::Array&lt; std::string &gt; &amp;expression_types)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html">SAMRAI::appu::VisItDataWriter</a>&lt; DIM &gt;::registerVisItExpressions           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>expression_keys</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>expressions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>expression_types</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+This method registers expressions that will be embedded in the VisIt datafiles. 
+<p>
+The three Arrays of strings define the names (or keys) of the expressions, the expressions, and the types of the expressions (scalar, vector, tensor). For more information on defining VisIt expressions see the VisItUsersManual. 
 </div>
 </div><p>
 <a class="anchor" name="fbd4f92bf05480c87eb54220736ee1f5"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::writePlotData" ref="fbd4f92bf05480c87eb54220736ee1f5" args="(const tbox::Pointer&lt; hier::BasePatchHierarchy&lt; DIM &gt; &gt; hierarchy, int time_step, double simulation_time=0.0)" -->
@@ -711,7 +798,7 @@ This sets the summary file written at each step of the simulation which describe
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/apputils/plotting/<a class="el" href="VisItDataWriter_8h.html">VisItDataWriter.h</a><li>source/apputils/plotting/<a class="el" href="VisItDataWriter_8C.html">VisItDataWriter.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:56:40 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:01 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

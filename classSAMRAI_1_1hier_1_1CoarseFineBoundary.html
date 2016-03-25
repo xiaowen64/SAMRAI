@@ -35,35 +35,46 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#fe70c55a53df634756c40ac889bafb44">CoarseFineBoundary</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>&lt; DIM &gt; &amp;hierarchy, int ln, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;max_ghost_width)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given patch hierarchy.  <a href="#fe70c55a53df634756c40ac889bafb44"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#66f0447a58eb33800daf3ffaf529d199">CoarseFineBoundary</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt; &amp;hierarchy, int ln, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;max_ghost_width)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given multiblock patch hierarchy.  <a href="#66f0447a58eb33800daf3ffaf529d199"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#f865cbd14b7b224c14ec0c5a0fd8a3bd">~CoarseFineBoundary</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#f20bd97de82e11d56ad424708a85a46f">computeFromHierarchy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>&lt; DIM &gt; &amp;hierarchy, int ln, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;max_ghost_width)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given patch hierarchy.  <a href="#f20bd97de82e11d56ad424708a85a46f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#97e8eb385a9e8bbf41da8c1ab23a61fd">computeFromHierarchy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">MultiblockPatchHierarchy</a>&lt; DIM &gt; &amp;hierarchy, int ln, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;max_ghost_width)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given multiblock patch hierarchy.  <a href="#97e8eb385a9e8bbf41da8c1ab23a61fd"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#5dc3eebc13bcb3cfb28f6113444565e0">computeFromLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>&lt; DIM &gt; &amp;level, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>&lt; DIM &gt; &amp;level0, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;max_ghost_width)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level based on a given level which is assumed to be the coarsest level (i.e., level zero) in some patch hierarchy.  <a href="#5dc3eebc13bcb3cfb28f6113444565e0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#d5ed5f839e93e2cf57a4330c640dc0c0">clear</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#371a7ee04f10c96fff12b902fb8d2772">computeFromLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">MultiblockPatchLevel</a>&lt; DIM &gt; &amp;level, const <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">MultiblockPatchLevel</a>&lt; DIM &gt; &amp;level0, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;max_ghost_width)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clear all boundary data.  <a href="#d5ed5f839e93e2cf57a4330c640dc0c0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified multibock level based on a given level which is assumed to be the coarsest level (i.e., level zero) in some patch hierarchy.  <a href="#371a7ee04f10c96fff12b902fb8d2772"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#1b653a78d289459a026dd741fe9fb4a7">clear</a> (const int block_number=0)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clear all boundary data.  <a href="#1b653a78d289459a026dd741fe9fb4a7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#fb92076ef9b86bd1d5b9f28ace56ee1f">printClassData</a> (std::ostream &amp;os) const</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print out class data (mostly for debugging).  <a href="#fb92076ef9b86bd1d5b9f28ace56ee1f"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to get the computed coarse-fine boundaries.</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt;<br>
- DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#207d4d28e20a19cc11c26321fc37a205">getBoundaries</a> (int pn, int boundary_type) const </td></tr>
+ DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#d4ad9d1e0024eadaf69c434843c9041e">getBoundaries</a> (int patch_num, int boundary_type, int block_num=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of boundary boxes of a given type for a specified patch.  <a href="#207d4d28e20a19cc11c26321fc37a205"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of boundary boxes of a given type for a specified patch.  <a href="#d4ad9d1e0024eadaf69c434843c9041e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt;<br>
- DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#f9f6d6ab02f5e0582de1678bbfd5aa47">getNodeBoundaries</a> (int pn) const </td></tr>
+ DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#d71d6e251616f8983b07e8e6eed17201">getNodeBoundaries</a> (int patch_num, int block_num=0) const</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of node boundary boxes for a specified patch (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class).  <a href="#f9f6d6ab02f5e0582de1678bbfd5aa47"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of node boundary boxes for a specified patch (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class).  <a href="#d71d6e251616f8983b07e8e6eed17201"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt;<br>
- DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#91a27e90b4a26752b2dca4b5535e950a">getEdgeBoundaries</a> (int pn) const </td></tr>
+ DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#0ac7cc6493d5d09ab5cab367409a743d">getEdgeBoundaries</a> (int patch_num, int block_num=0) const</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of edge boundary boxes for a specified patch (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class).  <a href="#91a27e90b4a26752b2dca4b5535e950a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of edge boundary boxes for a specified patch (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class).  <a href="#0ac7cc6493d5d09ab5cab367409a743d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt;<br>
- DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#088cca29c4f6542d9bfac63d7758c0ad">getFaceBoundaries</a> (int pn) const </td></tr>
+ DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#bb824c0b840dfeb3476853d8c2ce8a76">getFaceBoundaries</a> (int patch_num, int block_num=0) const</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of face boundary boxes for a specified patch (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class).  <a href="#088cca29c4f6542d9bfac63d7758c0ad"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of face boundary boxes for a specified patch (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class).  <a href="#bb824c0b840dfeb3476853d8c2ce8a76"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;int DIM&gt;<br>
@@ -145,6 +156,73 @@ Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the 
 Note that if level number is zero, the coarse-fine boundary will be empty. 
 </div>
 </div><p>
+<a class="anchor" name="66f0447a58eb33800daf3ffaf529d199"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::CoarseFineBoundary" ref="66f0447a58eb33800daf3ffaf529d199" args="(const tbox::Pointer&lt; MultiblockPatchHierarchy&lt; DIM &gt; &gt; &amp;hierarchy, int ln, const IntVector&lt; DIM &gt; &amp;max_ghost_width)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::<a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a>           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>hierarchy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>ln</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>max_ghost_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given multiblock patch hierarchy. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>multiblock atch hierarchy in which the patch level resides. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ln</em>&nbsp;</td><td>Level number of level of computed coarse-fine boundary. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>Max ghost width for which to generate boundary boxes. The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary.</td></tr>
+  </table>
+</dl>
+Note that if level number is zero, the coarse-fine boundary will be empty. 
+</div>
+</div><p>
+<a class="anchor" name="f865cbd14b7b224c14ec0c5a0fd8a3bd"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::~CoarseFineBoundary" ref="f865cbd14b7b224c14ec0c5a0fd8a3bd" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::~<a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a>           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Member Function Documentation</h2>
 <a class="anchor" name="f20bd97de82e11d56ad424708a85a46f"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::computeFromHierarchy" ref="f20bd97de82e11d56ad424708a85a46f" args="(const PatchHierarchy&lt; DIM &gt; &amp;hierarchy, int ln, const IntVector&lt; DIM &gt; &amp;max_ghost_width)" -->
 <div class="memitem">
@@ -181,6 +259,52 @@ template&lt;int DIM&gt; </div>
 
 <p>
 Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given patch hierarchy. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> hierarchy in which the patch level resides. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ln</em>&nbsp;</td><td>Level number of level of computed coarse-fine boundary. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>Max ghost width for which to generate boundary boxes. The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary.</td></tr>
+  </table>
+</dl>
+Note that if level number is zero, the coarse-fine boundary will be empty. 
+</div>
+</div><p>
+<a class="anchor" name="97e8eb385a9e8bbf41da8c1ab23a61fd"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::computeFromHierarchy" ref="97e8eb385a9e8bbf41da8c1ab23a61fd" args="(const MultiblockPatchHierarchy&lt; DIM &gt; &amp;hierarchy, int ln, const IntVector&lt; DIM &gt; &amp;max_ghost_width)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::computeFromHierarchy           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">MultiblockPatchHierarchy</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>hierarchy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>ln</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>max_ghost_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level in the given multiblock patch hierarchy. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -238,7 +362,53 @@ Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified level based o
 Note that if level and level0 are the same, the coarse-fine boundary will be empty. 
 </div>
 </div><p>
-<a class="anchor" name="d5ed5f839e93e2cf57a4330c640dc0c0"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::clear" ref="d5ed5f839e93e2cf57a4330c640dc0c0" args="()" -->
+<a class="anchor" name="371a7ee04f10c96fff12b902fb8d2772"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::computeFromLevel" ref="371a7ee04f10c96fff12b902fb8d2772" args="(const MultiblockPatchLevel&lt; DIM &gt; &amp;level, const MultiblockPatchLevel&lt; DIM &gt; &amp;level0, const IntVector&lt; DIM &gt; &amp;max_ghost_width)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::computeFromLevel           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">MultiblockPatchLevel</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">MultiblockPatchLevel</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>level0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>max_ghost_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct a CoarseFineBoundary&lt;DIM&gt; object for the specified multibock level based on a given level which is assumed to be the coarsest level (i.e., level zero) in some patch hierarchy. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> level of computed coarse-fine boundary. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level0</em>&nbsp;</td><td>Coarsest patch level in hierarchy used to compute coarse-fine boundary. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>Max ghost width for which to generate boundary boxes. The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary.</td></tr>
+  </table>
+</dl>
+Note that if level and level0 are the same, the coarse-fine boundary will be empty. 
+</div>
+</div><p>
+<a class="anchor" name="1b653a78d289459a026dd741fe9fb4a7"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::clear" ref="1b653a78d289459a026dd741fe9fb4a7" args="(const int block_number=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -247,7 +417,8 @@ template&lt;int DIM&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::clear           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>block_number</em> = <code>0</code>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -261,7 +432,7 @@ Clear all boundary data.
 
 </div>
 </div><p>
-<a class="anchor" name="207d4d28e20a19cc11c26321fc37a205"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getBoundaries" ref="207d4d28e20a19cc11c26321fc37a205" args="(int pn, int boundary_type) const " -->
+<a class="anchor" name="d4ad9d1e0024eadaf69c434843c9041e"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getBoundaries" ref="d4ad9d1e0024eadaf69c434843c9041e" args="(int patch_num, int boundary_type, int block_num=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -271,13 +442,19 @@ template&lt;int DIM&gt; </div>
           <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt; &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::getBoundaries           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>pn</em>, </td>
+          <td class="paramname"> <em>patch_num</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>boundary_type</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>boundary_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>block_num</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -294,14 +471,15 @@ Get an array of boundary boxes of a given type for a specified patch.
 The specified patch must exist in the level used to compute the internal state or it is an error.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pn</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_num</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>boundary_type</em>&nbsp;</td><td>Boundary box type (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> class). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>block_num</em>&nbsp;</td><td>Block number (defaults to 0 for non-multiblock case) </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="f9f6d6ab02f5e0582de1678bbfd5aa47"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getNodeBoundaries" ref="f9f6d6ab02f5e0582de1678bbfd5aa47" args="(int pn) const " -->
+<a class="anchor" name="d71d6e251616f8983b07e8e6eed17201"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getNodeBoundaries" ref="d71d6e251616f8983b07e8e6eed17201" args="(int patch_num, int block_num=0) const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -311,9 +489,18 @@ template&lt;int DIM&gt; </div>
           <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt; &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::getNodeBoundaries           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>pn</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td class="paramname"> <em>patch_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>block_num</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -325,13 +512,14 @@ Get an array of node boundary boxes for a specified patch (see <a class="el" hre
 The specified patch must exist in the level used to compute the internal state or it is an error.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pn</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_num</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>block_num</em>&nbsp;</td><td>Block number (defaults to 0 for non-multiblock case) </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="91a27e90b4a26752b2dca4b5535e950a"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getEdgeBoundaries" ref="91a27e90b4a26752b2dca4b5535e950a" args="(int pn) const " -->
+<a class="anchor" name="0ac7cc6493d5d09ab5cab367409a743d"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getEdgeBoundaries" ref="0ac7cc6493d5d09ab5cab367409a743d" args="(int patch_num, int block_num=0) const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -341,9 +529,18 @@ template&lt;int DIM&gt; </div>
           <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt; &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::getEdgeBoundaries           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>pn</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td class="paramname"> <em>patch_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>block_num</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -355,13 +552,14 @@ Get an array of edge boundary boxes for a specified patch (see <a class="el" hre
 Note that edge boxes are only meaningful if problem dimension is &gt; 1. The specified patch must exist in the level used to compute the internal state or it is an error.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pn</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_num</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>block_num</em>&nbsp;</td><td>Block number (defaults to 0 for non-multiblock case) </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="088cca29c4f6542d9bfac63d7758c0ad"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getFaceBoundaries" ref="088cca29c4f6542d9bfac63d7758c0ad" args="(int pn) const " -->
+<a class="anchor" name="bb824c0b840dfeb3476853d8c2ce8a76"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getFaceBoundaries" ref="bb824c0b840dfeb3476853d8c2ce8a76" args="(int patch_num, int block_num=0) const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -371,9 +569,18 @@ template&lt;int DIM&gt; </div>
           <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt; &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">SAMRAI::hier::CoarseFineBoundary</a>&lt; DIM &gt;::getFaceBoundaries           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>pn</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td class="paramname"> <em>patch_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>block_num</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -385,7 +592,8 @@ Get an array of face boundary boxes for a specified patch (see <a class="el" hre
 Note that face boxes are only meaningful if problem dimension is &gt; 2. The specified patch must exist in the level used to compute the internal state or it is an error.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pn</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_num</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>block_num</em>&nbsp;</td><td>Block number (defaults to 0 for non-multiblock case) </td></tr>
   </table>
 </dl>
 
@@ -417,7 +625,7 @@ Print out class data (mostly for debugging).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/patches/<a class="el" href="CoarseFineBoundary_8h.html">CoarseFineBoundary.h</a><li>source/hierarchy/patches/<a class="el" href="CoarseFineBoundary_8C.html">CoarseFineBoundary.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:56:47 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:07 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

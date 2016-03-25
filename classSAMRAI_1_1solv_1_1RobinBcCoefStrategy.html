@@ -42,9 +42,9 @@ Inheritance diagram for SAMRAI::solv::RobinBcCoefStrategy&lt; DIM &gt;:<p><cente
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#e3036dc731f48fddfa6a0ae36068ddfd"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to set boundary condition coefficients a and g.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#8c8eb30a032609af7b319a506c611788">setBcCoefs</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;acoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;bcoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;gcoef_data, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>&lt; DIM &gt; &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a>&lt; DIM &gt; &amp;bdry_box, double fill_time=0.0) const=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#b970730dd1046577178c5da2b46a0925">setBcCoefs</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;acoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;bcoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; DIM, double &gt; &gt; &amp;gcoef_data, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>&lt; DIM &gt; &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a>&lt; DIM &gt; &amp;bdry_box) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">User-supplied function to fill arrays of Robin boundary condition coefficients at a patch boundary.  <a href="#8c8eb30a032609af7b319a506c611788"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">User-supplied function to fill arrays of Robin boundary condition coefficients at a patch boundary.  <a href="#b970730dd1046577178c5da2b46a0925"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#335d6ecb710122038c697460df1b263c">numberOfExtensionsFillable</a> () const=0</td></tr>
 
 </table>
@@ -109,7 +109,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="8c8eb30a032609af7b319a506c611788"></a><!-- doxytag: member="SAMRAI::solv::RobinBcCoefStrategy::setBcCoefs" ref="8c8eb30a032609af7b319a506c611788" args="(tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;acoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;bcoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;gcoef_data, const tbox::Pointer&lt; hier::Variable&lt; DIM &gt; &gt; &amp;variable, const hier::Patch&lt; DIM &gt; &amp;patch, const hier::BoundaryBox&lt; DIM &gt; &amp;bdry_box, double fill_time=0.0) const=0" -->
+<a class="anchor" name="b970730dd1046577178c5da2b46a0925"></a><!-- doxytag: member="SAMRAI::solv::RobinBcCoefStrategy::setBcCoefs" ref="b970730dd1046577178c5da2b46a0925" args="(tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;acoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;bcoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; DIM, double &gt; &gt; &amp;gcoef_data, const tbox::Pointer&lt; hier::Variable&lt; DIM &gt; &gt; &amp;variable, const hier::Patch&lt; DIM &gt; &amp;patch, const hier::BoundaryBox&lt; DIM &gt; &amp;bdry_box) const =0" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -149,13 +149,7 @@ template&lt;int DIM&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a>&lt; DIM &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>bdry_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>fill_time</em> = <code>0.0</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>bdry_box</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -196,12 +190,11 @@ The parameter <code>variable</code> is passed through to tell the implementation
     <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td>variable to set the coefficients for. If implemented for multiple variables, this parameter can be used to determine which variable's coefficients are being sought. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td>patch requiring bc coefficients </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_box</em>&nbsp;</td><td>boundary box showing where on the boundary the coefficient data is needed. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Solution time corresponding to filling, for use when coefficients are time-dependent. </td></tr>
   </table>
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.html#3ac09652c513444cf80d5e3356a63481">SAMRAI::solv::GhostCellRobinBcCoefs&lt; DIM &gt;</a>, <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#5ace497cd2959274296274a3a607d4bf">SAMRAI::solv::LocationIndexRobinBcCoefs&lt; DIM &gt;</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#3381d96e7c58bb7227bb7db996db3ddb">SAMRAI::solv::SimpleCellRobinBcCoefs&lt; DIM &gt;</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.html#eb83ff74c43df20c8dc13d524605f890">SAMRAI::solv::GhostCellRobinBcCoefs&lt; DIM &gt;</a>, <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#395ec2cf1b396136af9cc124ffbd66c4">SAMRAI::solv::LocationIndexRobinBcCoefs&lt; DIM &gt;</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#dbfaf987343d44940f1493ff1e2bdad5">SAMRAI::solv::SimpleCellRobinBcCoefs&lt; DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="335d6ecb710122038c697460df1b263c"></a><!-- doxytag: member="SAMRAI::solv::RobinBcCoefStrategy::numberOfExtensionsFillable" ref="335d6ecb710122038c697460df1b263c" args="() const=0" -->
@@ -229,7 +222,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="RobinBcCoefStrategy_8h.html">RobinBcCoefStrategy.h</a><li>source/solvers/poisson/<a class="el" href="RobinBcCoefStrategy_8C.html">RobinBcCoefStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:57:16 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:33 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

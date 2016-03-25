@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1mesh.html">mesh</a>::<a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html">LoadBalancer</a></div>
-<h1>SAMRAI::mesh::LoadBalancer&lt; DIM &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::mesh::LoadBalancer" --><!-- doxytag: inherits="SAMRAI::mesh::LoadBalanceStrategy" -->Class LoadBalancer&lt;DIM&gt; provides load balancing routines for AMR hierarchy levels based on either uniform or non-uniform workload estimates. This class is derived from the abstract base class LoadBalanceStrategy&lt;DIM&gt;; thus, it is a concrete implementation of the load balance Strategy pattern interface.  
+<h1>SAMRAI::mesh::LoadBalancer&lt; DIM &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::mesh::LoadBalancer" --><!-- doxytag: inherits="SAMRAI::mesh::LoadBalanceStrategy" -->Class LoadBalancer&lt;DIM&gt; provides load balancing routines for AMR hierarchy levels based on either uniform or non-uniform workload estimates.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/mesh/load_balance/LoadBalancer.h&gt;</code>
@@ -40,6 +40,8 @@ Inheritance diagram for SAMRAI::mesh::LoadBalancer&lt; DIM &gt;:<p><center><img 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#f3b1a4ca2210631fe73f5f1aca80a344">~LoadBalancer</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#19c08c13a83ac304506baec82a2781d9">setMaxWorkloadFactor</a> (double factor, int level_number=-1)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#d44423d480089947ad11ca3c478f6593">setWorkloadTolerance</a> (double tolerance, int level_number=-1)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#2a70f4c4e6745ebc49ea29748594d48f">setWorkloadPatchDataIndex</a> (int data_id, int level_number=-1)</td></tr>
 
@@ -60,8 +62,9 @@ Inheritance diagram for SAMRAI::mesh::LoadBalancer&lt; DIM &gt;:<p><center><img 
 <h3>template&lt;int DIM&gt;<br>
  class SAMRAI::mesh::LoadBalancer&lt; DIM &gt;</h3>
 
-Class LoadBalancer&lt;DIM&gt; provides load balancing routines for AMR hierarchy levels based on either uniform or non-uniform workload estimates. This class is derived from the abstract base class LoadBalanceStrategy&lt;DIM&gt;; thus, it is a concrete implementation of the load balance Strategy pattern interface. 
+Class LoadBalancer&lt;DIM&gt; provides load balancing routines for AMR hierarchy levels based on either uniform or non-uniform workload estimates. 
 <p>
+This class is derived from the abstract base class LoadBalanceStrategy&lt;DIM&gt;; thus, it is a concrete implementation of the load balance Strategy pattern interface.<p>
 Load balancing operations, whether based on uniform or non-uniform workloads, can be specified for each level in the hierarchy individually or for the entire hierarchy. Basic load balance parameters can be set from an input file, while more complex behavior can be set at run-time via member functions, including dynamic reconfiguration of balance operations.<p>
 Required input keys: NONE<p>
 Optional input keys, data types, and defaults:<p>
@@ -73,9 +76,21 @@ NOTE: The largest patch size constraint specified in the input for the GriddingA
 <li><b>bin_pack_method</b> String value indicating the type of bin packing to use to map patches to processors. Currently, two options are supported: "GREEDY", "SPATIAL". The "GREEDY" process simply maps each patch (box) to the first processor (bin), in ascending tbox::MPI process number, whose difference between the average workload and its current workload is less than the workload of the patch in question. The "SPATIAL" process first constructs an ordering of the patches (boxes) by passing a Morton-type curve through the center of each box. Then, it attempts to map the patches to processors by assigning patches that are near each other on the curve to the same processor. If no input value is specified, a default value of "SPATIAL" is used. The input value will be used for all levels and will remain so until reset via the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#8d1d4a334afa6d22a6e993e79c4be22c">setBinPackMethod()</a> member function below.</li></ul>
 <p>
 <ul>
-<li><b>max_workload_factor</b> Double used during the box-splitting phase to determine which boxes to split. Specifically, boxes will be chopped if their estimated workload is greater than max_workload_factor * A, where A is the average workload (i.e., A = (total work)/(nume processors)). The default value for this parameter is 1.0. It can be set to any value greater than zero, either in the input file or via the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#19c08c13a83ac304506baec82a2781d9">setMaxWorkloadFactor()</a> member function below. The default or input value will remain in use for all levels until reset by the member function.</li></ul>
+<li><b>max_workload_factor</b> Double array (length = number of levels) used during the box-splitting phase to determine which boxes to split. Specifically, boxes will be chopped if their estimated workload is greater than max_workload_factor * A, where A is the average workload (i.e., A = (total work)/(nume processors)). The default value for this parameter is 1.0. It can be set to any value greater than zero, either in the input file or via the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#19c08c13a83ac304506baec82a2781d9">setMaxWorkloadFactor()</a> member function below.</li></ul>
 <p>
+Example input:<p>
+max_workload_factor = 0.8<p>
+Sets the workload factor to 0.8 for all levels.<p>
+max_worklaod_factor = 0.8 , 0.9<p>
+Sets the workload factor to 0.8 for level 0 and 0.9 for all other levels.<p>
+NOTE: If a length is less than max levels then finest value specified is use for finer levels. If length is greater than max levels, the values are ignored.<p>
 NOTE: Setting this value &gt; 1.0 increases the splitting threshold which effectively reduces the total number of boxes generated. Setting it less than 1.0 decreases the splitting threshold and will generally increase the total number of boxes.<p>
+<ul>
+<li><b>workload_tolerance</b> Double array (length = number of levels) used during the box-splitting phase to determine which boxes to split. The tolerance value can be use to prevent splitting of boxes when the computed box workload is close to the computed ideal workload. A box is split if:</li></ul>
+<p>
+( box_workload &lt;= ( (1. + workload_tolerance) * ideal_workload ) )<p>
+Tolerance values should be greater than or equal to 0.0 and less then 1.0. Large values will probably have undesirable results. The default value for this parameter is 0.0. It can be set to either in the input file or via the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#d44423d480089947ad11ca3c478f6593">setWorkloadTolerance()</a> member function below.<p>
+NOTE: If a length is less than max levels then finest value specified is use for finer levels. If length is greater than max levels, the values are ignored.<p>
 <ul>
 <li><b>ignore_level_box_union_is_single_box</b> Boolean flag to control chopping of level boxes when the union of the input boxes passed to the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#c3c5032f828636d20153c0e441a6f2d1">loadBalanceBoxes()</a> routine is a single box. The default value is false, which means that the domain will be chopped to make patch boxes based on the (single box) union of the boxes describing the level regardless of the input boxes. When the value is set to true, either via the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html#fb9a55c9b3958daf4efa8f758ec8c0af">setIgnoreLevelDomainIsSingleBox()</a> function or an input file, the domain will be chopped by chopping each of the input boxes.</li></ul>
 <p>
@@ -213,6 +228,44 @@ Set the max workload factor for either the specified level or all hierarchy leve
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>factor</em>&nbsp;</td><td>Double value of multiplier for average workload used in box chopping. The default value is 1.0. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>Optional integer number for level to which factor is applied. If no value is given, the factor will be used for all levels. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="d44423d480089947ad11ca3c478f6593"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalancer::setWorkloadTolerance" ref="d44423d480089947ad11ca3c478f6593" args="(double tolerance, int level_number=-1)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalancer.html">SAMRAI::mesh::LoadBalancer</a>&lt; DIM &gt;::setWorkloadTolerance           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>tolerance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>level_number</em> = <code>-1</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set the workload tolerance for either the specified level or all hierarchy levels. See discussion about inputs above for information on how this value is used during load balancing operations.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>factor</em>&nbsp;</td><td>Double value of tolerance. The default value is 0.0;</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>Optional integer number for level to which factor is applied. If no value is given, the value will be used for all levels. </td></tr>
   </table>
 </dl>
 
@@ -508,7 +561,7 @@ Print out all members of the class instance to given output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mesh/load_balance/<a class="el" href="LoadBalancer_8h.html">LoadBalancer.h</a><li>source/mesh/load_balance/<a class="el" href="LoadBalancer_8C.html">LoadBalancer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:57:00 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:19 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

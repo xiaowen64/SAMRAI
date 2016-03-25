@@ -43,10 +43,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> &amp;spec)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the matrix coefficients.  <a href="#32d2bc62b5f3ed4552978b695868c207"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#d0f3bdc54da8de470446e898b656312b">setSolnIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#801d0b2851e9edf4e44d3234887319b7">depth</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#d0f3bdc54da8de470446e898b656312b">setSolnIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#43c6cefba47e6b5e3fd8b0eb724c2a53">depth</a>)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the solution data involved in the solve.  <a href="#d0f3bdc54da8de470446e898b656312b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#f1c22954bdc5e25295d1cb9c419c0ded">setRhsIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#801d0b2851e9edf4e44d3234887319b7">depth</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#f1c22954bdc5e25295d1cb9c419c0ded">setRhsIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#43c6cefba47e6b5e3fd8b0eb724c2a53">depth</a>)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the rhs data involved in the solve.  <a href="#f1c22954bdc5e25295d1cb9c419c0ded"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#abfcc94f0bc7adb34a0791596deb9d42">setStoppingCriteria</a> (const int max_iterations=10, const double relative_residual_tol=1.0e-6)</td></tr>
@@ -592,7 +592,7 @@ The Robin boundary condition object is used when setting the matrix coefficient 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>physical_bc_coef_strategy</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> a concrete implementation of the Robin bc strategy. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> pointer to be passed to <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#8c8eb30a032609af7b319a506c611788">RobinBcCoefStrategy&lt;DIM&gt;::setBcCoefs()</a>, but otherwise unused by this class. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> pointer to be passed to <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#b970730dd1046577178c5da2b46a0925">RobinBcCoefStrategy&lt;DIM&gt;::setBcCoefs()</a>, but otherwise unused by this class. </td></tr>
   </table>
 </dl>
 
@@ -629,7 +629,7 @@ If this method is not called, or the flag is set false, no printing will occur.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8h.html">CellPoissonHypreSolver.h</a><li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8C.html">CellPoissonHypreSolver.C</a><li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8I.html">CellPoissonHypreSolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:57:16 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:33 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

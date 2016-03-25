@@ -20,6 +20,7 @@
   </ul></div>
 <h1>source/solvers/poisson/CellPoissonFACOps.C File Reference</h1><code>#include &quot;<a class="el" href="CellPoissonFACOps_8h.html">CellPoissonFACOps.h</a>&quot;</code><br>
 <code>#include &lt;IOMANIP_HEADER_FILE&gt;</code><br>
+<code>#include &quot;<a class="el" href="BoundaryBoxUtils_8h.html">BoundaryBoxUtils.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianGridGeometry_8h.html">CartesianGridGeometry.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianPatchGeometry_8h.html">CartesianPatchGeometry.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Index_8h.html">Index.h</a>&quot;</code><br>
@@ -94,7 +95,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1solv.html#4b33af8f97729c8927a006fe821859fa">SAMRAI::solv::ewingfixfluxcondc3d_</a> (const double *xflux, const double *<a class="el" href="solv__cellpoissonfacops3d_8f.html#4519d91523ab211218851e38d2d81c56">yflux</a>, const double *<a class="el" href="solv__cellpoissonfacops3d_8f.html#a19e33c6e05ed03268d7eb1e45ef03cf">zflux</a>, const int *<a class="el" href="solv__cellpoissonfacops3d_8f.html#50162670d34a38885954a28278da9ae6">fluxgi</a>, const int *<a class="el" href="solv__cellpoissonfacops3d_8f.html#354bafebf0d664eb014573f0fd856db0">fluxgj</a>, const int *<a class="el" href="solv__cellpoissonfacops3d_8f.html#f7eadcf4fe6acfd9009287f22227f960">fluxgk</a>, const double &amp;diff_coef, const double *<a class="el" href="solv__cellpoissonfacops3d_8f.html#88a6c66a223bdb3ba8eafe8f2ecbcd2a">soln</a>, const int *<a class="el" href="solv__cellpoissonfacops3d_8f.html#19cd060f645b45fde276e61f0c037e83">solngi</a>, const int *<a class="el" href="solv__cellpoissonfacops3d_8f.html#32667330b734eadd87ce11d831b32b0d">solngj</a>, const int *<a class="el" href="solv__cellpoissonfacops3d_8f.html#2d0526295e8a9bdac652254e15ff0bec">solngk</a>, const int *<a class="el" href="solv__cellpoissonhypresolver3d_8f.html#5d287efe8644a7447d59ac82b3e72656">ifirst</a>, const int *<a class="el" href="solv__cellpoissonhypresolver3d_8f.html#c159d543b05ee41d6a5c71a949386efc">ilast</a>, const int *<a class="el" href="solv__cellpoissonhypresolver3d_8f.html#1cc4484723835045d263eeb4dbe063d0">jfirst</a>, const int *<a class="el" href="solv__cellpoissonhypresolver3d_8f.html#e3195590ab01f1980c3c65cc1439697e">jlast</a>, const int *<a class="el" href="solv__cellpoissonhypresolver3d_8f.html#0e238f014311aa038d800a1ee889326d">kfirst</a>, const int *<a class="el" href="solv__cellpoissonhypresolver3d_8f.html#5456ab52cf4502db310701d0cd3b0271">klast</a>, const int *location_index, const int *ratio_to_coarser, const int *blower, const int *bupper, const double *dx)</td></tr>
 
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:56:35 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:13:56 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

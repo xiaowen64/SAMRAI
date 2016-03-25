@@ -21,11 +21,11 @@
 <h1>source/mesh/gridding/mesh_coarsentags2d.f File Reference</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Dec <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> the <br>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Nov <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> the <br>
 value on the coarse mesh is <br>
 <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> set to one <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <br>
 ***********************************************************************<a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <br>
-subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="mesh__coarsentags2d_8f.html#dad9465cfb0f49cca488910a09f0f598">coarsentags2d</a> (&amp;ifirstc0, <a class="el" href="geom__cartrefine3d_8f.html#c3e1686112950f10692926ef1b3d6c39">ifirstc1</a>, <a class="el" href="geom__cartrefine3d_8f.html#fd4733c851dc2ebef5f3f7749ebdb916">ilastc0</a>, <a class="el" href="geom__cartrefine3d_8f.html#29f7671fcd6560e2a7f7ba7199c983b8">ilastc1</a>,&amp;<a class="el" href="algs__nodeouternodeops3d_8f.html#800bbabe3bb83b1d80b9a18022e34765">filo0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#f5be499be776a1846d2468ac704439bc">filo1</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#d6e6dcc9f9462507c0b3297753e78996">fihi0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#2bca21f62c9c67a427f726a8b26bb3ae">fihi1</a>,&amp;<a class="el" href="algs__nodeouternodeops3d_8f.html#6d4e5cc313e9f5bdd40686573306f1b3">cilo0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#722690235286cef3bf221809a4c5a3fa">cilo1</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#330611ca309bcfac5a900e41504b797b">cihi0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#e184681efe03af7e8b2b1ca23696618d">cihi1</a>,&amp;ratio,&amp;<a class="el" href="geom__cartcoarsen3d_8f.html#7d4a52c11f0595fc7f12542f32f93e64">arrayf</a>, <a class="el" href="geom__cartrefine3d_8f.html#1669ab8da458dec032dc7dfce4c918c5">arrayc</a>) <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> ***********************************************************************implicit none integer zero</td></tr>
+subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="mesh__coarsentags2d_8f.html#ee5fb574b349994891634cb4ec9184cb">coarsentags2d</a> (&amp;ifirstc0, <a class="el" href="geom__cartrefine3d_8f.html#54bff8dba24f8dc521fca46199bcae7c">ifirstc1</a>, <a class="el" href="geom__cartrefine3d_8f.html#3c3c2819bb34c948dd365c6bb5277ec9">ilastc0</a>, <a class="el" href="geom__cartrefine3d_8f.html#efa91cde76ffaec01960ce52956a6590">ilastc1</a>,&amp;<a class="el" href="algs__nodeouternodeops3d_8f.html#2e5f86882123fd78da9e3fab973edbe6">filo0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#0b615e736c2f26c0cb9e05c46d34d18c">filo1</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#07b8edf990b58bc30e75f6113b2e5a60">fihi0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#86258dd80894bae64b93057d16e133eb">fihi1</a>,&amp;<a class="el" href="algs__nodeouternodeops3d_8f.html#74b12411f6fecfe6a9510701451d5569">cilo0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#f3de468599f4a315e129de3cb3fd1fa2">cilo1</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#79aee99fefd9f7c5422460e63ae4348d">cihi0</a>, <a class="el" href="algs__nodeouternodeops3d_8f.html#18c1c2c701cdbbdbeea91c9d95396d1b">cihi1</a>,&amp;ratio,&amp;<a class="el" href="geom__cartcoarsen3d_8f.html#97b461ee7975f2433b8542725fe165dc">arrayf</a>, <a class="el" href="geom__cartrefine3d_8f.html#7272cda7c7bbe82be84bc90ac1e55c4c">arrayc</a>) <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> ***********************************************************************implicit none integer zero</td></tr>
 
 <tr><td colspan="2"><br><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="mesh__coarsentags2d_8f.html#82aef7f8b2f3443eaa9f494b27d0000b">File</a></td></tr>
@@ -34,16 +34,16 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="mesh__coarsentags2d_8f.html#dc6ccd5c75c547611e6c507025194dfa">Revision</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Dec <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="mesh__coarsentags2d_8f.html#4d64161be68931aac471074fbef4bc5d">Description</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Nov <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="mesh__coarsentags2d_8f.html#80abba0e0c5a71ecdf4bc4a04801a0cd">Description</a></td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="dad9465cfb0f49cca488910a09f0f598"></a><!-- doxytag: member="mesh_coarsentags2d.f::coarsentags2d" ref="dad9465cfb0f49cca488910a09f0f598" args="(&amp;ifirstc0, ifirstc1, ilastc0, ilastc1,&amp;filo0, filo1, fihi0, fihi1,&amp;cilo0, cilo1, cihi0, cihi1,&amp;ratio,&amp;arrayf, arrayc) c ***********************************************************************implicit none integer zero" -->
+<a class="anchor" name="ee5fb574b349994891634cb4ec9184cb"></a><!-- doxytag: member="mesh_coarsentags2d.f::coarsentags2d" ref="ee5fb574b349994891634cb4ec9184cb" args="(&amp;ifirstc0, ifirstc1, ilastc0, ilastc1,&amp;filo0, filo1, fihi0, fihi1,&amp;cilo0, cilo1, cihi0, cihi1,&amp;ratio,&amp;arrayf, arrayc) c ***********************************************************************implicit none integer zero" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Dec <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> the value on the coarse mesh is <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> set to one <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a>*********************************************************************** <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> subroutine coarsentags2d           </td>
+          <td class="memname"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Nov <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> the value on the coarse mesh is <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> set to one <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a>*********************************************************************** <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> subroutine coarsentags2d           </td>
           <td>(</td>
           <td class="paramtype">&amp;&nbsp;</td>
           <td class="paramname"> <em>ifirstc0</em>, </td>
@@ -51,19 +51,19 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#c3e1686112950f10692926ef1b3d6c39">ifirstc1</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#54bff8dba24f8dc521fca46199bcae7c">ifirstc1</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#fd4733c851dc2ebef5f3f7749ebdb916">ilastc0</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#3c3c2819bb34c948dd365c6bb5277ec9">ilastc0</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#29f7671fcd6560e2a7f7ba7199c983b8">ilastc1</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#efa91cde76ffaec01960ce52956a6590">ilastc1</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -75,19 +75,19 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#f5be499be776a1846d2468ac704439bc">filo1</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#0b615e736c2f26c0cb9e05c46d34d18c">filo1</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#d6e6dcc9f9462507c0b3297753e78996">fihi0</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#07b8edf990b58bc30e75f6113b2e5a60">fihi0</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#2bca21f62c9c67a427f726a8b26bb3ae">fihi1</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#86258dd80894bae64b93057d16e133eb">fihi1</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -99,19 +99,19 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#722690235286cef3bf221809a4c5a3fa">cilo1</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#f3de468599f4a315e129de3cb3fd1fa2">cilo1</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#330611ca309bcfac5a900e41504b797b">cihi0</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#79aee99fefd9f7c5422460e63ae4348d">cihi0</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#e184681efe03af7e8b2b1ca23696618d">cihi1</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="algs__nodeouternodeops3d_8f.html#18c1c2c701cdbbdbeea91c9d95396d1b">cihi1</a>&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -129,7 +129,7 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#1669ab8da458dec032dc7dfce4c918c5">arrayc</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="geom__cartrefine3d_8f.html#7272cda7c7bbe82be84bc90ac1e55c4c">arrayc</a>&nbsp;</td>
           <td class="paramname"></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -191,12 +191,12 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 </div>
 </div><p>
-<a class="anchor" name="4d64161be68931aac471074fbef4bc5d"></a><!-- doxytag: member="mesh_coarsentags2d.f::Description" ref="4d64161be68931aac471074fbef4bc5d" args="" -->
+<a class="anchor" name="80abba0e0c5a71ecdf4bc4a04801a0cd"></a><!-- doxytag: member="mesh_coarsentags2d.f::Description" ref="80abba0e0c5a71ecdf4bc4a04801a0cd" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Dec <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#81b079483acab700a664a73ff035dbfe">Description</a>          </td>
+          <td class="memname"><a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> LLC <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> Nov <a class="el" href="appu__cpdat2buf3d_8f.html#fc49d14d72853e269c1dacf418f1ec3e">c</a> <a class="el" href="appu__cpdat2buf3d_8f.html#81b079483acab700a664a73ff035dbfe">Description</a>          </td>
         </tr>
       </table>
 </div>
@@ -206,7 +206,7 @@ subroutine&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:53:44 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:11:08 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

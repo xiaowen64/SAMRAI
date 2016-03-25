@@ -23,11 +23,7 @@
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1hier.html">hier</a>::<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a></div>
 <h1>SAMRAI::hier::Box&lt; DIM &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::hier::Box" --><code>#include &lt;source/hierarchy/boxes/Box.h&gt;</code>
 <p>
-Inheritance diagram for SAMRAI::hier::Box&lt; DIM &gt;:<p><center><img src="classSAMRAI_1_1hier_1_1Box__inherit__graph.png" border="0" usemap="#SAMRAI_1_1hier_1_1Box_3_01DIM_01_4__inherit__map" alt="Inheritance graph"></center>
-<map name="SAMRAI_1_1hier_1_1Box_3_01DIM_01_4__inherit__map">
-<area href="classSAMRAI_1_1hier_1_1LayerNode.html" shape="rect" coords="7,83,228,107" alt="">
-</map>
-<center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center><a href="classSAMRAI_1_1hier_1_1Box-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
+<a href="classSAMRAI_1_1hier_1_1Box-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a>&lt; DIM &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5ae555d01fa881d94c9773d60ec7694f">Iterator</a></td></tr>
@@ -77,6 +73,8 @@ Inheritance diagram for SAMRAI::hier::Box&lt; DIM &gt;:<p><center><img src="clas
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#feb636f1d0869dc760cf14e66a711ed7">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&lt; DIM &gt; &amp;p) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5c647010cff066b9422bb9f857338522">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#e621b6d97e8da0c5028d78a69a4452bf">b</a>) const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e1b26e970f0a4de81377a5c41928ac78">operator==</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;box) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5b76ee666fd22cb1dcaf39df7c8349e6">operator!=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;box) const </td></tr>
@@ -102,6 +100,10 @@ Inheritance diagram for SAMRAI::hier::Box&lt; DIM &gt;:<p><center><img src="clas
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#aeb6d52ff12b9d0e04bb7d2621caf4df">growUpper</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;ghosts)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#30bb1e4e3f62ba25419b48ac80e14dec">growUpper</a> (const int direction, const int ghosts)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c2725ea31b9b0394cbc383119a31ba46">lengthen</a> (const int direction, const int ghosts)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a7b60caa34c7b52e3aeadfdc03c61d5f">shorten</a> (const int direction, const int ghosts)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#78195d11f7185ffb476d6d5134a42b9a">shift</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;offset)</td></tr>
 
@@ -278,7 +280,7 @@ template&lt;int DIM&gt; </div>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -654,6 +656,28 @@ template&lt;int DIM&gt; </div>
 Check whether an index lies within the bounds of the box. 
 </div>
 </div><p>
+<a class="anchor" name="5c647010cff066b9422bb9f857338522"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="5c647010cff066b9422bb9f857338522" args="(const Box&lt; DIM &gt; &amp;b) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::Box</a>&lt; DIM &gt;::contains           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>b</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Check whether a given box lies within the bounds of the box. 
+</div>
+</div><p>
 <a class="anchor" name="e1b26e970f0a4de81377a5c41928ac78"></a><!-- doxytag: member="SAMRAI::hier::Box::operator==" ref="e1b26e970f0a4de81377a5c41928ac78" args="(const Box&lt; DIM &gt; &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -965,6 +989,68 @@ template&lt;int DIM&gt; </div>
 
 <p>
 Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ec1cbe66a952112ab2a9141c6eae1a2f">grow()</a> functions. However, box is only grown in upper bound of given direction in index space. 
+</div>
+</div><p>
+<a class="anchor" name="c2725ea31b9b0394cbc383119a31ba46"></a><!-- doxytag: member="SAMRAI::hier::Box::lengthen" ref="c2725ea31b9b0394cbc383119a31ba46" args="(const int direction, const int ghosts)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::Box</a>&lt; DIM &gt;::lengthen           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>direction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>ghosts</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#aeb6d52ff12b9d0e04bb7d2621caf4df">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7ee7acb8f5e7a76b0cb5e17bec225f3d">growLower()</a> functions. However, box is lengthened (never shortened). The sign of <code>ghosts</code> refer to whether the box is lengthened in the upper or lower side. 
+</div>
+</div><p>
+<a class="anchor" name="a7b60caa34c7b52e3aeadfdc03c61d5f"></a><!-- doxytag: member="SAMRAI::hier::Box::shorten" ref="a7b60caa34c7b52e3aeadfdc03c61d5f" args="(const int direction, const int ghosts)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::Box</a>&lt; DIM &gt;::shorten           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>direction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>ghosts</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#aeb6d52ff12b9d0e04bb7d2621caf4df">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7ee7acb8f5e7a76b0cb5e17bec225f3d">growLower()</a> functions. However, box is shortened (never lengthened). The sign of <code>ghosts</code> refer to whether the box is shortened in the upper or lower side. 
 </div>
 </div><p>
 <a class="anchor" name="78195d11f7185ffb476d6d5134a42b9a"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="78195d11f7185ffb476d6d5134a42b9a" args="(const IntVector&lt; DIM &gt; &amp;offset)" -->
@@ -1408,7 +1494,7 @@ Output the box description in the form [L,U], where L and U are the lower and up
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/boxes/<a class="el" href="Box_8h.html">Box.h</a><li>source/hierarchy/boxes/<a class="el" href="Box_8C.html">Box.C</a><li>source/hierarchy/boxes/<a class="el" href="Box_8I.html">Box.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:56:45 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:06 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

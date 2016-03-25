@@ -51,6 +51,9 @@ Inheritance diagram for SAMRAI::appu::VisMaterialsDataStrategy&lt; DIM &gt;:<p><
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html#ba909a18bb8141275e9438aece4816d4">packMaterialFractionsIntoDoubleBuffer</a> (double *<a class="el" href="appu__cpdat2buf3d_8f.html#cd99887f7d61a360dff9ffae98d6afbc">buffer</a>, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;region, const std::string &amp;material_name) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function, which must be implemented whenever materials are used, packs cell-centered material fractions for the given material, patch, and region into the given 1D double precision buffer which will already have been allocated. If a non-zero ghost cell vector was specified when registerMaterialNames() was invoked, then ghost data corresponding to this ghost cell vector must be packed into this double buffer. The data must be packed into the buffer in column major order, i.e. (f(x_0,y_0,z_0), f(x_1,y_0,z_0), f(x_2,y_0,z_0), ...).  <a href="#ba909a18bb8141275e9438aece4816d4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html#648992f8ba5d0c3ba838da00d3ac3172">packMaterialFractionsIntoSparseBuffers</a> (int *mat_list, std::vector&lt; int &gt; &amp;mix_zones, std::vector&lt; int &gt; &amp;mix_mat, std::vector&lt; double &gt; &amp;vol_fracs, std::vector&lt; int &gt; &amp;next_mat, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; 3 &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; 3 &gt; &amp;region) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack sparse volume fraction data.  <a href="#648992f8ba5d0c3ba838da00d3ac3172"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html#440ef3421c7c912ad11ab86a946abb20">packSpeciesFractionsIntoDoubleBuffer</a> (double *<a class="el" href="appu__cpdat2buf3d_8f.html#cd99887f7d61a360dff9ffae98d6afbc">buffer</a>, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;region, const std::string &amp;material_name, const std::string &amp;species_name) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function packs cell-centered species fractions for the given species.  <a href="#440ef3421c7c912ad11ab86a946abb20"></a><br></td></tr>
@@ -203,6 +206,85 @@ A enumerated PACK_RETURN_TYPE is used for a return value. To save space in the v
 Reimplemented in <a class="el" href="classSAMRAI_1_1appu_1_1EmbeddedBoundaryGeometry.html#1525418ea2fa1b48b9e230e1cba70314">SAMRAI::appu::EmbeddedBoundaryGeometry&lt; DIM &gt;</a>.
 </div>
 </div><p>
+<a class="anchor" name="648992f8ba5d0c3ba838da00d3ac3172"></a><!-- doxytag: member="SAMRAI::appu::VisMaterialsDataStrategy::packMaterialFractionsIntoSparseBuffers" ref="648992f8ba5d0c3ba838da00d3ac3172" args="(int *mat_list, std::vector&lt; int &gt; &amp;mix_zones, std::vector&lt; int &gt; &amp;mix_mat, std::vector&lt; double &gt; &amp;vol_fracs, std::vector&lt; int &gt; &amp;next_mat, const hier::Patch&lt; 3 &gt; &amp;patch, const hier::Box&lt; 3 &gt; &amp;region) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">SAMRAI::appu::VisMaterialsDataStrategy</a>&lt; DIM &gt;::packMaterialFractionsIntoSparseBuffers           </td>
+          <td>(</td>
+          <td class="paramtype">int *&nbsp;</td>
+          <td class="paramname"> <em>mat_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>mix_zones</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>mix_mat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>vol_fracs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>next_mat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; 3 &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>patch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; 3 &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>region</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Pack sparse volume fraction data. 
+<p>
+This function, which must be implemented whenever materials are used if the sparse packing format is to be used. Packing traverses the patch in a column major order (i.e. (f(x_0,y_0,z_0), f(x_1,y_0,z_0), f(x_2,y_0,z_0), ...) ). If the current cell is clean, then the material number of the material occupying the cell should be packed in to the buffer. If the cell is mixed, then a negative index (i.e., with numbering begining at -1) into the auxilliary mix_zones, mix_mat, vol_fracs, and next_mat vectors which will contain the sparse representation of the volume fractions (VisIt will correct the negative index internally and offset to a zero based representation). For each component of a mixed cell <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html#ba909a18bb8141275e9438aece4816d4">packMaterialFractionsIntoDoubleBuffer()</a> should pack an entry in the following vectors: mix_zones: the cell number with which the fraction is associated mix_mat: the material number of the fraction vol_fracs: the volume fraction of the current material next_mat: either the (positive but still offset by one) index to the next mixed component within the auxilliary vectors or a 0, indicating the end of the mixed components for this cell.<p>
+If a non-zero ghost cell vector was specified when registerMaterialNames() was invoked, then ghost data corresponding to this ghost cell vector must be packed into this double buffer.<p>
+This method will be called once for each patch.<p>
+A enumerated PACK_RETURN_TYPE is used for a return value. To save space in the visit data file, you may choose to set the return value to ALL_ONE to indicate that a single material occupies 100% of each cell on the patch. Otherwise, MIXTURE should be returned even if individual cells are not mixed, as this indicates that the patch contains multiple materials.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>buffer</em>&nbsp;</td><td>Double precision array into which the material numbers (or negative indices) are packed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mix_zones</em>&nbsp;</td><td>std::vector&lt;int&gt; into which the cell number associated with the mixed components are packed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mix_mat</em>&nbsp;</td><td>std::vector&lt;int&gt; into which the material numbers of the mixed components are packed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>vol_fracs</em>&nbsp;</td><td>std::vector&lt;double&gt; into which the volume fractions (between 0.0 and 1.0) of the mixed components are packed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>next_mat</em>&nbsp;</td><td>std::vector&lt;int&gt; into which the (positive) index of the next mixed component or a terminating 0 are packed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> on which fractions are defined. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>region</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region over which to pack fractions. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The enumeration constant VisMaterialsDataStrategy::ALL_ONE, or VisMaterialsDataStrategy::MIXTURE. </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="440ef3421c7c912ad11ab86a946abb20"></a><!-- doxytag: member="SAMRAI::appu::VisMaterialsDataStrategy::packSpeciesFractionsIntoDoubleBuffer" ref="440ef3421c7c912ad11ab86a946abb20" args="(double *buffer, const hier::Patch&lt; DIM &gt; &amp;patch, const hier::Box&lt; DIM &gt; &amp;region, const std::string &amp;material_name, const std::string &amp;species_name) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -269,7 +351,7 @@ The method must return a PACK_RETURN_TYPE of ALL_ONE, ALL_ZERO, or MIXED. See th
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/apputils/plotting/<a class="el" href="VisMaterialsDataStrategy_8h.html">VisMaterialsDataStrategy.h</a><li>source/apputils/plotting/<a class="el" href="VisMaterialsDataStrategy_8C.html">VisMaterialsDataStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 21 08:56:40 2007 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:01 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>
