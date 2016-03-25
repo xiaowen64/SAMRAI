@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>SAMRAI: SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE &gt; Class Template Reference</title>
+<title>SAMRAI: SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -21,44 +21,44 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">IndexDataFactory</a></div>
-<h1>SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexDataFactory" --><!-- doxytag: inherits="SAMRAI::hier::PatchDataFactory" --><code>#include &lt;source/patchdata/index/IndexDataFactory.h&gt;</code>
+<h1>SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexDataFactory" --><!-- doxytag: inherits="SAMRAI::hier::PatchDataFactory" --><code>#include &lt;source/patchdata/index/IndexDataFactory.h&gt;</code>
 <p>
-Inheritance diagram for SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE &gt;:<p><center><img src="classSAMRAI_1_1pdat_1_1IndexDataFactory__inherit__graph.png" border="0" usemap="#SAMRAI_1_1pdat_1_1IndexDataFactory_3_01DIM_00_01TYPE_01_4__inherit__map" alt="Inheritance graph"></center>
-<map name="SAMRAI_1_1pdat_1_1IndexDataFactory_3_01DIM_00_01TYPE_01_4__inherit__map">
-<area href="classSAMRAI_1_1hier_1_1PatchDataFactory.html" shape="rect" coords="30,8,294,32" alt="">
+Inheritance diagram for SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE, BOX_GEOMETRY &gt;:<p><center><img src="classSAMRAI_1_1pdat_1_1IndexDataFactory__inherit__graph.png" border="0" usemap="#SAMRAI_1_1pdat_1_1IndexDataFactory_3_01DIM_00_01TYPE_00_01BOX__GEOMETRY_01_4__inherit__map" alt="Inheritance graph"></center>
+<map name="SAMRAI_1_1pdat_1_1IndexDataFactory_3_01DIM_00_01TYPE_00_01BOX__GEOMETRY_01_4__inherit__map">
+<area href="classSAMRAI_1_1hier_1_1PatchDataFactory.html" shape="rect" coords="88,8,352,32" alt="">
 </map>
 <center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center><a href="classSAMRAI_1_1pdat_1_1IndexDataFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#2232007dd26747f0090279cdffe765d9">IndexDataFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;ghosts)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#8ef00a40f4e17976006342320e14fa17">IndexDataFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#4dcd1785d0a1d91b4abdcc7365505a82">~IndexDataFactory</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#9829f6dd9a85385523ce69af4b432509">~IndexDataFactory</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a>&lt;<br>
- DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#e0eeb2811a46854334eae3cb980749bf">cloneFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;ghosts)</td></tr>
+ DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#7c146bad692e4b469544f049655558fc">cloneFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;ghosts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to clone a patch data factory.  <a href="#e0eeb2811a46854334eae3cb980749bf"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to clone a patch data factory.  <a href="#7c146bad692e4b469544f049655558fc"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>&lt;<br>
- DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#de0d926eb7e20f0fa0ff43349f43bcfc">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;box, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> &gt; pool=(<a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> *)(0)) const </td></tr>
+ DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#bb62290459d1c59c6fb7b2b78568bea2">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;box, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> &gt; pool=(<a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> *)(0)) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>&lt;<br>
- DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#60be9ab550493a50cb018e78df4654d1">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> &gt; pool=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> &gt;((0))) const </td></tr>
+ DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#29bbd1a410d0c0544a9babe6a8aa8bbc">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;patch, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> &gt; pool=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Arena.html">tbox::Arena</a> &gt;((0))) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a>&lt;<br>
- DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#72dda72c52c1b496f8329a5a03c0462b">getBoxGeometry</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;box) const </td></tr>
+ DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#181744ff9b3737b81ce9d261b1dcb3a4">getBoxGeometry</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#52000a047437911ced5371b6089b07d9">getSizeOfMemory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;box) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#5e6f2d00fac862188fb996ae1bee1020">getSizeOfMemory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#3617d5a1dfdf949213c88a265b25bc91">fineBoundaryRepresentsVariable</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#98eca804eaf8ab76d778c7cdfd8b9660">fineBoundaryRepresentsVariable</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#786b5695458787ac8e00a7b158a3b7b4">dataLivesOnPatchBorder</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#b5f5a849ce872c74586b7bd868773608">dataLivesOnPatchBorder</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#7c36eabee8390422549bbda74a2589a9">validCopyTo</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a>&lt; DIM &gt; &gt; &amp;dst_pdf) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#2d7a42ab3264c7d34c57279c7feac909">validCopyTo</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a>&lt; DIM &gt; &gt; &amp;dst_pdf) const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;int DIM, class TYPE&gt;<br>
- class SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE &gt;</h3>
+<h3>template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt;<br>
+ class SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE, BOX_GEOMETRY &gt;</h3>
 
 Class IndexDataFactory&lt;DIM&gt; is the factory class used to allocate new instances of IndexData&lt;DIM&gt; objects. It is a subclass of the hier::PatchDataFactory&lt;DIM&gt; base class.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">pdat::IndexData</a> <p>
@@ -67,14 +67,14 @@ Class IndexDataFactory&lt;DIM&gt; is the factory class used to allocate new inst
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="2232007dd26747f0090279cdffe765d9"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::IndexDataFactory" ref="2232007dd26747f0090279cdffe765d9" args="(const hier::IntVector&lt; DIM &gt; &amp;ghosts)" -->
+<a class="anchor" name="8ef00a40f4e17976006342320e14fa17"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::IndexDataFactory" ref="8ef00a40f4e17976006342320e14fa17" args="(const hier::IntVector&lt; DIM &gt; &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">IndexDataFactory</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">IndexDataFactory</a>           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
@@ -89,14 +89,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 The default constructor for the IndexDataFactory&lt;DIM&gt; class. The ghost cell width argument gives the default width for all irregular data objects created with this factory. 
 </div>
 </div><p>
-<a class="anchor" name="4dcd1785d0a1d91b4abdcc7365505a82"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::~IndexDataFactory" ref="4dcd1785d0a1d91b4abdcc7365505a82" args="()" -->
+<a class="anchor" name="9829f6dd9a85385523ce69af4b432509"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::~IndexDataFactory" ref="9829f6dd9a85385523ce69af4b432509" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">IndexDataFactory</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">IndexDataFactory</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -111,14 +111,14 @@ Virtual destructor for the irregular data factory class.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="e0eeb2811a46854334eae3cb980749bf"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::cloneFactory" ref="e0eeb2811a46854334eae3cb980749bf" args="(const hier::IntVector&lt; DIM &gt; &amp;ghosts)" -->
+<a class="anchor" name="7c146bad692e4b469544f049655558fc"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::cloneFactory" ref="7c146bad692e4b469544f049655558fc" args="(const hier::IntVector&lt; DIM &gt; &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::cloneFactory           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::cloneFactory           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
@@ -143,14 +143,14 @@ This will return a new instantiation of the abstract factory with the same prope
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#b164bedeed7a1707bfb55cc80ecc9e43">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="de0d926eb7e20f0fa0ff43349f43bcfc"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::allocate" ref="de0d926eb7e20f0fa0ff43349f43bcfc" args="(const hier::Box&lt; DIM &gt; &amp;box, tbox::Pointer&lt; tbox::Arena &gt; pool=(tbox::Arena *)(0)) const " -->
+<a class="anchor" name="bb62290459d1c59c6fb7b2b78568bea2"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::allocate" ref="bb62290459d1c59c6fb7b2b78568bea2" args="(const hier::Box&lt; DIM &gt; &amp;box, tbox::Pointer&lt; tbox::Arena &gt; pool=(tbox::Arena *)(0)) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::allocate           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::allocate           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
@@ -176,14 +176,14 @@ Virtual factory function to allocate a concrete irregular data object. The defau
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#48a8fcc8531838e483351924058250f4">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="60be9ab550493a50cb018e78df4654d1"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::allocate" ref="60be9ab550493a50cb018e78df4654d1" args="(const hier::Patch&lt; DIM &gt; &amp;patch, tbox::Pointer&lt; tbox::Arena &gt; pool=tbox::Pointer&lt; tbox::Arena &gt;((0))) const " -->
+<a class="anchor" name="29bbd1a410d0c0544a9babe6a8aa8bbc"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::allocate" ref="29bbd1a410d0c0544a9babe6a8aa8bbc" args="(const hier::Patch&lt; DIM &gt; &amp;patch, tbox::Pointer&lt; tbox::Arena &gt; pool=tbox::Pointer&lt; tbox::Arena &gt;((0))) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::allocate           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::allocate           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a>&lt; DIM &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>patch</em>, </td>
@@ -204,19 +204,19 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Virtual factory function to allocate a concrete cell data object. Same as above function, except passes in a patch instead of a box. 
+Virtual factory function to allocate a concrete index data object. Same as above function, except passes in a patch instead of a box. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#ee51a4c303c19acd0455a14acd2531e5">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="72dda72c52c1b496f8329a5a03c0462b"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::getBoxGeometry" ref="72dda72c52c1b496f8329a5a03c0462b" args="(const hier::Box&lt; DIM &gt; &amp;box) const " -->
+<a class="anchor" name="181744ff9b3737b81ce9d261b1dcb3a4"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::getBoxGeometry" ref="181744ff9b3737b81ce9d261b1dcb3a4" args="(const hier::Box&lt; DIM &gt; &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::getBoxGeometry           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::getBoxGeometry           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -233,14 +233,14 @@ Allocate the box geometry object associated with the patch data. This informatio
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#f87c328ca018fb73e6c6332f8ed52a7f">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="52000a047437911ced5371b6089b07d9"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::getSizeOfMemory" ref="52000a047437911ced5371b6089b07d9" args="(const hier::Box&lt; DIM &gt; &amp;box) const " -->
+<a class="anchor" name="5e6f2d00fac862188fb996ae1bee1020"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::getSizeOfMemory" ref="5e6f2d00fac862188fb996ae1bee1020" args="(const hier::Box&lt; DIM &gt; &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::getSizeOfMemory           </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::getSizeOfMemory           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -257,14 +257,14 @@ Calculate the amount of memory needed to store the irregular data object, includ
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#22cb03223ce77c6ff5717c211ba32ee8">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="3617d5a1dfdf949213c88a265b25bc91"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::fineBoundaryRepresentsVariable" ref="3617d5a1dfdf949213c88a265b25bc91" args="() const" -->
+<a class="anchor" name="98eca804eaf8ab76d778c7cdfd8b9660"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::fineBoundaryRepresentsVariable" ref="98eca804eaf8ab76d778c7cdfd8b9660" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::fineBoundaryRepresentsVariable           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::fineBoundaryRepresentsVariable           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -280,14 +280,14 @@ Return a boolean true value indicating that the index data quantities will alway
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#d8d729a6d5d42f8be32b8e005a65aad1">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="786b5695458787ac8e00a7b158a3b7b4"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::dataLivesOnPatchBorder" ref="786b5695458787ac8e00a7b158a3b7b4" args="() const" -->
+<a class="anchor" name="b5f5a849ce872c74586b7bd868773608"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::dataLivesOnPatchBorder" ref="b5f5a849ce872c74586b7bd868773608" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::dataLivesOnPatchBorder           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::dataLivesOnPatchBorder           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -303,14 +303,14 @@ Return false since the index data index space matches the cell-centered index sp
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#fb1b19d67033f93879d2d05f4f43437f">SAMRAI::hier::PatchDataFactory&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="7c36eabee8390422549bbda74a2589a9"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::validCopyTo" ref="7c36eabee8390422549bbda74a2589a9" args="(const tbox::Pointer&lt; hier::PatchDataFactory&lt; DIM &gt; &gt; &amp;dst_pdf) const " -->
+<a class="anchor" name="2d7a42ab3264c7d34c57279c7feac909"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataFactory::validCopyTo" ref="2d7a42ab3264c7d34c57279c7feac909" args="(const tbox::Pointer&lt; hier::PatchDataFactory&lt; DIM &gt; &gt; &amp;dst_pdf) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE &gt;::validCopyTo           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::validCopyTo           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a>&lt; DIM &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_pdf</em>          </td>
@@ -329,7 +329,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#c387
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/patchdata/index/<a class="el" href="IndexDataFactory_8h.html">IndexDataFactory.h</a><li>source/patchdata/index/<a class="el" href="IndexDataFactory_8C.html">IndexDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:33 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:16 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

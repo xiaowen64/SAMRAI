@@ -140,7 +140,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_5.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_6.png">, for any <img class="formulaInl" alt="$i$" src="form_7.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png">. Otherwise return 0. If the control volume is NULL, all values in the index set are used. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_7.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_8.png">, for any <img class="formulaInl" alt="$i$" src="form_9.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png">. Otherwise return 0. If the control volume is NULL, all values in the index set are used. 
 </div>
 </div><p>
 <a class="anchor" name="bb03ec038b5a944e0d2e0cbbd457cfeb"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataMiscellaneousOpsReal::compareToScalar" ref="bb03ec038b5a944e0d2e0cbbd457cfeb" args="(tbox::Pointer&lt; pdat::NodeData&lt; DIM, TYPE &gt; &gt; &amp;dst, const tbox::Pointer&lt; pdat::NodeData&lt; DIM, TYPE &gt; &gt; &amp;src, const TYPE &amp;alpha, const hier::Box&lt; DIM &gt; &amp;box, const tbox::Pointer&lt; pdat::NodeData&lt; DIM, double &gt; &gt; cvol=((pdat::NodeData&lt; DIM, double &gt; *)(0))) const " -->
@@ -189,7 +189,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_9.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_10.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. If the control volume is NULL, all values in the index set are considered. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_11.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_12.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. If the control volume is NULL, all values in the index set are considered. 
 </div>
 </div><p>
 <a class="anchor" name="93562d097e5ae823c3b60166f2dfc6ce"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataMiscellaneousOpsReal::testReciprocal" ref="93562d097e5ae823c3b60166f2dfc6ce" args="(tbox::Pointer&lt; pdat::NodeData&lt; DIM, TYPE &gt; &gt; &amp;dst, const tbox::Pointer&lt; pdat::NodeData&lt; DIM, TYPE &gt; &gt; &amp;src, const hier::Box&lt; DIM &gt; &amp;box, const tbox::Pointer&lt; pdat::NodeData&lt; DIM, double &gt; &gt; cvol=((pdat::NodeData&lt; DIM, double &gt; *)(0))) const " -->
@@ -232,7 +232,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_12.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_13.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> anywhere, 0 is the return value. Otherwise 1 is returned. If the control volume all values in the index set are considered. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_14.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_15.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> anywhere, 0 is the return value. Otherwise 1 is returned. If the control volume all values in the index set are considered. 
 </div>
 </div><p>
 <a class="anchor" name="7f6510825b082080961659437debcdc7"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataMiscellaneousOpsReal::maxPointwiseDivide" ref="7f6510825b082080961659437debcdc7" args="(const tbox::Pointer&lt; pdat::NodeData&lt; DIM, TYPE &gt; &gt; &amp;numer, const tbox::Pointer&lt; pdat::NodeData&lt; DIM, TYPE &gt; &gt; &amp;denom, const hier::Box&lt; DIM &gt; &amp;box) const " -->
@@ -319,7 +319,7 @@ The quotient is defined as (numerator/denominator) where the denominator is nonz
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mathops/node/<a class="el" href="PatchNodeDataMiscellaneousOpsReal_8h.html">PatchNodeDataMiscellaneousOpsReal.h</a><li>source/mathops/node/<a class="el" href="PatchNodeDataMiscellaneousOpsReal_8C.html">PatchNodeDataMiscellaneousOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:25 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:08 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

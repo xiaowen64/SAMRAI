@@ -1105,7 +1105,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set this vector to the linear sum <img class="formulaInl" alt="$ \alpha x + @beta y $" src="form_110.png"> , where <img class="formulaInl" alt="$ \alpha, @beta $" src="form_111.png"> are scalars and <img class="formulaInl" alt="$ x, y $" src="form_112.png"> are vectors. 
+Set this vector to the linear sum <img class="formulaInl" alt="$ \alpha x + @beta y $" src="form_112.png"> , where <img class="formulaInl" alt="$ \alpha, @beta $" src="form_113.png"> are scalars and <img class="formulaInl" alt="$ x, y $" src="form_114.png"> are vectors. 
 </div>
 </div><p>
 <a class="anchor" name="1daf8fb5f186fa7f72f99132d39ff3d2"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::axpy" ref="1daf8fb5f186fa7f72f99132d39ff3d2" args="(const TYPE &amp;alpha, const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; x, const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; y, const bool interior_only=true)" -->
@@ -1148,7 +1148,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set this vector to the sum <img class="formulaInl" alt="$ \alpha x + y $" src="form_113.png"> , where <img class="formulaInl" alt="$ \alpha $" src="form_102.png"> is a scalar and <img class="formulaInl" alt="$ x, y $" src="form_112.png"> are vectors. 
+Set this vector to the sum <img class="formulaInl" alt="$ \alpha x + y $" src="form_115.png"> , where <img class="formulaInl" alt="$ \alpha $" src="form_104.png"> is a scalar and <img class="formulaInl" alt="$ x, y $" src="form_114.png"> are vectors. 
 </div>
 </div><p>
 <a class="anchor" name="84ab389ce35bd29ec835b8930d732c8f"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::abs" ref="84ab389ce35bd29ec835b8930d732c8f" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; x, const bool interior_only=true)" -->
@@ -1282,7 +1282,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$ L_1 $" src="form_50.png"> -norm of this vector using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$ \sum_i ( \| data_i \| cvol_i ) $" src="form_114.png"> . If the control volume is not defined for a component, the contribution is <img class="formulaInl" alt="$ \sum_i ( \| data_i \| ) $" src="form_115.png"> for that data component. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
+Return discrete <img class="formulaInl" alt="$ L_1 $" src="form_52.png"> -norm of this vector using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$ \sum_i ( \| data_i \| cvol_i ) $" src="form_116.png"> . If the control volume is not defined for a component, the contribution is <img class="formulaInl" alt="$ \sum_i ( \| data_i \| ) $" src="form_117.png"> for that data component. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="b2c423e606926003d7c244182ed12f32"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::L2Norm" ref="b2c423e606926003d7c244182ed12f32" args="(bool local_only=false) const " -->
@@ -1304,7 +1304,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm of this vector using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i)^2 cvol_i ) } $" src="form_116.png"> . If the control volume is not defined for a component, the contribution is <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i)^2 ) } $" src="form_117.png"> for that data component. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
+Return discrete <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm of this vector using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i)^2 cvol_i ) } $" src="form_118.png"> . If the control volume is not defined for a component, the contribution is <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i)^2 ) } $" src="form_119.png"> for that data component. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="1030321c74a3572bfbffe9bf030c2383"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::weightedL2Norm" ref="1030321c74a3572bfbffe9bf030c2383" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; wgt) const" -->
@@ -1326,7 +1326,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm of this vector using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) } $" src="form_118.png"> . If the control volume is not defined for a component, the contribution is <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i * weight_i)^2 ) } $" src="form_119.png"> for that data component. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
+Return discrete weighted <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm of this vector using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) } $" src="form_120.png"> . If the control volume is not defined for a component, the contribution is <img class="formulaInl" alt="$ \sqrt{ \sum_i ( (data_i * weight_i)^2 ) } $" src="form_121.png"> for that data component. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="96fa9d7981ba39472df31dedbdf2c3c6"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::RMSNorm" ref="96fa9d7981ba39472df31dedbdf2c3c6" args="() const" -->
@@ -1347,7 +1347,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete root mean squared norm of this vector. If control volumes are defined for all components, the return value is the <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm divided by the square root of the sum of the control volumes. If the control volume is not defined for a component, its contribution to the norm corresponds to its <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm divided by the square root of the number of data entries. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
+Return discrete root mean squared norm of this vector. If control volumes are defined for all components, the return value is the <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm divided by the square root of the sum of the control volumes. If the control volume is not defined for a component, its contribution to the norm corresponds to its <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm divided by the square root of the number of data entries. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="64dd96f8a6abf95d34f7a7cb551bc74e"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::weightedRMSNorm" ref="64dd96f8a6abf95d34f7a7cb551bc74e" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; wgt) const" -->
@@ -1369,7 +1369,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted root mean squared norm of this vector. If control volumes are defined for all components, the return value is the weighted <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm divided by the square root of the sum of the control volumes. If the control volume is not defined for a component, its contribution to the norm corresponds to its weighted <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm divided by the square root of the number of data entries. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
+Return discrete weighted root mean squared norm of this vector. If control volumes are defined for all components, the return value is the weighted <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm divided by the square root of the sum of the control volumes. If the control volume is not defined for a component, its contribution to the norm corresponds to its weighted <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm divided by the square root of the number of data entries. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="a2c44134257d8d30d2f560fb4cbf05bb"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::maxNorm" ref="a2c44134257d8d30d2f560fb4cbf05bb" args="(bool local_only=false) const " -->
@@ -1391,7 +1391,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$ \max $" src="form_120.png"> -norm of this vector. If control volumes are defined for all components, the return value is the max norm over all data values where the control volumes are non-zero. If the control volume is not defined for a component, its contribution to the norm will take a max over all of its data values. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
+Return the <img class="formulaInl" alt="$ \max $" src="form_122.png"> -norm of this vector. If control volumes are defined for all components, the return value is the max norm over all data values where the control volumes are non-zero. If the control volume is not defined for a component, its contribution to the norm will take a max over all of its data values. Thus, to have a consistent norm calculation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="9a0f0feb4f306b9b9da8d291bf668c45"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::dot" ref="9a0f0feb4f306b9b9da8d291bf668c45" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; x, bool local_only=false) const" -->
@@ -1444,7 +1444,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$ \|x_i\| > 0 $" src="form_121.png"> and <img class="formulaInl" alt="$ w_i * x_i \leq 0 $" src="form_122.png"> , for any <img class="formulaInl" alt="$ i $" src="form_60.png"> in the set of vector data indices, where <img class="formulaInl" alt="$ cvol_i > 0 $" src="form_123.png"> . Here, <img class="formulaInl" alt="$ w_i $" src="form_59.png"> is a data entry in this vector. Otherwise, return 0. If the control volume is undefined for a component, all data values for the component are considered in the test. Thus, to have a consistent test all components must have control volumes, or no control volumes should be used at all. 
+Return 1 if <img class="formulaInl" alt="$ \|x_i\| > 0 $" src="form_123.png"> and <img class="formulaInl" alt="$ w_i * x_i \leq 0 $" src="form_124.png"> , for any <img class="formulaInl" alt="$ i $" src="form_62.png"> in the set of vector data indices, where <img class="formulaInl" alt="$ cvol_i > 0 $" src="form_125.png"> . Here, <img class="formulaInl" alt="$ w_i $" src="form_61.png"> is a data entry in this vector. Otherwise, return 0. If the control volume is undefined for a component, all data values for the component are considered in the test. Thus, to have a consistent test all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="d7f43c25537dddaad1ff065eec7f6562"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::compareToScalar" ref="d7f43c25537dddaad1ff065eec7f6562" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; x, const TYPE &amp;alpha)" -->
@@ -1475,7 +1475,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$ cvol_i > 0 $" src="form_123.png"> in the set of vector data indices, set <img class="formulaInl" alt="$ w_i = 1 $" src="form_124.png"> if <img class="formulaInl" alt="$ \|x_i\| > \alpha $" src="form_125.png"> , and <img class="formulaInl" alt="$ w_i = 0 $" src="form_126.png"> otherwise. Here, <img class="formulaInl" alt="$ w_i $" src="form_59.png"> is a data entry in this vector. If the control volume is undefined for a component, all data values for the component are involved in the comparison. Thus, to have a consistent comparison all components must have control volumes, or no control volumes should be used at all. 
+Wherever <img class="formulaInl" alt="$ cvol_i > 0 $" src="form_125.png"> in the set of vector data indices, set <img class="formulaInl" alt="$ w_i = 1 $" src="form_126.png"> if <img class="formulaInl" alt="$ \|x_i\| > \alpha $" src="form_127.png"> , and <img class="formulaInl" alt="$ w_i = 0 $" src="form_128.png"> otherwise. Here, <img class="formulaInl" alt="$ w_i $" src="form_61.png"> is a data entry in this vector. If the control volume is undefined for a component, all data values for the component are involved in the comparison. Thus, to have a consistent comparison all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="06a3e63113d3e9c09e6b6beada793202"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::testReciprocal" ref="06a3e63113d3e9c09e6b6beada793202" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; x)" -->
@@ -1497,7 +1497,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$ cvol_i > 0 $" src="form_123.png"> in the set of vector data indices, set <img class="formulaInl" alt="$ w_i = 1/x_i $" src="form_127.png"> if <img class="formulaInl" alt="$ x_i \neq 0 $" src="form_128.png"> , and <img class="formulaInl" alt="$ w_i = 0 $" src="form_126.png"> otherwise. Here, <img class="formulaInl" alt="$ w_i $" src="form_59.png"> is a data entry in this vector. If the control volume is undefined for a component, all data values for the component are involved in the operation. Thus, to have a consistent operation all components must have control volumes, or no control volumes should be used at all. 
+Wherever <img class="formulaInl" alt="$ cvol_i > 0 $" src="form_125.png"> in the set of vector data indices, set <img class="formulaInl" alt="$ w_i = 1/x_i $" src="form_129.png"> if <img class="formulaInl" alt="$ x_i \neq 0 $" src="form_130.png"> , and <img class="formulaInl" alt="$ w_i = 0 $" src="form_128.png"> otherwise. Here, <img class="formulaInl" alt="$ w_i $" src="form_61.png"> is a data entry in this vector. If the control volume is undefined for a component, all data values for the component are involved in the operation. Thus, to have a consistent operation all components must have control volumes, or no control volumes should be used at all. 
 </div>
 </div><p>
 <a class="anchor" name="9af45f07e517b65fbd469e8c10eb014c"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::maxPointwiseDivide" ref="9af45f07e517b65fbd469e8c10eb014c" args="(const tbox::Pointer&lt; SAMRAIVectorReal&lt; DIM, TYPE &gt; &gt; denom) const" -->
@@ -1528,7 +1528,7 @@ The "conditional" quotient is defined as |numerator/denominator| if the denomina
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/vectors/<a class="el" href="SAMRAIVectorReal_8h.html">SAMRAIVectorReal.h</a><li>source/solvers/vectors/<a class="el" href="SAMRAIVectorReal_8C.html">SAMRAIVectorReal.C</a><li>source/solvers/vectors/<a class="el" href="SAMRAIVectorReal_8I.html">SAMRAIVectorReal.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:45 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:26 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

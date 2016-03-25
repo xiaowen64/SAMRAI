@@ -47,6 +47,8 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#fe03f1cedd6dd7fcbea7adf639e6fa4d">TBOX_ASSERT</a>(EXP)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#4968991f0ea8db7bdc5965f46247903e">TBOX_CHECK_ASSERT</a>(EXP)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#7128088a2230fdc1c875c8b31f3b94a7">PETSC_SAMRAI_ERROR</a>(ierr)</td></tr>
 
 </table>
@@ -191,6 +193,26 @@ A statement that does nothing, for insure++ make it something more complex than 
 </pre></div>Throw an error exception from within any C++ source code if the given expression is not true. This is a parallel-friendly version of assert. The file and line number of the abort are also printed. 
 </div>
 </div><p>
+<a class="anchor" name="4968991f0ea8db7bdc5965f46247903e"></a><!-- doxytag: member="Utilities.h::TBOX_CHECK_ASSERT" ref="4968991f0ea8db7bdc5965f46247903e" args="(EXP)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TBOX_CHECK_ASSERT          </td>
+          <td>(</td>
+          <td class="paramtype">EXP&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Macro for use when assertions are to be included only when debugging. 
+</div>
+</div><p>
 <a class="anchor" name="7128088a2230fdc1c875c8b31f3b94a7"></a><!-- doxytag: member="Utilities.h::PETSC_SAMRAI_ERROR" ref="7128088a2230fdc1c875c8b31f3b94a7" args="(ierr)" -->
 <div class="memitem">
 <div class="memproto">
@@ -217,7 +239,7 @@ A statement that does nothing, for insure++ make it something more complex than 
 </pre></div>Throw an error exception from within any C++ source code. This is is similar to <a class="el" href="Utilities_8h.html#49120d75ffbdfbaf0b28bbd8ad58e153">TBOX_ERROR()</a>, but is designed to be invoked after a call to a PETSc library function. In other words, it acts similarly to the PETSc CHKERRQ(ierr) macro. 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:06 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:05:48 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

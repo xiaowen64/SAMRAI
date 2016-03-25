@@ -22,6 +22,11 @@
 <h1>SAMRAI Class List</h1>Here are the classes, structs, unions and interfaces with brief descriptions:<table>
   <tr><td class="indexkey"><a class="el" href="structarith__functions.html">arith_functions</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structKeyData.html">KeyData</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMDA__Access.html">MDA_Access&lt; MDA_TYPE, MDA_DIM, OrderType &gt;</a></td><td class="indexvalue">Non-const multidimensional array access </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMDA__AccessConst.html">MDA_AccessConst&lt; MDA_TYPE, MDA_DIM, OrderType &gt;</a></td><td class="indexvalue">Const data version of the multidimensional array access template class <a class="el" href="classMDA__Access.html">MDA_Access</a> </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMDA__IndexRange.html">MDA_IndexRange&lt; MDA_DIM &gt;</a></td><td class="indexvalue">Defines index ranges for multidimensional arrays </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor&lt; MDA_DIM &gt;</a></td><td class="indexvalue">Performs computations based for column-major arrays </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMDA__OrderRowMajor.html">MDA_OrderRowMajor&lt; MDA_DIM &gt;</a></td><td class="indexvalue">Performs computations based for row-major arrays </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">SAMRAI::algs::HyperbolicLevelIntegrator&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">SAMRAI::algs::HyperbolicPatchStrategy&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html">SAMRAI::algs::ImplicitEquationStrategy&lt; DIM &gt;</a></td><td class="indexvalue"><b>Abstract</b> base class defining the interface between ImplicitIntegrator&lt;DIM&gt; object and routines specific to the system of equations to be solved </td></tr>
@@ -232,6 +237,7 @@
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">SAMRAI::mesh::StandardTagAndInitStrategy&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">SAMRAI::mesh::TagAndInitializeStrategy&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData&lt; DIM, TYPE &gt;</a></td><td class="indexvalue">Class ArrayData&lt;DIM, TYPE&gt; is a basic templated array structure defined over the index space of a box (with a specified depth) that provides the support for the various standard array-based patch data subclasses </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataAccess.html">SAMRAI::pdat::ArrayDataAccess</a></td><td class="indexvalue">Utility for wrapping data from <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a> class in an <a class="el" href="classMDA__Access.html">MDA_Access</a> or <a class="el" href="classMDA__AccessConst.html">MDA_AccessConst</a> object </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataIterator.html">SAMRAI::pdat::ArrayDataIterator&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataOperationUtilities.html">SAMRAI::pdat::ArrayDataOperationUtilities&lt; DIM, TYPE, OP &gt;</a></td><td class="indexvalue">Struct ArrayDataOperationUtilities&lt;DIM, TYPE, OP&gt; provides generic looping operations for all array-based patch data types. The operations are templated on spatial dimension, data type, and the operation that will be performed on individual array elements in the innermost loop </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1CellComplexConstantRefine.html">SAMRAI::pdat::CellComplexConstantRefine&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
@@ -248,7 +254,6 @@
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1CellIterator.html">SAMRAI::pdat::CellIterator&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">SAMRAI::pdat::CellOverlap&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1CellVariable.html">SAMRAI::pdat::CellVariable&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1ConstIndexIterator.html">SAMRAI::pdat::ConstIndexIterator&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1CopyOperation.html">SAMRAI::pdat::CopyOperation&lt; TYPE &gt;</a></td><td class="indexvalue">Class CopyOperation&lt;TYPE&gt; encapsulates a copy operation into an object </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html">SAMRAI::pdat::EdgeComplexConstantRefine&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexLinearTimeInterpolateOp.html">SAMRAI::pdat::EdgeComplexLinearTimeInterpolateOp&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
@@ -278,11 +283,11 @@
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">SAMRAI::pdat::FaceIterator&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">SAMRAI::pdat::FaceOverlap&lt; DIM &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceVariable.html">SAMRAI::pdat::FaceVariable&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1MBDataUtilities.html">SAMRAI::pdat::MBDataUtilities&lt; DIM, TYPE &gt;</a></td><td class="indexvalue">Class MBDataUtilities&lt;DIM,TYPE&gt; is a templated utilitiy class that contains a set of static member functions that can be used to copy patch data between index spaces that are not necessarily aligned on the same axes </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1MultiblockCellDataTranslator.html">SAMRAI::pdat::MultiblockCellDataTranslator&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSAMRAI_1_1pdat_1_1MultiblockEdgeDataTranslator.html">SAMRAI::pdat::MultiblockEdgeDataTranslator&lt; DIM, TYPE &gt;</a></td><td class="indexvalue"></td></tr>
@@ -486,7 +491,7 @@
   <tr><td class="indexkey"><a class="el" href="unionyyalloc.html">yyalloc</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="unionYYSTYPE.html">YYSTYPE</a></td><td class="indexvalue"></td></tr>
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:07 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:05:48 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -755,7 +755,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 + \beta s_2$" src="form_36.png">, where <img class="formulaInl" alt="$d$" src="form_37.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_38.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha, \beta$" src="form_39.png"> are scalar values. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 + \beta s_2$" src="form_38.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha, \beta$" src="form_41.png"> are scalar values. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#bfb7f694f5d90886d9917e90eb0fddde">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -806,7 +806,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 + s_2$" src="form_40.png">, where <img class="formulaInl" alt="$d$" src="form_37.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_38.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_41.png"> is a scalar. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 + s_2$" src="form_42.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#e5f45f27e53c5044a6227692f88e6f34">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -857,7 +857,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 - s_2$" src="form_42.png">, where <img class="formulaInl" alt="$d$" src="form_37.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_38.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_41.png"> is a scalar. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 - s_2$" src="form_44.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#b1a51e24666003bc955151609d9487ff">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1040,7 +1040,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_15.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$" src="form_43.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_17.png">. 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_17.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$" src="form_45.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_19.png">. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#b504c28c9ca5adf62829381ab333b232">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1073,7 +1073,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$" src="form_19.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$" src="form_20.png">. 
+Return discrete <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$" src="form_21.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$" src="form_22.png">. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#7520b56e890ed1cf8de6c9d8f5f6ad05">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1112,7 +1112,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_21.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_21.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_23.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_23.png">. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#20a5baa6b428f878af32ff01126ea269">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1145,7 +1145,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete root mean squared norm of the data. If the control volume is specified (vol_id &gt;= 0), the return value is the <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the number of data entries. 
+Return discrete root mean squared norm of the data. If the control volume is specified (vol_id &gt;= 0), the return value is the <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the number of data entries. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#8ba64acda828fb7e567df81ce8cd771e">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1184,7 +1184,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted root mean squared norm of the data. If the control volume is specified (vol_id &gt;= 0), the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the number of data entries. 
+Return discrete weighted root mean squared norm of the data. If the control volume is specified (vol_id &gt;= 0), the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the number of data entries. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#0bf333956f2cdee1245672fe0829b67e">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1217,7 +1217,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_22.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_23.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the computation of the maximum. 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the computation of the maximum. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#bd54b40966106206e27f8c024999fe2d">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1256,7 +1256,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_24.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the summation. 
+Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the summation. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#6b97b9796007437aa039f301a9ef406f">SAMRAI::math::HierarchyDataOpsComplex&lt; DIM &gt;</a>.
 </div>
@@ -1289,12 +1289,12 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_26.png">. 
+Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">. 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mathops/cell/<a class="el" href="HierarchyCellDataOpsComplex_8h.html">HierarchyCellDataOpsComplex.h</a><li>source/mathops/cell/<a class="el" href="HierarchyCellDataOpsComplex_8C.html">HierarchyCellDataOpsComplex.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:19 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:02 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

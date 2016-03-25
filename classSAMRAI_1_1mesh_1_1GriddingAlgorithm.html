@@ -121,10 +121,16 @@ Optional input keys, data types, and defaults:<p>
 <li><b>proper_nesting_buffer</b> An integer array specifying the number of coarse cells by which the next finer level is nested within the interior of the domain of the next coarser level when creating a new level. If more values are given than max_levels - 1 , extra entries will be ignored. If fewer values are given, then the last element in the array will be used on each level without a specified input value. For example, if only a single value is specified, then that value will be used on all levels. If no values are given, a default of 1 is used for each nesting buffer value. See sample input below for input file format.</li></ul>
 <p>
 <ul>
-<li><b>allow_patches_smaller_than_ghostwidth</b> In order to enforce minimum patch size restrictions, boxes may be grown in gridding operations. This may in turn lead to overlaps created between boxes. If overlaps are undesirable and you are willing to relax the minimum size constraints, set this parameter true. By default, it is false.</li></ul>
+<li><b>allow_patches_smaller_than_ghostwidth</b> If the smallest patch size provided in the input file is smaller than the maximum ghost width of all the registered variables, then by default the smallest patch size will be grown to the maximum ghost width. Set this flag to true to override this default behavior and to allow the smallest patch size given in the input to remain in effect. The default value is false.</li></ul>
 <p>
 <ul>
-<li><b>resolve_nonnesting_tags</b> How to resolve user-specified tags that violates proper nesting. Set to one of these characters: <b>'i'</b> for ignore (violating tags will be quietly disregarded). <b>'w'</b> for warn (violating tags will cause a warning and be disregarded). <b>'e'</b> for error (violating tags will cause an unrecoverable exception). The default is 'w'. Ignoring is the most efficient because no checks are required (but this puts the burden of dealing with unrefined tagged cells on the user.</li></ul>
+<li><b>allow_patches_smaller_than_minimum_size_to_prevent_overlaps</b> In order to enforce minimum patch size restrictions, boxes may be grown in gridding operations. This may in turn lead to overlaps created between boxes. If overlaps are undesirable and you are willing to relax the minimum size constraints, set this parameter true. By default, it is false.</li></ul>
+<p>
+<ul>
+<li><b>check_nonrefined_tags</b> How to resolve user-specified tags that violates proper nesting. Such tags will not be refined when creating a finer level. This flag gives options for how to handle these tags. Set to one of these characters: <b>'i'</b> for ignore (there is no check for violating tags, and they will be quietly disregarded). <b>'w'</b> for warn (violating tags will cause a warning and be disregarded). <b>'e'</b> for error (violating tags will cause an unrecoverable exception). The default is 'w'. Ignoring is the most efficient because no checks are required (but this puts the burden of dealing with unrefined tagged cells on the user.</li></ul>
+<p>
+<ul>
+<li><b>check_overlapping</b> patches Specify whether to check for overlapping patches on a newly created level, and what to do if any are found. Set to one of these characters: <b>'i'</b> for ignore (there is no check for overlapping patches, and they will be quietly disregarded). <b>'w'</b> for warn (overlapping patches will cause a warning and be disregarded). <b>'e'</b> for error (violating tags will cause an unrecoverable exception). The default is 'i'. The check for overlapping patches may be expensive, so the use of 'w' and 'e' is recommended only for debugging purposes. To prevent the creation of any levels with overlapping patches, see the input flag "allow_patches_smaller_than_minimum_size_to_prevent_overlaps"</li></ul>
 <p>
 <ul>
 <li><b>write_regrid_boxes</b> Output sequence of refine boxes to file.</li></ul>
@@ -134,6 +140,9 @@ Optional input keys, data types, and defaults:<p>
 <p>
 <ul>
 <li><b>regrid_boxes_filename</b> Filename used for writing or reading refine boxes. The read and write boxes option is usable only under very specific circumstances. Please contact the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers at samrai@llnl.gov) for more information.</li></ul>
+<p>
+<ul>
+<li><b>coalesce_boxes</b> Whether to coalesce boxes so that load balancer gives better results. Coalescing can be very expensive. If regridding cost fails to scale, this is probably the first option you should consider disabling.</li></ul>
 <p>
 Note that when continuing from restart, the input values in the input file override all values read in from the restart database.<p>
 The following represents sample input data for a three-dimensional problem:<p>
@@ -156,7 +165,7 @@ The following represents sample input data for a three-dimensional problem:<p>
  *       // all finer levels will use same values as level_1...
  *    }
  *
- *    // Optional input:  buffer of one cell used on each level  
+ *    // Optional input:  buffer of one cell used on each level
  *    proper_nesting_buffer = 1
  *    grow_after_nesting = FALSE
  *
@@ -174,6 +183,8 @@ The following represents sample input data for a three-dimensional problem:<p>
  *
  *    write_regrid_boxes = TRUE
  *    regrid_boxes_filename = "regrid_boxes_32proc"
+ *
+ *    coalesce_boxes = TRUE
  *
  * </pre></div><p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">mesh::TagAndInitializeStrategy</a> <p>
@@ -757,7 +768,7 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BaseGriddingAlgorithm.html
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mesh/gridding/<a class="el" href="GriddingAlgorithm_8h.html">GriddingAlgorithm.h</a><li>source/mesh/gridding/<a class="el" href="GriddingAlgorithm_8C.html">GriddingAlgorithm.C</a><li>source/mesh/gridding/<a class="el" href="GriddingAlgorithm_8I.html">GriddingAlgorithm.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:29 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:11 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

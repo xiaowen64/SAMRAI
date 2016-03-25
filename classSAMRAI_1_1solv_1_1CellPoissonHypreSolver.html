@@ -86,7 +86,7 @@
 
 Use the HYPRE preconditioner library to solve (the cell-centered) Poisson's equation on a single level in a hierarchy. 
 <p>
-Class CellPoissonHypreSolver&lt;DIM&gt; uses the HYPRE preconditioner library to solve linear equations of the form <img class="formulaInl" alt="$ \nabla ( D \nabla u ) + C u = f $" src="form_108.png">, where C is a cell-centered array, D is a face-centered array, and u and f are cell-centered arrays (see <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a>). The discretization is the standard second order finite difference stencil.<p>
+Class CellPoissonHypreSolver&lt;DIM&gt; uses the HYPRE preconditioner library to solve linear equations of the form <img class="formulaInl" alt="$ \nabla ( D \nabla u ) + C u = f $" src="form_110.png">, where C is a cell-centered array, D is a face-centered array, and u and f are cell-centered arrays (see <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a>). The discretization is the standard second order finite difference stencil.<p>
 Robin boundary conditions are used through the interface class RobinBcCoefStrategy&lt;DIM&gt;. Periodic boundary conditions are not supported yet.<p>
 The user must perform the following steps to use CellPoissonHypreSolver&lt;DIM&gt;:<ul>
 <li>Create a CellPoissonHypreSolver&lt;DIM&gt; object.</li><li>Initialize CellPoissonHypreSolver&lt;DIM&gt; object with a patch hierarchy, using the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#a01680b5868a9220bff63a5169741054">initializeSolverState()</a>.</li><li>Use the functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#14013ebd4a4606671f55ba64581d3750">setPhysicalBcCoefObject()</a> to provide implementations of RobinBcCoefStrategy&lt;DIM&gt;. (For most problems you can probably find a suitable implementation to use without implementing the strategy yourself. See for example SimpleCellRobinBcCoefs&lt;DIM&gt; and GhostCellRobinBcCoefs&lt;DIM&gt;.)</li><li>Set the matrix coefficients in the linear system, using the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients()</a>.</li><li>Specify the stopping criteria using <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#abfcc94f0bc7adb34a0791596deb9d42">setStoppingCriteria()</a>.</li><li>Solve the linear system, passing in u and f as the patch indices of the solution and the right hand side, respectively.</li></ul>
@@ -629,7 +629,7 @@ If this method is not called, or the flag is set false, no printing will occur.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8h.html">CellPoissonHypreSolver.h</a><li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8C.html">CellPoissonHypreSolver.C</a><li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8I.html">CellPoissonHypreSolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:44 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:26 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

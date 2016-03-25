@@ -71,6 +71,8 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c25d63c98b8762de7078b3d01d34f9e9">offset</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&lt; DIM &gt; &amp;p) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&lt; DIM &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ccb5cea05a08d08fce06885924b96b3d">index</a> (const int offset) const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#feb636f1d0869dc760cf14e66a711ed7">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&lt; DIM &gt; &amp;p) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5c647010cff066b9422bb9f857338522">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#e621b6d97e8da0c5028d78a69a4452bf">b</a>) const </td></tr>
@@ -632,6 +634,28 @@ template&lt;int DIM&gt; </div>
 
 <p>
 Given an index, calculate the offset of the index into the box. This function assumes column-major (<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#34cb3de4879ab966bef34a9678efd968">e.g</a>., Fortran) ordering of the indices within the box. This operation is a convenience function for later array indexing operations. 
+</div>
+</div><p>
+<a class="anchor" name="ccb5cea05a08d08fce06885924b96b3d"></a><!-- doxytag: member="SAMRAI::hier::Box::index" ref="ccb5cea05a08d08fce06885924b96b3d" args="(const int offset) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&lt; DIM &gt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::Box</a>&lt; DIM &gt;::index           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>offset</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Given an offset, calculate the index of the offset into the box. This function assumes column-major (<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#34cb3de4879ab966bef34a9678efd968">e.g</a>., Fortran) ordering of the indices within the box. This operation is a convenience function for later array indexing operations. 
 </div>
 </div><p>
 <a class="anchor" name="feb636f1d0869dc760cf14e66a711ed7"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="feb636f1d0869dc760cf14e66a711ed7" args="(const Index&lt; DIM &gt; &amp;p) const " -->
@@ -1494,7 +1518,7 @@ Output the box description in the form [L,U], where L and U are the lower and up
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/boxes/<a class="el" href="Box_8h.html">Box.h</a><li>source/hierarchy/boxes/<a class="el" href="Box_8C.html">Box.C</a><li>source/hierarchy/boxes/<a class="el" href="Box_8I.html">Box.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:15 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:05:58 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

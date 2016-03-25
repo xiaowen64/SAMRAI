@@ -94,6 +94,8 @@ Inheritance diagram for SAMRAI::algs::HyperbolicLevelIntegrator&lt; DIM &gt;:<p>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#56018b02e4c08f473ef8d5acf41a6a9c">usingRefinedTimestepping</a> () const</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#446aea65b28172e2dc3071d0863d40da">printStatistics</a> (std::ostream &amp;s=<a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a>) const</td></tr>
+
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#5679a337c7895051513942a3ee2bb945">getFromInput</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db, bool is_from_restart)</td></tr>
 
@@ -106,6 +108,8 @@ Inheritance diagram for SAMRAI::algs::HyperbolicLevelIntegrator&lt; DIM &gt;:<p>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3956ae32fd3420ef87e9ca776cf87549">copyTimeDependentData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&lt; DIM &gt; &gt; level, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; src_context, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; dst_context)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#595e3d349474a5d05169b420fa7944f5">synchronizeLevelWithCoarser</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&lt; DIM &gt; &gt; fine, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&lt; DIM &gt; &gt; coarse, const double sync_time, const double coarse_sim_time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#90917f2a6145097dbcd6578eb5fe9eba">recordStatistics</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&lt; DIM &gt; &amp;patch_level, double current_time)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -1179,6 +1183,28 @@ Return true if this class has been constructed to use refined timestepping and f
 Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#ccf94f247f5e6388b93d101d73c93850">SAMRAI::algs::TimeRefinementLevelStrategy&lt; DIM &gt;</a>.
 </div>
 </div><p>
+<a class="anchor" name="446aea65b28172e2dc3071d0863d40da"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::printStatistics" ref="446aea65b28172e2dc3071d0863d40da" args="(std::ostream &amp;s=tbox::plog) const" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">SAMRAI::algs::HyperbolicLevelIntegrator</a>&lt; DIM &gt;::printStatistics           </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>s</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a></code>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="5679a337c7895051513942a3ee2bb945"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput" ref="5679a337c7895051513942a3ee2bb945" args="(tbox::Pointer&lt; tbox::Database &gt; db, bool is_from_restart)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1418,9 +1444,40 @@ Apply the standard AMR hyperbolic flux synchronization process preserve conserva
 When assertion checking is turned on, an unrecoverable exception will result if either level pointer is null, the levels are not consecutive in the AMR hierarchy, or the coarse sim time is not less than the sync time. 
 </div>
 </div><p>
+<a class="anchor" name="90917f2a6145097dbcd6578eb5fe9eba"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::recordStatistics" ref="90917f2a6145097dbcd6578eb5fe9eba" args="(const hier::PatchLevel&lt; DIM &gt; &amp;patch_level, double current_time)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">SAMRAI::algs::HyperbolicLevelIntegrator</a>&lt; DIM &gt;::recordStatistics           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>patch_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>current_time</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/algorithm/hyperbolic/<a class="el" href="HyperbolicLevelIntegrator_8h.html">HyperbolicLevelIntegrator.h</a><li>source/algorithm/hyperbolic/<a class="el" href="HyperbolicLevelIntegrator_8C.html">HyperbolicLevelIntegrator.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:09 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:05:51 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

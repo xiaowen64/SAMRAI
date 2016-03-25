@@ -491,16 +491,16 @@ This function has an interface similar to the virtual function <a class="el" hre
 <p>
 This function calls RobinBcStrategy::setBcCoefs() to get the coefficients, then it sets the values in the first ghost cell on the boundary.<p>
 To determine the value for the ghost cell, a <em>linear</em> approximation in the direction normal to the boundary is assumed. We write the following discrete approximations: <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ u_b = \frac{ u_i + u_o }{2} \]" src="form_97.png">
+<img class="formulaDsp" alt="\[ u_b = \frac{ u_i + u_o }{2} \]" src="form_99.png">
 <p>
  <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ [u_n]_b = \frac{ u_o - u_i }{h} \]" src="form_98.png">
+<img class="formulaDsp" alt="\[ [u_n]_b = \frac{ u_o - u_i }{h} \]" src="form_100.png">
 <p>
  where the subscript b stands for the the boundary, i stands for the first cell inside the boundary and o stands for the first cell outside the boundary and h is the grid spacing normal to the boundary. Applying this to the Robin formula gives <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ u_o = \frac{ h\gamma + u_i( \beta - \frac{h}{2} \alpha ) } { \beta + \frac{h}{2} \alpha } \]" src="form_99.png">
+<img class="formulaDsp" alt="\[ u_o = \frac{ h\gamma + u_i( \beta - \frac{h}{2} \alpha ) } { \beta + \frac{h}{2} \alpha } \]" src="form_101.png">
 <p>
  or equivalently <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ u_o = \frac{ hg + u_i (1-a(1+\frac{h}{2})) }{ 1-a(1-\frac{h}{2}) } \]" src="form_100.png">
+<img class="formulaDsp" alt="\[ u_o = \frac{ hg + u_i (1-a(1+\frac{h}{2})) }{ 1-a(1-\frac{h}{2}) } \]" src="form_102.png">
 <p>
 <p>
 After setting the edge (face in 3D) boundary conditions, linear approximations are used to set the boundary conditions of higher boundary types (nodes in 2D, edges and nodes in 3D).<p>
@@ -710,7 +710,7 @@ In certain circumstances, only the value of a is needed, while the value of g is
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="CartesianRobinBcHelper_8h.html">CartesianRobinBcHelper.h</a><li>source/solvers/poisson/<a class="el" href="CartesianRobinBcHelper_8C.html">CartesianRobinBcHelper.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:44 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:25 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -37,14 +37,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#f2adc0365173a887e59c1692ea5eaeef">setMaxNumberPatchDataEntries</a> (int maxnum)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#e51392ef07bac75d30d12ac25fbb7f9c">getMaxNumberTimers</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#c6fc411421c7d0b115cd4b0bb0c59a1e">setMaxNumberTimers</a> (int maxnum)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#1279d79a47772f1e8b9f4cc66b497bcb">getMaxNumberStatistics</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#c4230b6571cb346b927e9b92ae5f0f81">setMaxNumberStatistics</a> (int maxnum)</td></tr>
-
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html">SAMRAIManager</a> is a utility for managing startup and shutdown for <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> applications and for changing the maximum number of patch data components supported by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patches. All applications should call <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#6b3b7c0498bf43bdda64685daf7607da">SAMRAIManager::startup()</a> (or <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#6b3b7c0498bf43bdda64685daf7607da">SAMRAIManager::startup()</a>) at the beginning of the program. Startup should be called after initializing MPI but before any <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> objects are used. <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#abafb6ed941cf04cf0ef1e5c347b662b">SAMRAIManager::shutdown()</a> (or <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html">SAMRAIManager</a>:<a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#abafb6ed941cf04cf0ef1e5c347b662b">shutdown()</a>) should be called near the end of the program, but before shutting down MPI and calling exit(0). Note that the shutdown function does not exit the program; it merely shuts down certain packages and deallocates memory (mostly objects with static members). 
@@ -128,89 +120,9 @@ Set maximum number of patch data entries supported by <a class="el" href="namesp
 Note that this routine cannot be called anytime after the max patch data entries value has been accessed via the <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#4a0232423127408c37e2deedccaa81b5">getMaxNumberPatchDataEntries()</a> function, either by the user or internally within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Typically, the first internal access of this value occurs whenever any objects related to the patch hierarchy or variables are created. 
 </div>
 </div><p>
-<a class="anchor" name="e51392ef07bac75d30d12ac25fbb7f9c"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::getMaxNumberTimers" ref="e51392ef07bac75d30d12ac25fbb7f9c" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int SAMRAI::tbox::SAMRAIManager::getMaxNumberTimers           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return maximum number of timers supported by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. The value is either the default value (128) or the value set by calling the <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#c6fc411421c7d0b115cd4b0bb0c59a1e">setMaxNumberTimers()</a> function. 
-</div>
-</div><p>
-<a class="anchor" name="c6fc411421c7d0b115cd4b0bb0c59a1e"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::setMaxNumberTimers" ref="c6fc411421c7d0b115cd4b0bb0c59a1e" args="(int maxnum)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::tbox::SAMRAIManager::setMaxNumberTimers           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>maxnum</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set maximum number of timers supported by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> to the maximum of the current value and the argument value.<p>
-Note that this routine cannot be called anytime after the max statistics value has been accessed via the getMaxTimers() function, either by the user or internally within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Typically, the first internal access of this value occurs whenever the timer manager is accessed. 
-</div>
-</div><p>
-<a class="anchor" name="1279d79a47772f1e8b9f4cc66b497bcb"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::getMaxNumberStatistics" ref="1279d79a47772f1e8b9f4cc66b497bcb" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int SAMRAI::tbox::SAMRAIManager::getMaxNumberStatistics           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return maximum number of statistics supported by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. The value is either the default value (128) or the value set by calling the <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAIManager.html#c4230b6571cb346b927e9b92ae5f0f81">setMaxNumberStatistics()</a> function. 
-</div>
-</div><p>
-<a class="anchor" name="c4230b6571cb346b927e9b92ae5f0f81"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::setMaxNumberStatistics" ref="c4230b6571cb346b927e9b92ae5f0f81" args="(int maxnum)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::tbox::SAMRAIManager::setMaxNumberStatistics           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>maxnum</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set maximum number of statistics supported by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> to the maximum of the current value and the argument value.<p>
-Note that this routine cannot be called anytime after the max statistics value has been accessed via the getMaxStatistics() function, either by the user or internally within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Typically, the first internal access of this value occurs whenever the statistician is accessed. 
-</div>
-</div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/toolbox/base/<a class="el" href="SAMRAIManager_8h.html">SAMRAIManager.h</a><li>source/toolbox/base/<a class="el" href="SAMRAIManager_8C.html">SAMRAIManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:46 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:28 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

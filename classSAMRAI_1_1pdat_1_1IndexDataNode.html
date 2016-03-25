@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>SAMRAI: SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE &gt; Class Template Reference</title>
+<title>SAMRAI: SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -21,39 +21,44 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a></div>
-<h1>SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexDataNode" --><code>#include &lt;source/patchdata/index/IndexData.h&gt;</code>
+<h1>SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexDataNode" --><code>#include &lt;source/patchdata/index/IndexData.h&gt;</code>
 <p>
 <a href="classSAMRAI_1_1pdat_1_1IndexDataNode-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#ca7d6a43e7554caf32fe27827a6d18df">IndexDataNode</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#b83b17401d3f4c06d2b4b0a7a9e7a346">IndexDataNode</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#8b30929248a7dc95a21bacbe77f960b8">~IndexDataNode</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#c430079896a52efb4bcc50402b073365">IndexDataNode</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&lt; DIM &gt; &amp;index, const int d_offset, TYPE &amp;t, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; *n, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; *p)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#7e71be3e604c564e3a0410a0f47e745b">~IndexDataNode</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#32468cf818f968ac88965241a464d683">IndexData&lt; DIM, TYPE &gt;</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#704d65a065aa0f1a47a3b237659feb09">IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#cf47654dc436e5c78ec9771a1f7c6b70">IndexIterator&lt; DIM, TYPE &gt;</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#0a04c5e0dc057d536f5669ccf78e4676">IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#e5919be3872998f93276a8e734892e13">ConstIndexIterator&lt; DIM, TYPE &gt;</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html#f27a903190e2e962ad8ce970e9c840f1">ConstIndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td></tr>
 
 </table>
-<h3>template&lt;int DIM, class TYPE&gt;<br>
- class SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE &gt;</h3>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+<h3>template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt;<br>
+ class SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt;</h3>
 
+Class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a> holds items for the linked list. This class should be defined inside the <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> class, but nested template classes can cause some compilers to barf. List nodes should never be seen by the user of a list. 
+<p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="ca7d6a43e7554caf32fe27827a6d18df"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexDataNode" ref="ca7d6a43e7554caf32fe27827a6d18df" args="()" -->
+<a class="anchor" name="b83b17401d3f4c06d2b4b0a7a9e7a346"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexDataNode" ref="b83b17401d3f4c06d2b4b0a7a9e7a346" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode</a>&lt; DIM, TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -63,18 +68,67 @@ template&lt;int DIM, class TYPE&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="8b30929248a7dc95a21bacbe77f960b8"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::~IndexDataNode" ref="8b30929248a7dc95a21bacbe77f960b8" args="()" -->
+<a class="anchor" name="c430079896a52efb4bcc50402b073365"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexDataNode" ref="c430079896a52efb4bcc50402b073365" args="(const hier::Index&lt; DIM &gt; &amp;index, const int d_offset, TYPE &amp;t, IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt; *n, IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt; *p)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode</a>&lt; DIM, TYPE &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>d_offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TYPE &amp;&nbsp;</td>
+          <td class="paramname"> <em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; *&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; *&nbsp;</td>
+          <td class="paramname"> <em>p</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7e71be3e604c564e3a0410a0f47e745b"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::~IndexDataNode" ref="7e71be3e604c564e3a0410a0f47e745b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">IndexDataNode</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -85,14 +139,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 </div>
 </div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" name="32468cf818f968ac88965241a464d683"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexData&lt; DIM, TYPE &gt;" ref="32468cf818f968ac88965241a464d683" args="" -->
+<a class="anchor" name="704d65a065aa0f1a47a3b237659feb09"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt;" ref="704d65a065aa0f1a47a3b237659feb09" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE &gt;<code> [friend]</code>          </td>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;<code> [friend]</code>          </td>
         </tr>
       </table>
 </div>
@@ -102,14 +156,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="cf47654dc436e5c78ec9771a1f7c6b70"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexIterator&lt; DIM, TYPE &gt;" ref="cf47654dc436e5c78ec9771a1f7c6b70" args="" -->
+<a class="anchor" name="0a04c5e0dc057d536f5669ccf78e4676"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;" ref="0a04c5e0dc057d536f5669ccf78e4676" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt;<code> [friend]</code>          </td>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;<code> [friend]</code>          </td>
         </tr>
       </table>
 </div>
@@ -119,14 +173,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="e5919be3872998f93276a8e734892e13"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::ConstIndexIterator&lt; DIM, TYPE &gt;" ref="e5919be3872998f93276a8e734892e13" args="" -->
+<a class="anchor" name="f27a903190e2e962ad8ce970e9c840f1"></a><!-- doxytag: member="SAMRAI::pdat::IndexDataNode::ConstIndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;" ref="f27a903190e2e962ad8ce970e9c840f1" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1ConstIndexIterator.html">ConstIndexIterator</a>&lt; DIM, TYPE &gt;<code> [friend]</code>          </td>
+          <td class="memname">friend class ConstIndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;<code> [friend]</code>          </td>
         </tr>
       </table>
 </div>
@@ -137,8 +191,8 @@ template&lt;int DIM, class TYPE&gt; </div>
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/patchdata/index/<a class="el" href="IndexData_8h.html">IndexData.h</a><li>source/patchdata/index/<a class="el" href="IndexData_8C.html">IndexData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:33 2008 for SAMRAI by&nbsp;
+<li>source/patchdata/index/<a class="el" href="IndexData_8h.html">IndexData.h</a><li>source/patchdata/index/<a class="el" href="IndexData_8I.html">IndexData.I</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:15 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

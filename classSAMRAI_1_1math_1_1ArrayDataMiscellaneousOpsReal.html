@@ -146,7 +146,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_5.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_6.png">, for any <img class="formulaInl" alt="$i$" src="form_7.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png">. Otherwise return 0. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_7.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_8.png">, for any <img class="formulaInl" alt="$i$" src="form_9.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png">. Otherwise return 0. 
 </div>
 </div><p>
 <a class="anchor" name="0ac1e738a873dc95b5bd784ff0f31e2f"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::computeConstrProdPos" ref="0ac1e738a873dc95b5bd784ff0f31e2f" args="(const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;data1, const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;data2, const hier::Box&lt; DIM &gt; &amp;box) const " -->
@@ -183,7 +183,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_5.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_6.png">, for any <img class="formulaInl" alt="$i$" src="form_7.png"> in the index region. Otherwise return 0. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_7.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_8.png">, for any <img class="formulaInl" alt="$i$" src="form_9.png"> in the index region. Otherwise return 0. 
 </div>
 </div><p>
 <a class="anchor" name="18b25ae73e4f8e64d91279a4d2f14646"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::compareToScalarWithControlVolume" ref="18b25ae73e4f8e64d91279a4d2f14646" args="(pdat::ArrayData&lt; DIM, TYPE &gt; &amp;dst, const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;src, const TYPE &amp;alpha, const pdat::ArrayData&lt; DIM, double &gt; &amp;cvol, const hier::Box&lt; DIM &gt; &amp;box) const " -->
@@ -232,7 +232,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_9.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_10.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_11.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_12.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. 
 </div>
 </div><p>
 <a class="anchor" name="2ff9299632ebf68f36cde4a527ef5657"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::compareToScalar" ref="2ff9299632ebf68f36cde4a527ef5657" args="(pdat::ArrayData&lt; DIM, TYPE &gt; &amp;dst, const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;src, const TYPE &amp;alpha, const hier::Box&lt; DIM &gt; &amp;box) const" -->
@@ -275,7 +275,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$dst_i = 1$" src="form_9.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_10.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. 
+Set <img class="formulaInl" alt="$dst_i = 1$" src="form_11.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_12.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. 
 </div>
 </div><p>
 <a class="anchor" name="645c41ec968ef18708613ec99632139e"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::testReciprocalWithControlVolume" ref="645c41ec968ef18708613ec99632139e" args="(pdat::ArrayData&lt; DIM, TYPE &gt; &amp;dst, const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;src, const pdat::ArrayData&lt; DIM, double &gt; &amp;cvol, const hier::Box&lt; DIM &gt; &amp;box) const " -->
@@ -318,7 +318,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_12.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_13.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> anywhere, 0 is the return value. Otherwise 1 is returned. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_14.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_15.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> anywhere, 0 is the return value. Otherwise 1 is returned. 
 </div>
 </div><p>
 <a class="anchor" name="2d161a6cb2b57ccdaf4dd03447f5e22c"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::testReciprocal" ref="2d161a6cb2b57ccdaf4dd03447f5e22c" args="(pdat::ArrayData&lt; DIM, TYPE &gt; &amp;dst, const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;src, const hier::Box&lt; DIM &gt; &amp;box) const " -->
@@ -355,7 +355,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_12.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_13.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> anywhere, 0 is the return value. Otherwise 1 is returned. 
+Set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_14.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_15.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> anywhere, 0 is the return value. Otherwise 1 is returned. 
 </div>
 </div><p>
 <a class="anchor" name="f4ef51615fc6b0fc815110bdc8166c39"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::maxPointwiseDivide" ref="f4ef51615fc6b0fc815110bdc8166c39" args="(const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;numer, const pdat::ArrayData&lt; DIM, TYPE &gt; &amp;denom, const hier::Box&lt; DIM &gt; &amp;box) const " -->
@@ -442,7 +442,7 @@ The quotient is defined as (numerator/denominator) where the denominator is nonz
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mathops/array/<a class="el" href="ArrayDataMiscellaneousOpsReal_8h.html">ArrayDataMiscellaneousOpsReal.h</a><li>source/mathops/array/<a class="el" href="ArrayDataMiscellaneousOpsReal_8C.html">ArrayDataMiscellaneousOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:19 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:02 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

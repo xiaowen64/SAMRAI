@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>SAMRAI: SAMRAI::pdat::IndexVariable&lt; DIM, TYPE &gt; Class Template Reference</title>
+<title>SAMRAI: SAMRAI::pdat::IndexVariable&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -21,30 +21,30 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">IndexVariable</a></div>
-<h1>SAMRAI::pdat::IndexVariable&lt; DIM, TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexVariable" --><!-- doxytag: inherits="SAMRAI::hier::Variable" --><code>#include &lt;source/patchdata/index/IndexVariable.h&gt;</code>
+<h1>SAMRAI::pdat::IndexVariable&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexVariable" --><!-- doxytag: inherits="SAMRAI::hier::Variable" --><code>#include &lt;source/patchdata/index/IndexVariable.h&gt;</code>
 <p>
-Inheritance diagram for SAMRAI::pdat::IndexVariable&lt; DIM, TYPE &gt;:<p><center><img src="classSAMRAI_1_1pdat_1_1IndexVariable__inherit__graph.png" border="0" usemap="#SAMRAI_1_1pdat_1_1IndexVariable_3_01DIM_00_01TYPE_01_4__inherit__map" alt="Inheritance graph"></center>
-<map name="SAMRAI_1_1pdat_1_1IndexVariable_3_01DIM_00_01TYPE_01_4__inherit__map">
-<area href="classSAMRAI_1_1pdat_1_1IndexVariable.html" shape="rect" coords="7,176,444,200" alt="">
-<area href="classSAMRAI_1_1hier_1_1Variable.html" shape="rect" coords="123,8,328,32" alt="">
+Inheritance diagram for SAMRAI::pdat::IndexVariable&lt; DIM, TYPE, BOX_GEOMETRY &gt;:<p><center><img src="classSAMRAI_1_1pdat_1_1IndexVariable__inherit__graph.png" border="0" usemap="#SAMRAI_1_1pdat_1_1IndexVariable_3_01DIM_00_01TYPE_00_01BOX__GEOMETRY_01_4__inherit__map" alt="Inheritance graph"></center>
+<map name="SAMRAI_1_1pdat_1_1IndexVariable_3_01DIM_00_01TYPE_00_01BOX__GEOMETRY_01_4__inherit__map">
+<area href="classSAMRAI_1_1pdat_1_1IndexVariable.html" shape="rect" coords="7,176,673,200" alt="">
+<area href="classSAMRAI_1_1hier_1_1Variable.html" shape="rect" coords="237,8,443,32" alt="">
 </map>
 <center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center><a href="classSAMRAI_1_1pdat_1_1IndexVariable-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#49017f13415db788ffd044a936710edb">IndexVariable</a> (const std::string &amp;name)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#049c1d055c28551234bfb2b842fff432">IndexVariable</a> (const std::string &amp;name)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#29bbaa7de37609c772d1ed5fe15cb1ac">~IndexVariable</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#05bb235c3d49cd169d19e792e9a3632e">~IndexVariable</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#898da437c9945b78cff929ae54ab174e">fineBoundaryRepresentsVariable</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#1c339d8ae1d549c31a6e2d4e825f542f">fineBoundaryRepresentsVariable</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#3a95b2353ed0219d56aab5d011918209">dataLivesOnPatchBorder</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html#c001a6dcef6ab2f92c9959d658770ad0">dataLivesOnPatchBorder</a> () const</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;int DIM, class TYPE&gt;<br>
- class SAMRAI::pdat::IndexVariable&lt; DIM, TYPE &gt;</h3>
+<h3>template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt;<br>
+ class SAMRAI::pdat::IndexVariable&lt; DIM, TYPE, BOX_GEOMETRY &gt;</h3>
 
-Class IndexVariable&lt;DIM&gt; is a templated variable class used to define quantities that exist on an irregular cell-centered index set. The template parameter TYPE defines the storage at each index location. For example, this class is used to represent embedded boundary features as a regular patch data type using the BoundaryCell class as the template type.<p>
+Class IndexVariable&lt;DIM,TYPE,BOX_GEOMETRY&gt; is a templated variable class used to define quantities that exist on an irregular cell-centered index set. The template parameter TYPE defines the storage at each index location. For example, this class is used to represent embedded boundary features as a regular patch data type using the BoundaryCell class as the template type. The template parameter BOX_GEOMETRY allows IndexVariables to be instantiated with a provided centering and geometry in index space via a BoxGeometry (<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#34cb3de4879ab966bef34a9678efd968">e.g</a>. <a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html">CellGeometry</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html">NodeGeometry</a>).<p>
 Please consult the README file in the index data source directory for instructions on using this class to provide other irregular index set types.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">pdat::IndexData</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">pdat::IndexDataFactory</a> <p>
@@ -52,14 +52,14 @@ pdat::Variable </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="49017f13415db788ffd044a936710edb"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::IndexVariable" ref="49017f13415db788ffd044a936710edb" args="(const std::string &amp;name)" -->
+<a class="anchor" name="049c1d055c28551234bfb2b842fff432"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::IndexVariable" ref="049c1d055c28551234bfb2b842fff432" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">IndexVariable</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">IndexVariable</a>           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>name</em>          </td>
@@ -74,14 +74,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Create an index variable object with the specified name. 
 </div>
 </div><p>
-<a class="anchor" name="29bbaa7de37609c772d1ed5fe15cb1ac"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::~IndexVariable" ref="29bbaa7de37609c772d1ed5fe15cb1ac" args="()" -->
+<a class="anchor" name="05bb235c3d49cd169d19e792e9a3632e"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::~IndexVariable" ref="05bb235c3d49cd169d19e792e9a3632e" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">IndexVariable</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">IndexVariable</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -96,14 +96,14 @@ Virtual destructor for index variable objects.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="898da437c9945b78cff929ae54ab174e"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::fineBoundaryRepresentsVariable" ref="898da437c9945b78cff929ae54ab174e" args="() const" -->
+<a class="anchor" name="1c339d8ae1d549c31a6e2d4e825f542f"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::fineBoundaryRepresentsVariable" ref="1c339d8ae1d549c31a6e2d4e825f542f" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE &gt;::fineBoundaryRepresentsVariable           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::fineBoundaryRepresentsVariable           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -119,14 +119,14 @@ Return true so that the index data quantities will always be treated as cell- ce
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html#bd9308b2abd965307250c372d1dc6032">SAMRAI::hier::Variable&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="3a95b2353ed0219d56aab5d011918209"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::dataLivesOnPatchBorder" ref="3a95b2353ed0219d56aab5d011918209" args="() const" -->
+<a class="anchor" name="c001a6dcef6ab2f92c9959d658770ad0"></a><!-- doxytag: member="SAMRAI::pdat::IndexVariable::dataLivesOnPatchBorder" ref="c001a6dcef6ab2f92c9959d658770ad0" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE &gt;::dataLivesOnPatchBorder           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::dataLivesOnPatchBorder           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -144,7 +144,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html#a37d4bc4fc2d
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/patchdata/index/<a class="el" href="IndexVariable_8h.html">IndexVariable.h</a><li>source/patchdata/index/<a class="el" href="IndexVariable_8C.html">IndexVariable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:34 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:16 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

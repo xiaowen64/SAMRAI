@@ -241,7 +241,7 @@ IMPORTANT: This function must not modify the vector arguments.
 <div class="memdoc">
 
 <p>
-User-supplied preconditioner solve function. This function must solve <img class="formulaInl" alt="$P x = r$" src="form_70.png">, where <img class="formulaInl" alt="$P$" src="form_71.png"> is the right preconditioner matrix formed by <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLAbstractFunctions.html#edb59b86ef54919f6b21d079df3c6d8f">precondSetup()</a>. The integer return value is a flag indicating success if 0 is returned, and failure otherwise. If a non-zero value is returned, KINSOL stops.<p>
+User-supplied preconditioner solve function. This function must solve <img class="formulaInl" alt="$P x = r$" src="form_72.png">, where <img class="formulaInl" alt="$P$" src="form_73.png"> is the right preconditioner matrix formed by <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLAbstractFunctions.html#edb59b86ef54919f6b21d079df3c6d8f">precondSetup()</a>. The integer return value is a flag indicating success if 0 is returned, and failure otherwise. If a non-zero value is returned, KINSOL stops.<p>
 The function arguments are:<p>
 <ul>
 <li><b>soln</b> (INPUT) {current iterate for the nonlinear solution}</li><li><b>fval</b> (INPUT) {current iterate for the nonlinear residual}</li><li><b>soln_scale</b> (INPUT) {diagonal entries of the nonlinear solution scaling matrix}</li><li><b>fval_scale</b> (INPUT) {diagonal entries of the nonlinear residual scaling matrix}</li><li><b>rhs</b> (OUTPUT){rhs-side (r) on input and must be set to preconditioner solution (i.e., x) on output}</li><li><b>vtemp1</b> (INOUT) {temporary vector managed by KINSOL}</li><li><b>num_feval</b> (OUTPUT){number of nonlinear function evaluations made to approximate the Jacobian, if any. For example, if the routine evaluates the function twice, num_feval is set to 2}</li></ul>
@@ -290,14 +290,14 @@ IMPORTANT: This function must not modify soln, fval, or the scaling vectors.
 Optional user-supplied A times x routine, where A is an approximation to the Jacobian matrix and v is some vector. product = (A * vector) is computed.<p>
 The function arguments are:<p>
 <ul>
-<li><b>vector</b> (INPUT) {the vector multiplied by the Jacobian}</li><li><b>product</b> (OUTPUT){product of the Jacobian and vector; <img class="formulaInl" alt="$A v$" src="form_72.png">)}</li><li><b>new_soln</b> (INPUT) {flag indicating whether solution has changed since last call to this routine. For example, if this routine computes and saves the Jacobian, then the Jacobian does not require computation if flag is false.}</li><li><b>soln</b> (INPUT) {current iterate for the nonlinear solution}</li></ul>
+<li><b>vector</b> (INPUT) {the vector multiplied by the Jacobian}</li><li><b>product</b> (OUTPUT){product of the Jacobian and vector; <img class="formulaInl" alt="$A v$" src="form_74.png">)}</li><li><b>new_soln</b> (INPUT) {flag indicating whether solution has changed since last call to this routine. For example, if this routine computes and saves the Jacobian, then the Jacobian does not require computation if flag is false.}</li><li><b>soln</b> (INPUT) {current iterate for the nonlinear solution}</li></ul>
 <p>
 IMPORTANT: This function must not modify soln vector. 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/packages/sundials/kinsol/<a class="el" href="KINSOLAbstractFunctions_8h.html">KINSOLAbstractFunctions.h</a><li>source/solvers/packages/sundials/kinsol/<a class="el" href="KINSOLAbstractFunctions_8C.html">KINSOLAbstractFunctions.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:43 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:25 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

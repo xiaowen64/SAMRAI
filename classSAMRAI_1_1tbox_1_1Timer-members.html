@@ -22,7 +22,6 @@
 <h1>SAMRAI::tbox::Timer Member List</h1>This is the complete list of members for <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a>, including all inherited members.<p><table>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#ec69f7c48e4e0ec553d679f5405a46b6">computeLoadBalanceEfficiency</a>()</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#046ed4ff861e4c688f4360edc2162f15">computeMaxWallclock</a>()</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#5b228d3fb9446be3ec7bbd26cd58e710">getConcurrentTimerVector</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#5679a92d11b3b80d84a39ada03fd412e">getExclusiveSystemTime</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#3186047d44b5bd1fdfe7a013baebfd8d">getExclusiveUserTime</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#d848e666bd97d03fdc8d6de4622b2b3c">getExclusiveWallclockTime</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
@@ -35,6 +34,7 @@
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#e7be0b9fb2a6a41ad2747d8d5401f4f2">getTotalUserTime</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#c4662f7df42cbdcc26dd3a5f549ab443">getTotalWallclockTime</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#160d25943faff550563c12397bb2850b">isActive</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#9bdd588f2c2026ea4d1abbc9e0bf3f6a">isConcurrentTimer</a>(const int id) const </td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#8ee72acea2abdd7af223135b272194aa">isRunning</a>() const</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#951064fa76fbb6081b0afdd1cc88b18f">putToDatabase</a>(Pointer&lt; Database &gt; db)</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#83bad8aedc4726fa5fc4ed08a0c364db">reset</a>()</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td></td></tr>
@@ -47,7 +47,7 @@
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#736de60cb824adc96b554225dc69fe50">Timer</a>(const std::string &amp;name, const int id=-1)</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#8f762e12639d620eb0f10068e6ab6521">TimerManager</a> class</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [friend]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#a105624cecf47b458662c083cdb927f7">~Timer</a>()</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">SAMRAI::tbox::Timer</a></td><td><code> [virtual]</code></td></tr>
-</table><hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:56 2008 for SAMRAI by&nbsp;
+</table><hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:37 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

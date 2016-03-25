@@ -3,127 +3,129 @@
 \form#2:$N$
 \form#3:$(N-1)!$
 \form#4:$O(N*logN)$
-\form#5:$\|data2_i\| > 0$
-\form#6:$data1_i * data2_i \leq 0$
-\form#7:$i$
-\form#8:$cvol_i > 0$
-\form#9:$dst_i = 1$
-\form#10:$\|src_i\| > \alpha$
-\form#11:$dst_i = 0$
-\form#12:$dst_i = 1/src_i$
-\form#13:$src_i \neq 0$
-\form#14:$d_i = \sqrt{ {real(s_i)}^2 + {imag(s_i)}^2 }$
-\form#15:$L_1$
-\form#16:$\sum_i ( \sqrt{data_i * \bar{data_i}} cvol_i )$
-\form#17:$\sum_i ( \sqrt{data_i * \bar{data_i}} )$
-\form#18:$L_2$
-\form#19:$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$
-\form#20:$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$
-\form#21:$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$
-\form#22:$\max$
-\form#23:$\max_i ( \sqrt{data_i * \bar{data_i}} )$
-\form#24:$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$
-\form#25:$\sum_i ( data1_i * \bar{data2_i} )$
-\form#26:$\sum_i ( data_i * vol_i )$
-\form#27:$d_i = \| s_i \|$
-\form#28:$\sum_i ( \| data_i \| cvol_i )$
-\form#29:$\sum_i ( \| data_i \| )$
-\form#30:$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$
-\form#31:$\sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) }$
-\form#32:$\sqrt{ \sum_i ( (data_i * weight_i)^2 ) }$
-\form#33:$\max_i ( \| data_i \| )$
-\form#34:$\sum_i ( data1_i * data2_i * cvol_i )$
-\form#35:$\sum_i ( data1_i * data2_i )$
-\form#36:$d = \alpha s_1 + \beta s_2$
-\form#37:$d$
-\form#38:$s_1, s_2$
-\form#39:$\alpha, \beta$
-\form#40:$d = \alpha s_1 + s_2$
-\form#41:$\alpha$
-\form#42:$d = \alpha s_1 - s_2$
-\form#43:$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$
-\form#44:\[ e^{fine} \leftarrow e^{fine} + I^{fine}_{coarse} e^{coarse} \]
-\form#45:$ r^l \leftarrow f - A u^l $
-\form#46:$ r \leftarrow r - A u $
-\form#47:$ (x,y) = \sum_i ( x_i * conj(y_i) ) $
-\form#48:$ x $
-\form#49:$ (x,y) = \sum_i ( x_i * (y_i) ) $
-\form#50:$ L_1 $
-\form#51:$ L_2 $
-\form#52:$ L_{\infty} $
-\form#53:$ y = \alpha x + y $
-\form#54:$ y $
-\form#55:$ y = \alpha x + @beta y $
-\form#56:$ w = \alpha x + y $
-\form#57:$ w $
-\form#58:$ w_i = x_i y_i $
-\form#59:$ w_i $
-\form#60:$ i $
-\form#61:$ w_i = x_i / y_i $
-\form#62:$ max_i = abs(w_i / y_i) $
-\form#63:$0 \le \eta_0 < 1$
-\form#64:$0 \le \eta_{max} < 1$
-\form#65:$1 < \alpha \le 2$
-\form#66:$0 \le \gamma \le 1$
-\form#67:$0 < \eta_{threshold} < 1$
-\form#68:$M z = r$
-\form#69:$M$
-\form#70:$P x = r$
-\form#71:$P$
-\form#72:$A v$
-\form#73:$machine_epsilon^(1/3)$
-\form#74:$machine_epsilon^(2/3)$
-\form#75:$c$
-\form#76:$c x$
-\form#77:$a x + b y$
-\form#78:$a, b$
-\form#79:$x, y$
-\form#80:$v_i = x_i y_i$
-\form#81:$x_i, y_i$
-\form#82:$x$
-\form#83:$y$
-\form#84:$v_i = x_i / y_i$
-\form#85:$v_i = 1 / x_i$
-\form#86:$x_i$
-\form#87:$b$
-\form#88:$0$
-\form#89:$x_i \neq 0$
-\form#90:$x_i z_i \leq 0$
-\form#91:$z_i$
-\form#92:$1$
-\form#93:$\mid x_i \mid \geq c$
-\form#94:$v_i = 1$
-\form#95:$v_i = 0$
-\form#96:$x_i = 0$
-\form#97:\[ u_b = \frac{ u_i + u_o }{2} \]
-\form#98:\[ [u_n]_b = \frac{ u_o - u_i }{h} \]
-\form#99:\[ u_o = \frac{ h\gamma + u_i( \beta - \frac{h}{2} \alpha ) } { \beta + \frac{h}{2} \alpha } \]
-\form#100:\[ u_o = \frac{ hg + u_i (1-a(1+\frac{h}{2})) }{ 1-a(1-\frac{h}{2}) } \]
-\form#101:\[ \nabla \cdot D \nabla u + C u = f \]
-\form#102:$ \alpha $
-\form#103:$ \beta $
-\form#104:$ \gamma $
-\form#105:$ \alpha u + \beta u_n = \gamma $
-\form#106:\[ D \nabla w \]
-\form#107:$ Ae=r $
-\form#108:$ \nabla ( D \nabla u ) + C u = f $
-\form#109:\[ \alpha u + \beta u_n = \gamma \]
-\form#110:$ \alpha x + @beta y $
-\form#111:$ \alpha, @beta $
-\form#112:$ x, y $
-\form#113:$ \alpha x + y $
-\form#114:$ \sum_i ( \| data_i \| cvol_i ) $
-\form#115:$ \sum_i ( \| data_i \| ) $
-\form#116:$ \sqrt{ \sum_i ( (data_i)^2 cvol_i ) } $
-\form#117:$ \sqrt{ \sum_i ( (data_i)^2 ) } $
-\form#118:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) } $
-\form#119:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 ) } $
-\form#120:$ \max $
-\form#121:$ \|x_i\| > 0 $
-\form#122:$ w_i * x_i \leq 0 $
-\form#123:$ cvol_i > 0 $
-\form#124:$ w_i = 1 $
-\form#125:$ \|x_i\| > \alpha $
-\form#126:$ w_i = 0 $
-\form#127:$ w_i = 1/x_i $
-\form#128:$ x_i \neq 0 $
+\form#5:$ \prod_{j=i}^{MDA_DIM-1} size_j $
+\form#6:$ \prod_{j=0}^{i} size_j $
+\form#7:$\|data2_i\| > 0$
+\form#8:$data1_i * data2_i \leq 0$
+\form#9:$i$
+\form#10:$cvol_i > 0$
+\form#11:$dst_i = 1$
+\form#12:$\|src_i\| > \alpha$
+\form#13:$dst_i = 0$
+\form#14:$dst_i = 1/src_i$
+\form#15:$src_i \neq 0$
+\form#16:$d_i = \sqrt{ {real(s_i)}^2 + {imag(s_i)}^2 }$
+\form#17:$L_1$
+\form#18:$\sum_i ( \sqrt{data_i * \bar{data_i}} cvol_i )$
+\form#19:$\sum_i ( \sqrt{data_i * \bar{data_i}} )$
+\form#20:$L_2$
+\form#21:$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$
+\form#22:$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$
+\form#23:$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$
+\form#24:$\max$
+\form#25:$\max_i ( \sqrt{data_i * \bar{data_i}} )$
+\form#26:$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$
+\form#27:$\sum_i ( data1_i * \bar{data2_i} )$
+\form#28:$\sum_i ( data_i * vol_i )$
+\form#29:$d_i = \| s_i \|$
+\form#30:$\sum_i ( \| data_i \| cvol_i )$
+\form#31:$\sum_i ( \| data_i \| )$
+\form#32:$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$
+\form#33:$\sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) }$
+\form#34:$\sqrt{ \sum_i ( (data_i * weight_i)^2 ) }$
+\form#35:$\max_i ( \| data_i \| )$
+\form#36:$\sum_i ( data1_i * data2_i * cvol_i )$
+\form#37:$\sum_i ( data1_i * data2_i )$
+\form#38:$d = \alpha s_1 + \beta s_2$
+\form#39:$d$
+\form#40:$s_1, s_2$
+\form#41:$\alpha, \beta$
+\form#42:$d = \alpha s_1 + s_2$
+\form#43:$\alpha$
+\form#44:$d = \alpha s_1 - s_2$
+\form#45:$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$
+\form#46:\[ e^{fine} \leftarrow e^{fine} + I^{fine}_{coarse} e^{coarse} \]
+\form#47:$ r^l \leftarrow f - A u^l $
+\form#48:$ r \leftarrow r - A u $
+\form#49:$ (x,y) = \sum_i ( x_i * conj(y_i) ) $
+\form#50:$ x $
+\form#51:$ (x,y) = \sum_i ( x_i * (y_i) ) $
+\form#52:$ L_1 $
+\form#53:$ L_2 $
+\form#54:$ L_{\infty} $
+\form#55:$ y = \alpha x + y $
+\form#56:$ y $
+\form#57:$ y = \alpha x + @beta y $
+\form#58:$ w = \alpha x + y $
+\form#59:$ w $
+\form#60:$ w_i = x_i y_i $
+\form#61:$ w_i $
+\form#62:$ i $
+\form#63:$ w_i = x_i / y_i $
+\form#64:$ max_i = abs(w_i / y_i) $
+\form#65:$0 \le \eta_0 < 1$
+\form#66:$0 \le \eta_{max} < 1$
+\form#67:$1 < \alpha \le 2$
+\form#68:$0 \le \gamma \le 1$
+\form#69:$0 < \eta_{threshold} < 1$
+\form#70:$M z = r$
+\form#71:$M$
+\form#72:$P x = r$
+\form#73:$P$
+\form#74:$A v$
+\form#75:$machine_epsilon^(1/3)$
+\form#76:$machine_epsilon^(2/3)$
+\form#77:$c$
+\form#78:$c x$
+\form#79:$a x + b y$
+\form#80:$a, b$
+\form#81:$x, y$
+\form#82:$v_i = x_i y_i$
+\form#83:$x_i, y_i$
+\form#84:$x$
+\form#85:$y$
+\form#86:$v_i = x_i / y_i$
+\form#87:$v_i = 1 / x_i$
+\form#88:$x_i$
+\form#89:$b$
+\form#90:$0$
+\form#91:$x_i \neq 0$
+\form#92:$x_i z_i \leq 0$
+\form#93:$z_i$
+\form#94:$1$
+\form#95:$\mid x_i \mid \geq c$
+\form#96:$v_i = 1$
+\form#97:$v_i = 0$
+\form#98:$x_i = 0$
+\form#99:\[ u_b = \frac{ u_i + u_o }{2} \]
+\form#100:\[ [u_n]_b = \frac{ u_o - u_i }{h} \]
+\form#101:\[ u_o = \frac{ h\gamma + u_i( \beta - \frac{h}{2} \alpha ) } { \beta + \frac{h}{2} \alpha } \]
+\form#102:\[ u_o = \frac{ hg + u_i (1-a(1+\frac{h}{2})) }{ 1-a(1-\frac{h}{2}) } \]
+\form#103:\[ \nabla \cdot D \nabla u + C u = f \]
+\form#104:$ \alpha $
+\form#105:$ \beta $
+\form#106:$ \gamma $
+\form#107:$ \alpha u + \beta u_n = \gamma $
+\form#108:\[ D \nabla w \]
+\form#109:$ Ae=r $
+\form#110:$ \nabla ( D \nabla u ) + C u = f $
+\form#111:\[ \alpha u + \beta u_n = \gamma \]
+\form#112:$ \alpha x + @beta y $
+\form#113:$ \alpha, @beta $
+\form#114:$ x, y $
+\form#115:$ \alpha x + y $
+\form#116:$ \sum_i ( \| data_i \| cvol_i ) $
+\form#117:$ \sum_i ( \| data_i \| ) $
+\form#118:$ \sqrt{ \sum_i ( (data_i)^2 cvol_i ) } $
+\form#119:$ \sqrt{ \sum_i ( (data_i)^2 ) } $
+\form#120:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) } $
+\form#121:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 ) } $
+\form#122:$ \max $
+\form#123:$ \|x_i\| > 0 $
+\form#124:$ w_i * x_i \leq 0 $
+\form#125:$ cvol_i > 0 $
+\form#126:$ w_i = 1 $
+\form#127:$ \|x_i\| > \alpha $
+\form#128:$ w_i = 0 $
+\form#129:$ w_i = 1/x_i $
+\form#130:$ x_i \neq 0 $

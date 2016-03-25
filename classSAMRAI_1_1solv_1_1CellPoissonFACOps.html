@@ -126,7 +126,7 @@ Inheritance diagram for SAMRAI::solv::CellPoissonFACOps&lt; DIM &gt;:<p><center>
 FAC operator class to solve Poisson's equation on a SAMR grid, using cell-centered, second-order finite-volume method, with Robin boundary conditions. 
 <p>
 This class provides operators that are used by the FAC preconditioner FACPreconditioner&lt;DIM&gt;. It is used to solve the scalar Poisson's equation using a cell-centered second-order finite-volume discretization. It is designed to provide all operations specific to the scalar Poisson's equation, <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \nabla \cdot D \nabla u + C u = f \]" src="form_101.png">
+<img class="formulaDsp" alt="\[ \nabla \cdot D \nabla u + C u = f \]" src="form_103.png">
 <p>
  (see <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a>) where<ul>
 <li>C, D and f are indpendent of u</li><li>C is a cell-centered scalar field</li><li>D is the <em>diffusion</em> <em>coefficients</em>, stored on faces</li><li>f is a cell-centered scalar function</li></ul>
@@ -136,7 +136,7 @@ This class provides:<ol type=1>
 <li>5-point (second order), cell-centered stencil operations for the discrete Laplacian.</li><li>Red-black Gauss-Seidel smoothing.</li><li>Provisions for working Robin boundary conditions (see <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a>).</li></ol>
 <p>
 This class is meant to provide the Poisson-specific operator used by the FAC preconditioner, FACPreconditioner&lt;DIM&gt;. To use the preconditioner with this class, you will have to provide:<ol type=1>
-<li>The solution vector SAMRAIVectorReal&lt;DIM&gt;, with appropriate norm weighting for the cell-centered AMR mesh. This class provides the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#6600a8f8ef7c74de55d6e03fa33579f8">computeVectorWeights()</a> to help with computing the appropriate weights. Since this is for a scalar equation, only the first depth of the first component of the vectors are used. All other parts are ignored.</li><li>The source vector SAMRAIVectorReal&lt;DIM&gt; for f.</li><li>A <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> objects to specify the cell-centered scalar field C and the side-centered diffusion coefficients D</li><li>The boundary condition specifications in terms of the coefficients <img class="formulaInl" alt="$ \alpha $" src="form_102.png">, <img class="formulaInl" alt="$ \beta $" src="form_103.png"> and <img class="formulaInl" alt="$ \gamma $" src="form_104.png"> in the Robin formula <img class="formulaInl" alt="$ \alpha u + \beta u_n = \gamma $" src="form_105.png"> applied on the boundary faces. See RobinBcCoefStrategy&lt;DIM&gt;.</li></ol>
+<li>The solution vector SAMRAIVectorReal&lt;DIM&gt;, with appropriate norm weighting for the cell-centered AMR mesh. This class provides the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#6600a8f8ef7c74de55d6e03fa33579f8">computeVectorWeights()</a> to help with computing the appropriate weights. Since this is for a scalar equation, only the first depth of the first component of the vectors are used. All other parts are ignored.</li><li>The source vector SAMRAIVectorReal&lt;DIM&gt; for f.</li><li>A <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> objects to specify the cell-centered scalar field C and the side-centered diffusion coefficients D</li><li>The boundary condition specifications in terms of the coefficients <img class="formulaInl" alt="$ \alpha $" src="form_104.png">, <img class="formulaInl" alt="$ \beta $" src="form_105.png"> and <img class="formulaInl" alt="$ \gamma $" src="form_106.png"> in the Robin formula <img class="formulaInl" alt="$ \alpha u + \beta u_n = \gamma $" src="form_107.png"> applied on the boundary faces. See RobinBcCoefStrategy&lt;DIM&gt;.</li></ol>
 <p>
 This class allocates and deallocates only its own scratch data. Other data that it manipuates are passed in as function arguments. Hence, it owns none of the solution vectors, error vectors, diffusion coefficient data, or any such things.<p>
 Input Examples <div class="fragment"><pre class="fragment">
@@ -654,10 +654,10 @@ template&lt;int DIM&gt; </div>
 function to compute flux, using general diffusion coefficient data. 
 <p>
 Recall that this solver class discretizes the PDE <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \nabla \cdot D \nabla u + C u = f \]" src="form_101.png">
+<img class="formulaDsp" alt="\[ \nabla \cdot D \nabla u + C u = f \]" src="form_103.png">
 <p>
  on an AMR grid. This member function allows users of this solver class to compute gradient terms, <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ D \nabla w \]" src="form_106.png">
+<img class="formulaDsp" alt="\[ D \nabla w \]" src="form_108.png">
 <p>
 , in their code in a manner consistent with the solver discretization. In particular, when solving PDE systems, it may be necessary to discretize the gradient operator appearing in equations not treated by the solver class in the same way as those treated by this class. These funtions allow users to do this easily. The divergence operator used in this solver is the standard sum of centered differences involving flux terms on the cell sides computed by these routines.<p>
 Note that the patch must exist on a level in an AMR hierarchy so that the discretization can be computed properly at the coarse-fine interface. Poisson coefficients C and D must exist on the patch, if they are variable. Also, calling this function does not affect the internal solver state in any way. However, the solver must be fully initialized before it is called and care should be exercised to pass arguments so that the solver solution quantity and other internal solver quantities are not adversely affected.<p>
@@ -819,7 +819,7 @@ Prolong the error quantity to the specified level from the next coarser level an
 On the part of the coarse level that does <em>not</em> overlap the fine level, the error is the corection to Au=f.<p>
 On the part of the coarse level that <em>does</em> overlap the fine level, the error is the corection to Ae=r of the fine level.<p>
 This function should apply the coarse-level correction to the fine level, that is <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ e^{fine} \leftarrow e^{fine} + I^{fine}_{coarse} e^{coarse} \]" src="form_44.png">
+<img class="formulaDsp" alt="\[ e^{fine} \leftarrow e^{fine} + I^{fine}_{coarse} e^{coarse} \]" src="form_46.png">
 <p>
 <p>
 <b>Note:</b> You probably have to store the refined error in a temporary location before adding it to the current error.<p>
@@ -1008,13 +1008,13 @@ May assume:<ul>
 <li>Composite residual on next finer level l+1, has been computed already.</li><li>If any intermediately computed data is needed from level l+1, it has been done and stored on that level.</li><li>Residual computations for the original equation and the error equations will not be intermingled within one FAC cycle.</li></ul>
 <p>
 Steps:<ol type=1>
-<li>Fill boundary ghosts.</li><li>If needed, coarsen intermediate data from level l+1.</li><li>Compute residual <img class="formulaInl" alt="$ r^l \leftarrow f - A u^l $" src="form_45.png">.</li></ol>
+<li>Fill boundary ghosts.</li><li>If needed, coarsen intermediate data from level l+1.</li><li>Compute residual <img class="formulaInl" alt="$ r^l \leftarrow f - A u^l $" src="form_47.png">.</li></ol>
 <p>
 Final step before leaving function:<ul>
 <li>If any intermediately computed data is needed in at level l-1, it must be computed and stored before leaving this function.</li></ul>
 <p>
 <b>Important:</b> Do not restrict residual from finer levels. (However, you must write the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#c813143b5414d2cc72efaff9c5b4b22c">restrictResidual()</a> to do this.)<p>
-<b>Important:</b> This function must also work when the right-hand-side and the residual are identical. In that case, it should effectively do <img class="formulaInl" alt="$ r \leftarrow r - A u $" src="form_46.png">.<p>
+<b>Important:</b> This function must also work when the right-hand-side and the residual are identical. In that case, it should effectively do <img class="formulaInl" alt="$ r \leftarrow r - A u $" src="form_48.png">.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>residual</em>&nbsp;</td><td>residual vector </td></tr>
@@ -1206,7 +1206,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrateg
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="CellPoissonFACOps_8h.html">CellPoissonFACOps.h</a><li>source/solvers/poisson/<a class="el" href="CellPoissonFACOps_8C.html">CellPoissonFACOps.C</a><li>source/solvers/poisson/<a class="el" href="CellPoissonFACOps_8I.html">CellPoissonFACOps.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:44 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:26 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

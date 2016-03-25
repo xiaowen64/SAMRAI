@@ -277,7 +277,7 @@ Prolong the error quantity to the specified level from the next coarser level an
 On the part of the coarse level that does <em>not</em> overlap the fine level, the error is the corection to Au=f.<p>
 On the part of the coarse level that <em>does</em> overlap the fine level, the error is the corection to Ae=r of the fine level.<p>
 This function should apply the coarse-level correction to the fine level, that is <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ e^{fine} \leftarrow e^{fine} + I^{fine}_{coarse} e^{coarse} \]" src="form_44.png">
+<img class="formulaDsp" alt="\[ e^{fine} \leftarrow e^{fine} + I^{fine}_{coarse} e^{coarse} \]" src="form_46.png">
 <p>
 <p>
 <b>Note:</b> You probably have to store the refined error in a temporary location before adding it to the current error.<p>
@@ -466,13 +466,13 @@ May assume:<ul>
 <li>Composite residual on next finer level l+1, has been computed already.</li><li>If any intermediately computed data is needed from level l+1, it has been done and stored on that level.</li><li>Residual computations for the original equation and the error equations will not be intermingled within one FAC cycle.</li></ul>
 <p>
 Steps:<ol type=1>
-<li>Fill boundary ghosts.</li><li>If needed, coarsen intermediate data from level l+1.</li><li>Compute residual <img class="formulaInl" alt="$ r^l \leftarrow f - A u^l $" src="form_45.png">.</li></ol>
+<li>Fill boundary ghosts.</li><li>If needed, coarsen intermediate data from level l+1.</li><li>Compute residual <img class="formulaInl" alt="$ r^l \leftarrow f - A u^l $" src="form_47.png">.</li></ol>
 <p>
 Final step before leaving function:<ul>
 <li>If any intermediately computed data is needed in at level l-1, it must be computed and stored before leaving this function.</li></ul>
 <p>
 <b>Important:</b> Do not restrict residual from finer levels. (However, you must write the function <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#cb3cd141b3ae50a4d284d3a4d930fd20">restrictResidual()</a> to do this.)<p>
-<b>Important:</b> This function must also work when the right-hand-side and the residual are identical. In that case, it should effectively do <img class="formulaInl" alt="$ r \leftarrow r - A u $" src="form_46.png">.<p>
+<b>Important:</b> This function must also work when the right-hand-side and the residual are identical. In that case, it should effectively do <img class="formulaInl" alt="$ r \leftarrow r - A u $" src="form_48.png">.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>residual</em>&nbsp;</td><td>residual vector </td></tr>
@@ -664,7 +664,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.ht
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/FAC/<a class="el" href="FACOperatorStrategy_8h.html">FACOperatorStrategy.h</a><li>source/solvers/FAC/<a class="el" href="FACOperatorStrategy_8C.html">FACOperatorStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:43 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:25 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

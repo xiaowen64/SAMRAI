@@ -29,10 +29,10 @@
 <a href="classSAMRAI_1_1mesh_1_1HistogramBox-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#2405bf0c312ec042d48b68435a098ff7a589734601caf9bcff197419f3f6bf4f">ORIGINAL_MODE</a> =  0, 
-<a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#2405bf0c312ec042d48b68435a098ff7f068a099d235a5160641ae6c492e2d61">ORIG_FAST_REDUCE_MODE</a> =  1, 
-<a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#2405bf0c312ec042d48b68435a098ff7bdc4356d7cf3a2cad306825f137b68f9">BINARY_TREE_MODE</a> =  2, 
-<a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#2405bf0c312ec042d48b68435a098ff780e7bd633d39e66bdb1f8082bcd85db0">COMMUNICATOR_MODE</a> =  3
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#1f6ce5ca0642088b7854072c98b03ed5a589734601caf9bcff197419f3f6bf4f">ORIGINAL_MODE</a> =  0, 
+<a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#1f6ce5ca0642088b7854072c98b03ed5f068a099d235a5160641ae6c492e2d61">ORIG_FAST_REDUCE_MODE</a> =  1, 
+<a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#1f6ce5ca0642088b7854072c98b03ed5bdc4356d7cf3a2cad306825f137b68f9">BINARY_TREE_MODE</a> =  2, 
+<a class="el" href="classSAMRAI_1_1mesh_1_1HistogramBox.html#1f6ce5ca0642088b7854072c98b03ed580e7bd633d39e66bdb1f8082bcd85db0">COMMUNICATOR_MODE</a> =  3
  }</td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
@@ -79,7 +79,7 @@
 Class HistogramBox&lt;DIM&gt; manages the histogram signature array for a region of index space contained within a single box. It is used during the regridding process to gather information about the distribution of tagged cells across a portion of a patch level. 
 <p>
 <hr><h2>Member Enumeration Documentation</h2>
-<a class="anchor" name="2405bf0c312ec042d48b68435a098ff7"></a><!-- doxytag: member="SAMRAI::mesh::HistogramBox::@5" ref="2405bf0c312ec042d48b68435a098ff7" args="" -->
+<a class="anchor" name="1f6ce5ca0642088b7854072c98b03ed5"></a><!-- doxytag: member="SAMRAI::mesh::HistogramBox::@10" ref="1f6ce5ca0642088b7854072c98b03ed5" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -98,13 +98,13 @@ Enumerated type for the communication mode. For a description of each of these m
 <li><b>ORIGINAL_MODE</b> {Original communication mode used in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>, through v1.3.1 (global reductions).}</li><li><b>ORIG_FAST_REDUCE_MODE</b> {Original communication mode but with a 'faster' reduce operation.}</li><li><b>BINARY_TREE_MODE</b> {Reduces all-to-all communication costs using explicit tbox::MPI send/recvs in a binary tree, rather than global reductions.}</li><li><b>COMMUNICATOR_MODE</b> {Similar to the binary tree option, but uses tbox::MPI communicators in place of the explicit send/recvs.} </li></ul>
 <dl compact><dt><b>Enumerator: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="2405bf0c312ec042d48b68435a098ff7a589734601caf9bcff197419f3f6bf4f"></a><!-- doxytag: member="ORIGINAL_MODE" ref="2405bf0c312ec042d48b68435a098ff7a589734601caf9bcff197419f3f6bf4f" args="" -->ORIGINAL_MODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="1f6ce5ca0642088b7854072c98b03ed5a589734601caf9bcff197419f3f6bf4f"></a><!-- doxytag: member="ORIGINAL_MODE" ref="1f6ce5ca0642088b7854072c98b03ed5a589734601caf9bcff197419f3f6bf4f" args="" -->ORIGINAL_MODE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="2405bf0c312ec042d48b68435a098ff7f068a099d235a5160641ae6c492e2d61"></a><!-- doxytag: member="ORIG_FAST_REDUCE_MODE" ref="2405bf0c312ec042d48b68435a098ff7f068a099d235a5160641ae6c492e2d61" args="" -->ORIG_FAST_REDUCE_MODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="1f6ce5ca0642088b7854072c98b03ed5f068a099d235a5160641ae6c492e2d61"></a><!-- doxytag: member="ORIG_FAST_REDUCE_MODE" ref="1f6ce5ca0642088b7854072c98b03ed5f068a099d235a5160641ae6c492e2d61" args="" -->ORIG_FAST_REDUCE_MODE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="2405bf0c312ec042d48b68435a098ff7bdc4356d7cf3a2cad306825f137b68f9"></a><!-- doxytag: member="BINARY_TREE_MODE" ref="2405bf0c312ec042d48b68435a098ff7bdc4356d7cf3a2cad306825f137b68f9" args="" -->BINARY_TREE_MODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="1f6ce5ca0642088b7854072c98b03ed5bdc4356d7cf3a2cad306825f137b68f9"></a><!-- doxytag: member="BINARY_TREE_MODE" ref="1f6ce5ca0642088b7854072c98b03ed5bdc4356d7cf3a2cad306825f137b68f9" args="" -->BINARY_TREE_MODE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="2405bf0c312ec042d48b68435a098ff780e7bd633d39e66bdb1f8082bcd85db0"></a><!-- doxytag: member="COMMUNICATOR_MODE" ref="2405bf0c312ec042d48b68435a098ff780e7bd633d39e66bdb1f8082bcd85db0" args="" -->COMMUNICATOR_MODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="1f6ce5ca0642088b7854072c98b03ed580e7bd633d39e66bdb1f8082bcd85db0"></a><!-- doxytag: member="COMMUNICATOR_MODE" ref="1f6ce5ca0642088b7854072c98b03ed580e7bd633d39e66bdb1f8082bcd85db0" args="" -->COMMUNICATOR_MODE</em>&nbsp;</td><td>
 </td></tr>
 </table>
 </dl>
@@ -569,7 +569,7 @@ Set all histogram elements to zero.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mesh/clustering/<a class="el" href="HistogramBox_8h.html">HistogramBox.h</a><li>source/mesh/clustering/<a class="el" href="HistogramBox_8C.html">HistogramBox.C</a><li>source/mesh/clustering/<a class="el" href="HistogramBox_8I.html">HistogramBox.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:28 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:11 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

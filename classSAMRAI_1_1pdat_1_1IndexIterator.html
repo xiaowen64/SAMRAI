@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>SAMRAI: SAMRAI::pdat::IndexIterator&lt; DIM, TYPE &gt; Class Template Reference</title>
+<title>SAMRAI: SAMRAI::pdat::IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -21,50 +21,63 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a></div>
-<h1>SAMRAI::pdat::IndexIterator&lt; DIM, TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexIterator" --><code>#include &lt;source/patchdata/index/IndexData.h&gt;</code>
+<h1>SAMRAI::pdat::IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::IndexIterator" --><code>#include &lt;source/patchdata/index/IndexData.h&gt;</code>
 <p>
 <a href="classSAMRAI_1_1pdat_1_1IndexIterator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#301a329eef1e0b368e47c8bf98304fc2">IndexIterator</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#3b1ca237144a01838252a80dbfe24cfb">IndexIterator</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#633155982ef668fe59ccae896e5b956a">IndexIterator</a> (<a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE &gt; &amp;data)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#efe79a011aa1f4cfde897b129a387cf4">IndexIterator</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;data)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#95a54600bc1f3a981ead8723de3454ae">IndexIterator</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;iterator)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#21f6074fa27629daf37e0e77abe061c4">IndexIterator</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#466139261f83c7f32f3f7d270b560a0e">operator=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;iterator)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE,<br>
+ BOX_GEOMETRY &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#89f26f4d2c4c86d1790f1112ba3b5f35">operator=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#ca16592e367382aa63b4d4e811642e6b">~IndexIterator</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#36a5cd43f2f524370988bff534c30751">~IndexIterator</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#17095d9a5672a964a7c7db084f19f05b">operator *</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#a55ee74aff0a5e81cadedc712c48d0f9">operator *</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#a176b6137b492fc3aca875cf839bdf7c">operator()</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#65a7cb6fd43a77ddfdff8210f862a720">operator *</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#2bfbf30db7ba411a0b565c1e9af2e7a1">getItem</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#6477f723ac92b511bf9732f5df4953be">operator()</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#9609a3a89deceaa49221a99f5a26a8b8">getIndex</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#19975f2760508fd6bb4be07d5349db68">operator()</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#eb409dfefb654f205881ab6101d8edc7">operator bool</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#b5e13a568e3f182cc64513adccfb0d14">getItem</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#9815033f324d43cec629a7e2b28c48e1">operator const void *</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#0433f422db821aec06015d9b95c8f1e7">getIndex</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#73d070801e98edb32b19847d164df475">operator!</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#5c88ab493e462979b7f2dc45629064f0">operator bool</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#aebb12a2ca1d17298eb2e592a9e2fc91">operator++</a> (int)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#e3882dc29c63693fe1c45bf1ca5a0b2d">operator const void *</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#d4ecd7b9928ac0ea6b7f67aa2bda6c4e">operator==</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;iterator) const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#874b5253e718fcc6bfbe729283fb9f8e">operator!</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#60152fbf0365cb73c58fcaafa92a8816">operator!=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;iterator) const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#64c9e65bdee3432d76f1be6c7c91da16">operator++</a> (int)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#70d718b9fec5ffdda78bb9177dec4d31">operator--</a> (int)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#e12b19f76ce41456f71895fdbf19c22a">operator==</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#2a8d8f7e8486e20a8e38f7e7254b67ac">operator!=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#fe31395eb649b31319e1ce40624e278c">rewindIterator</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#360f6fa4844f3e978bb081ea62520918">fastforwardIterator</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#e5919be3872998f93276a8e734892e13">ConstIndexIterator&lt; DIM, TYPE &gt;</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#f27a903190e2e962ad8ce970e9c840f1">ConstIndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html#704d65a065aa0f1a47a3b237659feb09">IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;int DIM, class TYPE&gt;<br>
- class SAMRAI::pdat::IndexIterator&lt; DIM, TYPE &gt;</h3>
+<h3>template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt;<br>
+ class SAMRAI::pdat::IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;</h3>
 
-Class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a> is the iterator associated with the <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> This class provides methods for stepping through the list that contains the irregular index set. The user should access this class through the name <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#c522cc2172e26747e0ecacdc569ca009">IndexData&lt;DIM,TYPE&gt;::Iterator</a>.<p>
+Class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a> is the iterator associated with the <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> This class provides methods for stepping through the list that contains the irregular index set. The user should access this class through the name <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#f8bfcbf9121f5c4bb222575591373ca9">IndexData&lt;DIM,TYPE&gt;::Iterator</a>.<p>
 This iterator should be used as follows: <div class="fragment"><pre class="fragment">
    IndexData&lt;DIM,TYPE&gt; data;
    ...
@@ -78,18 +91,18 @@ This iterator should be used as follows: <div class="fragment"><pre class="fragm
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="301a329eef1e0b368e47c8bf98304fc2"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexIterator" ref="301a329eef1e0b368e47c8bf98304fc2" args="()" -->
+<a class="anchor" name="3b1ca237144a01838252a80dbfe24cfb"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexIterator" ref="3b1ca237144a01838252a80dbfe24cfb" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -99,19 +112,19 @@ template&lt;int DIM, class TYPE&gt; </div>
 Default constructor for the index list iterator. The iterator must be initialized before it can be used to iterate over an <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> object. 
 </div>
 </div><p>
-<a class="anchor" name="633155982ef668fe59ccae896e5b956a"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexIterator" ref="633155982ef668fe59ccae896e5b956a" args="(IndexData&lt; DIM, TYPE &gt; &amp;data)" -->
+<a class="anchor" name="efe79a011aa1f4cfde897b129a387cf4"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexIterator" ref="efe79a011aa1f4cfde897b129a387cf4" args="(const IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;data)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>data</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -121,19 +134,19 @@ template&lt;int DIM, class TYPE&gt; </div>
 Constructor for the index list iterator. The iterator will iterate over the irregular index set of the argument data object. 
 </div>
 </div><p>
-<a class="anchor" name="95a54600bc1f3a981ead8723de3454ae"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexIterator" ref="95a54600bc1f3a981ead8723de3454ae" args="(const IndexIterator&lt; DIM, TYPE &gt; &amp;iterator)" -->
+<a class="anchor" name="21f6074fa27629daf37e0e77abe061c4"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexIterator" ref="21f6074fa27629daf37e0e77abe061c4" args="(const IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>iterator</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -143,14 +156,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Copy constructor for the index list iterator. 
 </div>
 </div><p>
-<a class="anchor" name="ca16592e367382aa63b4d4e811642e6b"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::~IndexIterator" ref="ca16592e367382aa63b4d4e811642e6b" args="()" -->
+<a class="anchor" name="36a5cd43f2f524370988bff534c30751"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::~IndexIterator" ref="36a5cd43f2f524370988bff534c30751" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::~<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -165,16 +178,16 @@ Destructor for the index list iterator.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="466139261f83c7f32f3f7d270b560a0e"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator=" ref="466139261f83c7f32f3f7d270b560a0e" args="(const IndexIterator&lt; DIM, TYPE &gt; &amp;iterator)" -->
+<a class="anchor" name="89f26f4d2c4c86d1790f1112ba3b5f35"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator=" ref="89f26f4d2c4c86d1790f1112ba3b5f35" args="(const IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator=           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator=           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>iterator</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
@@ -187,14 +200,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Assignment operator for the index list iterator. 
 </div>
 </div><p>
-<a class="anchor" name="17095d9a5672a964a7c7db084f19f05b"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator *" ref="17095d9a5672a964a7c7db084f19f05b" args="()" -->
+<a class="anchor" name="a55ee74aff0a5e81cadedc712c48d0f9"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator *" ref="a55ee74aff0a5e81cadedc712c48d0f9" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator *           </td>
+          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator *           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -208,56 +221,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Return the current item in the irregular index set. 
 </div>
 </div><p>
-<a class="anchor" name="a176b6137b492fc3aca875cf839bdf7c"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator()" ref="a176b6137b492fc3aca875cf839bdf7c" args="()" -->
+<a class="anchor" name="65a7cb6fd43a77ddfdff8210f862a720"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator *" ref="65a7cb6fd43a77ddfdff8210f862a720" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator()           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return the current item in the irregular index set. 
-</div>
-</div><p>
-<a class="anchor" name="2bfbf30db7ba411a0b565c1e9af2e7a1"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::getItem" ref="2bfbf30db7ba411a0b565c1e9af2e7a1" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::getItem           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return the current item in the irregular index set. 
-</div>
-</div><p>
-<a class="anchor" name="9609a3a89deceaa49221a99f5a26a8b8"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::getIndex" ref="9609a3a89deceaa49221a99f5a26a8b8" args="() const" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&lt; DIM &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::getIndex           </td>
+          <td class="memname">const TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator *           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -268,17 +239,101 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the index of the current item in the irregular index set 
+Return a const reference to the current item in the irregular index set. 
 </div>
 </div><p>
-<a class="anchor" name="eb409dfefb654f205881ab6101d8edc7"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator bool" ref="eb409dfefb654f205881ab6101d8edc7" args="() const" -->
+<a class="anchor" name="6477f723ac92b511bf9732f5df4953be"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator()" ref="6477f723ac92b511bf9732f5df4953be" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator bool           </td>
+          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator()           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return the current item in the irregular index set. 
+</div>
+</div><p>
+<a class="anchor" name="19975f2760508fd6bb4be07d5349db68"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator()" ref="19975f2760508fd6bb4be07d5349db68" args="() const" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator()           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return a const refeferene to the current item in the irregular index set. 
+</div>
+</div><p>
+<a class="anchor" name="b5e13a568e3f182cc64513adccfb0d14"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::getItem" ref="b5e13a568e3f182cc64513adccfb0d14" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">TYPE&amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::getItem           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return the current item in the irregular index set. 
+</div>
+</div><p>
+<a class="anchor" name="0433f422db821aec06015d9b95c8f1e7"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::getIndex" ref="0433f422db821aec06015d9b95c8f1e7" args="() const" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&lt;DIM&gt;&amp; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::getIndex           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return the index of the current item in the irregular index set 
+</div>
+</div><p>
+<a class="anchor" name="5c88ab493e462979b7f2dc45629064f0"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator bool" ref="5c88ab493e462979b7f2dc45629064f0" args="() const" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator bool           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -292,14 +347,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Return true if the iterator points to a valid item in the index set. 
 </div>
 </div><p>
-<a class="anchor" name="9815033f324d43cec629a7e2b28c48e1"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator const void *" ref="9815033f324d43cec629a7e2b28c48e1" args="() const" -->
+<a class="anchor" name="e3882dc29c63693fe1c45bf1ca5a0b2d"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator const void *" ref="e3882dc29c63693fe1c45bf1ca5a0b2d" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator const void *           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator const void *           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -313,14 +368,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Return a non-null if the iterator points to a valid item in the index set. 
 </div>
 </div><p>
-<a class="anchor" name="73d070801e98edb32b19847d164df475"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator!" ref="73d070801e98edb32b19847d164df475" args="() const" -->
+<a class="anchor" name="874b5253e718fcc6bfbe729283fb9f8e"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator!" ref="874b5253e718fcc6bfbe729283fb9f8e" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator!           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator!           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -334,14 +389,14 @@ template&lt;int DIM, class TYPE&gt; </div>
 Return whether the iterator points to a valid item in the index set. This operator mimics the !p operation applied to a pointer p. 
 </div>
 </div><p>
-<a class="anchor" name="aebb12a2ca1d17298eb2e592a9e2fc91"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator++" ref="aebb12a2ca1d17298eb2e592a9e2fc91" args="(int)" -->
+<a class="anchor" name="64c9e65bdee3432d76f1be6c7c91da16"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator++" ref="64c9e65bdee3432d76f1be6c7c91da16" args="(int)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator++           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator++           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname">          </td>
@@ -356,16 +411,38 @@ template&lt;int DIM, class TYPE&gt; </div>
 Increment the iterator to point to the next item in the index set. 
 </div>
 </div><p>
-<a class="anchor" name="d4ecd7b9928ac0ea6b7f67aa2bda6c4e"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator==" ref="d4ecd7b9928ac0ea6b7f67aa2bda6c4e" args="(const IndexIterator&lt; DIM, TYPE &gt; &amp;iterator) const" -->
+<a class="anchor" name="70d718b9fec5ffdda78bb9177dec4d31"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator--" ref="70d718b9fec5ffdda78bb9177dec4d31" args="(int)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator==           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator--           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;&nbsp;</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Decrement the iterator to point to the previous item in the index set. 
+</div>
+</div><p>
+<a class="anchor" name="e12b19f76ce41456f71895fdbf19c22a"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator==" ref="e12b19f76ce41456f71895fdbf19c22a" args="(const IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator==           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>iterator</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [inline]</code></td>
@@ -378,16 +455,16 @@ template&lt;int DIM, class TYPE&gt; </div>
 Test two iterators for equality (pointing to the same item). 
 </div>
 </div><p>
-<a class="anchor" name="60152fbf0365cb73c58fcaafa92a8816"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator!=" ref="60152fbf0365cb73c58fcaafa92a8816" args="(const IndexIterator&lt; DIM, TYPE &gt; &amp;iterator) const" -->
+<a class="anchor" name="2a8d8f7e8486e20a8e38f7e7254b67ac"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::operator!=" ref="2a8d8f7e8486e20a8e38f7e7254b67ac" args="(const IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;iterator) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE &gt;::operator!=           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::operator!=           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>iterator</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [inline]</code></td>
@@ -400,15 +477,74 @@ template&lt;int DIM, class TYPE&gt; </div>
 Test two iterators for inequality (pointing to different items). 
 </div>
 </div><p>
-<hr><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" name="e5919be3872998f93276a8e734892e13"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::ConstIndexIterator&lt; DIM, TYPE &gt;" ref="e5919be3872998f93276a8e734892e13" args="" -->
+<a class="anchor" name="fe31395eb649b31319e1ce40624e278c"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::rewindIterator" ref="fe31395eb649b31319e1ce40624e278c" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;int DIM, class TYPE&gt; </div>
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1ConstIndexIterator.html">ConstIndexIterator</a>&lt; DIM, TYPE &gt;<code> [friend]</code>          </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::rewindIterator           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="360f6fa4844f3e978bb081ea62520918"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::fastforwardIterator" ref="360f6fa4844f3e978bb081ea62520918" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;::fastforwardIterator           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="f27a903190e2e962ad8ce970e9c840f1"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::ConstIndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;" ref="f27a903190e2e962ad8ce970e9c840f1" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class ConstIndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;<code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="704d65a065aa0f1a47a3b237659feb09"></a><!-- doxytag: member="SAMRAI::pdat::IndexIterator::IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt;" ref="704d65a065aa0f1a47a3b237659feb09" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM, class TYPE, class BOX_GEOMETRY&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>&lt; DIM, TYPE, BOX_GEOMETRY &gt;<code> [friend]</code>          </td>
         </tr>
       </table>
 </div>
@@ -419,8 +555,8 @@ template&lt;int DIM, class TYPE&gt; </div>
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/patchdata/index/<a class="el" href="IndexData_8h.html">IndexData.h</a><li>source/patchdata/index/<a class="el" href="IndexData_8C.html">IndexData.C</a><li>source/patchdata/index/<a class="el" href="IndexData_8I.html">IndexData.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:33 2008 for SAMRAI by&nbsp;
+<li>source/patchdata/index/<a class="el" href="IndexData_8h.html">IndexData.h</a><li>source/patchdata/index/<a class="el" href="IndexData_8I.html">IndexData.I</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:15 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

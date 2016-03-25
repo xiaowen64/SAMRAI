@@ -771,7 +771,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 + \beta s_2$" src="form_36.png">, where <img class="formulaInl" alt="$d$" src="form_37.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_38.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha, \beta$" src="form_39.png"> are scalar values. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 + \beta s_2$" src="form_38.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha, \beta$" src="form_41.png"> are scalar values. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#342b4ca27b4f1ce7c7cf662f4db8bd82">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -822,7 +822,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 + s_2$" src="form_40.png">, where <img class="formulaInl" alt="$d$" src="form_37.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_38.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_41.png"> is a scalar. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 + s_2$" src="form_42.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#1a4ffa6af9abda563ed25bfefb11b2d3">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -873,7 +873,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 - s_2$" src="form_42.png">, where <img class="formulaInl" alt="$d$" src="form_37.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_38.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_41.png"> is a scalar. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 - s_2$" src="form_44.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#e4d5fb4824e5b0a0ed09d7bdd22e1062">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1128,7 +1128,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_15.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \| data_i \| cvol_i )$" src="form_28.png">. If the control volume is not defined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sum_i ( \| data_i \| )$" src="form_29.png">. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_17.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \| data_i \| cvol_i )$" src="form_30.png">. If the control volume is not defined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sum_i ( \| data_i \| )$" src="form_31.png">. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#10546d68a6434f42da3a8664b45e6ad2">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1167,7 +1167,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_30.png">. If the control volume is not defined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_30.png">. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
+Return discrete <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_32.png">. If the control volume is not defined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_32.png">. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#c44ec9ae0ae072b0eccf29c39d646b57">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1206,7 +1206,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) }$" src="form_31.png">. If the control volume is not defined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 ) }$" src="form_32.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) }$" src="form_33.png">. If the control volume is not defined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 ) }$" src="form_34.png">. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#c8d22b785e21f392c18711942f26ba4e">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1239,7 +1239,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete root mean squared norm of the data. If the control volume is defined, the return value is the <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the number of data entries. 
+Return discrete root mean squared norm of the data. If the control volume is defined, the return value is the <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the number of data entries. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#62357d080ccefbcad49c706add08a44b">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1278,7 +1278,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted root mean squared norm of the data. If the control volume is define, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_18.png">-norm divided by the square root of the number of data entries. 
+Return discrete weighted root mean squared norm of the data. If the control volume is define, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_20.png">-norm divided by the square root of the number of data entries. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#ed9cb1da52558b65dd59c2217b971109">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1317,7 +1317,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_22.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \| data_i \| )$" src="form_33.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the computation of the maximum. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \| data_i \| )$" src="form_35.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the computation of the maximum. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#3101148cd70791c510476d32d8f55ddd">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1362,7 +1362,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * data2_i * cvol_i )$" src="form_34.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the summation. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
+Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * data2_i * cvol_i )$" src="form_36.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the summation. If local_only is true, the global reduction is not performed (thus each process will get only local results). 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#5e93cfef3649d6b70abc8349664500b6">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1395,7 +1395,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_26.png">. 
+Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">. 
 </div>
 </div><p>
 <a class="anchor" name="936ddfc1d9bd69f77b3926d41f4706c7"></a><!-- doxytag: member="SAMRAI::math::HierarchyEdgeDataOpsReal::computeConstrProdPos" ref="936ddfc1d9bd69f77b3926d41f4706c7" args="(const int data1_id, const int data2_id, const int vol_id=-1) const " -->
@@ -1432,7 +1432,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_5.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_6.png">, for any <img class="formulaInl" alt="$i$" src="form_7.png"> in the set of patch data indices, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png">. Otherwise, return 0. If the control volume is undefined (vol_id &lt; 0), all values on the patch interiors are considered. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_7.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_8.png">, for any <img class="formulaInl" alt="$i$" src="form_9.png"> in the set of patch data indices, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png">. Otherwise, return 0. If the control volume is undefined (vol_id &lt; 0), all values on the patch interiors are considered. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#53eaa72ceec3227988d88a4f0a1d3b8b">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1477,7 +1477,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png"> in the set of patch data indices, set <img class="formulaInl" alt="$dst_i = 1$" src="form_9.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_10.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. If the control volume is undefined (vol_id &lt; 0), all values on the patch interiors are considered. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png"> in the set of patch data indices, set <img class="formulaInl" alt="$dst_i = 1$" src="form_11.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_12.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. If the control volume is undefined (vol_id &lt; 0), all values on the patch interiors are considered. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#6e6158c6ab154c42f544f1c8eec42440">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1516,7 +1516,7 @@ template&lt;int DIM, class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_8.png"> in the set of patch data indices, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_12.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_13.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_11.png"> anywhere, 0 is the return value. Otherwise 1 is returned. If the control volume is undefined (vol_id &lt; 0), all values on the patch interiors are considered. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_10.png"> in the set of patch data indices, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_14.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_15.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_13.png"> anywhere, 0 is the return value. Otherwise 1 is returned. If the control volume is undefined (vol_id &lt; 0), all values on the patch interiors are considered. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#1148708ec594aec51247d16809c5a4b3">SAMRAI::math::HierarchyDataOpsReal&lt; DIM, TYPE &gt;</a>.
 </div>
@@ -1609,7 +1609,7 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mathops/edge/<a class="el" href="HierarchyEdgeDataOpsReal_8h.html">HierarchyEdgeDataOpsReal.h</a><li>source/mathops/edge/<a class="el" href="HierarchyEdgeDataOpsReal_8C.html">HierarchyEdgeDataOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:21 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:04 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

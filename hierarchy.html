@@ -22,6 +22,15 @@
 <h1>SAMRAI Class Hierarchy</h1>This inheritance list is sorted roughly, but not completely, alphabetically:<ul>
 <li><a class="el" href="structarith__functions.html">arith_functions</a>
 <li><a class="el" href="structKeyData.html">KeyData</a>
+<li><a class="el" href="classMDA__Access.html">MDA_Access&lt; MDA_TYPE, MDA_DIM, OrderType &gt;</a>
+<ul>
+<li><a class="el" href="classMDA__AccessConst.html">MDA_AccessConst&lt; MDA_TYPE, MDA_DIM, OrderType &gt;</a>
+</ul>
+<li><a class="el" href="classMDA__IndexRange.html">MDA_IndexRange&lt; MDA_DIM &gt;</a>
+<ul>
+<li><a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor&lt; MDA_DIM &gt;</a>
+<li><a class="el" href="classMDA__OrderRowMajor.html">MDA_OrderRowMajor&lt; MDA_DIM &gt;</a>
+</ul>
 <li><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html">SAMRAI::algs::ImplicitEquationStrategy&lt; DIM &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1algs_1_1LocallyActiveDataPatchBoundaryEdgeSum.html">SAMRAI::algs::LocallyActiveDataPatchBoundaryEdgeSum&lt; DIM &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1algs_1_1LocallyActiveDataPatchBoundaryNodeSum.html">SAMRAI::algs::LocallyActiveDataPatchBoundaryNodeSum&lt; DIM &gt;</a>
@@ -143,7 +152,7 @@
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">SAMRAI::pdat::CellData&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">SAMRAI::pdat::EdgeData&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData&lt; DIM, TYPE &gt;</a>
-<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData&lt; DIM, TYPE &gt;</a>
+<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">SAMRAI::pdat::NodeData&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceData.html">SAMRAI::pdat::OuterfaceData&lt; DIM, TYPE &gt;</a>
@@ -156,7 +165,7 @@
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html">SAMRAI::pdat::CellDataFactory&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html">SAMRAI::pdat::EdgeDataFactory&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html">SAMRAI::pdat::FaceDataFactory&lt; DIM, TYPE &gt;</a>
-<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE &gt;</a>
+<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">SAMRAI::pdat::IndexDataFactory&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html">SAMRAI::pdat::NodeDataFactory&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html">SAMRAI::pdat::OuteredgeDataFactory&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html">SAMRAI::pdat::OuterfaceDataFactory&lt; DIM, TYPE &gt;</a>
@@ -182,7 +191,7 @@
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1CellVariable.html">SAMRAI::pdat::CellVariable&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeVariable.html">SAMRAI::pdat::EdgeVariable&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1FaceVariable.html">SAMRAI::pdat::FaceVariable&lt; DIM, TYPE &gt;</a>
-<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable&lt; DIM, TYPE &gt;</a>
+<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexVariable.html">SAMRAI::pdat::IndexVariable&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html">SAMRAI::pdat::NodeVariable&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeVariable.html">SAMRAI::pdat::OuteredgeVariable&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceVariable.html">SAMRAI::pdat::OuterfaceVariable&lt; DIM, TYPE &gt;</a>
@@ -357,15 +366,15 @@
 <li><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html">SAMRAI::mesh::StandardTagAndInitialize&lt; DIM &gt;</a>
 </ul>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData&lt; DIM, TYPE &gt;</a>
+<li><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataAccess.html">SAMRAI::pdat::ArrayDataAccess</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataIterator.html">SAMRAI::pdat::ArrayDataIterator&lt; DIM &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataOperationUtilities.html">SAMRAI::pdat::ArrayDataOperationUtilities&lt; DIM, TYPE, OP &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1CellIterator.html">SAMRAI::pdat::CellIterator&lt; DIM &gt;</a>
-<li><a class="el" href="classSAMRAI_1_1pdat_1_1ConstIndexIterator.html">SAMRAI::pdat::ConstIndexIterator&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1CopyOperation.html">SAMRAI::pdat::CopyOperation&lt; TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">SAMRAI::pdat::EdgeIterator&lt; DIM &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">SAMRAI::pdat::FaceIterator&lt; DIM &gt;</a>
-<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE &gt;</a>
-<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator&lt; DIM, TYPE &gt;</a>
+<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataNode.html">SAMRAI::pdat::IndexDataNode&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a>
+<li><a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">SAMRAI::pdat::IndexIterator&lt; DIM, TYPE, BOX_GEOMETRY &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1MBDataUtilities.html">SAMRAI::pdat::MBDataUtilities&lt; DIM, TYPE &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1NodeIterator.html">SAMRAI::pdat::NodeIterator&lt; DIM &gt;</a>
 <li><a class="el" href="classSAMRAI_1_1pdat_1_1SideIterator.html">SAMRAI::pdat::SideIterator&lt; DIM &gt;</a>
@@ -681,7 +690,7 @@
 <li><a class="el" href="unionyyalloc.html">yyalloc</a>
 <li><a class="el" href="unionYYSTYPE.html">YYSTYPE</a>
 </ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:07 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:05:48 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

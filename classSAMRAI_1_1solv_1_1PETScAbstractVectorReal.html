@@ -265,7 +265,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return <img class="formulaInl" alt="$ (x,y) = \sum_i ( x_i * conj(y_i) ) $" src="form_47.png"> , where <img class="formulaInl" alt="$ x $" src="form_48.png"> is this vector. Note that for real vectors, this is the same as <a class="el" href="classSAMRAI_1_1solv_1_1PETScAbstractVectorReal.html#630c854fbad38ccd1e2281973d26286d">TdotWith()</a>. If local_only is true, the operation is limited to parts owned by the local process. 
+Return <img class="formulaInl" alt="$ (x,y) = \sum_i ( x_i * conj(y_i) ) $" src="form_49.png"> , where <img class="formulaInl" alt="$ x $" src="form_50.png"> is this vector. Note that for real vectors, this is the same as <a class="el" href="classSAMRAI_1_1solv_1_1PETScAbstractVectorReal.html#630c854fbad38ccd1e2281973d26286d">TdotWith()</a>. If local_only is true, the operation is limited to parts owned by the local process. 
 </div>
 </div><p>
 <a class="anchor" name="630c854fbad38ccd1e2281973d26286d"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::TdotWith" ref="630c854fbad38ccd1e2281973d26286d" args="(const PETScAbstractVectorReal&lt; TYPE &gt; *y, bool local_only=false) const =0" -->
@@ -296,7 +296,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Limited to local data only, return <img class="formulaInl" alt="$ (x,y) = \sum_i ( x_i * (y_i) ) $" src="form_49.png"> , where <img class="formulaInl" alt="$ x $" src="form_48.png"> is this vector. Note that for real vectors, this is the same as <a class="el" href="classSAMRAI_1_1solv_1_1PETScAbstractVectorReal.html#4374e59f611e15a46b7f8f4fab35f29d">dotWith()</a>. If local_only is true, the operation is limited to parts owned by the local process. 
+Limited to local data only, return <img class="formulaInl" alt="$ (x,y) = \sum_i ( x_i * (y_i) ) $" src="form_51.png"> , where <img class="formulaInl" alt="$ x $" src="form_50.png"> is this vector. Note that for real vectors, this is the same as <a class="el" href="classSAMRAI_1_1solv_1_1PETScAbstractVectorReal.html#4374e59f611e15a46b7f8f4fab35f29d">dotWith()</a>. If local_only is true, the operation is limited to parts owned by the local process. 
 </div>
 </div><p>
 <a class="anchor" name="b7fa4aac954a12832fcfe4eeef4b1362"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::L1Norm" ref="b7fa4aac954a12832fcfe4eeef4b1362" args="(bool local_only=false) const =0" -->
@@ -318,7 +318,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return <img class="formulaInl" alt="$ L_1 $" src="form_50.png"> -norm of this vector.<p>
+Return <img class="formulaInl" alt="$ L_1 $" src="form_52.png"> -norm of this vector.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>local_only</em>&nbsp;</td><td>Flag to get result for local data only. </td></tr>
@@ -346,7 +346,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return <img class="formulaInl" alt="$ L_2 $" src="form_51.png"> -norm of this vector.<p>
+Return <img class="formulaInl" alt="$ L_2 $" src="form_53.png"> -norm of this vector.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>local_only</em>&nbsp;</td><td>Flag to get result for local data only. </td></tr>
@@ -374,7 +374,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return <img class="formulaInl" alt="$ L_{\infty} $" src="form_52.png"> -norm of this vector.<p>
+Return <img class="formulaInl" alt="$ L_{\infty} $" src="form_54.png"> -norm of this vector.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>local_only</em>&nbsp;</td><td>Flag to get result for local data only. </td></tr>
@@ -499,7 +499,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$ y = \alpha x + y $" src="form_53.png"> , where <img class="formulaInl" alt="$ y $" src="form_54.png"> is this vector. 
+Set <img class="formulaInl" alt="$ y = \alpha x + y $" src="form_55.png"> , where <img class="formulaInl" alt="$ y $" src="form_56.png"> is this vector. 
 </div>
 </div><p>
 <a class="anchor" name="12ec89aa1888db959e2661939efe822b"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::setAXPBY" ref="12ec89aa1888db959e2661939efe822b" args="(const TYPE alpha, const PETScAbstractVectorReal&lt; TYPE &gt; *x, const TYPE beta)=0" -->
@@ -536,7 +536,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$ y = \alpha x + @beta y $" src="form_55.png"> , where <img class="formulaInl" alt="$ y $" src="form_54.png"> is this vector. 
+Set <img class="formulaInl" alt="$ y = \alpha x + @beta y $" src="form_57.png"> , where <img class="formulaInl" alt="$ y $" src="form_56.png"> is this vector. 
 </div>
 </div><p>
 <a class="anchor" name="7d487cada617463b16292e9eb4dbe08e"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::setWAXPY" ref="7d487cada617463b16292e9eb4dbe08e" args="(const TYPE alpha, const PETScAbstractVectorReal&lt; TYPE &gt; *x, const PETScAbstractVectorReal&lt; TYPE &gt; *y)=0" -->
@@ -573,7 +573,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$ w = \alpha x + y $" src="form_56.png"> , where <img class="formulaInl" alt="$ w $" src="form_57.png"> is this vector. 
+Set <img class="formulaInl" alt="$ w = \alpha x + y $" src="form_58.png"> , where <img class="formulaInl" alt="$ w $" src="form_59.png"> is this vector. 
 </div>
 </div><p>
 <a class="anchor" name="af052c3342c70c51ea73de655d3dbee5"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::pointwiseMultiply" ref="af052c3342c70c51ea73de655d3dbee5" args="(const PETScAbstractVectorReal&lt; TYPE &gt; *x, const PETScAbstractVectorReal&lt; TYPE &gt; *y)=0" -->
@@ -604,7 +604,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$ w_i = x_i y_i $" src="form_58.png"> , where <img class="formulaInl" alt="$ w_i $" src="form_59.png"> is <img class="formulaInl" alt="$ i $" src="form_60.png"> -th entry of this vector. 
+Set <img class="formulaInl" alt="$ w_i = x_i y_i $" src="form_60.png"> , where <img class="formulaInl" alt="$ w_i $" src="form_61.png"> is <img class="formulaInl" alt="$ i $" src="form_62.png"> -th entry of this vector. 
 </div>
 </div><p>
 <a class="anchor" name="fa874c33f8f990e1ced589f6439a1aa8"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::pointwiseDivide" ref="fa874c33f8f990e1ced589f6439a1aa8" args="(const PETScAbstractVectorReal&lt; TYPE &gt; *x, const PETScAbstractVectorReal&lt; TYPE &gt; *y)=0" -->
@@ -635,7 +635,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$ w_i = x_i / y_i $" src="form_61.png"> , where <img class="formulaInl" alt="$ w_i $" src="form_59.png"> is <img class="formulaInl" alt="$ i $" src="form_60.png"> -th entry of this vector. 
+Set <img class="formulaInl" alt="$ w_i = x_i / y_i $" src="form_63.png"> , where <img class="formulaInl" alt="$ w_i $" src="form_61.png"> is <img class="formulaInl" alt="$ i $" src="form_62.png"> -th entry of this vector. 
 </div>
 </div><p>
 <a class="anchor" name="2dfacc68ad0652ae7cd9a2a8aa957331"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::maxPointwiseDivide" ref="2dfacc68ad0652ae7cd9a2a8aa957331" args="(const PETScAbstractVectorReal&lt; TYPE &gt; *y)=0" -->
@@ -657,7 +657,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Compute <img class="formulaInl" alt="$ max_i = abs(w_i / y_i) $" src="form_62.png"> , where <img class="formulaInl" alt="$ w_i $" src="form_59.png"> is <img class="formulaInl" alt="$ i $" src="form_60.png"> -th entry of this vector. 
+Compute <img class="formulaInl" alt="$ max_i = abs(w_i / y_i) $" src="form_64.png"> , where <img class="formulaInl" alt="$ w_i $" src="form_61.png"> is <img class="formulaInl" alt="$ i $" src="form_62.png"> -th entry of this vector. 
 </div>
 </div><p>
 <a class="anchor" name="cac7751220a839dac55bca12febcf0d6"></a><!-- doxytag: member="SAMRAI::solv::PETScAbstractVectorReal::vecMax" ref="cac7751220a839dac55bca12febcf0d6" args="(int &amp;i, TYPE &amp;max) const =0" -->
@@ -841,7 +841,7 @@ Restore pointer to vector data in contiguous array (local to processor).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/packages/petsc/<a class="el" href="PETScAbstractVectorReal_8h.html">PETScAbstractVectorReal.h</a><li>source/solvers/packages/petsc/<a class="el" href="PETScAbstractVectorReal_8C.html">PETScAbstractVectorReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:43 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:25 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>
