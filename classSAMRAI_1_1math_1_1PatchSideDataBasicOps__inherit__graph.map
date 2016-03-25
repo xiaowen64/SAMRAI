@@ -1,5 +1,6 @@
 base referer
-rect $classSAMRAI_1_1math_1_1PatchSideDataOpsReal.html 542,9 892,33
-rect $classSAMRAI_1_1math_1_1PatchSideDataBasicOps.html 550,57 884,81
-rect $classSAMRAI_1_1math_1_1PatchSideDataBasicOps.html 537,105 897,129
-rect $classSAMRAI_1_1math_1_1PatchSideDataBasicOps.html 529,153 905,177
+rect $classSAMRAI_1_1math_1_1PatchSideDataOpsComplex.html 605,8 1080,32
+rect $classSAMRAI_1_1math_1_1PatchSideDataOpsReal.html 669,56 1016,80
+rect $classSAMRAI_1_1math_1_1PatchSideDataBasicOps.html 676,104 1009,128
+rect $classSAMRAI_1_1math_1_1PatchSideDataBasicOps.html 664,152 1021,176
+rect $classSAMRAI_1_1math_1_1PatchSideDataBasicOps.html 615,200 1071,224

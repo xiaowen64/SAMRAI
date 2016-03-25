@@ -1,4 +1,4 @@
 base referer
-rect $classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html 375,8 682,32
-rect $classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html 361,56 697,80
-rect $classSAMRAI_1_1mblk_1_1MultiblockCoarsenPatchStrategy.html 350,104 707,128
+rect $classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html 371,7 678,31
+rect $classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html 358,55 691,79
+rect $classSAMRAI_1_1xfer_1_1MultiblockCoarsenPatchStrategy.html 350,103 699,127

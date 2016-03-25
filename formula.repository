@@ -108,28 +108,22 @@
 \form#107:$ Ae=r $
 \form#108:$ \nabla ( D \nabla u ) + C u = f $
 \form#109:\[ \alpha u + \beta u_n = \gamma \]
-\form#110:\[ a u + (1-a) u_n = g \]
-\form#111:$ a = \frac{\alpha}{\alpha+\beta} $
-\form#112:$ g = \frac{\gamma}{\alpha+\beta} $
-\form#113:$ y_i \neq 0 $
-\form#114:$ max_i = abs(w_i) $
-\form#115:$ y_i = 0 $
-\form#116:$ \alpha x + @beta y $
-\form#117:$ \alpha, @beta $
-\form#118:$ x, y $
-\form#119:$ \alpha x + y $
-\form#120:$ \sum_i ( \| data_i \| cvol_i ) $
-\form#121:$ \sum_i ( \| data_i \| ) $
-\form#122:$ \sqrt{ \sum_i ( (data_i)^2 cvol_i ) } $
-\form#123:$ \sqrt{ \sum_i ( (data_i)^2 ) } $
-\form#124:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) } $
-\form#125:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 ) } $
-\form#126:$ \max $
-\form#127:$ \|x_i\| > 0 $
-\form#128:$ w_i * x_i \leq 0 $
-\form#129:$ cvol_i > 0 $
-\form#130:$ w_i = 1 $
-\form#131:$ \|x_i\| > \alpha $
-\form#132:$ w_i = 0 $
-\form#133:$ w_i = 1/x_i $
-\form#134:$ x_i \neq 0 $
+\form#110:$ \alpha x + @beta y $
+\form#111:$ \alpha, @beta $
+\form#112:$ x, y $
+\form#113:$ \alpha x + y $
+\form#114:$ \sum_i ( \| data_i \| cvol_i ) $
+\form#115:$ \sum_i ( \| data_i \| ) $
+\form#116:$ \sqrt{ \sum_i ( (data_i)^2 cvol_i ) } $
+\form#117:$ \sqrt{ \sum_i ( (data_i)^2 ) } $
+\form#118:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) } $
+\form#119:$ \sqrt{ \sum_i ( (data_i * weight_i)^2 ) } $
+\form#120:$ \max $
+\form#121:$ \|x_i\| > 0 $
+\form#122:$ w_i * x_i \leq 0 $
+\form#123:$ cvol_i > 0 $
+\form#124:$ w_i = 1 $
+\form#125:$ \|x_i\| > \alpha $
+\form#126:$ w_i = 0 $
+\form#127:$ w_i = 1/x_i $
+\form#128:$ x_i \neq 0 $
