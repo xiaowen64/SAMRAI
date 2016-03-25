@@ -1,9 +1,9 @@
 //
-// File:        PatchMultiblockTestStrategy.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/PatchMultiblockTestStrategy.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 1.8 $
-// Modified:    $Date: 2004/02/11 23:46:08 $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for patch data test operations.
 //
 
@@ -14,9 +14,6 @@
 #include "SAMRAI_config.h"
 #endif
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifndef included_tbox_Array
 #include "tbox/Array.h"
@@ -33,9 +30,6 @@
 #ifndef included_MultiblockTester
 #include "MultiblockTester.h"
 #endif
-#ifndef included_geom_SkeletonGridGeometry
-#include "SkeletonGridGeometry.h"
-#endif
 #ifndef included_tbox_Database
 #include "Database.h"
 #endif
@@ -45,7 +39,7 @@
 #ifndef included_hier_Patch
 #include "Patch.h"
 #endif
-#ifndef included_mblk_MultiblockRefinePatchStrategy
+#ifndef included_xfer_MultiblockRefinePatchStrategy
 #include "MultiblockRefinePatchStrategy.h"
 #endif
 #ifndef included_hier_PatchHierarchy
@@ -146,25 +140,19 @@ public:
     */
    void setGridGeometrySize(const int num_blocks)
    {
-      d_grid_geometry =
-         new tbox::Pointer< geom::SkeletonGridGeometry<NDIM> >[num_blocks];
+      d_grid_geometry->getBlockGeometryArray().resizeArray(num_blocks);
    }
 
    void setGridGeometry(
-      tbox::Pointer< geom::SkeletonGridGeometry<NDIM> > grid_geom,
-      const int n) 
+      tbox::Pointer< hier::MultiblockGridGeometry<NDIM> >& grid_geom)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!grid_geom.isNull());
-#endif
-
-      d_grid_geometry[n] = grid_geom;
+      d_grid_geometry = grid_geom;
    }
 
-   tbox::Pointer< geom::SkeletonGridGeometry<NDIM> > getGridGeometry(
-      const int n) const
+   tbox::Pointer< hier::MultiblockGridGeometry<NDIM> >&
+      getGridGeometry()
    {
-      return(d_grid_geometry[n]);
+      return(d_grid_geometry);
    }
 
    /**
@@ -173,7 +161,7 @@ public:
    void setDataContext(tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!context.isNull());
+      TBOX_ASSERT(!context.isNull());
 #endif
       d_data_context = context;
    }
@@ -181,7 +169,7 @@ public:
    void setDestinationContext(tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS    
-      assert(!context.isNull());
+      TBOX_ASSERT(!context.isNull());
 #endif 
       d_dst_context = context;
    }
@@ -189,7 +177,7 @@ public:
    void setScratchContext(tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!context.isNull());
+      TBOX_ASSERT(!context.isNull());
 #endif
       d_scr_context = context;
    }
@@ -255,7 +243,7 @@ public:
 
    virtual void fillSingularityBoundaryConditions(
       hier::Patch<NDIM>& patch,
-      tbox::List<mblk::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
+      tbox::List<xfer::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
          singularity_patches,
       const hier::Box<NDIM>& fill_box,
       const hier::BoundaryBox<NDIM>& boundary_box) {}
@@ -326,9 +314,9 @@ public:
    /**
     * Virtual function for checking results of communication operations.
     */
-   virtual void verifyResults(
+   virtual bool verifyResults(
       hier::Patch<NDIM>& patch,
-      const tbox::Pointer<mblk::MultiblockPatchHierarchy<NDIM> > hierarchy,
+      const tbox::Pointer<hier::MultiblockPatchHierarchy<NDIM> > hierarchy,
       int level_number,
       int block_number) = 0;
 
@@ -350,7 +338,8 @@ protected:
    tbox::Array< hier::BoxArray<NDIM> > d_refine_level_boxes;
 
 private:
-   tbox::Pointer< geom::SkeletonGridGeometry<NDIM> >* d_grid_geometry;
+   tbox::Pointer< hier::MultiblockGridGeometry<NDIM> > d_grid_geometry;
+   //tbox::Array< tbox::Pointer< hier::GridGeometry<NDIM> > > d_grid_geometry;
 
    tbox::Pointer<hier::VariableContext> d_data_context;
    tbox::Pointer<hier::VariableContext> d_dst_context;

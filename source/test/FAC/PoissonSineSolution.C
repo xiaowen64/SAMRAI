@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2005 The Regents of the University of California
-  Revision:	$Revision: 173 $
-  Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/PoissonSineSolution.C $
+  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	PoissonSineSolution class implementation
 */
 
@@ -76,7 +76,7 @@ void PoissonSineSolution::setFromDatabase( tbox::Database &database )
 
 void PoissonSineSolution::setNeumannLocation( int location_index, bool flag )
 {
-  assert( location_index < 2*NDIM );
+  TBOX_ASSERT( location_index < 2*NDIM );
   d_neumann_location[location_index] = flag;
   return;
 }
@@ -143,6 +143,7 @@ ostream &operator<<( ostream &os, const PoissonSineSolution &r ) {
 
 void PoissonSineSolution::setBcCoefs (
   tbox::Pointer<pdat::ArrayData<NDIM,double> > &acoef_data ,
+  tbox::Pointer<pdat::ArrayData<NDIM,double> > &bcoef_data ,
   tbox::Pointer<pdat::ArrayData<NDIM,double> > &gcoef_data ,
   const tbox::Pointer< hier::Variable<NDIM> > &variable ,
   const hier::Patch<NDIM> &patch ,
@@ -160,6 +161,8 @@ void PoissonSineSolution::setBcCoefs (
   // a is either 0 (Neumann) or 1 (Dirichlet).
   if ( !acoef_data.isNull() )
     acoef_data->fill( d_neumann_location[location_index] ? 0.0 : 1.0 , 0 );
+  if ( !bcoef_data.isNull() )
+    bcoef_data->fill( d_neumann_location[location_index] ? 1.0 : 0.0 , 0 );
 
   /*
     Get geometry information needed to compute coordinates

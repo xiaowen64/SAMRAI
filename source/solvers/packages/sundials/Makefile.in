@@ -1,0 +1,32 @@
+##
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/Makefile.in $
+## Package:	SAMRAI solvers
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1743 $
+## Modified:	$LastChangedDate: 2007-12-05 15:39:03 -0800 (Wed, 05 Dec 2007) $
+## Description:	makefile for the Sundials interface classes
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/solvers/packages/sundials
+OBJECT        = ../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+SUBDIRS = vector kinsol cvode
+
+library:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+lib1d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+lib2d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+lib3d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+libXd:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+clean:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done

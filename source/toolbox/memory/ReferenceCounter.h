@@ -1,9 +1,9 @@
 //
-// File:	ReferenceCounter.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/ReferenceCounter.h $
 // Package:	SAMRAI toolbox for memory management
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Reference counting class for Array and Pointer
 //
 
@@ -31,7 +31,7 @@ class Arena;
  * free pool of objects to speed memory allocation and deallocation.  The
  * locally cached free pool can be freed by calling freeCachedCopies().
  *
- * {\bf Do not subclass!}  Changing the size of a ReferenceCounter
+ * {\b Do not subclass!}  Changing the size of a ReferenceCounter
  * object will cause my simple memory allocation mechanism to break in
  * horrible and disgusting ways.
  *

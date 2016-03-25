@@ -1,0 +1,60 @@
+##
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/sundials/Makefile.in $
+## Package:	SAMRAI applications
+## Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1744 $
+## Modified:	$LastChangedDate: 2007-12-06 09:08:43 -0800 (Thu, 06 Dec 2007) $
+## Description:	makefile for linear advection sample application
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = examples/sundials
+OBJECT        = ../..
+
+default:      main2d
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM)
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o CVODEModel.o tbox_Pointer-CVODEModel.o
+F2D_OBJS      = FACjacobian2d.o 
+F3D_OBJS      = FACjacobian3d.o 
+
+main2d:
+		if test -f stamp-3d; then $(MAKE) clean; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+ 
+main-2d:	$(CXX_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+ 
+main3d:
+		if test -f stamp-2d; then $(MAKE) clean; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+ 
+main-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+clean:
+		$(SAMCLEAN)
+		$(RM) main2d main3d 
+		$(RM) *.f 
+
+include Makefile.depend
+
+FORTRAN       = .
+M4DIRS        = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+
+FACjacobian2d.o:	$(FORTRAN)/FACjacobian2d.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian2d.m4 > FACjacobian2d.f
+		$(F77) $(FFLAGS) -c FACjacobian2d.f -o $@
+
+FACjacobian3d.o:	$(FORTRAN)/FACjacobian3d.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian3d.m4 > FACjacobian3d.f
+		$(F77) $(FFLAGS) -c FACjacobian3d.f -o $@

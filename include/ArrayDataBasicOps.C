@@ -1,27 +1,21 @@
 //
-// File:	ArrayDataBasicOps.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataBasicOps.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Basic templated opertions for array data.
 //
 
-#ifndef included_tbox_ArrayDataBasicOps_C
-#define included_tbox_ArrayDataBasicOps_C
+#ifndef included_math_ArrayDataBasicOps_C
+#define included_math_ArrayDataBasicOps_C
 
 #include "ArrayDataBasicOps.h"
-#include <stdlib.h>
-#include <float.h>
-#include <math.h>
 
 #include "tbox/MathUtilities.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 
@@ -85,7 +79,7 @@ void ArrayDataBasicOps<DIM,TYPE>::scale(
    } else {
       const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(ddepth == src.getDepth());
+      TBOX_ASSERT(ddepth == src.getDepth());
 #endif
       const hier::Box<DIM> dst_box = dst.getBox();
       const hier::Box<DIM> src_box = src.getBox();
@@ -185,7 +179,7 @@ void ArrayDataBasicOps<DIM,TYPE>::addScalar(
    } else {
       const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(ddepth == src.getDepth());
+      TBOX_ASSERT(ddepth == src.getDepth());
 #endif
       const hier::Box<DIM> dst_box = dst.getBox();
       const hier::Box<DIM> src_box = src.getBox();
@@ -282,7 +276,7 @@ void ArrayDataBasicOps<DIM,TYPE>::add(
 {
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+   TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
 
    const hier::Box<DIM> dst_box  = dst.getBox();
@@ -394,7 +388,7 @@ void ArrayDataBasicOps<DIM,TYPE>::subtract(
 {
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+   TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
 
    const hier::Box<DIM> dst_box  = dst.getBox();
@@ -506,7 +500,7 @@ void ArrayDataBasicOps<DIM,TYPE>::multiply(
 {
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+   TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
 
    const hier::Box<DIM> dst_box  = dst.getBox();
@@ -618,7 +612,7 @@ void ArrayDataBasicOps<DIM,TYPE>::divide(
 {
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+   TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
 
    const hier::Box<DIM> dst_box  = dst.getBox();
@@ -726,7 +720,7 @@ void ArrayDataBasicOps<DIM,TYPE>::reciprocal(
 {
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ddepth == src.getDepth());
+   TBOX_ASSERT(ddepth == src.getDepth());
 #endif
 
    const hier::Box<DIM> dst_box  = dst.getBox();
@@ -775,7 +769,8 @@ void ArrayDataBasicOps<DIM,TYPE>::reciprocal(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               dd[dst_counter+i0] = tbox::MathUtilities<TYPE>::getOne() / sd[src_counter+i0];
+               dd[dst_counter+i0] = 
+                  tbox::MathUtilities<TYPE>::getOne() / sd[src_counter+i0];
             }
             int dim_jump = 0;
 
@@ -825,7 +820,7 @@ void ArrayDataBasicOps<DIM,TYPE>::linearSum(
 {
    const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+   TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       if (beta == tbox::MathUtilities<TYPE>::getZero()) {
@@ -963,7 +958,7 @@ void ArrayDataBasicOps<DIM,TYPE>::axpy(
    } else {
       const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+      TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
       const hier::Box<DIM> dst_box  = dst.getBox();
       const hier::Box<DIM> src1_box = src1.getBox();
@@ -1081,7 +1076,7 @@ void ArrayDataBasicOps<DIM,TYPE>::axmy(
    } else {
       const int ddepth = dst.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(ddepth == src1.getDepth() && ddepth == src2.getDepth());
+      TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 #endif
       const hier::Box<DIM> dst_box  = dst.getBox();
       const hier::Box<DIM> src1_box = src1.getBox();
@@ -1226,7 +1221,8 @@ TYPE ArrayDataBasicOps<DIM,TYPE>::min(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               minval = tbox::MathUtilities<TYPE>::Min( minval, dd[d_counter+i0] );
+               minval = 
+                  tbox::MathUtilities<TYPE>::Min( minval, dd[d_counter+i0] );
             }
             int dim_jump = 0;
 
@@ -1264,7 +1260,7 @@ TYPE ArrayDataBasicOps<DIM,TYPE>::max(
    const pdat::ArrayData<DIM,TYPE>& data,
    const hier::Box<DIM>& box) const
 {
-   TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
+   TYPE maxval = -(tbox::MathUtilities<TYPE>::getMax());
 
    const hier::Box<DIM> d_box = data.getBox();
    const hier::Box<DIM> ibox = box * d_box;
@@ -1302,7 +1298,8 @@ TYPE ArrayDataBasicOps<DIM,TYPE>::max(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               maxval = tbox::MathUtilities<TYPE>::Max( maxval, dd[d_counter+i0] );
+               maxval = 
+                  tbox::MathUtilities<TYPE>::Max( maxval, dd[d_counter+i0] );
             }
             int dim_jump = 0;
 

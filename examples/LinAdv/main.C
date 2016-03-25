@@ -1,9 +1,9 @@
 //
-// File:        main.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/LinAdv/main.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 586 $
-// Modified:    $Date: 2005-08-23 10:49:46 -0700 (Tue, 23 Aug 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Main program for SAMRAI Linear Advection example problem.
 //
 
@@ -29,7 +29,7 @@ using namespace std;
 #include "tbox/InputManager.h" 
 #include "PatchLevel.h"
 #include "tbox/Pointer.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h" 
 #include "tbox/Utilities.h"
@@ -167,8 +167,10 @@ int main( int argc, char *argv[])
     * Initialize tbox::MPI and SAMRAI, enable logging, and process command line.
     */
 
-   tbox::MPI::init(&argc, &argv);
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
+
+   int num_failures = 0;
 
    {
 
@@ -184,7 +186,7 @@ int main( int argc, char *argv[])
 	      << "  options:\n"
 	      << "  none at this time"
 	      << endl;
-	 tbox::MPI::abort();
+	 tbox::SAMRAI_MPI::abort();
 	 return (-1);
       } else {
 	 input_filename = argv[1];
@@ -229,7 +231,7 @@ int main( int argc, char *argv[])
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
-            tbox::MPI::setCallAbortInSerialInsteadOfExit(flag);
+            tbox::SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(flag);
          }
       }
 
@@ -368,7 +370,7 @@ int main( int argc, char *argv[])
       if (is_from_restart) {
 	 restart_manager->
 	    openRestartFile(restart_read_dirname, restore_num, 
-			    tbox::MPI::getNodes() );
+			    tbox::SAMRAI_MPI::getNodes() );
       }
 
       /*
@@ -523,11 +525,11 @@ int main( int argc, char *argv[])
       /*
        * If we are doing autotests, check result...
        */
-      autotester.evalTestData(iteration_num,
-			      patch_hierarchy,
-			      time_integrator,
-			      hyp_level_integrator,
-			      gridding_algorithm);
+      num_failures += autotester.evalTestData(iteration_num,
+                                              patch_hierarchy,
+                                              time_integrator,
+                                              hyp_level_integrator,
+                                              gridding_algorithm);
 #endif
 
       while ( (loop_time < loop_time_end) && 
@@ -588,11 +590,11 @@ int main( int argc, char *argv[])
 	 /*
 	  * If we are doing autotests, check result...
 	  */
-	 autotester.evalTestData( iteration_num,
-				  patch_hierarchy,
-				  time_integrator,
-				  hyp_level_integrator,
-				  gridding_algorithm);
+	 num_failures += autotester.evalTestData(iteration_num,
+                                                 patch_hierarchy,
+                                                 time_integrator,
+                                                 hyp_level_integrator,
+                                                 gridding_algorithm);
 #endif
 
       }   
@@ -623,10 +625,12 @@ int main( int argc, char *argv[])
 
    }
 
-   tbox::pout << "\nPASSED:  LinAdv" << endl;
+   if (num_failures == 0) {
+      tbox::pout << "\nPASSED:  LinAdv" << endl;
+   }
 
    tbox::SAMRAIManager::shutdown();
-   tbox::MPI::finalize();
+   tbox::SAMRAI_MPI::finalize();
  
-   return(0);
+   return(num_failures);
 }

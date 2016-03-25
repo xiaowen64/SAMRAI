@@ -1,9 +1,9 @@
 //
-// File:	PatchDescriptor.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/PatchDescriptor.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 413 $
-// Modified:	$Date: 2005-06-01 14:24:59 -0700 (Wed, 01 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Factory class for patch data objects that live on a patch
 //
 
@@ -15,7 +15,6 @@
 #include "tbox/Utilities.h"
 
 #include <typeinfo>
-using namespace std;
 
 #ifdef DEBUG_NO_INLINE
 #include "PatchDescriptor.I"
@@ -66,19 +65,19 @@ template<int DIM>  PatchDescriptor<DIM>::~PatchDescriptor()
 */
 
 template<int DIM> int PatchDescriptor<DIM>::definePatchDataComponent(
-   const string& name,
+   const std::string& name,
    tbox::Pointer< PatchDataFactory<DIM> > factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( !name.empty() );
-   assert( !factory.isNull() );
+   TBOX_ASSERT( !name.empty() );
+   TBOX_ASSERT( !factory.isNull() );
 #endif
    int ret_index = INDEX_UNDEFINED; 
    if (d_free_indices.isEmpty()) {
       TBOX_ERROR("PatchDescriptor::definePatchDataComponent error...\n"
                  << "No available patch data component indices left.\n"
                  << "Application must be restarted and size must be increased.\n" 
-                 << "See tbox::SAMRAIManager utility for more information." << endl);
+                 << "See tbox::SAMRAIManager utility for more information." << std::endl);
    } else {
       ret_index = d_free_indices.getFirstItem();
       d_free_indices.removeFirstItem();
@@ -105,7 +104,7 @@ PatchDescriptor<DIM>::removePatchDataComponent(const int id)
 {
    if ((id >= 0) && (id < d_max_number_registered_components)) {
       if (!d_names[id].empty()) {
-         d_names[id] = string();
+         d_names[id] = std::string();
       }
       if (!d_factories[id].isNull()) {
          d_factories[id].setNull();
@@ -124,7 +123,7 @@ PatchDescriptor<DIM>::removePatchDataComponent(const int id)
 */
 
 template<int DIM> tbox::Pointer< PatchDataFactory<DIM> >
-PatchDescriptor<DIM>::getPatchDataFactory(const string &name) const
+PatchDescriptor<DIM>::getPatchDataFactory(const std::string &name) const
 {
    tbox::Pointer< PatchDataFactory<DIM> > factory = NULL;
    const int id = mapNameToIndex(name);
@@ -144,7 +143,7 @@ PatchDescriptor<DIM>::getPatchDataFactory(const string &name) const
 */
 
 template<int DIM> int 
-PatchDescriptor<DIM>::mapNameToIndex(const string &name) const
+PatchDescriptor<DIM>::mapNameToIndex(const std::string &name) const
 {
    int ret_index = INDEX_UNDEFINED;
    int id = 0;
@@ -166,26 +165,26 @@ PatchDescriptor<DIM>::mapNameToIndex(const string &name) const
 *************************************************************************
 */
 
-template<int DIM> void PatchDescriptor<DIM>::printClassData(ostream& stream) const
+template<int DIM> void PatchDescriptor<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-   stream << "Printing PatchDescriptor<DIM> state ..." << endl;
-   stream << "this = " << (PatchDescriptor<DIM>*)this << endl;
+   stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+   stream << "Printing PatchDescriptor<DIM> state ..." << std::endl;
+   stream << "this = " << (PatchDescriptor<DIM>*)this << std::endl;
    stream << "d_max_number_registered_components = " 
-          << d_max_number_registered_components << endl;
-   stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+          << d_max_number_registered_components << std::endl;
+   stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
    for (int i = 0; i < d_max_number_registered_components; i++) {
-      stream << "Patch Data Index=" << i << endl;
+      stream << "Patch Data Index=" << i << std::endl;
       if (!d_factories[i].isNull()) {
          stream << "   Patch Data Factory Name = " 
-                << d_names[i] << endl;
+                << d_names[i] << std::endl;
          stream << "   Patch Data Factory = " 
-                << typeid(*d_factories[i]).name() << endl;
+                << typeid(*d_factories[i]).name() << std::endl;
       } else {
-         stream << "   Patch Data Factory = NULL" << endl;
+         stream << "   Patch Data Factory = NULL" << std::endl;
       }
    }
-   stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+   stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }
 
 /*
@@ -202,7 +201,7 @@ PatchDescriptor<DIM>::getMaxGhostWidth() const
    IntVector<DIM> max_gcw(0);
    for (int i = 0; i < d_max_number_registered_components; i++) {
       if ( !d_factories[i].isNull() ) {
-         max_gcw.max(d_factories[i]->getDefaultGhostCellWidth());
+         max_gcw.max(d_factories[i]->getGhostCellWidth());
       }
    }
    return (max_gcw);

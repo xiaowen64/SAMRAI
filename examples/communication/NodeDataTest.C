@@ -1,20 +1,14 @@
 //
-// File:        NodeDataTest.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/NodeDataTest.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 415 $
-// Modified:    $Date: 2005-06-01 16:30:29 -0700 (Wed, 01 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for node-centered patch data
 //
 
 #include "NodeDataTest.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "BoundaryBox.h"
 #include "CartesianPatchGeometry.h"
@@ -24,6 +18,7 @@
 #include "NodeVariable.h"
 #include "CommTester.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "Variable.h"
 #include "VariableDatabase.h"
 
@@ -37,9 +32,9 @@ NodeDataTest::NodeDataTest(
    const string& refine_option)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(!refine_option.empty());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!refine_option.empty());
 #endif
 
    d_object_name = object_name;
@@ -78,7 +73,7 @@ NodeDataTest::~NodeDataTest()
 void NodeDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -120,7 +115,7 @@ void NodeDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 void NodeDataTest::registerVariables(CommTester* commtest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(commtest != (CommTester*)NULL);
+   TBOX_ASSERT(commtest != (CommTester*)NULL);
 #endif
 
    int nvars = d_variable_src_name.getSize();
@@ -157,7 +152,7 @@ void NodeDataTest::setLinearData(
    hier::Patch<NDIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
@@ -246,7 +241,7 @@ void NodeDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    const pdat::NodeIndex<NDIM> loweri(interior.lower(), (pdat::NodeIndex<NDIM>::Corner) 0);
@@ -275,7 +270,7 @@ void NodeDataTest::checkPatchInteriorData(
       double value;
       for (int d = 0; d < depth; d++) {
          value = d_Dcoef + d_Acoef*x + d_Bcoef*y + d_Ccoef*z;
-         if (!(tbox::Utilities::deq((*data)(ci(),d), value))) {
+         if (!(tbox::MathUtilities<double>::equalEps((*data)(ci(),d), value))) {
             tbox::perr << "FAILED: -- patch interior not properly filled" << endl;
          }
       }
@@ -369,13 +364,13 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 *                                                                       *
 *************************************************************************
 */
-void NodeDataTest::verifyResults(
+bool NodeDataTest::verifyResults(
    hier::Patch<NDIM>& patch, 
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy, 
    int level_number)
 {
    (void) hierarchy;
-
+   bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 
       tbox::plog << "\nEntering NodeDataTest::verifyResults..." << endl;
@@ -402,7 +397,6 @@ void NodeDataTest::verifyResults(
                              patch);//, hierarchy, level_number);
       }
 
-      bool test_failed = false;
       for (int i = 0; i < d_variables.getSize(); i++) {
 
          tbox::Pointer< pdat::NodeData<NDIM,double> > node_data =
@@ -414,7 +408,7 @@ void NodeDataTest::verifyResults(
             double correct = (*solution)(ci());
             for (int d = 0; d < depth; d++) {
                double result = (*node_data)(ci(),d);
-               if (!tbox::Utilities::deq(correct, result)) {
+               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...." 
                        << " : node index = " << ci() << endl;
                   tbox::perr << "    hier::Variable<NDIM> = " << d_variable_src_name[i]
@@ -438,6 +432,8 @@ void NodeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl << endl; 
 
    }
+
+   return (!test_failed);
 
 }
 

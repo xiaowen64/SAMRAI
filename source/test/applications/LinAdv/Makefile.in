@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/applications/LinAdv/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1716 $
+## Modified:	$LastChangedDate: 2007-11-26 16:10:27 -0800 (Mon, 26 Nov 2007) $
 ## Description:	makefile for linear advection sample application
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@top_srcdir@/examples/LinAdv
 SUBDIR        = source/test/applications/LinAdv
 VPATH	      =	@top_srcdir@/examples/LinAdv
+TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
 
 default: check	
@@ -21,6 +22,10 @@ AUTOTEST      = $(SAMRAI)/source/test/applications
 CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1 
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
+
+NUM_TESTS = 10
+
+TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = main.o LinAdv.o AutoTester.o
 F2D_OBJS      = flux.o grad.o init.o stable.o stufprobc.o trace1d.o trace.o
@@ -44,15 +49,17 @@ main-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS)	\
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
 
-TEST_NPROCS = @TEST_NPROCS@ 
-
 check:
 		$(MAKE) check2d
 		$(MAKE) check3d
 
+# WARNING: Checking of the redistribute routine is a bit of a problem since it needs only a single run 
+#          to have been done.  So remove the old stuff.
 check2d:	main2d
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main2d test-2d.input; \
+		$(RM) -rf  restart-test-2d/restore.00003/nodes.0000[2-9]
+		$(OBJECT)/tools/restart/restart-redistribute $(PWD)/restart-test-2d $(PWD)/restart-redistribute-2d 3 4; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main2d test-2d.input restart-test-2d 5; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
@@ -74,10 +81,17 @@ check3d:	main3d
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main3d test-3d-sync.input restart-test-3d-sync 5
 
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
+
 clean-check:
 		$(SAMCLEAN)
 
-clean:
+clean:		clean-check
 		$(RM) *.f *main* 
 		$(RM) -rf restart-*d*
 

@@ -1,9 +1,9 @@
 //
-// File:	FixedArena.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/FixedArena.C $
 // Package:	SAMRAI toolbox for memory management
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Fixed-size arena for efficient memory management
 //
 
@@ -56,11 +56,11 @@ Pointer<Arena> FixedArena::allocateArena(const size_t bytes)
    return(Pointer<Arena>(new FixedArena(bytes)));
 }
 
-void FixedArena::printClassData(ostream& os) const
+void FixedArena::printClassData(std::ostream& os) const
 {
-   os << "Pointer to fixed memory arena = " << d_pool << endl;
-   os << "Number of bytes allocated from arena = " << d_used << endl;
-   os << "Maximum size of fixed memory arena = " << d_size << endl;
+   os << "Pointer to fixed memory arena = " << d_pool << std::endl;
+   os << "Number of bytes allocated from arena = " << d_used << std::endl;
+   os << "Maximum size of fixed memory arena = " << d_size << std::endl;
 }
 
 }

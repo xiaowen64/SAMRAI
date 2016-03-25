@@ -1,18 +1,12 @@
 //
-// File:        TimeRefinementIntegrator.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/time_refinement/TimeRefinementIntegrator.I $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Time integration manager for AMR with local time stepping.
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -55,7 +49,7 @@ bool TimeRefinementIntegrator<DIM>::stepsRemaining(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return (d_step_level[level_number] < d_max_steps_level[level_number]);
@@ -72,7 +66,7 @@ double TimeRefinementIntegrator<DIM>::getLevelDtActual(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return (d_dt_actual_level[level_number]);
@@ -83,7 +77,7 @@ double TimeRefinementIntegrator<DIM>::getLevelDtMax(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return (d_dt_max_level[level_number]);
@@ -94,7 +88,7 @@ double TimeRefinementIntegrator<DIM>::getLevelSimTime(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return (d_level_sim_time[level_number]);
@@ -105,7 +99,7 @@ int TimeRefinementIntegrator<DIM>::getLevelStep(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return (d_step_level[level_number]);
@@ -116,7 +110,7 @@ int TimeRefinementIntegrator<DIM>::getLevelMaxSteps(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return (d_max_steps_level[level_number]);
@@ -148,7 +142,7 @@ bool TimeRefinementIntegrator<DIM>::firstLevelStep(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return ( d_step_level[level_number] <= 0 );
@@ -159,7 +153,7 @@ bool TimeRefinementIntegrator<DIM>::lastLevelStep(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return ( d_step_level[level_number] >= d_max_steps_level[level_number] );
@@ -170,7 +164,7 @@ void TimeRefinementIntegrator<DIM>::setRegridInterval(
    const int regrid_interval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_use_refined_timestepping);
+   TBOX_ASSERT(!d_use_refined_timestepping);
 #endif
 
    for (int i = 0; i < d_regrid_interval.getSize(); i++) {

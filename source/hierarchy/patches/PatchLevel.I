@@ -1,18 +1,12 @@
 //
-// File:	PatchLevel.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchLevel.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A collection of patches at one level of the AMR hierarchy
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -43,7 +37,7 @@ template<int DIM> inline
 tbox::Pointer< Patch<DIM> > PatchLevel<DIM>::getPatch(const int p) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((p >= 0) && (p < d_number_patches));
+   TBOX_ASSERT((p >= 0) && (p < d_number_patches));
 #endif
    return(d_patches[p]);
 }
@@ -119,7 +113,7 @@ template<int DIM> inline
 int PatchLevel<DIM>::getMappingForPatch(const int p) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((p >= 0) && (p < d_number_patches));
+   TBOX_ASSERT((p >= 0) && (p < d_number_patches));
 #endif
    return(d_mapping.getProcessorAssignment(p));
 }
@@ -128,7 +122,7 @@ template<int DIM> inline
 const Box<DIM>& PatchLevel<DIM>::getBoxForPatch(const int p) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((p >= 0) && (p < d_number_patches));
+   TBOX_ASSERT((p >= 0) && (p < d_number_patches));
 #endif
    return(d_boxes.getBox(p));
 }
@@ -138,7 +132,7 @@ const tbox::List< IntVector<DIM> >&
 PatchLevel<DIM>::getShiftsForPatch(const int p) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((p >= 0) && (p < d_number_patches));
+   TBOX_ASSERT((p >= 0) && (p < d_number_patches));
 #endif
    return(d_shifts[p]);
 }
@@ -147,7 +141,7 @@ template<int DIM> inline
 bool PatchLevel<DIM>::patchTouchesRegularBoundary(const int p) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((p >= 0) && (p < d_number_patches));
+   TBOX_ASSERT((p >= 0) && (p < d_number_patches));
 #endif
    return(d_patch_touches_regular_boundary[p]);
 }
@@ -156,7 +150,7 @@ template<int DIM> inline
 bool PatchLevel<DIM>::patchTouchesPeriodicBoundary(const int p) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((p >= 0) && (p < d_number_patches));
+   TBOX_ASSERT((p >= 0) && (p < d_number_patches));
 #endif
    return(d_patch_touches_periodic_boundary[p]);
 }

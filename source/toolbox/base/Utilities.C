@@ -1,60 +1,42 @@
 //
-// File:        Utilities.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/Utilities.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
-// Description: A collection of trivial utility functions such as min and max
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Description: Utility functions for error reporting, file manipulation, etc.
 //
 
-#include <float.h>
-#include <math.h>
+#include "tbox/Utilities.h"
+
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/PIO.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <time.h>
-#include "tbox/MPI.h"
-#include "tbox/PIO.h"
-
-#include "tbox/Utilities.h"
-#ifdef DEBUG_NO_INLINE
-#include "tbox/Utilities.I"
-#endif
 
 namespace SAMRAI {
    namespace tbox {
 
-
-bool Utilities::feq(const float a, const float b)
+/*
+ * Routine to rename a file.
+ */
+void Utilities::renameFile(const std::string& old_filename,
+                           const std::string& new_filename)
 {
-   float absmax = fmax(fabs(a),fabs(b));
-   return (fabs(a-b)/fmax(absmax, FLT_EPSILON) < sqrt(FLT_EPSILON));
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!old_filename.empty());
+   TBOX_ASSERT(!new_filename.empty());
+#endif
+   rename(old_filename.c_str(), new_filename.c_str());
 }
 
-bool Utilities::deq(const double a, const double b)
-{
-   double absmax = dmax(dabs(a),dabs(b));
-   return (dabs(a-b)/dmax(absmax, DBL_EPSILON) < sqrt(DBL_EPSILON));
-}
-
-void Utilities::renameFile(const char *old_filename,
-                                const char *new_filename)
-{
-   rename(old_filename,new_filename);
-}
-
-bool Utilities::ceq(const dcomplex a, const dcomplex b)
-{  
-   double a_re = real(a);
-   double a_im = imag(a);
-   double b_re = real(b);
-   double b_im = imag(b);
-
-   return ( deq(a_re,b_re) && deq(a_im,b_im) );
-}
-
+/*
+ * Routine to recursively construct directories based on a relative path name.
+ */
 void Utilities::recursiveMkdir(
-   const string& path, 
+   const std::string& path, 
    mode_t mode,
    bool only_node_zero_creates)
 {
@@ -67,7 +49,7 @@ void Utilities::recursiveMkdir(
 #endif
 
 
-   if ( (!only_node_zero_creates) || (MPI::getRank() == 0)) {
+   if ( (!only_node_zero_creates) || (SAMRAI_MPI::getRank() == 0)) {
       int length = path.length();
       char *path_buf= new char[length+1];
       sprintf(path_buf,"%s",path.c_str());
@@ -96,7 +78,7 @@ void Utilities::recursiveMkdir(
             TBOX_ERROR("Error in Utilities::recursiveMkdir...\n"
                << "    Cannot create directories in path = " << path
                << "\n    because some intermediate item in path exists and"
-               << "is NOT a directory" << endl);
+               << "is NOT a directory" << std::endl);
          }
       }
    
@@ -111,7 +93,7 @@ void Utilities::recursiveMkdir(
 	 if(mkdir(path_buf,mode) != 0) {
 	    TBOX_ERROR("Error in Utilities::recursiveMkdir...\n"
 		       << "    Cannot create directory  = " 
-		       << path_buf << endl);
+		       << path_buf << std::endl);
 	 }
 	 pos = 0;
       }
@@ -134,7 +116,7 @@ void Utilities::recursiveMkdir(
 	    if(mkdir(path_buf,mode) != 0) {
 	       TBOX_ERROR("Error in Utilities::recursiveMkdir...\n"
 			  << "    Cannot create directory  = " 
-			  << path_buf << endl);
+			  << path_buf << std::endl);
 	    }
 	 }
       } while (pos < length);
@@ -147,31 +129,53 @@ void Utilities::recursiveMkdir(
     * the directory structure.
     */
    if (only_node_zero_creates) {
-      MPI::barrier();
+      SAMRAI_MPI::barrier();
    }
 }
 
-
-void Utilities::abort(const string &message, 
-		           const string &filename, 
-			   const int line) 
+/*
+ * Routine to convert an integer to a string. 
+ */
+std::string Utilities::intToString(int num, int min_width)
 {
-   perr << "Program abort called in file ``" << filename
-        << "'' at line " << line << endl;
-   perr << "ERROR MESSAGE: " << endl << message.c_str() << endl;
-   perr << flush;
+   int tmp_width = ( min_width > 0 ? min_width : 1 );
+   std::ostringstream os;
+   if ( num < 0 ) {
+      os << '-' << std::setw(tmp_width-1) << std::setfill('0') << -num;
+   } else {
+      os << std::setw(tmp_width) << std::setfill('0') << num;
+   }
+   os << std::flush;
 
-   MPI::abort();
+   return(os.str()); //returns the string form of the stringstream object
 }
 
-void Utilities::printWarning(const string &message, 
-        			  const string &filename, 
+/*
+ * Routine that calls abort and prints calling location to error stream.
+ */
+void Utilities::abort(const std::string &message, 
+	              const std::string &filename, 
+	              const int line) 
+{
+   perr << "Program abort called in file ``" << filename
+        << "'' at line " << line << std::endl;
+   perr << "ERROR MESSAGE: " << std::endl << message.c_str() << std::endl;
+   perr << std::flush;
+
+   SAMRAI_MPI::abort();
+}
+
+/*
+ * Routine that prints a warning message and calling location to log stream.
+ */
+void Utilities::printWarning(const std::string &message, 
+        			  const std::string &filename, 
         			  const int line) 
 {
    plog << "Warning in file ``" << filename
-        << "'' at line " << line << endl;
-   plog << "WARNING MESSAGE: " << endl << message.c_str() << endl;
-   plog << flush;
+        << "'' at line " << line << std::endl;
+   plog << "WARNING MESSAGE: " << std::endl << message.c_str() << std::endl;
+   plog << std::flush;
 }
 
 

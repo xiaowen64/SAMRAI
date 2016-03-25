@@ -1,9 +1,9 @@
 //
-// File:	Parser.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/Parser.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Parser that reads the input database grammar
 //
 
@@ -28,7 +28,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -87,7 +86,7 @@ public:
     * are reset at the beginning of each parse.
     */
    int parse(
-      const string& filename,
+      const std::string& filename,
       FILE* fstream,
       Pointer<Database> database);
 
@@ -118,7 +117,7 @@ public:
     * Create a new database scope with the specified name.  This new scope
     * will be the default scope until leaveScope() is called.
     */
-   void enterScope(const string& name);
+   void enterScope(const std::string& name);
 
    /**
     * Leave the current database scope and return to the previous scope.
@@ -130,14 +129,14 @@ public:
     * Lookup the scope that contains the specified key.  If the scope does
     * not exist, then return a NULL pointer to the database.
     */
-   Pointer<Database> getDatabaseWithKey(const string& name);
+   Pointer<Database> getDatabaseWithKey(const std::string& name);
 
    /**
     * Save the current context and switch to the specified input file.
     * This routine returns true if the file exists and the switch was
     * successful and false otherwise.
     */
-   bool pushIncludeFile(const string& filename);
+   bool pushIncludeFile(const std::string& filename);
 
    /**
     * Pop the include file context off of the stack and return to the
@@ -151,7 +150,7 @@ public:
     * to pout, since it is assumed that all nodes are parsing the same input
     * file.
     */
-   void error(const string& message);
+   void error(const std::string& message);
 
    /**
     * Report a parsing warning with the specified warning message.  This
@@ -159,12 +158,12 @@ public:
     * are printed to pout, since it is assumed that all nodes are parsing
     * the same input file.
     */
-   void warning(const string& message);
+   void warning(const std::string& message);
 
    /**
     * Set the input line which is currently being parsed.
     */
-   void setLine(const string& line);
+   void setLine(const std::string& line);
 
    /**
     * Advance the line number by the specified number of lines.  If no
@@ -179,7 +178,7 @@ public:
     * The cursor position is automatically reset to one whenever the
     * line number is changed.
     */
-   void advanceCursor(const string& token);
+   void advanceCursor(const std::string& token);
 
    /**
     * Define the input reading routine used by flex.  Under MPI, node zero
@@ -192,9 +191,9 @@ private:
    void operator=(const Parser&);	// not implemented
 
    struct ParseData {
-      string d_filename;	// filename for description
+      std::string d_filename;	// filename for description
       FILE* d_fstream;		// input stream to parse
-      string d_linebuffer;      // line being parsed
+      std::string d_linebuffer;      // line being parsed
       int d_linenumber;		// line number in input stream
       int d_cursor;		// cursor position in line
       int d_nextcursor;		// next cursor position in line
@@ -215,7 +214,7 @@ private:
    
    static bool s_static_tables_initialized;
 
-   string d_pathname;           // path to filename for including
+   std::string d_pathname;           // path to filename for including
 };
 
 

@@ -1,9 +1,9 @@
 //
-// File:        LocallyActiveDataTester.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/LocallyActiveDataTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 465 $
-// Modified:    $Date: 2005-06-24 13:32:55 -0700 (Fri, 24 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to test locally-active data communication 
 //
  
@@ -44,9 +44,8 @@
 #include "VisItDataWriter.h"
 #include "tbox/IOStream.h"
 
-#ifndef LACKS_NAMESPACE
+using namespace std;
 using namespace SAMRAI;
-#endif
 
 /**
  * The LocallyActiveDataTester class coordinates construction of a patch hierarchy,
@@ -248,9 +247,10 @@ public:
    void performTest();
 
    /**
-    * Check results of test for pass or failuer.
+    * Check results of test for pass or failure and return integer number
+    * of failures.
     */
-   void checkTestResult(ostream &os) const;
+   int checkTestResult(ostream &os) const;
 
    /**
     * Dump the various function data on the hierarchy to the specified
@@ -398,7 +398,7 @@ private:
    /*
     * Check results for specified test.
     */
-   void checkRefineTestResult(ostream &os) const;
+   int checkRefineTestResult(ostream &os) const;
 
    bool checkRefineTestOnLevelInterior(
       tbox::Pointer<hier::PatchLevel<NDIM> > check_level,
@@ -424,7 +424,7 @@ private:
       tbox::Array< tbox::Array<hier::BoxList<NDIM> > >& unchecked_boxes,
       tbox::Array<bool>& patch_is_done) const;
 
-   void checkCoarsenTestResult(ostream &os) const;
+   int checkCoarsenTestResult(ostream &os) const;
 
    /*
     * Object string name identifier for error reporting, etc.

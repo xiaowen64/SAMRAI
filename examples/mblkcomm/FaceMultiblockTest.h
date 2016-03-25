@@ -1,9 +1,9 @@
 //
-// File:        FaceMultiblockTest.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/FaceMultiblockTest.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 1.6 $
-// Modified:    $Date: 2004/03/08 21:12:08 $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for edge-centered patch data
 //
 
@@ -26,9 +26,6 @@
 #ifndef included_pdat_FaceDoubleConstantRefine
 #include "FaceDoubleConstantRefine.h"
 #endif
-#ifndef included_geom_SkeletonPatchGeometry
-#include "SkeletonPatchGeometry.h"
-#endif
 #ifndef included_tbox_Database
 #include "tbox/Database.h"
 #endif
@@ -44,8 +41,8 @@
 #ifndef included_tbox_Pointer
 #include "Pointer.h"
 #endif
-#ifndef included_geom_SkeletonPatchGeometry
-#include "SkeletonPatchGeometry.h"
+#ifndef included_geom_BlockGridGeometry
+#include "BlockGridGeometry.h"
 #endif
 #ifndef included_hier_Variable
 #include "Variable.h"
@@ -89,7 +86,7 @@ public:
 
    void fillSingularityBoundaryConditions(
       hier::Patch<NDIM>& patch,
-      tbox::List<mblk::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
+      tbox::List<xfer::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
          sing_patches,
       const hier::Box<NDIM>& fill_box,
       const hier::BoundaryBox<NDIM>& boundary_box);
@@ -128,9 +125,9 @@ public:
    /**
     * Function for checking results of communication operations.
     */
-   void verifyResults(
+   bool verifyResults(
       hier::Patch<NDIM>& patch,
-      const tbox::Pointer<mblk::MultiblockPatchHierarchy<NDIM> > hierarchy,
+      const tbox::Pointer<hier::MultiblockPatchHierarchy<NDIM> > hierarchy,
       int level_number,
       int block_number);
 
@@ -155,7 +152,8 @@ private:
    /*
     * Data members specific to this edge data test.
     */
-   tbox::Pointer< geom::SkeletonGridGeometry<NDIM> >* d_skel_grid_geometry;
+   tbox::Array< tbox::Pointer< hier::GridGeometry<NDIM> > >
+   d_skel_grid_geometry;
 
    string d_refine_option;
    int d_finest_level_number;

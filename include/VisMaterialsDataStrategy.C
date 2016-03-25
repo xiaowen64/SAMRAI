@@ -1,9 +1,9 @@
 //
-// File:        VisMaterialsDataStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisMaterialsDataStrategy.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Interface for writing material related data to VisIt 
 //              dump file
 //
@@ -30,7 +30,7 @@ template<int DIM> int VisMaterialsDataStrategy<DIM>::packMaterialFractionsIntoDo
       double *buffer,
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
-      const string& material_name)
+      const std::string& material_name) const
 {
    NULL_USE(buffer);
    NULL_USE(patch);
@@ -40,7 +40,7 @@ template<int DIM> int VisMaterialsDataStrategy<DIM>::packMaterialFractionsIntoDo
                << "packMaterialFractionsIntoDoubleBuffer()"
                << "\nNo class supplies a concrete implementation for "
                << "\nthis method.  The default abstract method (which "
-               << "\ndoes nothing) is executed" << endl);
+               << "\ndoes nothing) is executed" << std::endl);
    return 0;
 }
 
@@ -49,8 +49,8 @@ template<int DIM> int VisMaterialsDataStrategy<DIM>::packSpeciesFractionsIntoDou
       double *buffer,
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
-      const string& material_name,
-      const string& species_name)
+      const std::string& material_name,
+      const std::string& species_name) const
 {
    NULL_USE(buffer);
    NULL_USE(patch);
@@ -61,7 +61,7 @@ template<int DIM> int VisMaterialsDataStrategy<DIM>::packSpeciesFractionsIntoDou
                << "packSpeciesFractionsIntoDoubleBuffer()"
                << "\nNo class supplies a concrete implementation for "
                << "\nthis method.  The default abstract method (which "
-               << "\ndoes nothing) is executed" << endl);
+               << "\ndoes nothing) is executed" << std::endl);
    return 0;
 }
 

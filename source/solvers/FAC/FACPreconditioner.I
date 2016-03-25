@@ -1,9 +1,9 @@
 //
-// File:        FACPreconditioner.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/FAC/FACPreconditioner.I $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 704 $
-// Modified:    $Date: 2005-11-04 11:33:31 -0800 (Fri, 04 Nov 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	FAC algorithm for solving linear equations on a hierarchy
 //
 
@@ -121,10 +121,10 @@ void FACPreconditioner<DIM>::setResidualTolerance( double residual_tol,
 
 
 template<int DIM> inline
-void FACPreconditioner<DIM>::setAlgorithmChoice( const string &choice )
+void FACPreconditioner<DIM>::setAlgorithmChoice( const std::string &choice )
 {
-   string lower = choice;
-   string::iterator c;
+   std::string lower = choice;
+   std::string::iterator c;
    for ( c=lower.begin(); c<lower.end(); ++c ) {
       *c = tolower(*c);
    }

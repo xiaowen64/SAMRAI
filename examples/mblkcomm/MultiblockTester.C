@@ -1,9 +1,9 @@
 //
-// File:        MultiblockTester.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/MultiblockTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 1.6 $
-// Modified:    $Date: 2004/02/11 23:46:08 $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1746 $
+// Modified:    $LastChangedDate: 2007-12-07 11:05:07 -0800 (Fri, 07 Dec 2007) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -21,12 +21,6 @@
 #include "tbox/Utilities.h"
 #include "VariableDatabase.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 using namespace SAMRAI;
 
@@ -48,9 +42,9 @@ MultiblockTester::MultiblockTester(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(data_test != (PatchMultiblockTestStrategy*)NULL);
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(data_test != (PatchMultiblockTestStrategy*)NULL);
 #endif
 
    d_object_name = object_name;
@@ -119,10 +113,10 @@ void MultiblockTester::registerVariable(
    const string& operator_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!src_variable.isNull());
-   assert(!dst_variable.isNull());
-   assert(!xfer_geom.isNull());
-   assert(!operator_name.empty());
+   TBOX_ASSERT(!src_variable.isNull());
+   TBOX_ASSERT(!dst_variable.isNull());
+   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(!operator_name.empty());
 #endif
 
    hier::VariableDatabase<NDIM>* variable_db =
@@ -137,8 +131,8 @@ void MultiblockTester::registerVariable(
 					                dst_ghosts);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( src_id != -1 );
-   assert( dst_id != -1 );
+   TBOX_ASSERT( src_id != -1 );
+   TBOX_ASSERT( dst_id != -1 );
 #endif
 
    d_patch_data_components.setFlag(src_id);
@@ -162,7 +156,7 @@ void MultiblockTester::registerVariable(
                                                  d_refine_scratch,
                                                  scratch_ghosts);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( scratch_id != -1 );
+   TBOX_ASSERT( scratch_id != -1 );
 #endif
 
       d_patch_data_components.setFlag(scratch_id);
@@ -185,7 +179,7 @@ void MultiblockTester::registerVariable(
                             operator_name);
 
    d_mblk_refine_alg =
-      new mblk::MultiblockRefineAlgorithm<NDIM>(d_refine_algorithm,
+      new xfer::MultiblockRefineAlgorithm<NDIM>(d_refine_algorithm,
                                                 d_patch_hierarchy);
 }
 
@@ -198,10 +192,10 @@ void MultiblockTester::registerVariableForReset(
    const string& operator_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!src_variable.isNull());
-   assert(!dst_variable.isNull());
-   assert(!xfer_geom.isNull());
-   assert(!operator_name.empty());
+   TBOX_ASSERT(!src_variable.isNull());
+   TBOX_ASSERT(!dst_variable.isNull());
+   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(!operator_name.empty());
 #endif
 
    hier::VariableDatabase<NDIM>* variable_db =
@@ -266,11 +260,11 @@ void MultiblockTester::createRefineSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
-   tbox::Pointer< mblk::MultiblockPatchLevel<NDIM> > level =
+   tbox::Pointer< hier::MultiblockPatchLevel<NDIM> > level =
       d_patch_hierarchy->getPatchLevel(level_number);
 
    if (d_do_refine) {
@@ -303,7 +297,7 @@ void MultiblockTester::resetRefineSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -320,7 +314,7 @@ void MultiblockTester::createCoarsenSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -345,7 +339,7 @@ void MultiblockTester::resetCoarsenSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -408,8 +402,9 @@ void MultiblockTester::performCoarsenOperations(
 *************************************************************************
 */
 
-void MultiblockTester::verifyCommunicationResults() const
+bool MultiblockTester::verifyCommunicationResults() const
 {
+   bool success = true;
    if (d_is_reset) {
       d_data_test_strategy->setDataContext(d_reset_destination);
    } else {
@@ -417,7 +412,7 @@ void MultiblockTester::verifyCommunicationResults() const
    }
    for (int ln = 0;
         ln <= d_patch_hierarchy->getFinestLevelNumber(); ln++) {
-      tbox::Pointer< mblk::MultiblockPatchLevel<NDIM> > level =
+      tbox::Pointer< hier::MultiblockPatchLevel<NDIM> > level =
          d_patch_hierarchy->getPatchLevel(ln);
 
       for (int nb = 0; nb < level->getNumberBlocks(); nb++) {
@@ -429,13 +424,16 @@ void MultiblockTester::verifyCommunicationResults() const
                tbox::Pointer<hier::Patch<NDIM> > patch =
                   patch_level->getPatch(p());
 
-               d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy,
-                                                   ln, nb);
+               success = d_data_test_strategy->verifyResults(
+                                                  *patch, d_patch_hierarchy,
+                                                  ln, nb);
             }
          }
       }
    }
    d_data_test_strategy->clearDataContext();
+
+   return (success);
 }
 
 /*
@@ -462,15 +460,15 @@ void MultiblockTester::initializeLevelData(
    (void) old_level;
    (void) allocate_data;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
-   assert(level_number >= 0);
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(level_number >= 0);
 #endif
 
-   tbox::Pointer< mblk::MultiblockPatchHierarchy<NDIM> > mblk_hierarchy =
+   tbox::Pointer< hier::MultiblockPatchHierarchy<NDIM> > mblk_hierarchy =
       hierarchy;
 
-   tbox::Pointer< mblk::MultiblockPatchLevel<NDIM> > level =
+   tbox::Pointer< hier::MultiblockPatchLevel<NDIM> > level =
       hierarchy->getPatchLevel(level_number);
 
    level->allocatePatchData(d_patch_data_components, time);
@@ -548,8 +546,8 @@ void MultiblockTester::applyGradientDetector(
    (void) initial_time;
    (void) uses_richardson_extrapolation_too;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
 #endif
 
    tbox::Pointer<hier::PatchLevel<NDIM> > level =
@@ -605,7 +603,7 @@ void MultiblockTester::setPhysicalBoundaryConditions(
 
 void MultiblockTester::fillSingularityBoundaryConditions(
    hier::Patch<NDIM>& patch,
-   tbox::List<mblk::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
+   tbox::List<xfer::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
       singularity_patches,
    const double time,
    const hier::Box<NDIM>& fill_box,
@@ -696,29 +694,18 @@ void MultiblockTester::setupHierarchy(
    tbox::Pointer<mesh::StandardTagAndInitialize<NDIM> > cell_tagger)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!main_input_db.isNull());
+   TBOX_ASSERT(!main_input_db.isNull());
 #endif
 
    tbox::Pointer<tbox::Database> mult_db =
       main_input_db->getDatabase("Multiblock");
 
-   int num_blocks = mult_db->getInteger("num_blocks");
-
-   tbox::Array< tbox::Pointer<hier::PatchHierarchy<NDIM> > >
-      hierarchies(num_blocks);
-
-   char hier_name[32];
-   for (int b = 0; b < num_blocks; b++) {
-      sprintf(hier_name, "PatchHierarchy%d", b);
-
-      hierarchies[b] =
-         new hier::PatchHierarchy<NDIM>(hier_name,
-                            d_data_test_strategy->getGridGeometry(b));
-   }
-
    d_patch_hierarchy =
-      new mblk::MultiblockPatchHierarchy<NDIM>("MultiblockPatchHierarchy",
-                                               mult_db, hierarchies, true);
+      new hier::MultiblockPatchHierarchy<NDIM>(
+         "MultiblockPatchHierarchy",
+         mult_db,
+         d_data_test_strategy->getGridGeometry(),
+         true);
 
    tbox::Pointer<mesh::BergerRigoutsos<NDIM> > box_generator =
       new mesh::BergerRigoutsos<NDIM>();
@@ -728,15 +715,15 @@ void MultiblockTester::setupHierarchy(
          "LoadBalancer",
          main_input_db->getDatabase("LoadBalancer"));
 
-   tbox::Pointer<mblk::MultiblockGriddingAlgorithm<NDIM> > gridding_alg =
-      new mblk::MultiblockGriddingAlgorithm<NDIM>(
-         "GriddingAlgorithm",
+   tbox::Pointer<mesh::MultiblockGriddingAlgorithm<NDIM> > gridding_alg =
+      new mesh::MultiblockGriddingAlgorithm<NDIM>(
+         "MultiblockGriddingAlgorithm",
          main_input_db->getDatabase("GriddingAlgorithm"),
          d_patch_hierarchy,
          cell_tagger,
          box_generator,
          load_balancer,
-         (mblk::MultiblockGriddingTagger<NDIM>*)NULL,
+         (mesh::MultiblockGriddingTagger<NDIM>*)NULL,
          true);
 
    int fake_tag_buffer = 0;

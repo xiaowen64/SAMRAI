@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -31,8 +31,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h $(INCLUDE_SAM)/tbox/Timer.I	\
 	$(INCLUDE_SAM)/tbox/Timer.h $(INCLUDE_SAM)/tbox/TimerManager.h	\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	Foo.C Foo.h
+	$(INCLUDE_SAM)/tbox/Utilities.h Foo.C Foo.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -55,8 +54,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MPI.I		\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/PIO.h		\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
 	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
@@ -65,12 +64,13 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/Statistic.I $(INCLUDE_SAM)/tbox/Statistic.h	\
 	$(INCLUDE_SAM)/tbox/Statistician.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	main_stats.C
+	$(INCLUDE_SAM)/tbox/Utilities.h main_stats.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -95,8 +95,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MPI.I		\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/PIO.h		\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/PIO.h		\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
 	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
@@ -105,11 +104,12 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h $(INCLUDE_SAM)/tbox/Timer.I	\
 	$(INCLUDE_SAM)/tbox/Timer.h $(INCLUDE_SAM)/tbox/TimerManager.h	\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	Foo.h main_timer.C
+	$(INCLUDE_SAM)/tbox/Utilities.h Foo.h main_timer.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\

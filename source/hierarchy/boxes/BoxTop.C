@@ -1,9 +1,9 @@
 //
-// File:	BoxTop.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTop.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Utility class to reduce complexity of box calculus operations.
 //
 
@@ -13,7 +13,7 @@
 #include "BoxTop.h"
 #include "BoxList.h"
 #include "BoxGraphUtilities.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 
 
 namespace SAMRAI {
@@ -200,13 +200,13 @@ template<int DIM> void BoxTop<DIM>::findNaborsPrivate(const Box<DIM>& box)
 *************************************************************************
 */
 
-template<int DIM> void BoxTop<DIM>::print(ostream& os)
+template<int DIM> void BoxTop<DIM>::print(std::ostream& os)
 {
    os << "\n----- BoxTop::print -----\n";
 
    int length = d_boxes.getNumberOfBoxes();
    for (int i=0; i<DIM; ++i) {
-      os << "Dimension: " << i+1 << endl << endl;
+      os << "Dimension: " << i+1 << std::endl << std::endl;
 
       os << "  sorted by upper:\n";
       printEltArray(d_sorted_lists[i*2+1], length, os);
@@ -279,13 +279,13 @@ template<int DIM> void BoxTop<DIM>::setup()
 *************************************************************************
 */
 
-template<int DIM> void BoxTop<DIM>::printEltArray(boxElt *&data, int len, ostream& os)
+template<int DIM> void BoxTop<DIM>::printEltArray(boxElt *&data, int len, std::ostream& os)
 {
    for (int j=0; j<len; ++j) {
       os << "    coord: " << data[j].coord 
-         << "  box: " << *(data[j].box) << endl;
+         << "  box: " << *(data[j].box) << std::endl;
    }
-   os << endl;
+   os << std::endl;
 }
 
 

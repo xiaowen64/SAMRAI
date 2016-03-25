@@ -1,18 +1,12 @@
 //
-// File:        SAMRAIVectorReal.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/SAMRAIVectorReal.I $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Vector class for real data on SAMRAI hierarchy.
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -21,19 +15,19 @@ namespace SAMRAI {
     namespace solv {
 
 template<int DIM, class TYPE> inline
-void SAMRAIVectorReal<DIM,TYPE>::setOutputStream(ostream& s)
+void SAMRAIVectorReal<DIM,TYPE>::setOutputStream(std::ostream& s)
 {
    d_output_stream = &s;
 }
 
 template<int DIM, class TYPE> inline
-ostream& SAMRAIVectorReal<DIM,TYPE>::getOutputStream()
+std::ostream& SAMRAIVectorReal<DIM,TYPE>::getOutputStream()
 {
    return(*d_output_stream);
 }
 
 template<int DIM, class TYPE> inline
-const string& SAMRAIVectorReal<DIM,TYPE>::getName() const
+const std::string& SAMRAIVectorReal<DIM,TYPE>::getName() const
 {
    return(d_vector_name);
 }
@@ -70,7 +64,7 @@ SAMRAIVectorReal<DIM,TYPE>::getComponentPatchData(
    const hier::Patch<DIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(comp_id >= 0 && comp_id < d_number_components); 
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components); 
 #endif
    return( patch.getPatchData(d_component_data_id[comp_id]) ); 
 }
@@ -82,8 +76,8 @@ SAMRAIVectorReal<DIM,TYPE>::getComponentPatchData(
    const hier::Patch<DIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!var.isNull());
-   assert(d_variableid_2_vectorcomponent_map[
+   TBOX_ASSERT(!var.isNull());
+   TBOX_ASSERT(d_variableid_2_vectorcomponent_map[
           var->getInstanceIdentifier()] >= 0);
 #endif
    return( patch.getPatchData(
@@ -98,7 +92,7 @@ SAMRAIVectorReal<DIM,TYPE>::getComponentVariable(
    const int comp_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(comp_id >= 0 && comp_id < d_number_components);
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
 #endif
    return(d_component_variable[comp_id]);
    
@@ -109,7 +103,7 @@ int SAMRAIVectorReal<DIM,TYPE>::getComponentDescriptorIndex(
    const int comp_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(comp_id >= 0 && comp_id < d_number_components);
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
 #endif
    return( d_component_data_id[comp_id] ); 
 }
@@ -119,7 +113,7 @@ int SAMRAIVectorReal<DIM,TYPE>::getControlVolumeIndex(
    const int comp_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(comp_id >= 0 && comp_id < d_number_components);
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
 #endif
    return( d_control_volume_data_id[comp_id] );
 }

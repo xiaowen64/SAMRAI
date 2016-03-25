@@ -1,0 +1,37 @@
+##
+## File:	$URL$
+## Package:	SAMRAI solvers
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1758 $
+## Modified:	$LastChangedDate: 2007-12-10 16:28:55 -0800 (Mon, 10 Dec 2007) $
+## Description:	makefile for the CVODE solver wrappers
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/solvers/packages/sundials/cvode
+VPATH	      =	@srcdir@
+OBJECT        = ../../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+OBJS          = CVODEAbstractFunctions.o \
+                CVODESolver.o
+
+library:	$(OBJS)
+
+lib1d:		$(OBJS)
+
+lib2d:		$(OBJS)
+
+lib3d:		$(OBJS)
+
+libXd:		$(OBJS)
+
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

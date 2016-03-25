@@ -1,8 +1,8 @@
 /*
-  File:        $RCSfile$
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision: 346 $
-  Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerEdgeSet.h $
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1808 $
+  Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
   Description: Set of edges in distributed box graph.
 */
 
@@ -29,8 +29,8 @@
 #include "tbox/Array.h"
 #endif
 
-#ifndef included_tbox_MPI
-#include "tbox/MPI.h"
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 
 #ifndef included_tbox_PIO
@@ -44,8 +44,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-
-using namespace std;
 
 namespace SAMRAI {
 namespace hier {
@@ -187,7 +185,7 @@ public:
      a combined owner and LocalIndex, each Connectivity object
      is implicitly associated with just one owner process.
    */
-   typedef map<LocalIndex,NabrContainer> Connectivity;
+   typedef std::map<LocalIndex,NabrContainer> Connectivity;
 
    /*!
      @brief Constructor.
@@ -620,8 +618,8 @@ public:
      @name For outputs, error checking and debugging.
    */
 
-   void printClassData( ostream &co, int debase_depth=0 ) const;
-   void printEdgeStats( ostream &co ) const;
+   virtual void printClassData( std::ostream &co, int debase_depth=0 ) const;
+   void printEdgeStats( std::ostream &co ) const;
 
    /*!
      @brief Check that the node and neighbor containers have
@@ -644,7 +642,7 @@ public:
      @brief Check that nodes referenced by a given connectivity
      object match nodes in the given node containers.
 
-     @param nodes A node container.
+     @param local_nodes A node container.
      @param cnect Connectivity data for @c nodes.
      @param head_layer LayerNodeSet describing the head
             with respect to the given connectivity.  This object
@@ -690,12 +688,12 @@ public:
      (just in case dereferencing a map is expensive).
    */
    struct CommunicationStruct {
-      vector<int> send_mesg;
-      tbox::MPI::request send_rqst;
+      std::vector<int> send_mesg;
+      tbox::SAMRAI_MPI::request send_rqst;
       int send_size;
       bool send_done;
-      vector<int> recv_mesg;
-      tbox::MPI::request recv_rqst;
+      std::vector<int> recv_mesg;
+      tbox::SAMRAI_MPI::request recv_rqst;
       int recv_size;
       bool recv_done;
       CommunicationStruct() : send_size(-1), send_done(false),
@@ -762,7 +760,7 @@ private:
    void bridge_discoverEdges(
       const LayerEdgeSet &edge_to_head,
       const LayerEdgeSet &edge_to_base,
-      map<LocalIndex,CommunicationStruct> &mesg_to_owners,
+      std::map<LocalIndex,CommunicationStruct> &mesg_to_owners,
       const bool ignore_self_overlap );
 
    /*!
@@ -770,7 +768,7 @@ private:
 
      Messages are created by bridge_discoverEdges().
    */
-   void bridge_shareEdges( map<LocalIndex,CommunicationStruct> &mesg_to_owners );
+   void bridge_shareEdges( std::map<LocalIndex,CommunicationStruct> &mesg_to_owners );
 
    /*!
      @brief Discover and add edges between self and another,
@@ -813,7 +811,7 @@ private:
      @brief Get a list of owners of neighbors.
    */
    void getNabrOwnerSet( const Connectivity &cnect,
-                         set<int> &owners ) const;
+                         std::set<int> &owners ) const;
 
    //@}
 

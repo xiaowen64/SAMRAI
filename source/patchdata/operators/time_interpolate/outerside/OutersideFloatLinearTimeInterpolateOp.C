@@ -1,9 +1,9 @@
 //
-// File:	OutersideFloatLinearTimeInterpolateOp.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/operators/time_interpolate/outerside/OutersideFloatLinearTimeInterpolateOp.C $
 // Package:	SAMRAI patchdata
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Linear time interp operator for float outerside patch data.
 //
 
@@ -15,19 +15,13 @@
 
 #include "OutersideFloatLinearTimeInterpolateOp.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 #include "Box.h"
 #include "Index.h"
 #include "OutersideData.h"
 #include "OutersideVariable.h"
-#include "tbox/IEEE.h"
 #include "tbox/Pointer.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 /*
 *************************************************************************
@@ -118,7 +112,7 @@ template<int DIM> OutersideFloatLinearTimeInterpolateOp<DIM>::~OutersideFloatLin
 
 template<int DIM> bool OutersideFloatLinearTimeInterpolateOp<DIM>::findTimeInterpolateOperator(
    const tbox::Pointer< hier::Variable<DIM> >& var,
-   const string &op_name) const
+   const std::string &op_name) const
 {
    const tbox::Pointer< OutersideVariable<DIM,float> > cast_var(var);
    if ( !cast_var.isNull() && (op_name == "STD_LINEAR_TIME_INTERPOLATE") ) {
@@ -143,12 +137,12 @@ template<int DIM> void OutersideFloatLinearTimeInterpolateOp<DIM>::timeInterpola
       dynamic_cast<OutersideData<DIM,float> *>(&dst_data);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( old_dat != NULL );
-   assert( new_dat != NULL );
-   assert( dst_dat != NULL );
-   assert( where*old_dat->getGhostBox() == where );
-   assert( where*new_dat->getGhostBox() == where );
-   assert( where*dst_dat->getGhostBox() == where );
+   TBOX_ASSERT( old_dat != NULL );
+   TBOX_ASSERT( new_dat != NULL );
+   TBOX_ASSERT( dst_dat != NULL );
+   TBOX_ASSERT( where*old_dat->getGhostBox() == where );
+   TBOX_ASSERT( where*new_dat->getGhostBox() == where );
+   TBOX_ASSERT( where*dst_dat->getGhostBox() == where );
 #endif
 
    const hier::Index<DIM> old_ilo = old_dat->getGhostBox().lower();
@@ -166,13 +160,13 @@ template<int DIM> void OutersideFloatLinearTimeInterpolateOp<DIM>::timeInterpola
    const double new_time = new_dat->getTime();
    const double dst_time = dst_dat->getTime();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((old_time < dst_time || tbox::Utilities::deq(old_time,dst_time)) && 
-          (dst_time < new_time || tbox::Utilities::deq(dst_time,new_time)));
+   TBOX_ASSERT((old_time < dst_time || tbox::MathUtilities<double>::equalEps(old_time,dst_time)) && 
+          (dst_time < new_time || tbox::MathUtilities<double>::equalEps(dst_time,new_time)));
 #endif
 
    double tfrac = dst_time - old_time;
    double denom = new_time - old_time;
-   if ( denom > tbox::IEEE::getDBL_MIN() ) {
+   if ( denom > tbox::MathUtilities<double>::getMin() ) {
       tfrac /= denom;
    } else {
       tfrac = 0.0;
@@ -245,7 +239,7 @@ template<int DIM> void OutersideFloatLinearTimeInterpolateOp<DIM>::timeInterpola
 				       new_dat->getPointer(2,i,d),
 				       dst_dat->getPointer(2,i,d));
 	 } else {
-	    TBOX_ERROR("OutersideFloatLinearTimeInterpolateOp::TimeInterpolate DIM > 3 not supported" << endl);
+	    TBOX_ERROR("OutersideFloatLinearTimeInterpolateOp::TimeInterpolate DIM > 3 not supported" << std::endl);
 	 }
       }
    }

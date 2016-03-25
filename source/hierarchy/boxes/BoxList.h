@@ -1,9 +1,9 @@
 //
-// File:	BoxList.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxList.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A list of boxes with basic domain calculus operations
 //
 
@@ -31,7 +31,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 namespace SAMRAI {
@@ -235,7 +234,7 @@ public:
     * Print all class member data for this bounding box list object
     * to specified output stream.
     */
-   void print(ostream& os = tbox::plog) const;
+   void print(std::ostream& os = tbox::plog) const;
 
 private:
    void burstBoxes(const Box<DIM>& bursty,

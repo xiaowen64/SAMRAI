@@ -1,9 +1,9 @@
 //
-// File:        CartesianBoundaryUtilities3.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/CartesianBoundaryUtilities3.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility routines for manipulating 3D Cartesian boundary data
 //
 
@@ -11,9 +11,6 @@
 
 #include "CartesianBoundaryDefines.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include "CartesianPatchGeometry.h"
 #include "BoundaryBox.h"
 #include "CellIndex.h"
@@ -136,11 +133,11 @@ void CartesianBoundaryUtilities3::readBoundaryInput(
    const hier::IntVector<3>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
-   assert(!bdry_db.isNull());
-   assert(face_conds.getSize() == NUM_3D_FACES);
-   assert(edge_conds.getSize() == NUM_3D_EDGES);
-   assert(node_conds.getSize() == NUM_3D_NODES);
+   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
+   TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
+   TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -179,7 +176,7 @@ void CartesianBoundaryUtilities3::readBoundaryInput(
  */
 
 void CartesianBoundaryUtilities3::fillFaceBoundaryData(
-   const string& varname,
+   const std::string& varname,
    tbox::Pointer< pdat::CellData<3,double> >& vardata,
    const hier::Patch<3>& patch,
    const hier::IntVector<3>& ghost_fill_width,
@@ -187,10 +184,10 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(!vardata.isNull());
-   assert(bdry_face_conds.getSize() == NUM_3D_FACES);
-   assert(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(bdry_face_conds.getSize() == NUM_3D_FACES);
+   TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -214,7 +211,7 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
       pgeom->getCodimensionBoundary(FACE3D_BDRY_TYPE);
    for (int i = 0; i < face_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(face_bdry[i].getBoundaryType() == FACE3D_BDRY_TYPE);
+      TBOX_ASSERT(face_bdry[i].getBoundaryType() == FACE3D_BDRY_TYPE);
 #endif
 
       int bface_loc = face_bdry[i].getLocationIndex();
@@ -258,7 +255,7 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
  */
 
 void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
-   const string& varname,
+   const std::string& varname,
    tbox::Pointer< pdat::CellData<3,double> >& vardata,
    const hier::Patch<3>& patch,
    const hier::IntVector<3>& ghost_fill_width,
@@ -266,10 +263,10 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(!vardata.isNull());
-   assert(bdry_edge_conds.getSize() == NUM_3D_EDGES);
-   assert(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_3D_EDGES);
+   TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -293,7 +290,7 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
       pgeom->getCodimensionBoundary(EDGE3D_BDRY_TYPE);
    for (int i = 0; i < edge_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(edge_bdry[i].getBoundaryType() == EDGE3D_BDRY_TYPE);
+      TBOX_ASSERT(edge_bdry[i].getBoundaryType() == EDGE3D_BDRY_TYPE);
 #endif
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
@@ -337,7 +334,7 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
  */
 
 void CartesianBoundaryUtilities3::fillNodeBoundaryData(
-   const string& varname,
+   const std::string& varname,
    tbox::Pointer< pdat::CellData<3,double> >& vardata,
    const hier::Patch<3>& patch,
    const hier::IntVector<3>& ghost_fill_width,
@@ -345,10 +342,10 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(!vardata.isNull());
-   assert(bdry_node_conds.getSize() == NUM_3D_NODES);
-   assert(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(bdry_node_conds.getSize() == NUM_3D_NODES);
+   TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -372,7 +369,7 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
       pgeom->getCodimensionBoundary(NODE3D_BDRY_TYPE);
    for (int i = 0; i < node_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(node_bdry[i].getBoundaryType() == NODE3D_BDRY_TYPE);
+      TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE3D_BDRY_TYPE);
 #endif
 
       int bnode_loc = node_bdry[i].getLocationIndex();
@@ -465,7 +462,7 @@ int CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry(
          TBOX_ERROR("Unknown edge boundary condition type = "
             << edge_btype << " passed to \n" 
             << "CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry" 
-            << endl); }
+            << std::endl); }
    }
 
    if (ret_face == -1) {
@@ -473,7 +470,7 @@ int CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry(
          << edge_btype << " and edge location = " << edge_loc
          << "\n passed to "
          << "CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry"
-         << " are inconsistant." << endl);
+         << " are inconsistant." << std::endl);
    }
 
    return(ret_face);
@@ -541,7 +538,7 @@ int CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
          TBOX_ERROR("Unknown node boundary condition type = "
             << node_btype << " passed to \n"
             << "CartesianBoundaryUtilities3::getFaceLocationForNodeBdry"
-            << endl); }
+            << std::endl); }
    }
 
    if (ret_face == -1) {
@@ -549,7 +546,7 @@ int CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
             << node_btype << " and node location = " << node_loc
             << "\n passed to "
             << "CartesianBoundaryUtilities3::getFaceLocationForNodeBdry"
-            << " are inconsistant." << endl);
+            << " are inconsistant." << std::endl);
    }
 
    return(ret_face);
@@ -571,7 +568,7 @@ int CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
  */
 
 int CartesianBoundaryUtilities3::checkBdryData(
-   const string& varname,
+   const std::string& varname,
    const hier::Patch<3>& patch,
    int data_id,
    int depth,
@@ -581,9 +578,9 @@ int CartesianBoundaryUtilities3::checkBdryData(
    double bstate)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(data_id >= 0);
-   assert(depth >= 0);
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(data_id >= 0);
+   TBOX_ASSERT(depth >= 0);
 #endif
 
    int num_bad_values = 0;
@@ -597,7 +594,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
    tbox::Pointer< pdat::CellData<3,double> > vardata =
       patch.getPatchData(data_id);
 
-   string bdry_type_str;
+   std::string bdry_type_str;
    if (btype == FACE3D_BDRY_TYPE) {
       bdry_type_str = "FACE";
    } else if (btype == EDGE3D_BDRY_TYPE) {
@@ -607,14 +604,14 @@ int CartesianBoundaryUtilities3::checkBdryData(
    } else {
       TBOX_ERROR("Unknown btype " << btype
          << " passed to CartesianBoundaryUtilities3::checkBdryData()! "
-         << endl);
+         << std::endl);
    }
 
-   tbox::plog << "\n\nCHECKING 3D " << bdry_type_str << " BDRY DATA..." << endl;
-   tbox::plog << "varname = " << varname << " : depth = " << depth << endl;
-   tbox::plog << "bbox = " << bbox.getBox() << endl;
+   tbox::plog << "\n\nCHECKING 3D " << bdry_type_str << " BDRY DATA..." << std::endl;
+   tbox::plog << "varname = " << varname << " : depth = " << depth << std::endl;
+   tbox::plog << "bbox = " << bbox.getBox() << std::endl;
    tbox::plog << "btype, bloc, bcase = "
-        << btype << ", = " << bloc << ", = " << bcase << endl;
+        << btype << ", = " << bloc << ", = " << bcase << std::endl;
 
    int idir;
    double valfact=0.0, constval=0.0, dxfact=0.0;
@@ -645,7 +642,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
          TBOX_ERROR("Unknown bcase " << bcase
             << " passed to CartesianBoundaryUtilities3::checkBdryData()"
             << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+            << " at location " << bloc << std::endl);
       }
 
    } else if (btype == EDGE3D_BDRY_TYPE) {
@@ -673,7 +670,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
          TBOX_ERROR("Unknown bcase " << bcase
             << " passed to CartesianBoundaryUtilities3::checkBdryData()"
             << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+            << " at location " << bloc << std::endl);
       }
 
    } else if (btype == NODE3D_BDRY_TYPE) {
@@ -701,7 +698,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
          TBOX_ERROR("Unknown bcase " << bcase
             << " passed to CartesianBoundaryUtilities3::checkBdryData()"
             << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+            << " at location " << bloc << std::endl);
       }
 
    }
@@ -740,7 +737,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
                          << " boundary value for " << varname
                          << " found in cell " << check
                          << "\n   found = " << (*vardata)(check, depth)
-                         << " : correct = " << offcheckval << endl);
+                         << " : correct = " << offcheckval << std::endl);
          }
          check(idir) += offsign;
       }
@@ -762,9 +759,9 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
    const hier::IntVector<3>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
-   assert(!bdry_db.isNull());
-   assert(face_conds.getSize() == NUM_3D_FACES);
+   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
 #endif
 
    int num_per_dirs = 0;
@@ -776,7 +773,7 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
 
       for (int s = 0; s < NUM_3D_FACES; s++) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case XLO: { bdry_loc_str = "boundary_face_xlo";
                         break; }
@@ -810,7 +807,7 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
                   bdry_db->getDatabase(bdry_loc_str);
                if (!bdry_loc_db.isNull()) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
-                     string bdry_cond_str =
+                     std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
                      if (bdry_cond_str == "FLOW") {
                         face_conds[s] = FLOW_BC;
@@ -830,16 +827,16 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
                                                         s);
                      } else {
                      TBOX_ERROR("Unknown face boundary string = "
-                           << bdry_cond_str << " found in input." << endl);
+                           << bdry_cond_str << " found in input." << std::endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << endl);
+                        << bdry_loc_str << " input database." << std::endl);
                   }
                }
             } else {
                TBOX_ERROR(bdry_loc_str 
-                  << " database entry not found in input." << endl);
+                  << " database entry not found in input." << std::endl);
             }
          } // if (need_data_read)
 
@@ -860,9 +857,9 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
    const hier::IntVector<3>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!bdry_db.isNull());
-   assert(face_conds.getSize() == NUM_3D_FACES);
-   assert(edge_conds.getSize() == NUM_3D_EDGES);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
+   TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
 #endif
 
    int num_per_dirs = 0;
@@ -874,7 +871,7 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
 
       for (int s = 0; s < NUM_3D_EDGES; s++) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case YLO_ZLO_3D: { bdry_loc_str = "boundary_edge_ylo_zlo";
                             break; }
@@ -926,7 +923,7 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
                   bdry_db->getDatabase(bdry_loc_str);
                if (!bdry_loc_db.isNull()) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
-                     string bdry_cond_str =
+                     std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
                      if (bdry_cond_str == "XFLOW") {
                         edge_conds[s] = XFLOW_BC;
@@ -954,7 +951,7 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
                         edge_conds[s] = ZNEUMANN_BC;
                      } else {
                         TBOX_ERROR("Unknown edge boundary string = "
-                           << bdry_cond_str << " found in input." << endl);
+                           << bdry_cond_str << " found in input." << std::endl);
                      }
    
                      bool ambiguous_type = false;
@@ -986,11 +983,11 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
                      if (ambiguous_type) {
                         TBOX_ERROR("Ambiguous bdry condition " 
                            << bdry_cond_str
-                           << " found for " << bdry_loc_str << endl);
+                           << " found for " << bdry_loc_str << std::endl);
                      }
 
-                     string proper_face;
-                     string proper_face_data;
+                     std::string proper_face;
+                     std::string proper_face_data;
                      bool no_face_data_found = false;
                      if (bdry_cond_str == "XFLOW" ||
                          bdry_cond_str == "XDIRICHLET" ||
@@ -1147,16 +1144,16 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
                         TBOX_ERROR("Bdry condition " << bdry_cond_str
                            << " found for " << bdry_loc_str
                            << "\n but no " << proper_face_data 
-                           << " data found for face " << proper_face << endl);
+                           << " data found for face " << proper_face << std::endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << endl);
+                        << bdry_loc_str << " input database." << std::endl);
                   }
                }
             } else {
                TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << endl);
+                  << " database entry not found in input." << std::endl);
             }
   
          } // if (need_data_read)
@@ -1178,9 +1175,9 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
    const hier::IntVector<3>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!bdry_db.isNull());
-   assert(face_conds.getSize() == NUM_3D_FACES);
-   assert(node_conds.getSize() == NUM_3D_NODES);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
+   TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
 #endif
 
    int num_per_dirs = 0;
@@ -1192,7 +1189,7 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
 
       for (int s = 0; s < NUM_3D_NODES; s++) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case XLO_YLO_ZLO: { bdry_loc_str = "boundary_node_xlo_ylo_zlo";
                                 break; }
@@ -1218,7 +1215,7 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
                bdry_db->getDatabase(bdry_loc_str);
             if (!bdry_loc_db.isNull()) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
-                  string bdry_cond_str =
+                  std::string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");
                   if (bdry_cond_str == "XFLOW") {
                      node_conds[s] = XFLOW_BC;
@@ -1246,11 +1243,11 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
                      node_conds[s] = ZNEUMANN_BC;
                   } else {
                      TBOX_ERROR("Unknown node boundary string = "
-                        << bdry_cond_str << " found in input." << endl);
+                        << bdry_cond_str << " found in input." << std::endl);
                   }
 
-                  string proper_face;
-                  string proper_face_data;
+                  std::string proper_face;
+                  std::string proper_face_data;
                   bool no_face_data_found = false;
                   if (bdry_cond_str == "XFLOW" ||
                       bdry_cond_str == "XDIRICHLET" ||
@@ -1407,17 +1404,17 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
                      TBOX_ERROR("Bdry condition " << bdry_cond_str
                         << " found for " << bdry_loc_str
                         << "\n but no " << proper_face_data
-                        << " data found for face " << proper_face << endl);
+                        << " data found for face " << proper_face << std::endl);
                   }
 
                } else {
                   TBOX_ERROR("'boundary_condition' entry missing from "
-                     << bdry_loc_str << " input database." << endl);
+                     << bdry_loc_str << " input database." << std::endl);
                }
             }
          } else {
             TBOX_ERROR(bdry_loc_str
-               << " database entry not found in input." << endl);
+               << " database entry not found in input." << std::endl);
          }
 
       } // for (int s = 0 ...
@@ -1439,7 +1436,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
    int bcase)
 {
 
-   string bdry_type_str;
+   std::string bdry_type_str;
 
    if (btype == FACE3D_BDRY_TYPE) {
 
@@ -1469,7 +1466,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
       } else {
          TBOX_ERROR("Unknown boundary location " << bloc
             << " passed to CartesianBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str << " boundary " << endl);
+            << "\n for " << bdry_type_str << " boundary " << std::endl);
       }
 
    } else if (btype == EDGE3D_BDRY_TYPE) {
@@ -1518,7 +1515,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
          TBOX_ERROR("Unknown or ambigous bcase " << bcase
             << " passed to CartesianBoundaryUtilities3::checkBdryData()"
             << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+            << " at location " << bloc << std::endl);
       }
 
    } else if (btype == NODE3D_BDRY_TYPE) {
@@ -1558,7 +1555,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
       TBOX_ERROR("Unknown boundary type " << btype
          << " passed to CartesianBoundaryUtilities3::checkBdryData()"
          << "\n for " << bdry_type_str
-         << " at location " << bloc << endl);
+         << " at location " << bloc << std::endl);
    }
   
 }

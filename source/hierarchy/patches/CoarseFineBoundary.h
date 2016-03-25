@@ -1,9 +1,9 @@
 //
-// File:	CoarseFineBoundary.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/CoarseFineBoundary.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1782 $
+// Modified:	$LastChangedDate: 2007-12-17 13:04:51 -0800 (Mon, 17 Dec 2007) $
 // Description:	For describing coarse-fine boundary interfaces
 //
 
@@ -197,7 +197,7 @@ public:
    /*!
     * @brief Print out class data (mostly for debugging).
     */
-   void printClassData( ostream &os ) const;
+   virtual void printClassData( std::ostream &os ) const;
 
 private:
 
@@ -214,17 +214,11 @@ private:
     *
     * @param boxes Box array to append to.  This function will
     *        append the periodic image boxes to this array.
-    * @param shift_refine_ratio Index space ratio between
-    *        level boxes and reference level.
-    * @param level Level for which to compute the shifts.
-    * @param is_level_zero Boolean indicating whether level is
-    *        reference level (true) or not (false).
+    * @param shifts Periodic shifts.
     */
    void addPeriodicImageBoxes(
       BoxArray<DIM>& boxes,
-      const IntVector<DIM>& shift_refine_ratio,
-      const PatchLevel<DIM>& level,
-      bool is_level_zero);
+      const tbox::Array<tbox::List<IntVector<DIM> > >& shifts);
 
    /*!
     * @brief Number of patches on the level for which coarse-fine

@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2002 The Regents of the University of California
-  Revision:	$Revision: 296 $
-  Modified:	$Date: 2005-04-14 16:39:17 -0700 (Thu, 14 Apr 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/SinusoidalFrontTagger.C $
+  Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	SinusoidalFrontTagger class implementation
 */
 
@@ -125,9 +125,9 @@ void SinusoidalFrontTagger<DIM>::initializeLevelData (
    tbox::Pointer<hier::PatchHierarchy<DIM> > hierarchy = base_hierarchy;
    tbox::Pointer<hier::PatchLevel<DIM> > old_level = old_base_level;
    if ( ! old_base_level.isNull() ) {
-      assert( ! old_level.isNull() );
+      TBOX_ASSERT( ! old_level.isNull() );
    }
-   assert( ! hierarchy.isNull() );
+   TBOX_ASSERT( ! hierarchy.isNull() );
 
   /*
     Reference the level object with the given index from the hierarchy.
@@ -186,8 +186,8 @@ void SinusoidalFrontTagger<DIM>::initializePatchData (
          patch.getPatchData(d_dist_id);
       tbox::Pointer<pdat::CellData<DIM,int> > tag_data =
          patch.getPatchData(d_tag_id);
-      assert( ! dist_data.isNull() );
-      assert( ! tag_data.isNull() );
+      TBOX_ASSERT( ! dist_data.isNull() );
+      TBOX_ASSERT( ! tag_data.isNull() );
       computePatchData( patch, init_data_time,
                         dist_data.getPointer(), tag_data.getPointer() );
     }
@@ -591,7 +591,7 @@ bool SinusoidalFrontTagger<DIM>::packDerivedDataIntoDoubleBuffer(
   const hier::Patch<DIM> &patch,
   const hier::Box<DIM> &region,
   const string &variable_name,
-  int depth_index)
+  int depth_index) const
 {
    TBOX_ASSERT( d_allocate_data == false );
   if ( variable_name == "Distance to front" ) {

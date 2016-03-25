@@ -1,0 +1,50 @@
+//
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/patch_configuration/test-3d-3levels-perz.input $
+// Package:     SAMRAI tests
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Description: input file for testing patch configuration utilities
+//
+
+/*
+ *  CONSTANTS FOR DOMAIN SETUP
+ */
+PX = 1
+PY = 2
+PZ = 3
+
+Main {
+// log file parameters 
+   dump_databases_to_log     = TRUE  
+   dump_hierarchy_to_log     = TRUE
+   log_file_name    = "test-3d-3levels-perz.log"
+   log_all_nodes    = TRUE
+}
+
+PatchConfigurationTester {
+
+// test_to_run = "HIERARCHY_AT_ONCE"
+// test_to_run = "LEVELS_COARSE_TO_FINE"
+   test_to_run = "LEVELS_FINE_TO_COARSE"
+
+   GriddingParameters {
+      num_levels = 3          // number of levels in hierarchy
+
+      ratio_to_coarser {      // vector ratio to next coarser level
+         level_1 = 2 , 2 , 2
+         level_2 = 2 , 2, 2
+      }
+
+      npatches_on_coarsest = PX , PY , PZ
+   }
+
+}
+
+CartesianGeometry {
+     domain_boxes       = [(0,0,0),(PX*8 - 1, PY*8 - 1, PZ*8 - 1)]
+     x_lo = 0.e0 , 0.e0 , 0.e0  // lower end of computational domain.
+     x_up = PX * 32.e0 , PY * 32.e0 , PZ * 32.e0 // upper end of computational domain.
+
+     periodic_dimension = 0, 0, 1
+}

@@ -1,9 +1,9 @@
 //
-// File:	CartesianGridGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/cartesian/grid_geom/CartesianGridGeometry.C $
 // Package:	SAMRAI geometry package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Simple Cartesian grid geometry for an AMR hierarchy.
 //
 
@@ -13,7 +13,6 @@
 #include "CartesianGridGeometry.h"
 #include <stdlib.h>
 #include <fstream>
-using namespace std;
 
 #include "CartesianPatchGeometry.h"
 
@@ -61,10 +60,10 @@ using namespace std;
 #include "FaceIntegerConstantRefine.h"
 
 // Node data coarsen operators
-#include "NodeComplexConstantAverage.h"
-#include "NodeDoubleConstantAverage.h"
-#include "NodeFloatConstantAverage.h"
-#include "NodeIntegerConstantAverage.h"
+#include "NodeComplexInjection.h"
+#include "NodeDoubleInjection.h"
+#include "NodeFloatInjection.h"
+#include "NodeIntegerInjection.h"
 
 // Node data refine operators
 #include "CartesianNodeComplexLinearRefine.h"
@@ -135,9 +134,6 @@ using namespace std;
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define GEOM_CARTESIAN_GRID_GEOMETRY_VERSION (2)
 
@@ -151,21 +147,21 @@ namespace SAMRAI {
 *************************************************************************
 *                                                                       *
 * Constructors for CartesianGridGeometry.  Both set up operator    *
-* handlers and register the geometry object with the RestartManager.    * 
+* handlers and register the geometry object with the RestartManager.    *
 * However, one initializes data members based on arguments.             *
 * The other initializes the object based on input file information.     *
 *                                                                       *
 *************************************************************************
 */
 template<int DIM>  CartesianGridGeometry<DIM>::CartesianGridGeometry(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    bool register_for_restart)
 :  xfer::Geometry<DIM>(object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
 #endif
 
    d_object_name = object_name;
@@ -190,7 +186,7 @@ template<int DIM>  CartesianGridGeometry<DIM>::CartesianGridGeometry(
 }
 
 template<int DIM>  CartesianGridGeometry<DIM>::CartesianGridGeometry(
-   const string& object_name,
+   const std::string& object_name,
    const double* x_lo,
    const double* x_up,
    const hier::BoxArray<DIM>& domain,
@@ -198,9 +194,9 @@ template<int DIM>  CartesianGridGeometry<DIM>::CartesianGridGeometry(
 :  xfer::Geometry<DIM>(object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!(x_lo == (double*)NULL));
-   assert(!(x_up == (double*)NULL));
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!(x_lo == (double*)NULL));
+   TBOX_ASSERT(!(x_up == (double*)NULL));
 #endif
 
    d_object_name = object_name;
@@ -231,22 +227,22 @@ template<int DIM>  CartesianGridGeometry<DIM>::CartesianGridGeometry(
 *************************************************************************
 */
 
-template<int DIM> tbox::Pointer<hier::GridGeometry<DIM> > 
+template<int DIM> tbox::Pointer<hier::GridGeometry<DIM> >
 CartesianGridGeometry<DIM>::makeRefinedGridGeometry(
-   const string& fine_geom_name,
+   const std::string& fine_geom_name,
    const hier::IntVector<DIM>& refine_ratio,
    bool register_for_restart) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_geom_name.empty());
-   assert(fine_geom_name != d_object_name);
-   assert(refine_ratio > hier::IntVector<DIM>(0));
-#endif 
+   TBOX_ASSERT(!fine_geom_name.empty());
+   TBOX_ASSERT(fine_geom_name != d_object_name);
+   TBOX_ASSERT(refine_ratio > hier::IntVector<DIM>(0));
+#endif
 
    hier::BoxArray<DIM> fine_domain(this -> getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   CartesianGridGeometry<DIM>* fine_geometry = 
+   CartesianGridGeometry<DIM>* fine_geometry =
       new CartesianGridGeometry<DIM>(fine_geom_name,
                                      d_x_lo,
                                      d_x_up,
@@ -268,15 +264,15 @@ CartesianGridGeometry<DIM>::makeRefinedGridGeometry(
 */
 
 template<int DIM> tbox::Pointer<hier::GridGeometry<DIM> > CartesianGridGeometry<DIM>::makeCoarsenedGridGeometry(
-   const string& coarse_geom_name,
+   const std::string& coarse_geom_name,
    const hier::IntVector<DIM>& coarsen_ratio,
    bool register_for_restart) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_geom_name.empty());
-   assert(coarse_geom_name != d_object_name);
-   assert(coarsen_ratio > hier::IntVector<DIM>(0));
-#endif 
+   TBOX_ASSERT(!coarse_geom_name.empty());
+   TBOX_ASSERT(coarse_geom_name != d_object_name);
+   TBOX_ASSERT(coarsen_ratio > hier::IntVector<DIM>(0));
+#endif
 
    hier::BoxArray<DIM> coarse_domain(this -> getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);
@@ -290,18 +286,18 @@ template<int DIM> tbox::Pointer<hier::GridGeometry<DIM> > CartesianGridGeometry<
       hier::Box<DIM> testbox = hier::Box<DIM>::refine(coarse_domain.getBox(ib), coarsen_ratio);
       if (testbox != fine_domain.getBox(ib)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         tbox::plog << "CartesianGridGeometry::makeCoarsenedGridGeometry : Box # " << ib << endl;
-         tbox::plog << "      fine box = " << fine_domain.getBox(ib) << endl;
-         tbox::plog << "      coarse box = " << coarse_domain.getBox(ib) << endl;
-         tbox::plog << "      refined coarse box = " << testbox << endl;
+         tbox::plog << "CartesianGridGeometry::makeCoarsenedGridGeometry : Box # " << ib << std::endl;
+         tbox::plog << "      fine box = " << fine_domain.getBox(ib) << std::endl;
+         tbox::plog << "      coarse box = " << coarse_domain.getBox(ib) << std::endl;
+         tbox::plog << "      refined coarse box = " << testbox << std::endl;
 #endif
          TBOX_ERROR("geom::CartesianGridGeometry<DIM>::makeCoarsenedGridGeometry() error...\n"
                     << "    geometry object with name = " << d_object_name
-                    << "\n    Cannot be coarsened by ratio " << coarsen_ratio << endl);
+                    << "\n    Cannot be coarsened by ratio " << coarsen_ratio << std::endl);
       }
    }
 
-   hier::GridGeometry<DIM>* coarse_geometry = 
+   hier::GridGeometry<DIM>* coarse_geometry =
       new geom::CartesianGridGeometry<DIM>(coarse_geom_name,
                                       d_x_lo,
                                       d_x_up,
@@ -327,7 +323,7 @@ template<int DIM>  CartesianGridGeometry<DIM>::~CartesianGridGeometry()
 {
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   } 
+   }
 }
 
 /*
@@ -344,8 +340,8 @@ template<int DIM> void CartesianGridGeometry<DIM>::setGeometryData(
    const hier::BoxArray<DIM>& domain)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(x_lo == (double*)NULL));
-   assert(!(x_up == (double*)NULL));
+   TBOX_ASSERT(!(x_lo == (double*)NULL));
+   TBOX_ASSERT(!(x_up == (double*)NULL));
 #endif
 
    for (int id = 0; id < DIM; id++ ) {
@@ -387,7 +383,7 @@ template<int DIM> void CartesianGridGeometry<DIM>::makeStandardOperators()
    addSpatialCoarsenOperator(new CartesianCellComplexWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianEdgeComplexWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianFaceComplexWeightedAverage<DIM>());
-   addSpatialCoarsenOperator(new pdat::NodeComplexConstantAverage<DIM>());
+   addSpatialCoarsenOperator(new pdat::NodeComplexInjection<DIM>());
    addSpatialCoarsenOperator(new CartesianOuterfaceComplexWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianSideComplexWeightedAverage<DIM>());
 
@@ -420,7 +416,7 @@ template<int DIM> void CartesianGridGeometry<DIM>::makeStandardOperators()
    addSpatialCoarsenOperator(new CartesianCellFloatWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianEdgeFloatWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianFaceFloatWeightedAverage<DIM>());
-   addSpatialCoarsenOperator(new pdat::NodeFloatConstantAverage<DIM>());
+   addSpatialCoarsenOperator(new pdat::NodeFloatInjection<DIM>());
    addSpatialCoarsenOperator(new CartesianOuterfaceFloatWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianSideFloatWeightedAverage<DIM>());
 
@@ -460,8 +456,8 @@ template<int DIM> void CartesianGridGeometry<DIM>::makeStandardOperators()
    addSpatialCoarsenOperator(new CartesianCellDoubleWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianEdgeDoubleWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new CartesianFaceDoubleWeightedAverage<DIM>());
-   addSpatialCoarsenOperator(new pdat::NodeDoubleConstantAverage<DIM>());
-   addSpatialCoarsenOperator(new pdat::NodeIntegerConstantAverage<DIM>());
+   addSpatialCoarsenOperator(new pdat::NodeDoubleInjection<DIM>());
+   addSpatialCoarsenOperator(new pdat::NodeIntegerInjection<DIM>());
    addSpatialCoarsenOperator(new CartesianOuterfaceDoubleWeightedAverage<DIM>());
    addSpatialCoarsenOperator(new pdat::OuternodeDoubleConstantCoarsen<DIM>());
    addSpatialCoarsenOperator(new CartesianOutersideDoubleWeightedAverage<DIM>());
@@ -510,8 +506,8 @@ template<int DIM> void CartesianGridGeometry<DIM>::makeStandardOperators()
 */
 
 template<int DIM> void CartesianGridGeometry<DIM>::setGeometryDataOnPatch(
-   hier::Patch<DIM>& patch, 
-   const hier::IntVector<DIM>& ratio_to_level_zero, 
+   hier::Patch<DIM>& patch,
+   const hier::IntVector<DIM>& ratio_to_level_zero,
    const tbox::Array< tbox::Array<bool> >& touches_regular_bdry,
    const tbox::Array< tbox::Array<bool> >& touches_periodic_bdry) const
 {
@@ -520,11 +516,11 @@ template<int DIM> void CartesianGridGeometry<DIM>::setGeometryDataOnPatch(
     * All components of ratio must be nonzero.  Additionally,
     * all components not equal to 1 must have the same sign.
     */
-   assert(ratio_to_level_zero != hier::IntVector<DIM>(0));
-   
+   TBOX_ASSERT(ratio_to_level_zero != hier::IntVector<DIM>(0));
+
    if (DIM > 1) {
       for (int i = 0; i < DIM; i++) {
-	 assert( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
+	 TBOX_ASSERT( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
 		 || (ratio_to_level_zero(i) == 1)
 		 || (ratio_to_level_zero((i+1)%DIM) == 1) );
       }
@@ -546,30 +542,30 @@ template<int DIM> void CartesianGridGeometry<DIM>::setGeometryDataOnPatch(
    hier::Box<DIM> box = patch.getBox();
 
    if ( coarsen ) {
-      index_box.coarsen(tmp_rat); 
+      index_box.coarsen(tmp_rat);
       for (int id3 = 0; id3 < DIM; id3++) {
          dx[id3]   = d_dx[id3] * ((double) tmp_rat(id3));
       }
-   } else { 
+   } else {
       index_box.refine(tmp_rat);
       for (int id4 = 0; id4 < DIM; id4++) {
-         dx[id4]   = d_dx[id4] / ((double) tmp_rat(id4)); 
+         dx[id4]   = d_dx[id4] / ((double) tmp_rat(id4));
       }
    }
 
    for (int id5 = 0; id5 < DIM; id5++) {
-      x_lo[id5] = d_x_lo[id5] 
-                  + ((double) (box.lower(id5)-index_box.lower(id5))) * dx[id5]; 
-      x_up[id5] = x_lo[id5] + ((double) box.numberCells(id5)) * dx[id5]; 
+      x_lo[id5] = d_x_lo[id5]
+                  + ((double) (box.lower(id5)-index_box.lower(id5))) * dx[id5];
+      x_up[id5] = x_lo[id5] + ((double) box.numberCells(id5)) * dx[id5];
    }
 
-   tbox::Pointer<CartesianPatchGeometry<DIM> > geom = 
+   tbox::Pointer<CartesianPatchGeometry<DIM> > geom =
       new CartesianPatchGeometry<DIM>(ratio_to_level_zero,
                                       touches_regular_bdry,
                                       touches_periodic_bdry,
                                       dx, x_lo, x_up);
 
-   patch.setPatchGeometry(geom); 
+   patch.setPatchGeometry(geom);
 
 }
 
@@ -581,30 +577,30 @@ template<int DIM> void CartesianGridGeometry<DIM>::setGeometryDataOnPatch(
 *************************************************************************
 */
 
-template<int DIM> void CartesianGridGeometry<DIM>::printClassData(ostream& os) const
+template<int DIM> void CartesianGridGeometry<DIM>::printClassData(std::ostream& os) const
 {
    os << "Printing CartesianGridGeometry data: this = "
-      << (CartesianGridGeometry<DIM> *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << (CartesianGridGeometry<DIM> *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
 
    int id;
    os << "d_x_lo = ";
    for (id = 0; id < DIM; id++) {
       os << d_x_lo[id] << "   ";
    }
-   os << endl;
+   os << std::endl;
    os << "d_x_up = ";
    for (id = 0; id < DIM; id++) {
       os << d_x_up[id] << "   ";
    }
-   os << endl;
+   os << std::endl;
    os << "d_dx = ";
    for (id = 0; id < DIM; id++) {
       os << d_dx[id] << "   ";
    }
-   os << endl;
+   os << std::endl;
 
-   os << "d_domain_box = " << d_domain_box << endl;
+   os << "d_domain_box = " << d_domain_box << std::endl;
 
    xfer::Geometry<DIM>::printClassData(os);
 }
@@ -621,7 +617,7 @@ template<int DIM> void CartesianGridGeometry<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
@@ -653,13 +649,13 @@ template<int DIM> void CartesianGridGeometry<DIM>::putToDatabase(
 */
 
 template<int DIM> void CartesianGridGeometry<DIM>::getFromInput(
-   tbox::Pointer<tbox::Database> db, 
+   tbox::Pointer<tbox::Database> db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
-   
+
    if (!is_from_restart) {
 
       hier::BoxArray<DIM> domain;
@@ -668,12 +664,12 @@ template<int DIM> void CartesianGridGeometry<DIM>::getFromInput(
          if (domain.getNumberOfBoxes() == 0) {
             TBOX_ERROR("CartesianGridGeometry<DIM>::getFromInput() error...\n"
                << "    geometry object with name = " << d_object_name
-               << "\n    Empty `domain_boxes' array found in input." << endl);
+               << "\n    Empty `domain_boxes' array found in input." << std::endl);
          }
       } else {
          TBOX_ERROR("CartesianGridGeometry<DIM>::getFromInput() error...\n"
                << "    geometry object with name = " << d_object_name
-               << "\n    Key data `domain_boxes' not found in input." << endl);
+               << "\n    Key data `domain_boxes' not found in input." << std::endl);
       }
 
       double x_lo[DIM], x_up[DIM];
@@ -683,20 +679,20 @@ template<int DIM> void CartesianGridGeometry<DIM>::getFromInput(
       } else {
          TBOX_ERROR("CartesianGridGeometry<DIM>::getFromInput() error...\n"
                << "    geometry object with name = " << d_object_name
-               << "\n    Key data `x_lo' not found in input."<< endl);
+               << "\n    Key data `x_lo' not found in input."<< std::endl);
       }
       if (db->keyExists("x_up")) {
          db->getDoubleArray("x_up",x_up, DIM);
       } else {
          TBOX_ERROR("CartesianGridGeometry<DIM>::getFromInput() error...\n"
                << "    geometry object with name = " << d_object_name
-               << "\n   Key data `x_up' not found in input." << endl);
+               << "\n   Key data `x_up' not found in input." << std::endl);
       }
 
       int pbc[DIM];
       hier::IntVector<DIM> per_bc(0);
       if (db->keyExists("periodic_dimension")) {
-         db->getIntegerArray("periodic_dimension", pbc, DIM);       
+         db->getIntegerArray("periodic_dimension", pbc, DIM);
          for (int i = 0; i < DIM; i++) {
             per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
          }
@@ -732,8 +728,8 @@ template<int DIM> void CartesianGridGeometry<DIM>::getFromInput(
 */
 template<int DIM> void CartesianGridGeometry<DIM>::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> restart_db = 
-      tbox::RestartManager::getManager()->getRootDatabase(); 
+   tbox::Pointer<tbox::Database> restart_db =
+      tbox::RestartManager::getManager()->getRootDatabase();
 
    tbox::Pointer<tbox::Database> db;
 
@@ -742,14 +738,14 @@ template<int DIM> void CartesianGridGeometry<DIM>::getFromRestart()
    } else {
       TBOX_ERROR("CartesianGridGeometry<DIM>::getFromRestart() error...\n"
                  << "    database with name " << d_object_name
-                 << " not found in the restart file" << endl);
+                 << " not found in the restart file" << std::endl);
    }
 
    int ver = db->getInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION");
    if (ver != GEOM_CARTESIAN_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR("CartesianGridGeometry<DIM>::getFromRestart() error...\n"
          << "    geometry object with name = " << d_object_name
-         << "Restart file version is different than class version" << endl);
+         << "Restart file version is different than class version" << std::endl);
    }
    hier::BoxArray<DIM> domain = db->getDatabaseBoxArray("d_physical_domain");
    double x_lo[DIM], x_up[DIM];

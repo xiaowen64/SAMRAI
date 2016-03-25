@@ -2,6 +2,7 @@
 
 #include "tbox/List.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #include <assert.h>
 
@@ -22,7 +23,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
    const int restore_num)
 {
    int num_files_written = 0;
-   int num_iterations = tbox::Utilities::imin(total_input_files,
+   int num_iterations = tbox::MathUtilities<int>::Min(total_input_files,
                                               total_output_files);
 
    for (int icount = 0; icount < num_iterations; icount++) {
@@ -505,7 +506,7 @@ void RedistributedRestartUtility::createNewProcessorMapping(
       for (int i = 0; i < total_input_files; i++) {
          tbox::List<int> input_patch_nums;
 
-         int output_id;
+         int output_id = 0;
          for (int j = 0; j < total_output_files; j++) {
             int num_inputs = file_mapping[j].size();
             if (file_mapping[j][num_inputs-1] >= i &&

@@ -1,9 +1,9 @@
 //
-// File:        BoundaryUtilityStrategy
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/BoundaryUtilityStrategy.h $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Interface for processing user-defined boundary data in
 //              CartesianBoundaryUtilities classes
 //
@@ -22,7 +22,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Utilities
@@ -78,7 +77,7 @@ public:
     */
    virtual void readDirichletBoundaryDataEntry(
       tbox::Pointer<tbox::Database> db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index)
    {
       NULL_USE(db);
@@ -99,7 +98,7 @@ public:
     */
    virtual void readNeumannBoundaryDataEntry(
       tbox::Pointer<tbox::Database> db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index)
    {
       NULL_USE(db);

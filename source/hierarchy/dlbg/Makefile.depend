@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -54,24 +54,26 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	LayerEdgeSet.C LayerEdgeSet.I LayerEdgeSet.h LayerNode.I	\
-	LayerNode.h LayerNodeSet.I LayerNodeSet.h
+	$(INCLUDE_SAM)/tbox/Utilities.h LayerEdgeSet.C LayerEdgeSet.I	\
+	LayerEdgeSet.h LayerNode.I LayerNode.h LayerNodeSet.I		\
+	LayerNodeSet.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -138,25 +140,26 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	LayerEdgeSet.I LayerEdgeSet.h LayerHierarchy.C LayerHierarchy.I	\
-	LayerHierarchy.h LayerNode.I LayerNode.h LayerNodeSet.I		\
-	LayerNodeSet.h
+	$(INCLUDE_SAM)/tbox/Utilities.h LayerEdgeSet.I LayerEdgeSet.h	\
+	LayerHierarchy.C LayerHierarchy.I LayerHierarchy.h LayerNode.I	\
+	LayerNode.h LayerNodeSet.I LayerNodeSet.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -186,12 +189,13 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h $(INCLUDE_SAM)/tbox/IOStream.h\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	LayerNode.C LayerNode.I LayerNode.h
+	$(INCLUDE_SAM)/tbox/Utilities.h LayerNode.C LayerNode.I		\
+	LayerNode.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -246,24 +250,25 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	LayerNode.I LayerNode.h LayerNodeSet.C LayerNodeSet.I		\
-	LayerNodeSet.h
+	$(INCLUDE_SAM)/tbox/Utilities.h LayerNode.I LayerNode.h		\
+	LayerNodeSet.C LayerNodeSet.I LayerNodeSet.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\

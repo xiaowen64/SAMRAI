@@ -1,9 +1,9 @@
 //
-// File:	RestartManager.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/RestartManager.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	An restart manager singleton class 
 //
 
@@ -21,7 +21,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Serializable
@@ -47,13 +46,12 @@ namespace SAMRAI {
  * The general procedure for starting a simulation from a restart file
  * is as follows.
  *
- * \begin{enumerate}
- * - Open the restart file using openRestartFile("filename").
- * - Get root of restart database using getRootDatabase().
- * - Initialize simulation objects using the restart constructor
+ * 
+ * \li Open the restart file using openRestartFile("filename").
+ * \li Get root of restart database using getRootDatabase().
+ * \li Initialize simulation objects using the restart constructor
  *       for the objects.
- * - Close the restart file using closeRestartFile().
- * \end{enumerate}
+ * \li Close the restart file using closeRestartFile().
  *
  * Technically, there is no need to close the restart file because this will 
  * automatically be taken care of by the destructor for the database object.
@@ -65,18 +63,17 @@ namespace SAMRAI {
  * The process for writing out state to a restart file is somewhat more
  * complicated.  The following things need to be taken care of.
  * 
- * \begin{enumerate}
- * - Each object that has state that needs to be saved for restart
+
+ * \li Each object that has state that needs to be saved for restart
  *       must be derived from the Serializable class (which
  *       responds to the putToDatabase() method).
- * - Any object that needs to save its state to the restart file 
+ * \li Any object that needs to save its state to the restart file 
  *       must be registered with the restart manager using the 
  *       registerRestartItem() method.   NOTE THAT NO TWO RESTARTABLE
  *       OBJECTS ARE ALLOWED TO HAVE THE SAME NAME STRING IDENTIFIER.
- * - The patchdata to be written to restart need to be specified 
+ * \li The patchdata to be written to restart need to be specified 
  *       using the VariableDatabase::setPatchdataForRestart() method.  
  *       This is usually taken care of by the numerical algorithm object.
- * \end{enumerate}
  * 
  * When all these items are accounted for, writing to the restart file
  * is accomplished using a writeRestartFile() method.  There are
@@ -122,7 +119,7 @@ public:
     * mounts the restart file.  
     * Returns true if open is successful; false otherwise.
     */
-   virtual bool openRestartFile(const string& root_dirname,
+   virtual bool openRestartFile(const std::string& root_dirname,
                                 const int restore_num,
                                 const int num_nodes);
 
@@ -143,7 +140,7 @@ public:
     * will result if either the string is empty or the serializable
     * object pointer is null.
     */
-   virtual void registerRestartItem(const string& name, 
+   virtual void registerRestartItem(const std::string& name, 
                                     Serializable* obj);
 
    /**
@@ -153,7 +150,7 @@ public:
     * When assertion checking is active, an unrecoverable exception
     * will result if the string is empty.
     */
-   virtual void unregisterRestartItem(const string& name);
+   virtual void unregisterRestartItem(const std::string& name);
 
    /**
     * Clear all restart items managed by the restart manager.
@@ -168,7 +165,7 @@ public:
     * Note:  This method creates/uses a restart directory structure
     *    with 00000 as the restore number.
     */
-   virtual void writeRestartFile(const string& root_dirname);
+   virtual void writeRestartFile(const std::string& root_dirname);
 
    /**
     * Write all objects registered to as restart objects to the 
@@ -176,7 +173,7 @@ public:
     * root of restart directory.  The integer argument is the 
     * identification number associated with the restart files generated.
     */
-   virtual void writeRestartFile(const string& root_dirname, 
+   virtual void writeRestartFile(const std::string& root_dirname, 
                                  const int restore_num);
 
 protected:
@@ -214,10 +211,10 @@ private:
     *       nodes.[number of processors]/
     *         proc.[processor number]
     */
-   string createDirs(const string& root_dirname, int restore_num);
+   std::string createDirs(const std::string& root_dirname, int restore_num);
  
    struct RestartItem {
-      string name;
+      std::string name;
       Serializable* obj;
    };
 

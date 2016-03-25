@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataCoarsenAlgorithm.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataCoarsenAlgorithm.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Coarsening algorithm for locally-active data transfer between AMR levels
 //
 
@@ -18,9 +18,6 @@
 #include "tbox/Utilities.h"
 #include "StandardLocallyActiveDataCoarsenTransactionFactory.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -76,7 +73,7 @@ void LocallyActiveDataCoarsenAlgorithm<DIM>::registerCoarsen(
       TBOX_ERROR("LocallyActiveDataCoarsenAlgorithm<DIM>::registerCoarsen error..."
                  << "\nCannot call registerCoarsen with this coarsen algorithm"
                  << "\nobject since it has already been used to create a coarsen schedule."
-                 << endl);
+                 << std::endl);
    }
 
    typename xfer::CoarsenClasses<DIM>::Data data;
@@ -141,11 +138,11 @@ LocallyActiveDataCoarsenAlgorithm<DIM>::createSchedule(
 */
 
 template<int DIM>
-void LocallyActiveDataCoarsenAlgorithm<DIM>::printClassData(ostream& stream) const
+void LocallyActiveDataCoarsenAlgorithm<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "LocallyActiveDataCoarsenAlgorithm<DIM>::printClassData()" << endl;
-   stream << "----------------------------------------" << endl;
-   stream << "d_fill_coarse_data = " << d_fill_coarse_data << endl;
+   stream << "LocallyActiveDataCoarsenAlgorithm<DIM>::printClassData()" << std::endl;
+   stream << "----------------------------------------" << std::endl;
+   stream << "d_fill_coarse_data = " << d_fill_coarse_data << std::endl;
 
    d_coarsen_classes->printClassData(stream);
 }

@@ -1,10 +1,10 @@
 //
-// File:	OuteredgeGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OuteredgeGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name:  $
-// Revision:	$Revision: 692 $
-// Modified:	$Date: 2005-10-28 13:37:46 -0700 (Fri, 28 Oct 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Box geometry information for edge centered objects
 //
 
@@ -33,93 +33,52 @@
 namespace SAMRAI {
     namespace pdat {
 
-
 template<int DIM> class EdgeGeometry;
    
 /*!
  * Class OuteredgeGeometry<DIM> manages the mapping between the AMR index 
- * space and the outeredge-centered geometry index space.  It is a subclass of
- * hier::BoxGeometry and it computes intersections between outeredge-
- * centered box geometries.  Outeredge data resides only on the outer edges
- * of the patch.  
+ * and the outeredge geometry index space.  It is a subclass of 
+ * hier::BoxGeometry<DIM> and it computes intersections between outeredge
+ * box geometries and edge or outeredge box geometries for communication 
+ * operations.
  *
- * Outeredge data is stored in DIM*DIM*2 arrays, containing the data for the 
- * patch boundary sides with each of the possible outward pointing normal 
- * directions. Where an outeredge falls on more than one side (patch edges 
- * and corners), the outeredge belongs to the array associated with the 
- * higher dimensional direction. In each of these arrays, memory allocation 
- * is in column-major ordering (e.g., Fortran style) so that the leftmost 
- * index runs fastest in memory.  
- *
- * The outeredge data is related to the edge data in the following way:
- *
- *    Outeredge box(axis,face_nrml,s) =  EdgeData<DIM>.getBox(axis) 
- *
- * where "axis" corresponds to the box of the standard edge datatype,
- * "face_nrml" is the normal face direction, and "s" indicates the upper
- * or lower face.  Note that when edge_dir = face_dir, there are no outside
- * edges so the data is NULL.
- *
- * A three-dimensional outeredge data object instantiated with 
- * a box [l0:u0,l1:u1,l2:u2] allocates 12 data (i.e., 3x2 pairs) arrays 
- * dimensioned as:
- *
- * \verbatim
- *
- *    a = edge axis
- *    f = face normal dir
- *    s = lower/upper face
- *
- *        (a,f,s) 
- *    0:  (0,0,[0,1])  NULL
- *        (0,1,[0,1])  [l0:u0,l1:l1,l2+1:u2,d],  [l0:u0,u1:u1,l2+1:u2,d]
- *        (0,2,[0,1])  [l0:u0,l1:u1+1,l2:l2,d],  [l0:u0,l1:u1+1,u2:u2,d]
- *        note: trimmed in 2, not trimmed in 1
- *
- *    1:  (1,0,[0,1])  [l0:l0,l1:u1,l2+1:u2,d],  [u0:u0,l1:u1,l2+1:u2,d]
- *        (1,1,[0,1])  NULL
- *        (1,2,[0,1])  [l0:u0+1,l1:u1,l2:l2,d],  [l0:u0+1,l1:u1,u2:u2,d]
- *        note: trimmed in 2, not trimmed in 0
- *
- *    2:  (2,0,[0,1])  [l0:l0,l1+1:u1,l2:u2,d],  [u0:u0,l1+1:u1,l2:u2,d]
- *        (2,1,[0,1])  [l0:u0+1,l1:l1,l2:u2,d],  [l0:u0+1,u1:u1,l2:u2,d]
- *        (2,2,[0,1])  NULL
- *        note: trimmed in 1, not trimmed in 0
- *
- * \endverbatim
- *
- * where 0, 1, and 2 can be thought of as X, Y, Z respectively, and d is the
- * depth of the data.  One- and two-dimensional edge data arrays are managed 
- * similary.  The "a" dimension corresponds with the "axis" of standard 
- * EdgeData<DIM>.
- *
- * Note that the intersection between two outeredge-centered boxes can be 
- * complicated, since edge geometries contain indices on the edges of 
- * boxes.  Thus, there may be overlap between two boxes, even though 
- * the boxes do not intersect in the AMR index space.
+ * See header file for OuteredgeData<DIM> class for a more detailed 
+ * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::OuteredgeOverlap
+ * @see pdat::EdgeGeometry
+ * @see pdat::EdgeOverlap
  */
 
 template<int DIM> class OuteredgeGeometry : public hier::BoxGeometry<DIM>
 {
 public:
    /*!
-    * Construct the edge geometry object given the box and ghost cell width.
+    * Convert a given box in the standard cell-centered AMR index space to an
+    * outeredge geometry box for the specified axis, face normal, and 
+    * lower/upper side.   See OuteredgeData header file for a detailed 
+    * description of an outeredge box.
+    */
+   static hier::Box<DIM> toOuteredgeBox(const hier::Box<DIM>& box,
+                                        int axis,
+                                        int face_normal,
+                                        int side);
+
+   /*!
+    * @brief Construct an outeredge geometry object given an AMR index
+    * space box and ghost cell width.
     */
    OuteredgeGeometry(const hier::Box<DIM>& box, 
                      const hier::IntVector<DIM>& ghosts);
 
    /*!
-    * The virtual destructor does nothing interesting.
+    * @brief The virtual destructor does nothing interesting.
     */
    virtual ~OuteredgeGeometry<DIM>();
 
    /*!
-    * Compute the overlap in index space between the source edge box
-    * geometry object and the destination box geometry.  Refer to the
-    * box geometry class for a detailed description of calculateOverlap().
+    * @brief Compute the overlap in edge-centered index space on the
+    * boundaries of the source box geometry and the destination box geometry.
     */
    virtual tbox::Pointer<hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
@@ -130,23 +89,14 @@ public:
       const bool retry) const;
 
    /*!
-    * Return the box extents for this edge centered box geometry object.
+    * @brief Return the box for this outeredge box geometry object.
     */
    const hier::Box<DIM>& getBox() const;
-
+ 
    /*!
-    * Return the ghost cell width for this edge centered box geometry object.
+    * @brief Return the ghost cell width for this outeredge box geometry object.
     */
    const hier::IntVector<DIM>& getGhosts() const;
-
-   /*!
-    * Trim databoxes in particular axis, face_nrml directions to avoid 
-    * duplicating data on common outer edges.
-    */
-   static void trimBoxes(hier::Box<DIM>& boxlo, 
-                         hier::Box<DIM>& boxup,
-                         const int axis,
-                         const int face_nrml);
 
 private:
    /*!

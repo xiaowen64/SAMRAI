@@ -4,7 +4,7 @@ dnl * CASC_PROG_F77 searches the PATH for an available Fortran 77
 dnl * compiler. It assigns the name of the compiler to F77.
 dnl ******************************************************************
 
-AC_DEFUN(CASC_PROG_F77,
+AC_DEFUN([CASC_PROG_F77],
 [
    if test -z "$F77"; then
       AC_CHECK_PROGS(F77, f77 g77 xlf cf77 if77 nf77)
@@ -20,7 +20,7 @@ dnl * CASC_PROG_FPP searches the PATH for a preprocessor for Fortran files
 dnl * with preprocessor directives
 dnl **********************************************************************
 
-AC_DEFUN(CASC_PROG_FPP,
+AC_DEFUN([CASC_PROG_FPP],
 [
    AC_CHECK_PROGS(FPP, fpp cpp "$CC -E" "cc -E" "gcc -E")
    test -z "$FPP" && AC_MSG_ERROR([no acceptable fpp found in \$PATH])
@@ -34,7 +34,7 @@ dnl * preprocessor directives.  If the preprocessor is necessary,
 dnl * F77NEEDSPP is set to "yes", otherwise it is set to "no"
 dnl **********************************************************************
 
-AC_DEFUN(CASC_CHECK_F77_PP,
+AC_DEFUN([CASC_CHECK_F77_PP],
 [
    AC_REQUIRE([CASC_PROG_F77])
 
@@ -92,7 +92,7 @@ dnl * the command line.), and/or the names of object files, all separated
 dnl * by a space, whatever might be necessary for successful linkage.
 dnl **********************************************************************
 
-AC_DEFUN(CASC_CHECK_LIB_FORTRAN,
+AC_DEFUN([CASC_CHECK_LIB_FORTRAN],
 [
    # This macro needs a f77 compiler and knowledge of the name-mangling scheme
    AC_REQUIRE([CASC_PROG_F77])
@@ -149,7 +149,7 @@ dnl * shell variable $F77LIBS is already set.  If so, the preset value is
 dnl * used.  Otherwise this macro only works for known architectures.
 dnl *********************************************************************
 
-AC_DEFUN(CASC_SET_F77LIBS,
+AC_DEFUN([CASC_SET_F77LIBS],
 [
    AC_REQUIRE([CASC_GUESS_ARCH])
    AC_REQUIRE([CASC_PROG_F77])
@@ -226,7 +226,7 @@ dnl * on an unknown system.  If this macro sets up nothing, then
 dnl * CASC_SET_F77LIBS is called as a backup
 dnl *********************************************************************
 
-AC_DEFUN(CASC_FIND_F77LIBS,
+AC_DEFUN([CASC_FIND_F77LIBS],
 [
    AC_CACHE_CHECK([for Fortran libraries], casc_cv_f77flags,
    [
@@ -346,12 +346,12 @@ dnl *    AC_DEFINE lines to define preprocessor macros that are assigned
 dnl *    to DEFS added by Noah Elliott May 18, 1998
 dnl ********************************************************************
 
-AC_DEFUN(CASC_GET_FORTNAMES,
+AC_DEFUN([CASC_GET_FORTNAMES],
 [
    PAC_GET_FORTNAMES
 ])dnl
 
-AC_DEFUN(PAC_GET_FORTNAMES,[
+AC_DEFUN([PAC_GET_FORTNAMES],[
    # Check for strange behavior of Fortran.  For example, some FreeBSD
    # systems use f2c to implement f77, and the version of f2c that they
    # use generates TWO (!!!) trailing underscores 
@@ -434,7 +434,7 @@ dnl * Changes:
 dnl * AC_SUBST(FLIBS) suppressed by N. Elliott 7-10-98
 dnl *****************************************************************
    
-AC_DEFUN(LF_FLIBS,[
+AC_DEFUN([LF_FLIBS],[
   dnl AC_MSG_CHECKING(for Fortran libraries)
   dnl
   dnl Write a minimal program and compile it with -v. I don't know

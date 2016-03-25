@@ -1,9 +1,9 @@
 //
-// File:        Tracer.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/Tracer.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1818 $
+// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description: A simple call sequence tracking class
 //
 
@@ -17,12 +17,10 @@
 #ifndef included_iostream
 #include <iostream>
 #define included_iostream
-using namespace std;
 #endif
 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -57,13 +55,13 @@ class Tracer
 {
 public:
    /**
-    * The constructor for Tracer prints ``Entering <message>''
+    * The constructor for Tracer prints ``Entering \<message\>''
     * to the tracer output stream.
     */
-   Tracer(const string& message);
+   Tracer(const std::string& message);
 
    /**
-    * The destructor for Tracer prints ``Exiting <message>''
+    * The destructor for Tracer prints ``Exiting \<message\>''
     * to the tracer output stream.
     */
     ~Tracer();
@@ -73,11 +71,11 @@ public:
     * this is set to the parallel log stream plog.  If this argument is
     * NULL, then all output to trace streams is disabled.
     */
-   static void setTraceStream(ostream* stream);
+   static void setTraceStream(std::ostream* stream);
 
 private:
-   string d_message;
-   static ostream* s_stream;
+   std::string d_message;
+   static std::ostream* s_stream;
 };
 
 }

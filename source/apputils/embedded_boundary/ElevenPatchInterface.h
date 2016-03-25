@@ -1,11 +1,11 @@
 //
-// File:        ElevenPatchInterface.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/ElevenPatchInterface.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1735 $
+// Modified:    $LastChangedDate: 2007-12-05 15:01:59 -0800 (Wed, 05 Dec 2007) $
 // Description: SAMRAI interface to Eleven library
 //              
 // 
@@ -29,15 +29,14 @@
 
 #ifdef HAVE_ELEVEN
 #include "model.hh"
-using namespace ELEVEN;
 #endif
 
 namespace SAMRAI {
    namespace appu {
 
 
-/**
- * This class provides an interface to the Eleven geometry library by
+/*!
+ * @brief This class provides an interface to the Eleven geometry library by
  * Kyle Chand in CASC.  The shapes over which the embedded boundary
  * is cut is defined through an XML database, the name of which is specified 
  * in the input file.  
@@ -79,10 +78,12 @@ namespace SAMRAI {
  *      database_file = "circle_r.3.gzxml"
  *      geom_tolerance = 0.01 // 1% of bounding box
  *   }
+ * \endverbatim
  *
  * @see appu::EmbeddedBoundaryGeometry  
  * @see appu::CutCell  
  */
+
 template<int DIM> class ElevenPatchInterface
 {
 public:
@@ -94,7 +95,7 @@ public:
     * @param input_db    the input database which contains radius and 
     *                    center specification.
     */
-   ElevenPatchInterface(const string& object_name,
+   ElevenPatchInterface(const std::string& object_name,
                         tbox::Pointer<tbox::Database> input_db);
    
    /*!
@@ -146,7 +147,7 @@ public:
    /*!
     * Dump data to supplied stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
 private:
    /*
@@ -156,7 +157,7 @@ private:
     */
    void getFromInput(tbox::Pointer<tbox::Database> db);
 
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Eleven objects used to represent the geometry

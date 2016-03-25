@@ -1,9 +1,9 @@
 //
-// File:	Patch.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/Patch.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Patch container class for patch data objects
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_stddef
@@ -303,15 +302,15 @@ public:
     * but is not used because this is the lowest level of recursion
     * currently supported.
     */
-   int recursivePrint( ostream &os ,
-                       const string &border=string() ,
+   int recursivePrint( std::ostream &os ,
+                       const std::string &border=std::string() ,
                        unsigned short depth=0 ) const;
 
    /**
     * Output patch information (box and number of components).
     */
    template<int D> 
-      friend ostream& operator<<(ostream& s, const Patch<D>& patch);
+      friend std::ostream& operator<<(std::ostream& s, const Patch<D>& patch);
 
 private:
    Patch(const Patch<DIM>&);	// not implemented
@@ -323,10 +322,8 @@ private:
    tbox::Array< tbox::Pointer< PatchData<DIM> > > d_patch_data;
    int                                         d_patch_number;
    int                                         d_patch_level_number;
-   int                                         d_patch_in_hierarchy;
+   bool                                        d_patch_in_hierarchy;
 
-   bool d_touches_regular_boundary;
-   bool d_touches_periodic_boundary;
 };
 
 }

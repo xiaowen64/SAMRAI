@@ -1,9 +1,9 @@
 ##
-## File:        pkgIndex.tcl
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/vizamrai/Wrapping/Tcl/vizamrai/pkgIndex.tcl $
 ## Package:     Vizamrai
-## Copyright:   (c) 1997-2000 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: Package loader for Vizamrai classes
 ##
 ##
@@ -17,10 +17,10 @@ set cvis_library $dir
 global cvisName
 
 global cvisRelease
-set cvisRelease [string trim "\$Revision$" "\$"]
+set cvisRelease [string trim "\$LastChangedRevision: 1704 $" "\$"]
 
 global cvisDate
-set cvisDate [string trim "\$Date$" "\$"]
+set cvisDate [string trim "\$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $" "\$"]
 
 package ifneeded vizamrai 2.0 [list source [file join $dir vizamrai.tcl]]
 

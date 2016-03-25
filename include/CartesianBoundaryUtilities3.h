@@ -1,9 +1,9 @@
 //
-// File:	CartesianBoundaryUtilities3.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/CartesianBoundaryUtilities3.h $
 // Package:	SAMRAI application utilities
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Utility routines for manipulating Cartesian 3d boundary data
 //
 
@@ -42,7 +42,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -201,7 +200,7 @@ public:
     * @param bdry_face_values    tbox::Array of boundary values for patch faces.
     */
    static void fillFaceBoundaryData(
-      const string& varname,
+      const std::string& varname,
       tbox::Pointer< pdat::CellData<3,double> >& vardata,
       const hier::Patch<3>& patch,
       const hier::IntVector<3>& ghost_width_to_fill,
@@ -223,7 +222,7 @@ public:
     * @param bdry_face_values    tbox::Array of boundary values for patch faces.
     */
    static void fillEdgeBoundaryData(
-      const string& varname,
+      const std::string& varname,
       tbox::Pointer< pdat::CellData<3,double> >& vardata,
       const hier::Patch<3>& patch,
       const hier::IntVector<3>& ghost_width_to_fill,
@@ -245,7 +244,7 @@ public:
     * @param bdry_face_values    tbox::Array of boundary values for patch faces.
     */
    static void fillNodeBoundaryData(
-      const string& varname,
+      const std::string& varname,
       tbox::Pointer< pdat::CellData<3,double> >& vardata,
       const hier::Patch<3>& patch,
       const hier::IntVector<3>& ghost_width_to_fill,
@@ -309,7 +308,7 @@ public:
     * @param bstate        Boundary value that applies in DIRICHLET or NEUMANN case.
     */
    static int checkBdryData(
-      const string& varname,
+      const std::string& varname,
       const hier::Patch<3>& patch,
       int data_id,
       int depth,

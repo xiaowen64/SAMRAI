@@ -1,10 +1,10 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/emb_bdry/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2004 The Regents of the University of California
+## Copyright:	(c) 1997-2004 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
-## Revision:	$Revision: 605 $
-## Modified:	$Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for embedded boundary sample application
 ##
 
@@ -16,6 +16,7 @@ OBJECT        = ../..
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA+= -DNDIM=$(PDIM)  -DTESTING=0
+#CPPFLAGS_EXTRA+= -DNDIM=$(PDIM)  -DTESTING=0 -DUSE_NONUNIFORM_LB
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
 CXX_OBJS      = main.o SampleApp.o

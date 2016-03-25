@@ -1,9 +1,9 @@
 //
-// File:        HyperbolicLevelIntegrator.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_algs_HyperbolicPatchStrategy
 #include "HyperbolicPatchStrategy.h"
@@ -57,7 +56,6 @@ using namespace std;
 #endif 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif 
 #ifndef included_xfer_CoarsenAlgorithm
@@ -238,7 +236,7 @@ public:
     * or an empty string will result in an unrecoverable exception.
     */  
    HyperbolicLevelIntegrator(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
       HyperbolicPatchStrategy<DIM>* patch_strategy,
       bool register_for_restart = true,
@@ -657,15 +655,15 @@ public:
                     const hier::IntVector<DIM> ghosts, 
                     const HYP_VAR_TYPE h_v_type, 
                     const tbox::Pointer< xfer::Geometry<DIM> > transfer_geom, 
-                    const string& coarsen_name = string(), 
-                    const string& refine_name = string());
+                    const std::string& coarsen_name = std::string(), 
+                    const std::string& refine_name = std::string());
 
    /**
     * Print class data representation for hyperbolic level integrator object.
     * This is done automatically, when an unrecoverable run-time exception 
     * is thrown within some member function of this class.
     */
-   virtual void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /** 
     * Write out object state to the given database.
@@ -836,7 +834,7 @@ private:
     * restart files and for error reporting purposes.  The boolean
     * is used to control restart file writing operations.
     */
-   string d_object_name;
+   std::string d_object_name;
    bool d_use_time_refinement;
    bool d_registered_for_restart;
 

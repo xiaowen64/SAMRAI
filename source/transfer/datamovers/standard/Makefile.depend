@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -62,13 +62,13 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MPI.I		\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/MessageStream.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
 	$(INCLUDE_SAM)/tbox/PointerBase.I				\
@@ -78,22 +78,22 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
-	$(INCLUDE_SAM)/tbox/Schedule.h					\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Schedule.h	\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	$(INCLUDE_SAM)/tbox/XDRStream.I $(INCLUDE_SAM)/tbox/XDRStream.h	\
-	CoarsenAlgorithm.C CoarsenAlgorithm.h CoarsenClasses.h		\
-	CoarsenCopyTransaction.h CoarsenPatchStrategy.h			\
-	CoarsenSchedule.h CoarsenTransactionFactory.h FillBoxSet.I	\
-	FillBoxSet.h RefineAlgorithm.h RefineClasses.h			\
-	RefineCopyTransaction.h RefinePatchStrategy.h RefineSchedule.h	\
-	RefineTimeTransaction.h RefineTransactionFactory.h		\
-	StandardCoarsenTransactionFactory.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h $(INCLUDE_SAM)/tbox/XDRStream.I	\
+	$(INCLUDE_SAM)/tbox/XDRStream.h CoarsenAlgorithm.C		\
+	CoarsenAlgorithm.h CoarsenClasses.h CoarsenCopyTransaction.h	\
+	CoarsenPatchStrategy.h CoarsenSchedule.h			\
+	CoarsenTransactionFactory.h FillBoxSet.I FillBoxSet.h		\
+	RefineAlgorithm.h RefineClasses.h RefineCopyTransaction.h	\
+	RefinePatchStrategy.h RefineSchedule.h RefineTimeTransaction.h	\
+	RefineTransactionFactory.h StandardCoarsenTransactionFactory.h	\
 	StandardRefineTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -162,18 +162,19 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	CoarsenClasses.C CoarsenClasses.h
+	$(INCLUDE_SAM)/tbox/Utilities.h CoarsenClasses.C		\
+	CoarsenClasses.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -236,25 +237,26 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	CoarsenClasses.h CoarsenCopyTransaction.C			\
-	CoarsenCopyTransaction.h
+	$(INCLUDE_SAM)/tbox/Utilities.h CoarsenClasses.h		\
+	CoarsenCopyTransaction.C CoarsenCopyTransaction.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -312,18 +314,19 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	CoarsenPatchStrategy.C CoarsenPatchStrategy.h
+	$(INCLUDE_SAM)/tbox/Utilities.h CoarsenPatchStrategy.C		\
+	CoarsenPatchStrategy.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
@@ -393,13 +396,13 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MPI.I		\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/MessageStream.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
 	$(INCLUDE_SAM)/tbox/PointerBase.I				\
@@ -409,21 +412,21 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
-	$(INCLUDE_SAM)/tbox/Schedule.h					\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Schedule.h	\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	$(INCLUDE_SAM)/tbox/XDRStream.I $(INCLUDE_SAM)/tbox/XDRStream.h	\
-	CoarsenClasses.h CoarsenPatchStrategy.h CoarsenSchedule.C	\
-	CoarsenSchedule.h CoarsenTransactionFactory.h FillBoxSet.I	\
-	FillBoxSet.h RefineAlgorithm.h RefineClasses.h			\
-	RefineCopyTransaction.h RefinePatchStrategy.h RefineSchedule.h	\
-	RefineTimeTransaction.h RefineTransactionFactory.h		\
-	StandardRefineTransactionFactory.h
+	$(INCLUDE_SAM)/tbox/Utilities.h $(INCLUDE_SAM)/tbox/XDRStream.I	\
+	$(INCLUDE_SAM)/tbox/XDRStream.h CoarsenClasses.h		\
+	CoarsenPatchStrategy.h CoarsenSchedule.C CoarsenSchedule.h	\
+	CoarsenTransactionFactory.h FillBoxSet.I FillBoxSet.h		\
+	RefineAlgorithm.h RefineClasses.h RefineCopyTransaction.h	\
+	RefinePatchStrategy.h RefineSchedule.h RefineTimeTransaction.h	\
+	RefineTransactionFactory.h StandardRefineTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
@@ -500,25 +503,26 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	CoarsenClasses.h CoarsenTransactionFactory.C			\
-	CoarsenTransactionFactory.h
+	$(INCLUDE_SAM)/tbox/Utilities.h CoarsenClasses.h		\
+	CoarsenTransactionFactory.C CoarsenTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
@@ -551,13 +555,14 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h $(INCLUDE_SAM)/tbox/IOStream.h\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/ReferenceCounter.I\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	FillBoxSet.C FillBoxSet.I FillBoxSet.h
+	$(INCLUDE_SAM)/tbox/Utilities.h FillBoxSet.C FillBoxSet.I	\
+	FillBoxSet.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
@@ -620,13 +625,13 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MPI.I		\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/MessageStream.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
 	$(INCLUDE_SAM)/tbox/PointerBase.I				\
@@ -636,19 +641,20 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
-	$(INCLUDE_SAM)/tbox/Schedule.h					\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Schedule.h	\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	$(INCLUDE_SAM)/tbox/XDRStream.I $(INCLUDE_SAM)/tbox/XDRStream.h	\
-	FillBoxSet.I FillBoxSet.h RefineAlgorithm.C RefineAlgorithm.h	\
-	RefineClasses.h RefineCopyTransaction.h RefinePatchStrategy.h	\
-	RefineSchedule.h RefineTimeTransaction.h			\
-	RefineTransactionFactory.h StandardRefineTransactionFactory.h
+	$(INCLUDE_SAM)/tbox/Utilities.h $(INCLUDE_SAM)/tbox/XDRStream.I	\
+	$(INCLUDE_SAM)/tbox/XDRStream.h FillBoxSet.I FillBoxSet.h	\
+	RefineAlgorithm.C RefineAlgorithm.h RefineClasses.h		\
+	RefineCopyTransaction.h RefinePatchStrategy.h RefineSchedule.h	\
+	RefineTimeTransaction.h RefineTransactionFactory.h		\
+	StandardRefineTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
@@ -714,18 +720,18 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	RefineClasses.C RefineClasses.h
+	$(INCLUDE_SAM)/tbox/Utilities.h RefineClasses.C RefineClasses.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
@@ -792,24 +798,26 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	RefineClasses.h RefineCopyTransaction.C RefineCopyTransaction.h
+	$(INCLUDE_SAM)/tbox/Utilities.h RefineClasses.h			\
+	RefineCopyTransaction.C RefineCopyTransaction.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
@@ -868,18 +876,19 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	RefinePatchStrategy.C RefinePatchStrategy.h
+	$(INCLUDE_SAM)/tbox/Utilities.h RefinePatchStrategy.C		\
+	RefinePatchStrategy.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
@@ -948,13 +957,13 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MPI.I		\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/MessageStream.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
 	$(INCLUDE_SAM)/tbox/PointerBase.I				\
@@ -964,17 +973,18 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
-	$(INCLUDE_SAM)/tbox/Schedule.h					\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Schedule.h	\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	$(INCLUDE_SAM)/tbox/XDRStream.I $(INCLUDE_SAM)/tbox/XDRStream.h	\
-	FillBoxSet.I FillBoxSet.h RefineClasses.h RefinePatchStrategy.h	\
-	RefineSchedule.C RefineSchedule.h RefineTransactionFactory.h
+	$(INCLUDE_SAM)/tbox/Utilities.h $(INCLUDE_SAM)/tbox/XDRStream.I	\
+	$(INCLUDE_SAM)/tbox/XDRStream.h FillBoxSet.I FillBoxSet.h	\
+	RefineClasses.h RefinePatchStrategy.h RefineSchedule.C		\
+	RefineSchedule.h RefineTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
@@ -1050,24 +1060,26 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	RefineClasses.h RefineTimeTransaction.C RefineTimeTransaction.h
+	$(INCLUDE_SAM)/tbox/Utilities.h RefineClasses.h			\
+	RefineTimeTransaction.C RefineTimeTransaction.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
@@ -1139,25 +1151,26 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	RefineClasses.h RefineTransactionFactory.C			\
-	RefineTransactionFactory.h
+	$(INCLUDE_SAM)/tbox/Utilities.h RefineClasses.h			\
+	RefineTransactionFactory.C RefineTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_13 +=\
@@ -1227,25 +1240,27 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	CoarsenClasses.h CoarsenCopyTransaction.h			\
-	CoarsenTransactionFactory.h StandardCoarsenTransactionFactory.C	\
+	$(INCLUDE_SAM)/tbox/Utilities.h CoarsenClasses.h		\
+	CoarsenCopyTransaction.h CoarsenTransactionFactory.h		\
+	StandardCoarsenTransactionFactory.C				\
 	StandardCoarsenTransactionFactory.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -1318,24 +1333,26 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Transaction.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	RefineClasses.h RefineCopyTransaction.h RefineTimeTransaction.h	\
+	$(INCLUDE_SAM)/tbox/Utilities.h RefineClasses.h			\
+	RefineCopyTransaction.h RefineTimeTransaction.h			\
 	RefineTransactionFactory.h StandardRefineTransactionFactory.C	\
 	StandardRefineTransactionFactory.h
 

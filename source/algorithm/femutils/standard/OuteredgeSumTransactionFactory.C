@@ -1,9 +1,9 @@
 //
-// File:        OuteredgeSumTransactionFactory.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/OuteredgeSumTransactionFactory.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 696 $
-// Modified:    $Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Factory for creating outeredge sum transaction objects
 //
 
@@ -13,9 +13,6 @@
 #include "OuteredgeSumTransactionFactory.h"
 #include "OuteredgeSumTransaction.h"
 #include "tbox/ArenaManager.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace algs {
@@ -119,7 +116,7 @@ void OuteredgeSumTransactionFactory<DIM>::preprocessScratchSpace(
 {
    (void) fill_time;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {

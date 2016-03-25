@@ -1,10 +1,10 @@
 //
-// File:        comm-test.input
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/input_files/oface-test-coarsen3d.input $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 1.4 $
-// Modified:    $Date: 2004/02/11 23:46:09 $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: input file for testing communication of SAMRAI OuterfaceData.
 //
 

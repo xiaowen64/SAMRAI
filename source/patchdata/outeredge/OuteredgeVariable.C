@@ -1,10 +1,10 @@
 //
-// File:	OuteredgeVariable.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outeredge/OuteredgeVariable.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 329 $
-// Modified:	$Date: 2005-05-03 11:26:58 -0700 (Tue, 03 May 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Variable class for defining outeredge centered variables
 //
 
@@ -32,7 +32,7 @@ namespace SAMRAI {
 
 template <int DIM, class TYPE>
 OuteredgeVariable<DIM,TYPE>::OuteredgeVariable(
-   const string &name, int depth)
+   const std::string &name, int depth)
 :  hier::Variable<DIM>(name, new OuteredgeDataFactory<DIM,TYPE>(depth))
 {
 }

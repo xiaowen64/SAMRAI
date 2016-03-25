@@ -1,8 +1,8 @@
 /*
- * File:        $RCSfile$
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 602 $
- * Modified:    $Date: 2005-09-06 11:51:31 -0700 (Tue, 06 Sep 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsos.C $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Asynchronous Berger-Rigoutsos algorithm wrapper
  */
 
@@ -13,19 +13,17 @@
 
 #include "BoxComm.h"
 #include "AsyncBergerRigoutsosNode.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/TimerManager.h"
 
 namespace SAMRAI {
 namespace mesh {
 
-using namespace tbox;
-
 template<int DIM>
-Pointer<Timer> AsyncBergerRigoutsos<DIM>::t_run_abr;
+tbox::Pointer<tbox::Timer> AsyncBergerRigoutsos<DIM>::t_run_abr;
 template<int DIM>
-Pointer<Timer> AsyncBergerRigoutsos<DIM>::t_globalize_boxes;
+tbox::Pointer<tbox::Timer> AsyncBergerRigoutsos<DIM>::t_globalize_boxes;
 
 
 /*
@@ -36,8 +34,8 @@ Pointer<Timer> AsyncBergerRigoutsos<DIM>::t_globalize_boxes;
 */
 template<int DIM>
 AsyncBergerRigoutsos<DIM>::AsyncBergerRigoutsos(
-   Pointer<Database> database )
-   : d_mpi_communicator(MPI::commNull),
+   tbox::Pointer<tbox::Database> database )
+   : d_mpi_communicator(tbox::SAMRAI_MPI::commNull),
      d_log_node_history(false),
      d_log_cluster_summary(false),
      d_owner_mode("MOST_OVERLAP"),
@@ -79,9 +77,9 @@ AsyncBergerRigoutsos<DIM>::AsyncBergerRigoutsos(
 
 #ifdef HAVE_MPI
    if ( use_private_communicator ) {
-      MPI_Comm_dup( MPI::getCommunicator(), &d_mpi_communicator );
+      MPI_Comm_dup( tbox::SAMRAI_MPI::getCommunicator(), &d_mpi_communicator );
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT( d_mpi_communicator != MPI::commNull );
+      TBOX_ASSERT( d_mpi_communicator != tbox::SAMRAI_MPI::commNull );
 #endif
    }
 #endif
@@ -90,11 +88,11 @@ AsyncBergerRigoutsos<DIM>::AsyncBergerRigoutsos(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT( t_globalize_boxes.isNull() );
 #endif
-      t_run_abr = TimerManager::getManager()->
+      t_run_abr = tbox::TimerManager::getManager()->
          getTimer("mesh::AsyncBergerRigoutsos::run_abr");
-      t_globalize_boxes = TimerManager::getManager()->
+      t_globalize_boxes = tbox::TimerManager::getManager()->
          getTimer("mesh::AsyncBergerRigoutsos::globalize_boxes");
-      ShutdownRegistry::registerShutdownRoutine(freeTimers, 254);
+      tbox::ShutdownRegistry::registerShutdownRoutine(freeTimers, 254);
    }
 
    return;
@@ -105,8 +103,8 @@ template<int DIM>
 AsyncBergerRigoutsos<DIM>::~AsyncBergerRigoutsos(void)
 {
 #ifdef HAVE_MPI
-   if ( d_mpi_communicator != MPI::commNull ) {
-      // Free the private communicator (if MPI has not been finalized).
+   if ( d_mpi_communicator != tbox::SAMRAI_MPI::commNull ) {
+      // Free the private communicator (if SAMRAI_MPI.has not been finalized).
       int flag;
       MPI_Finalized(&flag);
       if ( ! flag ) {
@@ -138,7 +136,7 @@ AsyncBergerRigoutsos<DIM>::~AsyncBergerRigoutsos(void)
 template<int DIM>
 void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
    hier::BoxList<DIM> &boxes,
-   const Pointer<hier::PatchLevel<DIM> > level,
+   const tbox::Pointer<hier::PatchLevel<DIM> > level,
    const int tag_data_index,
    const int tag_val,
    const hier::Box<DIM>& bound_box,
@@ -150,7 +148,7 @@ void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
       TBOX_ERROR("AsyncBergerRigoutsos: empty bounding box not allowed.");
    }
 
-   const int nprocs = MPI::getNodes();
+   const int nprocs = tbox::SAMRAI_MPI::getNodes();
 
    typename AsyncBergerRigoutsosNode<DIM>::CommonParams
       cp( level,
@@ -159,8 +157,8 @@ void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
           min_box,
           efficiency_tol,
           combine_tol,
-          d_mpi_communicator == MPI::commNull ?
-          MPI::getCommunicator() : d_mpi_communicator );
+          d_mpi_communicator == tbox::SAMRAI_MPI::commNull ?
+          tbox::SAMRAI_MPI::getCommunicator() : d_mpi_communicator );
 
    AsyncBergerRigoutsosNode<DIM> root( &cp, &bound_box );
 
@@ -184,7 +182,7 @@ void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
        * Log summary of clustering and dendogram.
        * Maybe this should have a flag to turn on/off.
        */
-      plog << "Async BR on proc " << MPI::getRank() << " owned "
+      tbox::plog << "Async BR on proc " << tbox::SAMRAI_MPI::getRank() << " owned "
            << root.getMaxOwnership() << " of "
            << root.getMaxNodes() << " nodes ("
            << (double)root.getMaxOwnership()/root.getMaxNodes()
@@ -215,7 +213,7 @@ void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
     */
    if ( d_owner_mode == "SINGLE_OWNER" ) {
 
-      if ( MPI::getRank() == 0 ) {
+      if ( tbox::SAMRAI_MPI::getRank() == 0 ) {
 
          boxes.clearItems();
          int num_boxes = 
@@ -267,7 +265,7 @@ void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
       for ( typename hier::BoxList<DIM>::Iterator bi(boxes); bi; bi++ ) {
          number_cells += bi().size();
       }
-      plog << "After globalize: "
+      tbox::plog << "After globalize: "
            << number_cells << " cells in "
            << boxes.size() << " boxes, averaging "
            << double(number_cells)/boxes.size() << " cells/box\n";
@@ -297,9 +295,9 @@ void AsyncBergerRigoutsos<DIM>::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if ( d_mpi_communicator != MPI::commNull ) {
+   if ( d_mpi_communicator != tbox::SAMRAI_MPI::commNull ) {
       int flag;
-      MPI::status mpi_status;
+      tbox::SAMRAI_MPI::status mpi_status;
       int mpi_err = MPI_Iprobe( MPI_ANY_SOURCE,
                                 MPI_ANY_TAG,
                                 d_mpi_communicator,

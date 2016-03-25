@@ -1,9 +1,9 @@
 //
-// File:	CellGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/CellGeometry.C $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for cell centered objects
 //
 
@@ -15,7 +15,7 @@
 #include "CellOverlap.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -36,7 +36,7 @@ template<int DIM>  CellGeometry<DIM>::CellGeometry(const hier::Box<DIM>& box,
                                        const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    d_box    = box;
    d_ghosts = ghosts;

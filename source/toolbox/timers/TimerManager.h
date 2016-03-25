@@ -1,9 +1,9 @@
 //
-// File:        TimerManager.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/TimerManager.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1818 $
+// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description: Singleton timer manager class.
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -40,7 +39,6 @@ using namespace std;
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Timer
@@ -125,14 +123,14 @@ namespace SAMRAI {
  *       performance of your calculation. [FALSE]  
  *
  *    - \b    print_threshold  
- *       (double) Timers that use up less than ({\it print_threshold})
+ *       (double) Timers that use up less than (<EM>print_threshold</EM>)
  *       percent of the overall run time are not printed.  This can be 
  *       a convenient option to limit output if you have many timers 
  *       invoked. [0.25]
  *
  *    - \b    timer_list  
  *       (string array) List of timers to be invoked.  The timers can be 
- *       listed individually in {\it package::class::method} format or 
+ *       listed individually in <TT>package::class::method</TT> format or 
  *       the entries may contain wildcards to turn on a set of timers in 
  *       a given package or class:
  *       \verbatim
@@ -213,7 +211,7 @@ public:
     * When assertion checking is active, an assertion will result if the 
     * string is empty.
     */
-   virtual Pointer<Timer> getTimer(const string& name,
+   virtual Pointer<Timer> getTimer(const std::string& name,
                                              bool ignore_timer_input = false);
 
    /*!
@@ -224,14 +222,14 @@ public:
     * If the name string is empty, a null pointer is returned.
     */
    virtual bool checkTimerExists(Pointer<Timer>& timer,
-                                 const string& name) const;
+                                 const std::string& name) const;
 
    /*!
     * Return true if a timer whose name matches the argument string
     * exists in the database of timers and is currently running.
     * Otherwise, return false.
     */
-   virtual bool checkTimerRunning(const string& name) const;
+   virtual bool checkTimerRunning(const std::string& name) const;
 
    /*!
     * Reset the times in all timers to zero.
@@ -241,7 +239,7 @@ public:
    /*!
     * Print the timing statistics to the specified output stream. 
     */
-   virtual void print(ostream& os = plog);
+   virtual void print(std::ostream& os = plog);
 
 protected:
    /*!
@@ -295,7 +293,7 @@ private:
     * Add timer to either the active or inactive timer array.
     */
    bool checkTimerExistsInArray(Pointer<Timer>& timer,
-                                const string& name,
+                                const std::string& name,
                                 const Array< Pointer<Timer> >& 
                                 timer_array,
                                 int array_size) const; 
@@ -305,12 +303,12 @@ private:
     * array.  column_titles and column_ids specify which columns in 
     * timer_values to print.
     */
-   void printTable(const string& table_title,
-                   const Array<string> column_titles,
-                   const Array<string> timer_names,
+   void printTable(const std::string& table_title,
+                   const Array<std::string> column_titles,
+                   const Array<std::string> timer_names,
                    const int column_ids[],
                    const double timer_values[][18],
-                   ostream& os);
+                   std::ostream& os);
 
    /*
     * Same as above, but also print the int max_processor_id integer array
@@ -318,26 +316,26 @@ private:
     * function is used when printing maximum values, in which it is 
     * desirable to print the ID of the processor holding the maximum value.
     */
-   void printTable(const string& table_title,
-                   const Array<string> column_titles,
-                   const Array<string> timer_names,
+   void printTable(const std::string& table_title,
+                   const Array<std::string> column_titles,
+                   const Array<std::string> timer_names,
                    const int max_processor_id[][2],
                    const int max_array_id,
                    const int column_ids[],
                    const double timer_values[][18],
-                   ostream& os);
+                   std::ostream& os);
 
    /*
     * Output overhead stats for Timers.  
     */
-   void printOverhead(const Array<string> timer_names,
+   void printOverhead(const Array<std::string> timer_names,
                       const double timer_values[][18],
-                      ostream& os);
+                      std::ostream& os);
 
    /*
     * Output concurrent tree of Timers.  
     */
-   void printConcurrent(ostream& os);
+   void printConcurrent(std::ostream& os);
 
    /*
     * Build the timer_names, timer_values, and max_processor_id arrays.
@@ -345,7 +343,7 @@ private:
    void buildTimerArrays(
                    double timer_values[][18],
                    int max_processor_id[][2],
-                   Array<string> timer_names);
+                   Array<std::string> timer_names);
 
    /*
     * Build an ordered list array, organizing timers largest to smallest.
@@ -360,7 +358,7 @@ private:
     * Checks timer name to determine if it is specified to be turned
     * on.  If it is, return true.  Otherwise, return false. 
     */
-   bool checkTimerInNameLists( const string& name );
+   bool checkTimerInNameLists( const std::string& name );
 
    /*
     * Evaluate consistency of timer database across processors.
@@ -378,7 +376,7 @@ private:
     * and the addTimer routine to add a timer name to the d_package, 
     * d_class, or d_class_method lists.   
     */
-   void addTimerToNameLists( const string& name );
+   void addTimerToNameLists( const std::string& name );
 
    /*
     * Quicksort algorithm specialized for timer array..  This
@@ -401,14 +399,22 @@ private:
 					 const double tot);
 
    /*
+    * Static constants used by timer manager.
+    */
+   static int s_main_timer_identifier;
+   static int s_inactive_timer_identifier;
+   static double s_timer_reg_access_time;
+   static double s_timer_unreg_access_time;
+
+   /*
     * Main timer used to time overall run time (time between
     * creation and print, or deletion, of TimerManager.  
     */
    Pointer<Timer> d_main_timer;
 
    /*
-    * Count of timers registered with the timer manager and an array of 
-    * pointers to those timers.
+    * Count of timers registered with the timer manager and an 
+    * array of pointers to those timers.
     */
    int d_num_timers;
    Array< Pointer<Timer> > d_timers; 
@@ -426,9 +432,9 @@ private:
     */
 
    /*  
-    * Boolean vector identifying which timers are turned on.
+    * Boolean array identifying which timers are turned on.
     */
-   bool* d_running_timers;
+   tbox::Array<bool> d_running_timers;
 
    /*
     * The timer manager maintains a list (stack) of running timers so
@@ -444,13 +450,13 @@ private:
     * Lists of timer names generated from the input database.  These are 
     * used to activate specific timers in the code when a program executes.
     */
-   List<string> d_package_names;
-   List<string> d_class_names;
-   List<string> d_class_method_names;
+   List<std::string> d_package_names;
+   List<std::string> d_class_names;
+   List<std::string> d_class_method_names;
 
    /*
     * These values hold the length of the package, class, and class_method
-b    * lists.  They are stored to avoid multiple calls to getNumberOfItems 
+    * lists.  They are stored to avoid multiple calls to getNumberOfItems 
     * to improve efficiency.  
     */
    int d_length_package_names;

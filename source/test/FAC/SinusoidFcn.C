@@ -1,16 +1,17 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2005 The Regents of the University of California
-  Revision:	$Revision: 173 $
-  Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
-  Description:	Sinusoid function functor.
-*/
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/SinusoidFcn.C $
+ * Package:     SAMRAI tests
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Description: Sinusoidal function functor in FAC solver test.
+ */
 
 #include "SAMRAI_config.h"
 
 #include "SinusoidFcn.h"
 #include <math.h>
-#include <assert.h>
+#include "tbox/Utilities.h"
 
 /*
   Temporary fix for g++ lacking instantiations when --no-implicit-templates
@@ -150,22 +151,22 @@ istream &operator>>( istream &ci, SinusoidFcn &sf ) {
   char dummy, name[2];
   EAT_WS(ci) // ci >> std::skipws; // ci.ipfx(0);
   ci >> dummy;
-  assert ( dummy == '{' );
+  TBOX_ASSERT( dummy == '{' );
   EAT_WS(ci) // ci >> std::skipws; // ci.ipfx(0);
   while ( ci.peek() != '}' ) {
     ci.read(name,2);
     if ( name[0] == 'a' && name[1] == 'm' ) {
-      ci >> dummy; assert ( dummy == 'p' );
-      ci >> dummy; assert ( dummy == '=' );
+      ci >> dummy; TBOX_ASSERT( dummy == 'p' );
+      ci >> dummy; TBOX_ASSERT( dummy == '=' );
       ci >> sf.d_amp;
     }
     else {
-      ci >> dummy; assert( dummy == '=' );
+      ci >> dummy; TBOX_ASSERT( dummy == '=' );
       double *data( name[0]=='n' ? sf.d_npi : sf.d_ppi );
       unsigned short dim( name[1]=='x' ? 0 :
 			  name[1]=='y' ? 1 :
 			  name[1]=='z' ? 2 : 3 );
-      assert( dim < NDIM );
+      TBOX_ASSERT( dim < NDIM );
       ci >> data[dim];
     }
     EAT_WS(ci) // ci >> std::skipws; // ci.ipfx(0);

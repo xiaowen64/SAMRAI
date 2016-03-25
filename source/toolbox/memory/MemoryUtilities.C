@@ -1,21 +1,18 @@
 //
-// File:	MemoryUtilities.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/MemoryUtilities.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 690 $
-// Modified:	$Date: 2005-10-28 13:19:16 -0700 (Fri, 28 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for tracking memory use in SAMRAI.
 //
 
 #include "tbox/MemoryUtilities.h"
 
-#include "tbox/MPI.h"
-#include "tbox/Utilities.h"
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/MathUtilities.h"
 #include "tbox/IOStream.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,7 +50,7 @@ double MemoryUtilities::s_max_memory = 0.;
 *                                                                       *
 *************************************************************************
 */
-void MemoryUtilities::printMemoryInfo(ostream& os) 
+void MemoryUtilities::printMemoryInfo(std::ostream& os) 
 {
    /*
     * NOTE: This was taken directly from John Gyllenhal...
@@ -76,14 +73,14 @@ void MemoryUtilities::printMemoryInfo(ostream& os)
    double number_allocated = my_mallinfo.ordblks + my_mallinfo.smblks;
 
    /* Record high-water mark for memory used. */
-   s_max_memory = Utilities::dmax(s_max_memory,used_mem);   
+   s_max_memory = MathUtilities<double>::Max(s_max_memory, used_mem);   
 
    /* Print out concise malloc info line */
    os << used_mem/(1024.0*1024.0) << "MB ("
       << used_mem << ") in "
       << number_allocated << " allocs, "
       << reserved_mem/(1024.0*1024.0) << "MB reserved ("
-      << free_mem << " unused)" << endl;
+      << free_mem << " unused)" << std::endl;
 }
 
 /*
@@ -124,7 +121,7 @@ void MemoryUtilities::recordMemoryInfo(double time)
    NULL_USE(number_allocated);
 
    /* Record high-water mark for memory used. */
-   s_max_memory = Utilities::dmax(s_max_memory,used_mem);   
+   s_max_memory = MathUtilities<double>::Max(s_max_memory, used_mem);   
 
    /*
     * Record "used_mem" in MB to tau event.
@@ -143,7 +140,7 @@ void MemoryUtilities::recordMemoryInfo(double time)
 *                                                                       *
 *************************************************************************
 */
-void MemoryUtilities::printMaxMemory(ostream& os) 
+void MemoryUtilities::printMaxMemory(std::ostream& os) 
 {
    /*
     * Step through all nodes (>0) and send max memory to processor 0,
@@ -151,16 +148,16 @@ void MemoryUtilities::printMaxMemory(ostream& os)
     */
    int maxmem = 0;
    int len = 1;
-   for (int p = 0; p < MPI::getNodes(); p++) {
-      if (MPI::getRank() == p) {
+   for (int p = 0; p < SAMRAI_MPI::getNodes(); p++) {
+      if (SAMRAI_MPI::getRank() == p) {
          maxmem = (int)s_max_memory;
-         MPI::send(&maxmem, len, 0, false);
+         SAMRAI_MPI::send(&maxmem, len, 0, false);
       }
-      if (MPI::getRank() == 0) {
-         MPI::recv(&maxmem, len, p, false);
+      if (SAMRAI_MPI::getRank() == 0) {
+         SAMRAI_MPI::recv(&maxmem, len, p, false);
       }
       os << "Maximum memory used on processor " << p
-         << ": " << maxmem/(1024.*1024.) << " MB" << endl;
+         << ": " << maxmem/(1024.*1024.) << " MB" << std::endl;
    }
 
 }

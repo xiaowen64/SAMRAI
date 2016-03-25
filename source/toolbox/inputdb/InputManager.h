@@ -1,9 +1,9 @@
 //
-// File:	InputManager.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/InputManager.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An input manager singleton class that parses input files
 //
 
@@ -21,7 +21,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -122,13 +121,13 @@ public:
     * Create a new database named "main" from the specified input file.
     */
    virtual Pointer<InputDatabase> parseInputFile(
-      const string& filename);
+      const std::string& filename);
 
    /**
     * Parse data from the specified file into the existing database.
     */
    virtual void parseInputFile(
-      const string& filename, Pointer<InputDatabase> db);
+      const std::string& filename, Pointer<InputDatabase> db);
 
 protected:
    /**

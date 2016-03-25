@@ -1,9 +1,9 @@
 //
-// File:        SideDataTest.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/SideDataTest.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 317 $
-// Modified:    $Date: 2005-04-27 21:26:06 -0700 (Wed, 27 Apr 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for side-centered patch data
 //
 
@@ -138,7 +138,7 @@ public:
    /**
     * Function for checking results of communication operations.
     */
-   void verifyResults(hier::Patch<NDIM>& patch,
+   bool verifyResults(hier::Patch<NDIM>& patch,
                       const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
                       int level_number);
 

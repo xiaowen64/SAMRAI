@@ -1,11 +1,11 @@
 //
-// File:        CubesPatchInterface.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CubesPatchInterface.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 609 $
-// Modified:    $Date: 2005-09-13 15:15:49 -0700 (Tue, 13 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Cubes embedded boundary shape
 //              
 //
@@ -24,14 +24,10 @@
 #include "CutCell.h"
 #include "EmbeddedBoundaryDefines.h"
 #include "IndexData.h"
-#include "tbox/IEEE.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
 
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 
 namespace SAMRAI {
@@ -46,7 +42,7 @@ namespace SAMRAI {
 */
 template<int DIM> 
 CubesPatchInterface<DIM>::CubesPatchInterface(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    tbox::Pointer<geom::CartesianGridGeometry<DIM> > grid_geom,
    hier::IntVector<DIM> nghosts)
@@ -87,8 +83,26 @@ void CubesPatchInterface<DIM>::calculateCutCellInfo(
 {
    TBOX_ERROR(d_object_name << ":Unable to use CUBES due to license issues."
               << "\nPlease contact SAMRAI developers to find out more"
-              << "\ninformation." << endl);
+              << "\ninformation." << std::endl);
 
+}
+
+
+
+
+/*
+*******************************************************************
+*
+* Set whether or not to record areas and normal.  By default, this
+* is turned on.
+*
+*******************************************************************
+*/
+template<int DIM>
+void CubesPatchInterface<DIM>::setRecordAreasAndNormal(
+   const bool record_an)
+{
+   d_record_areas_and_normal = record_an;
 }
 
 /*
@@ -103,12 +117,12 @@ void CubesPatchInterface<DIM>::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
   TBOX_ERROR(d_object_name << ":Unable to use CUBES due to license issues."
               << "\nPlease contact SAMRAI developers to find out more"
-              << "\ninformation." << endl);
+              << "\ninformation." << std::endl);
 
 
 }
@@ -122,9 +136,9 @@ void CubesPatchInterface<DIM>::getFromInput(
 */
 template<int DIM> 
 void CubesPatchInterface<DIM>::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
-   os << "d_object_name = " << d_object_name << endl;
+   os << "d_object_name = " << d_object_name << std::endl;
 }
 
 

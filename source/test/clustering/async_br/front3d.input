@@ -1,3 +1,12 @@
+//
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/front3d.input $
+// Package:     SAMRAI tests
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Description: Input file for 3D DLBG test.
+//
+
 Main {
   which_br = 'n'
   base_name = "front3d"
@@ -30,8 +39,8 @@ AsyncBergerRigoutsos {
   algo_advance_mode = "ADVANCE_SOME"
   // algo_advance_mode = "SYNCHRONOUS"
   // owner_mode: "SINGLE_OWNER", "MOST_OVERLAP" (default), "FEWEST_OWNED", "LEAST_ACTIVE"
-  owner_mode = "SINGLE_OWNER"
-  // owner_mode = "MOST_OVERLAP"
+  // owner_mode = "SINGLE_OWNER"
+  owner_mode = "MOST_OVERLAP"
   // owner_mode = "FEWEST_OWNED"
   // owner_mode = "LEAST_ACTIVE"
   use_level_boxes = FALSE

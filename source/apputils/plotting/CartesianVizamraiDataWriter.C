@@ -1,9 +1,9 @@
 //
-// File:        CartesianVizamraiDataWriter.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/CartesianVizamraiDataWriter.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Simple tool to facilitate dumping data to file for Vizamrai
 //
 
@@ -18,11 +18,9 @@
 #include "CellData.h"
 #include "CellDataFactory.h"
 #include "tbox/ArenaManager.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
+#include "tbox/MathUtilities.h"
 
 #define VIZAMRAI_FILE_FORMAT_VERSION (6)
 
@@ -48,10 +46,10 @@ namespace SAMRAI {
 */
 
 template<int DIM>  CartesianVizamraiDataWriter<DIM>::CartesianVizamraiDataWriter(
-   const string& name)
+   const std::string& name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
    d_object_name = name;
    d_wrote_plot_file = false; 
@@ -97,7 +95,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setFinestLevelToPlot(
          << " to " << finest_level_number 
          << "\n     but scaling ratio data has not yet been given" 
          << "\n     Thus, finest level in any plot file will be level " 
-         << d_finest_plot_level_in_all << endl);
+         << d_finest_plot_level_in_all << std::endl);
    } else {
       if (!d_wrote_plot_file) {
          d_finest_plot_level_in_all = finest_level_number;
@@ -123,7 +121,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setRatioToCoarserLevel(
          << " error...\n"
          << "    Data writer with name " << d_object_name
          << "\n     Attempting to set level scaling information after"
-         << "\n     writing a plot file.  This is not allowed." << endl);
+         << "\n     writing a plot file.  This is not allowed." << std::endl);
    }
 
    if (level_number > d_scaling_ratios.getSize()-1) {
@@ -131,8 +129,8 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setRatioToCoarserLevel(
    }
    d_scaling_ratios[level_number] = ratio;
    d_finest_plot_level_in_all = 
-      tbox::Utilities::imax(d_finest_plot_level_in_all,
-                           level_number);
+      tbox::MathUtilities<int>::Max( d_finest_plot_level_in_all,
+                                     level_number );
    d_finest_plot_level_now = d_finest_plot_level_in_all; 
 }
 
@@ -151,7 +149,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setPlotDataToDouble()
          << " warning...\n"
          << "    data writer with name " << d_object_name
          << "\n     Changing plot type from float to double"
-         << "\n     after writing plot data to file" << endl);
+         << "\n     after writing plot data to file" << std::endl);
    }
    d_plot_type = DUMP_DOUBLE_DATA; 
 }
@@ -163,7 +161,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setPlotDataToFloat()
          << " warning...\n"
          << "    data writer with name " << d_object_name
          << "\n     Changing plot type from double to float"
-         << "\n     after writing plot data to file" << endl);
+         << "\n     after writing plot data to file" << std::endl);
    }
    d_plot_type = DUMP_FLOAT_DATA; 
 }
@@ -180,7 +178,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setDerivedDataWriter(
    VisDerivedDataStrategy<DIM>* derived_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(derived_writer != (VisDerivedDataStrategy<DIM>*)NULL);
+   TBOX_ASSERT(derived_writer != (VisDerivedDataStrategy<DIM>*)NULL);
 #endif
    d_default_derived_writer = derived_writer;
 }
@@ -194,10 +192,10 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setDerivedDataWriter(
 */
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::setDirectoryName(
-   const string& directory_name)
+   const std::string& directory_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!directory_name.empty());
+   TBOX_ASSERT(!directory_name.empty());
 #endif
    d_directory_name = directory_name;
 }
@@ -210,7 +208,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::setDirectoryName(
 *************************************************************************
 */
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotScalar(
-   const string& variable_name, 
+   const std::string& variable_name, 
    int data_id, 
    int depth_id,
    double scale_factor)
@@ -219,7 +217,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotScalar(
 }
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotVector(
-   const string& variable_name,
+   const std::string& variable_name,
    int data_id,
    double scale_factor)
 {
@@ -237,16 +235,16 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotVector(
 */
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotItem(
-   const string& variable_name, 
+   const std::string& variable_name, 
    int data_id,
    bool isa_vector,
    int depth_id,
    double scale_factor)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!variable_name.empty());
-   assert(data_id > -1);
-   assert(depth_id > -1);
+   TBOX_ASSERT(!variable_name.empty());
+   TBOX_ASSERT(data_id > -1);
+   TBOX_ASSERT(depth_id > -1);
 #endif
 
    for (typename tbox::List<VizamraiItem<DIM> >::Iterator ipi(d_plot_items);
@@ -255,7 +253,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotItem(
          TBOX_ERROR("CartesianVizamraiDataWriter<DIM>::registerPlotItem"
          << " error...\n"
          << "    Attempting to register variable with name " << variable_name
-         << "\n     more than once." << endl);
+         << "\n     more than once." << std::endl);
       }
    }
 
@@ -275,7 +273,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotItem(
       TBOX_ERROR("CartesianVizamraiDataWriter<DIM>::registerPlotItem"
          << " error...\n"
          << "    data id = " << data_id << " for variable = " << variable_name
-         << "\n     is undefined in the patch descriptor" << endl);
+         << "\n     is undefined in the patch descriptor" << std::endl);
    } else {
       bool found_type = false;
       bool depth_is_good = false;
@@ -325,14 +323,14 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotItem(
            << variable_name 
            << "\n     corresponds to an illegal patch descriptor entry." 
            << "\n     Legal entries are cell-centered double, float, or int."
-           << endl);
+           << std::endl);
       }
       if (!depth_is_good) {
          TBOX_ERROR("CartesianVizamraiDataWriter<DIM>::registerPlotItem"
            << " error...\n"
            << "    depth id = " << depth_id << " for variable = "
            << variable_name
-           << "\n     is out of range." << endl);
+           << "\n     is out of range." << std::endl);
       }
    }
 
@@ -352,16 +350,16 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerPlotItem(
 */
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar(
-   const string& variable_name,
+   const std::string& variable_name,
    int level_number,
    int data_id,
    int depth_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!variable_name.empty());
-   assert(level_number > -1);
-   assert(data_id > -1);
-   assert(depth_id > -1);
+   TBOX_ASSERT(!variable_name.empty());
+   TBOX_ASSERT(level_number > -1);
+   TBOX_ASSERT(data_id > -1);
+   TBOX_ASSERT(depth_id > -1);
 #endif
 
    bool found = false;
@@ -380,7 +378,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar(
                << " error...\n"
                << "    data id = " << data_id << " for variable = " 
                << variable_name
-               << "\n     is undefined in the patch descriptor" << endl);
+               << "\n     is undefined in the patch descriptor" << std::endl);
          }
     
          int old_data_type = ipi().d_data_type;
@@ -421,14 +419,14 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar(
               << "    data id = " << data_id << " for variable = "
               << variable_name
               << "\n     does not match patch data type of previously" 
-              << "\n     registered variable" << endl);
+              << "\n     registered variable" << std::endl);
          }
          if (!depth_is_good) {
             TBOX_ERROR(
               "CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar"
               << " error...\n"
               << "    depth id = " << depth_id << " for variable = "
-              << variable_name << "\n     is out of range." << endl);
+              << variable_name << "\n     is out of range." << std::endl);
          }
 
          found = true; 
@@ -457,7 +455,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar(
       TBOX_ERROR("CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar"
                  << " error...\n"
                  << "    variable = " << variable_name
-                 << " has not been registered for plotting." << endl);
+                 << " has not been registered for plotting." << std::endl);
    }
 
 }
@@ -475,14 +473,14 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotScalar(
 */
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector(
-   const string& variable_name,
+   const std::string& variable_name,
    int level_number,
    int data_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!variable_name.empty());
-   assert(level_number > -1);
-   assert(data_id > -1);
+   TBOX_ASSERT(!variable_name.empty());
+   TBOX_ASSERT(level_number > -1);
+   TBOX_ASSERT(data_id > -1);
 #endif
 
    bool found = false;
@@ -500,7 +498,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector(
                << " error...\n"
                << "    data id = " << data_id << " for variable = " 
                << variable_name
-               << "\n     is undefined in the patch descriptor" << endl);
+               << "\n     is undefined in the patch descriptor" << std::endl);
          }
     
 
@@ -547,7 +545,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector(
               << "    data id = " << data_id << " for variable = "
               << variable_name
               << "\n     does not match patch data type of previously" 
-              << "\n     registered variable" << endl);
+              << "\n     registered variable" << std::endl);
          }
          if (!depth_is_good) {
             TBOX_ERROR(
@@ -555,7 +553,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector(
               << " error...\n"
               << "    depth of new variable = " << new_data_depth
               << "\n    depth of old variable = " << old_data_depth
-              << endl);
+              << std::endl);
          }
 
          found = true; 
@@ -580,7 +578,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector(
       TBOX_ERROR("CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector"
                  << " error...\n"
                  << "    variable = " << variable_name
-                 << " has not been registered for plotting." << endl);
+                 << " has not been registered for plotting." << std::endl);
    }
 
 }
@@ -596,14 +594,14 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::resetLevelPlotVector(
 */
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotScalar(
-   const string& variable_name,
+   const std::string& variable_name,
    VisDerivedDataStrategy<DIM>* derived_writer) 
 {
    registerDerivedPlotItem(variable_name, 1, derived_writer);
 }
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotVector(
-   const string& variable_name,
+   const std::string& variable_name,
    int depth,
    VisDerivedDataStrategy<DIM>* derived_writer)
 {
@@ -621,13 +619,13 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotVect
 */
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotItem(
-   const string& variable_name,
+   const std::string& variable_name,
    int depth,
    VisDerivedDataStrategy<DIM>* derived_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!variable_name.empty());
-   assert(depth > 0);
+   TBOX_ASSERT(!variable_name.empty());
+   TBOX_ASSERT(depth > 0);
 #endif
 
    for (typename tbox::List<VizamraiItem<DIM> >::Iterator ipi(d_plot_items); 
@@ -636,7 +634,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotItem
          TBOX_ERROR("CartesianVizamraiDataWriter<DIM>::registerDerivedPlotItem"
          << " error...\n"
          << "    Attempting to register variable with name " << variable_name
-         << "\n     more than once." << endl);
+         << "\n     more than once." << std::endl);
       }
    }
 
@@ -648,7 +646,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotItem
          << " error...\n"
          << "    no derived data writer specified for variable = "
          << variable_name
-         << "\n    and no default derived data writer set." << endl);
+         << "\n    and no default derived data writer set." << std::endl);
    } 
 
    VizamraiItem<DIM> plotitem;
@@ -676,13 +674,13 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::registerDerivedPlotItem
 
 template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePlotData(
    const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
-   const string& file_name,
+   const std::string& file_name,
    int extension,
    double plot_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(!file_name.empty());
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(!file_name.empty());
 #endif 
 
    /*
@@ -698,8 +696,8 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePlotData(
     */ 
 
    int finest_level_to_plot = 
-      tbox::Utilities::imin(hierarchy->getFinestLevelNumber(),
-                           d_finest_plot_level_now);
+      tbox::MathUtilities<int>::Min(hierarchy->getFinestLevelNumber(),
+                                    d_finest_plot_level_now);
 
    if (!d_wrote_plot_file && (d_finest_plot_level_in_all < 0)) {
       finest_level_to_plot = hierarchy->getFinestLevelNumber(); 
@@ -738,8 +736,8 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePlotData(
       d_domain_scale_length = (xupper[0] - xlower[0]);
       for (int id = 1; id < DIM; id++) {
          d_domain_scale_length = 
-            tbox::Utilities::dmin( d_domain_scale_length,
-                                  (xupper[id] - xlower[id]) );
+            tbox::MathUtilities<double>::Min( d_domain_scale_length,
+                                              (xupper[id] - xlower[id]) );
       }
       d_domain_scale_length *= DOMAIN_SCALE_FACTOR;
 
@@ -773,7 +771,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePlotData(
       /*
        * Move the temporary file to the final destination.
        */
-      if (tbox::MPI::getNodes() == 1) {
+      if (tbox::SAMRAI_MPI::getNodes() == 1) {
 	tbox::Utilities::renameFile(
            (getFileStreamName(file_name, extension, true)).c_str(),
 	   (getFileStreamName(file_name, extension, false)).c_str());
@@ -790,57 +788,57 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePlotData(
 *************************************************************************
 */
 
-template<int DIM> void CartesianVizamraiDataWriter<DIM>::printClassData(ostream& os) const
+template<int DIM> void CartesianVizamraiDataWriter<DIM>::printClassData(std::ostream& os) const
 {
-   os << "\nCartesianVizamraiDataWriter<DIM>::printClassData..." << endl;
+   os << "\nCartesianVizamraiDataWriter<DIM>::printClassData..." << std::endl;
    os << "CartesianVizamraiDataWriter<DIM>: this = "
-      << (CartesianVizamraiDataWriter<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
-   os << "d_wrote_plot_file = " << d_wrote_plot_file << endl;
-   os << "d_finest_plot_level_in_all = " << d_finest_plot_level_in_all << endl;
-   os << "d_finest_plot_level_now = " << d_finest_plot_level_now << endl;
+      << (CartesianVizamraiDataWriter<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
+   os << "d_wrote_plot_file = " << d_wrote_plot_file << std::endl;
+   os << "d_finest_plot_level_in_all = " << d_finest_plot_level_in_all << std::endl;
+   os << "d_finest_plot_level_now = " << d_finest_plot_level_now << std::endl;
    for (int i = 0; i < d_scaling_ratios.getSize(); i++) {
       os << "d_scaling_ratios[" << i << "] = " 
-         <<  d_scaling_ratios[i] << endl;
+         <<  d_scaling_ratios[i] << std::endl;
    }
    os << "d_plot_type = "; 
    if (d_plot_type == DUMP_FLOAT_DATA) {
-      os << "Float Data" << endl;
+      os << "Float Data" << std::endl;
    } else {
-      os << "Double Data" << endl;
+      os << "Double Data" << std::endl;
    } 
-   os << "d_default_derived_writer = " << d_default_derived_writer << endl;
-   os << "d_directory_name = " << d_directory_name << endl;
-   os << "d_plot_items list..." << endl; 
+   os << "d_default_derived_writer = " << d_default_derived_writer << std::endl;
+   os << "d_directory_name = " << d_directory_name << std::endl;
+   os << "d_plot_items list..." << std::endl; 
    os << "Number of plot items = " 
-      << d_plot_items.getNumberItems() << endl; 
+      << d_plot_items.getNumberItems() << std::endl; 
    for (typename tbox::List<VizamraiItem<DIM> >::Iterator ipi(d_plot_items); 
         ipi; ipi++) {
-      os << "   Name = " << ipi().d_variable_name << endl;
+      os << "   Name = " << ipi().d_variable_name << std::endl;
       if (!(ipi().d_derived_writer == NULL)) {
          if (ipi().d_isa_vector) {
-            os << "     DERIVED PLOT VECTOR: depth = " << ipi().d_depth << endl;   
+            os << "     DERIVED PLOT VECTOR: depth = " << ipi().d_depth << std::endl;   
          } else {
-            os << "     DERIVED PLOT SCALAR" << endl;   
+            os << "     DERIVED PLOT SCALAR" << std::endl;   
          }
       } else {
-         os << "     Master hier::Patch Data ID = " << ipi().d_data_id << endl;
+         os << "     Master hier::Patch Data ID = " << ipi().d_data_id << std::endl;
          for (int kk = 0; kk < ipi().d_level_data_id.getSize(); kk++) {
             os << "        Data id on level " << kk << " is " 
-                                                    << ipi().d_level_data_id[kk] << endl;
+                                                    << ipi().d_level_data_id[kk] << std::endl;
          }
          if (ipi().d_isa_vector) {
-            os << "     Data is a vector" << endl; 
-            os << "        Depth is" << ipi().d_depth << endl; 
+            os << "     Data is a vector" << std::endl; 
+            os << "        Depth is" << ipi().d_depth << std::endl; 
          } else {
-            os << "     Data is a scalar" << endl;    
-            os << "        Master hier::Patch Data Depth ID = " << ipi().d_depth_id << endl;
+            os << "     Data is a scalar" << std::endl;    
+            os << "        Master hier::Patch Data Depth ID = " << ipi().d_depth_id << std::endl;
             for (int ll = 0; ll < ipi().d_level_data_id.getSize(); ll++) {
                os << "        Depth id on level " << ll << " is "
-                                                        << ipi().d_level_depth_id[ll] << endl;
+                                                        << ipi().d_level_depth_id[ll] << std::endl;
             }
          }
-         os << "     Scale Factor = " << ipi().d_scale_factor << endl;
+         os << "     Scale Factor = " << ipi().d_scale_factor << std::endl;
       }
    }
 }
@@ -858,18 +856,17 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::printClassData(ostream&
 *************************************************************************
 */
 
-template<int DIM> string CartesianVizamraiDataWriter<DIM>::getFileStreamName(
-   const string& file_name,
+template<int DIM> std::string CartesianVizamraiDataWriter<DIM>::getFileStreamName(
+   const std::string& file_name,
    int extension,
    bool istemporaryflag) const
 {
-   string dump_directory = d_directory_name;
+   std::string dump_directory = d_directory_name;
 
-   string dump_filename = file_name;
+   std::string dump_filename = file_name;
    if (!dump_directory.empty()) {
       tbox::Utilities::recursiveMkdir(dump_directory);
-      //dump_filename = dump_directory + "/" + dump_filename;
-		string tmp = dump_filename;
+      std::string tmp = dump_filename;
       dump_filename = dump_directory;
       dump_filename += "/"; 
       dump_filename += tmp;
@@ -878,13 +875,13 @@ template<int DIM> string CartesianVizamraiDataWriter<DIM>::getFileStreamName(
    const int size = dump_filename.length() + 20;
    char *buffer = new char[size];
 
-   if (tbox::MPI::getNodes() > 1) {
+   if (tbox::SAMRAI_MPI::getNodes() > 1) {
       if (extension >= 0) {
          sprintf(buffer, "%s.%05d.vis.%05d", dump_filename.c_str(),
-                 extension, tbox::MPI::getRank());
+                 extension, tbox::SAMRAI_MPI::getRank());
       } else {
          sprintf(buffer, "%s.vis.%05d", dump_filename.c_str(),
-                 tbox::MPI::getRank());
+                 tbox::SAMRAI_MPI::getRank());
       }
    } else {
       // If this is a temporary file then add an tmp extension to the name
@@ -903,7 +900,7 @@ template<int DIM> string CartesianVizamraiDataWriter<DIM>::getFileStreamName(
       }
    }
 
-   string stream_name(buffer); 
+   std::string stream_name(buffer); 
 
    delete [] buffer;
 
@@ -923,7 +920,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiHeaderInfo
    double plot_time,
    int num_outboxes) const
 {
-   if (tbox::MPI::getRank() == 0) {
+   if (tbox::SAMRAI_MPI::getRank() == 0) {
 
       /*
        * Vizamrai header information:
@@ -1040,7 +1037,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
 
    int noutput = 0;
 
-   if (tbox::MPI::getRank() == 0) {
+   if (tbox::SAMRAI_MPI::getRank() == 0) {
 
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
          tbox::Pointer<hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
@@ -1060,7 +1057,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
          const double* xlo = geometry->getXLower();
          const double* xup = geometry->getXUpper();
  
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
  
             noutput--;
  
@@ -1101,7 +1098,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
 #ifdef HAVE_MPI
             buffer[buffer_count++] = ln;
             MPI_Send(buffer, DIM*2+1, MPI_DOUBLE,
-                     0, 0, tbox::MPI::getCommunicator());
+                     0, 0, tbox::SAMRAI_MPI::getCommunicator());
 #endif
          }
 
@@ -1113,7 +1110,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
    MPI_Status status;
 #endif
 
-   if (tbox::MPI::getRank() == 0) {
+   if (tbox::SAMRAI_MPI::getRank() == 0) {
 
       while(noutput) {
    
@@ -1123,7 +1120,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
 
 #ifdef HAVE_MPI
          MPI_Recv(buffer, DIM*2+1, MPI_DOUBLE, MPI_ANY_SOURCE, 0,
-                  tbox::MPI::getCommunicator(), &status);
+                  tbox::SAMRAI_MPI::getCommunicator(), &status);
 #endif
 
          for (id = 0; id < DIM; id++) {
@@ -1147,7 +1144,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writePatchBoundariesToF
 	    file  << d_domain_scale_length;
 	 }
 
-         file << (int)buffer[DIM*2];
+         file << static_cast<int>(buffer[DIM*2]);
 
       }
 
@@ -1242,7 +1239,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 
                         if (d_plot_type == DUMP_FLOAT_DATA) {
                            for (int i = 0; i < bsize; i++) {
-                              fbuffer[i] = (float) dbuffer[i];
+                              fbuffer[i] = static_cast<float>(dbuffer[i]);
                            }
                            file.pack(fbuffer, bsize);
                         } else {
@@ -1262,7 +1259,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 
                      if (d_plot_type == DUMP_FLOAT_DATA) {
                         for (int i = 0; i < bsize; i++) {
-                           fbuffer[i] = (float) dbuffer[i];
+                           fbuffer[i] = static_cast<float>(dbuffer[i]);
                         }
                         file.pack(fbuffer, bsize);
                      } else {
@@ -1301,7 +1298,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 			
 			if (d_plot_type == DUMP_FLOAT_DATA) {
 			   for (int i = 0; i < bsize; i++) {
-			      fbuffer[i] = (float) dbuffer[i];
+			      fbuffer[i] = static_cast<float>(dbuffer[i]);
 			   }
 			   file.pack(fbuffer, bsize);
 			} else {
@@ -1328,7 +1325,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiVariablesT
 		     
 		     if (d_plot_type == DUMP_FLOAT_DATA) {
 			for (int i = 0; i < bsize; i++) {
-			   fbuffer[i] = (float) dbuffer[i];
+			   fbuffer[i] = static_cast<float>(dbuffer[i]);
 			}
 			file.pack(fbuffer, bsize);
 		     } else {
@@ -1432,14 +1429,15 @@ template<int DIM> bool CartesianVizamraiDataWriter<DIM>::checkLevelInformation(
       if (hierarchy->getPatchLevel(ln).isNull()) {
          ret_val = false;
          tbox::perr << "CartesianVizamraiDataWriter<DIM>::writePlotData error...\n";
-         tbox::perr << "ERROR MESSAGE: patch level " << ln << " is null." << endl;
+         tbox::perr << "ERROR MESSAGE: patch level " << ln << " is null." << std::endl;
          printClassData(tbox::perr);
-         tbox::perr << flush;
-         tbox::MPI::abort();
+         tbox::perr << std::flush;
+         tbox::SAMRAI_MPI::abort();
       }
    }
 
-   int coarsest_to_check = tbox::Utilities::imax(1, coarsest_plot_level);
+   int coarsest_to_check = 
+      tbox::MathUtilities<int>::Max(1, coarsest_plot_level);
 
    if ( !d_wrote_plot_file && (d_scaling_ratios.getSize() == 0) ) {
       for (int ln = coarsest_to_check; ln <= finest_plot_level; ln++) {
@@ -1463,10 +1461,10 @@ template<int DIM> bool CartesianVizamraiDataWriter<DIM>::checkLevelInformation(
    if (ret_val == false) {
       tbox::perr << "CartesianVizamraiDataWriter<DIM>::writePlotData error...\n";
       tbox::perr << "ERROR MESSAGE: Level ratios set in setRatioToCoarserLevel()";
-      tbox::perr << "\n do not match ratios between levels in hierarchy." << endl;
+      tbox::perr << "\n do not match ratios between levels in hierarchy." << std::endl;
       printClassData(tbox::perr);
-      tbox::perr << flush;
-      tbox::MPI::abort();
+      tbox::perr << std::flush;
+      tbox::SAMRAI_MPI::abort();
    }
 
    return(ret_val);
@@ -1488,7 +1486,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::packPatchDataIntoDouble
    double* buffer) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((box * pdata->getGhostBox()) == box);
+   TBOX_ASSERT((box * pdata->getGhostBox()) == box);
 #endif
 
    const hier::Box<DIM>& data_box = pdata->getGhostBox();
@@ -1522,7 +1520,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::packPatchDataIntoDouble
 #ifdef HAVE_FLOAT
          const tbox::Pointer< pdat::CellData<DIM,float> > fpdata = pdata;
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!fpdata.isNull());
+         TBOX_ASSERT(!fpdata.isNull());
 #endif
          const float *const dat_ptr = fpdata->getPointer(depth);
 
@@ -1564,7 +1562,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::packPatchDataIntoDouble
 
          const tbox::Pointer< pdat::CellData<DIM,double> > dpdata = pdata;
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!dpdata.isNull());
+         TBOX_ASSERT(!dpdata.isNull());
 #endif
          const double *const dat_ptr = dpdata->getPointer(depth);
 
@@ -1603,7 +1601,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::packPatchDataIntoDouble
 
          const tbox::Pointer< pdat::CellData<DIM,int> > ipdata = pdata;
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!ipdata.isNull());
+         TBOX_ASSERT(!ipdata.isNull());
 #endif
          const int *const dat_ptr = ipdata->getPointer(depth);
 

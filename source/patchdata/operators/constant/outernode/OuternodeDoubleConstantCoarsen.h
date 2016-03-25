@@ -1,9 +1,9 @@
 //
-// File:	OuternodeDoubleConstantCoarsen.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/operators/constant/outernode/OuternodeDoubleConstantCoarsen.h $
 // Package:	SAMRAI patchdata
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Constant averaging operator for node-centered double data on 
 //              a  mesh.
 //
@@ -28,7 +28,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_xfer_CoarsenOperator
@@ -77,7 +76,7 @@ public:
     * constant averaging; otherwise, return false.
     */
    bool findCoarsenOperator(const tbox::Pointer<hier::Variable<DIM> >& var,
-                            const string &op_name) const; 
+                            const std::string &op_name) const; 
 
    /*!
     * @brief Return descriptive name string identifier of this
@@ -85,7 +84,7 @@ public:
     *
     * @return descriptive name string identifier of this coarsening operator.
     */
-   const string& getOperatorName() const;
+   const std::string& getOperatorName() const;
 
    /*!
     * @brief Give the operator priority.
@@ -121,7 +120,7 @@ public:
                 const hier::IntVector<DIM>& ratio) const;
 
 private:
-   string d_name_id;
+   std::string d_name_id;
 
 };
 

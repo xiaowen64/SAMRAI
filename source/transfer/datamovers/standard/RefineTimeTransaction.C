@@ -1,9 +1,9 @@
 //
-// File:	RefineTimeTransaction.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineTimeTransaction.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 684 $
-// Modified:	$Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Communication transaction for time interpolation during data refining
 //
 
@@ -11,18 +11,15 @@
 #define included_xfer_RefineTimeTransaction_C
 
 #include <typeinfo>
-using namespace std;
 
 #include "RefineTimeTransaction.h"
 
 #include "IntVector.h"
 #include "Patch.h"
 #include "PatchData.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
+#include "tbox/MathUtilities.h"
 
 namespace SAMRAI {
     namespace xfer {
@@ -59,8 +56,8 @@ template<int DIM> void RefineTimeTransaction<DIM>::setRefineItems(
    int num_refine_items)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(refine_items != (const typename RefineClasses<DIM>::Data**)NULL);
-   assert(num_refine_items >= 0);
+   TBOX_ASSERT(refine_items != (const typename RefineClasses<DIM>::Data**)NULL);
+   TBOX_ASSERT(num_refine_items >= 0);
 #endif
    s_refine_items = refine_items;
    s_num_refine_items = num_refine_items;
@@ -90,12 +87,12 @@ template<int DIM>  RefineTimeTransaction<DIM>::RefineTimeTransaction(
    int refine_item_id) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
-   assert(!overlap.isNull());
-   assert(dst_patch >= 0 && dst_patch < dst_level->getNumberOfPatches());
-   assert(src_patch >= 0 && src_patch < src_level->getNumberOfPatches());
-   assert(refine_item_id >= 0);
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_patch >= 0 && dst_patch < dst_level->getNumberOfPatches());
+   TBOX_ASSERT(src_patch >= 0 && src_patch < src_level->getNumberOfPatches());
+   TBOX_ASSERT(refine_item_id >= 0);
    // Note: s_num_refine_items cannot be used at this point!
 #endif
 
@@ -123,7 +120,7 @@ template<int DIM>  RefineTimeTransaction<DIM>::~RefineTimeTransaction()
 template<int DIM> bool RefineTimeTransaction<DIM>::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (getSourceProcessor() == tbox::MPI::getRank()) {
+   if (getSourceProcessor() == tbox::SAMRAI_MPI::getRank()) {
       can_estimate = 
          d_src_level->getPatch(d_src_patch)
                     ->getPatchData(s_refine_items[d_refine_item_id]->
@@ -243,18 +240,18 @@ template<int DIM> void RefineTimeTransaction<DIM>::timeInterpolate(
    const tbox::Pointer< hier::PatchData<DIM> >& pd_new)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!pd_old.isNull());
-   assert(!pd_dst.isNull());
-   assert(tbox::Utilities::deq(pd_dst->getTime(), s_time));
+   TBOX_ASSERT(!pd_old.isNull());
+   TBOX_ASSERT(!pd_dst.isNull());
+   TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst->getTime(), s_time));
 #endif
-   if (tbox::Utilities::deq(pd_old->getTime(), s_time)) {
+   if (tbox::MathUtilities<double>::equalEps(pd_old->getTime(), s_time)) {
       s_refine_items[d_refine_item_id]->
          d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!pd_new.isNull());
-   assert(pd_old->getTime() < s_time);
-   assert(pd_new->getTime() >= s_time);
+   TBOX_ASSERT(!pd_new.isNull());
+   TBOX_ASSERT(pd_old->getTime() < s_time);
+   TBOX_ASSERT(pd_new->getTime() >= s_time);
 #endif
       s_refine_items[d_refine_item_id]->
          d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_new);
@@ -270,32 +267,32 @@ template<int DIM> void RefineTimeTransaction<DIM>::timeInterpolate(
 */
 
 template<int DIM> 
-void RefineTimeTransaction<DIM>::printClassData(ostream& stream) const
+void RefineTimeTransaction<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "Refine Time Transaction" << endl;
-   stream << "   transaction time:        " << s_time            << endl;
+   stream << "Refine Time Transaction" << std::endl;
+   stream << "   transaction time:        " << s_time            << std::endl;
    stream << "   refine item array:        "
-          << (typename RefineClasses<DIM>::Data**)s_refine_items << endl;
-   stream << "   num refine items:        " << s_num_refine_items << endl;
-   stream << "   destination patch:       " << d_dst_patch       << endl;
-   stream << "   source patch:            " << d_src_patch       << endl;
-   stream << "   time interpolation box:  " << d_box             << endl;
-   stream << "   refine item id:          " << d_refine_item_id  << endl;
+          << (typename RefineClasses<DIM>::Data**)s_refine_items << std::endl;
+   stream << "   num refine items:        " << s_num_refine_items << std::endl;
+   stream << "   destination patch:       " << d_dst_patch       << std::endl;
+   stream << "   source patch:            " << d_src_patch       << std::endl;
+   stream << "   time interpolation box:  " << d_box             << std::endl;
+   stream << "   refine item id:          " << d_refine_item_id  << std::endl;
    stream << "   destination patch data:  " 
-          << s_refine_items[d_refine_item_id]->d_scratch         << endl;
+          << s_refine_items[d_refine_item_id]->d_scratch         << std::endl;
    stream << "   source (old) patch data: " 
-          << s_refine_items[d_refine_item_id]->d_src_told        << endl;
+          << s_refine_items[d_refine_item_id]->d_src_told        << std::endl;
    stream << "   source (new) patch data: " 
-          << s_refine_items[d_refine_item_id]->d_src_tnew        << endl;
+          << s_refine_items[d_refine_item_id]->d_src_tnew        << std::endl;
    stream << "   time interpolation name: " 
-          << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << endl;
-   stream << "   incoming bytes:          " << d_incoming_bytes  << endl;
-   stream << "   outgoing bytes:          " << d_outgoing_bytes  << endl;
+          << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << std::endl;
+   stream << "   incoming bytes:          " << d_incoming_bytes  << std::endl;
+   stream << "   outgoing bytes:          " << d_outgoing_bytes  << std::endl;
    stream << "   destination level:           "
-          << (hier::PatchLevel<DIM>*)d_src_level                    << endl;
+          << (hier::PatchLevel<DIM>*)d_src_level                    << std::endl;
    stream << "   source level:           "
-          << (hier::PatchLevel<DIM>*)d_src_level                    << endl;
-   stream << "   overlap:                 " << endl;
+          << (hier::PatchLevel<DIM>*)d_src_level                    << std::endl;
+   stream << "   overlap:                 " << std::endl;
    d_overlap->print(stream);
 }
 

@@ -1,18 +1,12 @@
 //
-// File:	LocallyActiveDataPatchLevelManager.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/LocallyActiveDataPatchLevelManager.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 468 $
-// Modified:	$Date: 2005-06-27 15:48:50 -0700 (Mon, 27 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Class for managing locally-active data on a single patch level.
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#include <assert.h>
-#define included_assert
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -68,18 +62,18 @@ LocallyActiveDataPatchLevelManager<DIM>::getPatchLevel() const
 template<int DIM> inline
 bool 
 LocallyActiveDataPatchLevelManager<DIM>::getPatchDataActive(
-   int patch_data_index,
-   int patch_number) const
+   const PatchDataId& patch_data_id,
+   const PatchNumber& patch_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
 
    bool ret_val = false;
 
    if (!d_patch_level.isNull()) {
-      ret_val = d_active_patch_data[patch_number]->isSet(patch_data_index);
+      ret_val = d_active_patch_data[ patch_number.pn ]->isSet( patch_data_id.pd );
    }
 
    return(ret_val);
@@ -89,14 +83,14 @@ LocallyActiveDataPatchLevelManager<DIM>::getPatchDataActive(
 template<int DIM> inline
 const hier::ComponentSelector&
 LocallyActiveDataPatchLevelManager<DIM>::getAllPatchDataActive(
-   int patch_number) const
+   const PatchNumber& patch_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      return(*d_active_patch_data[patch_number]);
+      return(*d_active_patch_data[ patch_number.pn ]);
    } else {
       return(*(new hier::ComponentSelector()));
    }
@@ -113,15 +107,15 @@ LocallyActiveDataPatchLevelManager<DIM>::getAllPatchDataActive(
 template<int DIM> inline
 void 
 LocallyActiveDataPatchLevelManager<DIM>::setPatchDataActive(
-   int patch_data_index,
-   int patch_number)
+   const PatchDataId& patch_data_id,
+   const PatchNumber& patch_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      d_active_patch_data[patch_number]->setFlag(patch_data_index);
+      d_active_patch_data[ patch_number.pn ]->setFlag( patch_data_id.pd );
    }
 }
 
@@ -129,30 +123,30 @@ template<int DIM> inline
 void 
 LocallyActiveDataPatchLevelManager<DIM>::setPatchDataActive(
    const hier::ComponentSelector& active_indices,
-   int patch_number)
+   const PatchNumber& patch_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
       tbox::Pointer<hier::ComponentSelector> active_data_copy =
          new hier::ComponentSelector(active_indices);
-      d_active_patch_data[patch_number] = active_data_copy;
+      d_active_patch_data[ patch_number.pn ] = active_data_copy;
    }
 }
 
 template<int DIM> inline 
 void
 LocallyActiveDataPatchLevelManager<DIM>::setAllPatchDataActive(
-   int patch_number)
+   const PatchNumber& patch_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      d_active_patch_data[patch_number]->setAllFlags();
+      d_active_patch_data[ patch_number.pn ]->setAllFlags();
    }
 }
 
@@ -162,7 +156,7 @@ LocallyActiveDataPatchLevelManager<DIM>::setPatchDataActive(
    const hier::ComponentSelector& active_indices)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
+   TBOX_ASSERT(!d_patch_level.isNull());
 #endif
    if (!d_patch_level.isNull()) {
       tbox::Pointer<hier::ComponentSelector> active_data_copy = 
@@ -184,29 +178,29 @@ LocallyActiveDataPatchLevelManager<DIM>::setPatchDataActive(
 template<int DIM> inline
 void
 LocallyActiveDataPatchLevelManager<DIM>::setPatchDataInactive(
-   int patch_data_index,
-   int patch_number)
+   const PatchDataId& patch_data_id,
+   const PatchNumber& patch_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      d_active_patch_data[patch_number]->clrFlag(patch_data_index);
+      d_active_patch_data[ patch_number.pn ]->clrFlag( patch_data_id.pd );
    }
 }
 
 template<int DIM> inline
 void
 LocallyActiveDataPatchLevelManager<DIM>::setAllPatchDataInactive(
-   int patch_number)
+   const PatchNumber& patch_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      d_active_patch_data[patch_number]->clrAllFlags();
+      d_active_patch_data[ patch_number.pn ]->clrAllFlags();
    }
 }
 
@@ -215,7 +209,7 @@ void
 LocallyActiveDataPatchLevelManager<DIM>::setAllPatchDataInactive()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
+   TBOX_ASSERT(!d_patch_level.isNull());
 #endif
    if (!d_patch_level.isNull()) {
       for (int ip = 0; ip < d_number_patches; ip++) {
@@ -248,7 +242,7 @@ LocallyActiveDataPatchLevelManager<DIM>::allocateAllPatchData(
    tbox::Pointer<tbox::Arena> pool) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
+   TBOX_ASSERT(!d_patch_level.isNull());
 #endif
    if (!d_patch_level.isNull()) {
       for (typename hier::PatchLevel<DIM>::Iterator ip(d_patch_level); ip; ip++) {
@@ -261,17 +255,17 @@ LocallyActiveDataPatchLevelManager<DIM>::allocateAllPatchData(
 template<int DIM> inline
 void
 LocallyActiveDataPatchLevelManager<DIM>::allocateAllPatchData(
-   int patch_number,
+   const PatchNumber& patch_number,
    double timestamp,
    tbox::Pointer<tbox::Arena> pool) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      d_patch_level->getPatch(patch_number)->
-         allocatePatchData(*(d_active_patch_data[patch_number]), 
+      d_patch_level->getPatch( patch_number.pn )->
+         allocatePatchData(*(d_active_patch_data[ patch_number.pn ]), 
                            timestamp, pool);
    }
 }
@@ -281,7 +275,7 @@ void
 LocallyActiveDataPatchLevelManager<DIM>::deallocateAllPatchData() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
+   TBOX_ASSERT(!d_patch_level.isNull());
 #endif
    if (!d_patch_level.isNull()) {
       for (typename hier::PatchLevel<DIM>::Iterator ip(d_patch_level); ip; ip++) {
@@ -294,15 +288,15 @@ LocallyActiveDataPatchLevelManager<DIM>::deallocateAllPatchData() const
 template<int DIM> inline
 void
 LocallyActiveDataPatchLevelManager<DIM>::deallocateAllPatchData(
-   int patch_number) const
+   const PatchNumber& patch_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
-   assert((patch_number >= 0) && (patch_number < d_number_patches));
+   TBOX_ASSERT(!d_patch_level.isNull());
+   TBOX_ASSERT((patch_number.pn >= 0) && (patch_number.pn < d_number_patches));
 #endif
    if (!d_patch_level.isNull()) {
-      d_patch_level->getPatch(patch_number)->
-         deallocatePatchData(*(d_active_patch_data[patch_number]));
+      d_patch_level->getPatch( patch_number.pn )->
+         deallocatePatchData(*(d_active_patch_data[ patch_number.pn ]));
    }
 }
 
@@ -317,13 +311,13 @@ LocallyActiveDataPatchLevelManager<DIM>::deallocateAllPatchData(
 template<int DIM> inline
 typename LocallyActiveDataPatchLevelManager<DIM>::Iterator
 LocallyActiveDataPatchLevelManager<DIM>::getIterator(
-   int patch_data_index) const
+   const PatchDataId& patch_data_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
+   TBOX_ASSERT(!d_patch_level.isNull());
 #endif
    return(
-      (LocallyActiveDataPatchLevelIterator<DIM>(patch_data_index,
+      (LocallyActiveDataPatchLevelIterator<DIM>(patch_data_id,
                                                 d_patch_level,
                                                 &d_active_patch_data)) );
 }
@@ -334,7 +328,7 @@ LocallyActiveDataPatchLevelManager<DIM>::getIterator(
    const tbox::Pointer< hier::Variable<DIM> > variable) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_patch_level.isNull());
+   TBOX_ASSERT(!d_patch_level.isNull());
 #endif
    return(
       (LocallyActiveDataPatchLevelIterator<DIM>(variable,

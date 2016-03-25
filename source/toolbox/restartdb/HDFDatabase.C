@@ -1,9 +1,9 @@
 //
-// File:        HDFDatabase.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/HDFDatabase.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 352 $
-// Modified:    $Date: 2005-05-16 13:08:32 -0700 (Mon, 16 May 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: A database structure that stores HDF5 format data.
 //
 
@@ -13,13 +13,8 @@
 
 #include "tbox/IOStream.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 /*
 *************************************************************************
@@ -75,15 +70,15 @@
 *************************************************************************
 */
 
-#define BEGIN_SUPPRESS_HDF5_WARNINGS                   \
+#define BEGIN_SUPPRESS_HDF5_WARNINGS                  \
 {                                                     \
-   herr_t (*H5E_saved_efunc) (void*);                 \
-   void *H5E_saved_edata;                             \
+   herr_t (*H5E_saved_efunc) (void*) = NULL;          \
+   void *H5E_saved_edata = NULL;                      \
    H5Eget_auto(&H5E_saved_efunc, &H5E_saved_edata);   \
    H5Eset_auto(NULL, NULL);                              
 
 #define END_SUPPRESS_HDF5_WARNINGS                     \
-   H5Eset_auto(H5E_saved_efunc, H5E_saved_edata);     \
+   H5Eset_auto(H5E_saved_efunc, H5E_saved_edata);      \
 }
 
 
@@ -106,8 +101,8 @@
 namespace SAMRAI {
    namespace tbox {
 
-string HDFDatabase::s_top_level_search_group = string();
-string HDFDatabase::s_group_to_search = string();
+std::string HDFDatabase::s_top_level_search_group = std::string();
+std::string HDFDatabase::s_group_to_search = std::string();
 int HDFDatabase::s_still_searching = 0;
 int HDFDatabase::s_found_group = 0;
 
@@ -126,7 +121,7 @@ herr_t HDFDatabase::iterateKeys(
    void *opdata)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(name != (char*)NULL);
+   TBOX_ASSERT(name != (char*)NULL);
 #endif
 
    if (s_still_searching) {
@@ -137,7 +132,7 @@ herr_t HDFDatabase::iterateKeys(
 
      errf = H5Gget_objinfo(loc_id, name, 0, &statbuf);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-     assert( errf >= 0 );
+     TBOX_ASSERT( errf >= 0 );
 #endif
 
      switch (statbuf.type) {
@@ -148,21 +143,21 @@ herr_t HDFDatabase::iterateKeys(
          hid_t grp;
          grp = H5Gopen(loc_id, name);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( grp >= 0 );
+         TBOX_ASSERT( grp >= 0 );
 #endif
          s_found_group = true;
          s_still_searching =
            H5Giterate(grp, ".", NULL,
                       HDFDatabase::iterateKeys, opdata);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( s_still_searching >= 0 );
+         TBOX_ASSERT( s_still_searching >= 0 );
 #endif
          s_found_group = false;
        } else {
          hid_t grp;
          grp = H5Gopen(loc_id, name);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( grp >= 0 );
+         TBOX_ASSERT( grp >= 0 );
 #endif
          if (s_found_group) {
            addKeyToList(name, KEY_DATABASE, opdata);
@@ -170,7 +165,7 @@ herr_t HDFDatabase::iterateKeys(
            errf = H5Giterate(grp, ".", NULL,
                              HDFDatabase::iterateKeys, opdata);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-           assert( errf >= 0 );
+           TBOX_ASSERT( errf >= 0 );
 #endif
          }
        }
@@ -186,15 +181,15 @@ herr_t HDFDatabase::iterateKeys(
          if (this_set > 0) {
             hid_t attr = H5Aopen_name(this_set, "Type");
 #ifdef ASSERT_HDF5_RETURN_VALUES
-            assert( attr >= 0 );
+            TBOX_ASSERT( attr >= 0 );
 #endif
             errf = H5Aread(attr, H5T_NATIVE_INT, &type_key);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-            assert( errf >= 0 );
+            TBOX_ASSERT( errf >= 0 );
 #endif
             hid_t this_space = H5Dget_space(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-            assert( this_space >= 0 );
+            TBOX_ASSERT( this_space >= 0 );
 #endif
             hsize_t nsel = H5Sget_select_npoints(this_space);
             int array_size = int(nsel); 
@@ -203,15 +198,15 @@ herr_t HDFDatabase::iterateKeys(
                          opdata);
             errf = H5Sclose(this_space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-            assert( errf >= 0 );
+            TBOX_ASSERT( errf >= 0 );
 #endif
             errf = H5Aclose(attr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-            assert( errf >= 0 );
+            TBOX_ASSERT( errf >= 0 );
 #endif
             errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-            assert( errf >= 0 );
+            TBOX_ASSERT( errf >= 0 );
 #endif
          }
        }
@@ -221,7 +216,7 @@ herr_t HDFDatabase::iterateKeys(
      default: {
        TBOX_ERROR("HDFDatabase key search error....\n"
                   << "   Unable to identify key = " << name 
-                  << " as a known group or dataset" << endl);
+                  << " as a known group or dataset" << std::endl);
      }
      }
 
@@ -244,8 +239,8 @@ void HDFDatabase::addKeyToList(
    void* database) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(name != (char*)NULL);
-   assert(database != NULL);
+   TBOX_ASSERT(name != (char*)NULL);
+   TBOX_ASSERT(database != NULL);
 #endif
 
    KeyData key_item;
@@ -265,14 +260,14 @@ void HDFDatabase::addKeyToList(
 *************************************************************************
 */
 
-HDFDatabase::HDFDatabase(const string& name) :
+HDFDatabase::HDFDatabase(const std::string& name) :
    d_is_file(false),
    d_file_id(-1),
    d_group_id(-1),
    d_database_name(name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
    d_keydata.clearItems(); 
 }
@@ -288,7 +283,7 @@ HDFDatabase::HDFDatabase(const string& name) :
 */
 
 HDFDatabase::HDFDatabase(
-   const string& name, 
+   const std::string& name, 
    hid_t group_ID) :
    d_is_file(false),
    d_file_id(-1),
@@ -296,7 +291,7 @@ HDFDatabase::HDFDatabase(
    d_database_name(name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
    d_keydata.clearItems(); 
 }
@@ -318,7 +313,7 @@ HDFDatabase::~HDFDatabase()
    if ( d_group_id != -1 ) {
       errf = H5Gclose(d_group_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 }
@@ -331,10 +326,10 @@ HDFDatabase::~HDFDatabase()
 *************************************************************************
 */
 
-bool HDFDatabase::keyExists(const string& key)
+bool HDFDatabase::keyExists(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    bool key_exists = false;
    herr_t errf;
@@ -347,7 +342,7 @@ bool HDFDatabase::keyExists(const string& key)
       key_exists = true;
       errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
    if (!key_exists) {
@@ -359,7 +354,7 @@ bool HDFDatabase::keyExists(const string& key)
          key_exists = true;
          errf = H5Gclose(this_group);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -375,11 +370,11 @@ bool HDFDatabase::keyExists(const string& key)
 *************************************************************************
 */
 
-Array<string> HDFDatabase::getAllKeys()
+Array<std::string> HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
-   Array<string> tmp_keys(d_keydata.getNumberItems());
+   Array<std::string> tmp_keys(d_keydata.getNumberItems());
 
    int k = 0;
    for (List<KeyData>::Iterator i(d_keydata); i; i++) {
@@ -403,10 +398,10 @@ Array<string> HDFDatabase::getAllKeys()
 *************************************************************************
 */
 
-int HDFDatabase::getArraySize(const string& key)
+int HDFDatabase::getArraySize(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    herr_t errf;
    int array_size  = 0;
@@ -418,17 +413,17 @@ int HDFDatabase::getArraySize(const string& key)
    if (this_set > 0) {
       hid_t this_space = H5Dget_space(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( this_space >= 0 );
+      TBOX_ASSERT( this_space >= 0 );
 #endif
       hsize_t nsel = H5Sget_select_npoints(this_space);
       array_size = int(nsel);
       errf = H5Sclose(this_space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
@@ -446,7 +441,7 @@ int HDFDatabase::getArraySize(const string& key)
 *************************************************************************
 */
 
-bool HDFDatabase::isDatabase(const string& key)
+bool HDFDatabase::isDatabase(const std::string& key)
 {
    bool is_database = false;
    herr_t errf;
@@ -460,7 +455,7 @@ bool HDFDatabase::isDatabase(const string& key)
          is_database = true;
          errf = H5Gclose(this_group);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -477,18 +472,18 @@ bool HDFDatabase::isDatabase(const string& key)
 */
 
 Pointer<Database> 
-HDFDatabase::putDatabase(const string& key)
+HDFDatabase::putDatabase(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
 
-   string parent_name = d_database_name;
+   std::string parent_name = d_database_name;
    hid_t  parent_id   = d_group_id;
 
    hid_t this_group = H5Gcreate(parent_id, key.c_str(), 0);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( this_group >= 0 );
+   TBOX_ASSERT( this_group >= 0 );
 
 #endif
    Pointer<Database> new_database = 
@@ -506,20 +501,20 @@ HDFDatabase::putDatabase(const string& key)
 */
 
 Pointer<Database> 
-HDFDatabase::getDatabase(const string& key)
+HDFDatabase::getDatabase(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if (!isDatabase(key)) {
       TBOX_ERROR("HDFDatabase::getDatabase() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a database." << endl);
+         << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
    hid_t this_group = H5Gopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( this_group >= 0 );
+   TBOX_ASSERT( this_group >= 0 );
 
 #endif
    Pointer<Database> database = 
@@ -538,7 +533,7 @@ HDFDatabase::getDatabase(const string& key)
 *************************************************************************
 */
 
-bool HDFDatabase::isBool(const string& key)
+bool HDFDatabase::isBool(const std::string& key)
 {
    bool is_boolean  = false;
    herr_t errf;
@@ -555,7 +550,7 @@ bool HDFDatabase::isBool(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -573,11 +568,11 @@ bool HDFDatabase::isBool(const string& key)
 */
 
 void HDFDatabase::putBool(
-   const string& key, 
+   const std::string& key, 
    const bool& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putBoolArray(key, &data, 1);
 }
@@ -592,11 +587,11 @@ void HDFDatabase::putBool(
 */
 
 void HDFDatabase::putBoolArray(
-   const string& key, 
+   const std::string& key, 
    const Array<bool>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putBoolArray(key, data.getPointer(), data.getSize());
@@ -604,7 +599,7 @@ void HDFDatabase::putBoolArray(
       TBOX_ERROR("HDFDatabase::putBoolArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -618,13 +613,13 @@ void HDFDatabase::putBoolArray(
 */
 
 void HDFDatabase::putBoolArray(
-   const string& key, 
+   const std::string& key, 
    const bool* const data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (bool*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (bool*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -632,7 +627,7 @@ void HDFDatabase::putBoolArray(
       hsize_t dim[] = {nelements};
       hid_t space = H5Screate_simple(1, dim, NULL);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( space >= 0 );
+      TBOX_ASSERT( space >= 0 );
 #endif
 
       /*
@@ -651,12 +646,12 @@ void HDFDatabase::putBoolArray(
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_BOOL,
                                 space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
       errf = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL,
                       H5P_DEFAULT, &data1[0]);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
       // Write attribute so we know what kind of data this is.
@@ -664,18 +659,18 @@ void HDFDatabase::putBoolArray(
 
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
    } else {
       TBOX_ERROR("HDFDatabase::putBoolArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -690,10 +685,10 @@ void HDFDatabase::putBoolArray(
 ************************************************************************
 */
 
-bool HDFDatabase::getBool(const string& key)
+bool HDFDatabase::getBool(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    bool ret_val;
    getBoolArray(key, &ret_val, 1);
@@ -713,11 +708,11 @@ bool HDFDatabase::getBool(const string& key)
 */
 
 bool HDFDatabase::getBoolWithDefault(
-   const string& key, 
+   const std::string& key, 
    const bool& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<bool> local_bool = getBoolArray(key);
    bool *locptr = local_bool.getPointer();
@@ -735,15 +730,15 @@ bool HDFDatabase::getBoolWithDefault(
 ************************************************************************
 */
 
-Array<bool> HDFDatabase::getBoolArray(const string& key)
+Array<bool> HDFDatabase::getBoolArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if (!isBool(key)) {
       TBOX_ERROR("HDFDatabase::getBoolArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a bool array." << endl);
+         << "\n    Key = " << key << " is not a bool array." << std::endl);
    }
 
    hid_t dset, dspace;
@@ -752,11 +747,11 @@ Array<bool> HDFDatabase::getBoolArray(const string& key)
 
    dset   = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    nsel   = H5Sget_select_npoints(dspace);
 
@@ -774,7 +769,7 @@ Array<bool> HDFDatabase::getBoolArray(const string& key)
       int* locPtr = data1.getPointer();
       errf = H5Dread(dset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       // Convert what was just read in.
       for ( size_t i=0; i<nsel; ++i ) bool_array[i] = data1[i];
@@ -782,23 +777,23 @@ Array<bool> HDFDatabase::getBoolArray(const string& key)
 
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 
 #endif
    return bool_array;
 }
 
 void HDFDatabase::getBoolArray(
-   const string& key,
+   const std::string& key,
    bool* data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<bool> tmp = getBoolArray(key);
    const int tsize = tmp.getSize();
@@ -808,7 +803,7 @@ void HDFDatabase::getBoolArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -827,7 +822,7 @@ void HDFDatabase::getBoolArray(
 *************************************************************************
 */
 
-bool HDFDatabase::isDatabaseBox(const string& key)
+bool HDFDatabase::isDatabaseBox(const std::string& key)
 {
    bool is_box  = false;
    herr_t errf;
@@ -844,7 +839,7 @@ bool HDFDatabase::isDatabaseBox(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -862,11 +857,11 @@ bool HDFDatabase::isDatabaseBox(const string& key)
 */
 
 void HDFDatabase::putDatabaseBox(
-   const string& key, 
+   const std::string& key, 
    const DatabaseBox& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putDatabaseBoxArray(key, &data, 1);
 }
@@ -880,11 +875,11 @@ void HDFDatabase::putDatabaseBox(
 */
 
 void HDFDatabase::putDatabaseBoxArray(
-   const string& key, 
+   const std::string& key, 
    const Array<DatabaseBox>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putDatabaseBoxArray(key, data.getPointer(), data.getSize());
@@ -892,7 +887,7 @@ void HDFDatabase::putDatabaseBoxArray(
       TBOX_ERROR("HDFDatabase::putDatabaseBoxArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -905,13 +900,13 @@ void HDFDatabase::putDatabaseBoxArray(
 */
 
 void HDFDatabase::putDatabaseBoxArray(
-   const string& key,
+   const std::string& key,
    const DatabaseBox* const data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (DatabaseBox*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (DatabaseBox*)NULL);
 #endif
    if (nelements > 0) {
 
@@ -928,11 +923,11 @@ void HDFDatabase::putDatabaseBoxArray(
       hid_t dataset =
          H5Dcreate( d_group_id, key.c_str(), stype, space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
       errf = H5Dwrite(dataset, mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 
 #endif
       // Write attribute so we know what kind of data this is.
@@ -940,26 +935,26 @@ void HDFDatabase::putDatabaseBoxArray(
 
       errf = H5Tclose(mtype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Tclose(stype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 
 #endif
    } else {
       TBOX_ERROR("HDFDatabase::putDatabaseBoxArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -974,10 +969,10 @@ void HDFDatabase::putDatabaseBoxArray(
 ************************************************************************
 */
 
-DatabaseBox HDFDatabase::getDatabaseBox(const string& key)
+DatabaseBox HDFDatabase::getDatabaseBox(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    DatabaseBox ret_val;
    getDatabaseBoxArray(key, &ret_val, 1);
@@ -997,11 +992,11 @@ DatabaseBox HDFDatabase::getDatabaseBox(const string& key)
 */
 
 DatabaseBox HDFDatabase::getDatabaseBoxWithDefault(
-   const string& key,
+   const std::string& key,
    const DatabaseBox& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<DatabaseBox> local_box = getDatabaseBoxArray(key);
    DatabaseBox *locptr = local_box.getPointer();
@@ -1019,15 +1014,15 @@ DatabaseBox HDFDatabase::getDatabaseBoxWithDefault(
 ************************************************************************
 */
 
-Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(const string& key)
+Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( !isDatabaseBox(key) ) {
       TBOX_ERROR("HDFDatabase::getDatabaseBoxArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a box array." << endl);
+         << "\n    Key = " << key << " is not a box array." << std::endl);
    }
 
    hid_t   dset, dspace;
@@ -1039,11 +1034,11 @@ Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(const string& key)
 
    dset   = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    nsel   = H5Sget_select_npoints(dspace);
 
@@ -1053,33 +1048,33 @@ Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(const string& key)
       DatabaseBox* locPtr = boxArray.getPointer();
       errf = H5Dread(dset, mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
    errf = H5Tclose(mtype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 
 #endif
    return boxArray;
 }
 
 void HDFDatabase::getDatabaseBoxArray(
-   const string& key,
+   const std::string& key,
    DatabaseBox* data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<DatabaseBox> tmp = getDatabaseBoxArray(key);
    const int tsize = tmp.getSize();
@@ -1089,7 +1084,7 @@ void HDFDatabase::getDatabaseBoxArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -1112,16 +1107,16 @@ hid_t HDFDatabase::createCompoundDatabaseBox( char type_spec ) const {
    default:
       TBOX_ERROR("HDFDatabase::createCompundDatabaseBox() error in database "
          << d_database_name
-         << "\n    Unknown type specifier found. " << endl);
+         << "\n    Unknown type specifier found. " << std::endl);
    }
    hid_t type = H5Tcreate(H5T_COMPOUND, sizeof(DatabaseBox));
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert(type >= 0);
+   TBOX_ASSERT(type >= 0);
 #endif
    errf = H5Tinsert(type, "dim", HOFFSET(DatabaseBox_POD,d_dimension),
                     int_type_spec);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0);
+   TBOX_ASSERT( errf >= 0);
 #endif
    const hsize_t box_dim = DatabaseBox_MAX_DIM /* defined in DatabaseBox.h */;
    insertArray(type, "lo", HOFFSET(DatabaseBox_POD,d_lo), 1, &box_dim,
@@ -1141,7 +1136,7 @@ hid_t HDFDatabase::createCompoundDatabaseBox( char type_spec ) const {
 *************************************************************************
 */
 
-bool HDFDatabase::isChar(const string& key)
+bool HDFDatabase::isChar(const std::string& key)
 {
    bool is_char  = false;
    herr_t errf;
@@ -1158,7 +1153,7 @@ bool HDFDatabase::isChar(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -1176,11 +1171,11 @@ bool HDFDatabase::isChar(const string& key)
 */
 
 void HDFDatabase::putChar(
-   const string& key, 
+   const std::string& key, 
    const char& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putCharArray(key, &data, 1);
 
@@ -1196,11 +1191,11 @@ void HDFDatabase::putChar(
 */
 
 void HDFDatabase::putCharArray(
-   const string& key, 
+   const std::string& key, 
    const Array<char>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putCharArray(key, data.getPointer(), data.getSize());
@@ -1208,7 +1203,7 @@ void HDFDatabase::putCharArray(
       TBOX_ERROR("HDFDatabase::putCharArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -1222,13 +1217,13 @@ void HDFDatabase::putCharArray(
 */
 
 void HDFDatabase::putCharArray(
-   const string& key,
+   const std::string& key,
    const char* const data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (char*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (char*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -1239,15 +1234,15 @@ void HDFDatabase::putCharArray(
 
       atype = H5Tcopy(H5T_C_S1);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( atype >= 0 );
+      TBOX_ASSERT( atype >= 0 );
 #endif
       errf = H5Tset_size(atype, nelements);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Tset_strpad(atype, H5T_STR_NULLTERM);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       for (int i = 0; i < nelements; i++) {
          local_buf[i] = data[i];
@@ -1255,19 +1250,19 @@ void HDFDatabase::putCharArray(
 
       space = H5Screate(H5S_SCALAR);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( space >= 0 );
+      TBOX_ASSERT( space >= 0 );
 #endif
 
       dataset = 
          H5Dcreate(d_group_id, key.c_str(), atype, space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
 
       errf = H5Dwrite(dataset, atype, H5S_ALL, H5S_ALL, 
                       H5P_DEFAULT, local_buf);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
       // Write attribute so we know what kind of data this is.
@@ -1275,15 +1270,15 @@ void HDFDatabase::putCharArray(
 
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Tclose(atype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       delete[] local_buf;
 
@@ -1291,7 +1286,7 @@ void HDFDatabase::putCharArray(
       TBOX_ERROR("HDFDatabase::putCharArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -1306,10 +1301,10 @@ void HDFDatabase::putCharArray(
 ************************************************************************
 */
 
-char HDFDatabase::getChar(const string& key)
+char HDFDatabase::getChar(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    char ret_val;
    getCharArray(key, &ret_val, 1);
@@ -1329,11 +1324,11 @@ char HDFDatabase::getChar(const string& key)
 */
 
 char HDFDatabase::getCharWithDefault(
-   const string& key,
+   const std::string& key,
    const char& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<char> local_char = getCharArray(key);
    char *locptr = local_char.getPointer();
@@ -1351,15 +1346,15 @@ char HDFDatabase::getCharWithDefault(
 ************************************************************************
 */
 
-Array<char> HDFDatabase::getCharArray(const string& key)
+Array<char> HDFDatabase::getCharArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( !isChar(key) ) {
       TBOX_ERROR("HDFDatabase::getCharArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a char array." << endl);
+         << "\n    Key = " << key << " is not a char array." << std::endl);
    } 
 
    hid_t   dset, dspace, dtype;
@@ -1368,15 +1363,15 @@ Array<char> HDFDatabase::getCharArray(const string& key)
 
    dset   = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    dtype  = H5Dget_type(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dtype >= 0 );
+   TBOX_ASSERT( dtype >= 0 );
 #endif
    nsel   = H5Tget_size(dtype);
 
@@ -1386,33 +1381,33 @@ Array<char> HDFDatabase::getCharArray(const string& key)
       char* locPtr = charArray.getPointer();
       errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Tclose(dtype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 
    return charArray;
 }
 
 void HDFDatabase::getCharArray(
-   const string& key,
+   const std::string& key,
    char* data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<char> tmp = getCharArray(key);
    const int tsize = tmp.getSize();
@@ -1422,7 +1417,7 @@ void HDFDatabase::getCharArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -1440,7 +1435,7 @@ void HDFDatabase::getCharArray(
 *************************************************************************
 */
 
-bool HDFDatabase::isComplex(const string& key)
+bool HDFDatabase::isComplex(const std::string& key)
 {
    bool is_complex  = false;
    herr_t errf;
@@ -1454,7 +1449,7 @@ bool HDFDatabase::isComplex(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -1472,11 +1467,11 @@ bool HDFDatabase::isComplex(const string& key)
 */
 
 void HDFDatabase::putComplex(
-   const string& key,
+   const std::string& key,
    const dcomplex& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putComplexArray(key, &data, 1);
 }
@@ -1491,11 +1486,11 @@ void HDFDatabase::putComplex(
 */
 
 void HDFDatabase::putComplexArray(
-   const string& key,
+   const std::string& key,
    const Array<dcomplex>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putComplexArray(key, data.getPointer(), data.getSize());
@@ -1503,7 +1498,7 @@ void HDFDatabase::putComplexArray(
       TBOX_ERROR("HDFDatabase::putComplexArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -1518,13 +1513,13 @@ void HDFDatabase::putComplexArray(
 */
 
 void HDFDatabase::putComplexArray(
-   const string& key,
+   const std::string& key,
    const dcomplex* const data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (dcomplex*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (dcomplex*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -1539,17 +1534,17 @@ void HDFDatabase::putComplexArray(
       hsize_t dim[] = {nelements};
       space = H5Screate_simple(1, dim, NULL);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( space >= 0 );
+      TBOX_ASSERT( space >= 0 );
 #endif
    
       dataset = 
          H5Dcreate( d_group_id, key.c_str(), stype, space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
       errf = H5Dwrite(dataset, mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
       // Write attribute so we know what kind of data this is.
@@ -1557,26 +1552,26 @@ void HDFDatabase::putComplexArray(
 
       errf = H5Tclose(mtype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Tclose(stype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
    } else {
       TBOX_ERROR("HDFDatabase::putComplexArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -1591,10 +1586,10 @@ void HDFDatabase::putComplexArray(
 ************************************************************************
 */
 
-dcomplex HDFDatabase::getComplex(const string& key)
+dcomplex HDFDatabase::getComplex(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    dcomplex ret_val;
    getComplexArray(key, &ret_val, 1);
@@ -1614,11 +1609,11 @@ dcomplex HDFDatabase::getComplex(const string& key)
 */
 
 dcomplex HDFDatabase::getComplexWithDefault(
-   const string& key,
+   const std::string& key,
    const dcomplex& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<dcomplex> local_dcomplex = getComplexArray(key);
    dcomplex *locptr = local_dcomplex.getPointer();
@@ -1636,16 +1631,16 @@ dcomplex HDFDatabase::getComplexWithDefault(
 ************************************************************************
 */
 
-Array<dcomplex> HDFDatabase::getComplexArray(const string& key)
+Array<dcomplex> HDFDatabase::getComplexArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    herr_t errf;
    if ( !isComplex(key) ) {
       TBOX_ERROR("HDFDatabase::getComplexArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a complex array." << endl);
+         << "\n    Key = " << key << " is not a complex array." << std::endl);
    }
 
    hid_t   dset, dspace;
@@ -1656,11 +1651,11 @@ Array<dcomplex> HDFDatabase::getComplexArray(const string& key)
 
    dset   = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    nsel   = H5Sget_select_npoints(dspace);
 
@@ -1670,33 +1665,33 @@ Array<dcomplex> HDFDatabase::getComplexArray(const string& key)
       dcomplex* locPtr = complexArray.getPointer();
       errf = H5Dread(dset, mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
    errf = H5Tclose(mtype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 
 #endif
    return complexArray;
 }
 
 void HDFDatabase::getComplexArray(
-   const string& key,
+   const std::string& key,
    dcomplex* data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<dcomplex> tmp = getComplexArray(key);
    const int tsize = tmp.getSize();
@@ -1706,7 +1701,7 @@ void HDFDatabase::getComplexArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -1730,19 +1725,19 @@ hid_t HDFDatabase::createCompoundComplex( char type_spec ) const {
    default:
       TBOX_ERROR("HDFDatabase::createCompundComplex() error in database "
          << d_database_name
-         << "\n    Unknown type specifier found. " << endl);
+         << "\n    Unknown type specifier found. " << std::endl);
    }
    hid_t type = H5Tcreate(H5T_COMPOUND, sizeof(dcomplex));
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( type >= 0 );
+   TBOX_ASSERT( type >= 0 );
 #endif
    errf = H5Tinsert(type, "real", HOFFSET(hdf_complex,re), double_type_spec);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Tinsert(type, "imag", HOFFSET(hdf_complex,im), double_type_spec);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    return type;
 }
@@ -1757,7 +1752,7 @@ hid_t HDFDatabase::createCompoundComplex( char type_spec ) const {
 *************************************************************************
 */
 
-bool HDFDatabase::isDouble(const string& key)
+bool HDFDatabase::isDouble(const std::string& key)
 {
    bool is_double = false;
    herr_t errf;
@@ -1774,7 +1769,7 @@ bool HDFDatabase::isDouble(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -1792,11 +1787,11 @@ bool HDFDatabase::isDouble(const string& key)
 */
 
 void HDFDatabase::putDouble(
-   const string& key, 
+   const std::string& key, 
    const double& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putDoubleArray(key, &data, 1);
 }
@@ -1811,11 +1806,11 @@ void HDFDatabase::putDouble(
 */
 
 void HDFDatabase::putDoubleArray(
-   const string& key,
+   const std::string& key,
    const Array<double>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putDoubleArray(key, data.getPointer(), data.getSize());
@@ -1823,7 +1818,7 @@ void HDFDatabase::putDoubleArray(
       TBOX_ERROR("HDFDatabase::putDoubleArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -1837,13 +1832,13 @@ void HDFDatabase::putDoubleArray(
 */
 
 void HDFDatabase::putDoubleArray(
-   const string& key,
+   const std::string& key,
    const double* const data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (double*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (double*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -1851,18 +1846,18 @@ void HDFDatabase::putDoubleArray(
       hsize_t dim[] = {nelements};
       hid_t space = H5Screate_simple(1, dim, NULL);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( space >= 0 );
+      TBOX_ASSERT( space >= 0 );
 
 #endif
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_DOUBLE, 
                                 space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
       errf = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, 
                       H5P_DEFAULT, data);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 
 #endif
       // Write attribute so we know what kind of data this is.
@@ -1870,18 +1865,18 @@ void HDFDatabase::putDoubleArray(
 
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 
 #endif
    } else {
       TBOX_ERROR("HDFDatabase::putDoubleArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    } 
 }
 
@@ -1896,10 +1891,10 @@ void HDFDatabase::putDoubleArray(
 ************************************************************************
 */
 
-double HDFDatabase::getDouble(const string& key)
+double HDFDatabase::getDouble(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    double ret_val;
    getDoubleArray(key, &ret_val, 1);
@@ -1919,11 +1914,11 @@ double HDFDatabase::getDouble(const string& key)
 */
 
 double HDFDatabase::getDoubleWithDefault(
-   const string& key, 
+   const std::string& key, 
    const double& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<double> local_double = getDoubleArray(key);
    double *locptr = local_double.getPointer();
@@ -1941,16 +1936,16 @@ double HDFDatabase::getDoubleWithDefault(
 ************************************************************************
 */
 
-Array<double> HDFDatabase::getDoubleArray(const string& key)
+Array<double> HDFDatabase::getDoubleArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    herr_t errf;
    if (!isDouble(key)) {
      TBOX_ERROR("HDFDatabase::getDoubleArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a double array." << endl);
+         << "\n    Key = " << key << " is not a double array." << std::endl);
    }
 
    hid_t   dset, dspace;
@@ -1958,11 +1953,11 @@ Array<double> HDFDatabase::getDoubleArray(const string& key)
 
    dset = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    nsel   = H5Sget_select_npoints(dspace);
 
@@ -1973,29 +1968,29 @@ Array<double> HDFDatabase::getDoubleArray(const string& key)
       errf = H5Dread(dset, H5T_NATIVE_DOUBLE, 
                      H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 
    return doubleArray;
 }
 
 void HDFDatabase::getDoubleArray(
-   const string& key, 
+   const std::string& key, 
    double* data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<double> tmp = getDoubleArray(key);
    const int tsize = tmp.getSize();
@@ -2005,7 +2000,7 @@ void HDFDatabase::getDoubleArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -2023,7 +2018,7 @@ void HDFDatabase::getDoubleArray(
 *************************************************************************
 */
 
-bool HDFDatabase::isFloat(const string& key)
+bool HDFDatabase::isFloat(const std::string& key)
 {
    bool is_float  = false;
    herr_t errf;
@@ -2040,7 +2035,7 @@ bool HDFDatabase::isFloat(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -2058,11 +2053,11 @@ bool HDFDatabase::isFloat(const string& key)
 */
 
 void HDFDatabase::putFloat(
-   const string& key, 
+   const std::string& key, 
    const float& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putFloatArray(key, &data, 1);
 }
@@ -2077,11 +2072,11 @@ void HDFDatabase::putFloat(
 */
 
 void HDFDatabase::putFloatArray(
-   const string& key,
+   const std::string& key,
    const Array<float>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putFloatArray(key, data.getPointer(), data.getSize());
@@ -2089,7 +2084,7 @@ void HDFDatabase::putFloatArray(
       TBOX_ERROR("HDFDatabase::putFloatArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
   
 }
@@ -2104,13 +2099,13 @@ void HDFDatabase::putFloatArray(
 */
 
 void HDFDatabase::putFloatArray(
-   const string& key,
+   const std::string& key,
    const float* const data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (float*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (float*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -2118,18 +2113,18 @@ void HDFDatabase::putFloatArray(
       hsize_t dim[] = {nelements};
       hid_t space = H5Screate_simple(1, dim, NULL);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( space >= 0 );
+      TBOX_ASSERT( space >= 0 );
 
 #endif
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_FLOAT, 
                                 space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
       errf = H5Dwrite(dataset, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, 
                       H5P_DEFAULT, data);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
       // Write attribute so we know what kind of data this is.
@@ -2137,18 +2132,18 @@ void HDFDatabase::putFloatArray(
 
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
    } else {
       TBOX_ERROR("HDFDatabase::putFloatArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -2163,10 +2158,10 @@ void HDFDatabase::putFloatArray(
 ************************************************************************
 */
 
-float HDFDatabase::getFloat(const string& key)
+float HDFDatabase::getFloat(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    float ret_val;
    getFloatArray(key, &ret_val, 1);
@@ -2186,11 +2181,11 @@ float HDFDatabase::getFloat(const string& key)
 */
 
 float HDFDatabase::getFloatWithDefault(
-   const string& key, 
+   const std::string& key, 
    const float& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<float> local_float = getFloatArray(key);
    float *locptr = local_float.getPointer();
@@ -2208,16 +2203,16 @@ float HDFDatabase::getFloatWithDefault(
 ************************************************************************
 */
 
-Array<float> HDFDatabase::getFloatArray(const string& key)
+Array<float> HDFDatabase::getFloatArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    herr_t errf;
    if (!isFloat(key)) {
       TBOX_ERROR("HDFDatabase::getFloatArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a float array." << endl);
+         << "\n    Key = " << key << " is not a float array." << std::endl);
    }
  
    hid_t   dset, dspace;
@@ -2225,11 +2220,11 @@ Array<float> HDFDatabase::getFloatArray(const string& key)
 
    dset = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    nsel   = H5Sget_select_npoints(dspace);
 
@@ -2240,17 +2235,17 @@ Array<float> HDFDatabase::getFloatArray(const string& key)
       errf = H5Dread(dset, H5T_NATIVE_FLOAT, 
                      H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 
    return floatArray;
@@ -2258,12 +2253,12 @@ Array<float> HDFDatabase::getFloatArray(const string& key)
 }
 
 void HDFDatabase::getFloatArray(
-   const string& key,
+   const std::string& key,
    float* data,
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<float> tmp = getFloatArray(key);
    const int tsize = tmp.getSize();
@@ -2273,7 +2268,7 @@ void HDFDatabase::getFloatArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -2291,7 +2286,7 @@ void HDFDatabase::getFloatArray(
 *************************************************************************
 */
 
-bool HDFDatabase::isInteger(const string& key)
+bool HDFDatabase::isInteger(const std::string& key)
 {
    bool is_int  = false;
    herr_t errf;
@@ -2308,7 +2303,7 @@ bool HDFDatabase::isInteger(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -2326,11 +2321,11 @@ bool HDFDatabase::isInteger(const string& key)
 */
 
 void HDFDatabase::putInteger(
-   const string& key,
+   const std::string& key,
    const int& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putIntegerArray(key, &data, 1);
 }
@@ -2345,11 +2340,11 @@ void HDFDatabase::putInteger(
 */
 
 void HDFDatabase::putIntegerArray(
-   const string& key, 
+   const std::string& key, 
    const Array<int>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putIntegerArray(key, data.getPointer(), data.getSize());
@@ -2357,7 +2352,7 @@ void HDFDatabase::putIntegerArray(
       TBOX_ERROR("HDFDatabase::putIntegerArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -2371,13 +2366,13 @@ void HDFDatabase::putIntegerArray(
 */
 
 void HDFDatabase::putIntegerArray(
-   const string& key, 
+   const std::string& key, 
    const int* const data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (int*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (int*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -2385,18 +2380,18 @@ void HDFDatabase::putIntegerArray(
       hsize_t dim[] = {nelements};
       hid_t space = H5Screate_simple(1, dim, NULL);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert(space >= 0);
+      TBOX_ASSERT(space >= 0);
 #endif
 
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_INT, 
                                 space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert(dataset >= 0);
+      TBOX_ASSERT(dataset >= 0);
 #endif
       errf = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, 
                       H5P_DEFAULT, data);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert(errf >= 0);
+      TBOX_ASSERT(errf >= 0);
 #endif
 
       // Write attribute so we know what kind of data this is.
@@ -2404,18 +2399,18 @@ void HDFDatabase::putIntegerArray(
 
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
    } else {
       TBOX_ERROR("HDFDatabase::putIntegerArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -2430,10 +2425,10 @@ void HDFDatabase::putIntegerArray(
 ************************************************************************
 */
 
-int HDFDatabase::getInteger(const string& key)
+int HDFDatabase::getInteger(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    int ret_val;
    getIntegerArray(key, &ret_val, 1);
@@ -2453,11 +2448,11 @@ int HDFDatabase::getInteger(const string& key)
 */
 
 int HDFDatabase::getIntegerWithDefault(
-   const string& key, 
+   const std::string& key, 
    const int& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<int> local_int = getIntegerArray(key);
    int *locptr = local_int.getPointer();
@@ -2475,16 +2470,16 @@ int HDFDatabase::getIntegerWithDefault(
 ************************************************************************
 */
 
-Array<int> HDFDatabase::getIntegerArray(const string& key)
+Array<int> HDFDatabase::getIntegerArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    herr_t errf;
    if ( !isInteger(key) ) {
       TBOX_ERROR("HDFDatabase::getIntegerArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not an integer array." << endl);
+         << "\n    Key = " << key << " is not an integer array." << std::endl);
    }
 
    hid_t   dset, dspace;
@@ -2492,11 +2487,11 @@ Array<int> HDFDatabase::getIntegerArray(const string& key)
 
    dset = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    nsel   = H5Sget_select_npoints(dspace);
 
@@ -2507,29 +2502,29 @@ Array<int> HDFDatabase::getIntegerArray(const string& key)
       errf = H5Dread(dset, H5T_NATIVE_INT, 
                      H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
    }
 
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 
 #endif
    return intArray;
 }
 
 void HDFDatabase::getIntegerArray(
-   const string& key, 
+   const std::string& key, 
    int* data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    Array<int> tmp = getIntegerArray(key);
    const int tsize = tmp.getSize();
@@ -2539,7 +2534,7 @@ void HDFDatabase::getIntegerArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -2557,7 +2552,7 @@ void HDFDatabase::getIntegerArray(
 *************************************************************************
 */
 
-bool HDFDatabase::isString(const string& key)
+bool HDFDatabase::isString(const std::string& key)
 {
    bool is_string  = false;
    herr_t errf;
@@ -2574,7 +2569,7 @@ bool HDFDatabase::isString(const string& key)
          }
          errf = H5Dclose(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         assert( errf >= 0 );
+         TBOX_ASSERT( errf >= 0 );
 #endif
       }
    }
@@ -2592,11 +2587,11 @@ bool HDFDatabase::isString(const string& key)
 */
 
 void HDFDatabase::putString(
-   const string& key, 
-   const string& data)
+   const std::string& key, 
+   const std::string& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    putStringArray(key, &data, 1);
 }
@@ -2611,11 +2606,11 @@ void HDFDatabase::putString(
 */
 
 void HDFDatabase::putStringArray(
-   const string& key, 
-   const Array<string>& data)
+   const std::string& key, 
+   const Array<std::string>& data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    if ( data.getSize() > 0 ) {
       putStringArray(key, data.getPointer(), data.getSize());
@@ -2623,7 +2618,7 @@ void HDFDatabase::putStringArray(
       TBOX_ERROR("HDFDatabase::putStringArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -2637,13 +2632,13 @@ void HDFDatabase::putStringArray(
 */
 
 void HDFDatabase::putStringArray(
-   const string& key, 
-   const string* const data, 
+   const std::string& key, 
+   const std::string* const data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
-   assert(data != (string*)NULL);
+   TBOX_ASSERT(!key.empty());
+   TBOX_ASSERT(data != (std::string*)NULL);
 #endif
    herr_t errf;
    if (nelements > 0) {
@@ -2668,48 +2663,48 @@ void HDFDatabase::putStringArray(
 
       hid_t atype = H5Tcopy(H5T_C_S1);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( atype >= 0 );
+      TBOX_ASSERT( atype >= 0 );
 #endif
       errf = H5Tset_size(atype, maxlen+1);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Tset_strpad(atype, H5T_STR_NULLTERM);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
 
       hsize_t dim[] = {nelements};
       hid_t space = H5Screate_simple(1, dim, NULL);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( space >= 0 );
+      TBOX_ASSERT( space >= 0 );
 #endif
 
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), 
                                 atype, space, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( dataset >= 0 );
+      TBOX_ASSERT( dataset >= 0 );
 #endif
 
       errf = H5Dwrite(dataset, atype, H5S_ALL, H5S_ALL, 
                       H5P_DEFAULT, local_buf);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       // Write attribute so we know what kind of data this is.
       writeAttribute( KEY_STRING_ARRAY, dataset );
 
       errf = H5Sclose(space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Tclose(atype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       errf = H5Dclose(dataset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       delete[] local_buf;
 
@@ -2717,7 +2712,7 @@ void HDFDatabase::putStringArray(
       TBOX_ERROR("HDFDatabase::putStringArray() error in database "
          << d_database_name
          << "\n    Attempt to put zero-length array with key = "
-         << key << endl);
+         << key << std::endl);
    }
 }
 
@@ -2732,12 +2727,12 @@ void HDFDatabase::putStringArray(
 ************************************************************************
 */
 
-string HDFDatabase::getString(const string& key)
+std::string HDFDatabase::getString(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
-   string ret_val;
+   std::string ret_val;
    getStringArray(key, &ret_val, 1);
 
    return(ret_val);
@@ -2754,15 +2749,15 @@ string HDFDatabase::getString(const string& key)
 ************************************************************************
 */
 
-string HDFDatabase::getStringWithDefault(
-   const string& key, 
-   const string& defaultvalue)
+std::string HDFDatabase::getStringWithDefault(
+   const std::string& key, 
+   const std::string& defaultvalue)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
-   Array<string> local_string = getStringArray(key);
-   string *locptr = local_string.getPointer();
+   Array<std::string> local_string = getStringArray(key);
+   std::string *locptr = local_string.getPointer();
    return ( locptr == NULL ? defaultvalue : *locptr);
 }
 
@@ -2777,16 +2772,16 @@ string HDFDatabase::getStringWithDefault(
 ************************************************************************
 */
 
-Array<string> HDFDatabase::getStringArray(const string& key)
+Array<std::string> HDFDatabase::getStringArray(const std::string& key)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
    herr_t errf;
    if (!isString(key)) {
       TBOX_ERROR("HDFDatabase::getStringArray() error in database "
          << d_database_name
-         << "\n    Key = " << key << " is not a string array." << endl);
+         << "\n    Key = " << key << " is not a string array." << std::endl);
    }
 
    hsize_t nsel;
@@ -2796,15 +2791,15 @@ Array<string> HDFDatabase::getStringArray(const string& key)
 
    dset   = H5Dopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dset >= 0 );
+   TBOX_ASSERT( dset >= 0 );
 #endif
    dspace = H5Dget_space(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dspace >= 0 );
+   TBOX_ASSERT( dspace >= 0 );
 #endif
    dtype  = H5Dget_type(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( dtype >= 0 );
+   TBOX_ASSERT( dtype >= 0 );
 #endif
    dsize  = H5Tget_size(dtype);
    nsel   = H5Sget_select_npoints(dspace);
@@ -2813,27 +2808,27 @@ Array<string> HDFDatabase::getStringArray(const string& key)
 
    errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 
-   Array<string> stringArray(nsel);
+   Array<std::string> stringArray(nsel);
 
    for (int i = 0; i < (int)nsel; i++) {
-      string* locPtr = stringArray.getPointer(i);
+      std::string* locPtr = stringArray.getPointer(i);
       *locPtr = &local_buf[i*dsize];
    }
 
    errf = H5Sclose(dspace);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Tclose(dtype);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Dclose(dset);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 
    delete[] local_buf;
@@ -2841,14 +2836,14 @@ Array<string> HDFDatabase::getStringArray(const string& key)
 }
 
 void HDFDatabase::getStringArray(
-   const string& key, 
-   string* data, 
+   const std::string& key, 
+   std::string* data, 
    const int nelements)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!key.empty());
+   TBOX_ASSERT(!key.empty());
 #endif
-   Array<string> tmp = getStringArray(key);
+   Array<std::string> tmp = getStringArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tsize) {
@@ -2856,7 +2851,7 @@ void HDFDatabase::getStringArray(
          << d_database_name
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
-         << "\n    Actual array size = " << tsize << endl);
+         << "\n    Actual array size = " << tsize << std::endl);
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -2873,24 +2868,24 @@ void HDFDatabase::writeAttribute( int type_key,
    herr_t errf;
    hid_t attr_id = H5Screate(H5S_SCALAR);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( attr_id >= 0 );
+   TBOX_ASSERT( attr_id >= 0 );
 #endif
    hid_t attr = H5Acreate(dataset_id, "Type", H5T_SAMRAI_ATTR, 
                           attr_id, H5P_DEFAULT);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( attr >= 0 );
+   TBOX_ASSERT( attr >= 0 );
 #endif
    errf = H5Awrite(attr, H5T_NATIVE_INT, &type_key);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Aclose(attr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Sclose(attr_id);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 }
 
@@ -2900,16 +2895,16 @@ int HDFDatabase::readAttribute( hid_t dataset_id )
    herr_t errf;
    hid_t attr = H5Aopen_name(dataset_id, "Type");
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( attr >= 0 );
+   TBOX_ASSERT( attr >= 0 );
 #endif
    int type_key;
    errf = H5Aread(attr, H5T_NATIVE_INT, &type_key);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Aclose(attr);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    return type_key;
 }
@@ -2925,71 +2920,71 @@ int HDFDatabase::readAttribute( hid_t dataset_id )
 *************************************************************************
 */
 
-void HDFDatabase::printClassData(ostream& os)
+void HDFDatabase::printClassData(std::ostream& os)
 {
 
    performKeySearch();
 
    if (d_keydata.getNumberItems() == 0) {
       os << "Database named `"<< d_database_name 
-         << "' has zero keys..." << endl;
+         << "' has zero keys..." << std::endl;
    } else {
       os << "Printing contents of database named `" 
-         << d_database_name << "'..." << endl;
+         << d_database_name << "'..." << std::endl;
    }
 
    for (List<KeyData>::Iterator i(d_keydata); i; i++) {
       int t = i().d_type; 
-      switch (Utilities::iabs(t)) {
+      switch ( tbox::MathUtilities<int>::Abs(t) ) {
          case KEY_DATABASE: {
             os << "   Data entry `"<< i().d_key << "' is"
-               << " a database" << endl;   
+               << " a database" << std::endl;   
             break;
          }
          case KEY_BOOL_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a boolean ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_BOX_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a box ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_CHAR_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a char ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_COMPLEX_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a complex ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_DOUBLE_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a double ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_FLOAT_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a float ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_INT_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " an integer ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          case KEY_STRING_ARRAY: {
             os << "   Data entry `"<< i().d_key << "' is" << " a string ";
-            os << ( (t < 0) ? "scalar" : "array") << endl;   
+            os << ( (t < 0) ? "scalar" : "array") << std::endl;   
             break;
          }
          default: {
             TBOX_ERROR("HDFDatabase::printClassData error....\n"
                << "   Unable to identify key = " << i().d_key
-               << " as a known group or dataset" << endl);
+               << " as a known group or dataset" << std::endl);
          }
       }
    }
@@ -3010,12 +3005,12 @@ void HDFDatabase::printClassData(ostream& os)
 */ 
 
 int HDFDatabase::mount(
-   const string& file_name, 
-   const string& flags)
+   const std::string& file_name, 
+   const std::string& flags)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!file_name.empty());
-   assert(!flags.empty());
+   TBOX_ASSERT(!file_name.empty());
+   TBOX_ASSERT(!flags.empty());
 #endif
 
    int status = 1;
@@ -3036,7 +3031,7 @@ int HDFDatabase::mount(
    } else {
      TBOX_ERROR("HDFDatabase::mount error...\n"
                 << "   database name is " << d_database_name
-                << "\n    unrecognized flag = " << flags << endl);  
+                << "\n    unrecognized flag = " << flags << std::endl);  
    }
 
    if (file_id < 0) {
@@ -3065,7 +3060,7 @@ void HDFDatabase::unmount()
    if (d_is_file) {
       errf = H5Fclose(d_file_id);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-      assert( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
       if ( d_group_id == d_file_id ) d_group_id = -1;
       d_file_id = -1;
@@ -3097,15 +3092,15 @@ void HDFDatabase::insertArray(
 
    hid_t array = H5Tarray_create(member_id, ndims, dim, perm);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( array >= 0 );
+   TBOX_ASSERT( array >= 0 );
 #endif
    errf = H5Tinsert(parent_id, name, offset, array);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
    errf = H5Tclose(array);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 #else
    size_t newdim[H5S_MAX_RANK];
@@ -3115,7 +3110,7 @@ void HDFDatabase::insertArray(
     
    errf = H5Tinsert_array(parent_id, name, offset, ndims, newdim, perm, member_id);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 #endif
 }
@@ -3137,7 +3132,7 @@ void HDFDatabase::performKeySearch()
       s_found_group = 1;
    } else {
       s_group_to_search = d_database_name;
-      s_top_level_search_group = string();
+      s_top_level_search_group = std::string();
       s_found_group = 0;
    }
 
@@ -3146,14 +3141,14 @@ void HDFDatabase::performKeySearch()
    errf = H5Giterate(d_group_id, "/", NULL,
                      HDFDatabase::iterateKeys, (void*)this);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-   assert( errf >= 0 );
+   TBOX_ASSERT( errf >= 0 );
 #endif
 }
 
 void HDFDatabase::cleanupKeySearch()
 {
-   s_top_level_search_group = string();
-   s_group_to_search = string();
+   s_top_level_search_group = std::string();
+   s_group_to_search = std::string();
    s_still_searching = 0;
    s_found_group = 0;
 

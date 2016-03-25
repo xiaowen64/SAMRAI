@@ -1,9 +1,9 @@
 //
-// File:	VariableContext.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/VariableContext.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Simple integer id and namestring variable context 
 //
 
@@ -15,7 +15,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_DescribedClass
@@ -75,7 +74,7 @@ public:
     * When assertion checking is active, an unrecoverable assertion results
     * when the name string is empty.
     */
-   VariableContext(const string& name);
+   VariableContext(const std::string& name);
 
    /**
     * The virtual destructor does nothing interesting.
@@ -90,7 +89,7 @@ public:
    /**
     * Return name string identifier for VariableContext object.
     */
-   const string& getName() const;
+   const std::string& getName() const;
 
    /**
     * Check whether two contexts are the same.  Return true if the
@@ -105,7 +104,7 @@ private:
 
    static int s_instance_counter;
 
-   string d_name;
+   std::string d_name;
    int    d_index;
 
 };

@@ -1,14 +1,14 @@
 //
-// File:	ArrayData.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/array/ArrayData.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Templated array data structure supporting patch data types
 //
 
-#ifndef included_tbox_ArrayData
-#define included_tbox_ArrayData
+#ifndef included_pdat_ArrayData
+#define included_pdat_ArrayData
 
 #ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
@@ -25,7 +25,7 @@
 #ifndef included_hier_IntVector
 #include "IntVector.h"
 #endif
-#ifndef included_tbox_ArrayDataIterator
+#ifndef included_pdat_ArrayDataIterator
 #include "ArrayDataIterator.h"
 #endif
 #ifndef included_tbox_AbstractStream
@@ -54,10 +54,10 @@
 namespace SAMRAI {
     namespace pdat {
 
-/**
- * Class ArrayData<DIM> is a basic templated array structure defined
+/*!
+ * @brief Class ArrayData<DIM, TYPE> is a basic templated array structure defined
  * over the index space of a box (with a specified depth) that provides
- * the support for the various flavors of patch data subclasses.
+ * the support for the various standard array-based patch data subclasses.
  *
  * The data storage is in (i,...,k,d) order, where i,...,k indicates
  * spatial indices and the d indicates the component at that location.
@@ -76,236 +76,438 @@ template<int DIM, class TYPE>
 class ArrayData
 {
 public:
-   /**
-    * The no-arguments constructor creates an empty array data object.
+
+   /*!
+    * Static member function that returns tru when the amount of buffer space in a 
+    * message stream can be estimated from box only.  For built-in types (bool, char, 
+    * double, float, int, and dcomplex), this routine returns true.  For other 
+    * data types (template paramters) that may require special handling, 
+    * a different implementation must be provided.
+    */
+   static bool canEstimateStreamSizeFromBox();
+
+   /*!
+    * Static member function that returns the amount of memory space needed to 
+    * store data of given depth on a box.  
+    *
+    * Note that this function is only defined for the standard data types: 
+    * bool, char, double, float, int, and dcomplex.  It must be provided for other
+    * template parameter types.
+    *
+    * @return size_t value indicating the amount of memory space needed for the data.
+    *
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the array data index region of interest.
+    * @param depth Integer number of data values at each spatial location in
+    *              the array.
+    */
+   static size_t getSizeOfData(const hier::Box<DIM>& box, 
+                               int depth);
+
+   /*!
+    * The default constructor creates an empty array data object.
     * The initializeArray() member function must be called before the
     * array can be used.
     */
    ArrayData();
 
-   /**
-    * The constructor for an array data object.  The box describes the
-    * spatial extents of the index space and the depth gives the number
-    * of data components for each spatial location in the array.  tbox::Array
-    * memory is allocated from the specified memory pool.
+   /*!
+    * Construct an array data object.  
+    * 
+    * @param box   Const reference to box object describing the spatial extents 
+    *              of the index space associated with the array data object.
+    * @param depth Integer number of data values at each spatial location in 
+    *              the array.  
+    * @param pool  Optional pointer to memory pool for allocating array data storage.
+    *              Default is null indicating that standard allocator will be used.
     */
    ArrayData(
       const hier::Box<DIM>& box,
-      const int depth,
+      int depth,
       tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL));
 
-   /**
+   /*!
     * The destructor for an array data object releases all memory allocated
     * for the array elements.
     */
    ~ArrayData();
 
-   /**
+   /*!
+    * Initialize the array data.  This routine is normally called to allocate
+    * storage when the array data object is created using the default constructor.
+    * 
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space associated with the array data object.
+    * @param depth Integer number of data values at each spatial location in
+    *              the array.
+    * @param pool  Optional pointer to memory pool for allocating array data storage.
+    *              Default is null indicating that standard allocator will be used.
+    */
+   void initializeArray(
+      const hier::Box<DIM>& box,
+      int depth,
+      const tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL));
+
+   /*!
+    * @brief Returns true when the array has been properly initialized
+    * and storage has been allocated; otherwise, return false.
+    *
+    * Note: Only arrays that have been initialized can do anything useful. 
+    * Initialize an uninitialized array by calling the initializeArray() method.
+    */
+   bool isInitialized() const;
+
+   /*!
+    * Set the array data to an ``undefined'' state appropriate for the data type.  
+    * For example, for float and double, this means setting data to signaling NaNs 
+    * that cause a floating point exception when used in a numerical expression
+    * without being set to valid values.
+    */
+   void undefineData();
+
+   /*!
+    * Return true if the TYPE is a standard (C++ pre-defined) data type;
+    * otherwise return false.
+    */
+   bool isStandardType();
+
+   /*!
     * Return the box over which the array is defined.
     */
    const hier::Box<DIM>& getBox() const;
 
-   /**
-    * Initialize the array data for the specified box and depth.
-    * This routine is normally called to initialize an array that
-    * was created by the no-arguments constructor.
+   /*!
+    * Return the depth (e.g., the number of data values at each spatial
+    * location) of this array.
     */
-   void initializeArray(
-      const hier::Box<DIM>& box,
-      const int depth,
-      const tbox::Pointer<tbox::Arena>& pool);
+   int getDepth() const;
 
    /*!
-    * @brief Returns whether array has been properly initialized
-    * proper depth and box.
-    *
-    * Only initialized arrays can be used.  Uninitialized arrays
-    * should not be used until initializeArray() is called.
+    * Return the offset (e.g., the number of data values for each 
+    * depth component) of this array.
     */
-   bool isInitialized() const;
-
-   /**
-    * Set the array data to some ``undefined'' state.  For floats and
-    * doubles, this means setting data to signaling NaNs that cause
-    * a floating point exception when used in a numerical expression.
-    */
-   void undefineData();
-
-   /**
-    * Return the amount of memory space needed to allocate a box of the
-    * specified size and depth.  This function will need to be redefined
-    * for data types other than the standard bool, char, double, float,
-    * and int types.
-    */
-   static size_t getSizeOfData(const hier::Box<DIM>& box, const int depth);
-
-   /**
-    * Return true if the TYPE is a standard fundamental data type
-    */
-   bool isStandardType();
-
-   /**
-    * Copy data from the source array data on the specified index domain.
-    * This routine will intersect the specified box against the source and
-    * destination boxes to find the region of intersection.
-    */
-   void copy(const ArrayData<DIM,TYPE>& src, const hier::Box<DIM>& box);
-
-   /**
-    * Copy data shifted in the index space from the source into the
-    * destination.  The boxes are in the destination index space, and
-    * the source data is taken from the boxes shifted into the source
-    * index space.  This routine will intersect the specified box against
-    * the source and destination boxes to find the region of intersection.
-    */
-   void copy(
-      const ArrayData<DIM,TYPE>& src,
-      const hier::Box<DIM>& box,
-      const hier::IntVector<DIM>& offset);
-
-   /**
-    * Copy data shifted in the index space from the source into the
-    * destination.  The boxes are in the destination index space, and
-    * the source data is taken from the boxes shifted into the source
-    * index space.
-    */
-   void copy(
-      const ArrayData<DIM,TYPE>& src,
-      const hier::BoxList<DIM>& boxes,
-      const hier::IntVector<DIM>& offset);
+   int getOffset() const;
 
    /*!
-    * @brief Copy one depth of a source array to a destination depth
-    * of another.
+    * Get a non-const pointer to the beginning of the given depth 
+    * component of this data array. 
+    */
+   TYPE* getPointer(const int d = 0);
+
+   /*!
+    * Get a const pointer to the beginning of the given depth 
+    * component of this data array.
+    */
+   const TYPE* getPointer(const int d = 0) const;
+
+   /*!
+    * Return reference to value in this array associated with the given
+    * box index and depth component.
+    */
+   TYPE& operator()(const hier::Index<DIM>& i, 
+                    const int d);
+
+   /*!
+    * Return const reference to value in this array associated with the given
+    * box index and depth component.
+    */
+   const TYPE& operator()(const hier::Index<DIM>& i, 
+                          const int d) const;
+
+   /*!
+    * Copy data from the source array data object to this array data object 
+    * on the specified index space region.
     *
-    * This routine will intersect the specified box against the source and
-    * destination boxes to find the region of intersection.
+    * Note that this routine assumes that the source and destination
+    * box regions require no shifting to make them consistent.  This routine 
+    * will intersect the specified box with the source and destination boxes 
+    * to find the region of intersection.
+    * 
+    * @param src   Const reference to source array data object.
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space region over which to perform the copy operation.
+    *              Note: the box is in either the source or destination index space
+    *                    (which are assumed to be the same).
+    */
+   void copy(const ArrayData<DIM,TYPE>& src, 
+             const hier::Box<DIM>& box);
+
+   /*!
+    * Copy data from the source array data object to this array data object
+    * on the specified index space region.  
+    *
+    * Note that this routine assumes that the source array box region must
+    * be shifted to be consistent with the destination (this) array box region.
+    * This routine will intersect the specified box with the destination box and
+    * shifted source box to find the region of intersection.
+    *
+    * @param src   Const reference to source array data object.
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space region over which to perform the copy operation.
+    *              Note: the box is in the destination index space.
+    * @param src_shift Const reference to shift vector used to put the source
+    *              array data box into the index space region of this array data object.
+    */
+   void copy(const ArrayData<DIM,TYPE>& src,
+             const hier::Box<DIM>& box,
+             const hier::IntVector<DIM>& src_shift);
+
+   /*!
+    * Copy data from the source array data object to this array data object
+    * on the specified index space regions.
+    *
+    * Note that this routine assumes that the source array box region must
+    * be shifted to be consistent with the destination (this) array box region.
+    * This routine will intersect the specified boxes with the destination box and
+    * shifted source box to find the regions of intersection.
+    *
+    * @param src   Const reference to source array data object.
+    * @param boxes Const reference to box list describing the spatial extents
+    *              of the index space regions over which to perform the copy operation.
+    *              Note: the boxes are in the destination index space.
+    * @param src_shift Const reference to shift vector used to put the source
+    *              array data box into the index space region of this array data object.
+    */
+   void copy(const ArrayData<DIM,TYPE>& src,
+             const hier::BoxList<DIM>& boxes,
+             const hier::IntVector<DIM>& src_shift);
+
+   /*!
+    * Copy given source depth of source array data object to given destination 
+    * depth of this array data object on the specified index space region.
+    *
+    * Note that this routine assumes that the source and destination
+    * box regions require no shifting to make them consistent.  This routine
+    * will intersect the specified box with the source and destination boxes
+    * to find the region of intersection.
+    *
+    * @param dst_depth Integer depth of destination array.
+    * @param src       Const reference to source array data object.
+    * @param src_depth Integer depth of source array.
+    * @param box       Const reference to box object describing the spatial extents
+    *                  of the index space region over which to perform the copy operation.
+    *                  Note: the box is in either the source or destination index space
+    *                        (which are assumed to be the same).
     */
    void copyDepth(int dst_depth,
 		  const ArrayData<DIM,TYPE>& src,
 		  int src_depth,
 		  const hier::Box<DIM>& box);
 
-   /**
-    * Return whether the amount of buffer space in the message stream can be
-    * estimated using the box alone (i.e., without specific type information).
-    * For built-in types (bool, char, double, float, int, and dcomplex), this 
-    * routine returns true.  For other user-defined data types that may require
-    * special handling, the user MUST define a different implementation.
+   /*!
+    * Add data from the source array data object to this array data object
+    * on the specified index space region.
+    *
+    * Note that this routine assumes that the source and destination
+    * box regions require no shifting to make them consistent.  This routine
+    * will intersect the specified box with the source and destination boxes
+    * to find the region of intersection.
+    *
+    * @param src   Const reference to source array data object.
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space region over which to perform the sum operation.
+    *              Note: the box is in either the source or destination index space
+    *                    (which are assumed to be the same).
     */
-   static bool canEstimateStreamSizeFromBox();
+   void sum(const ArrayData<DIM,TYPE>& src,
+             const hier::Box<DIM>& box);
 
-   /**
-    * Calculate the number of bytes needed to stream the data lying
+   /*!
+    * Add data from the source array data object to this array data object
+    * on the specified index space region.
+    *
+    * Note that this routine assumes that the source array box region must
+    * be shifted to be consistent with the destination (this) array box region.
+    * This routine will intersect the specified box with the destination box and
+    * shifted source box to find the region of intersection.
+    *
+    * @param src   Const reference to source array data object.
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space region over which to perform the sum operation.
+    *              Note: the box is in the destination index space.
+    * @param src_shift Const reference to shift vector used to put the source
+    *              array data box into the index space region of this array data object.
+    */
+   void sum(const ArrayData<DIM,TYPE>& src,
+             const hier::Box<DIM>& box,
+             const hier::IntVector<DIM>& src_shift);
+
+   /*!
+    * Add data from the source array data object to this array data object
+    * on the specified index space regions.
+    *
+    * Note that this routine assumes that the source array box region must
+    * be shifted to be consistent with the destination (this) array box region.
+    * This routine will intersect the specified boxes with the destination box and
+    * shifted source box to find the regions of intersection.
+    *
+    * @param src   Const reference to source array data object.
+    * @param boxes Const reference to box list describing the spatial extents
+    *              of the index space regions over which to perform the sum operation.
+    *              Note: the boxes are in the destination index space.
+    * @param src_shift Const reference to shift vector used to put the source
+    *              array data box into the index space region of this array data object.
+    */
+   void sum(const ArrayData<DIM,TYPE>& src,
+             const hier::BoxList<DIM>& boxes,
+             const hier::IntVector<DIM>& src_shift);
+
+   /*!
+    * Calculate the number of bytes needed to stream the data living
     * in the specified box domains.  This routine is only defined for
-    * the built-in types of bool, char, double, float, and int.  For
-    * all other types, the user must define a specialized implementation.
+    * the built-in types of bool, char, double, float, int, and dcomplex.  For
+    * all other types, a specialized implementation must be provided.
+    * 
+    * @param boxes Const reference to box list describing the spatial extents
+    *              of the index space regions of interest.
+    *              Note: the boxes are assumed to be in the index space of this
+    *              array data object.
+    * @param src_shift Const reference to vector used to shift the given
+    *              boxes into the index space region of this array data object.
+    *              Note: this argument is currently ignored.
     */
-   int getDataStreamSize(const hier::BoxList<DIM>& dest_boxes,
-                         const hier::IntVector<DIM>& source_offset) const;
+   int getDataStreamSize(const hier::BoxList<DIM>& boxes,
+                         const hier::IntVector<DIM>& src_shift) const;
 
-   /**
-    * Pack data lying on the specified index set into the output stream.
-    * The shifted box must lie completely within the index space of the
-    * array.  If compiled with assertions enabled, the packing routine
-    * will abort if the box is not contained within the index space of
-    * the array.
+   /*!
+    * Pack data living on the specified index region into the stream.
+    * 
+    * Note that this routine assumes that the given box region must
+    * be shifted to be consistent with the source (this) array box region.
+    * 
+    * @param stream Reference to stream into which to pack data.
+    * @param dest_box Const reference to box describing the spatial extent
+    *              of the destination index space region of interest.
+    * @param src_shift Const reference to vector used to shift the given
+    *              box into the index space region of this (source) array data 
+    *              object.
+    * 
+    * Note: The shifted box must lie completely within the index space of this
+    * array data object.  When assertion checking is active, the routine will
+    * abort if the box is not contained in the index space of this array.
     */
-   void packStream(
-      tbox::AbstractStream& stream,
-      const hier::Box<DIM>& dest_box,
-      const hier::IntVector<DIM>& source_offset) const;
+   void packStream(tbox::AbstractStream& stream,
+                   const hier::Box<DIM>& dest_box,
+                   const hier::IntVector<DIM>& src_shift) const;
 
-   /**
-    * Pack data lying on the specified index set into the output stream.
-    * The shifted boxes in the box list must lie completely within the
-    * index space of the array.  If compiled with assertions enabled, the
-    * packing routine will abort if the boxes are not contained within the
-    * index space of the array.
+   /*!
+    * Pack data living on the specified index regions into the stream.
+    *  
+    * Note that this routine assumes that the given box regions must
+    * be shifted to be consistent with the source (this) array box region.
+    *
+    * @param stream Reference to stream into which to pack data.
+    * @param dest_boxes Const reference to boxes describing the spatial extents
+    *              of the destination index space regions of interest.
+    * @param src_shift Const reference to vector used to shift the given
+    *              boxes into the index space region of this (source) array data
+    *              object.
+    *
+    * Note: The shifted boxes must lie completely within the index space of this
+    * array.  If compiled with assertions enabled, the routine will abort if
+    * the shifted boxes are not contained in the index space of this array.
     */
-   void packStream(
-      tbox::AbstractStream& stream,
-      const hier::BoxList<DIM>& dest_boxes,
-      const hier::IntVector<DIM>& source_offset) const;
+   void packStream(tbox::AbstractStream& stream,
+                   const hier::BoxList<DIM>& dest_boxes,
+                   const hier::IntVector<DIM>& src_shift) const;
 
-   /**
-    * Unpack data from the message stream into the index set lying under
-    * the specified index set.  The box must lie completely within the
-    * index space of the array.  If compiled with assertions enabled, the
-    * unpacking routine will abort if the box is not contained within the
-    * index space of the array.
+   /*!
+    * Unpack data from the stream into the index region specified.
+    * 
+    * @param stream Reference to stream from which to unpack data.
+    * @param dest_box Const reference to box describing the spatial extent
+    *              of the destination index space region of interest.
+    * @param src_offset Const reference to vector used to offset
+    *              box into the index space region of some (source) array data
+    *              object. Currently, this argument is ignored.
+    *
+    * Note: The given box must lie completely within the index space of this
+    * array data object.  When assertion checking is active, the routine will
+    * abort if the box is not contained in the index space of this array.
     */
    void unpackStream(tbox::AbstractStream& stream, 
                      const hier::Box<DIM>& dest_box,
-                     const hier::IntVector<DIM>& source_offset);
+                     const hier::IntVector<DIM>& src_offset);
 
-   /**
-    * Unpack data from the message stream into the index set lying under
-    * the specified index set.  The boxes in the box list must lie completely
-    * within the index space of the array.  If compiled with assertions
-    * enabled, the unpacking routine will abort if the boxes are not
-    * contained within the index space of the array.
+   /*!
+    * Unpack data from the stream into the index regions specified.
+    *
+    * @param stream Reference to stream from which to unpack data.
+    * @param dest_boxes Const reference to box list describing the spatial extents
+    *              of the destination index space regions of interest.
+    * @param src_offset Const reference to vector used to offset the given
+    *              boxes into the index space region of some (source) array data
+    *              object. Currently, this argument is ignored.
+    *
+    * Note: The given boxes must lie completely within the index space of this
+    * array data object.  When assertion checking is active, the routine will 
+    * abort if some box is not contained in the index space of this array.
     */
    void unpackStream(tbox::AbstractStream& stream, 
-                     const hier::BoxList<DIM>& boxes,
-                     const hier::IntVector<DIM>& source_offset);
+                     const hier::BoxList<DIM>& dest_boxes,
+                     const hier::IntVector<DIM>& src_offset);
 
-   /**
-    * Return the depth (e.g., the number of components in each spatial
-    * location) of the array.
+   /*!
+    * Unpack data from the stream and add to the array in the index region specified.
+    *
+    * @param stream Reference to stream from which to unpack data.
+    * @param dest_box Const reference to box describing the spatial extent
+    *              of the destination index space region of interest.
+    * @param src_offset Const reference to vector used to offset the given
+    *              box into the index space region of some (source) array data
+    *              object. Currently, this argument is ignored.
+    *
+    * Note: The given box must lie completely within the index space of this
+    * array data object.  When assertion checking is active, the routine will
+    * abort if the box is not contained in the index space of this array.
     */
-   int getDepth() const;
+   void unpackStreamAndSum(tbox::AbstractStream& stream,
+                           const hier::Box<DIM>& dest_box,
+                           const hier::IntVector<DIM>& src_offset);
 
-   /**
-    * Return the offset (e.g., the number of data values for each 
-    * depth component) of the array.
+   /*!
+    * Unpack data from the stream and ad to the array in the index region specified.
+    *
+    * @param stream Reference to stream from which to unpack data.
+    * @param dest_boxes Const reference to box list describing the spatial extents
+    *              of the destination index space regions of interest.
+    * @param src_offset Const reference to vector used to offset the given
+    *              boxes into the index space region of some (source) array data
+    *              object. Currently, this argument is ignored.
+    *
+    * Note: The given boxes must lie completely within the index space of this
+    * array.  If compiled with assertions enabled, the routine will abort if
+    * some box is not contained in the index space of this array.
     */
-   int getOffset() const;
+   void unpackStreamAndSum(tbox::AbstractStream& stream,
+                           const hier::BoxList<DIM>& dest_boxes,
+                           const hier::IntVector<DIM>& src_offset);
 
-   /**
-    * Get a pointer to the beginning of a particular component of the
-    * patch data array.
-    */
-   TYPE *getPointer(const int d = 0);
-
-   /**
-    * Get a const pointer to the beginning of a particular component
-    * of the patch data array.
-    */
-   const TYPE *getPointer(const int d = 0) const;
-
-   /**
-    * hier::Index into the array using an index and the component.
-    */
-   TYPE& operator()(const hier::Index<DIM>& i, const int d);
-
-   /**
-    * hier::Index into the array (via a const reference) using an index
-    * and the component.
-    */
-   const TYPE& operator()(const hier::Index<DIM>& i, const int d) const;
-
-   /**
-    * Fill all components with value t.
+   /*!
+    * Fill all array values with value t.
     */
    void fillAll(const TYPE& t);
 
-   /**
-    * Fill all components within the box with value t.
+   /*!
+    * Fill all array values within the box with value t.
     */
-   void fillAll(const TYPE& t, const hier::Box<DIM>& box);
+   void fillAll(const TYPE& t, 
+                const hier::Box<DIM>& box);
 
-   /**
-    * Fill all values of component d with the value t.
+   /*!
+    * Fill all array values associated with depth component d with the value t.
     */
    void fill(const TYPE& t, const int d = 0);
 
-   /**
-    * Fill all values of component d within the box with the value t.
+   /*!
+    * Fill all array values associated with depth component d 
+    * within the box with the value t.
     */
-   void fill(const TYPE& t, const hier::Box<DIM>& box, const int d = 0);
+   void fill(const TYPE& t, 
+             const hier::Box<DIM>& box, 
+             const int d = 0);
 
-   /**
+   /*!
     * Check to make sure that the class version and restart file
     * version are equal.  If so, read in data from database.  This
     * routine calls getSpecializedFromDatabase() to read in the 
@@ -315,8 +517,8 @@ public:
     */
    void getFromDatabase(tbox::Pointer<tbox::Database> database);
 
-   /**
-    * Writes out data for class representation to database.  This
+   /*!
+    * Write out array data object data to database.  This
     * routine calls putSpecializedToDatabase() to read in the 
     * proper data type.  The default behavior (boolean argument is
     * false) is to put all data members in database.  Otherwise, only
@@ -327,19 +529,19 @@ public:
    void putToDatabase(tbox::Pointer<tbox::Database> database,
                       bool data_only = false);
 
-   /**
+   /*!
     * Use specialized template method to get the correct behavior 
     * when reading in the array of data.
     */
    void getSpecializedFromDatabase(tbox::Pointer<tbox::Database> database);
 
-   /**
+   /*!
     * Use specialized template method to get the correct behavior 
     * when writing out the array of data.
     */
    void putSpecializedToDatabase(tbox::Pointer<tbox::Database> database);
 
-   /**
+   /*!
     * The array data iterator iterates over the elements of a box
     * associated with an ArrayData object.  This typedef is
     * convenient link to the ArrayDataIterator<DIM> class.
@@ -347,11 +549,27 @@ public:
    typedef ArrayDataIterator<DIM> Iterator;
 
 private:
-   void packBuffer(TYPE *buffer, const hier::Box<DIM>& box) const;
-   void unpackBuffer(const TYPE *buffer, const hier::Box<DIM>& box);
-
    ArrayData(const ArrayData<DIM,TYPE>&);	// not implemented
    void operator=(const ArrayData<DIM,TYPE>&);	// not implemented
+
+   /*
+    * Private member functions to pack/unpack data to/from buffer.
+    *
+    * Note: box of this array data object must completely contain given box.
+    */
+   void packBuffer(TYPE* buffer, 
+                   const hier::Box<DIM>& box) const;
+   void unpackBuffer(const TYPE* buffer, 
+                     const hier::Box<DIM>& box);
+
+   /*
+    * Private member functions to unpack data from buffer and add to
+    * this array data object.
+    *
+    * Note: box of this array data object must completely contain given box.
+    */
+   void unpackBufferAndSum(const TYPE* buffer,
+                           const hier::Box<DIM>& box);
 
    tbox::Array<TYPE> d_array;
    hier::Box<DIM> d_box;

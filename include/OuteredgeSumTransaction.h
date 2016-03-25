@@ -1,9 +1,9 @@
 //
-// File:        OuteredgeSumTransaction.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/OuteredgeSumTransaction.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 684 $
-// Modified:    $Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Communication transaction for summing outeredge data
 //
  
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_hier_BoxOverlap
 #include "BoxOverlap.h"
@@ -164,7 +163,7 @@ public:
    /*!
     * Print out transaction information.
     */
-   virtual void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    OuteredgeSumTransaction<DIM>(const OuteredgeSumTransaction<DIM>&); // not implemented
@@ -172,9 +171,6 @@ private:
 
    static const typename xfer::RefineClasses<DIM>::Data** s_refine_items;
    static int s_num_refine_items;
-
-   void sumData(pdat::OuteredgeData<DIM,double> &dst,
-                pdat::OuteredgeData<DIM,double> &add) const;
 
    tbox::Pointer< hier::PatchLevel<DIM> >    d_dst_level;
    tbox::Pointer< hier::PatchLevel<DIM> >    d_src_level;

@@ -1,6 +1,6 @@
 #!/bin/sh 
 #BHEADER***********************************************************************
-# (c) The Regents of the University of California 1997-2005
+# (c) Lawrence Livermore National Security, LLC 1997-2007
 #EHEADER***********************************************************************
 
 if [ $1 = "-h" ]

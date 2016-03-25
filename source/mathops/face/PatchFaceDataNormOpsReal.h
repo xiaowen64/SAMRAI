@@ -1,9 +1,9 @@
 //
-// File:	PatchFaceDataNormOpsReal.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/face/PatchFaceDataNormOpsReal.h $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated norm operations for real face-centered data.
 //
 
@@ -16,9 +16,8 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
-#ifndef included_tbox_ArrayDataNormOpsReal
+#ifndef included_math_ArrayDataNormOpsReal
 #include "ArrayDataNormOpsReal.h"
 #endif
 #ifndef included_hier_Box

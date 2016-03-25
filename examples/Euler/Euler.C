@@ -1,16 +1,13 @@
 //
-// File:        Euler.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/Euler/Euler.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 396 $
-// Modified:    $Date: 2005-05-24 13:02:06 -0700 (Tue, 24 May 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Numerical routines for Euler equations SAMRAI example
 //
 
 #include "Euler.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include <iostream>
 #include <iomanip>
@@ -43,7 +40,6 @@ using namespace std;
 #include "FaceData.h"
 #include "FaceIndex.h"
 #include "FaceVariable.h"
-#include "tbox/IEEE.h"
 #include "Index.h"
 #include "LoadBalancer.h"
 #include "tbox/PIO.h"
@@ -52,6 +48,7 @@ using namespace std;
 #include "tbox/TimerManager.h"
 #include "tbox/Timer.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 //integer constants for boundary conditions
 #define CHECK_BDRY_DATA  (0)
@@ -132,9 +129,9 @@ Euler::Euler(const string& object_name,
              tbox::Pointer<geom::CartesianGridGeometry<NDIM> > grid_geom)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!grid_geom.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!grid_geom.isNull());
 #endif
 
    d_object_name = object_name;
@@ -181,7 +178,7 @@ Euler::Euler(const string& object_name,
    d_godunov_order = 1;
    d_corner_transport = "CORNER_TRANSPORT_1";
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
    d_nghosts = hier::IntVector<NDIM>(CELLG);
    d_fluxghosts = hier::IntVector<NDIM>(FLUXG); 
@@ -190,14 +187,14 @@ Euler::Euler(const string& object_name,
     * Defaults for problem type and initial data
     */
 
-   d_radius = tbox::IEEE::getSignalingNaN();
-   tbox::IEEE::initializeArrayToSignalingNaN(d_center, NDIM); 
-   d_density_inside = tbox::IEEE::getSignalingNaN();
-   tbox::IEEE::initializeArrayToSignalingNaN(d_velocity_inside, NDIM); 
-   d_pressure_inside = tbox::IEEE::getSignalingNaN();
-   d_density_outside = tbox::IEEE::getSignalingNaN();   
-   tbox::IEEE::initializeArrayToSignalingNaN(d_velocity_outside, NDIM); 
-   d_pressure_outside = tbox::IEEE::getSignalingNaN();   
+   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, NDIM); 
+   d_density_inside = tbox::MathUtilities<double>::getSignalingNaN();
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_inside, NDIM); 
+   d_pressure_inside = tbox::MathUtilities<double>::getSignalingNaN();
+   d_density_outside = tbox::MathUtilities<double>::getSignalingNaN();   
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_outside, NDIM); 
+   d_pressure_outside = tbox::MathUtilities<double>::getSignalingNaN();   
 
    d_number_of_intervals = 0;
    d_front_position.resizeArray(0);
@@ -235,9 +232,9 @@ Euler::Euler(const string& object_name,
    d_bdry_edge_density.resizeArray(NUM_2D_EDGES);
    d_bdry_edge_velocity.resizeArray(NUM_2D_EDGES*NDIM);
    d_bdry_edge_pressure.resizeArray(NUM_2D_EDGES);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_edge_density);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_edge_velocity);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_edge_pressure);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_density);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_velocity);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_pressure);
 #endif
 #if (NDIM == 3)
    d_master_bdry_face_conds.resizeArray(NUM_3D_FACES);
@@ -275,9 +272,9 @@ Euler::Euler(const string& object_name,
    d_bdry_face_density.resizeArray(NUM_3D_FACES);
    d_bdry_face_velocity.resizeArray(NUM_3D_FACES*NDIM);
    d_bdry_face_pressure.resizeArray(NUM_3D_FACES);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_face_density);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_face_velocity);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_face_pressure);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_density);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_velocity);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_pressure);
 #endif
 
    /*
@@ -452,8 +449,8 @@ void Euler::registerModelVariables(
    algs::HyperbolicLevelIntegrator<NDIM>* integrator)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(integrator != (algs::HyperbolicLevelIntegrator<NDIM>*)NULL);
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(integrator != (algs::HyperbolicLevelIntegrator<NDIM>*)NULL);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    integrator->registerVariable(d_density ,d_nghosts, 
@@ -618,14 +615,14 @@ void Euler::initializeDataOnPatch(hier::Patch<NDIM>& patch,
           patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!density.isNull());
-      assert(!velocity.isNull());
-      assert(!pressure.isNull());
+      TBOX_ASSERT(!density.isNull());
+      TBOX_ASSERT(!velocity.isNull());
+      TBOX_ASSERT(!pressure.isNull());
 #endif
       hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(velocity->getGhostCellWidth() == ghost_cells);
-      assert(pressure->getGhostCellWidth() == ghost_cells);
+      TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
+      TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
 #endif
 
       const hier::Index<NDIM> ifirst=patch.getBox().lower();
@@ -730,14 +727,14 @@ double Euler::computeStableDtOnPatch(
       patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density.isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
+   TBOX_ASSERT(!density.isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
 #endif 
    hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(velocity->getGhostCellWidth() == ghost_cells);
-   assert(pressure->getGhostCellWidth() == ghost_cells);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
+   TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
 #endif 
 
    double stabdt = 0.;
@@ -791,7 +788,7 @@ void Euler::computeFluxesOnPatch(hier::Patch<NDIM>& patch,
 #if (NDIM == 2)
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
@@ -811,14 +808,14 @@ void Euler::computeFluxesOnPatch(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density.isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
-   assert(!flux.isNull());
-   assert(density->getGhostCellWidth() == d_nghosts);
-   assert(velocity->getGhostCellWidth() == d_nghosts);
-   assert(pressure->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!density.isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
    /*
@@ -854,7 +851,7 @@ void Euler::computeFluxesOnPatch(hier::Patch<NDIM>& patch,
        */
       int Mcells = 0;
       for (int k=0;k<NDIM;k++) {
-         Mcells = tbox::Utilities::imax(Mcells, pbox.numberCells(k));
+         Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
       // Face-centered temporary arrays
@@ -993,7 +990,7 @@ void Euler::compute3DFluxesWithCornerTransport1(hier::Patch<NDIM>& patch,
                                                 const double dt)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
@@ -1013,14 +1010,14 @@ void Euler::compute3DFluxesWithCornerTransport1(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density.isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
-   assert(!flux.isNull());
-   assert(density->getGhostCellWidth() == d_nghosts);
-   assert(velocity->getGhostCellWidth() == d_nghosts);
-   assert(pressure->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!density.isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
    /*
@@ -1063,7 +1060,7 @@ void Euler::compute3DFluxesWithCornerTransport1(hier::Patch<NDIM>& patch,
        */
       int Mcells = 0;
       for (int k=0;k<NDIM;k++) {
-         Mcells = tbox::Utilities::imax(Mcells, pbox.numberCells(k));
+         Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
       // Face-centered temporary arrays
@@ -1337,7 +1334,7 @@ void Euler::compute3DFluxesWithCornerTransport2(hier::Patch<NDIM>& patch,
                                                 const double dt)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
@@ -1357,14 +1354,14 @@ void Euler::compute3DFluxesWithCornerTransport2(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density.isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
-   assert(!flux.isNull());
-   assert(density->getGhostCellWidth() == d_nghosts);
-   assert(velocity->getGhostCellWidth() == d_nghosts);
-   assert(pressure->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!density.isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
    /*
@@ -1431,7 +1428,7 @@ void Euler::compute3DFluxesWithCornerTransport2(hier::Patch<NDIM>& patch,
        */
       int Mcells = 0;
       for (int k=0;k<NDIM;k++) {
-         Mcells = tbox::Utilities::imax(Mcells, pbox.numberCells(k));
+         Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
       // Face-centered temporary arrays
@@ -1632,14 +1629,14 @@ void Euler::conservativeDifferenceOnPatch(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density.isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
-   assert(!flux.isNull());
-   assert(density->getGhostCellWidth() == d_nghosts);
-   assert(velocity->getGhostCellWidth() == d_nghosts);
-   assert(pressure->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!density.isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
 #if (NDIM==2)
@@ -1738,8 +1735,9 @@ void Euler::boundaryReset(hier::Patch<NDIM>& patch,
       bdry_case = d_master_bdry_face_conds[bnode];
 #endif
 // BEGIN SIMPLE-MINDED FIX FOR STEP PROBLEM
-      if ( (d_data_problem == "STEP") && (bnode == 1)
-          && (fabs(xpatchhi[0]-xdomainhi[0]) < dx[0]) ) {
+      if ((d_data_problem == "STEP") && (bnode == 1) && 
+          (tbox::MathUtilities<double>::Abs(xpatchhi[0]-xdomainhi[0]) < dx[0]) )
+      {
           bdry_case = FLOW_BC;
       }
 // END SIMPLE-MINDED FIX FOR STEP PROBLEM
@@ -1793,20 +1791,20 @@ void Euler::postprocessRefine(hier::Patch<NDIM>& fine,
       fine.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!cdensity.isNull());
-   assert(!cvelocity.isNull());
-   assert(!cpressure.isNull());
-   assert(!fdensity.isNull());
-   assert(!fvelocity.isNull());
-   assert(!fpressure.isNull());
+   TBOX_ASSERT(!cdensity.isNull());
+   TBOX_ASSERT(!cvelocity.isNull());
+   TBOX_ASSERT(!cpressure.isNull());
+   TBOX_ASSERT(!fdensity.isNull());
+   TBOX_ASSERT(!fvelocity.isNull());
+   TBOX_ASSERT(!fpressure.isNull());
 
    hier::IntVector<NDIM> gccheck = cdensity->getGhostCellWidth();
-   assert(cvelocity->getGhostCellWidth() == gccheck);
-   assert(cpressure->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(cvelocity->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(cpressure->getGhostCellWidth() == gccheck);
 
    gccheck = fdensity->getGhostCellWidth();
-   assert(fvelocity->getGhostCellWidth() == gccheck);
-   assert(fpressure->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(fvelocity->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(fpressure->getGhostCellWidth() == gccheck);
 #endif
 
    const hier::Box<NDIM> cgbox(cdensity->getGhostBox());
@@ -1845,7 +1843,7 @@ void Euler::postprocessRefine(hier::Patch<NDIM>& fine,
    pdat::CellData<NDIM,double> flat0(coarse_box, 1, tmp_ghosts);
    pdat::CellData<NDIM,double> flat1(coarse_box, 1, tmp_ghosts);
    int mc = cihi(0)-cilo(0) + 1;
-   mc = tbox::Utilities::imax(mc,cihi(1)-cilo(1) + 1);
+   mc = tbox::MathUtilities<int>::Max(mc,cihi(1)-cilo(1) + 1);
    double* tflat  = new double[mc];
    double* tflat2 = new double[mc];
    double* tsound = new double[mc];
@@ -1879,8 +1877,8 @@ void Euler::postprocessRefine(hier::Patch<NDIM>& fine,
    pdat::CellData<NDIM,double> flat1(coarse_box, 1, tmp_ghosts);
    pdat::CellData<NDIM,double> flat2(coarse_box, 1, tmp_ghosts);
    int mc = cihi(0)-cilo(0) + 1;
-   mc = tbox::Utilities::imax(mc,cihi(1)-cilo(1) + 1);
-   mc = tbox::Utilities::imax(mc,cihi(2)-cilo(2) + 1);
+   mc = tbox::MathUtilities<int>::Max(mc,cihi(1)-cilo(1) + 1);
+   mc = tbox::MathUtilities<int>::Max(mc,cihi(2)-cilo(2) + 1);
    double* tflat  = new double[mc];
    double* tflat2 = new double[mc];
    double* tsound = new double[mc];
@@ -1962,20 +1960,20 @@ void Euler::postprocessCoarsen(hier::Patch<NDIM>& coarse,
                                               d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!cdensity.isNull());
-   assert(!cvelocity.isNull());
-   assert(!cpressure.isNull());
-   assert(!fdensity.isNull());
-   assert(!fvelocity.isNull());
-   assert(!fpressure.isNull());
+   TBOX_ASSERT(!cdensity.isNull());
+   TBOX_ASSERT(!cvelocity.isNull());
+   TBOX_ASSERT(!cpressure.isNull());
+   TBOX_ASSERT(!fdensity.isNull());
+   TBOX_ASSERT(!fvelocity.isNull());
+   TBOX_ASSERT(!fpressure.isNull());
 
    hier::IntVector<NDIM> gccheck = cdensity->getGhostCellWidth();
-   assert(cvelocity->getGhostCellWidth() == gccheck);
-   assert(cpressure->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(cvelocity->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(cpressure->getGhostCellWidth() == gccheck);
 
    gccheck = fdensity->getGhostCellWidth();
-   assert(fvelocity->getGhostCellWidth() == gccheck);
-   assert(fpressure->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(fvelocity->getGhostCellWidth() == gccheck);
+   TBOX_ASSERT(fpressure->getGhostCellWidth() == gccheck);
 #endif
 
    const hier::Index<NDIM> filo = fdensity->getGhostBox().lower();
@@ -2061,14 +2059,14 @@ void Euler::setPhysicalBoundaryConditions(
       patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density.isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
+   TBOX_ASSERT(!density.isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
 #endif
    hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(velocity->getGhostCellWidth() == ghost_cells);
-   assert(pressure->getGhostCellWidth() == ghost_cells);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
+   TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
 #endif
 
 #if (NDIM == 2) 
@@ -2095,7 +2093,7 @@ void Euler::setPhysicalBoundaryConditions(
       const double* xpatchhi = patch_geom->getXUpper();
       const double* xdomainhi = d_grid_geometry->getXUpper();
 
-      if (fabs(xpatchhi[0]-xdomainhi[0]) < dx[0]) {
+      if (tbox::MathUtilities<double>::Abs(xpatchhi[0]-xdomainhi[0]) < dx[0]) {
          tmp_edge_scalar_bcond[XHI] = FLOW_BC;
          tmp_edge_vector_bcond[XHI] = FLOW_BC;
       }
@@ -2466,7 +2464,7 @@ void Euler::tagGradientDetectorCells(hier::Patch<NDIM>& patch,
       if (time_allowed) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!var.isNull());
+         TBOX_ASSERT(!var.isNull());
 #endif
 
          hier::IntVector<NDIM> vghost = var->getGhostCellWidth();
@@ -2488,7 +2486,8 @@ void Euler::tagGradientDetectorCells(hier::Patch<NDIM>& patch,
                      locden *= 0.75;
                   }
                }
-               if (tbox::Utilities::fabs((*var)(ic())-dev) > locden) {
+               if (tbox::MathUtilities<double>::Abs((*var)(ic())-dev) > locden)
+               {
                   (*temp_tags)(ic(),0) = TRUE; 
                }
             }
@@ -2646,8 +2645,8 @@ void Euler::tagRichardsonExtrapolationCells(
       if (time_allowed) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!coarsened_fine_var.isNull());
-         assert(!advanced_coarse_var.isNull());
+         TBOX_ASSERT(!coarsened_fine_var.isNull());
+         TBOX_ASSERT(!advanced_coarse_var.isNull());
 #endif
 
          if (ref == "DENSITY_RICHARDSON" || ref == "PRESSURE_RICHARDSON") {
@@ -2673,9 +2672,10 @@ void Euler::tagRichardsonExtrapolationCells(
              double max_dx = 0.;
              double max_length = 0.;
              for (int idir = 0; idir < NDIM; idir++) {
-                max_dx = tbox::Utilities::dmax(max_dx, dx[idir]);
+                max_dx = tbox::MathUtilities<double>::Max(max_dx, dx[idir]);
                 double length = xdomainhi[idir] - xdomainlo[idir];
-                max_length = tbox::Utilities::dmax(max_length, length);
+                max_length = 
+                   tbox::MathUtilities<double>::Max(max_length, length);
              }
              double max_wave_speed = max_dx / deltat;
              double steps = max_length / (max_wave_speed * deltat);
@@ -2707,7 +2707,8 @@ void Euler::tagRichardsonExtrapolationCells(
                  */
                 diff = (*advanced_coarse_var)(ic(),0) - 
                        (*coarsened_fine_var)(ic(),0);
-                error = tbox::Utilities::fabs(diff) * rnminus1 * steps;
+                error = 
+                   tbox::MathUtilities<double>::Abs(diff) * rnminus1 * steps;
 
                 /*
                  * Tag cell if error > prescribed threshold. Since we are
@@ -2766,7 +2767,7 @@ void Euler::registerVizamraiDataWriter(
    tbox::Pointer<appu::CartesianVizamraiDataWriter<NDIM> > viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(viz_writer.isNull()));
+   TBOX_ASSERT(!(viz_writer.isNull()));
 #endif
    d_vizamrai_writer = viz_writer;
 }
@@ -2785,7 +2786,7 @@ void Euler::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter<NDIM> > viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(viz_writer.isNull()));
+   TBOX_ASSERT(!(viz_writer.isNull()));
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2805,10 +2806,10 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    const hier::Patch<NDIM>& patch,
    const hier::Box<NDIM>& region,
    const string& variable_name,
-   int depth_id)
+   int depth_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((region * patch.getBox()) == region);
+   TBOX_ASSERT((region * patch.getBox()) == region);
 #endif
 
    bool data_on_patch = FALSE;
@@ -2821,12 +2822,12 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       patch.getPatchData(d_pressure, d_plot_context);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!density .isNull());
-   assert(!velocity.isNull());
-   assert(!pressure.isNull());
-   assert(density->getGhostBox() == patch.getBox());
-   assert(velocity->getGhostBox() == patch.getBox());
-   assert(pressure->getGhostBox() == patch.getBox());
+   TBOX_ASSERT(!density .isNull());
+   TBOX_ASSERT(!velocity.isNull());
+   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(density->getGhostBox() == patch.getBox());
+   TBOX_ASSERT(velocity->getGhostBox() == patch.getBox());
+   TBOX_ASSERT(pressure->getGhostBox() == patch.getBox());
 #endif
 
    const hier::Box<NDIM>& data_box = density->getGhostBox();
@@ -2884,7 +2885,7 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 
    } else if (variable_name == "Momentum") {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(depth_id < NDIM);
+      TBOX_ASSERT(depth_id < NDIM);
 #endif
 
       const double *const dens = density->getPointer();
@@ -2948,9 +2949,9 @@ void Euler::writeData1dPencil(const tbox::Pointer<hier::Patch<NDIM> > patch,
          patch->getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!density .isNull());
-      assert(!velocity.isNull());
-      assert(!pressure.isNull());
+      TBOX_ASSERT(!density .isNull());
+      TBOX_ASSERT(!velocity.isNull());
+      TBOX_ASSERT(!pressure.isNull());
 #endif
 
       const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch->getPatchGeometry();
@@ -3312,7 +3313,7 @@ void Euler::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -3444,7 +3445,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_density_dev_time_max.resizeArray(1);
-                  d_density_dev_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_density_dev_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3473,7 +3475,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_density_grad_time_max.resizeArray(1);
-                  d_density_grad_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_density_grad_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3511,7 +3514,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_density_shock_time_max.resizeArray(1);
-                  d_density_shock_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_density_shock_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3540,7 +3544,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_density_rich_time_max.resizeArray(1);
-                  d_density_rich_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_density_rich_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3578,7 +3583,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_pressure_dev_time_max.resizeArray(1);
-                  d_pressure_dev_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_pressure_dev_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3607,7 +3613,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_pressure_grad_time_max.resizeArray(1);
-                  d_pressure_grad_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_pressure_grad_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3645,7 +3652,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_pressure_shock_time_max.resizeArray(1);
-                  d_pressure_shock_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_pressure_shock_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3674,7 +3682,8 @@ void Euler::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_pressure_rich_time_max.resizeArray(1);
-                  d_pressure_rich_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_pressure_rich_time_max[0] = 
+                     tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -3824,8 +3833,8 @@ void Euler::getFromInput(
           }
 
           d_number_of_intervals = 
-             tbox::Utilities::imin(d_front_position.getSize()+1,
-                                  init_data_keys.getSize()-1);
+             tbox::MathUtilities<int>::Min( d_front_position.getSize()+1,
+                                            init_data_keys.getSize()-1 );
 
           d_front_position.resizeArray(d_front_position.getSize()+1);
           d_front_position[d_front_position.getSize()-1] = 
@@ -3931,7 +3940,7 @@ void Euler::getFromInput(
 void Euler::putToDatabase(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("EULER_VERSION", EULER_VERSION);
@@ -4266,8 +4275,8 @@ void Euler::readDirichletBoundaryDataEntry(tbox::Pointer<tbox::Database> db,
                                            int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
 #endif
 #if (NDIM == 2)
    readStateDataEntry(db,
@@ -4295,12 +4304,12 @@ void Euler::readStateDataEntry(tbox::Pointer<tbox::Database> db,
                                tbox::Array<double>& pressure)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
-   assert(array_indx >= 0);
-   assert(density.getSize() > array_indx);
-   assert(velocity.getSize() > array_indx*NDIM);
-   assert(pressure.getSize() > array_indx);
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
+   TBOX_ASSERT(array_indx >= 0);
+   TBOX_ASSERT(density.getSize() > array_indx);
+   TBOX_ASSERT(velocity.getSize() > array_indx*NDIM);
+   TBOX_ASSERT(pressure.getSize() > array_indx);
 #endif
 
    if (db->keyExists("density")) {
@@ -4353,11 +4362,11 @@ void Euler::checkBoundaryData(int btype,
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
 #if (NDIM == 2) 
-   assert(btype == EDGE2D_BDRY_TYPE || 
+   TBOX_ASSERT(btype == EDGE2D_BDRY_TYPE || 
           btype == NODE2D_BDRY_TYPE);
 #endif
 #if (NDIM == 3)
-   assert(btype == FACE3D_BDRY_TYPE ||
+   TBOX_ASSERT(btype == FACE3D_BDRY_TYPE ||
           btype == EDGE3D_BDRY_TYPE ||
           btype == NODE3D_BDRY_TYPE);
 #endif
@@ -4372,7 +4381,7 @@ void Euler::checkBoundaryData(int btype,
    for (int i = 0; i < bdry_boxes.getSize(); i++ ) {
       hier::BoundaryBox<NDIM> bbox = bdry_boxes[i];
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(bbox.getBoundaryType() == btype);
+      TBOX_ASSERT(bbox.getBoundaryType() == btype);
 #endif
       int bloc = bbox.getLocationIndex();
 
@@ -4380,16 +4389,16 @@ void Euler::checkBoundaryData(int btype,
 #if (NDIM == 2)
       if (btype == EDGE2D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_2D_EDGES);
-         assert(vector_bconds.getSize() == NUM_2D_EDGES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
+         TBOX_ASSERT(vector_bconds.getSize() == NUM_2D_EDGES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          bvelocitycase = vector_bconds[bloc];
          refbdryloc = bloc;
       } else { // btype == NODE2D_BDRY_TYPE
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_2D_NODES);
-         assert(vector_bconds.getSize() == NUM_2D_NODES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
+         TBOX_ASSERT(vector_bconds.getSize() == NUM_2D_NODES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          bvelocitycase = vector_bconds[bloc];
@@ -4399,24 +4408,24 @@ void Euler::checkBoundaryData(int btype,
 #if (NDIM == 3)
       if (btype == FACE3D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_FACES);
-         assert(vector_bconds.getSize() == NUM_3D_FACES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
+         TBOX_ASSERT(vector_bconds.getSize() == NUM_3D_FACES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          bvelocitycase = vector_bconds[bloc];
          refbdryloc = bloc;
       } else if (btype == EDGE3D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_EDGES);
-         assert(vector_bconds.getSize() == NUM_3D_EDGES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
+         TBOX_ASSERT(vector_bconds.getSize() == NUM_3D_EDGES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          bvelocitycase = vector_bconds[bloc];
          refbdryloc = d_edge_bdry_face[bloc];
       } else { // btype == NODE3D_BDRY_TYPE
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_NODES);
-         assert(vector_bconds.getSize() == NUM_3D_NODES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
+         TBOX_ASSERT(vector_bconds.getSize() == NUM_3D_NODES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          bvelocitycase = vector_bconds[bloc];

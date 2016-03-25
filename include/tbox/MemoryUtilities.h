@@ -1,9 +1,9 @@
 //
-// File:	MemoryUtilities.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/MemoryUtilities.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 690 $
-// Modified:	$Date: 2005-10-28 13:19:16 -0700 (Fri, 28 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routine for tracking memory use in applications.
 //
 
@@ -16,7 +16,6 @@
 
 #ifndef included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 namespace SAMRAI {
@@ -49,7 +48,7 @@ struct MemoryUtilities
    /*!
     * Print memory information to the supplied output stream.
     */
-   static void printMemoryInfo(ostream& os);
+   static void printMemoryInfo(std::ostream& os);
  
    /*!
     * Record memory info to be analyzed by TAU (Tuning and Analysis 
@@ -63,7 +62,7 @@ struct MemoryUtilities
     * Print maximum memory used (i.e. high-water mark) to the 
     * supplied output stream.
     */
-   static void printMaxMemory(ostream& os);
+   static void printMaxMemory(std::ostream& os);
    
 private:
 

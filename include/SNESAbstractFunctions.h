@@ -1,9 +1,9 @@
 //
-// File:        SNESAbstractFunctions.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/SNESAbstractFunctions.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 601 $
-// Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1819 $
+// Modified:    $LastChangedDate: 2007-12-20 18:09:28 -0800 (Thu, 20 Dec 2007) $
 // Description: Interface to user functions for SAMRAI-based PETSc SNES context
 //
 
@@ -12,6 +12,22 @@
 
 #ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
+#endif
+
+#ifdef HAVE_PETSC
+#ifndef included_petsc_snes
+#define included_petsc_snes
+#ifdef MPICH_SKIP_MPICXX
+#undef MPICH_SKIP_MPICXX
+#endif
+
+extern "C" {
+#ifdef PETSC2028
+#include "snes.h"
+#else
+#include "petscsnes.h"
+#endif
+}
 #endif
 
 #ifdef REQUIRES_CMATH
@@ -23,17 +39,6 @@
 *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT PETSC
 ************************************************************************
 */
-#ifdef HAVE_PETSC
-#ifndef included_petsc_snes
-#define included_petsc_snes
-extern "C" {
-#ifdef PETSC2028
-#include "snes.h"
-#else
-#include "petscsnes.h"
-#endif
-}
-#endif
 
 namespace SAMRAI {
     namespace solv {

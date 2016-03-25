@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ############################################################
-##  c) 1997-2005 The Regents of the University of California
+##  c) 1997-2007 Lawrence Livermore National Security, LLC
 ##  Perl script for running the vizamrai_cat.sh script
 ##  on multiple timesteps.  
 ###########################################################

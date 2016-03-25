@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryDefines.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryDefines.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Definitions of cells and nodes on embedded boundaries.
 // 
 

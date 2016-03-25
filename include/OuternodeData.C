@@ -1,10 +1,10 @@
 //
-// File:	OuternodeData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outernode/OuternodeData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated outernode centered patch data type
 //
 
@@ -22,9 +22,6 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
 #include <stdio.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_OUTERNODEDATA_VERSION 1
 
@@ -48,13 +45,13 @@ namespace SAMRAI {
 template <int DIM, class TYPE>
 OuternodeData<DIM,TYPE>::OuternodeData(
    const hier::Box<DIM>& box,
-   const int depth,
+   int depth,
    tbox::Pointer<tbox::Arena> pool)
 :  hier::PatchData<DIM>(box, hier::IntVector<DIM>(0)),
    d_depth(depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
@@ -143,13 +140,13 @@ void OuternodeData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src)
 
    if ( t_node_src != NULL ) {
       copyFromNode( *t_node_src );
-   }
-   else if ( t_onode_src != NULL ) {
+   } else if ( t_onode_src != NULL ) {
       copyFromOuternode( *t_onode_src );
-   }
-   else {
-      TBOX_ERROR("OuternodeData<DIM> can copy only with NodeData<DIM> of the same"
-		 <<"primitive data type.");
+   } else {
+      TBOX_ERROR("OuternodeData<DIM>::copy error!\n"
+                 << "Can copy only from NodeData<DIM,TYPE> or "
+                 << "OuternodeData<DIM,TYPE> of the same "
+		 << "DIM and TYPE.");
    }
 
 }
@@ -164,13 +161,13 @@ void OuternodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
 
    if ( t_node_dst != NULL ) {
       copyToNode( *t_node_dst );
-   }
-   else if ( t_onode_dst != NULL ) {
+   } else if ( t_onode_dst != NULL ) {
       copyToOuternode( *t_onode_dst );
-   }
-   else {
-      TBOX_ERROR("OuternodeData<DIM> can copy only with NodeData<DIM> of the same"
-		 <<"primitive data type.");
+   } else {
+      TBOX_ERROR("OuternodeData<DIM>::copy2 error!\n"
+                 << "Can copy only to NodeData<DIM,TYPE> or "
+                 << "OuternodeData<DIM,TYPE> of the same "
+		 << "DIM and TYPE.");
    }
 }
 
@@ -190,7 +187,7 @@ void OuternodeData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const NodeData<DIM,TYPE> *t_node_src = 
@@ -200,13 +197,13 @@ void OuternodeData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
 
    if ( t_node_src != NULL ) {
       copyFromNode( *t_node_src, *t_overlap );
-   }
-   else if ( t_onode_src != NULL ) {
+   } else if ( t_onode_src != NULL ) {
       copyFromOuternode( *t_onode_src, *t_overlap );
-   }
-   else {
-      TBOX_ERROR("OuternodeData<DIM> can copy only with NodeData<DIM> of the same"
-		 <<"primitive data type.");
+   } else {
+      TBOX_ERROR("OuternodeData<DIM>::copy error!\n"
+                 << "Can copy only from NodeData<DIM,TYPE> or "
+                 << "OuternodeData<DIM,TYPE> of the same "
+		 << "DIM and TYPE.");
    }
 
 }
@@ -218,7 +215,7 @@ void OuternodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    NodeData<DIM,TYPE> *t_node_dst = 
@@ -228,13 +225,13 @@ void OuternodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
 
    if ( t_node_dst != NULL ) {
       copyToNode( *t_node_dst, *t_overlap );
-   }
-   else if ( t_onode_dst != NULL ) {
+   } else if ( t_onode_dst != NULL ) {
       copyToOuternode( *t_onode_dst, *t_overlap );
-   }
-   else {
-      TBOX_ERROR("OuternodeData<DIM> can copy only with NodeData<DIM> of the same"
-		 <<"primitive data type.");
+   } else {
+      TBOX_ERROR("OuternodeData<DIM>::copy2 error!\n"
+                 << "Can copy only to NodeData<DIM,TYPE> or "
+                 << "OuternodeData<DIM,TYPE> of the same "
+		 << "DIM and TYPE.");
    }
 
 }
@@ -242,8 +239,8 @@ void OuternodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
 /*
 *************************************************************************
 *                                                                       *
-* Perform a fast copy between two arrays at the                         *
-* specified depths, where their	index spaces overlap.                   *
+* Perform a fast copy from a node data object to this outernode data    *
+* object at the specified depths, where their index spaces overlap.     *
 *                                                                       *
 *************************************************************************
 */
@@ -253,16 +250,102 @@ void OuternodeData<DIM,TYPE>::copyDepth(int dst_depth,
                                         const NodeData<DIM,TYPE>& src,
                                         int src_depth)
 {
-   const ArrayData<DIM,TYPE> &node_array = src.getArrayData();
+   const ArrayData<DIM,TYPE>& node_array = src.getArrayData();
    for (int d = 0; d < DIM; d++ ) {
       for ( int loc = 0; loc < 2; loc++ ) {
-         ArrayData<DIM,TYPE> &onode_array = d_data[d][loc];
+         ArrayData<DIM,TYPE>& onode_array = d_data[d][loc];
          onode_array.copyDepth(dst_depth,
                                node_array,
                                src_depth,
                                onode_array.getBox());
       }
    }
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Perform a fast copy to a node data object from this outernode data    *
+* object at the specified depths, where their index spaces overlap.     *
+*                                                                       *
+*************************************************************************
+*/
+
+template <int DIM, class TYPE>
+void OuternodeData<DIM,TYPE>::copyDepth2(int dst_depth,
+                                         NodeData<DIM,TYPE>& dst,
+                                         int src_depth) const
+{
+   ArrayData<DIM,TYPE>& node_array = dst.getArrayData();
+   for (int d = 0; d < DIM; d++ ) {
+      for ( int loc = 0; loc < 2; loc++ ) {
+         const ArrayData<DIM,TYPE>& onode_array = d_data[d][loc];
+         node_array.copyDepth(dst_depth,
+                              onode_array,
+                              src_depth,
+                              onode_array.getBox());
+      }
+   }
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Add source data to the destination according to overlap descriptor.   *
+*                                                                       *
+*************************************************************************
+*/
+
+template <int DIM, class TYPE>
+void OuternodeData<DIM,TYPE>::sum(
+   const hier::PatchData<DIM>& src,
+   const hier::BoxOverlap<DIM>& overlap)
+{
+   const NodeOverlap<DIM> *t_overlap =
+      dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(t_overlap != NULL);
+#endif
+
+   const OuternodeData<DIM,TYPE> *t_onode_src = 
+      dynamic_cast<const OuternodeData<DIM,TYPE> *>(&src);
+
+   // NOTE:  We assume this operation is only needed to
+   //        copy and add data to another outernode data
+   //        object.  If we ever need to provide this for node
+   //        data or other flavors of the copy operation, we
+   //        should refactor the routine similar to the way 
+   //        the regular copy operations are implemented.
+   if ( t_onode_src == NULL ) {
+      TBOX_ERROR("OuternodeData<DIM>::sum error!\n"
+                 << "Can copy and add only from OuternodeData<DIM,TYPE> "
+                 << "of the same DIM and TYPE.");
+   } else {
+
+      const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
+
+      for ( int src_d = 0; src_d < DIM; src_d++ ) {
+         for ( int src_p = 0; src_p < 2; src_p++ ) {
+ 
+            const ArrayData<DIM,TYPE> &src_array = 
+               t_onode_src->d_data[src_d][src_p];
+            const hier::BoxList<DIM>& box_list = 
+               t_overlap->getDestinationBoxList();
+ 
+            for ( int dst_d = 0; dst_d < DIM; dst_d++ ) {
+               for ( int dst_p = 0; dst_p < 2; dst_p++ ) {
+                  if (d_data[dst_d][dst_p].isInitialized()) {
+                     d_data[dst_d][dst_p].sum( 
+                        src_array, box_list, src_offset);
+                  }
+               }
+            }
+
+         }
+      }
+
+   }
+
 }
 
 /*
@@ -287,7 +370,7 @@ int OuternodeData<DIM,TYPE>::getDataStreamSize(
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    int size = 0;
    const hier::BoxList<DIM>& boxlist = t_overlap->getDestinationBoxList();
@@ -316,7 +399,7 @@ void OuternodeData<DIM,TYPE>::packStream(
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::BoxList<DIM>& dst_boxes    = t_overlap->getDestinationBoxList();
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
@@ -346,7 +429,7 @@ void OuternodeData<DIM,TYPE>::unpackStream(
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::BoxList<DIM>& dst_boxes = t_overlap->getDestinationBoxList();
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
@@ -367,6 +450,41 @@ void OuternodeData<DIM,TYPE>::unpackStream(
 /*
 *************************************************************************
 *                                                                       *
+* Unpack data from the message stream and add to this outernode data    *
+* object using the index space in the overlap descriptor.               *
+*                                                                       *
+*************************************************************************
+*/
+
+template <int DIM, class TYPE>
+void OuternodeData<DIM,TYPE>::unpackStreamAndSum(
+   tbox::AbstractStream& stream,
+   const hier::BoxOverlap<DIM>& overlap)
+{
+   const NodeOverlap<DIM> *t_overlap =
+      dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(t_overlap != NULL);
+#endif
+   const hier::BoxList<DIM>& dst_boxes = t_overlap->getDestinationBoxList();
+   const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
+   for (int d = 0; d < DIM; d++) {
+      for (typename hier::BoxList<DIM>::Iterator dst_box(dst_boxes);
+           dst_box; dst_box++) {
+         for (int f = 0; f < 2; f++) {
+            const hier::Box<DIM> intersect =
+               dst_box() * d_data[d][f].getBox();
+            if (!intersect.empty()) {
+               d_data[d][f].unpackStreamAndSum(stream, intersect, src_offset);
+            }
+         }
+      }
+   }
+}
+
+/*
+*************************************************************************
+*                                                                       *
 * Calculate the amount of memory space needed to represent the data     *
 * for a  outernode centered grid.                                       *
 *                                                                       *
@@ -375,10 +493,10 @@ void OuternodeData<DIM,TYPE>::unpackStream(
 
 template <int DIM, class TYPE>
 size_t OuternodeData<DIM,TYPE>::getSizeOfData(
-   const hier::Box<DIM>& box, const int depth)
+   const hier::Box<DIM>& box, int depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    size_t size = 0;
    for (int d = 0; d < DIM; d++) {
@@ -416,21 +534,22 @@ size_t OuternodeData<DIM,TYPE>::getSizeOfData(
 */
 
 template <int DIM, class TYPE>
-hier::Box<DIM> OuternodeData<DIM,TYPE>::getDataBox( int dim, int side )
+hier::Box<DIM> 
+OuternodeData<DIM,TYPE>::getDataBox(int face_normal, int side)
 {
-   if ( dim < 0 || dim >=DIM || side < 0 || side > 1 ) {
-      TBOX_ERROR("Bad values for dim and/or side in\n"
+   if ( face_normal < 0 || face_normal >=DIM || side < 0 || side > 1 ) {
+      TBOX_ERROR("Bad values for face_normal and/or side in\n"
                  "OuternodeData<DIM>::getDataBox().\n");
    }
 
    /*
     * We start with the full box and chop it down to the databox
-    * corresponding to the given dimension and side.
+    * corresponding to the given face_normal and side.
     */
    hier::Box<DIM> databox = NodeGeometry<DIM>::toNodeBox(this -> getBox());
    const hier::IntVector<DIM> &ghosts = this -> getGhostCellWidth();
 
-   for ( int dh = dim+1; dh < DIM; dh++ ) {
+   for ( int dh = face_normal+1; dh < DIM; dh++ ) {
 
       /*
        * For dimensions higher than d, narrow the box down to avoid
@@ -441,12 +560,14 @@ hier::Box<DIM> OuternodeData<DIM,TYPE>::getDataBox( int dim, int side )
    }
 
    if ( side == 0 ) {
-      databox.upper(dim) = databox.lower(dim);
-      databox.lower(dim) = databox.lower(dim) - ghosts(dim);
+      databox.upper(face_normal) = databox.lower(face_normal);
+      databox.lower(face_normal) = databox.lower(face_normal) - 
+                                   ghosts(face_normal);
    }
    else { // side == 1
-      databox.lower(dim) = databox.upper(dim);
-      databox.upper(dim) = databox.upper(dim) + ghosts(dim);
+      databox.lower(face_normal) = databox.upper(face_normal);
+      databox.upper(face_normal) = databox.upper(face_normal) + 
+                                   ghosts(face_normal);
    }
    return databox;
 }
@@ -460,10 +581,10 @@ hier::Box<DIM> OuternodeData<DIM,TYPE>::getDataBox( int dim, int side )
 */
 
 template <int DIM, class TYPE>
-void OuternodeData<DIM,TYPE>::fill(const TYPE& t, const int d)
+void OuternodeData<DIM,TYPE>::fill(const TYPE& t, int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       if (d_data[i][0].isInitialized()) {
@@ -477,11 +598,11 @@ void OuternodeData<DIM,TYPE>::fill(const TYPE& t, const int d)
 
 template <int DIM, class TYPE>
 void OuternodeData<DIM,TYPE>::fill(const TYPE& t,
-                                const hier::Box<DIM>& box,
-                                const int d)
+                                   const hier::Box<DIM>& box,
+                                   int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       if (d_data[i][0].isInitialized()) {
@@ -566,7 +687,7 @@ void OuternodeData<DIM,TYPE>::copyToNode(NodeData<DIM,TYPE>& dst) const
 
 template <int DIM, class TYPE>
 void OuternodeData<DIM,TYPE>::copyFromNode(const NodeData<DIM,TYPE>& src,
-					     const NodeOverlap<DIM>& overlap)
+                                           const NodeOverlap<DIM>& overlap)
 {
    const hier::IntVector<DIM>& src_offset = overlap.getSourceOffset();
    for (int d = 0; d < DIM; d++) {
@@ -582,7 +703,7 @@ void OuternodeData<DIM,TYPE>::copyFromNode(const NodeData<DIM,TYPE>& src,
 
 template <int DIM, class TYPE>
 void OuternodeData<DIM,TYPE>::copyToNode(NodeData<DIM, TYPE>& dst,
-					   const NodeOverlap<DIM>& overlap) const
+                                         const NodeOverlap<DIM>& overlap) const
 {
    const hier::IntVector<DIM>& src_offset = overlap.getSourceOffset();
    const hier::BoxList<DIM>& box_list = overlap.getDestinationBoxList();
@@ -692,7 +813,9 @@ void OuternodeData<DIM,TYPE>::copyToOuternode( OuternodeData<DIM,TYPE> &dst,
 */
 
 template <int DIM, class TYPE>
-void OuternodeData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int prec) const
+void OuternodeData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                                    std::ostream& os, 
+                                    int prec) const
 {
    for (int d = 0; d < d_depth; d++) {
       print(box, d, os, prec);
@@ -700,58 +823,60 @@ void OuternodeData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int 
 }
 
 template <int DIM, class TYPE>
-void OuternodeData<DIM,TYPE>::print(
-   const hier::Box<DIM>& box, const int d, ostream& os, int prec) const
+void OuternodeData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                                    int depth, 
+                                    std::ostream& os, 
+                                    int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
    for (int axis = 0; axis < DIM; axis++) {
-      os << "Array Axis Index<DIM> = " << axis << endl;
+      os << "Array axis = " << axis << std::endl;
       for (int side = 0; side < 2; side++) {
-         os << "Side Index<DIM> = " << ((side == 0) ? "lower" : "upper") << endl;
-         printAxisSide(axis, side, box, d, os, prec);
+         os << "Side = " << ((side == 0) ? "lower" : "upper") << std::endl;
+         printAxisSide(axis, side, box, depth, os, prec);
       }
    }
 }
 
 template <int DIM, class TYPE>
-void OuternodeData<DIM,TYPE>::printAxisSide(
-   const int axis, const int side, const hier::Box<DIM>& box, ostream& os, int prec) const
+void OuternodeData<DIM,TYPE>::printAxisSide(int face_normal, 
+                                            int side, 
+                                            const hier::Box<DIM>& box, 
+                                            std::ostream& os, 
+                                            int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
-   if (d_depth > 1) {
-      for (int d = 0; d < d_depth; d++) {
-         os << "Array Component Index<DIM> = " << d << endl;
-         printAxisSide(axis, side, box, d, os, prec);
-      }
-   } else {
-       printAxisSide(axis, side, box, 0, os, prec);
+   for (int d = 0; d < d_depth; d++) {
+      os << "Array depth = " << d << std::endl;
+      printAxisSide(face_normal, side, box, d, os, prec);
    }
 }
 
 
 template <int DIM, class TYPE>
-void OuternodeData<DIM,TYPE>::printAxisSide(
-   const int axis, const int side,
-   const hier::Box<DIM>& box, const int d, ostream& os,
-   int prec) const
+void OuternodeData<DIM,TYPE>::printAxisSide(int face_normal, 
+                                            int side, 
+                                            const hier::Box<DIM>& box, 
+                                            int depth, 
+                                            std::ostream& os, 
+                                            int prec) const
 {
-   NULL_USE(prec);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
    const hier::Box<DIM> nodebox = NodeGeometry<DIM>::toNodeBox(box);
-   const hier::Box<DIM> region = nodebox * d_data[axis][side].getBox();
-   os.precision( ((prec < 0) ? 12 : prec) );
+   const hier::Box<DIM> region = nodebox * d_data[face_normal][side].getBox();
+   os.precision(prec);
    for (typename hier::Box<DIM>::Iterator i(region); i; i++) {
-      os << "array" << i() << " = " << d_data[axis][side](i(),d) << endl;
-      os << flush;
+      os << "array" << i() << " = " 
+         << d_data[face_normal][side](i(),depth) << std::endl << std::flush;
    }
 }
 
@@ -770,13 +895,13 @@ void OuternodeData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("PDAT_OUTERNODEDATA_VERSION");
    if (ver != PDAT_OUTERNODEDATA_VERSION) {
       TBOX_ERROR("OuternodeData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << endl);
+          << " : Restart file version different than class version" << std::endl);
    }
 
    d_depth = database->getInteger("d_depth");
@@ -812,7 +937,7 @@ void OuternodeData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_OUTERNODEDATA_VERSION",

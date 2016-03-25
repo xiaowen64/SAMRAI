@@ -1,9 +1,9 @@
 //
-// File:        BoundaryDataTester.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/boundary/BoundaryDataTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 397 $
-// Modified:    $Date: 2005-05-24 13:13:32 -0700 (Tue, 24 May 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to test usage of boundary utilities
 //
 
@@ -16,16 +16,10 @@
 #include "CellVariable.h"
 #include "PatchLevel.h"
 #include "RefineAlgorithm.h"
-#include "tbox/IEEE.h"
+#include "tbox/MathUtilities.h"
 #include "tbox/Utilities.h"
 #include "VariableDatabase.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 //integer constants for boundary conditions
 #define CHECK_BDRY_DATA  (1)
@@ -58,8 +52,8 @@ BoundaryDataTester::BoundaryDataTester(
    tbox::Pointer<geom::CartesianGridGeometry<NDIM> > grid_geom)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
 #endif
 
    d_object_name = object_name;
@@ -103,7 +97,7 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
       tbox::Pointer< pdat::CellData<NDIM,double> > cvdata = 
          patch.getPatchData(d_variables[iv], d_variable_context);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!cvdata.isNull());
+      TBOX_ASSERT(!cvdata.isNull());
 #endif
 
       tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << endl; 
@@ -168,13 +162,13 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
    int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(level_number == 0);
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(level_number == 0);
 #endif
 
    tbox::Pointer<hier::PatchLevel<NDIM> > level = hierarchy->getPatchLevel(level_number);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    level->allocatePatchData(d_patch_data_components);
@@ -186,7 +180,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
          tbox::Pointer< pdat::CellData<NDIM,double> > cvdata = 
             patch->getPatchData(d_variables[iv], d_variable_context);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!cvdata.isNull());
+         TBOX_ASSERT(!cvdata.isNull());
 #endif
          for (int id = 0; id < cvdata->getDepth(); id++) {
             cvdata->fill(d_variable_interior_values[iv][id], 
@@ -214,14 +208,15 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 *************************************************************************
 */
 
-void BoundaryDataTester::runBoundaryTest(
+int BoundaryDataTester::runBoundaryTest(
    tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
    int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(level_number == 0);
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(level_number == 0);
 #endif
+   int d_fail_count = 0;
 
    hier::VariableDatabase<NDIM>* variable_db = hier::VariableDatabase<NDIM>::getDatabase();
 
@@ -237,11 +232,12 @@ void BoundaryDataTester::runBoundaryTest(
 
    tbox::Pointer<hier::PatchLevel<NDIM> > level = hierarchy->getPatchLevel(level_number);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    boundary_fill.createSchedule(level, this)->fillData(0.0);
 
+   return(d_fail_count);
 }
 
 /*
@@ -257,7 +253,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -416,7 +412,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
 #if (NDIM == 3)
       d_variable_bc_values[iv].resizeArray(NUM_3D_FACES*d_variable_depth[iv]);
 #endif
-      tbox::IEEE::initializeArrayToSignalingNaN(d_variable_bc_values[iv]);
+      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_variable_bc_values[iv]);
    }
 
 }
@@ -451,20 +447,20 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
-   assert(d_variable_bc_values.getSize() == d_variable_name.getSize());
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
+   TBOX_ASSERT(d_variable_bc_values.getSize() == d_variable_name.getSize());
 #endif
 
    for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 #if (NDIM == 2)
-      assert(d_variable_bc_values[iv].getSize() == 
+      TBOX_ASSERT(d_variable_bc_values[iv].getSize() == 
              NUM_2D_EDGES*d_variable_depth[iv]);
 #endif
 #if (NDIM == 3)
-      assert(d_variable_bc_values[iv].getSize() == 
+      TBOX_ASSERT(d_variable_bc_values[iv].getSize() == 
              NUM_3D_FACES*d_variable_depth[iv]);
 #endif
 #endif
@@ -497,7 +493,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
 void BoundaryDataTester::readBoundaryDataInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    hier::IntVector<NDIM> periodic = d_grid_geometry->getPeriodicShift();
@@ -635,15 +631,15 @@ void BoundaryDataTester::postprocessBoundaryInput()
 void BoundaryDataTester::checkBoundaryData(
    int btype, 
    const hier::Patch<NDIM>& patch, 
-   const hier::IntVector<NDIM>& ghost_width_to_check) const
+   const hier::IntVector<NDIM>& ghost_width_to_check)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
 #if (NDIM == 2) 
-   assert(btype == EDGE2D_BDRY_TYPE ||
+   TBOX_ASSERT(btype == EDGE2D_BDRY_TYPE ||
           btype == NODE2D_BDRY_TYPE);
 #endif
 #if (NDIM == 3)
-   assert(btype == FACE3D_BDRY_TYPE ||
+   TBOX_ASSERT(btype == FACE3D_BDRY_TYPE ||
           btype == EDGE3D_BDRY_TYPE ||
           btype == NODE3D_BDRY_TYPE);
 #endif
@@ -656,7 +652,7 @@ void BoundaryDataTester::checkBoundaryData(
    for (int i = 0; i < bdry_boxes.getSize(); i++ ) {
       hier::BoundaryBox<NDIM> bbox = bdry_boxes[i];
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(bbox.getBoundaryType() == btype);
+      TBOX_ASSERT(bbox.getBoundaryType() == btype);
 #endif
       int bloc = bbox.getLocationIndex();
 
@@ -664,7 +660,7 @@ void BoundaryDataTester::checkBoundaryData(
          tbox::Pointer< pdat::CellData<NDIM,double> > cvdata =
             patch.getPatchData(d_variables[iv], d_variable_context);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!cvdata.isNull());
+         TBOX_ASSERT(!cvdata.isNull());
 #endif
 
          int depth = d_variable_depth[iv];
@@ -716,6 +712,7 @@ void BoundaryDataTester::checkBoundaryData(
                              d_variable_bc_values[iv][refbdryloc]);
 #if (TESTING == 1)
             if (num_bad_values > 0) {
+               d_fail_count++; 
                tbox::perr << "\nBoundary Test FAILED: \n"
                     << "     " << num_bad_values << " bad "
                     << d_variable_name[iv] << " values found for"
@@ -768,6 +765,7 @@ void BoundaryDataTester::checkBoundaryData(
                                 d_variable_bc_values[iv][refbdryloc*depth+id]);
 #if (TESTING == 1)
                if (num_bad_values > 0) {
+                  d_fail_count++; 
                   tbox::perr << "\nBoundary Test FAILED: \n"
                        << "     " << num_bad_values << " bad "
                        << d_variable_name[iv] << " values found for"

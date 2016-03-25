@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataOuternodeSumTransactionFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/locally_active/LocallyActiveDataOuternodeSumTransactionFactory.h $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 696 $
-// Modified:	$Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1808 $
+// Modified:	$LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
 // Description:	Concrete factory for creating outernode sum transaction objects
 //              for locally-active data refine schedules.
 //
@@ -87,9 +87,9 @@ public:
     * @param dst_level      tbox::Pointer to destination patch level.
     * @param src_level      tbox::Pointer to source patch level.
     * @param overlap        tbox::Pointer to overlap region between patches.
-    * @param dst_patch      Integer index of destination patch in destination
+    * @param dst_patch_id   Integer index of destination patch in destination
     *                       patch level.
-    * @param src_patch      Integer index of source patch in source patch level.
+    * @param src_patch_id   Integer index of source patch in source patch level.
     * @param ritem_id       Integer index of xfer::RefineClass<DIM>::Data item 
     *                       associated with transaction.
     * @param box            Optional const reference to box defining region of

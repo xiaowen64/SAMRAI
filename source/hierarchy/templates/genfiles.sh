@@ -1,9 +1,9 @@
 ##
-## File:        genfiles.sh
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -33,15 +33,19 @@ do
     touch ./tmp/$t.filenames
 done
 
-for t in BoxIOUtility BoxUtilities BoxArray BoxList Box BoxComm \
-    BoxTop Index BoxGraphUtilities BoxTreeNode IntVector BoxGraph BoxTree \
-    BinaryTree BoundaryBox BoxGeometry BoxOverlap GridGeometry \
-    Patch PatchData PatchDataFactory PatchDescriptor PatchFactory  \
-    PatchGeometry PatchHierarchy PatchLevel PatchLevelFactory Variable \
-    VariableDatabase CoarseFineBoundary BoundaryLookupTable \
-    BasePatchLevel BasePatchHierarchy \
-    LayerNode LayerNodeSet LayerEdgeSet LayerHierarchy \
-    LocallyActiveDataPatchLevelManager LocallyActiveVariableDatabase
+for t in BasePatchHierarchy BasePatchLevel BinaryTree BoundaryBox \
+    BoundaryBoxUtils \
+    BoundaryLookupTable Box BoxArray BoxComm BoxGeometry BoxGraph \
+    BoxGraphUtilities BoxIOUtility BoxList BoxOverlap BoxTop BoxTree \
+    BoxTreeNode BoxUtilities CoarseFineBoundary GridGeometry Index IntVector \
+    LayerEdgeSet LayerHierarchy LayerNode LayerNodeSet \
+    LocallyActiveDataPatchLevelManager LocallyActiveVariableDatabase \
+    MBUtilities MultiblockDataTranslator MultiblockGridGeometry \
+    MultiblockPatchHierarchy \
+    MultiblockPatchLevel Patch PatchConfigurationUtilities PatchData \
+    PatchDataFactory PatchDescriptor PatchFactory PatchGeometry \
+    PatchHierarchy PatchLevel PatchLevelFactory Variable VariableDatabase
+
 do
   ${MT} default.filenames ./tmp hier $t NDIM
 done
@@ -67,6 +71,10 @@ ${MT} default.filenames ./tmp tbox tbox::Array hier::IntVector NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array hier::LayerEdgeSet NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array hier::LayerNodeSet NDIM
 
+${MT} default.filenames ./tmp tbox tbox::Array hier::PatchConfigurationUtilities\<NDIM\>::PatchLevelInfo
+${MT} default.filenames ./tmp tbox tbox::Array hier::PatchConfigurationUtilities\<NDIM\>::PatchInfo*
+${MT} default.filenames ./tmp tbox tbox::Array hier::PatchConfigurationUtilities\<NDIM\>::NeighborPatchInfo
+
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::Box NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::BoxArray NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::Index NDIM
@@ -82,6 +90,7 @@ ${MT} default.filenames ./tmp tbox tbox::Array tbox::List hier::IntVector NDIM
 
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::BoxOverlap NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::Index NDIM
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::GridGeometry NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::Patch NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::PatchData NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::PatchDataFactory NDIM
@@ -90,6 +99,7 @@ ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::PatchLevel ND
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::Variable NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::LocallyActiveDataPatchLevelManager NDIM
 
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::PatchConfigurationUtilities NDIM
 
 ${MT} default.filenames ./tmp tbox tbox::List hier::BoundaryBox NDIM
 ${MT} default.filenames ./tmp tbox tbox::List hier::BoxTreeNode\<NDIM\>::Triple
@@ -125,6 +135,17 @@ ${MT} default.filenames ./tmp tbox tbox::Pointer hier::PatchLevelFactory NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer hier::Variable NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer hier::LocallyActiveDataPatchLevelManager NDIM
 
+${MT} default.filenames ./tmp tbox tbox::Pointer hier::PatchConfigurationUtilities NDIM
+
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Array tbox::Pointer hier::MultiblockPatchLevel NDIM
+${MT} default.filenames ./tmp tbox tbox::Array tbox::List hier::MultiblockPatchHierarchy\<NDIM\>::Neighbor
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer hier::MultiblockPatchLevel NDIM
+
+${MT} default.filenames ./tmp tbox tbox::List hier::MultiblockPatchHierarchy\<NDIM\>::Neighbor
+
+${MT} default.filenames ./tmp tbox tbox::Pointer hier::MultiblockGridGeometry NDIM
+${MT} default.filenames ./tmp tbox tbox::Pointer hier::MultiblockPatchHierarchy NDIM
+${MT} default.filenames ./tmp tbox tbox::Pointer hier::MultiblockPatchLevel NDIM
 
 #
 # other list templates

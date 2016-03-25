@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///home/gunney/csg/svnrepository/mda/branches/v_0_1/MDA_Access.h $
-  Copyright:	(c) 2005 The Regents of the University of California
-  Revision:	$Revision: 559 $
-  Modified:	$Date: 2005-08-17 15:13:12 -0700 (Wed, 17 Aug 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/MDA_Access.h $
+  Copyright:	(c) 2005 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	Light-weight array class
 */
 

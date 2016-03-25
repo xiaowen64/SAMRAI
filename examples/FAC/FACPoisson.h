@@ -1,9 +1,9 @@
 /*
- * File:        $RCSfile$
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/FAC/FACPoisson.h $
  * Package:     SAMRAI application
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 173 $
- * Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1784 $
+ * Modified:    $LastChangedDate: 2007-12-17 13:08:36 -0800 (Mon, 17 Dec 2007) $
  * Description: Numerical routines for example FAC Poisson solver
  */
 
@@ -76,7 +76,7 @@ public:
     * @param object_name Ojbect name
     * @param database Input database (may be NULL)
     */
-   FACPoisson( const string &object_name,
+   FACPoisson( const std::string &object_name,
                tbox::Pointer<tbox::Database> database=NULL);
 
    virtual ~FACPoisson();
@@ -123,8 +123,8 @@ public:
       double* buffer ,
       const hier::Patch<NDIM> &patch ,
       const hier::Box<NDIM> &region ,
-      const string &variable_name ,
-      int depth_id );
+      const std::string &variable_name ,
+      int depth_id ) const;
 
    //@}
 
@@ -184,7 +184,7 @@ public:
 
 private:
 
-  string d_object_name;
+  std::string d_object_name;
 
   tbox::Pointer<hier::PatchHierarchy<NDIM> > d_hierarchy;
 

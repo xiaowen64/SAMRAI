@@ -1,9 +1,9 @@
 //
-// File:	InputDatabase.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/InputDatabase.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -17,7 +17,7 @@
 #ifdef DEBUG_NO_INLINE
 #include "tbox/InputDatabase.I"
 #endif
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 
 #define KEY_DATABASE      (0)
 #define KEY_BOOL_ARRAY    (1)
@@ -36,10 +36,10 @@
 #define SSTREAM_BUFFER (4096)
 
 #define INPUT_DB_ERROR(X) do {						\
-      pout << "InputDatabase: " << X << endl << flush;			\
+      pout << "InputDatabase: " << X << std::endl << std::flush;			\
       printClassData(pout);						\
-      pout << "Program abort called..." << endl << flush;               \
-      MPI::abort(); 						\
+      pout << "Program abort called..." << std::endl << std::flush;               \
+      SAMRAI_MPI::abort(); 						\
 } while (0)
 
 namespace SAMRAI {
@@ -66,7 +66,7 @@ InputDatabase::~InputDatabase()
 *************************************************************************
 */
 
-bool InputDatabase::keyExists(const string& key)
+bool InputDatabase::keyExists(const std::string& key)
 {
    return(findKeyData(key) ? true : false);
 }
@@ -79,10 +79,10 @@ bool InputDatabase::keyExists(const string& key)
 *************************************************************************
 */
 
-Array<string> InputDatabase::getAllKeys()
+Array<std::string> InputDatabase::getAllKeys()
 {
    const int n = d_keyvalues.getNumberItems();
-   Array<string> keys(n);
+   Array<std::string> keys(n);
 
    int k = 0;
    for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
@@ -101,7 +101,7 @@ Array<string> InputDatabase::getAllKeys()
 *************************************************************************
 */
 
-int InputDatabase::getArraySize(const string& key)
+int InputDatabase::getArraySize(const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return(keydata ? keydata->d_array_size : 0);
@@ -115,13 +115,13 @@ int InputDatabase::getArraySize(const string& key)
 *************************************************************************
 */
 
-bool InputDatabase::isDatabase(const string& key)
+bool InputDatabase::isDatabase(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(keydata ? keydata->d_type == KEY_DATABASE : false);
 }
 
-Pointer<Database> InputDatabase::putDatabase(const string& key)
+Pointer<Database> InputDatabase::putDatabase(const std::string& key)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -135,7 +135,7 @@ Pointer<Database> InputDatabase::putDatabase(const string& key)
    return(keydata.d_database);
 }
 
-Pointer<Database> InputDatabase::getDatabase(const string& key)
+Pointer<Database> InputDatabase::getDatabase(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if (keydata->d_type != KEY_DATABASE) {
@@ -153,25 +153,25 @@ Pointer<Database> InputDatabase::getDatabase(const string& key)
 *************************************************************************
 */
 
-bool InputDatabase::isBool(const string& key)
+bool InputDatabase::isBool(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(keydata ? keydata->d_type == KEY_BOOL_ARRAY : false);
 }
 
-void InputDatabase::putBool(const string& key, const bool& data)
+void InputDatabase::putBool(const std::string& key, const bool& data)
 {
    putBoolArray(key, &data, 1);
 }
 
 void InputDatabase::putBoolArray(
-   const string& key, const Array<bool>& data)
+   const std::string& key, const Array<bool>& data)
 {
    this->putBoolArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putBoolArray(
-   const string& key, const bool* const data, const int nelements)
+   const std::string& key, const bool* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -189,7 +189,7 @@ void InputDatabase::putBoolArray(
    d_keyvalues.appendItem(keydata);
 }
 
-bool InputDatabase::getBool(const string& key)
+bool InputDatabase::getBool(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if ((keydata->d_type != KEY_BOOL_ARRAY) || (keydata->d_array_size != 1)) {
@@ -200,7 +200,7 @@ bool InputDatabase::getBool(const string& key)
 }
 
 bool InputDatabase::getBoolWithDefault(
-   const string& key, const bool& defaultvalue)
+   const std::string& key, const bool& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getBool(key));
@@ -209,7 +209,7 @@ bool InputDatabase::getBoolWithDefault(
    return(defaultvalue);
 }
 
-Array<bool> InputDatabase::getBoolArray(const string& key)
+Array<bool> InputDatabase::getBoolArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if (keydata->d_type != KEY_BOOL_ARRAY) {
@@ -220,7 +220,7 @@ Array<bool> InputDatabase::getBoolArray(const string& key)
 }
 
 void InputDatabase::getBoolArray(
-   const string& key, bool* data, const int nelements)
+   const std::string& key, bool* data, const int nelements)
 {
    Array<bool> tmp = this->getBoolArray(key);
    const int tsize = tmp.getSize();
@@ -243,25 +243,25 @@ void InputDatabase::getBoolArray(
 *************************************************************************
 */
 
-bool InputDatabase::isDatabaseBox(const string& key)
+bool InputDatabase::isDatabaseBox(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(keydata ? keydata->d_type == KEY_BOX_ARRAY : false);
 }
 
-void InputDatabase::putDatabaseBox(const string& key, const DatabaseBox& data)
+void InputDatabase::putDatabaseBox(const std::string& key, const DatabaseBox& data)
 {
    putDatabaseBoxArray(key, &data, 1);
 }
 
 void InputDatabase::putDatabaseBoxArray(
-   const string& key, const Array<DatabaseBox>& data)
+   const std::string& key, const Array<DatabaseBox>& data)
 {
    this->putDatabaseBoxArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putDatabaseBoxArray(
-   const string& key, const DatabaseBox* const data, const int nelements)
+   const std::string& key, const DatabaseBox* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -279,7 +279,7 @@ void InputDatabase::putDatabaseBoxArray(
    d_keyvalues.appendItem(keydata);
 }
 
-DatabaseBox InputDatabase::getDatabaseBox(const string& key)
+DatabaseBox InputDatabase::getDatabaseBox(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if ((keydata->d_type != KEY_BOX_ARRAY) || (keydata->d_array_size != 1)) {
@@ -290,7 +290,7 @@ DatabaseBox InputDatabase::getDatabaseBox(const string& key)
 }
 
 DatabaseBox InputDatabase::getDatabaseBoxWithDefault(
-   const string& key, const DatabaseBox& defaultvalue)
+   const std::string& key, const DatabaseBox& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getDatabaseBox(key));
@@ -299,7 +299,7 @@ DatabaseBox InputDatabase::getDatabaseBoxWithDefault(
    return(defaultvalue);
 }
 
-Array<DatabaseBox> InputDatabase::getDatabaseBoxArray(const string& key)
+Array<DatabaseBox> InputDatabase::getDatabaseBoxArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if (keydata->d_type != KEY_BOX_ARRAY) {
@@ -310,7 +310,7 @@ Array<DatabaseBox> InputDatabase::getDatabaseBoxArray(const string& key)
 }
 
 void InputDatabase::getDatabaseBoxArray(
-   const string& key, DatabaseBox* data, const int nelements)
+   const std::string& key, DatabaseBox* data, const int nelements)
 {
    Array<DatabaseBox> tmp = this->getDatabaseBoxArray(key);
    const int tsize = tmp.getSize();
@@ -333,25 +333,25 @@ void InputDatabase::getDatabaseBoxArray(
 *************************************************************************
 */
 
-bool InputDatabase::isChar(const string& key)
+bool InputDatabase::isChar(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(keydata ? keydata->d_type == KEY_CHAR_ARRAY : false);
 }
 
-void InputDatabase::putChar(const string& key, const char& data)
+void InputDatabase::putChar(const std::string& key, const char& data)
 {
    putCharArray(key, &data, 1);
 }
 
 void InputDatabase::putCharArray(
-   const string& key, const Array<char>& data)
+   const std::string& key, const Array<char>& data)
 {
    this->putCharArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putCharArray(
-   const string& key, const char* const data, const int nelements)
+   const std::string& key, const char* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -369,7 +369,7 @@ void InputDatabase::putCharArray(
    d_keyvalues.appendItem(keydata);
 }
 
-char InputDatabase::getChar(const string& key)
+char InputDatabase::getChar(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if ((keydata->d_type != KEY_CHAR_ARRAY) || (keydata->d_array_size != 1)) {
@@ -380,7 +380,7 @@ char InputDatabase::getChar(const string& key)
 }
 
 char InputDatabase::getCharWithDefault(
-   const string& key, const char& defaultvalue)
+   const std::string& key, const char& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getChar(key));
@@ -389,7 +389,7 @@ char InputDatabase::getCharWithDefault(
    return(defaultvalue);
 }
 
-Array<char> InputDatabase::getCharArray(const string& key)
+Array<char> InputDatabase::getCharArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if (keydata->d_type != KEY_CHAR_ARRAY) {
@@ -400,7 +400,7 @@ Array<char> InputDatabase::getCharArray(const string& key)
 }
 
 void InputDatabase::getCharArray(
-   const string& key, char* data, const int nelements)
+   const std::string& key, char* data, const int nelements)
 {
    Array<char> tmp = this->getCharArray(key);
    const int tsize = tmp.getSize();
@@ -425,7 +425,7 @@ void InputDatabase::getCharArray(
 *************************************************************************
 */
 
-bool InputDatabase::isComplex(const string& key)
+bool InputDatabase::isComplex(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(!keydata ? false : (keydata->d_type == KEY_COMPLEX_ARRAY
@@ -434,19 +434,19 @@ bool InputDatabase::isComplex(const string& key)
                            || keydata->d_type == KEY_DOUBLE_ARRAY));
 }
 
-void InputDatabase::putComplex(const string& key, const dcomplex& data)
+void InputDatabase::putComplex(const std::string& key, const dcomplex& data)
 {
    putComplexArray(key, &data, 1);
 }
 
 void InputDatabase::putComplexArray(
-   const string& key, const Array<dcomplex>& data)
+   const std::string& key, const Array<dcomplex>& data)
 {
    this->putComplexArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putComplexArray(
-   const string& key, const dcomplex* const data, const int nelements)
+   const std::string& key, const dcomplex* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -464,7 +464,7 @@ void InputDatabase::putComplexArray(
    d_keyvalues.appendItem(keydata);
 }
 
-dcomplex InputDatabase::getComplex(const string& key)
+dcomplex InputDatabase::getComplex(const std::string& key)
 {
    dcomplex value(0.0,0.0);
    KeyData *keydata = findKeyDataOrExit(key);
@@ -495,7 +495,7 @@ dcomplex InputDatabase::getComplex(const string& key)
 }
 
 dcomplex InputDatabase::getComplexWithDefault(
-   const string& key, const dcomplex& defaultvalue)
+   const std::string& key, const dcomplex& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getComplex(key));
@@ -505,7 +505,7 @@ dcomplex InputDatabase::getComplexWithDefault(
 }
 
 Array<dcomplex> InputDatabase::getComplexArray(
-   const string& key)
+   const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    Array<dcomplex> array;
@@ -542,7 +542,7 @@ Array<dcomplex> InputDatabase::getComplexArray(
 }
 
 void InputDatabase::getComplexArray(
-   const string& key, dcomplex* data, const int nelements)
+   const std::string& key, dcomplex* data, const int nelements)
 {
    Array<dcomplex> tmp = this->getComplexArray(key);
    const int tsize = tmp.getSize();
@@ -567,7 +567,7 @@ void InputDatabase::getComplexArray(
 */
 
 bool InputDatabase::isDouble(
-   const string& key)
+   const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(!keydata ? false : (keydata->d_type == KEY_DOUBLE_ARRAY
@@ -576,19 +576,19 @@ bool InputDatabase::isDouble(
 }
 
 void InputDatabase::putDouble(
-   const string& key, const double& data)
+   const std::string& key, const double& data)
 {
    putDoubleArray(key, &data, 1);
 }
 
 void InputDatabase::putDoubleArray(
-   const string& key, const Array<double>& data)
+   const std::string& key, const Array<double>& data)
 {
    this->putDoubleArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putDoubleArray(
-   const string& key, const double* const data, const int nelements)
+   const std::string& key, const double* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -606,7 +606,7 @@ void InputDatabase::putDoubleArray(
    d_keyvalues.appendItem(keydata);
 }
 
-double InputDatabase::getDouble(const string& key)
+double InputDatabase::getDouble(const std::string& key)
 {
    double value = 0.0;
    KeyData *keydata = findKeyDataOrExit(key);
@@ -634,7 +634,7 @@ double InputDatabase::getDouble(const string& key)
 }
 
 double InputDatabase::getDoubleWithDefault(
-   const string& key, const double& defaultvalue)
+   const std::string& key, const double& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getDouble(key));
@@ -643,7 +643,7 @@ double InputDatabase::getDoubleWithDefault(
    return(defaultvalue);
 }
 
-Array<double> InputDatabase::getDoubleArray(const string& key)
+Array<double> InputDatabase::getDoubleArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    Array<double> array;
@@ -674,7 +674,7 @@ Array<double> InputDatabase::getDoubleArray(const string& key)
 }
 
 void InputDatabase::getDoubleArray(
-   const string& key, double* data, const int nelements)
+   const std::string& key, double* data, const int nelements)
 {
    Array<double> tmp = this->getDoubleArray(key);
    const int tsize = tmp.getSize();
@@ -699,7 +699,7 @@ void InputDatabase::getDoubleArray(
 *************************************************************************
 */
 
-bool InputDatabase::isFloat(const string& key)
+bool InputDatabase::isFloat(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(!keydata ? false : (keydata->d_type == KEY_DOUBLE_ARRAY
@@ -707,19 +707,19 @@ bool InputDatabase::isFloat(const string& key)
                            || keydata->d_type == KEY_FLOAT_ARRAY));
 }
 
-void InputDatabase::putFloat(const string& key, const float& data)
+void InputDatabase::putFloat(const std::string& key, const float& data)
 {
    putFloatArray(key, &data, 1);
 }
 
 void InputDatabase::putFloatArray(
-   const string& key, const Array<float>& data)
+   const std::string& key, const Array<float>& data)
 {
    this->putFloatArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putFloatArray(
-   const string& key, const float* const data, const int nelements)
+   const std::string& key, const float* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -738,7 +738,7 @@ void InputDatabase::putFloatArray(
 }
 
 float InputDatabase::getFloat(
-   const string& key)
+   const std::string& key)
 {
    float value = 0.0;
    KeyData *keydata = findKeyDataOrExit(key);
@@ -749,13 +749,13 @@ float InputDatabase::getFloat(
 
    switch (keydata->d_type) {
       case KEY_INT_ARRAY:
-         value = (float) keydata->d_integer[0];
+         value = static_cast<float>( keydata->d_integer[0] );
          break;
       case KEY_FLOAT_ARRAY:
          value = keydata->d_float[0];
          break;
       case KEY_DOUBLE_ARRAY:
-         value = (float) keydata->d_double[0];
+         value = static_cast<float>( keydata->d_double[0] );
          break;
       default:
          INPUT_DB_ERROR("Key=" << key << " is not a single float...");
@@ -766,7 +766,7 @@ float InputDatabase::getFloat(
 }
 
 float InputDatabase::getFloatWithDefault(
-   const string& key, const float& defaultvalue)
+   const std::string& key, const float& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getFloat(key));
@@ -776,7 +776,7 @@ float InputDatabase::getFloatWithDefault(
 }
 
 Array<float> InputDatabase::getFloatArray(
-   const string& key)
+   const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    Array<float> array;
@@ -784,7 +784,7 @@ Array<float> InputDatabase::getFloatArray(
       case KEY_INT_ARRAY: {
          array = Array<float>(keydata->d_integer.getSize());
          for (int i = 0; i < keydata->d_integer.getSize(); i++) {
-            array[i] = (float) keydata->d_integer[i];
+            array[i] = static_cast<float>( keydata->d_integer[i] );
          }
          break;
       }
@@ -794,7 +794,7 @@ Array<float> InputDatabase::getFloatArray(
       case KEY_DOUBLE_ARRAY: {
          array = Array<float>(keydata->d_double.getSize());
          for (int i = 0; i < keydata->d_double.getSize(); i++) {
-            array[i] = (float) keydata->d_double[i];
+            array[i] = static_cast<float>( keydata->d_double[i] );
          }
          break;
       }
@@ -806,7 +806,7 @@ Array<float> InputDatabase::getFloatArray(
 }
 
 void InputDatabase::getFloatArray(
-   const string& key, float* data, const int nelements)
+   const std::string& key, float* data, const int nelements)
 {
    Array<float> tmp = this->getFloatArray(key);
    const int tsize = tmp.getSize();
@@ -830,26 +830,26 @@ void InputDatabase::getFloatArray(
 */
 
 bool InputDatabase::isInteger(
-   const string& key)
+   const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(!keydata ? false : keydata->d_type == KEY_INT_ARRAY);
 }
 
 void InputDatabase::putInteger(
-   const string& key, const int& data)
+   const std::string& key, const int& data)
 {
    putIntegerArray(key, &data, 1);
 }
 
 void InputDatabase::putIntegerArray(
-   const string& key, const Array<int>& data)
+   const std::string& key, const Array<int>& data)
 {
    this->putIntegerArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putIntegerArray(
-   const string& key, const int* const data, const int nelements)
+   const std::string& key, const int* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -868,7 +868,7 @@ void InputDatabase::putIntegerArray(
 }
 
 int InputDatabase::getInteger(
-   const string& key)
+   const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if ((keydata->d_type != KEY_INT_ARRAY) || (keydata->d_array_size != 1)) {
@@ -879,7 +879,7 @@ int InputDatabase::getInteger(
 }
 
 int InputDatabase::getIntegerWithDefault(
-   const string& key, const int& defaultvalue)
+   const std::string& key, const int& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getInteger(key));
@@ -889,7 +889,7 @@ int InputDatabase::getIntegerWithDefault(
 }
 
 Array<int> InputDatabase::getIntegerArray(
-   const string& key)
+   const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if (keydata->d_type != KEY_INT_ARRAY) {
@@ -900,7 +900,7 @@ Array<int> InputDatabase::getIntegerArray(
 }
 
 void InputDatabase::getIntegerArray(
-   const string& key, int* data, const int nelements)
+   const std::string& key, int* data, const int nelements)
 {
    Array<int> tmp = this->getIntegerArray(key);
    const int tsize = tmp.getSize();
@@ -923,27 +923,27 @@ void InputDatabase::getIntegerArray(
 *************************************************************************
 */
 
-bool InputDatabase::isString(const string& key)
+bool InputDatabase::isString(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
    return(!keydata ? false : keydata->d_type == KEY_STRING_ARRAY);
 }
 
 void InputDatabase::putString(
-   const string& key, const string& data)
+   const std::string& key, const std::string& data)
 {
    putStringArray(key, &data, 1);
 }
 
 void InputDatabase::putStringArray(
-   const string& key, 
-   const Array<string>& data)
+   const std::string& key, 
+   const Array<std::string>& data)
 {
    this->putStringArray(key, data.getPointer(), data.getSize());
 }
 
 void InputDatabase::putStringArray(
-   const string& key, const string* const data, const int nelements)
+   const std::string& key, const std::string* const data, const int nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -952,7 +952,7 @@ void InputDatabase::putStringArray(
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
-   keydata.d_string       = Array<string>(nelements);
+   keydata.d_string       = Array<std::string>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_string[i] = data[i];
@@ -961,7 +961,7 @@ void InputDatabase::putStringArray(
    d_keyvalues.appendItem(keydata);
 }
 
-string InputDatabase::getString(const string& key)
+std::string InputDatabase::getString(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if ((keydata->d_type != KEY_STRING_ARRAY) || (keydata->d_array_size != 1)) {
@@ -971,8 +971,8 @@ string InputDatabase::getString(const string& key)
    return(keydata->d_string[0]);
 }
 
-string InputDatabase::getStringWithDefault(
-   const string& key, const string& defaultvalue)
+std::string InputDatabase::getStringWithDefault(
+   const std::string& key, const std::string& defaultvalue)
 {
    KeyData *keydata = findKeyData(key);
    if (keydata) return(this->getString(key));
@@ -981,7 +981,7 @@ string InputDatabase::getStringWithDefault(
    return(defaultvalue);
 }
 
-Array<string> InputDatabase::getStringArray(const string& key)
+Array<std::string> InputDatabase::getStringArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
    if (keydata->d_type != KEY_STRING_ARRAY) {
@@ -992,9 +992,9 @@ Array<string> InputDatabase::getStringArray(const string& key)
 }
 
 void InputDatabase::getStringArray(
-   const string& key, string* data, const int nelements)
+   const std::string& key, std::string* data, const int nelements)
 {
-   Array<string> tmp = this->getStringArray(key);
+   Array<std::string> tmp = this->getStringArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -1017,7 +1017,7 @@ void InputDatabase::getStringArray(
 *************************************************************************
 */
 
-bool InputDatabase::deleteKeyIfFound(const string& key)
+bool InputDatabase::deleteKeyIfFound(const std::string& key)
 {
    for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
       if (i().d_key == key) {
@@ -1038,7 +1038,7 @@ bool InputDatabase::deleteKeyIfFound(const string& key)
 */
 
 InputDatabase::KeyData*
-InputDatabase::findKeyData(const string& key)
+InputDatabase::findKeyData(const std::string& key)
 {
    for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
       if (key == i().d_key) return(&i());
@@ -1057,7 +1057,7 @@ InputDatabase::findKeyData(const string& key)
 */
 
 InputDatabase::KeyData*
-InputDatabase::findKeyDataOrExit(const string& key)
+InputDatabase::findKeyDataOrExit(const std::string& key)
 {
    for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
       if (key == i().d_key) return(&i());
@@ -1074,7 +1074,7 @@ InputDatabase::findKeyDataOrExit(const string& key)
 *************************************************************************
 */
 
-void InputDatabase::printClassData(ostream& os)
+void InputDatabase::printClassData(std::ostream& os)
 {
    printDatabase(os, 0, PRINT_DEFAULT | PRINT_INPUT | PRINT_UNUSED);
 }
@@ -1087,7 +1087,7 @@ void InputDatabase::printClassData(ostream& os)
 *************************************************************************
 */
 
-void InputDatabase::printUnusedKeys(ostream& os) const
+void InputDatabase::printUnusedKeys(std::ostream& os) const
 {
    printDatabase(os, 0, PRINT_UNUSED);
 }
@@ -1100,7 +1100,7 @@ void InputDatabase::printUnusedKeys(ostream& os) const
 *************************************************************************
 */
 
-void InputDatabase::printDefaultKeys(ostream& os) const
+void InputDatabase::printDefaultKeys(std::ostream& os) const
 {
    printDatabase(os, 0, PRINT_DEFAULT);
 }
@@ -1113,7 +1113,7 @@ void InputDatabase::printDefaultKeys(ostream& os) const
 *************************************************************************
 */
 
-void InputDatabase::indentStream(ostream& os, const int indent)
+void InputDatabase::indentStream(std::ostream& os, const int indent)
 {
    for (int i = 0; i < indent; i++) {
       os << " ";
@@ -1129,7 +1129,7 @@ void InputDatabase::indentStream(ostream& os, const int indent)
 */
 
 void InputDatabase::printDatabase(
-   ostream& os, const int indent, const int toprint) const
+   std::ostream& os, const int indent, const int toprint) const
 {
    /*
     * Get the maximum key width in the output (excluding databases)
@@ -1160,10 +1160,10 @@ void InputDatabase::printDatabase(
         || (!(i().d_accessed)     && (toprint & PRINT_UNUSED ))) {
 
 #ifndef LACKS_SSTREAM
-         ostringstream sstream;
+         std::ostringstream sstream;
 #else
          char sstream_buffer[SSTREAM_BUFFER];
-         ostrstream sstream(sstream_buffer, SSTREAM_BUFFER);
+         std::ostrstream sstream(sstream_buffer, SSTREAM_BUFFER);
 #endif
 
          switch(i().d_type) {
@@ -1306,8 +1306,8 @@ void InputDatabase::printDatabase(
                sstream << " // input not used";
             }
           
-//            sstream << endl << ends;
-            sstream << endl;
+//            sstream << std::endl << ends;
+            sstream << std::endl;
             os << sstream.str();
          }
       }

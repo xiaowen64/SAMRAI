@@ -1,9 +1,9 @@
 //
-// File:	ComponentSelector.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/ComponentSelector.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 407 $
-// Modified:	$Date: 2005-06-01 09:49:54 -0700 (Wed, 01 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Simple bit vector of a fixed length (128 bits)
 //
 
@@ -21,7 +21,7 @@ namespace SAMRAI {
 
 int ComponentSelector::s_bits_per_long = 8*sizeof(unsigned long);
 
-void ComponentSelector::printClassData( ostream &os ) const
+void ComponentSelector::printClassData( std::ostream &os ) const
 {
    int i;
    const int number_of_bits = getSize();

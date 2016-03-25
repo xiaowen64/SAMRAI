@@ -1,9 +1,9 @@
 //
-// File:	SideGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/SideGeometry.C $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for side centered objects
 //
 
@@ -15,7 +15,7 @@
 #include "SideOverlap.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -39,8 +39,8 @@ template<int DIM>  SideGeometry<DIM>::SideGeometry(
    const hier::IntVector<DIM>& directions)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
-   assert(directions.min() >= 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(directions.min() >= 0);
 #endif
    d_box    = box;
    d_ghosts = ghosts;
@@ -101,16 +101,16 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > SideGeometry<DIM>::calc
 
 template<int DIM> hier::Box<DIM> SideGeometry<DIM>::toSideBox(
    const hier::Box<DIM>& box,
-   const int axis)
+   int side_normal)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert ( (axis >= 0) && (axis < DIM) );
+   TBOX_ASSERT( (side_normal >= 0) && (side_normal < DIM) );
 #endif
    hier::Box<DIM> side_box;
 
    if (!box.empty()) {
       side_box = box;
-      side_box.upper(axis) += 1;
+      side_box.upper(side_normal) += 1;
    }
 
    return(side_box);
@@ -138,7 +138,7 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > SideGeometry<DIM>::doOv
    const hier::IntVector<DIM>& src_offset)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert (dst_geometry.getDirectionVector() 
+   TBOX_ASSERT(dst_geometry.getDirectionVector() 
            == src_geometry.getDirectionVector());
 #endif
 

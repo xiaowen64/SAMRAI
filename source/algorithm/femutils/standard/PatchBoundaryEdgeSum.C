@@ -1,9 +1,9 @@
 //
-// File:	PatchBoundaryEdgeSum.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/PatchBoundaryEdgeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 696 $
-// Modified:	$Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for summing edge data at patch boundaries
 //
 
@@ -23,9 +23,6 @@
 #include "RefineOperator.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace algs {
@@ -54,6 +51,37 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 /*
 *************************************************************************
 *                                                                       *
+* Static functions to determine number of patch data slots needed       *
+* for PatchBoundaryEdgeSum objects.                                     *
+*                                                                       *
+*************************************************************************
+*/
+ 
+template<int DIM>
+int
+PatchBoundaryEdgeSum<DIM>::getNumSharedPatchDataSlots(
+   int max_variables_to_register)
+{
+   // edge boundary sum requires two internal outeredge variables
+   // (source and destination) for each registered variable.
+ 
+   return( 2 * max_variables_to_register );
+}
+ 
+template<int DIM>
+int
+PatchBoundaryEdgeSum<DIM>::getNumUniquePatchDataSlots(
+   int max_variables_to_register)
+{
+   // all patch data slots used by edge boundary sum are static
+   // and shared among all objects.
+ 
+   return( 0 );
+}
+
+/*
+*************************************************************************
+*                                                                       *
 * Constructor patch boundary edge sum objects initializes data members  *
 * to default (undefined) states.                                        *
 *                                                                       *
@@ -61,10 +89,10 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 */
 
 template<int DIM> PatchBoundaryEdgeSum<DIM>::PatchBoundaryEdgeSum(
-   const string& object_name)
+   const std::string& object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
 
    d_object_name = object_name;
@@ -101,12 +129,12 @@ template<int DIM> PatchBoundaryEdgeSum<DIM>::~PatchBoundaryEdgeSum()
 
             if (s_oedge_src_id_array[id][iv] >= 0) {
                hier::VariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_oedge_src_id_array[id][iv]);
             }
             if (s_oedge_dst_id_array[id][iv] >= 0) {
                hier::VariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_oedge_dst_id_array[id][iv]);
             }
 
@@ -140,14 +168,14 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::registerSum(
                  << "\nCannot call registerSum with this PatchBoundaryEdgeSum"
                  << "\nobject since it has already been used to create communication"
                  << "\nschedules; i.e., setupSum() has been called."
-                 << endl);
+                 << std::endl);
    }
 
    if (edge_data_id < 0) {
       TBOX_ERROR("PatchBoundaryEdgeSum<DIM> register error..."
                  << "\nobject named " << d_object_name 
                  << "\n edge_data_id = " << edge_data_id
-                 << " is an invalid patch data identifier." << endl);
+                 << " is an invalid patch data identifier." << std::endl);
    }
 
    hier::VariableDatabase<DIM>* var_db = hier::VariableDatabase<DIM>::getDatabase();
@@ -160,12 +188,12 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::registerSum(
       TBOX_ERROR("PatchBoundaryEdgeSum<DIM> register error..."
                  << "\nobject named " << d_object_name 
                  << "\n edge_data_id = " << edge_data_id
-                 << " does not correspond to edge data of type double." << endl);
+                 << " does not correspond to edge data of type double." << std::endl);
 
    } else {
 
-      static string tmp_oedge_src_variable_name("PatchBoundaryEdgeSum__internal-oedge-src");
-      static string tmp_oedge_dst_variable_name("PatchBoundaryEdgeSum__internal-oedge-dst");
+      static std::string tmp_oedge_src_variable_name("PatchBoundaryEdgeSum__internal-oedge-src");
+      static std::string tmp_oedge_dst_variable_name("PatchBoundaryEdgeSum__internal-oedge-dst");
 
       const int reg_sum_id = d_num_reg_sum;
 
@@ -218,14 +246,14 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::registerSum(
       char var_suffix[17];
       sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
 
-      string toedge_src_var_name = tmp_oedge_src_variable_name + var_suffix;
+      std::string toedge_src_var_name = tmp_oedge_src_variable_name + var_suffix;
       d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(toedge_src_var_name);
       if (d_tmp_oedge_src_variable[reg_sum_id].isNull()) {
          d_tmp_oedge_src_variable[reg_sum_id] =
             new pdat::OuteredgeVariable<DIM,double>(toedge_src_var_name, data_depth);
       }
 
-      string toedge_dst_var_name = tmp_oedge_dst_variable_name + var_suffix;
+      std::string toedge_dst_var_name = tmp_oedge_dst_variable_name + var_suffix;
       d_tmp_oedge_dst_variable[reg_sum_id] = var_db->getVariable(toedge_dst_var_name);
       if (d_tmp_oedge_dst_variable[reg_sum_id].isNull()) {
          d_tmp_oedge_dst_variable[reg_sum_id] =
@@ -234,13 +262,15 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::registerSum(
 
       if ( s_oedge_src_id_array[data_depth][data_depth_id] < 0 ) {
          s_oedge_src_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_oedge_src_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_oedge_src_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
       if ( s_oedge_dst_id_array[data_depth][data_depth_id] < 0) {
          s_oedge_dst_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_oedge_dst_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_oedge_dst_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
 
       d_user_edge_data_id[reg_sum_id] = edge_data_id;
@@ -271,7 +301,7 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::setupSum(
    tbox::Pointer<hier::PatchLevel<DIM> > level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    d_setup_called = true;
@@ -333,7 +363,7 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::doLevelSum(
    tbox::Pointer<hier::PatchLevel<DIM> > level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {
@@ -346,6 +376,7 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::doLevelSum(
             patch->getPatchData(d_oedge_src_id[i]);
 
          oedge_data->copy(*edge_data);
+
       }
    }
 
@@ -361,6 +392,7 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::doLevelSum(
             patch->getPatchData(d_oedge_dst_id[i]);
 
          oedge_data->copy2(*edge_data);
+
       }
    }
 

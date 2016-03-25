@@ -1,9 +1,9 @@
 ##
-## File:        solv.data
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/scripts/conversion2.0/solv.data $
 ## Package:     SAMRAI build scripts
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1768 $
+## Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 ## Description: data file for sed substitutions to generate dim-dep. files
 ##
 
@@ -23,7 +23,7 @@ solv_CellPoissonFACSolver
 solv_PoissonHierarchySolver
 solv_PoissonHYPRESolver
 solv_PoissonLevelStrategy
-solv_PVodeTrio_SAMRAIVector
+solv_Sundials_SAMRAIVector
 solv_RobinBcCoefStrategy
 solv_SimpleCellRobinBcCoefs
 solv_SAMRAIVectorReal

@@ -1,9 +1,9 @@
 //
-// File:	CoarsenSchedule.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenSchedule.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 684 $
-// Modified:	$Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Coarsening schedule for data transfer between AMR levels
 //
  
@@ -24,10 +24,8 @@
 #include "tbox/InputManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifndef NULL
 #define NULL (0)
@@ -48,7 +46,7 @@ template<int DIM> const hier::IntVector<DIM>
    CoarsenSchedule<DIM>::s_constant_zero_intvector = hier::IntVector<DIM>(0);
 template<int DIM> const hier::IntVector<DIM> 
    CoarsenSchedule<DIM>::s_constant_one_intvector = hier::IntVector<DIM>(1);
-template<int DIM> string 
+template<int DIM> std::string 
    CoarsenSchedule<DIM>::s_schedule_generation_method = "BOX_TREE";
 
 /*
@@ -60,7 +58,7 @@ template<int DIM> string
  */
 
 template<int DIM> void CoarsenSchedule<DIM>::setScheduleGenerationMethod(
-   const string& method)
+   const std::string& method)
 {
    if ( !((method == "ORIG_NSQUARED") ||
           (method == "BOX_GRAPH") ||
@@ -69,7 +67,7 @@ template<int DIM> void CoarsenSchedule<DIM>::setScheduleGenerationMethod(
                  << "Given method string "
                  << method << " is invalid.\n Options are\n"
                  << "'ORIG_NSQUARED', 'BOX_GRAPH', and 'BOX_TREE'."
-                 << endl);
+                 << std::endl);
    }
 
    s_schedule_generation_method = method;
@@ -96,10 +94,10 @@ template<int DIM>  CoarsenSchedule<DIM>::CoarsenSchedule(
    bool fill_coarse_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!crse_level.isNull());
-   assert(!fine_level.isNull());
-   assert(!coarsen_classes.isNull());
-   assert(!transaction_factory.isNull());
+   TBOX_ASSERT(!crse_level.isNull());
+   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(!coarsen_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
    t_coarsen_data = tbox::TimerManager::getManager() -> 
@@ -145,18 +143,19 @@ template<int DIM>  CoarsenSchedule<DIM>::CoarsenSchedule(
       if (fine(i) > 1) {
          d_ratio_between_levels(i) = fine(i) / crse(i);
       } else {
-         d_ratio_between_levels(i) = tbox::Utilities::iabs( crse(i) / fine(i) );
+         d_ratio_between_levels(i) = 
+            tbox::MathUtilities<int>::Abs( crse(i) / fine(i) );
       }
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (i = 0; i < DIM; i++) {
-      assert( d_ratio_between_levels(i) != 0 );
+      TBOX_ASSERT( d_ratio_between_levels(i) != 0 );
    }
    if (DIM > 1) {
       for (i = 0; i < DIM; i++) {
          if ( d_ratio_between_levels(i)*d_ratio_between_levels((i+1)%DIM) < 0 ) {
-            assert ( (d_ratio_between_levels(i) == 1) ||
+            TBOX_ASSERT( (d_ratio_between_levels(i) == 1) ||
                      (d_ratio_between_levels((i+1)%DIM) == 1) );
          }
       }
@@ -219,7 +218,7 @@ template<int DIM> void CoarsenSchedule<DIM>::reset(
    const tbox::Pointer< xfer::CoarsenClasses<DIM> > coarsen_classes)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarsen_classes.isNull());
+   TBOX_ASSERT(!coarsen_classes.isNull());
 #endif
    setCoarsenItems(coarsen_classes);
 
@@ -417,7 +416,7 @@ template<int DIM> void CoarsenSchedule<DIM>::generateSchedule()
 
       TBOX_ERROR("Internal CoarsenSchedule<DIM> error..."
                  << "\n unrecognized schedule generation option: "
-                 << s_schedule_generation_method << endl);
+                 << s_schedule_generation_method << std::endl);
 
    }
 
@@ -590,7 +589,7 @@ template<int DIM> hier::IntVector<DIM> CoarsenSchedule<DIM>::getMaxGhostsToGrow(
 
    for (int ici = 0; ici < d_number_coarsen_items; ici++) {
       const int src_id = d_coarsen_items[ici]->d_src;
-      gcw.max(pd->getPatchDataFactory(src_id)->getDefaultGhostCellWidth());
+      gcw.max(pd->getPatchDataFactory(src_id)->getGhostCellWidth());
       gcw.max(d_coarsen_items[ici]->d_gcw_to_coarsen);
    }
 
@@ -616,8 +615,8 @@ template<int DIM> void CoarsenSchedule<DIM>::constructScheduleTransactions(
    int src_patch_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
 #endif
 
    tbox::Pointer< hier::PatchDescriptor<DIM> > dst_patch_descriptor =
@@ -669,7 +668,7 @@ template<int DIM> void CoarsenSchedule<DIM>::constructScheduleTransactions(
          tbox::Pointer< hier::PatchDataFactory<DIM> > dst_pdf =
             dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id);
 
-         const hier::IntVector<DIM>& dst_gcw = dst_pdf->getDefaultGhostCellWidth();
+         const hier::IntVector<DIM>& dst_gcw = dst_pdf->getGhostCellWidth();
 
          hier::Box<DIM> dst_fill_box(hier::Box<DIM>::grow(dst_box, dst_gcw));
 
@@ -687,7 +686,7 @@ template<int DIM> void CoarsenSchedule<DIM>::constructScheduleTransactions(
          test_mask = hier::Box<DIM>::grow(src_box,
                                 hier::IntVector<DIM>::min(
                                    rep_item.d_gcw_to_coarsen,
-                                   src_pdf->getDefaultGhostCellWidth()) ); 
+                                   src_pdf->getGhostCellWidth()) ); 
 
          src_mask += test_mask;
 
@@ -703,7 +702,7 @@ template<int DIM> void CoarsenSchedule<DIM>::constructScheduleTransactions(
                        << "\n Overlap is NULL for "
                        << "\n src box = " << src_box
                        << "\n dst box = " << dst_box
-                       << "\n src mask = " << src_mask << endl);
+                       << "\n src mask = " << src_mask << std::endl);
          }
 
          if (!overlap->isOverlapEmpty()) {
@@ -907,8 +906,8 @@ template<int DIM> void CoarsenSchedule<DIM>::initialCheckCoarsenClassItems() con
          tbox::Pointer< hier::PatchDataFactory<DIM> > sfact =
             pd->getPatchDataFactory(src_id);
 
-         const hier::IntVector<DIM>& dst_gcw = dfact->getDefaultGhostCellWidth();
-         const hier::IntVector<DIM>& src_gcw = sfact->getDefaultGhostCellWidth();
+         const hier::IntVector<DIM>& dst_gcw = dfact->getGhostCellWidth();
+         const hier::IntVector<DIM>& src_gcw = sfact->getGhostCellWidth();
 
          if (crs_item->d_gcw_to_coarsen > dst_gcw) {
             TBOX_ERROR("Bad data given to CoarsenSchedule<DIM>...\n"
@@ -918,7 +917,7 @@ template<int DIM> void CoarsenSchedule<DIM>::initialCheckCoarsenClassItems() con
                        << " with CoarsenAlgorithm<DIM>\n"
                        << " is larger than ghost cell width of data \n"
                        << "d_gcw_to_coarsen = " << crs_item->d_gcw_to_coarsen
-                       << "\n data ghost cell width = " << dst_gcw << endl);
+                       << "\n data ghost cell width = " << dst_gcw << std::endl);
          }
 
          if ( (crs_item->d_gcw_to_coarsen * d_ratio_between_levels) > src_gcw ) { 
@@ -932,7 +931,7 @@ template<int DIM> void CoarsenSchedule<DIM>::initialCheckCoarsenClassItems() con
                        << "\nratio between levels = " << d_ratio_between_levels
                        << "\n Thus, data ghost width must be >= "
                        << (crs_item->d_gcw_to_coarsen * d_ratio_between_levels) 
-                       << endl);
+                       << std::endl);
          }
 
          if ( user_gcw > src_gcw) {
@@ -941,7 +940,7 @@ template<int DIM> void CoarsenSchedule<DIM>::initialCheckCoarsenClassItems() con
                        << user_gcw
                        << "\nis larger than ghost cell width of `Source'\n"
                        << "patch data " << pd->mapIndexToName(src_id) 
-                       << " , which is " << src_gcw << endl);
+                       << " , which is " << src_gcw << std::endl);
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -960,13 +959,13 @@ template<int DIM> void CoarsenSchedule<DIM>::initialCheckCoarsenClassItems() con
  * ************************************************************************
  */
 
-template<int DIM> void CoarsenSchedule<DIM>::printClassData(ostream& stream) const
+template<int DIM> void CoarsenSchedule<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "CoarsenSchedule<DIM>::printClassData()" << endl;
-   stream << "---------------------------------------" << endl;
+   stream << "CoarsenSchedule<DIM>::printClassData()" << std::endl;
+   stream << "---------------------------------------" << std::endl;
    stream << "s_schedule_generation_method = "
-          << s_schedule_generation_method << endl;
-   stream << "d_fill_coarse_data = " << d_fill_coarse_data << endl;
+          << s_schedule_generation_method << std::endl;
+   stream << "d_fill_coarse_data = " << d_fill_coarse_data << std::endl;
 
    d_coarsen_classes->printClassData(stream);
 

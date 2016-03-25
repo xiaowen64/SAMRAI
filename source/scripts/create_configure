@@ -1,0 +1,5 @@
+# Commands to create the autoconf configure script
+
+rm -fr autom4te.cache
+aclocal -I config -I acmacros --output=config/aclocal.m4
+autoconf -I config

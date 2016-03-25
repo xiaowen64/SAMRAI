@@ -1,9 +1,9 @@
 /*
- * File:        CellPoissonHypreSolver.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonHypreSolver.h $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 601 $
- * Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1818 $
+ * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
  * Description:	Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -67,7 +67,6 @@ extern "C" {
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -131,7 +130,7 @@ public:
     * @param database tbox::Database for input.
     */
    CellPoissonHypreSolver(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> database=NULL );
 
    /*!
@@ -202,7 +201,7 @@ public:
     * tolerance) for the linear solver.
     *
     * @param max_iterations gives the maximum number of iterations
-    * @param residual_tol the maximum error tolerance
+    * @param relative_residual_tol the maximum error tolerance
     */
    void setStoppingCriteria(const int max_iterations = 10,
                             const double relative_residual_tol = 1.0e-6);
@@ -296,7 +295,7 @@ public:
     * See SimpleCellRobinBcCoefs<DIM>::setBoundaries()
     * for an explanation of the arguments.
     */
-   void setBoundaries(const string& boundary_type,
+   void setBoundaries(const std::string& boundary_type,
                       const int fluxes = -1,
                       const int flags = -1,
                       int* bdry_types = NULL);
@@ -469,6 +468,7 @@ private:
       const pdat::SideData<DIM,double> &variable_off_diagonal,
       const hier::Box<DIM> &patch_box,
       const pdat::ArrayData<DIM,double> &acoef_data,
+      const pdat::ArrayData<DIM,double> &bcoef_data,
       const hier::Box<DIM> bccoef_box,
       pdat::ArrayData<DIM,double> &Ak0_data,
       const hier::BoundaryBox<DIM> &trimmed_boundary_box,
@@ -484,7 +484,7 @@ private:
    /*!
     * @brief Object name.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*!
     * @brief Associated hierarchy. 

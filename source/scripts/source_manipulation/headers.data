@@ -315,7 +315,7 @@ mesh StandardTagAndInitialize.h
 mesh TagAndInitializeStrategy.h
 mesh StandardTagAndInitStrategy.h
 solv NonlinearSolverStrategy.h
-solv PVodeTrio_SAMRAIVector.h
+solv Sundials_SAMRAIVector.h
 solv PETSc_SAMRAIVectorReal.h
 solv SAMRAIVectorReal.h
 solv OuternodeSumTransaction.h
@@ -337,10 +337,10 @@ solv KINSOLSolver.h
 solv KINSOLAbstractFunctions.h
 solv KINSOL_SAMRAIContext.h
 solv nvector.h
-solv PVodeTrioAbstractVector.h
+solv SundialsAbstractVector.h
 solv solv_NVector.h
-solv PVODEAbstractFunctions.h
-solv PVODESolver.h
+solv CVODEAbstractFunctions.h
+solv CVODESolver.h
 solv PETScAbstractVectorReal.h
 solv SNES_SAMRAIContext.h
 solv SNESAbstractFunctions.h

@@ -1,9 +1,9 @@
 //
-// File:        PETScAbstractVectorReal.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/PETScAbstractVectorReal.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1819 $
+// Modified:    $LastChangedDate: 2007-12-20 18:09:28 -0800 (Thu, 20 Dec 2007) $
 // Description: Interface to C++ vector implementation for PETSc package.
 //
 
@@ -22,15 +22,19 @@
 #ifdef HAVE_PETSC
 
 #ifdef REQUIRES_CMATH
-// SGS include for blue xlc
 #include <cmath>
+#endif
+
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 
 #ifndef included_petsc_vec
 #define included_petsc_vec
-extern "C" {
+#ifdef MPICH_SKIP_MPICXX
+#undef MPICH_SKIP_MPICXX
+#endif
 #include "petscvec.h"
-}
 #endif
 
 namespace SAMRAI {
@@ -38,7 +42,7 @@ namespace SAMRAI {
 
 /**
  * Class PETScAbstractVectorReal serves as an abstract base class for a
- * {\tt C++} vector class that can be used with the PETSc solver framework.
+ * <TT>C++</TT> vector class that can be used with the PETSc solver framework.
  * Specifically, this class provides an interface for real-valued PETSc
  * vectors (i.e., where the data is either float or double).  PETSc allows 
  * the use of user-defined vectors.  Thus, the intent of this base class is 
@@ -55,7 +59,7 @@ namespace SAMRAI {
  *
  * PETSc was developed in the Mathematics and Computer Science Division at 
  * Argonne National Laboratory (ANL).  For more information about PETSc, 
- * see {\tt http://www-fp.mcs.anl.gov/petsc/}.
+ * see <TT>http://www-fp.mcs.anl.gov/petsc/</TT>.
  *
  * Important notes: 
  * 
@@ -72,12 +76,12 @@ namespace SAMRAI {
  *            associated with the local process only.  It has no knowledge
  *            of the structure of the vector data, nor the implementations
  *            of the individual vector routines.
- * - @b (3) Several of the operations defined in the PETSc {\tt _VecOps}
+ * - @b (3) Several of the operations defined in the PETSc <TT>_VecOps</TT>
  *            structure are left unimplemented in this class.  They will
  *            print an error message and throw an unrecoverable exeception
  *            if called which causes the program to abort. 
- * - @b (4) By default, PETSc typdefs "Scalar" to {\tt double}.  PETSc
- *            must be recompiled to use {\tt float} data.  Also, PETSc
+ * - @b (4) By default, PETSc typdefs "Scalar" to <TT>double</TT>.  PETSc
+ *            must be recompiled to use <TT>float</TT> data.  Also, PETSc
  *            support complex vector data.  A complex vector interface class 
  *            similar to this class may be provided in the future if the 
  *            need arises.
@@ -96,7 +100,8 @@ protected:
     * constructor allocates the PETSc vector and sets its data structures and
     * member functions so that it can operate on the SAMRAI vector.
     */
-   PETScAbstractVectorReal(bool vector_created_via_duplicate);
+   PETScAbstractVectorReal(bool vector_created_via_duplicate, 
+			   MPI_Comm comm);
 
    /**
     * Destructor for PETScAbstractVectorReal class destroys the PETSc
@@ -156,21 +161,21 @@ protected:
     *
     * @param local_only Flag to get result for local data only.
     */
-   virtual double L1Norm(bool local_only=false) const = 0;
+   virtual TYPE L1Norm(bool local_only=false) const = 0;
 
    /**
     * Return @f$ L_2 @f$ -norm of this vector.
     *
     * @param local_only Flag to get result for local data only.
     */
-   virtual double L2Norm(bool local_only=false) const = 0;
+   virtual TYPE L2Norm(bool local_only=false) const = 0;
 
    /**
     * Return @f$ L_{\infty} @f$ -norm of this vector.
     *
     * @param local_only Flag to get result for local data only.
     */
-   virtual double maxNorm(bool local_only=false) const = 0;
+   virtual TYPE maxNorm(bool local_only=false) const = 0;
 
    /**
     * Multiply each entry of this vector by given scalar.
@@ -236,12 +241,12 @@ protected:
    /**
     * Find maximum vector entry and vector index at which maximum occurs.
     */
-   virtual void vecMax(int& i, double& max) const = 0;
+   virtual void vecMax(int& i, TYPE& max) const = 0;
 
    /**
     * Find minimum vector entry and vector index at which minimum occurs.
     */
-   virtual void vecMin(int& i, double& min) const = 0;
+   virtual void vecMin(int& i, TYPE& min) const = 0;
 
    /**
     * Set vector entries to random values.  Note that PETSc uses the
@@ -252,7 +257,7 @@ protected:
    /**
     * Set argument to vector data in contiguous array (local to processor).
     */
-   virtual void getDataArray(TYPE* array) = 0;
+   virtual void getDataArray(TYPE** array) = 0;
 
    /**
     * Return total length of vector. 
@@ -264,6 +269,15 @@ protected:
     */
    virtual int getLocalDataSize() const = 0;
 
+
+    /*!
+     * Restore pointer to vector data in contiguous array (local to
+     * processor).
+     */
+    virtual void restoreDataArray(
+        TYPE** array) = 0;
+
+
 private:
    /*
     * PETSc vector object corresponding to this 
@@ -273,164 +287,398 @@ private:
    
    bool d_vector_created_via_duplicate;
 
-   /*
-    * Static member functions for linkage with PETSc solver package routines.
-    * Essentially, these functions match those in the PETSc _VecOps structure.
-    * Note that these operations are actually implemented in a subclass of 
-    * this base class using the virtual function mechanism.
-    */
+   MPI_Comm d_comm;
 
-   /* Free vector structure and associated data. */
-   static int destroyVec(Vec v);
 
-   /* Print vector data. */
-   static int viewVec(Vec x, PetscViewer view);
+    /*
+     * Static member functions for linkage with PETSc solver package
+     * routines.  Essentially, these functions match those in the
+     * PETSc _VecOps structure.  Note that these operations are
+     * actually implemented in a subclass of this base class using the
+     * virtual function mechanism.
+     */
 
-   /* Duplicate vector structure and allocate data storage for new vector. */ 
-   static int duplicateVec(Vec v_in, Vec* v_new);
+    /*
+     * Creates a new vector of the same type as an existing vector.
+     */
+    static PetscErrorCode vecDuplicate(
+        Vec v,
+        Vec* newv);
 
-   /* Duplicate array of vectors and allocate data storage for new vectors. */ 
-   static int duplicateVecs(Vec v_in, int n, Vec** varr_new);
 
-   /* Free each vector structure and its data in vector array. */
-   static int destroyVecs(const Vec* v_arr, int n);
+    /*
+     * Creates an array of vectors of the same type as an existing vector.
+     */
+    static PetscErrorCode vecDuplicateVecs(
+        Vec v,
+	int n,
+        Vec** varr_new);
 
-   /* Compute dot product: *dp = (x,y) = sum( x_i * conj(y_i) ) */
-   static int dotProduct(Vec x, Vec y, TYPE* dp);
+    /*
+     * Destroys an array of vectors.
+     */ 
+    static PetscErrorCode vecDestroyVecs(
+       Vec *v_arr, 
+       PetscInt n);
 
-   /* Compute dot product: *dp = (x,y)_T = sum( x_i * y_i ) */
-   static int dotProductT(Vec x, Vec y, TYPE* dp);
+    /*
+     * Computes the vector dot product.
+     */
+    static PetscErrorCode vecDot(
+        Vec x,
+        Vec y,
+        TYPE* val);
 
-   /* Compute dot product: dp[j] = (x,y_j) = sum( x_i * conj((y_j)_i) ) */
-   static int dotProductM(int n, Vec x, const Vec* y, TYPE* dp);
+    /*
+     * Computes vector multiple dot products.
+     */
+    static PetscErrorCode vecMDot(
+        Vec x,
+        PetscInt nv,
+        const Vec* y,
+        TYPE* val);
 
-   /* Compute dot product: dp[j] = (x,y_j)_T = sum( x_i * (y_j)_i ) */
-   static int dotProductMT(int n, Vec x, const Vec* y, TYPE* dp);
+    /*
+     * Computes the vector norm.
+     *
+     * Note that PETSc defines the following enumerated type (in
+     * petscvec.h):
+     *
+     * typedef enum {NORM_1=0,NORM_2=1,NORM_FROBENIUS=2,NORM_INFINITY=3,NORM_1_AND_2=4} NormType;
+     *
+     * If norm type is not NORM_1, NORM_2, NORM_INFINITY, or
+     * NORM_1_AND_2, an unrecoverable exception will be thrown and
+     * program will abort.
+     */
+    static PetscErrorCode vecNorm(
+        Vec x,
+        NormType type,
+        TYPE* val);
 
-   /*
-      Compute requested norm, where PETSc defines the following enumerated
-      type (in vec.h):
-            typedef enum {NORM_1=1,
-                          NORM_2=2,
-                          NORM_FROBENIUS=3,
-                          NORM_INFINITY=4,
-                          NORM_1_AND_2=5} NormType;
-      If norm type is not NORM_1, NORM_2, NORM_INFINITY, or NORM_1_AND_2
-      an unrecoverable exception will be thrown and program will abort. 
-   */ 
-   static int vecNorm(Vec x, NormType n_type, double* norm);
+    /*
+     * Computes an indefinite vector dot product.  That is, this
+     * routine does NOT use the complex conjugate.
+     */
+    static PetscErrorCode vecTDot(
+        Vec x,
+        Vec y,
+        TYPE* val);
 
-   /* Scale vector entries: x = alpha * x   */
-   static int scaleVec(const TYPE* alpha, Vec x);
+    /*
+     * Computes indefinite vector multiple dot products.  That is, it
+     * does NOT use the complex conjugate.
+     */
+    static PetscErrorCode vecMTDot(
+        Vec x,
+        PetscInt nv,
+        const Vec* y,
+        TYPE* val);
 
-   /* Copy source vector to destination: v_dst = v_src */
-   static int copyVec(Vec v_src, Vec v_dst);
+    /*
+     * Scales a vector.
+     */
+    static PetscErrorCode vecScale(
+        Vec x,
+        TYPE alpha);
 
-   /* Set vector entries to scalar: x = alpha  */
-   static int setVec(const TYPE* alpha, Vec x);
+    /*
+     * Copies a vector.
+     */
+    static PetscErrorCode vecCopy(
+        Vec x,
+        Vec y);
 
-   /* Exchange vectors x and y. */
-   static int swapVecs(Vec x, Vec y);
+    /*
+     *  Sets all components of a vector to a single scalar value.
+     */
+    static PetscErrorCode vecSet(
+        Vec x,
+        TYPE alpha);
 
-   /* Set y = alpha * x + y */
-   static int computeAXPY(const TYPE* alpha, Vec x, Vec y);
+    /*
+     * Swaps the vectors x and y.
+     */
+    static PetscErrorCode vecSwap(
+        Vec x,
+        Vec y);
 
-   /* Set y = alpha * x + beta * y */
-   static int computeAXPBY(const TYPE* alpha, const TYPE* beta, Vec x, Vec y); 
+    /*
+     * Computes y = alpha x + y.
+     */
+    static PetscErrorCode vecAXPY(
+        Vec y,
+        TYPE alpha,
+        Vec x);
 
-   /* Set x = x + SUM_j (alpha[j] + y[j]) */
-   static int computeMAXPY(int n, const TYPE* alpha, Vec x, Vec* y); 
+    /*
+     * Computes y = alpha x + beta y.
+     */
+    static PetscErrorCode vecAXPBY(
+        Vec y,
+        TYPE alpha,
+        TYPE beta,
+        Vec x);
 
-   /* Set y = x + alpha * y */
-   static int computeAYPX(const TYPE* alpha, Vec x, Vec y);
+    /*
+     * Computes y = y + sum alpha[j] x[j].
+     */
+    static PetscErrorCode vecMAXPY(
+        Vec y,
+        PetscInt nv,
+        const TYPE* alpha,
+        Vec* x);
 
-   /* Set w = alpha * x + y */
-   static int computeWAXPY(const TYPE* alpha, Vec x, Vec y, Vec w);
+    /*
+     * Computes y = x + alpha y.
+     */
+    static PetscErrorCode vecAYPX(
+        Vec y,
+        TYPE alpha,
+        Vec x);
 
-   /* Set w_i = x_i * y_i */
-   static int pointwiseMultVecs(Vec x, Vec y, Vec w);
+    /*
+     * Computes w = alpha x + y.
+     */
+    static PetscErrorCode vecWAXPY(
+        Vec w,
+        TYPE alpha,
+        Vec x,
+        Vec y);
 
-   /* Set w_i = x_i / y_i */
-   static int pointwiseDivideVecs(Vec x, Vec y, Vec w);
+    /*
+     * Computes the component-wise multiplication w = x*y.
+     */
+    static PetscErrorCode vecPointwiseMult(
+        Vec w,
+        Vec x,
+        Vec y);
 
-   /* Set max = max of abs(x_i / y_i) */
-   static int maxPointwiseDivideVecs(Vec x, Vec y, PetscReal *max);
+    /*
+     * Computes the component-wise division w = x/y.
+     */
+    static PetscErrorCode vecPointwiseDivide(
+        Vec w,
+        Vec x,
+        Vec y);
 
-   /* Compute *max = max_i(x_i) and  *i = index of max elt. */
-   static int vectorMax(Vec x, int* i, double* max);
+    /*
+     * Returns a pointer to a contiguous array that contains this
+     * processor's portion of the vector data.
+     */
+    static PetscErrorCode vecGetArray(
+        Vec x,
+        TYPE** a);
 
-   /* Compute *min = min_i(x_i) and *i = index of min elt. */
-   static int vectorMin(Vec x, int* i, double* min);
+    /*
+     * Returns the global number of elements of the vector.
+     */
+    static PetscErrorCode vecGetSize(
+        Vec x,
+        PetscInt* size);
 
-   /* Set vector entries to random values.  Note: PETSc uses drand48().  */
-   static int setVecRandom(PetscRandom r, Vec x);
+    /*
+     * Returns the number of elements of the vector stored in local
+     * memory.
+     */
+    static PetscErrorCode vecGetLocalSize(
+        Vec x,
+        PetscInt* size);
 
-   /* Return *array = vector data in contiguous array (local to processor). */
-   static int getVecArray(Vec x, TYPE** array);
+    /*
+     * Restores a vector after VecGetArray() has been called.
+     */
+    static PetscErrorCode vecRestoreArray(
+        Vec x,
+        TYPE** a);
 
-   /* Return *size = total number of vector entries. */
-   static int getVecSize(Vec x, int* size);
+    /*
+     * Determines the maximum vector component and its location.
+     */
+    static PetscErrorCode vecMax(
+        Vec x,
+        PetscInt* p,
+        TYPE* val);
 
-   /* Return *size = number of local vector entries. */
-   static int getLocalVecSize(Vec x, int* size);
+    /*
+     * Determines the minimum vector component and its location.
+     */
+    static PetscErrorCode vecMin(
+        Vec x,
+        PetscInt* p,
+        TYPE* val);
 
-   /*
-    *********************************************************************
-    * The remaining functions are not implemented and will result in an *  
-    * unrecoverable exception being thrown and program abort if called. *
-    *********************************************************************
-    */
- 
-   /*
-      For each vector elt index in indices (size = ni),
-      set x(index) = vals(index) if m == INSERT_VALUES.
-      If m != INSERT_VALUES, set x(index) += vals(index).
-      Note: PETSc routine checks for index out of range.
-            Also, enum InsertMode mode type is defined in vec.h
-            (has several modes defined).
-   */
-   static int setVecValues(Vec x, int ni, const int* indices, const TYPE* vals,
-                           InsertMode mode);
+    /*
+     * Sets all components of a vector to random numbers.
+     */
+    static PetscErrorCode vecSetRandom(
+        Vec x,
+        PetscRandom rctx);
 
-   static int beginVecAssembly(Vec x);
+    /*
+     * Destroys a vector.
+     */
+    static PetscErrorCode vecDestroy(
+        Vec v);
 
-   static int endVecAssembly(Vec x);
+    /*
+     * Views a vector object.
+     */
+    static PetscErrorCode vecView(
+        Vec v,
+        PetscViewer viewer);
 
-   /* Restore vector data array. */
-   static int restoreVecArray(Vec x, TYPE** array);
+    /*
+     * Computes the vector dot product.
+     */
+    static PetscErrorCode vecDot_local(
+        Vec x,
+        Vec y,
+        TYPE* val);
 
-   static int setVecOption(Vec x, VecOption option);
+    /*
+     * Computes an indefinite vector dot product.  That is, this
+     * routine does NOT use the complex conjugate.
+     */
+    static PetscErrorCode vecTDot_local(
+        Vec x,
+        Vec y,
+        TYPE* val);
 
-   static int setVecValuesBlocked(Vec x, int n, const int* nb, 
-                                  const TYPE* vals,
-                                  InsertMode mode); 
+    /*
+     * Computes the vector norm.
+     *
+     * Note that PETSc defines the following enumerated type (in
+     * petscvec.h):
+     *
+     * typedef enum {NORM_1=0,NORM_2=1,NORM_FROBENIUS=2,NORM_INFINITY=3,NORM_1_AND_2=4} NormType;
+     *
+     * If norm type is not NORM_1, NORM_2, NORM_INFINITY, or
+     * NORM_1_AND_2, an unrecoverable exception will be thrown and
+     * program will abort.
+     */
+    static PetscErrorCode vecNorm_local(
+        Vec x,
+        NormType type,
+        TYPE* val);
 
-   static int placeArray(Vec x, const TYPE *vals);
+    /*
+     * Computes vector multiple dot products.
+     */
+    static PetscErrorCode vecMDot_local(
+        Vec x,
+        PetscInt nv,
+        const Vec* y,
+        TYPE* val);
 
-   static int replaceArray(Vec x, const TYPE *vals);
+    /*
+     * Computes indefinite vector multiple dot products.  That is, it
+     * does NOT use the complex conjugate.
+     */
+    static PetscErrorCode vecMTDot_local(
+        Vec x,
+        PetscInt nv,
+        const Vec* y,
+        TYPE* val);
 
-   static int dotProductLocal(Vec x, Vec y, TYPE* dp);
+    /*
+     * Computes the maximum of the component-wise division max = max_i
+     * abs(x_i/y_i).
+     */
+    static PetscErrorCode vecMaxPointwiseDivide(
+        Vec x,
+        Vec y,
+        TYPE* max);
 
-   static int dotProductLocalT(Vec x, Vec y, TYPE* dp);
+    ///
+    /// The remaining functions are not implemented and will result in
+    /// an unrecoverable exception being thrown and program abort if
+    /// called.
+    ///
 
-   static int vecNormLocal(Vec x, NormType n_type, double* norm);
+    static PetscErrorCode vecSetValues(
+        Vec x,
+        PetscInt ni,
+        const PetscInt* ix,
+        const TYPE* y,
+        InsertMode iora);
 
-   static int loadIntoVector(PetscViewer view, Vec x);
+    static PetscErrorCode vecAssemblyBegin(
+        Vec vec);
 
-   static int reciprocal(Vec x);
+    static PetscErrorCode vecAssemblyEnd(
+        Vec vec);
 
-   static int viewNative(Vec x, PetscViewer view);
+    static PetscErrorCode vecSetOption(
+        Vec x,
+        VecOption op);
 
-   static int conjugate(Vec x);
+    static PetscErrorCode vecSetValuesBlocked(
+        Vec x,
+        PetscInt ni,
+        const PetscInt* ix,
+        const TYPE* y,
+        InsertMode iora);
 
-   static int setLocalToGlobalMapping(Vec x, ISLocalToGlobalMapping mapping);
+    static PetscErrorCode vecPlaceArray(
+        Vec vec,
+        const TYPE* array);
 
-   static int setValuesLocal(Vec x, int count, const int *indices,
-                             const TYPE *vals, InsertMode mode);
+    static PetscErrorCode vecReplaceArray(
+        Vec vec,
+        const TYPE* array);
 
-   static int resetArray(Vec x);
+    static PetscErrorCode vecReciprocal(
+        Vec vec);
 
-   static int setFromOptions(Vec x);
+    static PetscErrorCode vecViewNative(
+        Vec v,
+        PetscViewer viewer);
+
+    static PetscErrorCode vecConjugate(
+        Vec x);
+
+    static PetscErrorCode vecSetLocalToGlobalMapping(
+        Vec x,
+        ISLocalToGlobalMapping mapping);
+
+    static PetscErrorCode vecSetValuesLocal(
+        Vec x,
+        PetscInt ni,
+        const PetscInt* ix,
+        const TYPE* y,
+        InsertMode iora);
+
+    static PetscErrorCode vecResetArray(
+        Vec vec);
+
+    static PetscErrorCode vecSetFromOptions(
+        Vec vec);
+
+    static PetscErrorCode vecLoad(
+        PetscViewer viewer,
+        VecType outtype,
+        Vec* newvec);
+
+    static PetscErrorCode vecPointwiseMax(
+        Vec w,
+        Vec x,
+        Vec y);
+
+    static PetscErrorCode vecPointwiseMaxAbs(
+        Vec w,
+        Vec x,
+        Vec y);
+
+    static PetscErrorCode vecPointwiseMin(
+        Vec w,
+        Vec x,
+        Vec y);
+
+    static PetscErrorCode vecGetValues(
+        Vec x,
+        PetscInt ni,
+        const PetscInt* ix,
+        PetscScalar* y);
 };
 
 }

@@ -1,9 +1,9 @@
 //
-// File:        VisDerivedDataStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisDerivedDataStrategy.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Interface for writing user-defined data to either VisIt or
 //              Vizamrai dump file
 //

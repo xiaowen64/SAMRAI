@@ -1,9 +1,9 @@
 //
-// File:        $RCSfile$
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/FAC/2d.otherbc.input $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision$
-// Modified:    $Date$
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1784 $
+// Modified:    $LastChangedDate: 2007-12-17 13:08:36 -0800 (Mon, 17 Dec 2007) $
 // Description: Input file for example FAC Poisson solver
 //
 // This is the input file for the 2D FAC example
@@ -66,7 +66,7 @@ FACPoisson {
   }
 }
 
-CartesianGeometry {
+CartesianGridGeometry {
   //  Specify lower/upper corners of the computational domain and a
   //  set of non-overlapping boxes defining domain interior.  If union 
   //  of boxes is not a parallelpiped, lower/upper corner data corresponds 

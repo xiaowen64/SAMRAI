@@ -1,19 +1,13 @@
 /*
- * File:        $RCSfile$
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 346 $
- * Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerNodeSet.I $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Set of layer nodes in a distributed box graph.
  */
 
 #include "LayerNodeSet.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline

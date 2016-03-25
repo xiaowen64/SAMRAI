@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/variables/Makefile.in $
 ## Package:	SAMRAI tests
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for testing variable database operations
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/variables
 VPATH	      =	@srcdir@
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check
@@ -31,6 +32,8 @@ main-var_db2:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
 		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o vdbtest2
 
+NUM_TESTS  = 1
+
 TEST_NPROCS = @TEST_NPROCS@
 
 check:
@@ -42,6 +45,12 @@ check2d:	vdbtest2
 
 check3d:
 
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

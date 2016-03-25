@@ -1,18 +1,12 @@
 /*
- * File:        $RCSFile$
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACSolver.I $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 173 $
- * Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: High-level solver (wrapper) for scalar poisson equation.
  */
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -57,14 +51,14 @@ void CellPoissonFACSolver<DIM>::setCConstant( double scalar ) {
 
 template<int DIM> inline
 void CellPoissonFACSolver<DIM>::setProlongationMethod(
-   const string &prolongation_method )
+   const std::string &prolongation_method )
 {
    d_fac_ops.setProlongationMethod(prolongation_method);
 }
 
 template<int DIM> inline
 void CellPoissonFACSolver<DIM>::setCoarsestLevelSolverChoice(
-   const string &choice )
+   const std::string &choice )
 {
    d_fac_ops.setCoarsestLevelSolverChoice(choice);
 }
@@ -85,7 +79,7 @@ void CellPoissonFACSolver<DIM>::setCoarsestLevelSolverMaxIterations(
 
 template<int DIM> inline
 void CellPoissonFACSolver<DIM>::setCoarseFineDiscretization(
-   const string &coarsefine_method )
+   const std::string &coarsefine_method )
 {
    d_fac_ops.setCoarseFineDiscretization(coarsefine_method);
 }

@@ -1,9 +1,9 @@
 //
-// File:	PatchBoundaryNodeSum.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/PatchBoundaryNodeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 696 $
-// Modified:	$Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for summing node data at patch boundaries
 //
 
@@ -24,10 +24,8 @@
 #include "RefinePatchStrategy.h"
 #include "RefineOperator.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 /*
 *************************************************************************
@@ -120,6 +118,37 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 /*
 *************************************************************************
 *                                                                       *
+* Static functions to determine number of patch data slots needed       *
+* for PatchBoundaryNodeSum objects.                                     *
+*                                                                       *
+*************************************************************************
+*/
+ 
+template<int DIM>
+int
+PatchBoundaryNodeSum<DIM>::getNumSharedPatchDataSlots(
+   int max_variables_to_register)
+{
+   // node boundary sum requires two internal outernode variables
+   // (source and destination) for each registered variable.
+ 
+   return( 2 * max_variables_to_register );
+}
+ 
+template<int DIM>
+int
+PatchBoundaryNodeSum<DIM>::getNumUniquePatchDataSlots(
+   int max_variables_to_register)
+{
+   // all patch data slots used by node boundary sum are static
+   // and shared among all objects.
+ 
+   return( 0 );
+}
+
+/*
+*************************************************************************
+*                                                                       *
 * Constructor patch boundary node sum objects initializes data members  *
 * to default (undefined) states.                                        *
 *                                                                       *
@@ -127,10 +156,10 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 */
 
 template<int DIM> PatchBoundaryNodeSum<DIM>::PatchBoundaryNodeSum(
-   const string& object_name)
+   const std::string& object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
 
    d_object_name = object_name;
@@ -174,12 +203,12 @@ template<int DIM> PatchBoundaryNodeSum<DIM>::~PatchBoundaryNodeSum()
           
             if (s_onode_src_id_array[id][iv] >= 0) {
                hier::VariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_onode_src_id_array[id][iv]);
             }
             if (s_onode_dst_id_array[id][iv] >= 0) {
                hier::VariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_onode_dst_id_array[id][iv]);
             }
 
@@ -215,14 +244,14 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::registerSum(
                  << "\nCannot call registerSum with this PatchBoundaryNodeSum"
                  << "\nobject since it has already been used to create communication"
                  << "\nschedules; i.e., setupSum() has been called."
-                 << endl);
+                 << std::endl);
    }
 
    if (node_data_id < 0) {
       TBOX_ERROR("PatchBoundaryNodeSum<DIM> register error..."
                  << "\nobject named " << d_object_name
                  << "\n node_data_id = " << node_data_id
-                 << " is an invalid patch data identifier." << endl);
+                 << " is an invalid patch data identifier." << std::endl);
    }
 
    hier::VariableDatabase<DIM>* var_db = hier::VariableDatabase<DIM>::getDatabase();
@@ -235,12 +264,12 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::registerSum(
       TBOX_ERROR("PatchBoundaryNodeSum<DIM> register error..."
                  << "\nobject named " << d_object_name
                  << "\n node_data_id = " << node_data_id
-                 << " does not correspond to node data of type double." << endl);
+                 << " does not correspond to node data of type double." << std::endl);
 
    } else {
 
-      static string tmp_onode_src_variable_name("PatchBoundaryNodeSum__internal-onode-src");
-      static string tmp_onode_dst_variable_name("PatchBoundaryNodeSum__internal-onode-dst");
+      static std::string tmp_onode_src_variable_name("PatchBoundaryNodeSum__internal-onode-src");
+      static std::string tmp_onode_dst_variable_name("PatchBoundaryNodeSum__internal-onode-dst");
 
       const int reg_sum_id = d_num_reg_sum;
 
@@ -293,14 +322,14 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::registerSum(
       char var_suffix[17];
       sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
 
-      string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
+      std::string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
       d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(tonode_src_var_name);
       if (d_tmp_onode_src_variable[reg_sum_id].isNull()) {
          d_tmp_onode_src_variable[reg_sum_id] =
             new pdat::OuternodeVariable<DIM,double>(tonode_src_var_name, data_depth);
       }
 
-      string tonode_dst_var_name = tmp_onode_dst_variable_name + var_suffix;
+      std::string tonode_dst_var_name = tmp_onode_dst_variable_name + var_suffix;
       d_tmp_onode_dst_variable[reg_sum_id] = var_db->getVariable(tonode_dst_var_name);
       if (d_tmp_onode_dst_variable[reg_sum_id].isNull()) {
          d_tmp_onode_dst_variable[reg_sum_id] =
@@ -309,13 +338,15 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::registerSum(
 
       if ( s_onode_src_id_array[data_depth][data_depth_id] < 0 ) {
          s_onode_src_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_onode_src_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_onode_src_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
       if ( s_onode_dst_id_array[data_depth][data_depth_id] < 0) {
          s_onode_dst_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_onode_dst_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_onode_dst_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
 
       d_user_node_data_id[reg_sum_id] = node_data_id;
@@ -346,14 +377,14 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::setupSum(
    tbox::Pointer<hier::PatchLevel<DIM> > level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    if (d_hierarchy_setup_called) {
 
       TBOX_ERROR("PatchBoundaryNodeSum<DIM>::setupSum error...\n"
          << " object named " << d_object_name
-         << " already initialized via setupSum() for hierarchy" << endl);
+         << " already initialized via setupSum() for hierarchy" << std::endl);
 
    } else {
 
@@ -399,8 +430,8 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::setupSum(
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(   (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(   (coarsest_level >= 0)
           && (finest_level >= coarsest_level)
           && (finest_level <= hierarchy->getFinestLevelNumber()) );
 #endif
@@ -409,7 +440,7 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::setupSum(
 
       TBOX_ERROR("PatchBoundaryNodeSum<DIM>::setupSum error...\n"
          << " object named " << d_object_name
-         << " already initialized via setupSum() for single level" << endl);
+         << " already initialized via setupSum() for single level" << std::endl);
 
    } else {
 
@@ -632,7 +663,7 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::doLevelSum(
    tbox::Pointer<hier::PatchLevel<DIM> > level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    copyNodeToOuternodeOnLevel(level,
@@ -642,7 +673,7 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::doLevelSum(
    int schedule_level_number = 0;
    if (!d_level_setup_called) {
       schedule_level_number = 
-         tbox::Utilities::imax(0, level->getLevelNumber()); 
+         tbox::MathUtilities<int>::Max(0, level->getLevelNumber()); 
    }
    d_single_level_sum_schedule[schedule_level_number]->fillData(0.0, false);
 
@@ -669,12 +700,12 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
    bool fill_hanging_nodes) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_level.isNull());
-   assert(!coarsened_fine_level.isNull());
-   assert(node_data_id.size() == onode_data_id.size());
+   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(!coarsened_fine_level.isNull());
+   TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
    for (int i = 0; i < node_data_id.size(); i++) {
-      assert(fine_level->checkAllocated(node_data_id[i]));
-      assert(coarsened_fine_level->checkAllocated(onode_data_id[i]));
+      TBOX_ASSERT(fine_level->checkAllocated(node_data_id[i]));
+      TBOX_ASSERT(coarsened_fine_level->checkAllocated(onode_data_id[i]));
    }
 #endif
 
@@ -876,7 +907,7 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
                      TBOX_ERROR("PatchBoundaryNodeSum::computeSum error...\n"
                         << " object named " << d_object_name
                         << "\n unrecognized coarse-fine boundary box location " 
-                        << bbox_loc << endl);
+                        << bbox_loc << std::endl);
                   }
 
                }  // switch(box_loc)
@@ -1007,8 +1038,8 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::copyNodeToOuternodeOnLevel(
    const tbox::Array<int>& onode_data_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(node_data_id.size() == onode_data_id.size());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {
@@ -1032,8 +1063,8 @@ template<int DIM> void PatchBoundaryNodeSum<DIM>::copyOuternodeToNodeOnLevel(
    const tbox::Array<int>& node_data_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(node_data_id.size() == onode_data_id.size());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {

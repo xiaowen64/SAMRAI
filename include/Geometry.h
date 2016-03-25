@@ -1,9 +1,9 @@
 // 
-// File:	Geometry.h 
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/operators/Geometry.h $
 // Package:	SAMRAI transfer 
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for interface between transfer ops and geometry.
 //
 
@@ -27,7 +27,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_xfer_CoarsenOperator
@@ -78,7 +77,7 @@ public:
     * Constructor for Geometry class just passes the object_name 
     * to the hier::GridGeometry parent class.
     */
-   Geometry(const string &object_name);
+   Geometry(const std::string &object_name);
 
    /**
     * The virtual destructor for the geometry base class does
@@ -118,7 +117,7 @@ public:
     */
    virtual tbox::Pointer< CoarsenOperator<DIM> >
    lookupCoarsenOperator(const tbox::Pointer< hier::Variable<DIM> >& var,
-                         const string& op_name) const;
+                         const std::string& op_name) const;
 
    /**
     * Search list for the spatial refinement operator matching the
@@ -128,7 +127,7 @@ public:
     */
    virtual tbox::Pointer< RefineOperator<DIM> >
    lookupRefineOperator(const tbox::Pointer< hier::Variable<DIM> >& var,
-                        const string& op_name) const;
+                        const std::string& op_name) const;
 
    /**
     * Search list for the time interpolation operator matching the
@@ -138,13 +137,13 @@ public:
     */
    virtual tbox::Pointer< TimeInterpolateOperator<DIM> >
    lookupTimeInterpolateOperator(const tbox::Pointer< hier::Variable<DIM> >& var,
-                                 const string& op_name
+                                 const std::string& op_name
                                        = "STD_LINEAR_TIME_INTERPOLATE") const;
 
    /**
     * Print class data representation.
     */
-   virtual void printClassData(ostream& os) const; 
+   virtual void printClassData(std::ostream& os) const; 
 
 private:
    /*

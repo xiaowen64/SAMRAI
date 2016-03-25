@@ -1,18 +1,12 @@
 /*
- * File:        CellPoissonFACOps.I
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACOps.I $
  * Package:     SAMRAI solvers
- * Copyright:	(c) 1997-2005 The Regents of the University of California
- * Revision:	$Revision: 453 $
- * Modified:	$Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:	$LastChangedRevision: 1704 $
+ * Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description:	Operator class for solving scalar Poisson using FAC
  */
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -126,7 +120,7 @@ void CellPoissonFACOps<DIM>::setFluxId( int flux_id ) {
 
 template<int DIM> inline
 void CellPoissonFACOps<DIM>::setSmoothingChoice(
-   const string &smoothing_choice )
+   const std::string &smoothing_choice )
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if ( smoothing_choice != "redblack" ) {
@@ -147,7 +141,7 @@ void CellPoissonFACOps<DIM>::setSmoothingChoice(
 */
 
 template<int DIM> inline
-void CellPoissonFACOps<DIM>::setCoarsestLevelSolverChoice( const string &choice ) {
+void CellPoissonFACOps<DIM>::setCoarsestLevelSolverChoice( const std::string &choice ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifndef HAVE_HYPRE
    if ( choice == "hypre" ) {
@@ -208,7 +202,7 @@ void CellPoissonFACOps<DIM>::setCoarsestLevelSolverMaxIterations(
 
 template<int DIM> inline
 void CellPoissonFACOps<DIM>::setCoarseFineDiscretization(
-   const string &coarsefine_method ) {
+   const std::string &coarsefine_method ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if ( d_hierarchy ) {
       TBOX_ERROR(d_object_name << ": Cannot change coarse-fine\n"
@@ -230,7 +224,7 @@ void CellPoissonFACOps<DIM>::setCoarseFineDiscretization(
 
 template<int DIM> inline
 void CellPoissonFACOps<DIM>::setProlongationMethod(
-   const string &prolongation_method ) {
+   const std::string &prolongation_method ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if ( d_hierarchy ) {
       TBOX_ERROR(d_object_name << ": Cannot change prolongation method\n"

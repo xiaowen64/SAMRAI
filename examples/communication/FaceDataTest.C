@@ -1,20 +1,14 @@
 //
-// File:        FaceDataTest.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/FaceDataTest.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 415 $
-// Modified:    $Date: 2005-06-01 16:30:29 -0700 (Wed, 01 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for face-centered patch data
 //
 
 #include "FaceDataTest.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#include <assert.h>
-#define included_assert
-#endif
-#endif
 
 #include "ArrayData.h"
 #include "BoundaryBox.h"
@@ -27,6 +21,7 @@
 #include "FaceIterator.h"
 #include "FaceVariable.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
 namespace SAMRAI {
@@ -39,9 +34,9 @@ FaceDataTest::FaceDataTest(
    const string& refine_option)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(!refine_option.empty());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!refine_option.empty());
 #endif
 
    d_object_name = object_name;
@@ -83,7 +78,7 @@ FaceDataTest::~FaceDataTest()
 void FaceDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -148,7 +143,7 @@ void FaceDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 void FaceDataTest::registerVariables(CommTester* commtest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(commtest != (CommTester*)NULL);
+   TBOX_ASSERT(commtest != (CommTester*)NULL);
 #endif
 
    int nvars = d_variable_src_name.getSize();
@@ -190,9 +185,9 @@ void FaceDataTest::setConservativeData(
    int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0)
+   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -352,7 +347,7 @@ void FaceDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    const double* dx = pgeom->getDx();
@@ -401,7 +396,7 @@ void FaceDataTest::checkPatchInteriorData(
          double value;
          for (int d = 0; d < depth; d++) {
             value = d_Dcoef + d_Acoef*x + d_Bcoef*y + d_Ccoef*z;
-            if (!(tbox::Utilities::deq((*data)(fi(),d), value))) {
+            if (!(tbox::MathUtilities<double>::equalEps((*data)(fi(),d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled" << endl;
             }
          }
@@ -493,7 +488,7 @@ void FaceDataTest::setLinearData(
    hier::Patch<NDIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
@@ -561,13 +556,13 @@ void FaceDataTest::setLinearData(
 *************************************************************************
 */
 
-void FaceDataTest::verifyResults(
+bool FaceDataTest::verifyResults(
    hier::Patch<NDIM>& patch, 
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy, 
    int level_number)
 {
    (void) hierarchy;
-
+   bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 
       tbox::plog << "\nEntering FaceDataTest::verifyResults..." << endl;
@@ -608,7 +603,8 @@ void FaceDataTest::verifyResults(
                double correct = (*solution)(si());
                for (int d = 0; d < depth; d++) {
                   double result = (*face_data)(si(),d);
-                  if (!tbox::Utilities::deq(correct, result)) {
+                  if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                     test_failed = true;
                      tbox::perr << "Test FAILED: ...." 
                           << " : face_data index = " << si() << endl;
                      tbox::perr << "    hier::Variable<NDIM> = " << d_variable_src_name[i]
@@ -630,6 +626,7 @@ void FaceDataTest::verifyResults(
 
    }
 
+   return (!test_failed);
 }
 
 }

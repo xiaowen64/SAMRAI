@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -23,9 +23,14 @@ ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
 
 FILE_1=MathUtilitiesSpecial.o
 DEPENDS_1:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/IOStream.h					\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
-	$(INCLUDE_SAM)/tbox/MathUtilities.h MathUtilitiesSpecial.C
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h MathUtilitiesSpecial.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -77,8 +82,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	tbox_List-tbox_TimerPointer.C
+	$(INCLUDE_SAM)/tbox/Utilities.h tbox_List-tbox_TimerPointer.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\

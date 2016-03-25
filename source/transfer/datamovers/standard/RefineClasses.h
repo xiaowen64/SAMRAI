@@ -1,9 +1,9 @@
 //
-// File:	RefineClasses.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineClasses.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Simple structure for managing refinement data in equivalence classes.
 //
  
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -52,7 +51,7 @@ template<int DIM> class RefineClasses : public tbox::DescribedClass
 {
 public:
    /**
-    * The {\tt RefineClasses<DIM>::Data} data structure contains the items that 
+    * The <TT>RefineClasses<DIM>::Data</TT> data structure contains the items that 
     * describe communication between patch data components on an AMR hierarchy.
     */
    struct Data {
@@ -157,12 +156,12 @@ public:
    /**
     * Print all equivalence class data to the specified output stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
    /**
     * Print single equivalence class item to the specified output stream.
     */
-   void printRefineItem(ostream& stream,
+   void printRefineItem(std::ostream& stream,
                         const typename RefineClasses<DIM>::Data& data) const;
 
 private:

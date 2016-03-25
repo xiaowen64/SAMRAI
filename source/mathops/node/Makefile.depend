@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -16,6 +16,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -31,11 +32,17 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/BoxTop.h		\
 	$(INCLUDE_SAM)/BoxTree.h $(INCLUDE_SAM)/BoxTreeNode.h		\
 	$(INCLUDE_SAM)/BoxUtilities.h $(INCLUDE_SAM)/ComponentSelector.I\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/GridGeometry.I\
-	$(INCLUDE_SAM)/GridGeometry.h					\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/GridGeometry.I $(INCLUDE_SAM)/GridGeometry.h	\
 	$(INCLUDE_SAM)/HierarchyDataOpsComplex.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
+	$(INCLUDE_SAM)/IntVector.h					\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h $(INCLUDE_SAM)/NodeData.I	\
 	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeDataFactory.I	\
 	$(INCLUDE_SAM)/NodeDataFactory.h $(INCLUDE_SAM)/NodeGeometry.I	\
 	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
@@ -58,11 +65,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/PatchLevel.h $(INCLUDE_SAM)/PatchLevelFactory.I	\
 	$(INCLUDE_SAM)/PatchLevelFactory.h				\
 	$(INCLUDE_SAM)/ProcessorMapping.I				\
-	$(INCLUDE_SAM)/ProcessorMapping.h $(INCLUDE_SAM)/SideGeometry.I	\
-	$(INCLUDE_SAM)/SideGeometry.h $(INCLUDE_SAM)/SideIndex.I	\
-	$(INCLUDE_SAM)/SideIndex.h $(INCLUDE_SAM)/SideIterator.I	\
-	$(INCLUDE_SAM)/SideIterator.h $(INCLUDE_SAM)/SideOverlap.I	\
-	$(INCLUDE_SAM)/SideOverlap.h $(INCLUDE_SAM)/Variable.I		\
+	$(INCLUDE_SAM)/ProcessorMapping.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -78,10 +82,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -92,21 +94,23 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyNodeDataOpsComplex.C HierarchyNodeDataOpsComplex.h	\
-	PatchNodeDataBasicOps.h PatchNodeDataNormOpsComplex.h		\
-	PatchNodeDataOpsComplex.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyNodeDataOpsComplex.C	\
+	HierarchyNodeDataOpsComplex.h PatchNodeDataBasicOps.h		\
+	PatchNodeDataNormOpsComplex.h PatchNodeDataOpsComplex.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -117,7 +121,12 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyDataOpsComplex.C $(INCLUDE_SAM)/Index.C	\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C $(INCLUDE_SAM)/NodeData.C	\
 	$(INCLUDE_SAM)/NodeDataFactory.C $(INCLUDE_SAM)/NodeGeometry.C	\
 	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/OuternodeData.C	\
@@ -127,8 +136,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchHierarchy.C	\
 	$(INCLUDE_SAM)/PatchLevel.C $(INCLUDE_SAM)/PatchLevelFactory.C	\
-	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
-	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
 	PatchNodeDataBasicOps.C PatchNodeDataNormOpsComplex.C		\
 	PatchNodeDataOpsComplex.C
@@ -143,6 +150,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsInteger.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -158,11 +166,17 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/BoxTop.h		\
 	$(INCLUDE_SAM)/BoxTree.h $(INCLUDE_SAM)/BoxTreeNode.h		\
 	$(INCLUDE_SAM)/BoxUtilities.h $(INCLUDE_SAM)/ComponentSelector.I\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/GridGeometry.I\
-	$(INCLUDE_SAM)/GridGeometry.h					\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/GridGeometry.I $(INCLUDE_SAM)/GridGeometry.h	\
 	$(INCLUDE_SAM)/HierarchyDataOpsInteger.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
+	$(INCLUDE_SAM)/IntVector.h					\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h $(INCLUDE_SAM)/NodeData.I	\
 	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeDataFactory.I	\
 	$(INCLUDE_SAM)/NodeDataFactory.h $(INCLUDE_SAM)/NodeGeometry.I	\
 	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
@@ -185,11 +199,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/PatchLevel.h $(INCLUDE_SAM)/PatchLevelFactory.I	\
 	$(INCLUDE_SAM)/PatchLevelFactory.h				\
 	$(INCLUDE_SAM)/ProcessorMapping.I				\
-	$(INCLUDE_SAM)/ProcessorMapping.h $(INCLUDE_SAM)/SideGeometry.I	\
-	$(INCLUDE_SAM)/SideGeometry.h $(INCLUDE_SAM)/SideIndex.I	\
-	$(INCLUDE_SAM)/SideIndex.h $(INCLUDE_SAM)/SideIterator.I	\
-	$(INCLUDE_SAM)/SideIterator.h $(INCLUDE_SAM)/SideOverlap.I	\
-	$(INCLUDE_SAM)/SideOverlap.h $(INCLUDE_SAM)/Variable.I		\
+	$(INCLUDE_SAM)/ProcessorMapping.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -205,10 +216,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -219,20 +228,23 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyNodeDataOpsInteger.C HierarchyNodeDataOpsInteger.h	\
-	PatchNodeDataBasicOps.h PatchNodeDataOpsInteger.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyNodeDataOpsInteger.C	\
+	HierarchyNodeDataOpsInteger.h PatchNodeDataBasicOps.h		\
+	PatchNodeDataOpsInteger.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsInteger.C			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -243,7 +255,12 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyDataOpsInteger.C $(INCLUDE_SAM)/Index.C	\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C $(INCLUDE_SAM)/NodeData.C	\
 	$(INCLUDE_SAM)/NodeDataFactory.C $(INCLUDE_SAM)/NodeGeometry.C	\
 	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/OuternodeData.C	\
@@ -253,8 +270,6 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchHierarchy.C	\
 	$(INCLUDE_SAM)/PatchLevel.C $(INCLUDE_SAM)/PatchLevelFactory.C	\
-	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
-	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
 	PatchNodeDataBasicOps.C PatchNodeDataOpsInteger.C
 endif
@@ -269,6 +284,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -284,11 +300,17 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/BoxTop.h		\
 	$(INCLUDE_SAM)/BoxTree.h $(INCLUDE_SAM)/BoxTreeNode.h		\
 	$(INCLUDE_SAM)/BoxUtilities.h $(INCLUDE_SAM)/ComponentSelector.I\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/GridGeometry.I\
-	$(INCLUDE_SAM)/GridGeometry.h					\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/GridGeometry.I $(INCLUDE_SAM)/GridGeometry.h	\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
+	$(INCLUDE_SAM)/IntVector.h					\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h $(INCLUDE_SAM)/NodeData.I	\
 	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeDataFactory.I	\
 	$(INCLUDE_SAM)/NodeDataFactory.h $(INCLUDE_SAM)/NodeGeometry.I	\
 	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
@@ -311,11 +333,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/PatchLevel.h $(INCLUDE_SAM)/PatchLevelFactory.I	\
 	$(INCLUDE_SAM)/PatchLevelFactory.h				\
 	$(INCLUDE_SAM)/ProcessorMapping.I				\
-	$(INCLUDE_SAM)/ProcessorMapping.h $(INCLUDE_SAM)/SideGeometry.I	\
-	$(INCLUDE_SAM)/SideGeometry.h $(INCLUDE_SAM)/SideIndex.I	\
-	$(INCLUDE_SAM)/SideIndex.h $(INCLUDE_SAM)/SideIterator.I	\
-	$(INCLUDE_SAM)/SideIterator.h $(INCLUDE_SAM)/SideOverlap.I	\
-	$(INCLUDE_SAM)/SideOverlap.h $(INCLUDE_SAM)/Variable.I		\
+	$(INCLUDE_SAM)/ProcessorMapping.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -331,10 +350,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -345,15 +362,17 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyNodeDataOpsReal.C HierarchyNodeDataOpsReal.h		\
-	PatchNodeDataBasicOps.h PatchNodeDataMiscellaneousOpsReal.h	\
-	PatchNodeDataNormOpsReal.h PatchNodeDataOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyNodeDataOpsReal.C	\
+	HierarchyNodeDataOpsReal.h PatchNodeDataBasicOps.h		\
+	PatchNodeDataMiscellaneousOpsReal.h PatchNodeDataNormOpsReal.h	\
+	PatchNodeDataOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -361,6 +380,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -371,7 +391,12 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C $(INCLUDE_SAM)/Index.C	\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C $(INCLUDE_SAM)/NodeData.C	\
 	$(INCLUDE_SAM)/NodeDataFactory.C $(INCLUDE_SAM)/NodeGeometry.C	\
 	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/OuternodeData.C	\
@@ -381,8 +406,6 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchHierarchy.C	\
 	$(INCLUDE_SAM)/PatchLevel.C $(INCLUDE_SAM)/PatchLevelFactory.C	\
-	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
-	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
 	PatchNodeDataBasicOps.C PatchNodeDataMiscellaneousOpsReal.C	\
 	PatchNodeDataNormOpsReal.C PatchNodeDataOpsReal.C
@@ -395,68 +418,14 @@ DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataBasicOps.h	\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/Box.I		\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
-	$(INCLUDE_SAM)/BoxGeometry.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
-	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/Index.I		\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeGeometry.I		\
-	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
-	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
-	$(INCLUDE_SAM)/NodeIterator.h $(INCLUDE_SAM)/NodeOverlap.I	\
-	$(INCLUDE_SAM)/NodeOverlap.h $(INCLUDE_SAM)/PatchData.I		\
-	$(INCLUDE_SAM)/PatchData.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
-	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
-	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
-	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
-	$(INCLUDE_SAM)/tbox/Complex.h					\
-	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
-	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
-	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
-	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
-	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
-	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
-	$(INCLUDE_SAM)/tbox/PointerBase.I				\
-	$(INCLUDE_SAM)/tbox/PointerBase.h				\
-	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
-	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	PatchNodeDataBasicOps.C PatchNodeDataBasicOps.h
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_3 +=\
-	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
-	$(INCLUDE_SAM)/ArrayDataIterator.C $(INCLUDE_SAM)/Box.C		\
-	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeGeometry.C		\
-	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
-	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/PatchData.C
-endif
-
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
-
-FILE_4=PatchNodeDataMiscellaneousOpsReal.o
-DEPENDS_4:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
-	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
-	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
 	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
 	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
 	$(INCLUDE_SAM)/BoxOverlap.I $(INCLUDE_SAM)/BoxOverlap.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
 	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
@@ -465,6 +434,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -476,8 +446,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -486,7 +455,68 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/Utilities.h PatchNodeDataBasicOps.C		\
+	PatchNodeDataBasicOps.h
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_3 +=\
+	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
+	$(INCLUDE_SAM)/ArrayDataIterator.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
+	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
+	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
+	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
+	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
+	$(INCLUDE_SAM)/PatchData.C
+endif
+
+${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+FILE_4=PatchNodeDataMiscellaneousOpsReal.o
+DEPENDS_4:=\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
+	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/BoxOverlap.I $(INCLUDE_SAM)/BoxOverlap.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
+	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
+	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
+	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
+	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
+	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
+	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
+	$(INCLUDE_SAM)/tbox/Complex.h					\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	PatchNodeDataMiscellaneousOpsReal.C				\
 	PatchNodeDataMiscellaneousOpsReal.h
 
@@ -494,6 +524,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -510,20 +541,24 @@ DEPENDS_5:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
-	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h $(INCLUDE_SAM)/Box.I	\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
-	$(INCLUDE_SAM)/BoxGeometry.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
-	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/Index.I		\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeGeometry.I		\
-	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
-	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
-	$(INCLUDE_SAM)/NodeIterator.h $(INCLUDE_SAM)/NodeOverlap.I	\
-	$(INCLUDE_SAM)/NodeOverlap.h $(INCLUDE_SAM)/PatchData.I		\
-	$(INCLUDE_SAM)/PatchData.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/BoxOverlap.I $(INCLUDE_SAM)/BoxOverlap.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
+	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
+	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
+	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
+	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -534,8 +569,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -544,19 +578,21 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	PatchNodeDataNormOpsComplex.C PatchNodeDataNormOpsComplex.h
+	$(INCLUDE_SAM)/tbox/Utilities.h PatchNodeDataNormOpsComplex.C	\
+	PatchNodeDataNormOpsComplex.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
-	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C $(INCLUDE_SAM)/Box.C	\
-	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeGeometry.C		\
-	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
-	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/PatchData.C
+	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
+	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
+	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
+	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
+	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
+	$(INCLUDE_SAM)/PatchData.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -566,20 +602,24 @@ DEPENDS_6:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
-	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h $(INCLUDE_SAM)/Box.I	\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
-	$(INCLUDE_SAM)/BoxGeometry.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
-	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/Index.I		\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeGeometry.I		\
-	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
-	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
-	$(INCLUDE_SAM)/NodeIterator.h $(INCLUDE_SAM)/NodeOverlap.I	\
-	$(INCLUDE_SAM)/NodeOverlap.h $(INCLUDE_SAM)/PatchData.I		\
-	$(INCLUDE_SAM)/PatchData.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/BoxOverlap.I $(INCLUDE_SAM)/BoxOverlap.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
+	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
+	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
+	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
+	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -590,8 +630,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -600,19 +639,21 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	PatchNodeDataNormOpsReal.C PatchNodeDataNormOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h PatchNodeDataNormOpsReal.C	\
+	PatchNodeDataNormOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
-	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C $(INCLUDE_SAM)/Box.C	\
-	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeGeometry.C		\
-	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
-	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/PatchData.C
+	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
+	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
+	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
+	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
+	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
+	$(INCLUDE_SAM)/PatchData.C
 endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
@@ -624,6 +665,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BoundaryBox.I $(INCLUDE_SAM)/BoundaryBox.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/Box.I	\
@@ -632,20 +674,23 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/BoxGeometry.h $(INCLUDE_SAM)/BoxList.I		\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
 	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/ComponentSelector.I	\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/Index.I	\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeGeometry.I		\
-	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
-	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
-	$(INCLUDE_SAM)/NodeIterator.h $(INCLUDE_SAM)/NodeOverlap.I	\
-	$(INCLUDE_SAM)/NodeOverlap.h $(INCLUDE_SAM)/Patch.I		\
-	$(INCLUDE_SAM)/Patch.h $(INCLUDE_SAM)/PatchData.I		\
-	$(INCLUDE_SAM)/PatchData.h $(INCLUDE_SAM)/PatchDataFactory.I	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
+	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
+	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
+	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
+	$(INCLUDE_SAM)/Patch.I $(INCLUDE_SAM)/Patch.h			\
+	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/PatchDataFactory.I				\
 	$(INCLUDE_SAM)/PatchDataFactory.h				\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/Variable.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -661,8 +706,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -673,15 +717,16 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	PatchNodeDataBasicOps.h PatchNodeDataNormOpsComplex.h		\
-	PatchNodeDataOpsComplex.C PatchNodeDataOpsComplex.h
+	$(INCLUDE_SAM)/tbox/Utilities.h PatchNodeDataBasicOps.h		\
+	PatchNodeDataNormOpsComplex.h PatchNodeDataOpsComplex.C		\
+	PatchNodeDataOpsComplex.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
@@ -705,6 +750,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsInteger.h			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BoundaryBox.I $(INCLUDE_SAM)/BoundaryBox.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/Box.I	\
@@ -713,20 +759,23 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/BoxGeometry.h $(INCLUDE_SAM)/BoxList.I		\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
 	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/ComponentSelector.I	\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/Index.I	\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeGeometry.I		\
-	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
-	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
-	$(INCLUDE_SAM)/NodeIterator.h $(INCLUDE_SAM)/NodeOverlap.I	\
-	$(INCLUDE_SAM)/NodeOverlap.h $(INCLUDE_SAM)/Patch.I		\
-	$(INCLUDE_SAM)/Patch.h $(INCLUDE_SAM)/PatchData.I		\
-	$(INCLUDE_SAM)/PatchData.h $(INCLUDE_SAM)/PatchDataFactory.I	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
+	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
+	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
+	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
+	$(INCLUDE_SAM)/Patch.I $(INCLUDE_SAM)/Patch.h			\
+	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/PatchDataFactory.I				\
 	$(INCLUDE_SAM)/PatchDataFactory.h				\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/Variable.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -742,8 +791,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -754,15 +802,15 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	PatchNodeDataBasicOps.h PatchNodeDataOpsInteger.C		\
-	PatchNodeDataOpsInteger.h
+	$(INCLUDE_SAM)/tbox/Utilities.h PatchNodeDataBasicOps.h		\
+	PatchNodeDataOpsInteger.C PatchNodeDataOpsInteger.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataNormOpsInteger.C			\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
@@ -787,6 +835,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BoundaryBox.I $(INCLUDE_SAM)/BoundaryBox.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/Box.I	\
@@ -795,20 +844,23 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/BoxGeometry.h $(INCLUDE_SAM)/BoxList.I		\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
 	$(INCLUDE_SAM)/BoxOverlap.h $(INCLUDE_SAM)/ComponentSelector.I	\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/Index.I	\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeGeometry.I		\
-	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
-	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
-	$(INCLUDE_SAM)/NodeIterator.h $(INCLUDE_SAM)/NodeOverlap.I	\
-	$(INCLUDE_SAM)/NodeOverlap.h $(INCLUDE_SAM)/Patch.I		\
-	$(INCLUDE_SAM)/Patch.h $(INCLUDE_SAM)/PatchData.I		\
-	$(INCLUDE_SAM)/PatchData.h $(INCLUDE_SAM)/PatchDataFactory.I	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
+	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
+	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
+	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
+	$(INCLUDE_SAM)/Patch.I $(INCLUDE_SAM)/Patch.h			\
+	$(INCLUDE_SAM)/PatchData.I $(INCLUDE_SAM)/PatchData.h		\
+	$(INCLUDE_SAM)/PatchDataFactory.I				\
 	$(INCLUDE_SAM)/PatchDataFactory.h				\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/Variable.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -824,8 +876,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -836,10 +887,9 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	PatchNodeDataBasicOps.h PatchNodeDataMiscellaneousOpsReal.h	\
-	PatchNodeDataNormOpsReal.h PatchNodeDataOpsReal.C		\
-	PatchNodeDataOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h PatchNodeDataBasicOps.h		\
+	PatchNodeDataMiscellaneousOpsReal.h PatchNodeDataNormOpsReal.h	\
+	PatchNodeDataOpsReal.C PatchNodeDataOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
@@ -847,6 +897,7 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\

@@ -1,7 +1,7 @@
 c
-c  File:        solv_cartesianrobinbchelper2d.f
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/solv_cartesianrobinbchelper2d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
@@ -13,7 +13,7 @@ c***********************************************************************
       subroutine settype1cells2d(
      &  data, 
      &  difirst, dilast, djfirst, djlast,
-     &  a, g,
+     &  a, b, g,
      &  ifirst, ilast, jfirst, jlast,
      &  ibeg, iend, jbeg, jend,
      &  face, ghos, inte, location,
@@ -24,6 +24,7 @@ c***********************************************************************
       double precision data(difirst:dilast,djfirst:djlast)
       integer ifirst, ilast, jfirst, jlast
       double precision a(ifirst:ilast,jfirst:jlast)
+      double precision b(ifirst:ilast,jfirst:jlast)
       double precision g(ifirst:ilast,jfirst:jlast)
       integer ibeg, iend
       integer jbeg, jend
@@ -35,15 +36,17 @@ c        Assume g value of zero
          if ( location/2 .eq. 0 ) then
             do i=ibeg,iend
                do j=jbeg,jend
-                  data(ghos,j) = ( data(inte,j)*(1-a(face,j)*(1+0.5*h)))
-     &                           / (1-a(face,j)*(1-0.5*h))
+                  data(ghos,j) =
+     &            ( data(inte,j)*( b(face,j) - 0.5*h*a(face,j) ) )
+     &                 / ( b(face,j)+0.5*h*a(face,j) )
                enddo
             enddo
          elseif ( location/2 .eq. 1 ) then
             do i=ibeg,iend
                do j=jbeg,jend
-                  data(i,ghos) = ( data(i,inte)*(1-a(i,face)*(1+0.5*h)))
-     &                           / (1-a(i,face)*(1-0.5*h))
+                  data(i,ghos) =
+     &            ( data(i,inte)*( b(i,face) - 0.5*h*a(i,face) ) )
+     &                 / ( b(i,face)+0.5*h*a(i,face) )
                enddo
             enddo
          endif
@@ -53,16 +56,16 @@ c        Assume finite g
             do i=ibeg,iend
                do j=jbeg,jend
                   data(ghos,j) = ( h*g(face,j)
-     &                           + data(inte,j)*(1-a(face,j)*(1+0.5*h)))
-     &                           / (1-a(face,j)*(1-0.5*h))
+     &                 + data(inte,j)*( b(face,j) - 0.5*h*a(face,j) ) )
+     &                 / ( b(face,j)+0.5*h*a(face,j) )
                enddo
             enddo
          elseif ( location/2 .eq. 1 ) then
             do i=ibeg,iend
                do j=jbeg,jend
                   data(i,ghos) = ( h*g(i,face)
-     &                           + data(i,inte)*(1-a(i,face)*(1+0.5*h)))
-     &                           / (1-a(i,face)*(1-0.5*h))
+     &                 + data(i,inte)*( b(i,face) - 0.5*h*a(i,face) ) )
+     &                 / ( b(i,face)+0.5*h*a(i,face) )
                enddo
             enddo
          endif

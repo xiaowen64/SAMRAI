@@ -22,7 +22,7 @@ dnl Variable:	casc_cv_cxx_have_bool = (yes|no)
 dnl Defines:	(HAVE|LACKS)_BOOL
 dnl
 
-AC_DEFUN(CASC_CXX_BOOL, [
+AC_DEFUN([CASC_CXX_BOOL], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports bool)
 
@@ -52,7 +52,7 @@ dnl Variable:	casc_cv_cxx_have_namespace = (yes|no)
 dnl Defines:	(HAVE|LACKS)_NAMESPACE
 dnl
 
-AC_DEFUN(CASC_CXX_NAMESPACE, [
+AC_DEFUN([CASC_CXX_NAMESPACE], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports namespace)
 
@@ -87,7 +87,7 @@ dnl Variable:	casc_cv_cxx_have_template_comlex = (yes|no)
 dnl Defines:	(HAVE|LACKS)_TEMPLATE_COMPLEX
 dnl
 
-AC_DEFUN(CASC_CXX_TEMPLATE_COMPLEX, [
+AC_DEFUN([CASC_CXX_TEMPLATE_COMPLEX], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports template-based complex numbers)
 
@@ -147,7 +147,7 @@ dnl                   level of compiler support for std ISO header files.
 dnl                   It is not intended to apply to all compilers.
 dnl
 
-AC_DEFUN(CASC_CXX_SSTREAM, [
+AC_DEFUN([CASC_CXX_SSTREAM], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports sstream.h and class ostringstream)
 
@@ -215,7 +215,7 @@ dnl
 dnl Variable:	casc_cv_cxx_have_iomanip_left = (yes|no)
 dnl Defines:	(HAVE|LACKS)_IOMANIP_LEFT
 
-AC_DEFUN(CASC_CXX_IOMANIP_LEFT, [
+AC_DEFUN([CASC_CXX_IOMANIP_LEFT], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} defines the iomanip left operator)
 
@@ -253,7 +253,7 @@ dnl Variable:	casc_cv_cxx_have_new_placement_operator = (yes|no)
 dnl Defines:	(HAVE|LACKS)_NEW_PLACEMENT_OPERATOR
 dnl
 
-AC_DEFUN(CASC_CXX_NEW_PLACEMENT_OPERATOR, [
+AC_DEFUN([CASC_CXX_NEW_PLACEMENT_OPERATOR], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} defines the new placement operator)
 
@@ -301,7 +301,7 @@ dnl not allowed, then the compiler must define some other mechanism for
 dnl automatically generating template code.
 dnl
 
-AC_DEFUN(CASC_CXX_EXPLICIT_TEMPLATE_INSTANTIATION, [
+AC_DEFUN([CASC_CXX_EXPLICIT_TEMPLATE_INSTANTIATION], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports explicit template instantiation)
    AC_CACHE_VAL(casc_cv_cxx_have_explicit_template_instantiation, [
@@ -345,7 +345,7 @@ dnl will define the specialized version of Pointer<int>::foo().  Some
 dnl compilers such as GNU g++ cannot parse the template <> syntax.
 dnl
 
-AC_DEFUN(CASC_CXX_MEMBER_FUNCTION_SPECIALIZATION, [
+AC_DEFUN([CASC_CXX_MEMBER_FUNCTION_SPECIALIZATION], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports member function specialization)
    AC_CACHE_VAL(casc_cv_cxx_have_member_function_specialization, [
@@ -398,7 +398,7 @@ dnl Some compilers such as GNU g++ cannot parse the generic static data member
 dnl instantiation syntax and require that static data members for type T be
 dnl explicitly specified to instantiate the data member.
 
-AC_DEFUN(CASC_CXX_STATIC_DATA_INSTANTIATION, [
+AC_DEFUN([CASC_CXX_STATIC_DATA_INSTANTIATION], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports static data instantiation)
    AC_CACHE_VAL(casc_cv_cxx_have_static_data_instantiation, [
@@ -440,7 +440,7 @@ dnl Some compilers such as GNU g++ and older versions of KCC cannot parse
 dnl this syntax and use other methods (such as pragmas or different syntax).
 dnl
 
-AC_DEFUN(CASC_CXX_STANDARD_STATIC_DATA_SPECIALIZATION, [
+AC_DEFUN([CASC_CXX_STANDARD_STATIC_DATA_SPECIALIZATION], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports standard static data specialization)
    AC_CACHE_VAL(casc_cv_cxx_have_standard_static_data_specialization, [
@@ -486,7 +486,7 @@ dnl macro should be used ONLY if the standard static data specialization
 dnl syntax fails.
 dnl
 
-AC_DEFUN(CASC_CXX_PRAGMA_STATIC_DATA_SPECIALIZATION, [
+AC_DEFUN([CASC_CXX_PRAGMA_STATIC_DATA_SPECIALIZATION], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} supports pragma static data specialization)
    AC_CACHE_VAL(casc_cv_cxx_have_pragma_static_data_specialization, [
@@ -533,7 +533,7 @@ dnl    signal(SIGFPE, byebye);  /* Invoke byebye when above occurs */
 dnl }
 dnl
 dnl
-AC_DEFUN(CASC_CXX_EXCEPTION_HANDLING, [
+AC_DEFUN([CASC_CXX_EXCEPTION_HANDLING], [
     AC_REQUIRE([AC_PROG_CXX])
     AC_MSG_CHECKING(whether ${CXX} supports exception handling)
     AC_CACHE_VAL(casc_cxx_have_exception_handling, [
@@ -572,7 +572,7 @@ dnl Variable:	casc_cv_cxx_have_isnan_template = (yes|no)
 dnl Defines:	(HAVE|LACKS)_ISNAN_TEMPLATE
 dnl
 
-AC_DEFUN(CASC_CXX_ISNAN_TEMPLATE, [
+AC_DEFUN([CASC_CXX_ISNAN_TEMPLATE], [
    AC_REQUIRE([AC_PROG_CXX])
    AC_MSG_CHECKING(whether ${CXX} needs isnan templates)
 

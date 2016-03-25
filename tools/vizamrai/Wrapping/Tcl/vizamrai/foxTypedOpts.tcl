@@ -148,9 +148,9 @@
 #
 # REVISION HISTORY
 #
-# $Revision$
-#   $Author$
-#     $Date$
+# $LastChangedRevision: 816 $
+#   $LastChangedBy: gunney $
+#     $LastChangedDate: 2005-12-20 13:26:41 -0800 (Tue, 20 Dec 2005) $
 #
 # $Log$
 # Revision 1.1  2001/12/06 23:02:59  smithsg

@@ -44,7 +44,7 @@ dnl *     at the end of configure.in .
 dnl *********************************************************************
 
 
-AC_DEFUN(CASC_CONFIG_OUTPUT_LIST,
+AC_DEFUN([CASC_CONFIG_OUTPUT_LIST],
 [
    dnl * m_OUTPUT_LIST is a macro to store the name of the variable
    dnl * which will contain the list of output files
@@ -81,7 +81,7 @@ dnl * fails, ARCH is set to the value, if any, of shell variable HOSTTYPE,
 dnl * otherwise ARCH is set to "unknown".
 dnl **********************************************************************
 
-AC_DEFUN(CASC_GUESS_ARCH,
+AC_DEFUN([CASC_GUESS_ARCH],
 [
    AC_MSG_CHECKING(the architecture)
 
@@ -170,7 +170,7 @@ dnl * CXXFLAGS  = C++ compiler flags
 dnl * FFLAGS    = Fortran 77 compiler flags
 dnl **********************************************************************
 
-AC_DEFUN(CASC_SET_SUFFIX_RULES,
+AC_DEFUN([CASC_SET_SUFFIX_RULES],
 [
    dnl * Things weren't working whenever "$@" showed up in the script, so
    dnl * I made the symbol $at_sign to signify '@'

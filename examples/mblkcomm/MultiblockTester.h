@@ -1,9 +1,9 @@
 // 
-// File:        MultiblockTester.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/MultiblockTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 1.7 $
-// Modified:    $Date: 2004/03/08 21:12:08 $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -50,19 +50,19 @@
 #ifndef included_hier_IntVector
 #include "IntVector.h"
 #endif
-#ifndef included_mblk_MultiblockCoarsenAlgorithm
+#ifndef included_xfer_MultiblockCoarsenAlgorithm
 #include "MultiblockCoarsenAlgorithm.h"
 #endif
-#ifndef included_mblk_MultiblockPatchHierarchy
+#ifndef included_hier_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
 #endif
-#ifndef included_mblk_MultiblockRefinePatchStrategy
+#ifndef included_xfer_MultiblockRefinePatchStrategy
 #include "MultiblockRefinePatchStrategy.h"
 #endif
-#ifndef included_mblk_MultiblockRefineAlgorithm
+#ifndef included_xfer_MultiblockRefineAlgorithm
 #include "MultiblockRefineAlgorithm.h"
 #endif
-#ifndef included_mblk_MultiblockRefineSchedule
+#ifndef included_xfer_MultiblockRefineSchedule
 #include "MultiblockRefineSchedule.h"
 #endif
 #ifndef included_hier_Patch
@@ -103,6 +103,7 @@
 #define NULL (0)
 #endif
 
+using namespace std;
 using namespace SAMRAI;
 
 class PatchMultiblockTestStrategy;
@@ -127,7 +128,7 @@ class PatchMultiblockTestStrategy;
 class MultiblockTester :
    public mesh::StandardTagAndInitStrategy<NDIM>,
    public xfer::CoarsenPatchStrategy<NDIM>,
-   public mblk::MultiblockRefinePatchStrategy<NDIM>
+   public xfer::MultiblockRefinePatchStrategy<NDIM>
 {
 public:
 
@@ -149,7 +150,7 @@ public:
    /**
     * Return pointer to patch hierarchy on which communication is tested.
     */
-   tbox::Pointer< mblk::MultiblockPatchHierarchy<NDIM> > getPatchHierarchy()
+   tbox::Pointer< hier::MultiblockPatchHierarchy<NDIM> > getPatchHierarchy()
    const
    {
       return(d_patch_hierarchy);
@@ -207,7 +208,7 @@ public:
    /**
     * After communication operations are performed, check results.
     */
-   void verifyCommunicationResults() const;
+   bool  verifyCommunicationResults() const;
 
    /**
     * Operations needed by GriddingAlgorithm to construct and
@@ -252,7 +253,7 @@ public:
     */
    void fillSingularityBoundaryConditions(
       hier::Patch<NDIM>& patch,
-      tbox::List<mblk::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
+      tbox::List<xfer::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
          singularity_patches,
       const double fill_time,
       const hier::Box<NDIM>& fill_box,
@@ -327,7 +328,7 @@ private:
    /*
     * Patch hierarchy on which tests occur.
     */
-   tbox::Pointer< mblk::MultiblockPatchHierarchy<NDIM> > d_patch_hierarchy;
+   tbox::Pointer< hier::MultiblockPatchHierarchy<NDIM> > d_patch_hierarchy;
 
    /*
     * Dummy time stamp for all data operations.
@@ -366,11 +367,11 @@ private:
    xfer::RefineAlgorithm<NDIM>  d_reset_refine_algorithm;
    xfer::CoarsenAlgorithm<NDIM> d_reset_coarsen_algorithm;
 
-   tbox::Pointer <mblk::MultiblockRefineAlgorithm<NDIM> > d_mblk_refine_alg;
+   tbox::Pointer <xfer::MultiblockRefineAlgorithm<NDIM> > d_mblk_refine_alg;
 
    bool d_is_reset;
 
-   tbox::Array< tbox::Pointer< mblk::MultiblockRefineSchedule<NDIM> > >
+   tbox::Array< tbox::Pointer< xfer::MultiblockRefineSchedule<NDIM> > >
       d_refine_schedule;
    tbox::Array< tbox::Pointer< xfer::CoarsenSchedule<NDIM> > >
       d_coarsen_schedule;

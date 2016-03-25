@@ -1,9 +1,9 @@
 //
-// File:	BoxUtilities.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxUtilities.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for processing boxes within a domain of index space.
 //
 
@@ -12,16 +12,13 @@
 
 #include "BoxUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include <stdlib.h>
 
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
-#include "tbox/IEEE.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 namespace SAMRAI {
    namespace hier {
@@ -45,9 +42,9 @@ template<int DIM> void BoxUtilities<DIM>::findBadCutPointsForBorderAndDirection(
    const int bad_interval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (0 <= id) && (id < DIM) );
-   assert(bad_cuts.getSize() == box.numberCells(id));
-   assert(bad_interval >= 0);
+   TBOX_ASSERT( (0 <= id) && (id < DIM) );
+   TBOX_ASSERT(bad_cuts.getSize() == box.numberCells(id));
+   TBOX_ASSERT(bad_interval >= 0);
 #endif
 
    if (bad_interval > 0) {
@@ -63,12 +60,16 @@ template<int DIM> void BoxUtilities<DIM>::findBadCutPointsForBorderAndDirection(
       int mark = border.lower(id);
       if ( mark > (ilo-bad_interval) ) {
 
-         iclo = tbox::Utilities::imax(ilo, (mark-bad_interval+1)) - ilo;
-         ichi = tbox::Utilities::imin(ihi, (mark-1)) - ilo + 1;
+         iclo = 
+            tbox::MathUtilities<int>::Max(ilo, (mark-bad_interval+1)) - ilo;
+         ichi = 
+            tbox::MathUtilities<int>::Min(ihi, (mark-1)) - ilo + 1;
          for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
 
-         iclo = tbox::Utilities::imax(ilo, (mark+1)) - ilo;
-         ichi = tbox::Utilities::imin(ihi, (mark+bad_interval-1)) - ilo + 1;
+         iclo = 
+            tbox::MathUtilities<int>::Max(ilo, (mark+1)) - ilo;
+         ichi = 
+            tbox::MathUtilities<int>::Min(ihi, (mark+bad_interval-1)) - ilo + 1;
          for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
 
       }
@@ -79,12 +80,16 @@ template<int DIM> void BoxUtilities<DIM>::findBadCutPointsForBorderAndDirection(
       mark = border.upper(id) + 1;
       if ( mark < (ihi+bad_interval+1) ) {
 
-         iclo = tbox::Utilities::imax(ilo, (mark-bad_interval+1)) - ilo;
-         ichi = tbox::Utilities::imin(ihi, (mark-1)) - ilo + 1;
+         iclo = 
+            tbox::MathUtilities<int>::Max(ilo, (mark-bad_interval+1)) - ilo;
+         ichi = 
+            tbox::MathUtilities<int>::Min(ihi, (mark-1)) - ilo + 1;
          for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
 
-         iclo = tbox::Utilities::imax(ilo, (mark+1)) - ilo;
-         ichi = tbox::Utilities::imin(ihi, (mark+bad_interval-1)) - ilo + 1;
+         iclo = 
+            tbox::MathUtilities<int>::Max(ilo, (mark+1)) - ilo;
+         ichi = 
+            tbox::MathUtilities<int>::Min(ihi, (mark+bad_interval-1)) - ilo + 1;
          for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
 
       }
@@ -114,9 +119,9 @@ template<int DIM> void BoxUtilities<DIM>::checkBoxConstraints(
 {
    int id;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(min_size > IntVector<DIM>(0));
-   assert(cut_factor > IntVector<DIM>(0));
-   assert(bad_interval >= IntVector<DIM>(0)); 
+   TBOX_ASSERT(min_size > IntVector<DIM>(0));
+   TBOX_ASSERT(cut_factor > IntVector<DIM>(0));
+   TBOX_ASSERT(bad_interval >= IntVector<DIM>(0)); 
 #endif
   
    /*
@@ -134,14 +139,14 @@ template<int DIM> void BoxUtilities<DIM>::checkBoxConstraints(
    }
 
    if (min_violation) {
-      tbox::perr << "\nBox = " << box << " -- minimum size = " << min_size << endl;
+      tbox::perr << "\nBox = " << box << " -- minimum size = " << min_size << std::endl;
       for (id = 0; id < DIM; id++) { 
          if (min_is_bad[id]) {
-            tbox::perr << "min size violated in direction " << id << endl;
+            tbox::perr << "min size violated in direction " << id << std::endl;
          }
       }
       TBOX_ERROR("BoxUtilities<DIM>::checkBoxConstraints() error:\n"
-                 << "  Box violates minimum size restriction" << endl);
+                 << "  Box violates minimum size restriction" << std::endl);
    }
 
    /*
@@ -159,14 +164,14 @@ template<int DIM> void BoxUtilities<DIM>::checkBoxConstraints(
    }
 
    if (factor_violation) {
-      tbox::perr << "\nBox = " << box << " -- cut factor = " << cut_factor << endl;
+      tbox::perr << "\nBox = " << box << " -- cut factor = " << cut_factor << std::endl;
       for (id = 0; id < DIM; id++) { 
          if (factor_is_bad[id]) {
-            tbox::perr << "factor bad in direction " << id << endl;
+            tbox::perr << "factor bad in direction " << id << std::endl;
          }
       }
       TBOX_ERROR("BoxUtilities<DIM>::checkBoxConstraints() error:\n"
-                 << "  Box violates cut factor restriction" << endl);
+                 << "  Box violates cut factor restriction" << std::endl);
    }
 
    if (physical_boxes.getNumberOfBoxes() > 0) {
@@ -261,14 +266,14 @@ template<int DIM> void BoxUtilities<DIM>::checkBoxConstraints(
             if (cut_is_bad[id]) tbox::perr << "\n" << id;
          }
          tbox::perr << "\nBox = " << box << " -- bad cut interval = " 
-                                 << bad_interval << endl;
-         tbox::perr << "Physical domain boxes ... " << endl;
+                                 << bad_interval << std::endl;
+         tbox::perr << "Physical domain boxes ... " << std::endl;
          for (int ib = 0; ib < physical_boxes.getNumberOfBoxes(); ib++) {
             tbox::perr << "Box # " << ib << " -- " 
-                             << physical_boxes.getBox(ib) << endl;
+                             << physical_boxes.getBox(ib) << std::endl;
          }
          TBOX_ERROR("BoxUtilities<DIM>::checkBoxConstraints() error:\n"
-                    << "  Box violates bad cut restriction" << endl);
+                    << "  Box violates bad cut restriction" << std::endl);
       }
 
    }
@@ -312,11 +317,11 @@ template<int DIM> void BoxUtilities<DIM>::chopBoxes(
    const BoxArray<DIM>& physical_boxes)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(min_size > IntVector<DIM>(0));
-   assert(max_size >= min_size);
-   assert(cut_factor > IntVector<DIM>(0));
-   assert(bad_interval >= IntVector<DIM>(0));
-   assert(physical_boxes.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(min_size > IntVector<DIM>(0));
+   TBOX_ASSERT(max_size >= min_size);
+   TBOX_ASSERT(cut_factor > IntVector<DIM>(0));
+   TBOX_ASSERT(bad_interval >= IntVector<DIM>(0));
+   TBOX_ASSERT(physical_boxes.getNumberOfBoxes() > 0);
 #endif
 
    BoxList<DIM> in_boxes(boxes);
@@ -392,7 +397,7 @@ template<int DIM> void BoxUtilities<DIM>::chopBox(
    const tbox::Array< tbox::List<int> > cut_points)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(cut_points.getSize() == DIM);
+   TBOX_ASSERT(cut_points.getSize() == DIM);
 #endif
 
    if (!box.empty()) {
@@ -418,12 +423,12 @@ template<int DIM> void BoxUtilities<DIM>::chopBox(
 
                tbox::List<int>::Iterator cut = cut_points[id].listStart();
 #ifdef DEBUG_CHECK_ASSERTIONS
-               int last_cut = tbox::IEEE::getINT_MIN();
+               int last_cut = tbox::MathUtilities<int>::getMin();
 #endif
                while (cut) {
                   int cut_val = cut();
 #ifdef DEBUG_CHECK_ASSERTIONS
-                  assert(last_cut <= cut_val);
+                  TBOX_ASSERT(last_cut <= cut_val);
                   last_cut = cut_val;
 #endif
                   ihi(id) = cut_val - 1;
@@ -477,8 +482,8 @@ template<int DIM> bool BoxUtilities<DIM>::extendBoxesToDomainBoundary(
    const IntVector<DIM>& ext_ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!domain.isEmpty());
-   assert(ext_ghosts >= IntVector<DIM>(0));
+   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(ext_ghosts >= IntVector<DIM>(0));
 #endif
 
    bool out_val = false;
@@ -509,8 +514,8 @@ template<int DIM> bool BoxUtilities<DIM>::extendBoxToDomainBoundary(
 {
    int id;
 #ifdef DEBUG_CHECK_ASSERTIONSa
-   assert(!domain.isEmpty());
-   assert(ext_ghosts >= IntVector<DIM>(0));
+   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(ext_ghosts >= IntVector<DIM>(0));
 #endif
 
    bool out_val = false;
@@ -538,7 +543,7 @@ template<int DIM> bool BoxUtilities<DIM>::extendBoxToDomainBoundary(
  
             int box_lo = box.lower(id);
             for (lb=outside_boxes.listStart(); lb; lb++) {
-               box_lo = tbox::Utilities::imin(box_lo, lb().upper(id)+1);
+               box_lo = tbox::MathUtilities<int>::Min(box_lo, lb().upper(id)+1);
             }
 
             // Test whether upper end of ghost box extends outside domain
@@ -550,7 +555,7 @@ template<int DIM> bool BoxUtilities<DIM>::extendBoxToDomainBoundary(
 
             int box_hi = box.upper(id);
             for (lb=outside_boxes.listStart(); lb; lb++) {
-               box_hi = tbox::Utilities::imax(box_hi, lb().lower(id)-1);
+               box_hi = tbox::MathUtilities<int>::Max(box_hi, lb().lower(id)-1);
             }
 
             if (!out_val) {
@@ -591,7 +596,7 @@ template<int DIM> void BoxUtilities<DIM>::growBoxesWithinDomain(
 {
    int id;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(min_size > IntVector<DIM>(0)); 
+   TBOX_ASSERT(min_size > IntVector<DIM>(0)); 
 #endif
 
    if (!boxes.isEmpty()) {
@@ -636,7 +641,8 @@ template<int DIM> void BoxUtilities<DIM>::growBoxesWithinDomain(
                
                int grow_lo = try_box.lower(id) - grow;
                for (lb=outside_boxes.listStart(); lb; lb++) {
-                  grow_lo = tbox::Utilities::imax(grow_lo, lb().upper(id)+1);
+                  grow_lo = 
+                    tbox::MathUtilities<int>::Max(grow_lo, lb().upper(id)+1);
                }
  
                // How far may box be grown within domain in upper direction?
@@ -649,7 +655,8 @@ template<int DIM> void BoxUtilities<DIM>::growBoxesWithinDomain(
     
                int grow_up = try_box.upper(id) + grow;
                for (lb=outside_boxes.listStart(); lb; lb++) {
-                  grow_up = tbox::Utilities::imin(grow_up, lb().lower(id)-1);
+                  grow_up = 
+                     tbox::MathUtilities<int>::Min(grow_up, lb().lower(id)-1);
                }
     
                // Adjust box dimensions as necessary
@@ -712,9 +719,9 @@ template<int DIM> bool BoxUtilities<DIM>::findBestCutPointsGivenMax(
 {
    int id;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(min_size > IntVector<DIM>(0));
-   assert(min_size <= max_size);
-   assert(cut_factor > IntVector<DIM>(0));
+   TBOX_ASSERT(min_size > IntVector<DIM>(0));
+   TBOX_ASSERT(min_size <= max_size);
+   TBOX_ASSERT(cut_factor > IntVector<DIM>(0));
 #endif
 
    bool chop_ok = false;
@@ -764,10 +771,10 @@ template<int DIM> bool BoxUtilities<DIM>::findBestCutPointsForDirectionGivenMax(
    const int cut_factor)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!box.empty());
-   assert(min_size > 0);
-   assert(max_size >= min_size);
-   assert(cut_factor > 0);
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(min_size > 0);
+   TBOX_ASSERT(max_size >= min_size);
+   TBOX_ASSERT(cut_factor > 0);
 #endif
 
    cut_points.clearItems();
@@ -796,7 +803,7 @@ template<int DIM> bool BoxUtilities<DIM>::findBestCutPointsForDirectionGivenMax(
        * but possibly at the expense of breaking the max constraint.
        */
       if ( (max < min) || ((max == min) && ((len % max) != 0)) ) {
-         max = tbox::Utilities::imin(2*min, len/2);
+         max = tbox::MathUtilities<int>::Min(2*min, len/2);
       }
 
       int num_boxes = 1;
@@ -866,10 +873,10 @@ template<int DIM> bool BoxUtilities<DIM>::findBestCutPointsGivenNumber(
    const IntVector<DIM>& cut_factor)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!box.empty());
-   assert(min_size > IntVector<DIM>(0));
-   assert(number_boxes > IntVector<DIM>(0));
-   assert(cut_factor > IntVector<DIM>(0));
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(min_size > IntVector<DIM>(0));
+   TBOX_ASSERT(number_boxes > IntVector<DIM>(0));
+   TBOX_ASSERT(cut_factor > IntVector<DIM>(0));
 #endif
 
    int id;
@@ -938,9 +945,9 @@ template<int DIM> bool BoxUtilities<DIM>::findBestCutPointsForDirectionGivenNumb
    const int cut_factor)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(min_size > 0);
-   assert(num_boxes > 0);
-   assert(cut_factor > 0);
+   TBOX_ASSERT(min_size > 0);
+   TBOX_ASSERT(num_boxes > 0);
+   TBOX_ASSERT(cut_factor > 0);
 #endif
 
    cut_points.clearItems();
@@ -1052,8 +1059,8 @@ template<int DIM> bool BoxUtilities<DIM>::checkBoxForBadCutPointsInDirection(
    const IntVector<DIM>& bad_interval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!box.empty());
-   assert(bad_interval >= IntVector<DIM>(0));
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(bad_interval >= IntVector<DIM>(0));
 #endif
 
    bool found_bad = false;
@@ -1144,8 +1151,8 @@ template<int DIM> void BoxUtilities<DIM>::findBadCutPoints(
    const IntVector<DIM>& bad_interval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!box.empty());
-   assert(bad_cuts.getSize() == DIM);
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(bad_cuts.getSize() == DIM);
 #endif
 
    for (int id = 0; id < DIM; id++) {
@@ -1184,8 +1191,8 @@ template<int DIM> void BoxUtilities<DIM>::findBadCutPointsForDirection(
    const IntVector<DIM>& bad_interval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!box.empty());
-   assert(bad_interval >= IntVector<DIM>(0));
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(bad_interval >= IntVector<DIM>(0));
 #endif
 
    int ic;
@@ -1313,17 +1320,17 @@ template<int DIM> void BoxUtilities<DIM>::fixBadCutPoints(
 {
    int id;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(cuts.getSize() == DIM);
-   assert(bad_cuts.getSize() == DIM);
+   TBOX_ASSERT(cuts.getSize() == DIM);
+   TBOX_ASSERT(bad_cuts.getSize() == DIM);
    bool bad_cuts_ok = true;
    for (id = 0; id < DIM; id++) {
       bad_cuts_ok = bad_cuts_ok && 
                     (bad_cuts[id].getSize() == box.numberCells(id)); 
    }
-   assert(bad_cuts_ok);
-   assert(!box.empty());
-   assert(min_size > IntVector<DIM>(0));
-   assert(cut_factor > IntVector<DIM>(0));
+   TBOX_ASSERT(bad_cuts_ok);
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(min_size > IntVector<DIM>(0));
+   TBOX_ASSERT(cut_factor > IntVector<DIM>(0));
 #endif
 
    for (id = 0; id < DIM; id++) {
@@ -1362,7 +1369,7 @@ template<int DIM> void BoxUtilities<DIM>::fixBadCutPointsForDirection(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    tbox::List<int>::Iterator cut = cuts.listStart();
-   assert(bad_cuts.getSize() == box.numberCells(id));
+   TBOX_ASSERT(bad_cuts.getSize() == box.numberCells(id));
    bool cuts_strictly_increase = true;
    if (cut) {
       int prev = cut();
@@ -1373,17 +1380,17 @@ template<int DIM> void BoxUtilities<DIM>::fixBadCutPointsForDirection(
          cut++;
       }
    }
-   assert(cuts_strictly_increase);
-   assert(!box.empty());
-   assert(min_in > 0);
-   assert(fact > 0);
+   TBOX_ASSERT(cuts_strictly_increase);
+   TBOX_ASSERT(!box.empty());
+   TBOX_ASSERT(min_in > 0);
+   TBOX_ASSERT(fact > 0);
    bool cuts_satisfy_factor = true;
    cut = cuts.listStart();
    while (cut && cuts_satisfy_factor) {
       if (((cut() - box.lower(id))%fact) != 0) cuts_satisfy_factor = false; 
       cut++;
    }
-   assert(cuts_satisfy_factor);
+   TBOX_ASSERT(cuts_satisfy_factor);
 #endif
 
    /*

@@ -1,10 +1,10 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/patchbdrysum/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name$
-## Revision:	$Revision: 698 $
-## Modified:	$Date: 2005-11-03 12:29:23 -0800 (Thu, 03 Nov 2005) $
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for SAMRAI patch boundary hierarchy sum test
 ##
 
@@ -14,6 +14,7 @@ SAMRAI        = @top_srcdir@
 SRCDIR        = @top_srcdir@/examples/patchbdrysum
 SUBDIR        = source/test/patchbdrysum
 VPATH         = @top_srcdir@/examples/patchbdrysum
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default:      check
@@ -25,6 +26,10 @@ CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DTESTING=1
 CXX_OBJS      = main.o HierSumTest.o
 F2D_OBJS       = edgeops2d.o
 F3D_OBJS       = edgeops3d.o
+
+NUM_TESTS = 17
+
+TEST_NPROCS = @TEST_NPROCS@
 
 main2d:
 		if test -f stamp-3d; then $(MAKE) clean-check; fi
@@ -43,8 +48,6 @@ main3d:
 main-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) \
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
-
-TEST_NPROCS = @TEST_NPROCS@ 
 
 check:
 		$(MAKE) check2d
@@ -88,19 +91,23 @@ check3d:        main3d
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 		./main3d 2lev-3d-node-edge-perz.input; \
 
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
+
 clean-check:
-		$(RM) stamp-*d *.log.*
-		$(RM) *.o *.ii *core* *.int.c *log*
-		$(RM) -r ti_files viz*
+		$(SAMCLEAN)
 
 clean:
-		$(RM) main2d main3d core.*
-		$(RM) *.f *.o *.ii *.int.c stamp-[23]d 
-		$(RM) -r ti_files ii_files viz*
-		$(RM) *log*
+		$(SAMCLEAN)
+		$(RM) *.f *main* 
+		$(RM) -rf restart-*d*
+		$(RM) -r viz*
 
-redo:
-		$(RM) main2d main3d core
 
 include $(SRCDIR)/Makefile.depend
 

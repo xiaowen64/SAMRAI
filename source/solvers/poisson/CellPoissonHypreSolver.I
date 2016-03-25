@@ -1,18 +1,12 @@
 /*
- * File:        $RCSFile$
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonHypreSolver.I $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 173 $
- * Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Level solver for diffusion-like elliptic problems.
  */
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -55,7 +49,7 @@ void CellPoissonHypreSolver<DIM>::setUseSMG( bool use_smg ) {
 
 template<int DIM> inline
 void CellPoissonHypreSolver<DIM>::setBoundaries(
-   const string& boundary_type,
+   const std::string& boundary_type,
    const int fluxes,
    const int flags,
    int* bdry_types)
@@ -106,7 +100,7 @@ template<int DIM> inline
 void CellPoissonHypreSolver<DIM>::setNumPreRelaxSteps(const int steps)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
+   TBOX_ASSERT(!d_hierarchy.isNull());
 #endif
    d_num_pre_relax_steps = steps;
 }
@@ -115,7 +109,7 @@ template<int DIM> inline
 void CellPoissonHypreSolver<DIM>::setNumPostRelaxSteps(const int steps)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
+   TBOX_ASSERT(!d_hierarchy.isNull());
 #endif
    d_num_post_relax_steps = steps;
 }
@@ -132,8 +126,8 @@ void CellPoissonHypreSolver<DIM>::setStoppingCriteria(
    const double residual_tol)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(max_iterations >= 0);
-   assert(residual_tol      >= 0.0);
+   TBOX_ASSERT(max_iterations >= 0);
+   TBOX_ASSERT(residual_tol      >= 0.0);
 #endif
    d_max_iterations = max_iterations;
    d_relative_residual_tol      = residual_tol;

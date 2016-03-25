@@ -1,22 +1,18 @@
 //
-// File:        Statistic.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistic.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to record statistics during program execution.
 //
 
 #include "tbox/Statistic.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 #include "tbox/Array.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #define TBOX_STATISTIC_VERSION (1)
 
@@ -42,20 +38,20 @@ double Statistic::s_empty_seq_tag_entry = -99999999.;
 *************************************************************************
 */
 
-Statistic::Statistic(const string& name,
-                               const string& stat_type,
+Statistic::Statistic(const std::string& name,
+                               const std::string& stat_type,
                                int instance_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
-   assert(!stat_type.empty());
-   assert(instance_id > -1);
+   TBOX_ASSERT(!name.empty());
+   TBOX_ASSERT(!stat_type.empty());
+   TBOX_ASSERT(instance_id > -1);
 #endif 
 
    if ( !(stat_type == "PROC_STAT" || stat_type == "PATCH_STAT") ) {
       TBOX_ERROR("Invalid stat_type passed to Statistic constructor"
          << "   object name = " << name
-         << ".\n   Valid stat types are `PROC_STAT' and `PATCH_STAT'" << endl);
+         << ".\n   Valid stat types are `PROC_STAT' and `PATCH_STAT'" << std::endl);
    }
 
    d_object_name = name;
@@ -93,7 +89,7 @@ void Statistic::recordProcStat(double value,
 {
    if (d_stat_type != PROC_STAT) {
       TBOX_ERROR("Statistic::recordProcStat error...\n"
-                 << "    Statistic type is `PATCH_STAT'" << endl);
+                 << "    Statistic type is `PATCH_STAT'" << std::endl);
    }
 
    /*
@@ -130,7 +126,7 @@ void Statistic::recordPatchStat(int patch_num,
 {
    if (d_stat_type != PATCH_STAT) {
       TBOX_ERROR("Statistic::recordPatchStat error...\n"
-         << "    Statistic type is `PROC_STAT'" << endl);
+         << "    Statistic type is `PROC_STAT'" << std::endl);
    }
 
    /*
@@ -229,9 +225,9 @@ int Statistic::getDataStreamSize()
 
 void Statistic::packStream(AbstractStream& stream)
 {
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
       TBOX_ERROR("Statistic::packStream error...\n"
-         << "    Processor zero should not pack stat data" << endl);
+         << "    Processor zero should not pack stat data" << std::endl);
    }
 
    int num_int     = 4;
@@ -246,7 +242,7 @@ void Statistic::packStream(AbstractStream& stream)
    Array<int> idata(num_int);
    Array<double> ddata(num_double);
 
-   idata[0] = MPI::getRank();
+   idata[0] = SAMRAI_MPI::getRank();
    idata[1] = d_instance_id;
    idata[2] = d_stat_type;
    idata[3] = d_seq_counter;
@@ -288,9 +284,9 @@ void Statistic::packStream(AbstractStream& stream)
 
 void Statistic::unpackStream(AbstractStream& stream)
 {
-   if (MPI::getRank() != 0) {
+   if (SAMRAI_MPI::getRank() != 0) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
-         << "    Only processor zero should unpack stat data" << endl);
+         << "    Only processor zero should unpack stat data" << std::endl);
    }
 
    int src_rank, stat_id, stat_type, seq_len;
@@ -302,15 +298,15 @@ void Statistic::unpackStream(AbstractStream& stream)
 
    if (src_rank == 0) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
-         << "     Processor zero should not send stat data" << endl);
+         << "     Processor zero should not send stat data" << std::endl);
    }
    if (stat_id != d_instance_id) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
-         << "    Incompatible statistic number ids" << endl);
+         << "    Incompatible statistic number ids" << std::endl);
    }
    if (stat_type != d_stat_type) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
-         << "    Incompatible statistic types" << endl);
+         << "    Incompatible statistic types" << std::endl);
    }
 
    int is;
@@ -355,36 +351,36 @@ void Statistic::unpackStream(AbstractStream& stream)
 
 }
 
-void Statistic::printClassData(ostream& stream,
+void Statistic::printClassData(std::ostream& stream,
                                     int precision) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(precision > 0);
+      TBOX_ASSERT(precision > 0);
 #endif
 
    stream.precision(precision);
 
-   stream << "Local Data for " << getType() << " : " << getName() << endl;
-   stream << "   Processor id = " << MPI::getRank() << endl;
-   stream << "   Instance id = " << getInstanceId() << endl;
-   stream << "   Sequence length = " << getStatSequenceLength() << endl;
+   stream << "Local Data for " << getType() << " : " << getName() << std::endl;
+   stream << "   Processor id = " << SAMRAI_MPI::getRank() << std::endl;
+   stream << "   Instance id = " << getInstanceId() << std::endl;
+   stream << "   Sequence length = " << getStatSequenceLength() << std::endl;
 
    int is = 0;
    if (d_stat_type == PROC_STAT) {
       for (is = 0; is < d_seq_counter; is++) {
          stream << "     sequence[" << is 
-                << "] : value = " << d_proc_array[is].value << endl;
+                << "] : value = " << d_proc_array[is].value << std::endl;
       }
    } else {
       for (is = 0; is < d_seq_counter; is++) {
          stream << "     sequence[" << is 
-                << "]" << endl;
+                << "]" << std::endl;
 
          List<Statistic::PatchStatRecord>::Iterator ilr(
             d_patch_array[is].patch_records);
          for ( ; ilr; ilr++) {
             stream << "        patch # = " << ilr().patch_id
-                   << " : value = " << ilr().value << endl;
+                   << " : value = " << ilr().value << std::endl;
          }
       }
    }
@@ -397,7 +393,7 @@ void Statistic::checkArraySizes(int seq_num)
     * Verify that seq_num is less than array size.  If so, drop through.
     * If not, resize and initialize the array.
     */
-   int high_mark = Utilities::imax(seq_num, d_seq_counter);
+   int high_mark = tbox::MathUtilities<int>::Max(seq_num, d_seq_counter);
 
    if (d_stat_type == PROC_STAT) {
 
@@ -427,7 +423,7 @@ void Statistic::putToDatabase(
    Pointer<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    db->putInteger("TBOX_STATISTIC_VERSION",
                   TBOX_STATISTIC_VERSION);
@@ -486,7 +482,7 @@ void Statistic::getFromRestart(
    Pointer<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    int ver = db->getInteger("TBOX_STATISTIC_VERSION");
    if (ver != TBOX_STATISTIC_VERSION) {

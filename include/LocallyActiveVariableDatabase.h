@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveVariableDatabase.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/LocallyActiveVariableDatabase.h $
 // Package:     SAMRAI hierarchy	
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 731 $
-// Modified:	$Date: 2005-11-15 14:05:53 -0800 (Tue, 15 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1811 $
+// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
 // Description:	Singleton database for variables defined on subset of hierarchy patches.
 //
 
@@ -13,20 +13,43 @@
 #ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
 #endif
+#ifndef included_hier_ComponentSelector
+#include "ComponentSelector.h"
+#endif
+#ifndef included_hier_IntVector
+#include "IntVector.h"
+#endif
+#ifndef included_hier_PatchDescriptor
+#include "PatchDescriptor.h"
+#endif
 #ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
 #endif
 #ifndef included_hier_ProcessorMapping
 #include "ProcessorMapping.h"
 #endif
+#ifndef included_hier_Variable
+#include "Variable.h"
+#endif
+#ifndef included_hier_VariableContext
+#include "VariableContext.h"
+#endif
 #ifndef included_hier_VariableDatabase
 #include "VariableDatabase.h"
 #endif
-
+#ifndef included_tbox_Array
+#include "tbox/Array.h"
+#endif
+#ifndef included_tbox_Pointer
+#include "tbox/Pointer.h"
+#endif
+#ifndef included_String
+#include <string>
+#define included_String
+#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 namespace SAMRAI {
@@ -37,44 +60,72 @@ template<int DIM> class LocallyActiveDataPatchLevelIterator;
 template<int DIM> class LocallyActiveDataPatchLevelManager;
 
 /*!
- * @brief Class LocallyActiveVariableDatabase is a Singleton class for managing
- * variables and data that live on different sets of patches in an AMR patch
- * hierarchy; i.e., they are "locally-active".   Although this class is derived 
- * from the VariableDatabase class, this class does not extend the full range of 
- * functionality provided by the VariableDatabase base class.  Instead, this class 
- * uses some of the functionality of the VariableDatabase base class so that it is 
- * not  replicated here.  For example, this class assumes that each variable 
- * is associated with only one patch data index and all variables registered with 
- * this class share the same variable context.  However, the usage of this class is
- * similar to the VariableDatabase class.  To make usage of this class reasonably
- * transparent all functions defined in the base class that make sense for this 
- * class are redeclared here.
+ * @brief Class LocallyActiveVariableDatabase is a Singleton class that 
+ * provides functionality for using the VariableDatabase to manage variables 
+ * and data that live on different sets of patches in an AMR patch hierarchy, 
+ * so-called "locally-active" data, can be managed.   
  *
- * @see hier::VariableContext
+ * This class uses the VariableDatabase directly and provides most of the 
+ * operations available in that class through the interface declared here.
+ * However, support for locally-active data is more limited than in the 
+ * standard case.  For example, this class does not support registration of
+ * locally-active variables with VariableContexts and each variable can be 
+ * associated with only one patch data index. That is, there is a one-to-one 
+ * mapping between variables and patch data indices and associating multiple 
+ * VariableContexts with a variable is not allowed.  To make usage of this 
+ * class reasonably transparent, all member functions are similar to the
+ * analogous operations in the VariableDatabase.
+ *
+ * To avoid potentially improper, or unexpected, behavior, all locally-active
+ * variables should be registered with and managed using operations provided
+ * by this class.  Standard variable registration and variable management 
+ * operations should use the VariableDatabase class.
+ *
+ * This class provides "manager" objects to define which patches are active
+ * on each level for each locally-active variable; see the declaration of
+ * LocallyActiveDataPatchLevelManager below.  
+ *
  * @see hier::VariableDatabase
  * @see hier::PatchDescriptor
  * @see hier::LocallyActiveDataPatchLevelManager
  */
 
 template<int DIM>
-class LocallyActiveVariableDatabase : 
-   public hier::VariableDatabase<DIM>
+class LocallyActiveVariableDatabase 
 {
    friend class LocallyActiveDataPatchLevelIterator<DIM>;
+
 public:
    /*!
-    * Return a pointer to the singleton instance of the locally-active variable 
+    * Return a pointer to the singleton instance of this locally-active variable 
     * database.  All access to the LocallyActiveVariableDatabase<DIM> object is 
     * through the getDatabase() function.  For example, to access the variable with 
     * string name "my_variable", use the following call: 
     * LocallyActiveVariableDatabase<DIM>::getVariable()->getVariable("my_variable").
     * 
-    * Note that there is no freeDatabase() static member function as one might 
-    * expect for a Singleton class.  This is unnecessary since the deallocation 
-    * at program termination is handled by the VariableDatabase base class through
-    * the virtual destructor.
+    * Note that when the database is accessed for the first time, the
+    * Singleton instance is registered with the ShutdownRegistry
+    * class which destroys such objects at program completion.  Thus,
+    * users of this class do not explicitly allocate or deallocate the
+    * Singleton instance.
+    *
+    * @return  Bare pointer to variable database instance.
     */
    static LocallyActiveVariableDatabase<DIM>* getDatabase();
+
+   /*!
+    * Deallocate the LocallyActiveVariableDatabase<DIM> instance.  
+    * It is not necessary to call this function at program termination, 
+    * since it is automatically called by the ShutdownRegistry class.
+    */
+   static void freeDatabase();
+
+   /*!
+    * Return number of variables registered with the 
+    * locally-active variable database.
+    */
+   virtual
+   int getNumberRegisteredVariables() const;
 
    /*!
     * Return pointer to the patch descriptor managed by the database
@@ -85,28 +136,22 @@ public:
    tbox::Pointer< hier::PatchDescriptor<DIM> > getPatchDescriptor() const;
 
    /*!
-    * Return pointer to variable context shared by all locally-active 
-    * variables registered with this database.
-    */
-   tbox::Pointer<hier::VariableContext> getSharedContext() const;
-
-   /*!
-    * Add the given variable and ghost cell width to the database of 
+    * Rgister the given variable and ghost cell width with the database of 
     * locally-active variables.  This function is similar to the variable 
     * registration member functions in the VariableDatabase<DIM> class,
     * but is more restrictive here since each variable can be registered with
     * only one patch data index.  This function imposes the same restrictions
     * on uniqueness of variable names as the VariableDatabase<DIM> base
-    * class.  
-    * 
+    * class.
+    *
     * Typically, this function will generate a new patch descriptor index for the
     * variable and ghost cell width and add the variable-ghost cell width pair
     * and index to the database.  If the variable-ghost cell width pair is already
     * mapped to some patch data identifier in the database, then that index
     * will be returned and the function will do nothing.   However, if
-    * the variable-ghost cell width pair is already mapped to some patch data identifier
-    * with a different ghost cell width, the program will abort with a descriptive
-    * error message.  
+    * the variable-ghost cell width pair is already mapped to some patch data 
+    * identifier with a different ghost cell width, the program will abort with a 
+    * descriptive error message.  
     *
     * @return integer patch descriptor index corresponding to storage for variable.
     *
@@ -125,86 +170,113 @@ public:
     * Get variable in locally-active database with given name string identifier.
     *
     * @return  tbox::Pointer to variable in database with given name.  If no such
-    *          variable exists, a null pointer is returned.
+    *          variable exists, a null pointer is returned.  In particular, if
+    *          the variable exists in the VariableDatabase instance, but is not
+    *          registered as locally-active, then a null pointer is returned.
     *
     * @param name  Const reference to name string identifying the variable.
     */
-   tbox::Pointer< hier::Variable<DIM> > getVariable(const string& name) const;
+   tbox::Pointer< hier::Variable<DIM> > getVariable(const std::string& name) const;
 
    /*!
-    * Check if variable with given name exists in the locally-active database.
+    * Check if variable with given name has been registered with the 
+    * locally-active variable database.
     *
     * @return boolean true if a variable whose name matches the argument string
-    *         exists in the database; otherwise, return false. 
+    *         exists in the database; otherwise, return false.  In particular, if
+    *         the variable exists in the VariableDatabase instance, but is not
+    *         registered as locally-active, then a value of false is returned.
     * 
     * @param name string name of variable to retrieve.
     */
-   bool checkVariableExists(const string& name) const;
+   bool checkVariableExists(const std::string& name) const;
 
    /*!
-    * Check if given variable exists in the locally-active database.
+    * Check if given variable has been registered with the locally-active 
+    * variable database.
     *
     * @return boolean true if argument variable exists in the database; 
     *         otherwise, return false.
     *
-    * @param const smart pointer to variable to check whether it is in database.
-    *
-    * When assertion checking is active, an assertion will result when
-    * the variable pointer is null.
+    * @param variable smart pointer to variable to check whether it is in database.
+    *        When assertion checking is active, an assertion will result when
+    *        the variable pointer is null.
     */ 
    bool checkVariableExists(const tbox::Pointer< hier::Variable<DIM> > variable) const; 
 
    /*!
-    * Check whether the given variable matches the type of the patch data
-    * at the given descriptor index.  Note this check can be performed
-    * regardless of whether the variable and data index are in the variable
-    * database and so this function does not provide information about the
-    * contents of the database.
+    * Check whether the given variable matches the patch data index in 
+    * the locally-active variable database.  
     *
-    * @return  Boolean true if the type of the variable matches the type of
-    *          the patch data at the given descriptor index; false otherwise.
+    * @return  Boolean true if the variable/patch data index pair reside in
+    *          the locally-active variable database; false otherwise.
     *
     * @param  variable  tbox::Pointer to variable.  When assertion checking is
-    *                   active, an unrecoverable exception will result if
+    *                   active, an unrecoverable assertion will result if
     *                   the variable pointer is null.
     * @param  data_id   Integer patch data identifier.  When assertion checking
-    *                   is active, an unrecoverable exception will result if
-    *                   the value is an invalid identifier (< 0).
+    *                   is active, an unrecoverable assertion will result if
+    *                   the value is an invalid identifier (either < 0 or    
+    *                   larger than the maximum allowed patch data id).
     */
    bool
    checkVariablePatchDataIndex(const tbox::Pointer< Variable<DIM> > variable,
-                               int data_id);
+                               int data_id) const;
+
+   /*!    
+    * Check whether the given variable matches the patch data type
+    * associated with the given patch data index in the locally-active
+    * variable database.    
+    *    
+    * @return  Boolean true if the type of the variable matches the type of 
+    *          the patch data at the given patch data index; false otherwise.
+    *    
+    * @param  variable  tbox::Pointer to variable.  When assertion checking
+    *                   is active, an unrecoverable assertion will result if
+    *                   the variable pointer is null.
+    * @param  data_id   Integer patch data index.  When assertion checking
+    *                   is active, an unrecoverable assertion will result
+    *                   the value is an invalid identifier (either < 0 or
+    *                   larger than the maximum allowed patch data id).
+    */
+   virtual
+   bool checkVariablePatchDataIndexType(
+        const tbox::Pointer< hier::Variable<DIM> > variable,
+        int data_id) const;
+
 
    /*!
-    * Map variable in database to patch data identifier.  If variable is not 
-    * in the database (i.e., it has not been added), then an invalid descriptor 
-    * index (i.e., < 0) is returned.
+    * Map variable in locally-active variable database to patch data index.
     *
     * @return Integer patch data identifier for variable in database.
+    *         If variable is not in the database (i.e., it has not been 
+    *         registered), then an invalid patch data index (i.e., < 0) 
+    *         is returned.
     *
-    * @param  variable  tbox::Pointer to variable.  When assertion checking is active,
-    *                   an unrecoverable exception will result if the variable
-    *                   pointer is null.
+    * @param  variable  tbox::Pointer to variable.  When assertion checking 
+    *                   is active, an unrecoverable assertion results 
+    *                   if the variable pointer is null.
     */
-   int mapVariableToIndex(const tbox::Pointer< hier::Variable<DIM> > variable) const;
+   int mapVariableToIndex(
+      const tbox::Pointer< hier::Variable<DIM> > variable) const;
 
    /*!
-    * Map patch data identifier to variable associated with the data, if
-    * possible, and set the variable pointer to the variable in the database.
+    * Map patch data index to variable, if index is associated with
+    * a variable registered with the locally-active variable database.
     *
-    * @return  Boolean true if patch data identifier maps to variable in the
-    *          database; otherwise false.
+    * @return  Boolean true if patch data index maps to variable in the
+    *          locally-active database; otherwise false.
     *
-    * @param   index  Integer patch data identifier.  When assertion checking
-    *                 is active, an unrecoverable exception will if the index
-    *                 is invalid (i.e., < 0).
-    * @param   variable  tbox::Pointer to variable that maps to patch data identifier
-    *                    in database.  If there is no identifier in the database
-    *                    matching the index input value, then the variable pointer
-    *                    is set to null.
+    * @param   data_id  Integer patch data identifier.  When assertion checking
+    *                   is active, an unrecoverable assertion will if the index
+    *                   is invalid (i.e., < 0).
+    * @param   variable  tbox::Pointer to variable that maps to patch data 
+    *                    index in database.  If there is no patch data index
+    *                    in the database matching the index input value, 
+    *                    then the variable pointer is set to null.
     */
    bool mapIndexToVariable(
-      const int index,
+      int data_id,
       tbox::Pointer< hier::Variable<DIM> >& variable) const; 
 
    /*!
@@ -259,11 +331,14 @@ public:
 
    /*!
     * Print all variable, context, and patch descriptor information
-    * contained in the database to the specified output stream.
+    * contained in the database to the specified output stream.  
+    * Active patch information for the patch hierarchy is also printed 
+    * by dumping the contents of the locally-active patch data level 
+    * manager objects.
     *
     * @param os  Optional output stream.  If not given, tbox::plog is used.
     */
-   void printClassData(ostream& os = tbox::plog) const;
+   virtual void printClassData(std::ostream& os = tbox::plog) const;
 
 protected:
    /**
@@ -304,37 +379,47 @@ private:
       getLevelManager(const hier::PatchLevel<DIM>* pl) const;
 
    /*
-    * Static pointer to singleton active variable database object.
+    * Static data members used to control access to and destruction of
+    * singleton variable database instance.
     */
    static LocallyActiveVariableDatabase<DIM>* 
       s_locally_active_variable_database_instance;
+
+   static bool s_registered_callback;
+
+   /*
+    * Static data member used to control allocation of arrays.
+    */
+   static int s_patchlevel_array_alloc_size;
+
+   /*
+    * Cached pointer to variable database.
+    */
+   hier::VariableDatabase<DIM>* d_variable_database;
+
+   /*
+    * Count of number of variables registered with 
+    * locally-active variable database.
+    */
+   int d_num_registered_variables;
 
    /*
     * Single variable context shared by all locally-active variables.
     */
    tbox::Pointer<hier::VariableContext> d_locally_active_context;
 
-   /* 
-    * Locally active variables information held in database:
-    * 
-    * d_num_variables_registered        number of locally-active vars in database.
-    * d_max_locally_active_variable_id  max var instance among vars in database.
-    * d_locally_active_variables        array of pointers to vars in database
-    *                                   indexed by variable instance identifier.
-    * d_locally_active_variable_descriptor_indices  
-    *                                   array of integer patch data indices of
-    *                                   storage locations for vars in database
-    *                                   indexed by variable instance identifier. 
+   /*
+    * Set of patch data identifiers associated with registered 
+    * active variables.
     */
-   int d_num_variables_registered;
-   int d_max_locally_active_variable_id;
-   tbox::Array< tbox::Pointer< hier::Variable<DIM> > > d_locally_active_variables;
-   tbox::Array<int> d_locally_active_variable_descriptor_indices;
+   hier::ComponentSelector d_locally_active_patch_data_ids;
 
    /* 
     * Array of manager objects that maintain active variable information for
     * levels in patch hierarchy. Indexing is d_patch_active_data[level #].
     */
+   // Array of patch level manager pointers is indexed as 
+   // d_patch_level_active_data_manager[ <level number> ]
    tbox::Array< tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > > 
       d_patch_level_active_data_manager; 
 
@@ -343,9 +428,6 @@ private:
 }
 }
 
-#ifndef DEBUG_NO_INLINE
-#include "LocallyActiveVariableDatabase.I"
-#endif
 #endif
 
 #ifdef INCLUDE_TEMPLATE_IMPLEMENTATION

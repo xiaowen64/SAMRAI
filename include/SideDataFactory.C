@@ -1,9 +1,9 @@
 //
-// File:	SideDataFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/side/SideDataFactory.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Factory class for creating side data objects
 //
 
@@ -18,10 +18,8 @@
 #include "SideData.h"
 #include "SideGeometry.h"
 #include "OutersideDataFactory.h"
+#include "Patch.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "SideDataFactory.I"
@@ -43,22 +41,25 @@ SideDataFactory<DIM,TYPE>::SideDataFactory(
    const hier::IntVector<DIM>& ghosts,
    bool fine_boundary_represents_var,
    const hier::IntVector<DIM>& directions)
-:  hier::PatchDataFactory<DIM>(),
+:  hier::PatchDataFactory<DIM>(ghosts),
    d_depth(depth),
-   d_ghosts(ghosts),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(directions)
+   d_directions(directions),
+   d_mb_trans(NULL)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-   assert(ghosts.min() >= 0);
-   assert(directions.min() >= 0);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(directions.min() >= 0);
 #endif
 }
 
 template<int DIM, class TYPE>
 SideDataFactory<DIM,TYPE>::~SideDataFactory()
 {
+   if (d_mb_trans) {
+      delete d_mb_trans;
+   }
 }
 
 /*
@@ -71,10 +72,10 @@ SideDataFactory<DIM,TYPE>::~SideDataFactory()
 
 template<int DIM, class TYPE>
 tbox::Pointer< hier::PatchDataFactory<DIM> >
-SideDataFactory<DIM,TYPE>::cloneFactory()
+SideDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
    return(new SideDataFactory<DIM,TYPE>(d_depth, 
-                                          d_ghosts, 
+                                          ghosts, 
                                           d_fine_boundary_represents_var,
                                           d_directions));
 }
@@ -100,10 +101,18 @@ SideDataFactory<DIM,TYPE>::allocate(
    hier::PatchData<DIM> *patchdata =
       new (pool) SideData<DIM,TYPE>(box,
                                       d_depth,
-                                      d_ghosts,
+                                      this -> d_ghosts,
                                       d_directions,
                                       pool);
    return(tbox::Pointer< hier::PatchData<DIM> >(patchdata, pool));
+}
+
+template<int DIM, class TYPE>
+tbox::Pointer< hier::PatchData<DIM> >
+SideDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
+                                    tbox::Pointer<tbox::Arena> pool) const
+{
+   return (allocate(patch.getBox(), pool));
 }
 
 /*
@@ -119,35 +128,9 @@ tbox::Pointer< hier::BoxGeometry<DIM> >
 SideDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
 {
    hier::BoxGeometry<DIM> *boxgeometry = new SideGeometry<DIM>(box,
-                                                           d_ghosts,
+                                                           this -> d_ghosts,
                                                            d_directions);
    return(tbox::Pointer< hier::BoxGeometry<DIM> >(boxgeometry));
-}
-
-/*
-*************************************************************************
-*									*
-* Get and set the default ghost cell widths for the side data objects	*
-* created with this factory.						*
-*									*
-*************************************************************************
-*/
-
-template<int DIM, class TYPE>
-const hier::IntVector<DIM>&
-SideDataFactory<DIM,TYPE>::getDefaultGhostCellWidth() const
-{
-   return(d_ghosts);
-}
-
-template<int DIM, class TYPE>
-void SideDataFactory<DIM,TYPE>::setDefaultGhostCellWidth(
-   const hier::IntVector<DIM>& ghosts)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
-#endif
-   d_ghosts = ghosts;
 }
 
 /*
@@ -164,7 +147,7 @@ size_t SideDataFactory<DIM,TYPE>::getSizeOfMemory(const hier::Box<DIM>& box) con
    const size_t obj =
       tbox::Arena::align(sizeof(SideData<DIM,TYPE>));
    const size_t data =
-      SideData<DIM,TYPE>::getSizeOfData(box, d_depth, d_ghosts, d_directions);
+      SideData<DIM,TYPE>::getSizeOfData(box, d_depth, this -> d_ghosts, d_directions);
    return(obj+data);
 }
 

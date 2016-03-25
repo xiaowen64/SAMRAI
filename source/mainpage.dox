@@ -1,9 +1,9 @@
 /*
-  File:        $Id$
+  File:        $$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mainpage.dox $
   Package:     SAMRAI Doxygen manual
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision$
-  Modified:    $Date$
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1768 $
+  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
   Description: Generation of SAMRAI Doxygen source code manual
 */
 
@@ -68,11 +68,6 @@
     boundaries or lists of particles).  Other types may be added in the
     future to meet the application needs.
 
-  - @ref package_multiblock "Multiblock":
-    The "Multiblock" package provides capabilities that allow manipulation of 
-    multiple patch hierarchies, each of which may be defined by its own index
-    space, and communication of data between those hierarchies. 
-
   - @ref package_mathematical_operations "Mathematical Operations":
     The "Math Operations" package provides basic arithmetic and other operations 
     that are required for vector kernels, such as dot products and norms.  
@@ -100,7 +95,7 @@
     solver method to problems defined on an AMR patch hierarchy.  Vectors
     for treating data defined on a structured AMR patch hierarchy are 
     provided here.  SAMRAI also provides interfaces and wrapper classes for 
-    employing the PETSc and KINSOL nonlinear solver libraries, the PVODE
+    employing the PETSc and KINSOL nonlinear solver libraries, the CVODE
     ODE solver library, and the hypre preconditioner library.  An FAC algorithm
     for solving Poisson problems on an AMR hierarchy is also included.
 

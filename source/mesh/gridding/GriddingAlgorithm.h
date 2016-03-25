@@ -1,9 +1,9 @@
 //
-// File:        GriddingAlgorithm.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/GriddingAlgorithm.h $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 462 $
-// Modified:    $Date: 2005-06-20 12:42:54 -0700 (Mon, 20 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_mesh_BaseGriddingAlgorithm
 #include "BaseGriddingAlgorithm.h"
@@ -68,7 +67,6 @@ using namespace std;
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Timer
@@ -232,6 +230,18 @@ namespace SAMRAI {
  *       willing to relax the minimum size constraints, set this parameter
  *       true.  By default, it is false.
  *
+ *    - \b    resolve_nonnesting_tags
+ *       How to resolve user-specified tags that violates proper nesting.
+ *       Set to one of these characters:
+ *       @b 'i' for ignore (violating tags will be quietly disregarded).
+ *       @b 'w' for warn (violating tags will cause a warning and be
+ *       disregarded).
+ *       @b 'e' for error (violating tags will cause an unrecoverable
+ *       exception).
+ *       The default is 'w'.  Ignoring is the most efficient because
+ *       no checks are required (but this puts the burden of dealing
+ *       with unrefined tagged cells on the user.
+ *
  *    - \b    write_regrid_boxes   
  *       Output sequence of refine boxes to file. 
  *
@@ -318,7 +328,7 @@ public:
     * parameters fail.
     */
    GriddingAlgorithm(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
       tbox::Pointer< TagAndInitializeStrategy<DIM> > level_strategy,
       tbox::Pointer< BoxGeneratorStrategy<DIM> > generator,
@@ -522,7 +532,7 @@ public:
    /*!
     * Print out all members of the class instance to given output stream.
     */
-   virtual void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /*!
     * Write object state out to the given database.
@@ -681,6 +691,13 @@ private:
       const int level_number,
       const bool for_building_finer) const;
 
+   /*!
+     @brief Check for user tags that violate proper nesting.
+   */
+   void checkNonnestingTags(
+      const tbox::Pointer<hier::PatchLevel<DIM> > &level,
+      const hier::BoxTree<DIM> &proper_nesting_complement );
+
    /*
     * Temporary method to sort box, used in performance comparison
     * of clustering algorithms.
@@ -691,6 +708,7 @@ private:
     * Static members for managing shared tag data among multiple
     * GriddingAlgorithm objects.
     */
+   static int s_instance_counter;
    static int s_tag_indx;
    static int s_buf_tag_indx;
 
@@ -700,7 +718,7 @@ private:
     * file data depends on the value of this boolean which is
     * set in the constructor.
     */
-   string d_object_name;
+   std::string d_object_name;
    bool d_registered_for_restart;
 
    /*
@@ -880,12 +898,25 @@ private:
     */
    bool d_write_dumped_level_boxes;
    bool d_read_dumped_level_boxes;
-   string d_regrid_boxes_filename;
+   std::string d_regrid_boxes_filename;
    hier::BoxIOUtility<DIM>* d_regrid_box_utility;
    tbox::Array<int> d_regrid_box_counter; 
 
    bool d_extend_tags_to_bdry;
    bool d_use_new_alg;
+
+   /*!
+     @brief How to resolve user tags that violate nesting requirement.
+
+     Values can be:
+     - 'i' Ignore (violating tags will be quietly disregarded)
+     - 'w' Warn (violating tags will cause a warning and be disregarded)
+     - 'e' Error (violating tags will cause an unrecoverable exception)
+
+     This defaults to 'w' and set by input parameter
+     "resolve_nonnesting_tags".
+   */
+   char d_resolve_nonnesting_tags;
 
    /*
     * Timers interspersed throughout the class (those timers used 

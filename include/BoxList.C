@@ -1,9 +1,9 @@
 //
-// File:	BoxList.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxList.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A list of boxes with basic domain calculus operations
 //
 
@@ -15,7 +15,7 @@
 #include "BoxArray.h"
 #include "Index.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -245,7 +245,7 @@ template<int DIM> void BoxList<DIM>::removeIntersections(const Box<DIM>& box,
     * intersect, simply add box to the box list (no intersection removed).
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(this ->isEmpty());
+   TBOX_ASSERT(this ->isEmpty());
 #endif
 
    if (!(box * takeaway).empty()) {
@@ -534,11 +534,11 @@ template<int DIM> Box<DIM> BoxList<DIM>::getBoundingBox() const
 *************************************************************************
 */
 
-template<int DIM> void BoxList<DIM>::print(ostream& os) const
+template<int DIM> void BoxList<DIM>::print(std::ostream& os) const
 {
    int i = 0;
    for (typename BoxList<DIM>::Iterator b(*this); b; b++) {
-      os << "Box # " << i << ":  " << b() << endl;
+      os << "Box # " << i << ":  " << b() << std::endl;
       i++;
    }
 }

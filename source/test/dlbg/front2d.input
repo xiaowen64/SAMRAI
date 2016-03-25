@@ -1,3 +1,10 @@
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/front2d.input $
+// Package:     SAMRAI tests
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Description: Input file for DLBG tests.
+
 Main {
   which_br = 'o'
   base_name = "front2d"
@@ -7,7 +14,7 @@ Main {
   // restart_write_dirname = "restart"
   // time_nlbg_random_rmi = TRUE
   log_hierarchy = FALSE
-  num_steps = 5
+  num_steps = 100
   build_cross_edge = TRUE
   build_peer_edge = TRUE
   globalize_node_sets = FALSE
@@ -21,7 +28,8 @@ DLBGTest {
     adaption_buffer = 1
     period = 1
     amplitude = .3
-    init_disp = 0.5, 0.0
+    init_disp =  -0.50, 0.0
+    // init_disp = -0.00, 0.25
     velocity = 0.02, 0.005
   }
 }
@@ -46,15 +54,12 @@ AsyncBergerRigoutsos {
 
 
 CartesianGridGeometry {
-  // domain_boxes = [(0,0), (9,3)]
-  // domain_boxes = [(0,0), (23,15)]
-  domain_boxes = [(0,0), (47,31)]
-  // domain_boxes = [(0,0), (95,63)]
-  // domain_boxes = [(0,0), (191,127)]
-  // domain_boxes = [(0,0), (383,255)]
-  // domain_boxes = [(0,0), (767,511)]
+  // domain_boxes = [(0,0), (3,3)]
+  domain_boxes = [(0,0), (15,31)]
+  // domain_boxes = [(0,0), (15,15)], [(1,16), (16,31)]
+  // domain_boxes = [(0,0), (7,15)], [(8,-1), (15,14)], [(2,16), (9,31)], [(10,15), (17,30)]
   x_lo         = 0, 0
-  x_up         = 3, 2
+  x_up         = 1, 2
 }
 
 StandardTagAndInitialize {
@@ -89,7 +94,7 @@ GriddingAlgorithm {
       //  etc.
    }
    efficiency_tolerance = 0.70
-   combine_efficiency = 0.85
+   combine_efficiency = 0.95
    // write_regrid_boxes = TRUE
    // read_regrid_boxes = TRUE
    // regrid_boxes_filename = "grid"

@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -21,11 +21,11 @@ libdefault:	CartesianRobinBcHelper-NDIM${NDIM}.o				\
 	LocationIndexRobinBcCoefs-NDIM${NDIM}.o				\
 	NonlinearSolverStrategy-NDIM${NDIM}.o				\
 	PETSc_SAMRAIVectorReal-NDIM_double${NDIM}.o			\
-	PVodeTrio_SAMRAIVector-NDIM${NDIM}.o				\
 	RobinBcCoefStrategy-NDIM${NDIM}.o				\
 	SAMRAIVectorReal-NDIM_double${NDIM}.o				\
 	SNES_SAMRAIContext-NDIM${NDIM}.o				\
 	SimpleCellRobinBcCoefs-NDIM${NDIM}.o				\
+	Sundials_SAMRAIVector-NDIM${NDIM}.o				\
 	tbox__Pointer-solv__SAMRAIVectorReal-NDIM_double${NDIM}.o
 
 

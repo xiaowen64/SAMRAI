@@ -1,9 +1,9 @@
 ##
-## File:        Makefile.in
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/Makefile.in $
 ## Package:     SAMRAI tests
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision: 437 $
-## Modified:    $Date: 2005-06-13 09:38:05 -0700 (Mon, 13 Jun 2005) $
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: makefile for SAMRAI locally-active data tests
 ##
 
@@ -11,6 +11,7 @@ SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
 SUBDIR        = source/test/locally_active
 VPATH         = @srcdir@
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check	
@@ -24,6 +25,10 @@ CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM)  -DTESTING=1
 CXX_OBJS      = LocallyActiveDataTester.o main.o
 F2D_OBJS      = laplacian2d.o 
 F3D_OBJS      = laplacian3d.o 
+
+NUM_TESTS = 13
+
+TEST_NPROCS = @TEST_NPROCS@
 
 test2d:
 		if test -f stamp-3d; then $(MAKE) clean-check; fi
@@ -42,8 +47,6 @@ test3d:
 test-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND) 
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) \
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
-
-TEST_NPROCS = @TEST_NPROCS@ 
 
 check:
 		$(MAKE) check2d
@@ -78,6 +81,13 @@ check3d:	test3d
 			./test3d test-refine-3d-3levels-MOD2.input
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./test3d test-refine-3d-3levels-EVEN_ODD.input
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

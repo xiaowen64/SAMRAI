@@ -1,9 +1,9 @@
 //
-// File:	Schedule.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/Schedule.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Schedule of communication transactions between processors
 //
 
@@ -27,7 +27,7 @@ typedef List< Pointer< Transaction > >::Iterator ITERATOR;
 
 Schedule::Schedule()
 {
-   d_nnodes = MPI::getNodes();
+   d_nnodes = SAMRAI_MPI::getNodes();
 
    d_incoming.resizeArray(d_nnodes);
    d_outgoing.resizeArray(d_nnodes);
@@ -62,7 +62,7 @@ Schedule::~Schedule()
 void Schedule::addTransaction(
    const Pointer<Transaction>& transaction)
 {
-   const int my_id  = MPI::getRank();
+   const int my_id  = SAMRAI_MPI::getRank();
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
 
@@ -90,7 +90,7 @@ void Schedule::addTransaction(
 void Schedule::appendTransaction(
    const Pointer<Transaction>& transaction)
 {
-   const int my_id  = MPI::getRank();
+   const int my_id  = SAMRAI_MPI::getRank();
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
 
@@ -229,13 +229,13 @@ void Schedule::calculateReceiveSizes()
          d_incoming[p].d_must_communicate_byte_size = true;
          d_incoming[p].d_stream_in_use              = true;
 #ifdef HAVE_MPI
-         MPI::updateIncomingStatistics(1, sizeof(int));
+         SAMRAI_MPI::updateIncomingStatistics(1, sizeof(int));
          (void) MPI_Irecv(&d_incoming[p].d_bytes_in_stream,
                           1,
                           MPI_INT,
                           p,
                           SCHEDULE_SIZE_TAG,
-                          MPI::getCommunicator(),
+                          SAMRAI_MPI::getCommunicator(),
                           &d_incoming[p].d_request_id);
 #endif
       }
@@ -249,13 +249,13 @@ void Schedule::calculateReceiveSizes()
    for (int q = 0; q < d_nnodes; q++) {
       if (d_outgoing[q].d_must_communicate_byte_size) {
 #ifdef HAVE_MPI
-         MPI::updateOutgoingStatistics(1, sizeof(int));
+         SAMRAI_MPI::updateOutgoingStatistics(1, sizeof(int));
          (void) MPI_Send(&d_outgoing[q].d_bytes_in_stream,
                          1,
                          MPI_INT,
                          q,
                          SCHEDULE_SIZE_TAG,
-                         MPI::getCommunicator());
+                         SAMRAI_MPI::getCommunicator());
 #endif
       }
    }
@@ -294,13 +294,13 @@ void Schedule::postMessageReceives()
          d_incoming[p].d_stream =
             new MessageStream(bytes, MessageStream::Read);
 #ifdef HAVE_MPI
-         MPI::updateIncomingStatistics(1, bytes);
+         SAMRAI_MPI::updateIncomingStatistics(1, bytes);
          (void) MPI_Irecv(d_incoming[p].d_stream->getBufferStart(),
                           bytes,
                           MPI_BYTE,
                           p,
                           SCHEDULE_DATA_TAG,
-                          MPI::getCommunicator(),
+                          SAMRAI_MPI::getCommunicator(),
                           &d_incoming[p].d_request_id);
 #endif
       }
@@ -330,13 +330,13 @@ void Schedule::sendMessages()
             pack()->packStream(*d_outgoing[p].d_stream);
          }
 #ifdef HAVE_MPI
-         MPI::updateOutgoingStatistics(1, bytes);
+         SAMRAI_MPI::updateOutgoingStatistics(1, bytes);
          (void) MPI_Isend(d_outgoing[p].d_stream->getBufferStart(),
                           d_outgoing[p].d_stream->getCurrentSize(),
                           MPI_BYTE,
                           p,
                           SCHEDULE_DATA_TAG,
-                          MPI::getCommunicator(),
+                          SAMRAI_MPI::getCommunicator(),
                           &d_outgoing[p].d_request_id);
 #endif
       }
@@ -428,43 +428,43 @@ void Schedule::deallocateSendBuffers()
 *************************************************************************
 */
 
-void Schedule::printClassData(ostream& stream) const
+void Schedule::printClassData(std::ostream& stream) const
 {
-   stream << "Schedule::printClassData()" << endl;
-   stream << "-------------------------------" << endl;
+   stream << "Schedule::printClassData()" << std::endl;
+   stream << "-------------------------------" << std::endl;
 
-   stream << "Number of nodes: " << d_nnodes << endl;
+   stream << "Number of nodes: " << d_nnodes << std::endl;
 
    for (int s = 0; s < d_nnodes; s++) {
-      stream << "Incoming Message Stream: " << s << endl;
+      stream << "Incoming Message Stream: " << s << std::endl;
       stream << "   bytes in stream: " << d_incoming[s].d_bytes_in_stream
-              << endl;
+              << std::endl;
       stream << "   must communicate bytes size: "
-              << d_incoming[s].d_must_communicate_byte_size << endl;
-      stream << "   stream in use: " << d_incoming[s].d_stream_in_use << endl;
-      stream << "Outgoing Message Stream: " << s << endl;
+              << d_incoming[s].d_must_communicate_byte_size << std::endl;
+      stream << "   stream in use: " << d_incoming[s].d_stream_in_use << std::endl;
+      stream << "Outgoing Message Stream: " << s << std::endl;
       stream << "   bytes in stream: " << d_outgoing[s].d_bytes_in_stream
-              << endl;
+              << std::endl;
       stream << "   must communicate bytes size: "
-              << d_outgoing[s].d_must_communicate_byte_size << endl;
-      stream << "   stream in use: " << d_outgoing[s].d_stream_in_use << endl;
+              << d_outgoing[s].d_must_communicate_byte_size << std::endl;
+      stream << "   stream in use: " << d_outgoing[s].d_stream_in_use << std::endl;
    }
 
    for (int ss = 0; ss < d_nnodes; ss++) {
-      stream << "Send Set: " << ss << endl;
+      stream << "Send Set: " << ss << std::endl;
       for (ITERATOR send(d_send_set[ss]); send; send++) {
          send()->printClassData(stream);
       }
    }
 
    for (int rs = 0; rs < d_nnodes; rs++) {
-      stream << "Receive Set: " << rs << endl;
+      stream << "Receive Set: " << rs << std::endl;
       for (ITERATOR recv(d_recv_set[rs]); recv; recv++) {
          recv()->printClassData(stream);
       }
    }
 
-   stream << "Local Set" << endl;
+   stream << "Local Set" << std::endl;
    for (ITERATOR local(d_local_set); local; local++) {
       local()->printClassData(stream);
    }

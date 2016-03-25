@@ -4,7 +4,7 @@ dnl * CASC_PROG_MPICC searches the PATH for an available MPI C compiler
 dnl * wraparound.  It assigns the name to MPICC.
 dnl ********************************************************************
 
-AC_DEFUN(CASC_PROG_MPICC,
+AC_DEFUN([CASC_PROG_MPICC],
 [
    AC_CHECK_PROGS(MPICC, mpcc mpicc tmcc hcc)
    test -z "$MPICC" && AC_MSG_ERROR([no acceptable mpicc found in \$PATH])
@@ -16,7 +16,7 @@ dnl * CASC_PROG_MPICXX searches the PATH for an available MPI C++
 dnl * compiler wraparound.  It assigns the name to MPICXX.
 dnl ********************************************************************
 
-AC_DEFUN(CASC_PROG_MPICXX,
+AC_DEFUN([CASC_PROG_MPICXX],
 [
    AC_CHECK_PROGS(MPICXX, mpKCC mpCC mpig++ mpiCC hcp)
    test -z "$MPICXX" && AC_MSG_ERROR([no acceptable mpic++ found in \$PATH])
@@ -28,7 +28,7 @@ dnl * CASC_PROG_MPIF77 searches the PATH for an available MPI Fortran 77
 dnl * compiler wraparound.  It assigns the name to MPIF77.
 dnl **********************************************************************
 
-AC_DEFUN(CASC_PROG_MPIF77,
+AC_DEFUN([CASC_PROG_MPIF77],
 [
    AC_CHECK_PROGS(MPIF77, mpf77 mpxlf mpif77 mpixlf tmf77 hf77)
    test -z "$MPIF77" && AC_MSG_ERROR([no acceptable mpif77 found in \$PATH])
@@ -43,7 +43,7 @@ dnl * is necessary, MPIF77NEEDSPP is set to "yes", otherwise it is set to
 dnl * "no"
 dnl ***********************************************************************
 
-AC_DEFUN(CASC_CHECK_MPIF77_PP,
+AC_DEFUN([CASC_CHECK_MPIF77_PP],
 [
    AC_REQUIRE([CASC_PROG_MPIF77])
 
@@ -107,7 +107,7 @@ dnl * variables are left blank.  In the case of rs6000, the variable
 dnl * MPIFLAGS is also set. 
 dnl **********************************************************************
  
-AC_DEFUN(CASC_SET_MPI,
+AC_DEFUN([CASC_SET_MPI],
 [
 
    dnl * If called from within CASC_FIND_MPI, then the configure-line
@@ -288,7 +288,7 @@ dnl * plan, where if there is no mpicc, it will use the settings
 dnl * determined by architecture name in CASC_SET_MPI
 dnl ********************************************************************
 
-AC_DEFUN(CASC_FIND_MPI,
+AC_DEFUN([CASC_FIND_MPI],
 [
 
    casc_find_mpi_cache_used=yes
@@ -741,7 +741,7 @@ dnl * did not work for this case so I added this one to deal with it.
 dnl * AMW 9/00
 dnl ********************************************************************
 
-AC_DEFUN(CASC_FIND_MPI_ALPHA,
+AC_DEFUN([CASC_FIND_MPI_ALPHA],
 [
 
    casc_find_mpi_cache_used=yes

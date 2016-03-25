@@ -1,9 +1,9 @@
 //
-// File:        node-mblk-test.input
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/input_files/node-2d.input $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2002 The Regents of the University of California
-// Revision:    $Revision: 1.7 $
-// Modified:    $Date: 2002/02/06 18:18:53 $
+// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: input file for testing communication of SAMRAI node data.
 //
 
@@ -96,8 +96,8 @@ NodeMultiblockTest {
          depth = 1
          src_ghosts = 0,0
          dst_ghosts = 1,1
-         coarsen_operator = "SKELETON_COARSEN"
-         refine_operator = "SKELETON_REFINE"
+         coarsen_operator = "NO_COARSEN"
+         refine_operator = "NO_REFINE"
       }
    }
 
@@ -106,13 +106,13 @@ NodeMultiblockTest {
 
 }
 
-SkeletonGridGeometry0 {
+BlockGridGeometry0 {
    domain_boxes = [ (0,0) , (20,13) ]
 }
-SkeletonGridGeometry1 {
+BlockGridGeometry1 {
    domain_boxes = [ (0,0) , (13,25) ]
 }
-SkeletonGridGeometry2 {
+BlockGridGeometry2 {
    domain_boxes = [ (0,0) , (20,25) ]
 }
 

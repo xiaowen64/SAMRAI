@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/schedules/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for Euler gas dynamics sample application
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      = @top_srcdir@
 SRCDIR        = @top_srcdir@/examples/Euler
 SUBDIR        = source/test/schedules
 VPATH         = @top_srcdir@/examples/Euler
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check
@@ -35,6 +36,8 @@ main-2d:	$(CXX_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS)	\
 		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
 
+NUM_TESTS = 3
+
 TEST_NPROCS = @TEST_NPROCS@ 
 
 check:
@@ -51,6 +54,13 @@ check2d:        main2d
 		./main2d test-2d-append-3.input
 
 check3d:
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 
 clean-check:

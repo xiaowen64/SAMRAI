@@ -4,10 +4,10 @@ exec wish "$0" "$@"
 
 
 ##
-## File:        vtkinteractor.tcl
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/vizamrai/Wrapping/Tcl/vizamrai/vtkinteractor.tcl $
 ## Package:     Vizamrai
-## Revision:    $Revision$
-## Modified:    $Date$
+## Revision:    $LastChangedRevision: 816 $
+## Modified:    $LastChangedDate: 2005-12-20 13:26:41 -0800 (Tue, 20 Dec 2005) $
 ## Description: Modified Interactor from VTK
 ##
 

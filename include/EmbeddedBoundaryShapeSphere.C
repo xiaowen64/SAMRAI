@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryShapeSphere.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShapeSphere.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Sphere embedded boundary shape
 //              
 // 
@@ -15,12 +15,8 @@
 
 #include "EmbeddedBoundaryShapeSphere.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#define included_assert
-#endif
 
-#include "tbox/IEEE.h"
+#include "tbox/MathUtilities.h"
 
 #ifdef DEBUG_NO_INLINE
 #include "EmbeddedBoundaryShapeSphere.I"
@@ -31,13 +27,13 @@ namespace SAMRAI {
 
 template<int DIM>
 EmbeddedBoundaryShapeSphere<DIM>::EmbeddedBoundaryShapeSphere(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db)
 {
    d_object_name = object_name;
 
-   tbox::IEEE::initializeArrayToSignalingNaN(d_center,DIM);
-   tbox::IEEE::setNaN(d_radius);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, DIM);
+   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
 
    getFromInput(input_db);
 }
@@ -48,12 +44,12 @@ EmbeddedBoundaryShapeSphere<DIM>::~EmbeddedBoundaryShapeSphere()
 }
 
 template<int DIM> void
-EmbeddedBoundaryShapeSphere<DIM>::printClassData(ostream& os) const
+EmbeddedBoundaryShapeSphere<DIM>::printClassData(std::ostream& os) const
 {
-   os << "d_object_name = " << d_object_name << endl;
-   os << "d_radius = " << d_radius << endl;
+   os << "d_object_name = " << d_object_name << std::endl;
+   os << "d_radius = " << d_radius << std::endl;
    for (int i = 0; i < DIM; i++) {
-      os << "d_center[" << i << "] = " << d_center[i] << endl;
+      os << "d_center[" << i << "] = " << d_center[i] << std::endl;
    }
    
 }
@@ -63,7 +59,7 @@ void EmbeddedBoundaryShapeSphere<DIM>::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*

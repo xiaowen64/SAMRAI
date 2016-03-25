@@ -129,11 +129,11 @@
 
 
 //
-// File:	Grammar.y
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/Grammar.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+
 // Description:	Yacc grammar description for the input database
 //
 
@@ -254,6 +254,13 @@ typedef union YYSTYPE {
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
+# ifndef YYFREE
+#  define YYFREE free
+# endif
+# ifndef YYMALLOC
+#  define YYMALLOC malloc
+# endif
+
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
 # ifdef YYSTACK_USE_ALLOCA
@@ -278,8 +285,8 @@ typedef union YYSTYPE {
 #   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
 #   define YYSIZE_T size_t
 #  endif
-#  define YYSTACK_ALLOC malloc
-#  define YYSTACK_FREE free
+#  define YYSTACK_ALLOC YYMALLOC
+#  define YYSTACK_FREE YYFREE
 # endif
 #endif /* ! defined (yyoverflow) || YYERROR_VERBOSE */
 
@@ -636,7 +643,7 @@ static const unsigned char yystos[] =
 #endif
 
 #define yyerrok		(yyerrstatus = 0)
-#define yyclearin	(yychar = YYEMPTY)
+#define yyclearin	(SAMRAI_yychar = YYEMPTY)
 #define YYEMPTY		(-2)
 #define YYEOF		0
 
@@ -655,11 +662,11 @@ static const unsigned char yystos[] =
 
 #define YYBACKUP(Token, Value)					\
 do								\
-  if (yychar == YYEMPTY && yylen == 1)				\
+  if (SAMRAI_yychar == YYEMPTY && yylen == 1)				\
     {								\
-      yychar = (Token);						\
-      yylval = (Value);						\
-      yytoken = YYTRANSLATE (yychar);				\
+      SAMRAI_yychar = (Token);						\
+      SAMRAI_yylval = (Value);						\
+      yytoken = YYTRANSLATE (SAMRAI_yychar);				\
       YYPOPSTACK;						\
       goto yybackup;						\
     }								\
@@ -952,13 +959,13 @@ int yyparse ();
 
 
 /* The lookahead symbol.  */
-int yychar;
+int SAMRAI_yychar;
 
 /* The semantic value of the lookahead symbol.  */
-YYSTYPE yylval;
+YYSTYPE SAMRAI_yylval;
 
 /* Number of syntax errors so far.  */
-int yynerrs;
+int SAMRAI_yynerrs;
 
 
 
@@ -1030,8 +1037,8 @@ yyparse ()
 
   yystate = 0;
   yyerrstatus = 0;
-  yynerrs = 0;
-  yychar = YYEMPTY;		/* Cause a token to be read.  */
+  SAMRAI_yynerrs = 0;
+  SAMRAI_yychar = YYEMPTY;		/* Cause a token to be read.  */
 
   /* Initialize stack pointers.
      Waste one element of value and location stack
@@ -1142,21 +1149,21 @@ yybackup:
   /* Not known => get a lookahead token if don't already have one.  */
 
   /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
-  if (yychar == YYEMPTY)
+  if (SAMRAI_yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token: "));
-      yychar = YYLEX;
+      SAMRAI_yychar = YYLEX;
     }
 
-  if (yychar <= YYEOF)
+  if (SAMRAI_yychar <= YYEOF)
     {
-      yychar = yytoken = YYEOF;
+      SAMRAI_yychar = yytoken = YYEOF;
       YYDPRINTF ((stderr, "Now at end of input.\n"));
     }
   else
     {
-      yytoken = YYTRANSLATE (yychar);
-      YYDSYMPRINTF ("Next token is", yytoken, &yylval, &yylloc);
+      yytoken = YYTRANSLATE (SAMRAI_yychar);
+      YYDSYMPRINTF ("Next token is", yytoken, &SAMRAI_yylval, &yylloc);
     }
 
   /* If the proper action on seeing token YYTOKEN is to reduce or to
@@ -1180,10 +1187,10 @@ yybackup:
   YYDPRINTF ((stderr, "Shifting token %s, ", yytname[yytoken]));
 
   /* Discard the token being shifted unless it is eof.  */
-  if (yychar != YYEOF)
-    yychar = YYEMPTY;
+  if (SAMRAI_yychar != YYEOF)
+    SAMRAI_yychar = YYEMPTY;
 
-  *++yyvsp = yylval;
+  *++yyvsp = SAMRAI_yylval;
 
 
   /* Count tokens shifted since error; after three, turn off error
@@ -1763,7 +1770,7 @@ yyreduce:
 
     }
 
-/* Line 993 of yacc.c.  */
+/* Line 1000 of yacc.c.  */
 
 
   yyvsp -= yylen;
@@ -1797,14 +1804,14 @@ yyerrlab:
   /* If not already recovering from an error, report this error.  */
   if (!yyerrstatus)
     {
-      ++yynerrs;
+      ++SAMRAI_yynerrs;
 #if YYERROR_VERBOSE
       yyn = yypact[yystate];
 
       if (YYPACT_NINF < yyn && yyn < YYLAST)
 	{
 	  YYSIZE_T yysize = 0;
-	  int yytype = YYTRANSLATE (yychar);
+	  int yytype = YYTRANSLATE (SAMRAI_yychar);
 	  const char* yyprefix;
 	  char *yymsg;
 	  int yyx;
@@ -1867,11 +1874,11 @@ yyerrlab:
       /* If just tried and failed to reuse lookahead token after an
 	 error, discard it.  */
 
-      if (yychar <= YYEOF)
+      if (SAMRAI_yychar <= YYEOF)
         {
           /* If at end of input, pop the error token,
 	     then the rest of the stack, then return failure.  */
-	  if (yychar == YYEOF)
+	  if (SAMRAI_yychar == YYEOF)
 	     for (;;)
 	       {
 		 YYPOPSTACK;
@@ -1883,9 +1890,9 @@ yyerrlab:
         }
       else
 	{
-	  YYDSYMPRINTF ("Error: discarding", yytoken, &yylval, &yylloc);
-	  yydestruct (yytoken, &yylval);
-	  yychar = YYEMPTY;
+	  YYDSYMPRINTF ("Error: discarding", yytoken, &SAMRAI_yylval, &yylloc);
+	  yydestruct (yytoken, &SAMRAI_yylval);
+	  SAMRAI_yychar = YYEMPTY;
 
 	}
     }
@@ -1949,7 +1956,7 @@ yyerrlab1:
 
   YYDPRINTF ((stderr, "Shifting error token, "));
 
-  *++yyvsp = yylval;
+  *++yyvsp = SAMRAI_yylval;
 
 
   yystate = yyn;

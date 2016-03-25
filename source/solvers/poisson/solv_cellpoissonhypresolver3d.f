@@ -1,7 +1,7 @@
 c
-c  File:        solv_cellpoissonhypresolver3d.f
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/solv_cellpoissonhypresolver3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
@@ -106,6 +106,7 @@ c***********************************************************************
      &  offdiagi, offdiagj, offdiagk,
      &  pifirst, pilast, pjfirst, pjlast, pkfirst, pklast,
      &  acoef,
+     &  bcoef,
      &  aifirst, ailast, ajfirst, ajlast, akfirst, aklast,
      &  auk0,
      &  kifirst, kilast, kjfirst, kjlast, kkfirst, kklast,
@@ -123,6 +124,8 @@ c***********************************************************************
       integer aifirst, ailast, ajfirst, ajlast, akfirst, aklast
       double precision 
      &  acoef(aifirst:ailast,ajfirst:ajlast,akfirst:aklast)
+      double precision 
+     &  bcoef(aifirst:ailast,ajfirst:ajlast,akfirst:aklast)
       integer kifirst, kilast, kjfirst, kjlast, kkfirst, kklast
       double precision
      &  auk0(kifirst:kilast,kjfirst:kjlast,kkfirst:kklast)

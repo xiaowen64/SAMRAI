@@ -1,9 +1,9 @@
 //
-// File:        vtkSamraiStructuredPointsReader.cxx
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/vizamrai/vtkcvis/vtkSamraiStructuredPointsReader.cxx $
 // Package:     Vizamrai
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision$
-// Modified:    $Date$
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: File reader for Vizamrai files
 //
 
@@ -72,7 +72,7 @@ int xdr_read_double(XDR *stream, double *data, const int n)
 // is currently not used.
 #define SAMRAI_NULL_VALUE 1.0E30
 
-vtkCxxRevisionMacro(vtkSamraiStructuredPointsReader, "$Revision$");
+vtkCxxRevisionMacro(vtkSamraiStructuredPointsReader, "$LastChangedRevision: 1704 $");
 vtkStandardNewMacro(vtkSamraiStructuredPointsReader);
 
 

@@ -1,18 +1,18 @@
 c
-c  File:        ebdry3d.m4
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/appu_ebdry3d.f $
 c  Package:     SAMRAI 
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
 c  Description:    F77 routines for setting embedded boundary conditions.
 c
 c
-c  File:        pdat_m4arrdim3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/appu_ebdry3d.f $
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for dimensioning 3d arrays in FORTRAN routines.
 c
 c
@@ -30,6 +30,15 @@ c
      &  cell_vol)
 c***********************************************************************
       implicit none
+c
+c File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/appu_ebdry3d.f $
+c Package:     SAMRAI application
+c Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c Revision:    $LastChangedRevision: 1768 $
+c Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+c Description: Commonblock in embedded boundary test code.
+c
+
       common/ebparams/SOLID_EB,CUT_EB,BORDER_EB,FLOW_EB,
      &  OUTSIDE_EB,INSIDE_EB,BOUNDARY_EB,ONBOUNDARY_EB
       integer

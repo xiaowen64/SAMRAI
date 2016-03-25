@@ -1,20 +1,14 @@
 //
-// File:        HierarchyTester.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/hierarchy/HierarchyTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 414 $
-// Modified:    $Date: 2005-06-01 16:23:06 -0700 (Wed, 01 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Manager class for patch hierarchy refine/coarsen tests.
 //
 
 #include "HierarchyTester.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "tbox/Utilities.h"
 #include "BergerRigoutsos.h"
@@ -46,8 +40,8 @@ HierarchyTester::HierarchyTester(
    Pointer<Database> hier_test_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!hier_test_db.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!hier_test_db.isNull());
 #endif
 
    d_object_name = object_name;
@@ -118,7 +112,7 @@ void HierarchyTester::setupInitialHierarchy(
    Pointer<Database> main_input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!main_input_db.isNull());
+   TBOX_ASSERT(!main_input_db.isNull());
 #endif
 
    Pointer<CartesianGridGeometry<NDIM> > grid_geometry =
@@ -141,27 +135,30 @@ void HierarchyTester::setupInitialHierarchy(
           this,
           main_input_db->getDatabase("StandardTagAndInitialize"));
 
-   Pointer<GriddingAlgorithm<NDIM> > gridding_algorithm =
+   d_gridding_algorithm =
       new GriddingAlgorithm<NDIM>("GriddingAlgorithm",
                             main_input_db->getDatabase("GriddingAlgorithm"),
                             dummy_error_detector,
                             box_generator,
                             load_balancer);
 
-   gridding_algorithm->makeCoarsestLevel(d_initial_patch_hierarchy, 
-                                         0.0);  // dummy time
+   d_gridding_algorithm->makeCoarsestLevel(d_initial_patch_hierarchy, 
+                                           0.0);  // dummy time
 
-   for (int ln = 0; gridding_algorithm->levelCanBeRefined(ln); ln++) {
-       gridding_algorithm->makeFinerLevel(d_initial_patch_hierarchy,
-                                          0.0,   // dummy time
-                                          true,  // indicates initial time 
-                                          0);    // dummy tag buffer
+   for (int ln = 0; d_gridding_algorithm->levelCanBeRefined(ln); ln++) {
+       d_gridding_algorithm->makeFinerLevel(d_initial_patch_hierarchy,
+                                            0.0,   // dummy time
+                                            true,  // indicates initial time 
+                                            0);    // dummy tag buffer
+
    }
 
 }
 
-void HierarchyTester::runHierarchyTestAndVerify()
+int HierarchyTester::runHierarchyTestAndVerify()
 {
+   int fail_count = 0;
+
    if (d_do_refine_test) {
       d_test_patch_hierarchy = 
          d_initial_patch_hierarchy->makeRefinedPatchHierarchy(
@@ -192,6 +189,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
    // Test #0a:
    if ( init_geometry->getPeriodicShift() != 
         test_geometry->getPeriodicShift() ) {
+      fail_count++;
       tbox::perr << "FAILED: - Test #0a: initial hierarchy has periodic shift " 
            << init_geometry->getPeriodicShift() << " and \n" 
            << "test hierarchy has periodic shift "
@@ -208,6 +206,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       for (int ib = 0; ib < npdboxes; ib++) {
          if ( Box<NDIM>::refine(init_phys_domain.getBox(ib), d_ratio) !=
               test_phys_domain.getBox(ib) ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                  << " box with array index " << ib
                  << " is not a proper refinement of initial hierarchy"
@@ -219,6 +218,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       for (int ib = 0; ib < npdboxes; ib++) {
          if ( Box<NDIM>::coarsen(init_phys_domain.getBox(ib), d_ratio) !=
               test_phys_domain.getBox(ib) ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                  << " box with array index " << ib
                  << " is not a proper coarsening of initial hierarchy"
@@ -230,6 +230,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
    // Test #0c:
    if ( init_geometry->getDomainIsSingleBox() !=
         test_geometry->getDomainIsSingleBox() ) {
+      fail_count++;
       tbox::perr << "FAILED: - Test #0c: initial and test hierarchy do not match"
            << " for geom->getDomainIsSingleBox()" << endl;
    }
@@ -244,6 +245,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
 
    // Test #1:
    if (d_test_patch_hierarchy->getNumberLevels() != nlevels) {
+      fail_count++;
       tbox::perr << "FAILED: - Test #1: initial hierarchy has " 
            << nlevels << " levels and \n" 
            << "test hierarchy has " 
@@ -259,6 +261,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       // Test #2:
       if (init_level->getLevelNumber() !=
           test_level->getLevelNumber()) {
+         fail_count++;
          tbox::perr << "FAILED: - Test #2: for level number " << ln
               << " initial hierarchy level number is "
               << init_level->getLevelNumber() 
@@ -269,6 +272,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       // Test #3:
       if (init_level->getNextCoarserHierarchyLevelNumber() !=
           test_level->getNextCoarserHierarchyLevelNumber()) {
+         fail_count++;
          tbox::perr << "FAILED: - Test #3: for level number " << ln
               << " initial hierarchy next coarser level number is "
               << init_level->getNextCoarserHierarchyLevelNumber() 
@@ -279,6 +283,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       // Test #4:
       if (init_level->inHierarchy() !=
           test_level->inHierarchy()) {
+         fail_count++;
          tbox::perr << "FAILED: - Test #4: for level number " << ln
               << " initial hierarchy level in hierarchy is "
               << init_level->inHierarchy()
@@ -289,6 +294,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       // Test #5:
       if (init_level->getNumberOfPatches() !=
           test_level->getNumberOfPatches()) {
+         fail_count++;
          tbox::perr << "FAILED: - Test #5: for level number " << ln
               << " initial hierarchy number of patches is "
               << init_level->getNumberOfPatches()
@@ -299,6 +305,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       // Test #6:
       if (init_level->getRatio() !=
           test_level->getRatio()) {
+         fail_count++;
          tbox::perr << "FAILED: - Test #6: for level number " << ln
               << " initial hierarchy ratio to level zero is "
               << init_level->getRatio()
@@ -309,6 +316,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
       // Test #7:
       if (init_level->getRatioToCoarserLevel() !=
           test_level->getRatioToCoarserLevel()) {
+         fail_count++; 
          tbox::perr << "FAILED: - Test #7: for level number " << ln
               << " initial hierarchy ratio to coarser level is "
               << init_level->getRatioToCoarserLevel()
@@ -326,6 +334,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          for (int ib = 0; ib < nboxes; ib++) {
             if ( Box<NDIM>::refine(init_domain.getBox(ib), d_ratio) !=
                  test_domain.getBox(ib) ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                     << " refined domain box with array index " << ib 
                     << " is not a proper refinement of initial domain "
@@ -337,6 +346,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          for (int ib = 0; ib < nboxes; ib++) {
             if ( Box<NDIM>::coarsen(init_domain.getBox(ib), d_ratio) !=
                  test_domain.getBox(ib) ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                     << " coarsened domain box with array index " << ib 
                     << " is not a proper coarsening of initial domain "
@@ -361,6 +371,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          if (d_do_refine_test) {
             if ( Box<NDIM>::refine(init_boxes.getBox(ip), d_ratio) !=
                  test_boxes.getBox(ip) ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                     << " refined patch box with array index " << ip
                     << " is not a proper refinement of initial domain "
@@ -370,6 +381,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          if (d_do_coarsen_test) {
             if ( Box<NDIM>::coarsen(init_boxes.getBox(ip), d_ratio) !=
                  test_boxes.getBox(ip) ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                     << " coarsened patch box with array index " << ip
                     << " is not a proper coarsening of initial domain "
@@ -380,6 +392,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #10:
          if ( (init_level->getShiftsForPatch(ip)).getNumberItems() !=
               (test_level->getShiftsForPatch(ip)).getNumberItems() ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #10: for level number " << ln
                  << " initial and test level have different number of "
                  << "shifts for patch number " << ip << endl;
@@ -388,6 +401,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #11:
          if ( init_level->getMappingForPatch(ip) !=
               test_level->getMappingForPatch(ip) ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #11: for level number " << ln
                  << " initial and test level have different processor "
                  << "mapping for patch number " << ip << endl;
@@ -396,6 +410,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #12:
          if ( init_level->patchTouchesRegularBoundary(ip) !=
               test_level->patchTouchesRegularBoundary(ip) ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #12: for level number " << ln
                  << " initial and test level do not match for "
                  << "patchTouchesRegularBoundary() "
@@ -405,6 +420,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #13:
          if ( init_level->patchTouchesPeriodicBoundary(ip) !=
               test_level->patchTouchesPeriodicBoundary(ip) ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #12: for level number " << ln
                  << " initial and test level do not match for "
                  << "patchTouchesPeriodicBoundary() "
@@ -426,6 +442,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          if (d_do_refine_test) {
             if ( Box<NDIM>::refine(init_patch->getBox(), d_ratio) !=
                  test_patch->getBox() ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #14: for level number " << ln
                     << " box for test level patch " << tip()
                     << " is not a proper refinement of box "
@@ -435,6 +452,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          if (d_do_coarsen_test) {
             if ( Box<NDIM>::coarsen(init_patch->getBox(), d_ratio) !=
                  test_patch->getBox() ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #14: for level number " << ln
                     << " box for test level patch " << tip()
                     << " is not a proper coarsening of box "
@@ -445,6 +463,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #15:
          if ( init_patch->getPatchNumber() != 
               test_patch->getPatchNumber() ) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #15: for level number " << ln
                  << " initial and test level patches have different patch "
                  << "numbers for patch with index " << tip() << endl;
@@ -453,6 +472,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #16:
          if ( init_patch->getPatchLevelNumber() != 
               test_patch->getPatchLevelNumber()) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #16: for level number " << ln
                  << " initial and test level patches have different patch "
                  << "level numbers for patch number " << tip() << endl;
@@ -461,6 +481,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #17:
          if ( init_patch->inHierarchy() != 
               test_patch->inHierarchy()) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #17: for level number " << ln
                  << " initial and test level do not match for "
                  << "inHierarchy() "
@@ -470,6 +491,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #18:
          if ( init_patch->getPatchGeometry()->getTouchesRegularBoundary() != 
               test_patch->getPatchGeometry()->getTouchesRegularBoundary()) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #18: for level number " << ln
                  << " initial and test level do not match for "
                  << "getTouchesRegularBoundary() "
@@ -479,6 +501,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #19:
          if ( init_patch->getPatchGeometry()->getTouchesPeriodicBoundary() != 
               test_patch->getPatchGeometry()->getTouchesPeriodicBoundary()) {
+            fail_count++; 
             tbox::perr << "FAILED: - Test #19: for level number " << ln
                  << " initial and test level do not match for "
                  << "getTouchesPeriodicBoundary() "
@@ -499,6 +522,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #20a:
          if ( init_patch_geom->getRatio() != 
               test_patch_geom->getRatio()) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #20a: for level number " << ln
                  << " patch geometry ratio data does not match "
                  << "for patch number " << tip() << endl;
@@ -507,6 +531,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          // Test #20b:
          if ( init_patch_geom->intersectsPhysicalBoundary() != 
               test_patch_geom->intersectsPhysicalBoundary()) {
+            fail_count++;
             tbox::perr << "FAILED: - Test #20b: for level number " << ln
                  << " intersectsPhysicalBoundary() does not match "
                  << "for patch number " << tip() << endl;
@@ -516,6 +541,7 @@ void HierarchyTester::runHierarchyTestAndVerify()
          for (int id = 1; id <= NDIM; id++) {
             if ( (init_patch_geom->getCodimensionBoundary(id)).getSize() !=
                  (test_patch_geom->getCodimensionBoundary(id)).getSize() ) {
+               fail_count++;
                tbox::perr << "FAILED: - Test #20c: for level number " << ln
                     << " number of codimension " << id 
                     << " boundary boxes does not match "
@@ -526,6 +552,8 @@ void HierarchyTester::runHierarchyTestAndVerify()
       }
         
    }
+   
+   return(fail_count);
 }
 
 

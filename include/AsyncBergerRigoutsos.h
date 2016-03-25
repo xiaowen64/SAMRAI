@@ -1,8 +1,8 @@
 /*
- * File:         $RCSfile$
- * Copyright:    (c) 1997-2005 The Regents of the University of California
- * Revision:     $Revision: 279 $
- * Modified:     $Date: 2005-03-31 13:08:56 -0800 (Thu, 31 Mar 2005) $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsos.h $
+ * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 1704 $
+ * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description:  Asynchronous Berger-Rigoutsos clustering algorithm.
  */
 
@@ -65,9 +65,9 @@ namespace mesh {
  *   communications used by the asynchronous algorithm is
  *   isolated from other communications.
  *   If a private communicator is used, it is duplicated from
- *   MPI::getCommunicator() at construction time.
+ *   SAMRAI_MPI::getCommunicator() at construction time.
  *   If a private communicator is not used, the current value of
- *   MPI::getCommunicator() is used when a communicator is needed.
+ *   SAMRAI_MPI::getCommunicator() is used when a communicator is needed.
  *   The private communicator is freed when the object goes out of
  *   scope.  Disabling the use of a private communicator is not
  *   recommended unless you are absolutely sure unintended message
@@ -167,7 +167,7 @@ private:
 
 
    //! @brief Communicator, which may be privately created.
-   tbox::MPI::comm d_mpi_communicator;
+   tbox::SAMRAI_MPI::comm d_mpi_communicator;
 
    //! @brief Whether to log execution node allocation and deallocation.
    bool d_log_node_history;
@@ -176,13 +176,13 @@ private:
    bool d_log_cluster_summary;
 
    //! @brief How to select the owner of a node.
-   string d_owner_mode;
+   std::string d_owner_mode;
 
    //! @brief Whether to take advantage of level boxes data.
    bool d_use_level_boxes;
 
    //! @brief Asynchronous mode for advancing algorithm.
-   string d_algo_advance_mode;
+   std::string d_algo_advance_mode;
 
    //! @brief Max ghost cell width for overlap computation.
    hier::IntVector<DIM> d_max_gcw;

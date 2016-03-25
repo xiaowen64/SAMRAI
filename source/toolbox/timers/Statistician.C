@@ -1,7 +1,7 @@
 //
-// File:        Statistician.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistician.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Revision:    \f$ \f$
 // Modified:    \f$ \f$
 // Description: Singleton manager class for statistic objects.
@@ -9,21 +9,16 @@
 
 #include "tbox/Statistician.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
-#include "tbox/IEEE.h"
 #include "tbox/IOStream.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/RestartManager.h"
+#include "tbox/SAMRAIManager.h"
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/Schedule.h"
 #include "tbox/StatTransaction.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 
 namespace SAMRAI {
@@ -35,12 +30,6 @@ namespace SAMRAI {
 #endif
 #ifndef TBOX_STATISTICRESTARTDATABASE_VERSION
 #define TBOX_STATISTICRESTARTDATABASE_VERSION (1)
-#endif
-#ifndef STATISTICIAN_MAX_STATS
-#define STATISTICIAN_MAX_STATS (128)
-#endif
-#ifndef COLUMN_WIDTH
-#define COLUMN_WIDTH (15)
 #endif
 
 Statistician* Statistician::s_statistician_instance = 
@@ -94,7 +83,7 @@ void Statistician::registerSingletonSubclassInstance(
    } else {
       TBOX_ERROR("Statistician internal error...\n"
                  << "Attemptng to set Singleton instance to subclass instance,"
-                 << "\n but Singleton instance already set." << endl);
+                 << "\n but Singleton instance already set." << std::endl);
    }
 }
 
@@ -112,10 +101,12 @@ Statistician::Statistician()
 
    d_must_call_finalize = true;
 
+   const int max_stats = tbox::SAMRAIManager::getMaxNumberStatistics();
+
    d_num_proc_stats = 0;
-   d_proc_statistics.resizeArray(STATISTICIAN_MAX_STATS);
+   d_proc_statistics.resizeArray(max_stats);
    d_num_patch_stats = 0;
-   d_patch_statistics.resizeArray(STATISTICIAN_MAX_STATS);
+   d_patch_statistics.resizeArray(max_stats);
 }
 
 Statistician::~Statistician()
@@ -169,12 +160,12 @@ void Statistician::initRestartDatabase(bool register_for_restart,
 */
 
 Pointer<Statistic> Statistician::getStatistic(
-   const string& name,
-   const string& stat_type)
+   const std::string& name,
+   const std::string& stat_type)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
-   assert(!stat_type.empty());
+   TBOX_ASSERT(!name.empty());
+   TBOX_ASSERT(!stat_type.empty());
 #endif
 
   Pointer<Statistic> stat;
@@ -192,9 +183,9 @@ Pointer<Statistic> Statistician::getStatistic(
      }
 
      if (!found) {
-        if (d_num_proc_stats == STATISTICIAN_MAX_STATS) {
+        if (d_num_proc_stats == d_proc_statistics.getSize()) {
            TBOX_ERROR("Statistician::getStatistic error ..."
-              << "\n   Max statistic exceeded with stat " << name << endl);
+              << "\n   Max statistic exceeded with stat " << name << std::endl);
         }
         stat = new Statistic(name, stat_type, d_num_proc_stats);
         d_proc_statistics[d_num_proc_stats] = stat;
@@ -213,9 +204,9 @@ Pointer<Statistic> Statistician::getStatistic(
      }
 
      if (!found) {
-        if (d_num_patch_stats == STATISTICIAN_MAX_STATS) {
+        if (d_num_patch_stats == d_patch_statistics.getSize()) {
            TBOX_ERROR("Statistician::getStatistic error ..."
-              << "\n   Max statistic exceeded with stat " << name << endl);
+              << "\n   Max statistic exceeded with stat " << name << std::endl);
         }
         stat = new Statistic(name, stat_type, d_num_patch_stats);
         d_patch_statistics[d_num_patch_stats] = stat;
@@ -226,7 +217,7 @@ Pointer<Statistic> Statistician::getStatistic(
   } else {
      TBOX_ERROR("Statistician::getStatistic error ..."
               << "\n   Unrecognized stat type string " << stat_type 
-              << "passed to routine." << endl);
+              << "passed to routine." << std::endl);
   }
 
   return(stat); 
@@ -235,10 +226,10 @@ Pointer<Statistic> Statistician::getStatistic(
 
 bool Statistician::checkStatisticExists(
     Pointer<Statistic>& stat,
-    const string& name) const
+    const std::string& name) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
 
    if (checkProcStatExists(stat, name)) {
@@ -255,7 +246,7 @@ bool Statistician::checkStatisticExists(
 
 bool Statistician::checkProcStatExists(
     Pointer<Statistic>& stat,
-    const string& name) const
+    const std::string& name) const
 {
    stat.setNull(); 
 
@@ -273,7 +264,7 @@ bool Statistician::checkProcStatExists(
 
 bool Statistician::checkPatchStatExists(
     Pointer<Statistic>& stat,
-    const string& name) const
+    const std::string& name) const
 {
    stat.setNull();
 
@@ -321,7 +312,7 @@ void Statistician::resetStatistics()
 */
 
 int Statistician::getProcStatId(
-   const string& name) const
+   const std::string& name) const
 {
    int ret_val = -1;
  
@@ -341,17 +332,17 @@ int Statistician::getGlobalProcStatSequenceLength(
 {
    int seq_len = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatSeqLength ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
  
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 && 
+      TBOX_ASSERT(proc_stat_id >= 0 && 
              proc_stat_id < d_global_proc_stat_data.getSize());
 #endif
 
@@ -369,21 +360,21 @@ double Statistician::getGlobalProcStatValue(
 {
    double val = 0.;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatValue ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 &&
+      TBOX_ASSERT(proc_stat_id >= 0 &&
              proc_stat_id < d_global_proc_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
-      assert(proc_num < MPI::getNodes());
+      TBOX_ASSERT(proc_num < SAMRAI_MPI::getNodes());
 #endif
   
       val = d_global_proc_stat_data[proc_stat_id][seq_num][proc_num];
@@ -398,23 +389,23 @@ double Statistician::getGlobalProcStatSum(
 {  
    double sum = 0.;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatSum ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 &&
+      TBOX_ASSERT(proc_stat_id >= 0 &&
              proc_stat_id < d_global_proc_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
 #endif
 
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          sum += d_global_proc_stat_data[proc_stat_id][seq_num][np];
       }
    }
@@ -426,26 +417,26 @@ double Statistician::getGlobalProcStatMax(
    int proc_stat_id,
    int seq_num)
 {
-   double pmax = -IEEE::getDBL_MAX();
+   double pmax = -(tbox::MathUtilities<double>::getMax());
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatMax ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 &&
+      TBOX_ASSERT(proc_stat_id >= 0 &&
              proc_stat_id < d_global_proc_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
 #endif
 
       double val = pmax;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_proc_stat_data[proc_stat_id][seq_num][np];
          pmax = (val > pmax ? val : pmax); 
       }
@@ -458,27 +449,27 @@ int Statistician::getGlobalProcStatMaxProcessorId(
    int proc_stat_id,
    int seq_num)
 {
-   double pmax = -IEEE::getDBL_MAX();
+   double pmax = -(tbox::MathUtilities<double>::getMax());
    int id = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatMaxProcId ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 &&
+      TBOX_ASSERT(proc_stat_id >= 0 &&
              proc_stat_id < d_global_proc_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
 #endif
 
       double val = pmax;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_proc_stat_data[proc_stat_id][seq_num][np];
          if (val > pmax) {
             id = np; 
@@ -495,25 +486,25 @@ double Statistician::getGlobalProcStatMin(
    int proc_stat_id,
    int seq_num)
 {
-   double pmin = IEEE::getDBL_MAX();
+   double pmin = tbox::MathUtilities<double>::getMax();
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatMin ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 &&
+      TBOX_ASSERT(proc_stat_id >= 0 &&
              proc_stat_id < d_global_proc_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
 #endif
       double val = pmin;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_proc_stat_data[proc_stat_id][seq_num][np];
          pmin = (val < pmin ? val : pmin); 
       }
@@ -526,27 +517,27 @@ int Statistician::getGlobalProcStatMinProcessorId(
    int proc_stat_id,
    int seq_num)
 {
-   double pmin = IEEE::getDBL_MAX();
+   double pmin = tbox::MathUtilities<double>::getMax();
    int id = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatMinProcId ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0 &&
+      TBOX_ASSERT(proc_stat_id >= 0 &&
              proc_stat_id < d_global_proc_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
 #endif
 
       double val = pmin;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_proc_stat_data[proc_stat_id][seq_num][np];
          if (val < pmin) {
             id = np; 
@@ -560,46 +551,46 @@ int Statistician::getGlobalProcStatMinProcessorId(
 
 
 void Statistician::printGlobalProcStatData(int proc_stat_id,
-                                                ostream& os,
+                                                std::ostream& os,
                                                 int precision)
 {
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printGlobalProcStatData ..."
                     << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
          
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0);
-      assert(precision > 0);
+      TBOX_ASSERT(proc_stat_id >= 0);
+      TBOX_ASSERT(precision > 0);
 #endif
 
       os.precision(precision);
 
       os << "\n   " << proc_stat_id << ":    " 
-         << d_proc_statistics[proc_stat_id]->getName()  << endl;
+         << d_proc_statistics[proc_stat_id]->getName()  << std::endl;
       
-      int nnodes = MPI::getNodes();
+      int nnodes = SAMRAI_MPI::getNodes();
       const Array< Array<double> >& sdata = 
          d_global_proc_stat_data[proc_stat_id];
       
       for (int ipsl = 0; ipsl < sdata.getSize(); ipsl++) {
-         os << "      Seq # " << ipsl << endl;
-         os << "         proc : value" << endl;
+         os << "      Seq # " << ipsl << std::endl;
+         os << "         proc : value" << std::endl;
          for (int ip = 0; ip < nnodes; ip++) {
             /*
              * Write out data only if data entry is NOT an "empty"
              * entry, defined by the Statistic::s_empty_seq_tag_entry
              * value.
              */          
-            if (!(Utilities::deq(sdata[ipsl][ip],
+            if (!(MathUtilities<double>::equalEps(sdata[ipsl][ip],
                 Statistic::s_empty_seq_tag_entry))) {
                os << "         " << ip << "    : " << sdata[ipsl][ip] 
-                  << endl;
+                  << std::endl;
             }
          }
       }
@@ -609,22 +600,22 @@ void Statistician::printGlobalProcStatData(int proc_stat_id,
 
 void Statistician::printGlobalProcStatDataFormatted(
    int proc_stat_id,
-   ostream& os,
+   std::ostream& os,
    int precision) 
 {
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printGlobalPatchStatDataFormatted"
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0);
-      assert(precision > 0);
+      TBOX_ASSERT(proc_stat_id >= 0);
+      TBOX_ASSERT(precision > 0);
 #endif
 
       os.precision(precision);
@@ -635,9 +626,9 @@ void Statistician::printGlobalProcStatDataFormatted(
       * [   1].  Using setf(ios::left) makes it left justified, which
       * is more convenient to output columns of tables.
       */
-      os.setf(ios::left);
+      os.setf(std::ios::left);
       int s, n;
-      int nnodes = MPI::getNodes();
+      int nnodes = SAMRAI_MPI::getNodes();
             
 
       // heading - line 1
@@ -645,14 +636,14 @@ void Statistician::printGlobalProcStatDataFormatted(
       for (n = 0; n < nnodes; n++) {
          os << "Proc\t";
       }
-      os << endl;
+      os << std::endl;
 
       // heading - line 2
       os << "    \t";
       for (n = 0; n < nnodes; n++) {
          os << n << "\t";
       }
-      os << endl;
+      os << std::endl;
  
       /*
        * Now print values. 
@@ -667,7 +658,7 @@ void Statistician::printGlobalProcStatDataFormatted(
              * entry, defined by the Statistic::s_empty_seq_tag_entry
              * value.
              */
-            if (Utilities::deq(sdata[s][n],
+            if (MathUtilities<double>::equalEps(sdata[s][n],
                   Statistic::s_empty_seq_tag_entry)) {
                os << "  " << "\t";
             } else {
@@ -675,7 +666,7 @@ void Statistician::printGlobalProcStatDataFormatted(
             }
             
          }
-         os << endl;
+         os << std::endl;
       }
 
    } 
@@ -685,23 +676,23 @@ void Statistician::printGlobalProcStatDataFormatted(
 void Statistician::printGlobalProcStatDataFormatted(
    int proc_stat_id,
    int proc_id,
-   ostream& os,
+   std::ostream& os,
    int precision) 
 {
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printGlobalPatchStatDataFormatted"
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(proc_stat_id >= 0);
-      assert(proc_id >= 0);
-      assert(precision > 0);
+      TBOX_ASSERT(proc_stat_id >= 0);
+      TBOX_ASSERT(proc_id >= 0);
+      TBOX_ASSERT(precision > 0);
 #endif
 
       os.precision(precision);
@@ -712,14 +703,14 @@ void Statistician::printGlobalProcStatDataFormatted(
       * [   1].  Using setf(ios::left) makes it left justified, which
       * is more convenient to output columns of tables.
       */
-      os.setf(ios::left);
+      os.setf(std::ios::left);
       int s;
 
       // heading - line 1
-      os << "Seq#\t" << "Proc\t" << endl;
+      os << "Seq#\t" << "Proc\t" << std::endl;
 
       // heading - line 2
-      os << "    \t" << proc_id << "\t" << endl;
+      os << "    \t" << proc_id << "\t" << std::endl;
  
       /*
        * Now print values. 
@@ -733,20 +724,20 @@ void Statistician::printGlobalProcStatDataFormatted(
           * entry, defined by the Statistic::s_empty_seq_tag_entry
           * value.
           */
-         if (Utilities::deq(sdata[s][proc_id],
+         if (MathUtilities<double>::equalEps(sdata[s][proc_id],
             Statistic::s_empty_seq_tag_entry)) {
             os << "  " << "\t";
          } else {
             os << sdata[s][proc_id] << "\t";
          }
-         os << endl;
+         os << std::endl;
       }
 
    } 
 
 }
 
-int Statistician::getPatchStatId(const string& name) const
+int Statistician::getPatchStatId(const std::string& name) const
 {
    int ret_val = -1;
 
@@ -766,17 +757,17 @@ int Statistician::getGlobalPatchStatSequenceLength(
 {
    int seq_len = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatSeqLen ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
 #endif
 
@@ -794,19 +785,19 @@ int Statistician::getGlobalPatchStatNumberPatches(
 
    int num_patches = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalProcStatNumPatches ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
 
@@ -825,21 +816,21 @@ int Statistician::getGlobalPatchStatPatchMapping(
 {
    int mapping = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatPatchMapping ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_mapping.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_mapping[patch_stat_id].getSize());
-      assert(patch_num >= 0 &&
+      TBOX_ASSERT(patch_num >= 0 &&
              patch_num < d_global_patch_stat_mapping[patch_stat_id][seq_num].
                                                                    getSize());
 #endif
@@ -858,21 +849,21 @@ double Statistician::getGlobalPatchStatValue(
 {
    double val = 0.;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatValue ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
-      assert(patch_num >= 0 &&
+      TBOX_ASSERT(patch_num >= 0 &&
              patch_num < d_global_patch_stat_data[patch_stat_id][seq_num].
                                                                    getSize());
 #endif
@@ -890,19 +881,19 @@ double Statistician::getGlobalPatchStatSum(
 
    double sum = 0.;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::gettGlobalPatchStatSum ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
   
@@ -921,21 +912,21 @@ double Statistician::getGlobalPatchStatMax(
    int patch_stat_id,
    int seq_num)
 {
-   double pmax = -IEEE::getDBL_MAX();
+   double pmax = -(tbox::MathUtilities<double>::getMax());
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMax ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
 
@@ -955,22 +946,22 @@ int Statistician::getGlobalPatchStatMaxPatchId(
    int patch_stat_id,
    int seq_num)
 {
-   double pmax = -IEEE::getDBL_MAX();
+   double pmax = -(tbox::MathUtilities<double>::getMax());
    int id = -1;
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMaxPatchId ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
 
@@ -993,21 +984,21 @@ double Statistician::getGlobalPatchStatMin(
    int patch_stat_id,
    int seq_num)
 {
-   double pmin = IEEE::getDBL_MAX();
+   double pmin = tbox::MathUtilities<double>::getMax();
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMin ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
 
@@ -1027,22 +1018,22 @@ int Statistician::getGlobalPatchStatMinPatchId(
    int patch_stat_id,
    int seq_num)
 {
-   double pmin = IEEE::getDBL_MAX();
+   double pmin = tbox::MathUtilities<double>::getMax();
    int id = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMinPatchId ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
   
@@ -1071,21 +1062,21 @@ double Statistician::getGlobalPatchStatProcessorSum(
 {
    double sum = -1.;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatProcSum ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_proc_data.getSize());
-      assert(processor_id >= 0 &&
-             processor_id < MPI::getNodes());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(processor_id >= 0 &&
+             processor_id < SAMRAI_MPI::getNodes());
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
 
@@ -1100,26 +1091,26 @@ double Statistician::getGlobalPatchStatProcessorSumMax(
    int patch_stat_id,
    int seq_num)
 {
-   double pmax = -IEEE::getDBL_MAX();
+   double pmax = -(tbox::MathUtilities<double>::getMax());
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::gettGlobalPatchStatProcSumMax ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_proc_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
 
       double val = pmax;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_patch_stat_proc_data[patch_stat_id][seq_num][np];
          pmax = (val > pmax ? val : pmax); 
       }
@@ -1132,27 +1123,27 @@ int Statistician::getGlobalPatchStatProcessorSumMaxId(
    int patch_stat_id,
    int seq_num)
 {
-   double pmax = -IEEE::getDBL_MAX();
+   double pmax = -(tbox::MathUtilities<double>::getMax());
    int id = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMaxProcSumId ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_proc_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
   
       double val = pmax;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_patch_stat_proc_data[patch_stat_id][seq_num][np];
          if (val > pmax) {
             id = np;
@@ -1167,27 +1158,27 @@ double Statistician::getGlobalPatchStatProcessorSumMin(
    int patch_stat_id,
    int seq_num)
 {
-   double pmin = IEEE::getDBL_MAX();
+   double pmin = tbox::MathUtilities<double>::getMax();
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatProcSumMin ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_proc_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
 
       double val = pmin;
 
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_patch_stat_proc_data[patch_stat_id][seq_num][np];
          pmin = (val < pmin ? val : pmin); 
       }
@@ -1200,28 +1191,28 @@ int Statistician::getGlobalPatchStatProcessorSumMinId(
    int patch_stat_id,
    int seq_num)
 {
-   double pmin = IEEE::getDBL_MAX();
+   double pmin = tbox::MathUtilities<double>::getMax();
    int id = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatProcSumMinId ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_proc_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
   
 
       double val = pmin;
-      for (int np = 0; np < MPI::getNodes(); np++) {
+      for (int np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = d_global_patch_stat_proc_data[patch_stat_id][seq_num][np];
          if (val < pmin) {
             id = np; 
@@ -1238,22 +1229,22 @@ int Statistician::getGlobalPatchStatNumberPatchesOnProc(
    int proc_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
-      assert(proc_id >= 0 &&
-             proc_id < MPI::getNodes());
+      TBOX_ASSERT(proc_id >= 0 &&
+             proc_id < SAMRAI_MPI::getNodes());
 #endif
 
    int num_patches = -1;
    
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
       
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatNumberPatchesOnProc"
            << "\n   The finalize() method to construct global data "
-           << "must be called BEFORE this method." << endl);
+           << "must be called BEFORE this method." << std::endl);
       }
 
       num_patches = 
@@ -1270,32 +1261,32 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProc(
    int seq_num)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(patch_stat_id >= 0 &&
+   TBOX_ASSERT(patch_stat_id >= 0 &&
           patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   assert(seq_num >= 0 &&
+   TBOX_ASSERT(seq_num >= 0 &&
           seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
   
    int pmax = -999999;
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMaxPatchesPerProc"
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
       int val = pmax;
       Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(MPI::getNodes());
+      patches_per_proc.resizeArray(SAMRAI_MPI::getNodes());
       
       int num_patches =  d_global_patch_stat_data[patch_stat_id][seq_num].
                                                                   getSize();
 
       int np, p;
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          patches_per_proc[np] = 0;
       }
 
@@ -1304,7 +1295,7 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProc(
          patches_per_proc[np]++;
       }
 
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = patches_per_proc[np];
          pmax = (val > pmax ? val : pmax); 
       }
@@ -1318,33 +1309,33 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProcId(
    int seq_num)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(patch_stat_id >= 0 &&
+   TBOX_ASSERT(patch_stat_id >= 0 &&
           patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   assert(seq_num >= 0 &&
+   TBOX_ASSERT(seq_num >= 0 &&
           seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
   
    int pmax = -999999;
    int id = -1;
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMaxPatchesPerProcId"
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
       int val = pmax;
       Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(MPI::getNodes());
+      patches_per_proc.resizeArray(SAMRAI_MPI::getNodes());
       
       int num_patches =  d_global_patch_stat_data[patch_stat_id][seq_num].
                                                                   getSize();
 
       int np, p;
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          patches_per_proc[np] = 0;
       }
 
@@ -1353,7 +1344,7 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProcId(
          patches_per_proc[np]++;
       }
 
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = patches_per_proc[np];
          if (val > pmax) {
             id = np;
@@ -1371,39 +1362,39 @@ int Statistician::getGlobalPatchStatMinPatchesPerProc(
    int seq_num)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(patch_stat_id >= 0 &&
+   TBOX_ASSERT(patch_stat_id >= 0 &&
           patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   assert(seq_num >= 0 &&
+   TBOX_ASSERT(seq_num >= 0 &&
           seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
   
    int pmin = 999999;
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMinPatchesPerProc"
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0 &&
+      TBOX_ASSERT(patch_stat_id >= 0 &&
              patch_stat_id < d_global_patch_stat_data.getSize());
-      assert(seq_num >= 0 &&
+      TBOX_ASSERT(seq_num >= 0 &&
              seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
 #endif
   
       int val = pmin;
       Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(MPI::getNodes());
+      patches_per_proc.resizeArray(SAMRAI_MPI::getNodes());
       
       int num_patches =  d_global_patch_stat_data[patch_stat_id][seq_num].
          getSize();
       
       int np, p;
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          patches_per_proc[np] = 0;
       }
       
@@ -1412,7 +1403,7 @@ int Statistician::getGlobalPatchStatMinPatchesPerProc(
          patches_per_proc[np]++;
       }
       
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = patches_per_proc[np];
          pmin = (val < pmin ? val : pmin); 
       }
@@ -1427,33 +1418,33 @@ int Statistician::getGlobalPatchStatMinPatchesPerProcId(
    int seq_num)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(patch_stat_id >= 0 &&
+   TBOX_ASSERT(patch_stat_id >= 0 &&
           patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   assert(seq_num >= 0 &&
+   TBOX_ASSERT(seq_num >= 0 &&
           seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 #endif
 
    int pmin = 9999999;
    int id = -1;
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::getGlobalPatchStatMinPatchesPerProcId"
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
       int val = pmin;
       Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(MPI::getNodes());
+      patches_per_proc.resizeArray(SAMRAI_MPI::getNodes());
       
       int num_patches =  d_global_patch_stat_data[patch_stat_id][seq_num].
                                                                   getSize();
 
       int np, p;
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          patches_per_proc[np] = 0;
       }
 
@@ -1462,7 +1453,7 @@ int Statistician::getGlobalPatchStatMinPatchesPerProcId(
          patches_per_proc[np]++;
       }
 
-      for (np = 0; np < MPI::getNodes(); np++) {
+      for (np = 0; np < SAMRAI_MPI::getNodes(); np++) {
          val = patches_per_proc[np];
          if (val < pmin) {
             id = np;
@@ -1476,45 +1467,45 @@ int Statistician::getGlobalPatchStatMinPatchesPerProcId(
 }
 
 void Statistician::printGlobalPatchStatData(int patch_stat_id,
-                                                 ostream& os,
+                                                 std::ostream& os,
                                                  int precision) 
 {
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printGlobalPatchStatData ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0);
-      assert(precision > 0);
+      TBOX_ASSERT(patch_stat_id >= 0);
+      TBOX_ASSERT(precision > 0);
 #endif
 
       os.precision(precision);
 
       os << "\n   " << patch_stat_id << ":    " 
-         << d_patch_statistics[patch_stat_id]->getName()  << endl;
+         << d_patch_statistics[patch_stat_id]->getName()  << std::endl;
       
       const Array< Array<double> >& sdata = 
          d_global_patch_stat_data[patch_stat_id];
       const Array< Array<int> >& spmap = 
          d_global_patch_stat_mapping[patch_stat_id];
       for (int ipsl = 0; ipsl < sdata.getSize(); ipsl++) {
-         os << "      Seq # " << ipsl << endl;
-         os << "         patch[proc]: value" << endl;
+         os << "      Seq # " << ipsl << std::endl;
+         os << "         patch[proc]: value" << std::endl;
          for (int ip = 0; ip < sdata[ipsl].getSize(); ip++) {
             /*
              * Write out data only if data entry is NOT an "empty"
              * entry, defined by the Statistic::s_empty_seq_tag_entry
              * value.
              */
-            if (!(Utilities::deq(sdata[ipsl][ip],
+            if (!(MathUtilities<double>::equalEps(sdata[ipsl][ip],
                   Statistic::s_empty_seq_tag_entry))) {
                os << "         " << ip << "    [" << spmap[ipsl][ip] 
-                  << "]:    " << sdata[ipsl][ip] << endl; 
+                  << "]:    " << sdata[ipsl][ip] << std::endl; 
             }
          }
       }
@@ -1522,21 +1513,21 @@ void Statistician::printGlobalPatchStatData(int patch_stat_id,
 }
 
 void Statistician::printGlobalPatchStatDataFormatted(int patch_stat_id,
-                                                          ostream& os,
+                                                          std::ostream& os,
                                                           int precision) 
 {
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printGlobalPatchStatFormatted ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
  
       }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(patch_stat_id >= 0);
-      assert(precision > 0);
+      TBOX_ASSERT(patch_stat_id >= 0);
+      TBOX_ASSERT(precision > 0);
 #endif
 
       os.precision(precision);
@@ -1547,7 +1538,7 @@ void Statistician::printGlobalPatchStatDataFormatted(int patch_stat_id,
       * [   1].  Using setf(ios::left) makes it left justified, which
       * is more convenient to output columns of tables.
       */
-      os.setf(ios::left);
+      os.setf(std::ios::left);
       int s, n;
       int npatches = 0; 
             
@@ -1566,14 +1557,14 @@ void Statistician::printGlobalPatchStatDataFormatted(int patch_stat_id,
       for (n = 0; n < npatches; n++) {
          os << "Patch\t";
       }
-      os << endl;
+      os << std::endl;
 
       // heading - line 2
       os << "    \t";
       for (n = 0; n < npatches; n++) {
          os << n << "\t";
       }
-      os << endl;
+      os << std::endl;
  
       /*
        * Now print values. 
@@ -1586,14 +1577,14 @@ void Statistician::printGlobalPatchStatDataFormatted(int patch_stat_id,
              * entry, defined by the Statistic::s_empty_seq_tag_entry
              * value.
              */
-            if (Utilities::deq(sdata[s][n],
+            if (MathUtilities<double>::equalEps(sdata[s][n],
                   Statistic::s_empty_seq_tag_entry)) {
                os << "  " << "\t";
             } else {
                os << sdata[s][n] << "\t";
             }
          }
-         os << endl;
+         os << std::endl;
       }
    } 
 
@@ -1626,8 +1617,8 @@ void Statistician::finalize()
     * each patch statistic.
     */
 
-   int nnodes = MPI::getNodes();
-   int my_rank = MPI::getRank();
+   int nnodes = SAMRAI_MPI::getNodes();
+   int my_rank = SAMRAI_MPI::getRank();
    int is, ip, ipsl, seq_len;
 
    /*
@@ -1701,8 +1692,8 @@ void Statistician::finalize()
              */
 
             for (is = 0; is < d_num_proc_stats; is++) {
-               const string& sname = d_proc_statistics[is]->getName();
-               const string& stype = d_proc_statistics[is]->getType();
+               const std::string& sname = d_proc_statistics[is]->getName();
+               const std::string& stype = d_proc_statistics[is]->getType();
                global_proc_stats[is].resizeArray(nnodes);
                for (ip = 1; ip < nnodes; ip++) {
                   global_proc_stats[is][ip] = 
@@ -1740,8 +1731,8 @@ void Statistician::finalize()
              */
 
             for (is = 0; is < d_num_patch_stats; is++) {
-               const string& sname = d_patch_statistics[is]->getName();
-               const string& stype = d_patch_statistics[is]->getType();
+               const std::string& sname = d_patch_statistics[is]->getName();
+               const std::string& stype = d_patch_statistics[is]->getType();
                global_patch_stats[is].resizeArray(nnodes);
                for (ip = 1; ip < nnodes; ip++) {
                   global_patch_stats[is][ip] = 
@@ -1857,13 +1848,9 @@ void Statistician::finalize()
 
    } // if I am processor zero
 
-   if (d_num_proc_stats > 0) {
-      delete [] global_proc_stats;
-   }
 
-   if (d_num_patch_stats > 0) {
-      delete [] global_patch_stats;
-   }
+   delete [] global_proc_stats;
+   delete [] global_patch_stats;
 
    d_must_call_finalize = false;
 
@@ -1885,7 +1872,7 @@ void Statistician::checkStatsForConsistency(
    Array<int>& total_patches)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(total_patches.getSize() == 0);
+   TBOX_ASSERT(total_patches.getSize() == 0);
 #endif
 
    int ip, is, consistent, n_stats;
@@ -1897,24 +1884,24 @@ void Statistician::checkStatsForConsistency(
     * are same on every processor.  Otherwise, we abort with an error message.
     */
 
-   n_stats  = MPI::bcast(d_num_proc_stats, 0);
+   n_stats  = SAMRAI_MPI::bcast(d_num_proc_stats, 0);
    consistent = ( (n_stats == d_num_proc_stats) ? 1 : 0 );
-   consistent = MPI::minReduction(consistent);
+   consistent = SAMRAI_MPI::minReduction(consistent);
 
    if (!consistent) {
       TBOX_ERROR("Statistician::finalize error ..."
                  << "\n   Number of processor stats inconsistent"
-                 << " across processors.  Cannot gather information." << endl);
+                 << " across processors.  Cannot gather information." << std::endl);
    }
 
-   n_stats  = MPI::bcast(d_num_patch_stats, 0);
+   n_stats  = SAMRAI_MPI::bcast(d_num_patch_stats, 0);
    consistent = ( (n_stats == d_num_patch_stats) ? 1 : 0 );
-   consistent = MPI::minReduction(consistent);
+   consistent = SAMRAI_MPI::minReduction(consistent);
 
    if (!consistent) {
       TBOX_ERROR("Statistician::finalize error ..."
                  << "\n   Number of patch stats inconsistent"
-                 << " across processors.  Cannot gather information." << endl);
+                 << " across processors.  Cannot gather information." << std::endl);
    }
 
    /*
@@ -1946,7 +1933,7 @@ void Statistician::checkStatsForConsistency(
          n_patch_stat_seq_items += my_seq_lengths[mark];
       }
 
-      MPI::maxReduction(max_seq_lengths.getPointer(), n_stats);
+      SAMRAI_MPI::maxReduction(max_seq_lengths.getPointer(), n_stats);
 
       consistent = 1;
       for (is = 0; is < n_stats; is++) {
@@ -1955,12 +1942,12 @@ void Statistician::checkStatsForConsistency(
             break;
          }
       }
-      consistent = MPI::minReduction(consistent);
+      consistent = SAMRAI_MPI::minReduction(consistent);
 
       if (!consistent) {
          TBOX_ERROR("Statistician::finalize error ..."
                  << "\n   Sequence length for some statistic inconsistent"
-                 << " across processors.  Cannot gather information." << endl);
+                 << " across processors.  Cannot gather information." << std::endl);
       }
 
    }
@@ -1982,7 +1969,7 @@ void Statistician::checkStatsForConsistency(
          }
       }
 
-      MPI::sumReduction(total_patches.getPointer(), 
+      SAMRAI_MPI::sumReduction(total_patches.getPointer(), 
                              n_patch_stat_seq_items);
 
    }
@@ -2015,56 +2002,56 @@ int Statistician::getNumberPatchStats() const
 *************************************************************************
 */
 
-void Statistician::printLocalStatData(ostream& os,
+void Statistician::printLocalStatData(std::ostream& os,
                                            int precision) const
 {
    int is;
 
-   os << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+   os << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
    os << "Printing local statistic information...";
-   os << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+   os << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 
    for (is = 0; is < d_num_proc_stats; is++) {
-      os << endl;
+      os << std::endl;
       d_proc_statistics[is]->printClassData(os, precision);
    }
 
    for (is = 0; is < d_num_patch_stats; is++) {
-      os << endl;
+      os << std::endl;
       d_patch_statistics[is]->printClassData(os, precision);
    }
 }
 
-void Statistician::printAllGlobalStatData(ostream& os,
+void Statistician::printAllGlobalStatData(std::ostream& os,
                                                int precision)
 {
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printAllGlobalStatData ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
       }
 
       int is;
       os << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++"
          << "\nPrinting global statistic information..."
          << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++" 
-         << endl;     
+         << std::endl;     
 
-      os << "\n  ---------------------" << endl;
-      os << "  Processor Statistics:"   << endl;
-      os << "  ---------------------"   << endl;
-      os << "   Stat #: name"           << endl;
+      os << "\n  ---------------------" << std::endl;
+      os << "  Processor Statistics:"   << std::endl;
+      os << "  ---------------------"   << std::endl;
+      os << "   Stat #: name"           << std::endl;
       for (is = 0; is < d_num_proc_stats; is++) {
          printGlobalProcStatData(is, os, precision);
       }
 
-      os << "\n  ---------------------" << endl;
-      os << "  Patch Statistics:"       << endl;
-      os << "  ---------------------"   << endl;
-      os << "   Stat #: name"           << endl;
+      os << "\n  ---------------------" << std::endl;
+      os << "  Patch Statistics:"       << std::endl;
+      os << "  ---------------------"   << std::endl;
+      os << "   Stat #: name"           << std::endl;
       for (is = 0; is < d_num_patch_stats; is++) {
          printGlobalPatchStatData(is, os, precision);
       }
@@ -2080,48 +2067,48 @@ void Statistician::printAllGlobalStatData(ostream& os,
 *                                                                       *
 *************************************************************************
 */
-void Statistician::printAllSummedGlobalStatData(const string& filename,
+void Statistician::printAllSummedGlobalStatData(const std::string& filename,
                                                 int precision)
 {
-   if (MPI::getRank() == 0) {
-      ofstream file(filename.c_str());
+   if (SAMRAI_MPI::getRank() == 0) {
+      std::ofstream file(filename.c_str());
       printAllSummedGlobalStatData(file,precision);
       file.close();
       
    }
 }
 
-void Statistician::printAllSummedGlobalStatData(ostream& os,
+void Statistician::printAllSummedGlobalStatData(std::ostream& os,
                                                 int precision)
 {
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
       os.precision(precision);
       
       int is,id,num_sequences,n;
       double sum;
       for (is = 0; is < d_num_proc_stats; is++) {
-         string procstat_name = d_proc_statistics[is]->getName();
-         os << "PROCESSOR STAT: " << procstat_name << endl;
+         std::string procstat_name = d_proc_statistics[is]->getName();
+         os << "PROCESSOR STAT: " << procstat_name << std::endl;
          id = d_proc_statistics[is]->getInstanceId();
          num_sequences = getGlobalProcStatSequenceLength(id);
          for (n = 0; n < num_sequences; n++) {
             sum = getGlobalProcStatSum(id,n);
-            os << "\t" << n << "\t" << sum << endl;
+            os << "\t" << n << "\t" << sum << std::endl;
          }
-         os << "\n" << endl;
+         os << "\n" << std::endl;
       }
       
       for (is = 0; is < d_num_patch_stats; is++) {
-         string patchstat_name = d_patch_statistics[is]->getName();
-         os << "PATCH STAT: " << patchstat_name << endl;
+         std::string patchstat_name = d_patch_statistics[is]->getName();
+         os << "PATCH STAT: " << patchstat_name << std::endl;
          id = d_patch_statistics[is]->getInstanceId();
          num_sequences = getGlobalPatchStatSequenceLength(id);
          for (n = 0; n < num_sequences; n++) {
             sum = getGlobalPatchStatSum(id,n);
-            os << "\t" << n << "\t" << sum << endl;
+            os << "\t" << n << "\t" << sum << std::endl;
          }
-         os << "\n" << endl;
+         os << "\n" << std::endl;
       }
    }
    
@@ -2145,7 +2132,7 @@ void Statistician::printAllSummedGlobalStatData(ostream& os,
 *************************************************************************
 */
 
-void Statistician::printSpreadSheetOutput(const string& dirname,
+void Statistician::printSpreadSheetOutput(const std::string& dirname,
                                                int precision) 
 {
 
@@ -2161,12 +2148,12 @@ void Statistician::printSpreadSheetOutput(const string& dirname,
    /*
     * Processor 0 writes the output files.
     */
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printSpreadSheetOutput() ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
       }
       
       /*
@@ -2176,19 +2163,19 @@ void Statistician::printSpreadSheetOutput(const string& dirname,
        */
       int is;
       for (is = 0; is < d_num_proc_stats; is++) {
-         string filename = d_proc_statistics[is]->getName();
+         std::string filename = d_proc_statistics[is]->getName();
          filename = filename + "-proc.txt";
          if (write_to_dir) filename = dirname + "/" + filename;
-         ofstream file(filename.c_str());
+         std::ofstream file(filename.c_str());
          printGlobalProcStatDataFormatted(is, file, precision);
          file.close();
       }
       
       for (is = 0; is < d_num_patch_stats; is++) {
-         string filename = d_patch_statistics[is]->getName();
+         std::string filename = d_patch_statistics[is]->getName();
          filename = filename + "-patch.txt";
          if (write_to_dir) filename = dirname + "/" + filename;
-         ofstream file(filename.c_str());
+         std::ofstream file(filename.c_str());
          printGlobalPatchStatDataFormatted(is, file, precision);
          file.close();
       }
@@ -2211,7 +2198,7 @@ void Statistician::printSpreadSheetOutput(const string& dirname,
 
 void Statistician::printSpreadSheetOutputForProcessor(
    const int proc_id,
-   const string& dirname,
+   const std::string& dirname,
    int precision) 
 {
 
@@ -2229,12 +2216,12 @@ void Statistician::printSpreadSheetOutputForProcessor(
     * data from only a single processor, proc 0 will still do the 
     * writing.
     */
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
 
       if (d_must_call_finalize) {
          TBOX_ERROR("Statistician::printSpreadSheetOutput() ..."
                  << "\n   The finalize() method to construct global data "
-                    "must be called BEFORE this method." << endl);
+                    "must be called BEFORE this method." << std::endl);
       }
       
       /*
@@ -2245,15 +2232,15 @@ void Statistician::printSpreadSheetOutputForProcessor(
        */
       int is;
       for (is = 0; is < d_num_proc_stats; is++) {
-         string name = d_proc_statistics[is]->getName();
+         std::string name = d_proc_statistics[is]->getName();
          name = name + "-proc-";
          const int size = name.length() + 16;
          char *buffer = new char[size];
          sprintf(buffer, "%s%d", name.c_str(),proc_id);
-         string filename(buffer);
+         std::string filename(buffer);
          filename = filename + ".txt";
          if (write_to_dir) filename = dirname + "/" + filename;
-         ofstream file(filename.c_str());
+         std::ofstream file(filename.c_str());
          printGlobalProcStatDataFormatted(is, proc_id, file, precision);
          file.close();
       }
@@ -2272,12 +2259,12 @@ void Statistician::printSpreadSheetOutputForProcessor(
 */
 
 StatisticRestartDatabase::StatisticRestartDatabase(
-   const string& object_name,
+   const std::string& object_name,
    bool register_for_restart,
    bool read_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
    d_object_name = object_name;
    d_registered_for_restart = register_for_restart;
@@ -2303,7 +2290,7 @@ void StatisticRestartDatabase::putToDatabase(
    Pointer<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("TBOX_STATISTICRESTARTDATABASE_VERSION",
@@ -2330,8 +2317,8 @@ void StatisticRestartDatabase::putToDatabase(
     * Store the name of each stat in the string arrays 
     * "proc_stat_names" and "patch_stat_names".
     */
-   Array<string> proc_stat_names(number_of_procstats);
-   Array<string> patch_stat_names(number_of_patchstats);
+   Array<std::string> proc_stat_names(number_of_procstats);
+   Array<std::string> patch_stat_names(number_of_patchstats);
 
    /*
     * Write procstat and patchstats to database. 
@@ -2377,7 +2364,7 @@ void StatisticRestartDatabase::getFromRestart()
       db = root_db->getDatabase(d_object_name);
    } else {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file" << endl);
+         << d_object_name << " not found in restart file" << std::endl);
    }
 
    int ver = db->getInteger("TBOX_STATISTICRESTARTDATABASE_VERSION");
@@ -2394,11 +2381,11 @@ void StatisticRestartDatabase::getFromRestart()
    /*
     * Read in the list of sub-database names.
     */
-   Array<string> proc_stat_names; 
+   Array<std::string> proc_stat_names; 
    if (number_of_procstats > 0) {   
       proc_stat_names = db->getStringArray("proc_stat_names");
    }
-   Array<string> patch_stat_names; 
+   Array<std::string> patch_stat_names; 
    if (number_of_patchstats > 0) {   
       patch_stat_names = db->getStringArray("patch_stat_names");
    }
@@ -2408,7 +2395,7 @@ void StatisticRestartDatabase::getFromRestart()
     */
    Statistician* statistician = Statistician::getStatistician();
    Pointer<Database> sub_database;
-   string sub_database_name;
+   std::string sub_database_name;
    Pointer<Statistic> stat;
    int i;
    for (i = 0; i < number_of_procstats; i++) {

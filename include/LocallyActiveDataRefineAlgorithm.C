@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataRefineAlgorithm.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineAlgorithm.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 697 $
-// Modified:	$Date: 2005-11-03 12:27:48 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Refine algorithm for locally-active data transfer between AMR levels
 //
 
@@ -18,9 +18,6 @@
 #include "tbox/Utilities.h"
 #include "StandardLocallyActiveDataRefineTransactionFactory.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -73,7 +70,7 @@ void LocallyActiveDataRefineAlgorithm<DIM>::registerRefine(
       TBOX_ERROR("LocallyActiveDataRefineAlgorithm<DIM>::registerRefine error..."
                  << "\nCannot call registerRefine with this refine algorithm"
                  << "\nobject since it has already been used to create a refine schedule."
-                 << endl);
+                 << std::endl);
    }
 
    typename xfer::RefineClasses<DIM>::Data data;
@@ -112,14 +109,14 @@ template<int DIM> void LocallyActiveDataRefineAlgorithm<DIM>::registerRefine(
    tbox::Pointer< xfer::TimeInterpolateOperator<DIM> > optime)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!optime.isNull());
+   TBOX_ASSERT(!optime.isNull());
 #endif
 
    if (d_schedule_created) {
       TBOX_ERROR("LocallyActiveDataRefineAlgorithm<DIM>::registerRefine error..."
                  << "\nCannot call registerRefine with this refine algorithm"
                  << "\nobject since it has already been used to create a refine schedule."
-                 << endl);
+                 << std::endl);
    }
 
    typename xfer::RefineClasses<DIM>::Data data;
@@ -159,8 +156,8 @@ LocallyActiveDataRefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::LocallyActiveDataRefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
 #endif
 
    d_schedule_created = true;
@@ -203,10 +200,10 @@ LocallyActiveDataRefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::LocallyActiveDataRefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!dst_level_mgr.isNull());
-   assert(!src_level.isNull());
-   assert(!src_level_mgr.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!dst_level_mgr.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(!src_level_mgr.isNull());
 #endif
 
    d_schedule_created = true;
@@ -251,9 +248,9 @@ LocallyActiveDataRefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::LocallyActiveDataRefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert((next_coarser_level == -1) || !hierarchy.isNull());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT((next_coarser_level == -1) || !hierarchy.isNull());
 #endif
 
    d_schedule_created = true;
@@ -301,10 +298,10 @@ LocallyActiveDataRefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::LocallyActiveDataRefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!dst_level_mgr.isNull());
-   if (!src_level.isNull()) assert(!src_level_mgr.isNull());
-   assert((next_coarser_level == -1) || !hierarchy.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!dst_level_mgr.isNull());
+   if (!src_level.isNull()) TBOX_ASSERT(!src_level_mgr.isNull());
+   TBOX_ASSERT((next_coarser_level == -1) || !hierarchy.isNull());
 #endif
 
    d_schedule_created = true;
@@ -337,10 +334,10 @@ LocallyActiveDataRefineAlgorithm<DIM>::createSchedule(
 */
 
 template<int DIM>
-void LocallyActiveDataRefineAlgorithm<DIM>::printClassData(ostream& stream) const
+void LocallyActiveDataRefineAlgorithm<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "LocallyActiveDataRefineAlgorithm<DIM>::printClassData()" << endl;
-   stream << "----------------------------------------" << endl;
+   stream << "LocallyActiveDataRefineAlgorithm<DIM>::printClassData()" << std::endl;
+   stream << "----------------------------------------" << std::endl;
    d_refine_classes->printClassData(stream);
 }
 

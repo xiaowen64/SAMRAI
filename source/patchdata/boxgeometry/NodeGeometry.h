@@ -1,9 +1,9 @@
 //
-// File:	NodeGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/NodeGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for node centered objects
 //
 
@@ -32,25 +32,14 @@
 namespace SAMRAI {
     namespace pdat {
 
-/**
+/*!
  * Class NodeGeometry<DIM> manages the mapping between the AMR index space
  * and the node-centered geometry index space.  It is a subclass of
  * hier::BoxGeometry<DIM> and it computes intersections between node-
- * centered box geometries.  That is, node geometry objects calculate 
- * the node-centered data residing in the intersection of two boxes 
- * defining regions of index space on an AMR patch hierarchy.  For example, 
- * given a three-dimensional box [l0:u0,l1:u1,l2:u2], the indices for a 
- * three-dimensional node data object run as follows:
- * \verbatim
- 
-      [l0:u0+1,l1:u1+1,l2:u2+1]
-
- * \endverbatim
+ * centered box geometries for communication operations.
  *
- * Note that the intersection between two node-centered boxes can be 
- * complicated since node geometries contain indices on the nodes of 
- * the boxes.  Thus, there may be overlap between two boxes, even though 
- * the boxes do not intersect in the AMR index space.
+ * See header file for NodeData<DIM> class for a more detailed
+ * description of the data layout.
  *
  * @see hier::BoxGeometry
  * @see pdat::NodeOverlap
@@ -59,20 +48,28 @@ namespace SAMRAI {
 template<int DIM> class NodeGeometry : public hier::BoxGeometry<DIM>
 {
 public:
-   /**
-    * Construct the node geometry object given the box and ghost cell width.
+   /*!
+    * @brief Convert an AMR index box space box into a node geometry box.
+    * A node geometry box is extends the given AMR index box space box
+    * by one in upper dimension for each coordinate direction.
     */
-   NodeGeometry(const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts);
+   static hier::Box<DIM> toNodeBox(const hier::Box<DIM>& box);
 
-   /**
-    * The virtual destructor does nothing interesting.
+   /*!
+    * @brief Construct the node geometry object given an AMR index
+    * space box and ghost cell width. 
+    */
+   NodeGeometry(const hier::Box<DIM>& box, 
+                const hier::IntVector<DIM>& ghosts);
+
+   /*!
+    * @brief The virtual destructor does nothing interesting.
     */
    virtual ~NodeGeometry<DIM>();
 
-   /**
-    * Compute the overlap in index space between the source box geometry
-    * and the destination box geometry.  Refer to the box geometry class
-    * for a detailed description of calculateOverlap().
+   /*!
+    * @brief Compute the overlap in node-centered index space between
+    * the source box geometry and the destination box geometry.
     */
    virtual tbox::Pointer< hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
@@ -82,22 +79,17 @@ public:
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
 
-   /**
-    * Return the box extents for this node centered box geometry object.
+   /*!
+    * @brief Return the box for this node centered box geometry
+    * object.
     */
    const hier::Box<DIM>& getBox() const;
-
-   /**
-    * Return the ghost cell width for this node centered box geometry object.
+ 
+   /*!
+    * @brief Return the ghost cell width for this node centered box
+    * geometry object.
     */
    const hier::IntVector<DIM>& getGhosts() const;
-
-   /**
-    * Convert an AMR abstract box into a node geometry box.  The lower
-    * index is the same, but the upper index is one greater in each
-    * dimension.
-    */
-   static hier::Box<DIM> toNodeBox(const hier::Box<DIM>& box);
 
 private:
    /**

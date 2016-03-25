@@ -1,9 +1,9 @@
 //
-// File:        BoxGraph.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxGraph.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 179 $
-// Modified:    $Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility class to determines topographical box relationships
 //
 
@@ -12,21 +12,13 @@
 
 #include "BoxGraph.h"
 #include "BoxGraphUtilities.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/MathUtilities.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
-using namespace std;
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
-
-#include "tbox/IEEE.h"
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
 
@@ -415,7 +407,7 @@ template<int DIM> void BoxGraph<DIM>::addEdges(
 
 template<int DIM> void BoxGraph<DIM>::buildLocalOverlapArrays()
 {
-   int myid = tbox::MPI::getRank();
+   int myid = tbox::SAMRAI_MPI::getRank();
    int n = d_adj.getSize();
    d_adj_local.resizeArray(n);
 
@@ -474,7 +466,7 @@ template<int DIM> void BoxGraph<DIM>::findSortDimension()
    //        that overlap bins is minimized; but optimally determining
    //        the direction would likely be costly---so we'll do
    //        something cheap.
-   double rho = tbox::IEEE::getFLT_MAX();
+   double rho = tbox::MathUtilities<double>::getMax();
 
    //Get bounding box for the lists
    int size_src = d_src_boxes.getNumberOfBoxes();
@@ -515,11 +507,11 @@ template<int DIM> void BoxGraph<DIM>::print(tbox::Array<BoxGraph<DIM>::GraphNode
             << "; idx= " << list[i].idx
             << "; box= " << *(list[i].box)
             << "; isSrcBox= " << list[i].isSrcBox
-            << endl;
+            << std::endl;
     }
 }
 
-template<int DIM> void BoxGraph<DIM>::printGraph(ostream& os)
+template<int DIM> void BoxGraph<DIM>::printGraph(std::ostream& os)
 {
    int src_len = d_src_boxes.getNumberOfBoxes();
    int dst_len = d_dst_boxes.getNumberOfBoxes();
@@ -532,19 +524,19 @@ template<int DIM> void BoxGraph<DIM>::printGraph(ostream& os)
    os << "\n---------------------------------------------------\n";
    os << "dst boxes (after growing):\n";
    for (i=0; i<dst_len; ++i) {
-      os << "  dst box " << i << " = " << d_dst_boxes(i) << endl;
+      os << "  dst box " << i << " = " << d_dst_boxes(i) << std::endl;
    }
 
    os << "\n---------------------------------------------------\n";
    os << "src boxes\n";
    for (i=0; i<src_len; ++i) {
-      os << "  src box " << i << " = " << d_src_boxes(i) << endl;
+      os << "  src box " << i << " = " << d_src_boxes(i) << std::endl;
    }
 
    os << "\n---------------------------------------------------\n";
    os << "Nabors of dst boxes:\n";
    for (i=0; i<dst_len; ++i) {
-      os << "  dst box " << i << " = " << d_dst_boxes(i) << endl;
+      os << "  dst box " << i << " = " << d_dst_boxes(i) << std::endl;
       os << "     src box nabors:\n";
       int adj_len = d_adj[i].getSize();
       for (int j=0; j<adj_len; ++j) {
@@ -552,10 +544,10 @@ template<int DIM> void BoxGraph<DIM>::printGraph(ostream& os)
 
          if (idx >= src_len) {
              tbox::plog << "hysom's error!  idx= " << idx << ", should be < "
-                  << src_len << endl;
+                  << src_len << std::endl;
          }
 
-         os << "     idx= " << idx << endl;
+         os << "     idx= " << idx << std::endl;
       }
    }
 

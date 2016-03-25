@@ -1,9 +1,9 @@
 //
-// File:	PatchHierarchy.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchHierarchy.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 553 $
-// Modified:	$Date: 2005-08-17 14:27:03 -0700 (Wed, 17 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An AMR hierarchy of patch levels
 //
 
@@ -14,11 +14,9 @@
 
 #include <stdio.h>
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #define HIER_PATCH_HIERARCHY_VERSION (2)
 
@@ -41,13 +39,13 @@ namespace SAMRAI {
 */
 
 template<int DIM>  PatchHierarchy<DIM>::PatchHierarchy(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer< GridGeometry<DIM> > geometry,
    bool register_for_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!geometry.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!geometry.isNull());
 #endif
    d_object_name         = object_name;
    d_registered_for_restart = register_for_restart;
@@ -93,14 +91,14 @@ template<int DIM>  PatchHierarchy<DIM>::~PatchHierarchy()
 
 template<int DIM> tbox::Pointer<hier::PatchHierarchy<DIM> > 
 PatchHierarchy<DIM>::makeRefinedPatchHierarchy(
-   const string& fine_hierarchy_name,
+   const std::string& fine_hierarchy_name,
    const hier::IntVector<DIM>& refine_ratio,
    bool register_for_restart) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_hierarchy_name.empty());
-   assert(fine_hierarchy_name != d_object_name);
-   assert(refine_ratio > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(!fine_hierarchy_name.empty());
+   TBOX_ASSERT(fine_hierarchy_name != d_object_name);
+   TBOX_ASSERT(refine_ratio > hier::IntVector<DIM>(0));
 #endif
 
    tbox::Pointer<hier::GridGeometry<DIM> > fine_geometry =
@@ -114,10 +112,12 @@ PatchHierarchy<DIM>::makeRefinedPatchHierarchy(
                                register_for_restart);
 
    for (int ln = 0; ln < d_number_levels; ln++) {
+
       tbox::Pointer<hier::PatchLevel<DIM> > new_level = new hier::PatchLevel<DIM>();
       new_level->setRefinedPatchLevel(d_patch_levels[ln],
                                       refine_ratio,
                                       fine_geometry);
+
       new_level->setLevelNumber(ln);
       new_level->setNextCoarserHierarchyLevelNumber(ln-1);
       new_level->setLevelInHierarchy(true);
@@ -144,14 +144,14 @@ PatchHierarchy<DIM>::makeRefinedPatchHierarchy(
 
 template<int DIM> tbox::Pointer<hier::PatchHierarchy<DIM> > 
 hier::PatchHierarchy<DIM>::makeCoarsenedPatchHierarchy(
-   const string& coarse_hierarchy_name,
+   const std::string& coarse_hierarchy_name,
    const hier::IntVector<DIM>& coarsen_ratio,
    bool register_for_restart) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_hierarchy_name.empty());
-   assert(coarse_hierarchy_name != d_object_name);
-   assert(coarsen_ratio > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(!coarse_hierarchy_name.empty());
+   TBOX_ASSERT(coarse_hierarchy_name != d_object_name);
+   TBOX_ASSERT(coarsen_ratio > hier::IntVector<DIM>(0));
 #endif
 
    tbox::Pointer<hier::GridGeometry<DIM> > coarse_geometry =
@@ -197,12 +197,13 @@ template<int DIM> void PatchHierarchy<DIM>::makeNewPatchLevel(
    const int l, 
    const IntVector<DIM>& ratio_to_coarsest,
    const BoxArray<DIM>& patch_boxes,
-   const ProcessorMapping& mapping)
+   const ProcessorMapping& mapping,
+   const bool defer_boundary_box_creation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(l >= 0);
+   TBOX_ASSERT(l >= 0);
    for (int i = 0; i < DIM; i++) {
-      assert( ratio_to_coarsest(i) > 0 );
+      TBOX_ASSERT( ratio_to_coarsest(i) > 0 );
    }
 #endif
 
@@ -213,7 +214,8 @@ template<int DIM> void PatchHierarchy<DIM>::makeNewPatchLevel(
 
    d_patch_levels[l] = d_patch_level_factory->allocate(
       patch_boxes, mapping, ratio_to_coarsest,
-      d_grid_geometry, d_patch_descriptor, d_patch_factory);
+      d_grid_geometry, d_patch_descriptor, d_patch_factory,
+      defer_boundary_box_creation);
 
    d_patch_levels[l]->setLevelNumber(l);
    d_patch_levels[l]->setNextCoarserHierarchyLevelNumber(l-1);
@@ -237,7 +239,7 @@ template<int DIM> void PatchHierarchy<DIM>::makeNewPatchLevel(
 template<int DIM> void PatchHierarchy<DIM>::removePatchLevel(const int l)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((l >= 0) && (l < d_number_levels));
+   TBOX_ASSERT((l >= 0) && (l < d_number_levels));
 #endif
    d_patch_levels[l].setNull();
    if (d_number_levels == l+1) {
@@ -288,7 +290,7 @@ template<int DIM> void PatchHierarchy<DIM>::putToDatabase(
    const ComponentSelector& patchdata_write_table)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("HIER_PATCH_HIERARCHY_VERSION",
@@ -296,7 +298,7 @@ template<int DIM> void PatchHierarchy<DIM>::putToDatabase(
    database->putInteger("d_number_levels", d_number_levels);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( PATCHLEVEL_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
+   TBOX_ASSERT( PATCHLEVEL_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
 #endif
    char level_name[PATCHLEVEL_NAME_BUF_SIZE];
 
@@ -326,7 +328,7 @@ template<int DIM> void PatchHierarchy<DIM>::getFromRestart(
    const int max_levels)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(max_levels > 0);
+   TBOX_ASSERT(max_levels > 0);
 #endif
 
    tbox::Pointer<tbox::Database> restart_db = 
@@ -339,14 +341,14 @@ template<int DIM> void PatchHierarchy<DIM>::getFromRestart(
    } else {
       TBOX_ERROR("PatchHierarchy<DIM>::getFromRestart() error...\n"
               << "   Restart database with name "
-              << d_object_name << " not found in restart file" << endl);
+              << d_object_name << " not found in restart file" << std::endl);
    }
 
    int ver = database->getInteger("HIER_PATCH_HIERARCHY_VERSION");
    if (ver != HIER_PATCH_HIERARCHY_VERSION) {
       TBOX_ERROR("PatchHierarchy<DIM>::getFromRestart error...\n" 
           << "  object name = " << d_object_name 
-          << " : Restart file version different than class version" << endl);
+          << " : Restart file version different than class version" << std::endl);
    }
 
    getFromDatabase(
@@ -361,8 +363,8 @@ template<int DIM> void PatchHierarchy<DIM>::getFromDatabase(
    const int max_levels)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
-   assert( (max_levels == -1) || (max_levels > 0) );
+   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT( (max_levels == -1) || (max_levels > 0) );
 #endif
 
    d_number_levels = database->getInteger("d_number_levels");
@@ -373,13 +375,14 @@ template<int DIM> void PatchHierarchy<DIM>::getFromDatabase(
    }
 
    if (max_levels != -1) {
-      d_number_levels = tbox::Utilities::imin(d_number_levels, max_levels);
+      d_number_levels = 
+         tbox::MathUtilities<int>::Min(d_number_levels, max_levels);
    }
 
    d_patch_levels.resizeArray(d_number_levels);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( PATCHLEVEL_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
+   TBOX_ASSERT( PATCHLEVEL_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
 #endif
    char level_name[PATCHLEVEL_NAME_BUF_SIZE];
 
@@ -393,13 +396,14 @@ template<int DIM> void PatchHierarchy<DIM>::getFromDatabase(
            d_grid_geometry, 
            d_patch_descriptor, 
            d_patch_factory,
-           component_selector);
+           component_selector,
+           false);
    }
 }
 
 
-template<int DIM> int PatchHierarchy<DIM>::recursivePrint( ostream &os ,
-                                                           const string &border ,
+template<int DIM> int PatchHierarchy<DIM>::recursivePrint( std::ostream &os ,
+                                                           const std::string &border ,
                                                            unsigned short depth )
 {
   int totl_npatches = 0;

@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/Makefile.in $
 ## Package:	SAMRAI tests
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1789 $
+## Modified:	$LastChangedDate: 2007-12-18 10:37:24 -0800 (Tue, 18 Dec 2007) $
 ## Description:	makefile for the FAC test directory
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      = @top_srcdir@
 SRCDIR        = @srcdir@
 SUBDIR        = source/test/FAC
 VPATH         = @srcdir@
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
@@ -20,6 +21,10 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM) -DTESTING=1
+
+NUM_TESTS = 15
+
+TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = main.o ABRTest.o SinusoidalFrontTagger.o MDA_Access_instances.o intToString.o get-input-filename.o
 CXX_OBJS      = main.o AdaptivePoisson.o \
@@ -57,23 +62,28 @@ main-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS)	\
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
 
-TEST_NPROCS = @TEST_NPROCS@ 
-
 check:		
 		$(MAKE) check2d
 		$(MAKE) check3d
 
 check2d:	main2d
-		@for i in $(SRCDIR)/*2d.input ; do	\
+		@for i in $(SRCDIR)/inputs/*2d.input ; do	\
 		  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main2d $${i};	\
 		done
 
 check3d:	main3d
-		@for i in $(SRCDIR)/*3d.input ; do	\
+		@for i in $(SRCDIR)/inputs/*3d.input ; do	\
 		  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main3d $${i};	\
 		done
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

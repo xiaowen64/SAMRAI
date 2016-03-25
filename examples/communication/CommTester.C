@@ -1,9 +1,9 @@
 //
-// File:        CommTester.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/CommTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 317 $
-// Modified:    $Date: 2005-04-27 21:26:06 -0700 (Wed, 27 Apr 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -18,12 +18,6 @@
 #include "tbox/Utilities.h"
 #include "VariableDatabase.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 namespace SAMRAI {
 
@@ -44,9 +38,9 @@ CommTester::CommTester(
    const string& refine_option)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(data_test != (PatchDataTestStrategy*)NULL);
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(data_test != (PatchDataTestStrategy*)NULL);
 #endif
 
    d_object_name = object_name;
@@ -113,10 +107,10 @@ void CommTester::registerVariable(
    const string& operator_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!src_variable.isNull());
-   assert(!dst_variable.isNull());
-   assert(!xfer_geom.isNull());
-   assert(!operator_name.empty());
+   TBOX_ASSERT(!src_variable.isNull());
+   TBOX_ASSERT(!dst_variable.isNull());
+   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(!operator_name.empty());
 #endif
 
    hier::VariableDatabase<NDIM>* variable_db = hier::VariableDatabase<NDIM>::getDatabase();
@@ -130,8 +124,8 @@ void CommTester::registerVariable(
 					                dst_ghosts);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( src_id != -1 );
-   assert( dst_id != -1 );
+   TBOX_ASSERT( src_id != -1 );
+   TBOX_ASSERT( dst_id != -1 );
 #endif
 
    d_patch_data_components.setFlag(src_id);
@@ -154,7 +148,7 @@ void CommTester::registerVariable(
                                                  d_refine_scratch,
                                                  scratch_ghosts);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( scratch_id != -1 );
+   TBOX_ASSERT( scratch_id != -1 );
 #endif
 
       d_patch_data_components.setFlag(scratch_id);
@@ -186,10 +180,10 @@ void CommTester::registerVariableForReset(
    const string& operator_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!src_variable.isNull());
-   assert(!dst_variable.isNull());
-   assert(!xfer_geom.isNull());
-   assert(!operator_name.empty());
+   TBOX_ASSERT(!src_variable.isNull());
+   TBOX_ASSERT(!dst_variable.isNull());
+   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(!operator_name.empty());
 #endif
 
    hier::VariableDatabase<NDIM>* variable_db = hier::VariableDatabase<NDIM>::getDatabase();
@@ -251,7 +245,7 @@ void CommTester::createRefineSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -286,7 +280,7 @@ void CommTester::resetRefineSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -303,7 +297,7 @@ void CommTester::createCoarsenSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -327,7 +321,7 @@ void CommTester::resetCoarsenSchedule(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0)
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -389,8 +383,9 @@ void CommTester::performCoarsenOperations(
 *************************************************************************
 */
 
-void CommTester::verifyCommunicationResults() const
+bool CommTester::verifyCommunicationResults() const
 {
+   bool tests_pass = true;
    if (d_is_reset) {
       d_data_test_strategy->setDataContext(d_reset_destination);
    } else {
@@ -403,10 +398,13 @@ void CommTester::verifyCommunicationResults() const
       for (hier::PatchLevel<NDIM>::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch<NDIM> > patch = level->getPatch(p());
 
-         d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
+         tests_pass =
+            d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
       }
    }
    d_data_test_strategy->clearDataContext();
+
+   return tests_pass;
 }
 
 /*
@@ -433,9 +431,9 @@ void CommTester::initializeLevelData(
    (void) old_level;
    (void) allocate_data;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
-   assert(level_number >= 0);
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(level_number >= 0);
 #endif
 
    hier::PatchLevel<NDIM> &level = 
@@ -574,7 +572,7 @@ void CommTester::setupHierarchy(tbox::Pointer<tbox::Database> main_input_db,
                                 tbox::Pointer<mesh::StandardTagAndInitialize<NDIM> > cell_tagger)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!main_input_db.isNull());
+   TBOX_ASSERT(!main_input_db.isNull());
 #endif
 
    d_patch_hierarchy =

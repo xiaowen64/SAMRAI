@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -17,6 +17,8 @@ libdefault:	AsyncBergerRigoutsos-NDIM${NDIM}.o				\
 	BergerRigoutsos-NDIM${NDIM}.o BoxGeneratorStrategy-NDIM${NDIM}.o\
 	GriddingAlgorithm-NDIM${NDIM}.o HistogramBox-NDIM${NDIM}.o	\
 	LoadBalanceStrategy-NDIM${NDIM}.o LoadBalancer-NDIM${NDIM}.o	\
+	MultiblockGriddingAlgorithm-NDIM${NDIM}.o			\
+	MultiblockGriddingTagger-NDIM${NDIM}.o				\
 	StandardTagAndInitStrategy-NDIM${NDIM}.o			\
 	StandardTagAndInitialize-NDIM${NDIM}.o				\
 	TagAndInitializeStrategy-NDIM${NDIM}.o				\
@@ -27,6 +29,7 @@ libdefault:	AsyncBergerRigoutsos-NDIM${NDIM}.o				\
 	tbox__Pointer-mesh__GriddingAlgorithm-NDIM${NDIM}.o		\
 	tbox__Pointer-mesh__LoadBalanceStrategy-NDIM${NDIM}.o		\
 	tbox__Pointer-mesh__LoadBalancer-NDIM${NDIM}.o			\
+	tbox__Pointer-mesh__MultiblockGriddingAlgorithm-NDIM${NDIM}.o	\
 	tbox__Pointer-mesh__StandardTagAndInitStrategy-NDIM${NDIM}.o	\
 	tbox__Pointer-mesh__StandardTagAndInitialize-NDIM${NDIM}.o	\
 	tbox__Pointer-mesh__TagAndInitializeStrategy-NDIM${NDIM}.o

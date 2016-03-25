@@ -1,9 +1,9 @@
 /*
- * File:        RobinBcCoefStrategy.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/RobinBcCoefStrategy.h $
  * Package:     SAMRAI solver package
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Robin boundary condition problem-dependent interfaces
  */
 
@@ -28,7 +28,7 @@
 #include "Patch.h"
 #endif
 
-#ifndef included_tbox_ArrayData
+#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
 #endif
 
@@ -49,13 +49,6 @@ namespace SAMRAI {
  * in the Robin formula
  * @f[  \alpha u + \beta u_n = \gamma @f]
  * applied on the boundary with outward normal n.
- * The three coefficients are not independent,
- * and an equivalent equation can be writen
- * using just two coefficients,
- * @f[  a u + (1-a) u_n = g @f]
- * where @f$ a = \frac{\alpha}{\alpha+\beta} @f$ and
- * @f$ g = \frac{\gamma}{\alpha+\beta} @f$.
- * This class uses the latter equation.
  *
  * This class specifies the interfaces for communicating the
  * boundary condition coefficients.
@@ -147,10 +140,13 @@ public:
     *        for corresponding to the boundary box @c bdry_box
     *        and appropriate for the alignment of the given variable.
     *        If this is a null pointer, then the calling function
-    *        is not interested in g, and you can disregard it.
+    *        is not interested in a, and you can disregard it.
+    * @param bcoef_data boundary coefficient data.
+    *        This array is exactly like @c acoef_data,
+    *        except that it is to be filled with the b coefficient.
     * @param gcoef_data boundary coefficient data.
     *        This array is exactly like @c acoef_data,
-    *        except that it is to b filled with the g coefficient.
+    *        except that it is to be filled with the g coefficient.
     * @param variable variable to set the coefficients for.
     *        If implemented for multiple variables, this parameter
     *        can be used to determine which variable's coefficients
@@ -163,6 +159,7 @@ public:
     */
    virtual void setBcCoefs (
       tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
+      tbox::Pointer<pdat::ArrayData<DIM,double> > &bcoef_data ,
       tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
       const tbox::Pointer< hier::Variable<DIM> > &variable ,
       const hier::Patch<DIM> &patch ,

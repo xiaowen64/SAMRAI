@@ -1,9 +1,9 @@
 ##
 ## File:        cvisRenderWindow.tcl
 ## Package:     Vizamrai
-## Copyright:   (c) 1997-2001 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2001 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: Render Window for 3D data
 ##
 

@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dataops/Makefile.in $
 ## Package:	SAMRAI algorithm
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 676 $
-## Modified:	$Date: 2005-10-14 15:23:35 -0700 (Fri, 14 Oct 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for testing patch data operations
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/dataops
 VPATH	      =	@srcdir@
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check	
@@ -19,6 +20,14 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+ifneq (,$(findstring libdcomplex, "@SAMRAI_OPTIONAL_LIBS@ "))
+  NUM_TESTS = 13
+else
+  NUM_TESTS = 8
+endif
+
+TEST_NPROCS = @TEST_NPROCS@
 
 cellpatchtest:
 		@echo "Make sure all files were compiled with PDIM=2..."
@@ -121,8 +130,6 @@ face_cplxtest:		face_cplxtest.o  $(LIBSAMRAIDEPEND)
 side_cplxtest:		side_cplxtest.o  $(LIBSAMRAIDEPEND) 
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) side_cplxtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
-TEST_NPROCS = @TEST_NPROCS@ 
-
 check:
 		$(MAKE) check2d
 		$(MAKE) check3d
@@ -162,6 +169,13 @@ libdefault:	cellpatchtest cellhiertest \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hiertest; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_hiertest; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_hiertest
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

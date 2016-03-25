@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataFillBoxSet.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataFillBoxSet.h $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 481 $
-// Modified:	$Date: 2005-07-21 13:50:43 -0700 (Thu, 21 Jul 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for "smart" boxlist ops in locally-active comm schedules
 //
 
@@ -39,7 +39,6 @@
 #endif
 #ifndef included_iostream
 #include <iostream>
-using namespace std;
 #define included_iostream
 #endif
 
@@ -194,7 +193,7 @@ public:
     * Print all class member data for this locally-active fill box set object
     * to specified output stream  (default is plog).
     */
-   void printClassData(ostream& os = tbox::plog) const;
+   virtual void printClassData(std::ostream& os = tbox::plog) const;
 
 private:
    /*
@@ -225,10 +224,10 @@ private:
    /*
     * Private utility functions to check unions and print lists of refine items.
     */
-   bool checkUnion(ostream& os = tbox::plog) const;
+   bool checkUnion(std::ostream& os = tbox::plog) const;
    void printRefineVarListItems(
       const tbox::List<const typename xfer::RefineClasses<DIM>::Data*>& inlist, 
-      ostream& os = tbox::plog) const;
+      std::ostream& os = tbox::plog) const;
 
    tbox::List< xfer::LocallyActiveDataFillBox<DIM> > d_locally_active_boxes;
    

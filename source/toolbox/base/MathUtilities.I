@@ -1,19 +1,15 @@
 //
-// File:	MathUtilities.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/MathUtilities.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
-// Description:	MathUtilities routines to set up handlers and get signaling NaNs
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1777 $
+// Modified:	$LastChangedDate: 2007-12-13 16:51:06 -0800 (Thu, 13 Dec 2007) $
+// Description:	Utilities class to access common POSIX constants and math ops
 //
 
 #ifdef DEBUG_NO_INLINE
 #define inline
 #endif
-
-#include <float.h>
-#include <math.h>
-#include <limits.h>
 
 namespace SAMRAI {
    namespace tbox {
@@ -55,27 +51,33 @@ TYPE MathUtilities<TYPE>::getEpsilon()
 }
 
 template<class TYPE> inline
-TYPE MathUtilities<TYPE>::getUndefined()
-{
-   return(s_undefined);
-}
-
-template<class TYPE> inline
-bool MathUtilities<TYPE>::isNaN(const TYPE &value)
+bool MathUtilities<TYPE>::isNaN(const TYPE& value)
 {
    return(false);
 }
 
+template<class TYPE> inline
+bool MathUtilities<TYPE>::equalEps(const TYPE& a, const TYPE& b)
+{
+   return(a == b);
+}
+
 template<class TYPE> inline 
-TYPE MathUtilities<TYPE>::Min( TYPE a, TYPE b )
+TYPE MathUtilities<TYPE>::Min(TYPE a, TYPE b)
 {
    return(a < b ? a : b);
 }
 
 template<class TYPE> inline 
-TYPE MathUtilities<TYPE>::Max( TYPE a, TYPE b )
+TYPE MathUtilities<TYPE>::Max(TYPE a, TYPE b)
 {
    return(a > b ? a : b);
+}
+
+template<class TYPE> inline 
+TYPE MathUtilities<TYPE>::Abs(TYPE value)
+{
+   return(value);
 }
 
 #ifdef DEBUG_NO_INLINE

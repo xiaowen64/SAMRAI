@@ -1,9 +1,9 @@
 //
-// File:	Box.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/Box.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Box representing a portion of the AMR index space
 //
 
@@ -11,7 +11,6 @@
 #define included_hier_Box_C
 
 #include "Box.h"
-
 #include "tbox/Utilities.h"
 
 #ifdef DEBUG_NO_INLINE
@@ -83,7 +82,7 @@ void Box<DIM>::set_Box_from_DatabaseBox(const tbox::DatabaseBox& box)
 *************************************************************************
 */
 template<int DIM>
-istream& operator>>(istream& s, Box<DIM>& box)
+std::istream& operator>>(std::istream& s, Box<DIM>& box)
 {
    while (s.get() != '[');
    s >> box.lower();
@@ -94,7 +93,7 @@ istream& operator>>(istream& s, Box<DIM>& box)
 }
 
 template<int DIM>
-ostream& operator<<(ostream& s, const Box<DIM>& box)
+std::ostream& operator<<(std::ostream& s, const Box<DIM>& box)
 {
    if (box.empty()) {
       s << "[(),()]";
@@ -235,8 +234,8 @@ void Box<DIM>::rotateAboutAxis(const int axis, const int num_rotations)
 {
                                                                                 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(axis < DIM);
-   assert(DIM == 3);
+   TBOX_ASSERT(axis < DIM);
+   TBOX_ASSERT(DIM == 3);
 #endif
                                                                                 
    const int a = (axis+1)% DIM;

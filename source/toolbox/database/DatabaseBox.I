@@ -1,17 +1,14 @@
 //
-// File:	DatabaseBox.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/database/DatabaseBox.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A box structure representing a portion of the AMR index space
 //
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -71,7 +68,7 @@ inline
 void DatabaseBox::setDimension(const int dimension)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((dimension >= 0) && (dimension <= DatabaseBox_MAX_DIM));
+   TBOX_ASSERT((dimension >= 0) && (dimension <= DatabaseBox_MAX_DIM));
 #endif
    d_data.d_dimension = dimension;
 }
@@ -80,7 +77,7 @@ inline
 int& DatabaseBox::lower(const int i)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < d_data.d_dimension));
+   TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
 #endif
    return(d_data.d_lo[i]);
 }
@@ -89,7 +86,7 @@ inline
 int& DatabaseBox::upper(const int i)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < d_data.d_dimension));
+   TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
 #endif
    return(d_data.d_hi[i]);
 }
@@ -98,7 +95,7 @@ inline
 int DatabaseBox::lower(const int i) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < d_data.d_dimension));
+   TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
 #endif
    return(d_data.d_lo[i]);
 }
@@ -107,7 +104,7 @@ inline
 int DatabaseBox::upper(const int i) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < d_data.d_dimension));
+   TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
 #endif
    return(d_data.d_hi[i]);
 }

@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataRefinePatchStrategy.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefinePatchStrategy.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 732 $
-// Modified:	$Date: 2005-11-15 15:59:09 -0800 (Tue, 15 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Strategy interface to user routines for refining locally-active AMR data.
 //
  
@@ -236,7 +236,7 @@ public:
    void postprocessRefineBoxes(
       hier::Patch<DIM>& fine,
       const hier::Patch<DIM>& coarse,
-      const xfer::LocallyActiveDataFillBoxSet<DIM>& fine_box,
+      const xfer::LocallyActiveDataFillBoxSet<DIM>& fine_boxes,
       const hier::IntVector<DIM>& ratio);
 
 };

@@ -1,10 +1,10 @@
 //
-// File:	IndexData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/index/IndexData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$Revision: 738 $
-// Modified:	$Date: 2005-11-21 17:31:55 -0800 (Mon, 21 Nov 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: hier::Patch data structure for irregular grid data
 //
 
@@ -18,9 +18,6 @@
 #include "tbox/Utilities.h"
 #include "tbox/IOStream.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_INDEXDATA_VERSION 1
 
@@ -98,7 +95,7 @@ void IndexData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src)
       dynamic_cast<const IndexData<DIM,TYPE> *>(&src);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_src != NULL);
+   TBOX_ASSERT(t_src != NULL);
 #endif
 
    const hier::Box<DIM>& src_ghost_box = t_src->getGhostBox();
@@ -134,8 +131,8 @@ void IndexData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
    const CellOverlap<DIM> *t_overlap =
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_src != NULL);
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_src != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
@@ -189,7 +186,7 @@ int IndexData<DIM,TYPE>::getDataStreamSize(
    const CellOverlap<DIM> *t_overlap =
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    size_t bytes = 0;
    int num_items = 0;
@@ -227,7 +224,7 @@ void IndexData<DIM,TYPE>::packStream(
    const CellOverlap<DIM>  *t_overlap =
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::BoxList<DIM>& boxes = t_overlap->getDestinationBoxList();
@@ -251,7 +248,7 @@ void IndexData<DIM,TYPE>::packStream(
          if (box.contains(t())) {
             TYPE* item = getItem(t());
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(item != NULL);
+            TBOX_ASSERT(item != NULL);
 #endif
             int index_buf[DIM];
             for (int i=0; i<DIM; i++) {
@@ -273,13 +270,17 @@ void IndexData<DIM,TYPE>::unpackStream(
    const CellOverlap<DIM> *t_overlap =
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    int num_items;
    stream >> num_items;
 
    const hier::BoxList<DIM>& boxes = t_overlap->getDestinationBoxList();
+   for (typename hier::BoxList<DIM>::Iterator b(boxes); b; b++) {
+      removeInsideBox(b());
+   }
+
    int i;
    TYPE* items = new TYPE[num_items];
    for (i=0; i<num_items; i++) {
@@ -288,12 +289,6 @@ void IndexData<DIM,TYPE>::unpackStream(
       hier::Index<DIM> index; 
       for (int j=0; j<DIM; j++) {
          index(j) = index_buf[j];
-      }
-      hier::Box<DIM> box;
-      for (typename hier::BoxList<DIM>::Iterator b(boxes); b; b++) {
-         if (b().contains(index)) {
-            box = b();
-         }
       }
       (items+i)->unpackStream(stream, t_overlap->getSourceOffset());
       addItem(index+(t_overlap->getSourceOffset()), items[i]);
@@ -319,7 +314,7 @@ void IndexData<DIM,TYPE>::appendItem(const hier::Index<DIM>& index,
       }
       TYPE* new_item = new TYPE();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert (new_item != NULL);
+      TBOX_ASSERT(new_item != NULL);
 #endif
       *new_item = item; 
       d_data[hier::PatchData<DIM>::getGhostBox().offset(index)].d_item =  new_item;
@@ -337,7 +332,7 @@ void IndexData<DIM,TYPE>::addItem(const hier::Index<DIM>& index, const TYPE& ite
       }
       TYPE* new_item = new TYPE();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert (new_item != NULL);
+      TBOX_ASSERT(new_item != NULL);
 #endif
       *new_item = item;
       d_data[hier::PatchData<DIM>::getGhostBox().offset(index)].d_item =  new_item;
@@ -359,7 +354,7 @@ void IndexData<DIM,TYPE>::removeItem(const hier::Index<DIM>& index)
    if (found) {
       TYPE* tmp = d_data[hier::PatchData<DIM>::getGhostBox().offset(index)].d_item;
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert (tmp != NULL);
+      TBOX_ASSERT(tmp != NULL);
 #endif
       d_data[hier::PatchData<DIM>::getGhostBox().offset(index)].d_item = NULL;
       delete tmp;
@@ -440,17 +435,17 @@ void IndexData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("PDAT_INDEXDATA_VERSION");
    if (ver != PDAT_INDEXDATA_VERSION){
       TBOX_ERROR("IndexData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << endl); 
+          << " : Restart file version different than class version" << std::endl); 
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( INDEX_NAME_BUF_SIZE > (5 + 1 + 6 + 1) );
+   TBOX_ASSERT( INDEX_NAME_BUF_SIZE > (5 + 1 + 6 + 1) );
 #endif
 
    char index_keyword[INDEX_NAME_BUF_SIZE];
@@ -500,13 +495,13 @@ void IndexData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_INDEXDATA_VERSION",PDAT_INDEXDATA_VERSION);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( INDEX_NAME_BUF_SIZE > (5 + 1 + 6 + 1) );
+   TBOX_ASSERT( INDEX_NAME_BUF_SIZE > (5 + 1 + 6 + 1) );
 #endif
 
    char index_keyword[INDEX_NAME_BUF_SIZE]; 
@@ -565,6 +560,38 @@ IndexIterator<DIM,TYPE>::IndexIterator(
    d_index_data(iter.d_index_data)
 {
 }
+
+#ifdef ENABLE_CONST_ITERATOR
+// ConstIndexIterator
+template<int DIM, class TYPE>
+ConstIndexIterator<DIM,TYPE>::ConstIndexIterator()
+{
+}
+
+template<int DIM, class TYPE>
+ConstIndexIterator<DIM,TYPE>::ConstIndexIterator(
+   const IndexData<DIM,TYPE>& data)
+{
+   d_index_data = &data;
+   d_iterator = data.d_list;
+}
+
+template<int DIM, class TYPE>
+ConstIndexIterator<DIM,TYPE>::ConstIndexIterator(
+   const ConstIndexIterator<DIM,TYPE>& iter)
+:  d_iterator(iter.d_iterator),
+   d_index_data(iter.d_index_data)
+{
+}
+
+template<int DIM, class TYPE>
+ConstIndexIterator<DIM,TYPE>::ConstIndexIterator(
+   const IndexIterator<DIM,TYPE>& iter)
+:  d_iterator(iter.d_iterator),
+   d_index_data(iter.d_index_data)
+{
+}
+#endif
 
 
 template<int DIM, class TYPE>

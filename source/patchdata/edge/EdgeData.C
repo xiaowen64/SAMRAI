@@ -1,9 +1,9 @@
 //
-// File:	EdgeData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/edge/EdgeData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated edge centered patch data type
 //
 
@@ -20,9 +20,6 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
 #include <stdio.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_EDGEDATA_VERSION 1
 
@@ -43,15 +40,15 @@ namespace SAMRAI {
 
 template<int DIM, class TYPE>
 EdgeData<DIM,TYPE>::EdgeData(const hier::Box<DIM>& box,
-                                     const int depth,
-                                     const hier::IntVector<DIM>& ghosts,
-                                     tbox::Pointer<tbox::Arena> pool)
+                             int depth,
+                             const hier::IntVector<DIM>& ghosts,
+                             tbox::Pointer<tbox::Arena> pool)
 :  hier::PatchData<DIM>(box, ghosts),
    d_depth(depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
@@ -123,7 +120,7 @@ void EdgeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
    EdgeData<DIM,TYPE> *t_dst =
       dynamic_cast<EdgeData<DIM,TYPE> *>(&dst);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
+   TBOX_ASSERT(t_dst != NULL);
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> box = d_data[d].getBox() * t_dst->d_data[d].getBox();
@@ -173,8 +170,8 @@ void EdgeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
       dynamic_cast<const EdgeOverlap<DIM> *>(&overlap);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
@@ -186,8 +183,8 @@ void EdgeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
 /*
 *************************************************************************
 *									*
-* Perform a fast copy between two arrays at the                         *
-* specified depths, where their	index spaces overlap.			*
+* Perform a fast copy from an edge data object to this edge data        *
+* object at the specified depths, where their index spaces overlap.     *
 *									*
 *************************************************************************
 */
@@ -228,7 +225,7 @@ int EdgeData<DIM,TYPE>::getDataStreamSize(
       dynamic_cast<const EdgeOverlap<DIM> *>(&overlap);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
@@ -258,7 +255,7 @@ void EdgeData<DIM,TYPE>::packStream(tbox::AbstractStream& stream,
       dynamic_cast<const EdgeOverlap<DIM> *>(&overlap);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
@@ -277,7 +274,7 @@ void EdgeData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
    const EdgeOverlap<DIM> *t_overlap =
       dynamic_cast<const EdgeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
@@ -300,11 +297,11 @@ void EdgeData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
 
 template<int DIM, class TYPE>
 size_t EdgeData<DIM,TYPE>::getSizeOfData(const hier::Box<DIM>& box,
-                                         const int depth,
+                                         int depth,
                                          const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    size_t size = 0;
    const hier::Box<DIM> ghost_box = hier::Box<DIM>::grow(box, ghosts);
@@ -324,10 +321,10 @@ size_t EdgeData<DIM,TYPE>::getSizeOfData(const hier::Box<DIM>& box,
 */
 
 template<int DIM, class TYPE>
-void EdgeData<DIM,TYPE>::fill(const TYPE& t, const int d)
+void EdgeData<DIM,TYPE>::fill(const TYPE& t, int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       d_data[i].fill(t, d);
@@ -337,10 +334,10 @@ void EdgeData<DIM,TYPE>::fill(const TYPE& t, const int d)
 template<int DIM, class TYPE>
 void EdgeData<DIM,TYPE>::fill(const TYPE& t,
                                 const hier::Box<DIM>& box,
-                                const int d)
+                                int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       d_data[i].fill(t, EdgeGeometry<DIM>::toEdgeBox(box, i), d);
@@ -373,46 +370,62 @@ void EdgeData<DIM,TYPE>::fillAll(const TYPE& t, const hier::Box<DIM>& box)
 */
 
 template<int DIM, class TYPE>
-void EdgeData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int prec) const
+void EdgeData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                               std::ostream& os, 
+                               int prec) const
 {
    for (int axis = 0; axis < DIM; axis++) {
-      os << "Array Axis hier::Index = " << axis << endl;
+      os << "Array axis = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
 }
 
 template<int DIM, class TYPE>
 void EdgeData<DIM,TYPE>::print(const hier::Box<DIM>& box,
-                                 const int d,
-                                 ostream& os,
-                                 int prec) const
+                               int depth,
+                               std::ostream& os,
+                               int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
    for (int axis = 0; axis < DIM; axis++) {
-      os << "Array Axis hier::Index = " << axis << endl;
-      printAxis(axis, box, d, os, prec);
+      os << "Array axis = " << axis << std::endl;
+      printAxis(axis, box, depth, os, prec);
    }
 }
 
 template<int DIM, class TYPE>
-void EdgeData<DIM,TYPE>::printAxis(const int axis,
-                                     const hier::Box<DIM>& box,
-                                     ostream& os,
-                                     int prec) const
+void EdgeData<DIM,TYPE>::printAxis(int axis,
+                                   const hier::Box<DIM>& box,
+                                   std::ostream& os,
+                                   int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
 #endif
-   if (d_depth > 1) {
-      for (int d = 0; d < d_depth; d++) {
-         os << "Array Component hier::Index = " << d << endl;
-         printAxis(axis, box, d, os, prec);
-      }
-   } else {
-       printAxis(axis, box, 0, os, prec);
+   for (int d = 0; d < d_depth; d++) {
+      os << "Array depth = " << d << std::endl;
+      printAxis(axis, box, d, os, prec);
    }
+}
+
+template <int DIM, class TYPE>
+void EdgeData<DIM,TYPE>::printAxis(int axis, 
+                                   const hier::Box<DIM>& box,
+                                   int depth, 
+                                   std::ostream& os,
+                                   int prec) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+#endif
+   os.precision(prec);
+   for (EdgeIterator<DIM> i(box, axis); i; i++) {
+      os << "array" << i() << " = " << d_data[axis](i(),depth) 
+         << std::endl << std::flush;
+   } 
 }
 
 /*
@@ -430,13 +443,13 @@ void EdgeData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
   
    int ver = database->getInteger("PDAT_EDGEDATA_VERSION");
    if (ver != PDAT_EDGEDATA_VERSION) {
       TBOX_ERROR("EdgeData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << endl);
+          << " : Restart file version different than class version" << std::endl);
    }
 
    d_depth = database->getInteger("d_depth");
@@ -464,7 +477,7 @@ void EdgeData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_EDGEDATA_VERSION", PDAT_EDGEDATA_VERSION);
@@ -480,20 +493,6 @@ void EdgeData<DIM,TYPE>::putSpecializedToDatabase(
    }
 }
 
-template <int DIM, class TYPE>
-void EdgeData<DIM,TYPE>::printAxis(const int axis, const hier::Box<DIM>& box,
-                                   const int d, ostream& os,
-                                   int prec) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
-   assert((axis >= 0) && (axis < DIM));
-#endif
-   os.precision( ((prec < 0) ? 12 : prec) );
-   for (EdgeIterator<DIM> i(box, axis); i; i++) {
-      os << "array" << i() << " = " << d_data[axis](i(),d) << endl << flush;
-   } 
-}
 
 }
 }

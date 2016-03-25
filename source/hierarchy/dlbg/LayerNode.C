@@ -1,8 +1,8 @@
 /*
- * File:        $RCSfile$
- * Copyright:   (c) 1997-2003 The Regents of the University of California
- * Revision:    $Revision: 346 $
- * Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerNode.C $
+ * Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Node in the distribued box graph.
  */
 
@@ -22,9 +22,6 @@
 namespace SAMRAI {
    namespace hier {
 
-using namespace std;
-
-
 template<int DIM>
 LayerNode<DIM>::~LayerNode()
 {
@@ -34,7 +31,7 @@ LayerNode<DIM>::~LayerNode()
 
 
 template<int DIM>
-ostream &operator<<( ostream &co, const LayerNode<DIM> &r )
+std::ostream &operator<<( std::ostream &co, const LayerNode<DIM> &r )
 {
    co << r.d_owner_rank << '#' << r.d_local_index << ':' << r.getBox();
    return co;

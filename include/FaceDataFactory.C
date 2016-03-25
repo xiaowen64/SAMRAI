@@ -1,9 +1,9 @@
 //
-// File:	FaceDataFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/face/FaceDataFactory.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Factory class for creating face data objects
 //
 
@@ -18,10 +18,8 @@
 #include "FaceData.h"
 #include "FaceGeometry.h"
 #include "OuterfaceDataFactory.h"
+#include "Patch.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "FaceDataFactory.I"
@@ -42,20 +40,23 @@ FaceDataFactory<DIM,TYPE>::FaceDataFactory(
    int depth,
    const hier::IntVector<DIM>& ghosts,
    bool fine_boundary_represents_var)
-:  hier::PatchDataFactory<DIM>(),
+:  hier::PatchDataFactory<DIM>(ghosts),
    d_depth(depth),
-   d_ghosts(ghosts),
-   d_fine_boundary_represents_var(fine_boundary_represents_var)
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_mb_trans(NULL)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
 }
 
 template<int DIM, class TYPE>
 FaceDataFactory<DIM,TYPE>::~FaceDataFactory()
 {
+   if (d_mb_trans) {
+      delete d_mb_trans;
+   }
 }
 
 /*
@@ -68,10 +69,10 @@ FaceDataFactory<DIM,TYPE>::~FaceDataFactory()
 
 template<int DIM, class TYPE>
 tbox::Pointer< hier::PatchDataFactory<DIM> >
-FaceDataFactory<DIM,TYPE>::cloneFactory()
+FaceDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
    return(new FaceDataFactory<DIM,TYPE>(d_depth, 
-                                          d_ghosts,
+                                          ghosts,
                                           d_fine_boundary_represents_var));
 }
 
@@ -94,8 +95,16 @@ FaceDataFactory<DIM,TYPE>::allocate(
    }
 
    hier::PatchData<DIM> *patchdata =
-      new (pool) FaceData<DIM,TYPE>(box, d_depth, d_ghosts, pool);
+      new (pool) FaceData<DIM,TYPE>(box, d_depth, this -> d_ghosts, pool);
    return(tbox::Pointer< hier::PatchData<DIM> >(patchdata, pool));
+}
+
+template<int DIM, class TYPE>
+tbox::Pointer< hier::PatchData<DIM> >
+FaceDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
+                                    tbox::Pointer<tbox::Arena> pool) const
+{
+   return (allocate(patch.getBox(), pool));
 }
 
 /*
@@ -110,35 +119,10 @@ template<int DIM, class TYPE>
 tbox::Pointer< hier::BoxGeometry<DIM> >
 FaceDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
 {
-   hier::BoxGeometry<DIM> *boxgeometry = new FaceGeometry<DIM>(box, d_ghosts);
+   hier::BoxGeometry<DIM> *boxgeometry = new FaceGeometry<DIM>(box, this -> d_ghosts);
    return(tbox::Pointer< hier::BoxGeometry<DIM> >(boxgeometry));
 }
 
-/*
-*************************************************************************
-*									*
-* Get and set the default ghost cell widths for the face data objects	*
-* created with this factory.						*
-*									*
-*************************************************************************
-*/
-
-template<int DIM, class TYPE>
-const hier::IntVector<DIM>&
-FaceDataFactory<DIM,TYPE>::getDefaultGhostCellWidth() const
-{
-   return(d_ghosts);
-}
-
-template<int DIM, class TYPE>
-void FaceDataFactory<DIM,TYPE>::setDefaultGhostCellWidth(
-   const hier::IntVector<DIM>& ghosts)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
-#endif
-   d_ghosts = ghosts;
-}
 
 /*
 *************************************************************************
@@ -154,7 +138,7 @@ size_t FaceDataFactory<DIM,TYPE>::getSizeOfMemory(const hier::Box<DIM>& box) con
    const size_t obj =
       tbox::Arena::align(sizeof(FaceData<DIM,TYPE>));
    const size_t data =
-      FaceData<DIM,TYPE>::getSizeOfData(box, d_depth, d_ghosts);
+      FaceData<DIM,TYPE>::getSizeOfData(box, d_depth, this -> d_ghosts);
    return(obj+data);
 }
 

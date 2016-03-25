@@ -1,9 +1,9 @@
 //
-// File:	OuterfaceVariable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outerface/OuterfaceVariable.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Variable class for defining outerface centered variables
 //
 
@@ -18,7 +18,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_Variable
@@ -28,43 +27,20 @@ using namespace std;
 namespace SAMRAI {
     namespace pdat {
 
-/**
- * Class OuterfaceVariable<DIM> is a templated variable class used to define
- * face-centered quantities on an AMR mesh.  It is templated on the type
- * of the underlying data (e.g., double, int, bool, etc.).  Outerface variable
- * data is associated with the faces (or sides) of cells.  However, it differs
- * from the FaceVariable<DIM> class in that outerface quantities reside only
- * on the faces residing on the boundary of a patch.  Outerface data is
- * stored in DIM arrays, each of which holds values for faces having the
- * same outward normal vector.  For example, a three-dimensional outerface
- * variable can be used to create face-centered data arrays over a box
- * [l0:u0,l1:u1,l2:u2] that can be dimensioned as:
- * \verbatim
-
-     [ l1 : u1 ,
-       l2 : u2 , d ]   ,
-
-     [ l2 : u2 ,
-       l0 : u0 , d ]   ,
-
-     [ l0 : u0 ,
-       l1 : u1 , d ]   ,
-
- * \endverbatim
- * for the upper and lower x, y, and z (or 0, 1, 2) face directions, 
- * respectively, and where d is the depth index (i.e., number of values at 
- * each face index location).  Note that the array orderings are permuted 
- * to match the conventions of the FaceVariable<DIM> class.  One- and two-
- * dimensional outerface variables define storage similarly.  For more 
- * information on indexing and manipulating outerface patch data objects, 
- * see the classes OuterfaceData<DIM> and OuterfaceGeometry<DIM>.
+/*!
+ * @brief Class OuterfaceVariable<DIM> is a templated variable class
+ * used to define face-centered data quantities only on patch boundaries.
+ * It is a subclass of hier::Variable and is templated on the type
+ * of the underlying data (e.g., double, int, bool, etc.).
  *
- * IMPORTANT: The class OutersideVariable<DIM> and associated classes define
- * the same storage as this outerface variable class, except that the indices
- * are not permuted in the outerside data type.  Also, outerface and outerside 
- * data classes are intended to interact with their face-centered and 
- * side-centered data counterparts, respectively.  Mixing types, while 
- * allowed, is discouraged to prevent undesirable behavior.
+ * Note that the data layout in the outerface data arrays matches the corresponding 
+ * array sections provided by the face data implementation. See header file for 
+ * the OuterfaceData<DIM> class for a more detailed description of the data layout.
+ *
+ * IMPORTANT: The class OutersideVariable<DIM> and associated "outerside 
+ * data" classes define the same storage as this outerface variable class, 
+ * except that the individual array indices are not permuted in the outerside 
+ * data type.
  *
  * @see pdat::FaceData
  * @see pdat::OuterfaceData
@@ -76,31 +52,31 @@ template<int DIM, class TYPE>
 class OuterfaceVariable : public hier::Variable<DIM>
 {
 public:
-   /**
-    * Create an outerface variable object having properties specified by the
-    * name and depth (i.e., number of data values at each index location).
-    * The default depth is one.   The ghost cell width for all outerface
-    * data is currently fixed at zero; this may be changed in the future 
-    * if needed.
+   /*!
+    * @brief Create an outerface variable object having properties
+    * specified by the name and depth (i.e., number of data values
+    * at each index location).  The default depth is one.
+    *
+    * Note that The ghost cell width for all outerface data is currently
+    * fixed at zero; this may be changed in the future if needed.
     */
-   OuterfaceVariable(const string &name,
-                           int depth = 1);
+   OuterfaceVariable(const std::string &name,
+                     int depth = 1);
 
-   /**
-    * Virtual destructor for outerface variable objects.
+   /*!
+    * @brief Virtual destructor for outerface variable objects.
     */
    virtual ~OuterfaceVariable<DIM,TYPE>();
-
-   /**
-    * Return a boolean true value indicating that fine patch values take precedence 
-    * on coarse-fine interfaces. 
+ 
+   /*!
+    * @brief Return a boolean true value indicating that fine patch
+    * values take precedence on coarse-fine interfaces.
     */
    bool fineBoundaryRepresentsVariable() const {return true;}
-
-   /**
-    * Return true since the face data index space (and hence the outerface data index
-    * space) extends beyond the interior of patches.  That is, outerface data lives 
-    * on patch borders.
+ 
+   /*!
+    * @brief Return true indicating that outerface data
+    * exists on the patch boundary.
     */
    bool dataLivesOnPatchBorder() const {return true;}
 

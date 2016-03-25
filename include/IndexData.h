@@ -1,10 +1,10 @@
 //
-// File:	IndexData.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/index/IndexData.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: hier::Patch data structure for irregular grid data
 //
 
@@ -36,12 +36,16 @@
 #ifndef included_tbox_Database
 #include "tbox/Database.h"
 #endif
+#define ENABLE_CONST_ITERATOR 1
 
 namespace SAMRAI {
     namespace pdat {
 
 template<int DIM, class TYPE> class IndexDataNode;
 template<int DIM, class TYPE> class IndexIterator;
+#ifdef ENABLE_CONST_ITERATOR
+template<int DIM, class TYPE> class ConstIndexIterator;
+#endif
 
 /**
  * Class IndexData<DIM> is a templated patch data type for manipulating 
@@ -94,6 +98,9 @@ public:
     * Define the iterator.
     */
    typedef IndexIterator<DIM,TYPE> Iterator;
+#ifdef ENABLE_CONST_ITERATOR
+   typedef ConstIndexIterator<DIM,TYPE> ConstIterator;
+#endif
 
    /**
     * The constructor for an IndexData object.  The box describes the interior
@@ -224,6 +231,9 @@ public:
       tbox::Pointer<tbox::Database> database);
 
    friend class IndexIterator<DIM,TYPE>;
+#ifdef ENABLE_CONST_ITERATOR
+   friend class ConstIndexIterator<DIM,TYPE>;
+#endif
 
 private:
    IndexData(const IndexData<DIM,TYPE>&); // not implemented
@@ -239,6 +249,9 @@ public:
 
    friend class IndexData<DIM,TYPE>;
    friend class IndexIterator<DIM,TYPE>;
+#ifdef ENABLE_CONST_ITERATOR
+   friend class ConstIndexIterator<DIM,TYPE>;
+#endif
 
    IndexDataNode();
 
@@ -353,10 +366,108 @@ public:
     */
    bool operator!=(const IndexIterator<DIM,TYPE>& iterator) const;
 
+#ifdef ENABLE_CONST_ITERATOR
+   friend class ConstIndexIterator<DIM,TYPE>;
+#endif
 private:
    typename tbox::List< hier::Index<DIM> >::Iterator d_iterator;
    IndexData<DIM,TYPE>* d_index_data;
 };
+
+#ifdef ENABLE_CONST_ITERATOR
+template<int DIM, class TYPE>
+class ConstIndexIterator
+{
+public:
+   /**
+    * Default constructor for the index list iterator.  The iterator must
+    * be initialized before it can be used to iterate over an IndexData object.
+    */
+   ConstIndexIterator();
+
+   /**
+    * Constructor for the index list iterator.  The iterator will iterate
+    * over the irregular index set of the argument data object.
+    */
+   ConstIndexIterator(const IndexData<DIM,TYPE>& data);
+
+   /**
+    * Copy constructor for the index list iterator.
+    */
+   ConstIndexIterator(const ConstIndexIterator<DIM,TYPE>& iterator);
+   ConstIndexIterator(const IndexIterator<DIM,TYPE>& iterator);
+
+   /**
+    * Assignment operator for the index list iterator.
+    */
+   ConstIndexIterator<DIM,TYPE>& operator=(const ConstIndexIterator<DIM,TYPE>& iterator);
+   ConstIndexIterator<DIM,TYPE>& operator=(const IndexIterator<DIM,TYPE>& iterator);
+
+   /**
+    * Destructor for the index list iterator.
+    */
+   ~ConstIndexIterator<DIM,TYPE>();
+
+   /**
+    * Return the current item in the irregular index set.
+    */
+   const TYPE& operator*();
+
+   /**
+    * Return the current item in the irregular index set.
+    */
+   const TYPE& operator()();
+
+   /**
+    * Return the current item in the irregular index set.
+    */
+   const TYPE& getItem();
+
+   /**
+    * Return the index of the current item in the irregular index set
+    */
+   const hier::Index<DIM>& getIndex() const;
+
+   /**
+    * Return true if the iterator points to a valid item in the index set.
+    */
+   operator bool() const;
+
+#ifndef LACKS_BOOL_VOID_RESOLUTION
+   /**
+    * Return a non-null if the iterator points to a valid item in the index
+    * set.
+    */
+   operator const void*() const;
+#endif
+
+   /**
+    * Return whether the iterator points to a valid item in the index set.
+    * This operator mimics the !p operation applied to a pointer p.
+    */
+   bool operator!() const;
+
+   /**
+    * Increment the iterator to point to the next item in the index set.
+    */
+   void operator++(int);
+
+   /**
+    * Test two iterators for equality (pointing to the same item).
+    */
+   bool operator==(const ConstIndexIterator<DIM,TYPE>& iterator) const;
+
+   /**
+    * Test two iterators for inequality (pointing to different items).
+    */
+   bool operator!=(const ConstIndexIterator<DIM,TYPE>& iterator) const;
+
+   friend class IndexIterator<DIM,TYPE>;
+private:
+   typename tbox::List< hier::Index<DIM> >::Iterator d_iterator;
+   const IndexData<DIM,TYPE>* d_index_data;
+};
+#endif
 
 }
 }

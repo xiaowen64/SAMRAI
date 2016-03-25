@@ -1,9 +1,9 @@
 //
-// File:        LocallyActiveDataRefineSchedule.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.C $
 // Package:     SAMRAI data transfer
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 697 $
-// Modified:	$Date: 2005-11-03 12:27:48 -0800 (Thu, 03 Nov 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Refine schedule for locally-active data transfer between AMR levels
 //
 
@@ -25,14 +25,12 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "LocallyActiveDataFillBox.h"
 #include "RefineCopyTransaction.h"
 
 #include "tbox/PIO.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace xfer {
@@ -56,7 +54,7 @@ template<int DIM> const hier::IntVector<DIM>
 template<int DIM> const hier::IntVector<DIM>
    LocallyActiveDataRefineSchedule<DIM>::s_constant_one_intvector = 
       hier::IntVector<DIM>(1);
-template<int DIM> string
+template<int DIM> std::string
    LocallyActiveDataRefineSchedule<DIM>::s_schedule_generation_method = 
       "BOX_TREE";
 
@@ -70,7 +68,7 @@ template<int DIM> string
 
 template<int DIM>
 void LocallyActiveDataRefineSchedule<DIM>::setScheduleGenerationMethod(
-   const string& method)
+   const std::string& method)
 {
    if ( !((method == "ORIG_NSQUARED") ||
           (method == "BOX_GRAPH") ||
@@ -79,7 +77,7 @@ void LocallyActiveDataRefineSchedule<DIM>::setScheduleGenerationMethod(
                  << "Given method string "
                  << method << " is invalid.\n Options are\n"
                  << "'ORIG_NSQUARED', 'BOX_GRAPH', and 'BOX_TREE'."
-                 << endl);
+                 << std::endl);
    }
 
    s_schedule_generation_method = method;
@@ -111,14 +109,14 @@ LocallyActiveDataRefineSchedule<DIM>::LocallyActiveDataRefineSchedule(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!dst_level_mgr.isNull());
-   assert(dst_level_mgr->checkLevel(dst_level));
-   assert(!src_level.isNull());
-   assert(!src_level_mgr.isNull());
-   assert(src_level_mgr->checkLevel(src_level));
-   assert(!refine_classes.isNull());
-   assert(!transaction_factory.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!dst_level_mgr.isNull());
+   TBOX_ASSERT(dst_level_mgr->checkLevel(dst_level));
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(!src_level_mgr.isNull());
+   TBOX_ASSERT(src_level_mgr->checkLevel(src_level));
+   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
    t_fill_data = tbox::TimerManager::getManager() ->
@@ -244,16 +242,16 @@ LocallyActiveDataRefineSchedule<DIM>::LocallyActiveDataRefineSchedule(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!dst_level_mgr.isNull());
-   assert(dst_level_mgr->checkLevel(dst_level));
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!dst_level_mgr.isNull());
+   TBOX_ASSERT(dst_level_mgr->checkLevel(dst_level));
    if (!src_level.isNull()) {
-      assert(!src_level_mgr.isNull());
-      assert(src_level_mgr->checkLevel(src_level));
+      TBOX_ASSERT(!src_level_mgr.isNull());
+      TBOX_ASSERT(src_level_mgr->checkLevel(src_level));
    }
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
-   assert(!refine_classes.isNull());
-   assert(!transaction_factory.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
    t_fill_data = tbox::TimerManager::getManager() ->
@@ -352,17 +350,17 @@ LocallyActiveDataRefineSchedule<DIM>::LocallyActiveDataRefineSchedule(
    xfer::LocallyActiveDataRefinePatchStrategy<DIM>* patch_strategy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!dst_level_mgr.isNull());
-   assert(dst_level_mgr->checkLevel(dst_level));
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!dst_level_mgr.isNull());
+   TBOX_ASSERT(dst_level_mgr->checkLevel(dst_level));
    if (!src_level.isNull()) {
-      assert(!src_level_mgr.isNull());
-      assert(src_level_mgr->checkLevel(src_level));
+      TBOX_ASSERT(!src_level_mgr.isNull());
+      TBOX_ASSERT(src_level_mgr->checkLevel(src_level));
    }
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
-   assert(!refine_classes.isNull());
-   assert(!transaction_factory.isNull());
-   assert(la_fill_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
+   TBOX_ASSERT(la_fill_boxes.getSize() == dst_level->getNumberOfPatches());
 #endif
 
    t_fill_data = tbox::TimerManager::getManager() ->
@@ -427,8 +425,8 @@ LocallyActiveDataRefineSchedule<DIM>::LocallyActiveDataRefineSchedule(
    const int nfill_boxes = la_fill_boxes.getSize();
    for (int p = 0; p < nfill_boxes; p++) {
       d_max_fill_boxes =
-            tbox::Utilities::imax(d_max_fill_boxes,
-                                  la_fill_boxes[p].getNumberOfBoxes());
+         tbox::MathUtilities<int>::Max(d_max_fill_boxes,
+                                       la_fill_boxes[p].getNumberOfBoxes());
    }
  
    bool use_time_interpolation = true;
@@ -499,11 +497,11 @@ void LocallyActiveDataRefineSchedule<DIM>::finishScheduleConstruction(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!src_level.isNull()) {
-      assert(!src_level_mgr.isNull());
-      assert(src_level_mgr->checkLevel(src_level));
+      TBOX_ASSERT(!src_level_mgr.isNull());
+      TBOX_ASSERT(src_level_mgr->checkLevel(src_level));
    }
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
-   assert(la_fill_boxes.getSize() == d_dst_level->getNumberOfPatches());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(la_fill_boxes.getSize() == d_dst_level->getNumberOfPatches());
 #endif
 
    d_coarse_priority_level_schedule = new tbox::Schedule();
@@ -616,13 +614,13 @@ void LocallyActiveDataRefineSchedule<DIM>::finishScheduleConstruction(
          TBOX_ERROR("Internal xfer::LocallyActiveDataRefineSchedule<DIM> error..."
                     << "\n In finishScheduleConstruction() -- "
                     << "\n No coarser levels...could not fill from coarser."
-                    << endl);
+                    << std::endl);
       } else {
          if (hierarchy.isNull()) {
             TBOX_ERROR("Internal xfer::LocallyActiveDataRefineSchedule<DIM> error..."
                        << "\n In finishScheduleConstruction() -- "
                        << "\n Need to fill from coarser hierarchy level and \n"
-                       << "hierarchy is unavailable." << endl);
+                       << "hierarchy is unavailable." << std::endl);
          }
       }
 
@@ -788,7 +786,9 @@ void LocallyActiveDataRefineSchedule<DIM>::finishScheduleConstruction(
             d_la_fine_fill_boxes[cp].getUnionActiveRefineVarData();
          for (typename tbox::List<const typename xfer::RefineClasses<DIM>::Data*>::Iterator 
               vi(var_data); vi; vi++) {
-            d_coarse_level_mgr->setPatchDataActive(vi()->d_scratch, cp);
+            d_coarse_level_mgr->setPatchDataActive( 
+                                hier::PatchDataId(vi()->d_scratch), 
+                                hier::PatchNumber(cp) );
          }
  
          for (typename hier::BoxList<DIM>::Iterator cfb(coarse_to_fill); cfb; cfb++) {
@@ -990,9 +990,9 @@ void LocallyActiveDataRefineSchedule<DIM>::fillPhysicalBoundaries(
    double fill_time) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!d_dst_level_mgr.isNull());
-   assert(d_dst_level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!d_dst_level_mgr.isNull());
+   TBOX_ASSERT(d_dst_level_mgr->checkLevel(level));
 #endif
 
    if (d_refine_patch_strategy) {
@@ -1005,7 +1005,8 @@ void LocallyActiveDataRefineSchedule<DIM>::fillPhysicalBoundaries(
             tbox::List<const typename xfer::RefineClasses<DIM>::Data*> active_data;
             for (int iri = 0; iri < d_number_refine_items; iri++) {
                if ( d_dst_level_mgr->getPatchDataActive(
-                    d_refine_items[iri]->d_scratch, p()) ) {
+                                     hier::PatchDataId(d_refine_items[iri]->d_scratch), 
+                                     hier::PatchNumber(p()) ) ) {
                    /*
                     * IMPORTANT! Proper generation of refine data lists requires
                     *            appendItem(); addItem() is incorrect since
@@ -1046,9 +1047,9 @@ void LocallyActiveDataRefineSchedule<DIM>::allocateScratchSpace(
    hier::LocallyActiveDataPatchLevelManager<DIM>& allocate_mgr) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    hier::LocallyActiveDataPatchLevelManager<DIM> preprocess_mgr(level);
@@ -1058,11 +1059,14 @@ void LocallyActiveDataRefineSchedule<DIM>::allocateScratchSpace(
 
       for (int iri = 0; iri < d_number_refine_items; iri++) {
          const int data_id = d_refine_items[iri]->d_scratch;
-         if ( level_mgr->getPatchDataActive(data_id, p()) ) {
+         if ( level_mgr->getPatchDataActive( hier::PatchDataId(data_id), 
+                                             hier::PatchNumber(p()) ) ) {
             if (!patch->checkAllocated(data_id)) {
-               allocate_mgr.setPatchDataActive(data_id, p());
+               allocate_mgr.setPatchDataActive( hier::PatchDataId(data_id), 
+                                                hier::PatchNumber(p()) );
             }
-            preprocess_mgr.setPatchDataActive(data_id, p());
+            preprocess_mgr.setPatchDataActive( hier::PatchDataId(data_id), 
+                                               hier::PatchNumber(p()) );
          }
       }
    }
@@ -1092,9 +1096,9 @@ void LocallyActiveDataRefineSchedule<DIM>::copyScratchToDestination(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator p(level); p; p++) {
@@ -1103,12 +1107,13 @@ void LocallyActiveDataRefineSchedule<DIM>::copyScratchToDestination(
       for (int iri = 0; iri < d_number_refine_items; iri++) {
          const int src_id = d_refine_items[iri]->d_scratch;
          const int dst_id = d_refine_items[iri]->d_dst;
-         if ( level_mgr->getPatchDataActive(dst_id, p()) &&
+         if ( level_mgr->getPatchDataActive( hier::PatchDataId(dst_id), 
+                                             hier::PatchNumber(p()) ) &&
               (src_id != dst_id) ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
             const double dst_time = patch->getPatchData(dst_id)->getTime();
             const double src_time = patch->getPatchData(src_id)->getTime();
-            assert(dst_time == src_time);
+            TBOX_ASSERT(dst_time == src_time);
 #endif
             patch->getPatchData(dst_id)->copy(*patch->getPatchData(src_id));
          }
@@ -1171,14 +1176,21 @@ void LocallyActiveDataRefineSchedule<DIM>::refineScratchData() const
               vi(fbi().getActiveRefineVarData()); vi; vi++) {
             if ( !(vi()->d_oprefine).isNull() ) {
                const int scratch_id = vi()->d_scratch;
-               const hier::Box<DIM> scratch_space =
-                  fine_patch->getPatchData(scratch_id)->getGhostBox();
-               vi()->d_oprefine->refine(*fine_patch,
-                                        *crse_patch,
-                                        scratch_id,
-                                        scratch_id,
-                                        fbi().getBox()*scratch_space,
-                                        ratio);
+               if ( d_coarse_level_mgr->getPatchDataActive( hier::PatchDataId(scratch_id),
+                                                            hier::PatchNumber(p()) ) ) {
+#ifdef DEBUG_CHECK_ASSERTIONS
+                  TBOX_ASSERT(fine_patch->checkAllocated(scratch_id));
+                  TBOX_ASSERT(crse_patch->checkAllocated(scratch_id));
+#endif
+                  const hier::Box<DIM>& scratch_space =
+                     fine_patch->getPatchData(scratch_id)->getGhostBox();
+                  vi()->d_oprefine->refine(*fine_patch,
+                                           *crse_patch,
+                                           scratch_id,
+                                           scratch_id,
+                                           fbi().getBox()*scratch_space,
+                                           ratio);
+               }
             }
          } // loop over active variables
       } // loop over fill boxes
@@ -1227,15 +1239,15 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_priority_schedule.isNull());
-   assert(!fine_priority_schedule.isNull());
-   assert(!dst_level.isNull());
-   assert(!dst_level_mgr.isNull());
-   assert(dst_level_mgr->checkLevel(dst_level));
-   assert(!src_level.isNull());
-   assert(src_level_mgr->checkLevel(src_level));
-   assert(la_fill_boxes.getSize() == dst_level->getNumberOfPatches());
-   assert(la_unfilled_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(!coarse_priority_schedule.isNull());
+   TBOX_ASSERT(!fine_priority_schedule.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!dst_level_mgr.isNull());
+   TBOX_ASSERT(dst_level_mgr->checkLevel(dst_level));
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(src_level_mgr->checkLevel(src_level));
+   TBOX_ASSERT(la_fill_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(la_unfilled_boxes.getSize() == dst_level->getNumberOfPatches());
 #endif
 
    const int dst_npatches = dst_level->getNumberOfPatches();
@@ -1251,7 +1263,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
 
    hier::IntVector<DIM> growth =
       hier::IntVector<DIM>::max(d_max_scratch_gcw, getMaxDestinationGhosts());
-   int max_gcw = tbox::Utilities::imax(growth.max(), 1);
+   int max_gcw = tbox::MathUtilities<int>::Max(growth.max(), 1);
    hier::IntVector<DIM> dst_growth(max_gcw);
 
    /*
@@ -1286,7 +1298,8 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
          bool some_src_data_is_missing = false;
          for (typename tbox::List<const typename xfer::RefineClasses<DIM>::Data*>::Iterator
               vi(dst_patch_active_data); vi; vi++) {
-            if (!src_level_mgr->getPatchDataActive(vi()->d_src, src_patch_id)) {
+            if (!src_level_mgr->getPatchDataActive( hier::PatchDataId(vi()->d_src), 
+                                                    hier::PatchNumber(src_patch_id) ) ) {
                /*
                 * IMPORTANT! Proper generation of refine data lists requires
                 *            appendItem(); addItem() is incorrect!
@@ -1400,8 +1413,12 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
                     l(d_refine_classes->getIterator(nc)); l; l++) {
                int ritem_count = l().d_tag;
                active_ritem[ritem_count] = false;
-               if ( src_level_mgr->getPatchDataActive(l().d_src, src_patch_id) &&
-                    dst_level_mgr->getPatchDataActive(l().d_dst, dst_patch_id) ) {
+               if ( src_level_mgr->getPatchDataActive( 
+                                   hier::PatchDataId(l().d_src), 
+                                   hier::PatchNumber(src_patch_id) ) &&
+                    dst_level_mgr->getPatchDataActive( 
+                                   hier::PatchDataId(l().d_dst), 
+                                   hier::PatchNumber(dst_patch_id) ) ) {
                   active_equivalence_class[nc] = true;
                   active_ritem[ritem_count] = true;
                }
@@ -1459,7 +1476,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
                         dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id);
    
                      const hier::IntVector<DIM>& dst_gcw = 
-                        dst_pdf->getDefaultGhostCellWidth();
+                        dst_pdf->getGhostCellWidth();
 
                      /*
                       * Iterate over boxes in fill box list for destination patch.
@@ -1501,7 +1518,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
                               << "\n Overlap is NULL for "
                               << "\n src box = " << src_box
                               << "\n dst box = " << dst_box
-                              << "\n src mask = " << src_mask << endl);
+                              << "\n src mask = " << src_mask << std::endl);
                         }
 #endif
 
@@ -1623,10 +1640,10 @@ void LocallyActiveDataRefineSchedule<DIM>::allocateDefaultFillBoxes(
    const hier::IntVector<DIM>& fill_ghost_width)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(la_fill_boxes.getSize() == 0);
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(!(fill_ghost_width < s_constant_zero_intvector));
+   TBOX_ASSERT(la_fill_boxes.getSize() == 0);
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(!(fill_ghost_width < s_constant_zero_intvector));
 #endif
 
    /*
@@ -1662,7 +1679,9 @@ void LocallyActiveDataRefineSchedule<DIM>::allocateDefaultFillBoxes(
    for (int p = 0; p < nboxes; p++) {
       tbox::List<const typename xfer::RefineClasses<DIM>::Data*> var_data;
       for (int iri = 0; iri < d_number_refine_items; iri++) {
-         if ( level_mgr->getPatchDataActive(d_refine_items[iri]->d_dst, p) ) {
+         if ( level_mgr->getPatchDataActive( 
+                         hier::PatchDataId(d_refine_items[iri]->d_dst), 
+                         hier::PatchNumber(p) ) ) {
             /*
              * IMPORTANT! Proper generation of refine data lists requires
              *            appendItem(); addItem() is incorrect!
@@ -1675,8 +1694,8 @@ void LocallyActiveDataRefineSchedule<DIM>::allocateDefaultFillBoxes(
                                                    var_data);
 
       d_max_fill_boxes =
-            tbox::Utilities::imax(d_max_fill_boxes,
-                                  la_fill_boxes[p].getNumberOfBoxes());
+         tbox::MathUtilities<int>::Max(d_max_fill_boxes,
+                                       la_fill_boxes[p].getNumberOfBoxes());
 
    }
 
@@ -1700,7 +1719,7 @@ LocallyActiveDataRefineSchedule<DIM>::getMaxDestinationGhosts() const
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       const int dst_id = d_refine_items[iri]->d_dst;
-      gcw.max(pd->getPatchDataFactory(dst_id)->getDefaultGhostCellWidth());
+      gcw.max(pd->getPatchDataFactory(dst_id)->getGhostCellWidth());
    }
 
    return(gcw);
@@ -1724,7 +1743,7 @@ LocallyActiveDataRefineSchedule<DIM>::getMaxScratchGhosts() const
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
-      gcw.max(pd->getPatchDataFactory(scratch_id)->getDefaultGhostCellWidth());
+      gcw.max(pd->getPatchDataFactory(scratch_id)->getGhostCellWidth());
    }
 
    return(gcw);
@@ -1884,7 +1903,7 @@ void LocallyActiveDataRefineSchedule<DIM>::initialCheckRefineClassItems() const
 
             const int scratch = ref_item->d_scratch;
             const hier::IntVector<DIM>& scratch_gcw(pd->getPatchDataFactory(scratch)->
-                                               getDefaultGhostCellWidth());
+                                               getGhostCellWidth());
 
             if (user_gcw > scratch_gcw) {
                TBOX_ERROR("Bad data given to xfer::LocallyActiveDataRefineSchedule<DIM>...\n"
@@ -1892,7 +1911,7 @@ void LocallyActiveDataRefineSchedule<DIM>::initialCheckRefineClassItems() const
                           << user_gcw
                           << "\nis larger than ghost cell width of `Scratch'\n"
                           << "patch data " << pd->mapIndexToName(scratch)
-                          << " , which is " << scratch_gcw << endl);
+                          << " , which is " << scratch_gcw << std::endl);
             }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1936,60 +1955,60 @@ void LocallyActiveDataRefineSchedule<DIM>::clearRefineItems()
 */
 
 template<int DIM>
-void LocallyActiveDataRefineSchedule<DIM>::printClassData(ostream& stream) const
+void LocallyActiveDataRefineSchedule<DIM>::printClassData(std::ostream& stream) const
 {
    stream << "LocallyActiveDataRefineSchedule<DIM>::printClassData()\n";
    stream << "--------------------------------------\n";
    stream << "s_schedule_generation_method = "
-          << s_schedule_generation_method << endl;
+          << s_schedule_generation_method << std::endl;
 
-   stream << "d_refine_classes ..." << endl;
+   stream << "d_refine_classes ..." << std::endl;
    d_refine_classes->printClassData(stream);
 
-   stream << "d_dst_level = " << (hier::PatchLevel<DIM>*)d_dst_level << endl;
+   stream << "d_dst_level = " << (hier::PatchLevel<DIM>*)d_dst_level << std::endl;
    stream << "d_dst_level_mgr = " 
-          << (hier::LocallyActiveDataPatchLevelManager<DIM>*)d_dst_level_mgr << endl;
+          << (hier::LocallyActiveDataPatchLevelManager<DIM>*)d_dst_level_mgr << std::endl;
 
    stream << "d_refine_patch_strategy = " 
-          << (xfer::LocallyActiveDataRefinePatchStrategy<DIM>*)d_refine_patch_strategy << endl;
+          << (xfer::LocallyActiveDataRefinePatchStrategy<DIM>*)d_refine_patch_strategy << std::endl;
 
-   stream << "d_max_stencil_gcw = " << d_max_stencil_gcw << endl; 
-   stream << "d_max_scratch_gcw = " << d_max_scratch_gcw << endl; 
-   stream << "d_boundary_fill_ghost_width = " << d_boundary_fill_ghost_width << endl; 
+   stream << "d_max_stencil_gcw = " << d_max_stencil_gcw << std::endl; 
+   stream << "d_max_scratch_gcw = " << d_max_scratch_gcw << std::endl; 
+   stream << "d_boundary_fill_ghost_width = " << d_boundary_fill_ghost_width << std::endl; 
 
-   stream << "d_force_boundary_fill = " << d_force_boundary_fill << endl;
-   stream << "d_domain_is_one_box = " << d_domain_is_one_box << endl;
-   stream << "d_domain_box = " << d_domain_box << endl;
-   stream << "d_num_periodic_directions = " << d_num_periodic_directions << endl;
-   stream << "d_periodic_shift = " << d_periodic_shift << endl;
+   stream << "d_force_boundary_fill = " << d_force_boundary_fill << std::endl;
+   stream << "d_domain_is_one_box = " << d_domain_is_one_box << std::endl;
+   stream << "d_domain_box = " << d_domain_box << std::endl;
+   stream << "d_num_periodic_directions = " << d_num_periodic_directions << std::endl;
+   stream << "d_periodic_shift = " << d_periodic_shift << std::endl;
 
-   stream << "d_coarse_level = " << (hier::PatchLevel<DIM>*)d_coarse_level << endl;
+   stream << "d_coarse_level = " << (hier::PatchLevel<DIM>*)d_coarse_level << std::endl;
    stream << "d_coarse_level_mgr = " 
-          << (hier::LocallyActiveDataPatchLevelManager<DIM>*)d_coarse_level_mgr << endl;
+          << (hier::LocallyActiveDataPatchLevelManager<DIM>*)d_coarse_level_mgr << std::endl;
 
    stream << "d_coarse_to_fine_mapping size = "
-          << d_coarse_to_fine_mapping.size() << endl;
+          << d_coarse_to_fine_mapping.size() << std::endl;
 
    stream << "d_la_fine_fill_boxes size = "
-          << d_la_fine_fill_boxes.size() << endl;
+          << d_la_fine_fill_boxes.size() << std::endl;
 
    if (!d_coarse_priority_level_schedule.isNull()) {
-      stream << "Printing coarse priority schedule..." << endl;
+      stream << "Printing coarse priority schedule..." << std::endl;
       d_coarse_priority_level_schedule->printClassData(stream);
    } else {
-      stream << "coarse priority schedule is null" << endl;
+      stream << "coarse priority schedule is null" << std::endl;
    }
    if (!d_fine_priority_level_schedule.isNull()) {
-      stream << "Printing fine priority schedule..." << endl;
+      stream << "Printing fine priority schedule..." << std::endl;
       d_fine_priority_level_schedule->printClassData(stream);
    } else {
-      stream << "fine priority schedule is null" << endl;
+      stream << "fine priority schedule is null" << std::endl;
    }
    if (!d_coarse_schedule.isNull()) {
-      stream << "Printing coarse refine schedule..." << endl;
+      stream << "Printing coarse refine schedule..." << std::endl;
       d_coarse_schedule->printClassData(stream);
    } else {
-      stream << "coarse refine schedule is null" << endl;
+      stream << "coarse refine schedule is null" << std::endl;
    }
 }
 

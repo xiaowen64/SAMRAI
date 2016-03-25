@@ -1,9 +1,9 @@
 //
-// File:        VisMaterialsDataStrategy.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisMaterialsDataStrategy.h $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Interface for writing material related data to a VisIt 
 //              dump file.
 //
@@ -22,7 +22,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Utilities
@@ -121,7 +120,7 @@ public:
       double *buffer,
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
-      const string& material_name);
+      const std::string& material_name) const;
 
    /*!
     * @brief This function packs cell-centered species fractions for
@@ -158,8 +157,8 @@ public:
       double *buffer,
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
-      const string& material_name,
-      const string& species_name);
+      const std::string& material_name,
+      const std::string& species_name) const;
 };
 }
 }

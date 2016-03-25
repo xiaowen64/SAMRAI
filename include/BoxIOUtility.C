@@ -1,9 +1,9 @@
 //
-// File:        BoxIOUtility.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxIOUtility.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility class to read and write boxes to an HDF database.
 //
 
@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
-using namespace std;
 
 #ifdef HAVE_HDF5
 #include "tbox/HDFDatabase.h"
@@ -24,12 +23,6 @@ using namespace std;
 #include "tbox/PIO.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #define MESH_REFINE_BOX_IO_UTILITY (1)
 
@@ -45,17 +38,17 @@ namespace SAMRAI {
 */
 
 template<int DIM>  BoxIOUtility<DIM>::BoxIOUtility(
-   const string& dirname, 
+   const std::string& dirname, 
    const IOTYPE iotype) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-    assert(!dirname.empty());
+    TBOX_ASSERT(!dirname.empty());
 #endif
 
 #ifndef HAVE_HDF5
     TBOX_ERROR("BoxIOUtility<DIM> constructor error"
                << "\n HDF Library not included in SAMRAI configure - "
-               << "cannot read or write box information" << endl);
+               << "cannot read or write box information" << std::endl);
 #endif
 
 
@@ -93,7 +86,7 @@ template<int DIM> void BoxIOUtility<DIM>::getLevelBoxes(
    const int entry_number)
 {
    tbox::plog << "Reading boxes for level: " << level_number
-        << " entry number: " << entry_number << endl;
+        << " entry number: " << entry_number << std::endl;
 
    /*
     * Make sure the data we are reading valid data from the database.
@@ -103,7 +96,7 @@ template<int DIM> void BoxIOUtility<DIM>::getLevelBoxes(
                  << "\n The level boxes database holds data only up "
                  << "\n to level " << d_level_boxes.getSize()-1 
                  << "\n You requested data from level " << level_number
-                 << endl);
+                 << std::endl);
    }
 
 
@@ -112,12 +105,12 @@ template<int DIM> void BoxIOUtility<DIM>::getLevelBoxes(
                  << "\n The level boxes database holds entries up "
                  << "\n to size " << d_level_boxes[level_number].getSize()
                  << "\n You requested data for entry " << entry_number
-                 << endl);      
+                 << std::endl);      
    } 
 
    tbox::plog << "Returning BoxArray containing " 
         << d_level_boxes[level_number][entry_number].getNumberOfBoxes() 
-        << " boxes. " << endl;
+        << " boxes. " << std::endl;
    
    /*
     * Return BoxArray entry for this step.
@@ -140,7 +133,7 @@ template<int DIM> void BoxIOUtility<DIM>::putLevelBoxes(
 {  
 
    tbox::plog << "Writing boxes for level: " << level_number
-        << " entry number: " << entry_number << endl;
+        << " entry number: " << entry_number << std::endl;
 
    /*
     * Reset dimension of arrays, if necessary.
@@ -192,7 +185,7 @@ template<int DIM> int BoxIOUtility<DIM>::getNumberOfEntries(
                  << "\n The level boxes database holds data only up "
                  << "\n to level " << d_level_boxes.getSize()-1 
                  << "\n You requested data from level " << level_number
-                 << endl);
+                 << std::endl);
    }
 
    return(d_level_boxes[level_number].getSize());
@@ -217,7 +210,7 @@ template<int DIM> void BoxIOUtility<DIM>::readLevelBoxesDatabase()
    int stat = db->mount(d_hdf_dirname,"R");
    if (stat < 0) {
      TBOX_ERROR("BoxIOUtility<DIM>::readLevelBoxesDatabase() error: "
-                "\n Error opening HDF database: " << d_hdf_dirname << endl);
+                "\n Error opening HDF database: " << d_hdf_dirname << std::endl);
    }
    
    /*
@@ -244,7 +237,7 @@ template<int DIM> void BoxIOUtility<DIM>::readLevelBoxesDatabase()
        */
       char *buffer1 = new char[16];
       sprintf(buffer1, "nboxes[%d]", ln);
-      string s1(buffer1);
+      std::string s1(buffer1);
       delete [] buffer1;
       tbox::Array<int> number_of_boxes = db->getIntegerArray(s1);
 
@@ -256,7 +249,7 @@ template<int DIM> void BoxIOUtility<DIM>::readLevelBoxesDatabase()
       for (i = 0; i < nentries; i++) {
          char *buffer2 = new char[16];
          sprintf(buffer2, "BoxArray[%d][%d]", ln, i);
-         string s2(buffer2);
+         std::string s2(buffer2);
          delete [] buffer2;
          if (number_of_boxes[i] > 0) {
             d_level_boxes[ln][i] = db->getDatabaseBoxArray(s2);
@@ -283,7 +276,7 @@ template<int DIM> void BoxIOUtility<DIM>::writeLevelBoxesDatabase()
    int stat = db->mount(d_hdf_dirname,"W");
    if (stat < 0) {
      TBOX_ERROR("BoxIOUtility<DIM>::writeLevelBoxesDatabase() error" 
-                << "\n Error opening HDF database: " << d_hdf_dirname << endl);
+                << "\n Error opening HDF database: " << d_hdf_dirname << std::endl);
    }
 
    /*
@@ -315,7 +308,7 @@ template<int DIM> void BoxIOUtility<DIM>::writeLevelBoxesDatabase()
       }
       char *buffer1 = new char[16];
       sprintf(buffer1, "nboxes[%d]", ln);
-      string s1(buffer1);
+      std::string s1(buffer1);
       delete buffer1;
       db->putIntegerArray(s1, number_of_boxes );
 
@@ -325,7 +318,7 @@ template<int DIM> void BoxIOUtility<DIM>::writeLevelBoxesDatabase()
       for (i = 0; i < nentries; i++) {
          char *buffer2 = new char[16];
          sprintf(buffer2, "BoxArray[%d][%d]", ln, i);
-         string s2(buffer2);
+         std::string s2(buffer2);
          delete buffer2;
          if (number_of_boxes[i] > 0) {
             db->putDatabaseBoxArray(s2, d_level_boxes[ln][i]);
@@ -345,25 +338,25 @@ template<int DIM> void BoxIOUtility<DIM>::writeLevelBoxesDatabase()
 *                                                                       *
 *************************************************************************
 */
-template<int DIM> void BoxIOUtility<DIM>::printBoxes(ostream& os)
+template<int DIM> void BoxIOUtility<DIM>::printBoxes(std::ostream& os)
 {  
-   os << "\n\n---------------------------------------------" << endl;
-   os << "Boxes stored in database:"  << endl;
+   os << "\n\n---------------------------------------------" << std::endl;
+   os << "Boxes stored in database:"  << std::endl;
 
    int nlevels = d_level_boxes.getSize();
    
    for (int ln = 0; ln < nlevels; ln++) {
-      os << "Level " << ln << ":" << endl;
-      os << "-------" << endl;
+      os << "Level " << ln << ":" << std::endl;
+      os << "-------" << std::endl;
 
       for (int i = 0; i < d_level_boxes[ln].getSize(); i++) {
 
-         os << "   Entry " << i << ": " << endl;
+         os << "   Entry " << i << ": " << std::endl;
          d_level_boxes[ln][i].print(os);
       }
-      os << "\n" << endl;
+      os << "\n" << std::endl;
    }
-   os << "---------------------------------------------\n\n" << endl;
+   os << "---------------------------------------------\n\n" << std::endl;
 
 }
        

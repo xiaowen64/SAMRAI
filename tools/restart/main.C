@@ -1,8 +1,8 @@
 //
-// File:        main.C
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/restart/main.C $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1806 $
+// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
 // Description: Main program restart-redistribute tool.
 //
 
@@ -23,7 +23,7 @@ using namespace std;
 // Headers for basic SAMRAI objects
 
 #include "tbox/HDFDatabase.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/RestartManager.h"
 #include "tbox/SAMRAIManager.h"
 // Headers for major algorithm/data structure objects
@@ -38,9 +38,17 @@ using namespace std;
 
 using namespace SAMRAI;
 
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+
 int main( int argc, char *argv[])
 {
-   tbox::MPI::init(&argc, &argv);
+
+   const string slash = "/";
+
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
 
    string read_dirname;
@@ -66,44 +74,62 @@ int main( int argc, char *argv[])
 
    sprintf(restore_buf,"/restore.%05d",restore_num);
 
-   char working_dir[NAME_BUFSIZE*10];
+   string restore_dirname;
+   if( read_dirname.compare(0, 1, "/") == 0 ) {
+      restore_dirname = read_dirname + restore_buf;
+   } else {
+      restore_dirname = "."  + slash + read_dirname + restore_buf;
+   }
 
-   getcwd(working_dir, NAME_BUFSIZE*10);
-
-   string slash = "/";
-   string restore_dirname = working_dir + slash + read_dirname + restore_buf;
+   if( write_dirname.compare(0, 1, "/") != 0 ) {
+      write_dirname = "." + slash + write_dirname;
+   }
 
    struct dirent **namelist;
 
    //directory should have three entries:  ., .., and nodes.*****
    int num_entries = scandir(restore_dirname.c_str(), &namelist, 0, 0); 
 
-   if (num_entries != 3) {
-      TBOX_ERROR("restore directory should contain only nodes subdirectory.");
+   if(num_entries < 0) {
+      TBOX_ERROR("restore directory not found.");
    }
 
-   string nodes_dirname = namelist[num_entries-1]->d_name; 
+   // Expect only a single run to be in restore directory
+   if (num_entries > 3) {
+      TBOX_ERROR("restore directory should contain restart files for a single run; this probably indicates runs with different number of nodes have been done in in the restart directory");
+   }
+
+   string nodes_dirname;
+   string prefix = "nodes.";
+   for(int i = 0; i < num_entries; i++) {
+      if ( strncmp(prefix.c_str(), namelist[i] -> d_name, prefix.length()) == 0 ) {
+	 nodes_dirname = namelist[i]->d_name; 
+      }
+   }
+
    int num_input_files = 0;
 
-   //reading in directory name.
-   if ((nodes_dirname.size() == 11) && (nodes_dirname.find('n',0) == 0) &&
-       (nodes_dirname.find('o',0) == 1) && (nodes_dirname.find('d',0) == 2) &&
-       (nodes_dirname.find('e',0) == 3) && (nodes_dirname.find('s',0) == 4) &&
-       (nodes_dirname.find('.',0) == 5)) {
+   // Check if nodes_dirname is valid and extract number of processors for the saved run.
+   if ( nodes_dirname.size() == 11 ) {
 
       string int_str = &(nodes_dirname.c_str()[6]);
 
       num_input_files = atoi(int_str.c_str());
 
    } else {
-      TBOX_ERROR("nodes.***** subdirectory not found in restore directory.  A directory with a name such as nodes.00016 must be present, with the number indicating the number of restart files contained within");
+      TBOX_ERROR("nodes.***** subdirectory not found in restore directory.  A directory with a name such as nodes.00016 must be present, with the number indicating the number of process for the run");
    }
 
+
+   free(namelist);
+
    string full_nodes_dirname = restore_dirname + slash + nodes_dirname;
-   num_entries = scandir(restore_dirname.c_str(), &namelist, 0, 0);
+   num_entries = scandir(full_nodes_dirname.c_str(), &namelist, 0, 0);
    if (num_entries != num_input_files+2) {
       TBOX_ERROR("number of files in nodes subdirectory does not match the number indicated in the directory's name"); 
    }
+
+   free(namelist);
 
    // file_mapping will have size equal to the lesser value of
    // num_input_files and num_output_files.

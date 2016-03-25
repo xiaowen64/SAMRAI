@@ -1,9 +1,9 @@
 //
-// File:	CellData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/cell/CellData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 456 $
-// Modified:	$Date: 2005-06-16 12:46:43 -0700 (Thu, 16 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated cell centered patch data type
 //
 
@@ -19,9 +19,6 @@
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_CELLDATA_VERSION 1
 
@@ -36,6 +33,28 @@ namespace SAMRAI {
 /*
 *************************************************************************
 *									*
+* Calculate the amount of memory space needed to represent the data	*
+* for a cell centered grid.						*
+*									*
+*************************************************************************
+*/
+
+template<int DIM, class TYPE>
+size_t CellData<DIM,TYPE>::getSizeOfData(
+   const hier::Box<DIM>& box,
+   int depth,
+   const hier::IntVector<DIM>& ghosts)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(depth > 0);
+#endif
+   const hier::Box<DIM> ghost_box = hier::Box<DIM>::grow(box, ghosts);
+   return(ArrayData<DIM,TYPE>::getSizeOfData(ghost_box, depth));
+}
+
+/*
+*************************************************************************
+*									*
 * Constructor and destructor for cell data objects.  The constructor	*
 * simply initializes data variables and sets up the array data.		*
 *									*
@@ -44,15 +63,15 @@ namespace SAMRAI {
 
 template<int DIM, class TYPE>
 CellData<DIM,TYPE>::CellData(const hier::Box<DIM>& box,
-                                     const int depth,
-                                     const hier::IntVector<DIM>& ghosts,
-                                     tbox::Pointer<tbox::Arena> pool)
+                             int depth,
+                             const hier::IntVector<DIM>& ghosts,
+                             tbox::Pointer<tbox::Arena> pool)
 :  hier::PatchData<DIM>(box, ghosts),
    d_depth(depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-   assert(ghosts.min() >= 0); 
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0); 
 #endif
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
@@ -117,7 +136,7 @@ void CellData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
 {
    CellData<DIM,TYPE> *t_dst = dynamic_cast<CellData<DIM,TYPE> *>(&dst);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
+   TBOX_ASSERT(t_dst != NULL);
 #endif
    const hier::Box<DIM> box = d_data.getBox() * t_dst->d_data.getBox();
    if (!box.empty()) {
@@ -161,8 +180,8 @@ void CellData<DIM,TYPE>::copy2(
    const CellOverlap<DIM> *t_overlap = 
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    t_dst->d_data.copy(d_data,
                       t_overlap->getDestinationBoxList(),
@@ -211,7 +230,7 @@ int CellData<DIM,TYPE>::getDataStreamSize(
    const CellOverlap<DIM> *t_overlap = 
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    return( d_data.getDataStreamSize(t_overlap->getDestinationBoxList(),
                                     t_overlap->getSourceOffset()) );
@@ -233,7 +252,7 @@ void CellData<DIM,TYPE>::packStream(
    const CellOverlap<DIM> *t_overlap = 
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    d_data.packStream( stream, t_overlap->getDestinationBoxList(), 
                               t_overlap->getSourceOffset());
@@ -246,32 +265,10 @@ void CellData<DIM,TYPE>::unpackStream(
    const CellOverlap<DIM> *t_overlap = 
       dynamic_cast<const CellOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    d_data.unpackStream( stream, t_overlap->getDestinationBoxList(),
                                 t_overlap->getSourceOffset() );
-}
-
-/*
-*************************************************************************
-*									*
-* Calculate the amount of memory space needed to represent the data	*
-* for a cell centered grid.						*
-*									*
-*************************************************************************
-*/
-
-template<int DIM, class TYPE>
-size_t CellData<DIM,TYPE>::getSizeOfData(
-   const hier::Box<DIM>& box,
-   const int depth,
-   const hier::IntVector<DIM>& ghosts)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-#endif
-   const hier::Box<DIM> ghost_box = hier::Box<DIM>::grow(box, ghosts);
-   return(ArrayData<DIM,TYPE>::getSizeOfData(ghost_box, depth));
 }
 
 /*
@@ -286,18 +283,31 @@ size_t CellData<DIM,TYPE>::getSizeOfData(
 template<int DIM, class TYPE>
 void CellData<DIM,TYPE>::print(
    const hier::Box<DIM>& box, 
-   ostream& os, 
-   const int prec) const
+   std::ostream& os, 
+   int prec) const
 {
-   if (d_depth > 1) {
-      for (int d = 0; d < d_depth; d++) {
-         os << "Array Component hier::Index = " << d << endl;
-         print(box, d, os, prec);
-      }
-   } else {
-       print(box, 0, os, prec);
+   for (int d = 0; d < d_depth; d++) {
+      os << "Array depth = " << d << std::endl;
+      print(box, d, os, prec);
    }
 }
+
+template<int DIM, class TYPE> void CellData<DIM,TYPE>::print(
+   const hier::Box<DIM>& box,
+   int depth,
+   std::ostream& os, 
+   int prec) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+#endif
+   os.precision(prec);
+   for (CellIterator<DIM> i(box); i; i++) {
+      os << "array" << i() << " = " << d_data(i(),depth) << std::endl << std::flush;
+      os << std::flush;
+   }
+}
+
 
 /*
 *************************************************************************
@@ -314,13 +324,13 @@ void CellData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("PDAT_CELLDATA_VERSION");
    if (ver != PDAT_CELLDATA_VERSION) {
       TBOX_ERROR("CellData<DIM>::getSpecializedFromDatabase error...\n"
-          << "Restart file version different than class version" << endl);
+          << "Restart file version different than class version" << std::endl);
    }
 
    d_depth = database->getInteger("d_depth");
@@ -344,7 +354,7 @@ void CellData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_CELLDATA_VERSION", PDAT_CELLDATA_VERSION);
@@ -354,23 +364,6 @@ void CellData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> array_database;
    array_database = database->putDatabase("d_data");
    d_data.putToDatabase(array_database);
-}
-
-template<int DIM, class TYPE> void CellData<DIM,TYPE>::print(
-   const hier::Box<DIM>& box,
-   const int d,
-   ostream& os, 
-   int prec) const
-{
-   (void) prec;
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
-#endif
-   os.precision( ((prec < 0) ? 12 : prec) );
-   for (CellIterator<DIM> i(box); i; i++) {
-      os << "array" << i() << " = " << d_data(i(),d) << endl << flush;
-      os << flush;
-   }
 }
 
 

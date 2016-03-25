@@ -1,26 +1,20 @@
 //
-// File:	ArrayDataNormOpsReal.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataNormOpsReal.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated array data norm operations.
 //
 
-#ifndef included_tbox_ArrayDataNormOpsReal_C
-#define included_tbox_ArrayDataNormOpsReal_C
+#ifndef included_math_ArrayDataNormOpsReal_C
+#define included_math_ArrayDataNormOpsReal_C
 
 #include "ArrayDataNormOpsReal.h"
-#include <stdlib.h>
-#include <float.h>
-#include <math.h>
-#include "tbox/Utilities.h"
 
+#include "tbox/MathUtilities.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -75,7 +69,7 @@ void ArrayDataNormOpsReal<DIM,TYPE>::abs(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dst.getDepth() == src.getDepth());
+   TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
    const hier::Box<DIM> dst_box = dst.getBox();
    const hier::Box<DIM> src_box = src.getBox();
@@ -121,7 +115,8 @@ void ArrayDataNormOpsReal<DIM,TYPE>::abs(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               dd[dst_counter+i0] = tbox::Utilities::dabs(sd[src_counter+i0]);
+               dd[dst_counter+i0] = 
+                  tbox::MathUtilities<TYPE>::Abs(sd[src_counter+i0]);
             } 
 
             int dim_jump = 0;
@@ -191,7 +186,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::sumControlVolumes(
 
       const int ddepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == data.getDepth()) || (ddepth == 1));
+      TBOX_ASSERT((ddepth == data.getDepth()) || (ddepth == 1));
 #endif
 
       const double* cvd = cvol.getPointer();
@@ -259,7 +254,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::L1NormWithControlVolume(
       const int ddepth  = data.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -299,7 +294,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::L1NormWithControlVolume(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               l1norm += tbox::Utilities::dabs(dd[d_counter+i0]) *
+               l1norm += tbox::MathUtilities<TYPE>::Abs(dd[d_counter+i0]) *
                          cvd[cv_counter+i0]; 
             }
             int dim_jump = 0;
@@ -382,7 +377,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::L1Norm(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               l1norm += tbox::Utilities::dabs(dd[d_counter+i0]);
+               l1norm += tbox::MathUtilities<TYPE>::Abs(dd[d_counter+i0]);
             }
             int dim_jump = 0;
 
@@ -442,7 +437,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::weightedL2NormWithControlVolume(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(data.getDepth() == weight.getDepth());
+   TBOX_ASSERT(data.getDepth() == weight.getDepth());
 #endif
 
    double wl2norm = 0.0;
@@ -456,7 +451,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::weightedL2NormWithControlVolume(
       const int ddepth = data.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -556,7 +551,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::weightedL2Norm(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(data.getDepth() == weight.getDepth());
+   TBOX_ASSERT(data.getDepth() == weight.getDepth());
 #endif
 
    double wl2norm = 0.0;
@@ -661,7 +656,7 @@ double ArrayDataNormOpsReal<DIM,TYPE>::maxNormWithControlVolume(
       const int ddepth  = data.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -702,9 +697,10 @@ double ArrayDataNormOpsReal<DIM,TYPE>::maxNormWithControlVolume(
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
                if (cvd[cv_counter+i0] > 0.0) {
-                  maxnorm = tbox::Utilities::dmax(
-                               maxnorm,
-                               tbox::Utilities::dabs(dd[d_counter+i0]) );
+                  maxnorm = 
+                     tbox::MathUtilities<double>::Max(
+                           maxnorm,
+                           tbox::MathUtilities<TYPE>::Abs(dd[d_counter+i0]) );
                }
             }
             int dim_jump = 0;
@@ -786,9 +782,9 @@ double ArrayDataNormOpsReal<DIM,TYPE>::maxNorm(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               maxnorm = tbox::Utilities::dmax(
+               maxnorm = tbox::MathUtilities<double>::Max(
                             maxnorm,
-                            tbox::Utilities::dabs(dd[d_counter+i0]) );
+                            tbox::MathUtilities<TYPE>::Abs(dd[d_counter+i0]) );
             }
             int dim_jump = 0;
 
@@ -830,7 +826,7 @@ TYPE ArrayDataNormOpsReal<DIM,TYPE>::dotWithControlVolume(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(data1.getDepth() == data2.getDepth());
+   TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 #endif
 
    TYPE dprod = 0.0;
@@ -844,8 +840,8 @@ TYPE ArrayDataNormOpsReal<DIM,TYPE>::dotWithControlVolume(
       const int d1depth = data1.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(d1depth == data2.getDepth());
-      assert((d1depth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT(d1depth == data2.getDepth());
+      TBOX_ASSERT((d1depth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -947,7 +943,7 @@ TYPE ArrayDataNormOpsReal<DIM,TYPE>::dot(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(data1.getDepth() == data2.getDepth());
+   TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 #endif
 
    TYPE dprod = 0.0;
@@ -959,7 +955,7 @@ TYPE ArrayDataNormOpsReal<DIM,TYPE>::dot(
    if (!ibox.empty()) {
       const int d1depth = data1.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(d1depth == data2.getDepth());
+      TBOX_ASSERT(d1depth == data2.getDepth());
 #endif
 
       int box_w[DIM];
@@ -1057,7 +1053,7 @@ TYPE ArrayDataNormOpsReal<DIM,TYPE>::integral(
       const int ddepth = data.getDepth();
       const int vdepth = vol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == vdepth) || (vdepth == 1));
+      TBOX_ASSERT((ddepth == vdepth) || (vdepth == 1));
 #endif
 
       int box_w[DIM];

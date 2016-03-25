@@ -1,22 +1,20 @@
 //
-// File:        AutoTester.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/applications/AutoTester.C $
 // Package:     SAMRAI applications
-// Copyright:   (c) 1997-2002 The Regents of the University of California
-// Revision:    $Revision: 414 $
-// Modified:    $Date: 2005-06-01 16:23:06 -0700 (Wed, 01 Jun 2005) $
+// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class used for auto testing applications 
 //
 
 #include "AutoTester.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include "Box.h"
 #include "BoxArray.h"
 #include "BoxList.h"
 #include "PatchLevel.h"
 #include "tbox/List.h"
+#include "tbox/MathUtilities.h"
 
 
 AutoTester::AutoTester(const string& object_name,
@@ -73,13 +71,16 @@ AutoTester::~AutoTester()
 *                                                                *
 ******************************************************************
 */
-void AutoTester::evalTestData( 
+int AutoTester::evalTestData( 
    int iter, 
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy, 
    const tbox::Pointer<algs::TimeRefinementIntegrator<NDIM> > tri, 
    const tbox::Pointer<algs::HyperbolicLevelIntegrator<NDIM> > hli, 
    const tbox::Pointer<mesh::GriddingAlgorithm<NDIM> > ga)
 {
+
+   int num_failures = 0;
+
    /*
     * Compare "correct_result" array to the computed result on specified 
     * iteration.
@@ -112,10 +113,11 @@ void AutoTester::evalTestData(
          }
          tbox::pout << endl;
       
-         if (tbox::Utilities::deq(time,d_correct_result[0]) ) {
+         if (tbox::MathUtilities<double>::equalEps(time,d_correct_result[0]) ) {
             tbox::pout << "Test 0: Time Refinement check successful" << endl;
          } else {
             tbox::perr << "Test 0 FAILED: Check Time Refinement Integrator" << endl;
+            num_failures++;
          }
       }
       
@@ -133,10 +135,11 @@ void AutoTester::evalTestData(
          }
          tbox::pout << endl;
       
-         if (tbox::Utilities::deq(dt,d_correct_result[1]) ) {
+         if (tbox::MathUtilities<double>::equalEps(dt,d_correct_result[1]) ) {
             tbox::pout << "Test 1: Time Refinement check successful" << endl;
          } else {
             tbox::perr << "Test 1 FAILED: Check Time Refinement Integrator" << endl;
+            num_failures++;
          }
       }
 
@@ -155,10 +158,11 @@ void AutoTester::evalTestData(
 	 }
 	 tbox::pout << endl;
       
-         if (tbox::Utilities::deq(dt,d_correct_result[2]) ) {
+         if (tbox::MathUtilities<double>::equalEps(dt,d_correct_result[2]) ) {
             tbox::pout << "Test 2: Hyperbolic Level Int check successful" << endl;
          } else {
             tbox::perr << "Test 2 FAILED: Check Hyperbolic Level Integrator" << endl;
+            num_failures++;
          }
       }
       
@@ -177,6 +181,7 @@ void AutoTester::evalTestData(
          tbox::pout << "Test 3: Gridding Algorithm check successful" << endl;
       } else {
          tbox::perr << "Test 3 FAILED: Check Gridding Algorithm" << endl;
+         num_failures++;
       }
 
    }
@@ -198,10 +203,10 @@ void AutoTester::evalTestData(
                                             ln,
                                             d_test_patch_boxes_step_count);
 
-            checkHierarchyBoxes(hierarchy,
-                                ln,
-                                test_boxes,
-                                iter);
+            num_failures +=checkHierarchyBoxes(hierarchy,
+                                               ln,
+                                               test_boxes,
+                                               iter);
          }
 
 
@@ -227,6 +232,7 @@ void AutoTester::evalTestData(
 
    }
 
+   return(num_failures);
 }
 
 /*
@@ -237,13 +243,16 @@ void AutoTester::evalTestData(
 *                                                                *
 ******************************************************************
 */
-void AutoTester::evalTestData(
+int AutoTester::evalTestData(
    int iter,
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
    double time,
    const tbox::Pointer<algs::MethodOfLinesIntegrator<NDIM> > mol,
    const tbox::Pointer<mesh::GriddingAlgorithm<NDIM> > ga)
 {
+
+   int num_failures = 0;
+
    /*
     * Compare "correct_result" array to the computed result on specified
     * iteration.
@@ -274,10 +283,11 @@ void AutoTester::evalTestData(
          }
          tbox::pout << endl;
       }
-      if (tbox::Utilities::deq(time,d_correct_result[0]) ) {
+      if (tbox::MathUtilities<double>::equalEps(time,d_correct_result[0]) ) {
          tbox::pout << "Test 0: Simulation Time check successful" << endl;
       } else {
          tbox::perr << "Test 0 FAILED: Simulation time incorrect" << endl;
+         num_failures++;
       }
 
       /*
@@ -293,10 +303,11 @@ void AutoTester::evalTestData(
          }
          tbox::pout << endl;
       }
-      if (tbox::Utilities::deq(dt,d_correct_result[1]) ) {
+      if (tbox::MathUtilities<double>::equalEps(dt,d_correct_result[1]) ) {
          tbox::pout << "Test 1: MOL Int check successful" << endl;
       } else {
          tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator" << endl;
+         num_failures++;
       }
 
       /*
@@ -313,6 +324,7 @@ void AutoTester::evalTestData(
          tbox::pout << "Test 2: Gridding Alg check successful" << endl;
       } else {
          tbox::perr << "Test 2 FAILED: Check Gridding Algorithm" << endl;
+         num_failures++;
       }
 
    }
@@ -335,10 +347,10 @@ void AutoTester::evalTestData(
                                             ln,
                                             d_test_patch_boxes_step_count);
 
-            checkHierarchyBoxes(hierarchy,
-                                ln,
-                                test_boxes,
-                                iter);
+            num_failures += checkHierarchyBoxes(hierarchy,
+                                                ln,
+                                                test_boxes,
+                                                iter);
          }
 
 
@@ -365,6 +377,7 @@ void AutoTester::evalTestData(
 
    }
 
+   return(num_failures);
 }
 
 /*
@@ -490,13 +503,13 @@ static void getBoxListsSortedBySize(tbox::Array<hier::BoxList<NDIM> >& sorted_bo
    } 
 }
 
-void AutoTester::checkHierarchyBoxes(
+int AutoTester::checkHierarchyBoxes(
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
    int level_number,
    const hier::BoxArray<NDIM>& test_boxes,
    int iter)
 {
-   
+ 
    hier::BoxList<NDIM> master_boxes(test_boxes);
 
    tbox::Pointer<hier::PatchLevel<NDIM> > level 
@@ -535,6 +548,8 @@ void AutoTester::checkHierarchyBoxes(
              sorted_master_boxes[i].getNumberItems());
       }
    } 
+
+   int num_failures = 0;
    
    if (total_match && bin_match && bin_count_match) {
       tbox::pout << "Test 4: Level " << level_number
@@ -544,6 +559,7 @@ void AutoTester::checkHierarchyBoxes(
       tbox::perr << "Test 4: FAILED: Level " << level_number
            << " hier::Box configuration doesn't match at step " << iter 
            << endl << endl;
+      num_failures++;
    }
   
    if (d_output_correct) {
@@ -597,5 +613,6 @@ void AutoTester::checkHierarchyBoxes(
            << endl << endl;
 
    }
-     
+
+   return (num_failures);
 }

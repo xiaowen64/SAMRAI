@@ -1,9 +1,9 @@
 //
-// File:	PatchFaceDataMiscellaneousOpsReal.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/face/PatchFaceDataMiscellaneousOpsReal.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated miscellaneous operations for real face-centered data.
 //
 
@@ -12,12 +12,9 @@
 
 #include "PatchFaceDataMiscellaneousOpsReal.h"
 #include "FaceGeometry.h"
-#include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -73,13 +70,14 @@ int PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPos(
    const tbox::Pointer< pdat::FaceData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
 #endif
    int retval = 1;
    if (cvol.isNull()) {
       for (int d = 0; d < DIM; d++) {
-         const hier::Box<DIM> face_box = pdat::FaceGeometry<DIM>::toFaceBox(box, d);
-         retval = tbox::Utilities::imin(retval,
+         const hier::Box<DIM> face_box = 
+            pdat::FaceGeometry<DIM>::toFaceBox(box, d);
+         retval = tbox::MathUtilities<int>::Min( retval,
                      d_array_ops.computeConstrProdPos(
                         data1->getArrayData(d),
                         data2->getArrayData(d),
@@ -87,8 +85,9 @@ int PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPos(
       }   
    } else {
       for (int d = 0; d < DIM; d++) {
-         const hier::Box<DIM> face_box = pdat::FaceGeometry<DIM>::toFaceBox(box, d);
-         retval = tbox::Utilities::imin(retval,
+         const hier::Box<DIM> face_box = 
+            pdat::FaceGeometry<DIM>::toFaceBox(box, d);
+         retval = tbox::MathUtilities<int>::Min( retval,
                      d_array_ops.computeConstrProdPosWithControlVolume(
                         data1->getArrayData(d),
                         data2->getArrayData(d),
@@ -108,7 +107,7 @@ void PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalar(
    const tbox::Pointer< pdat::FaceData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    if (cvol.isNull()) {
       for (int d = 0; d < DIM; d++) {
@@ -138,13 +137,14 @@ int PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocal(
    const tbox::Pointer< pdat::FaceData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    int retval = 1;
    if (cvol.isNull()) {
       for (int d = 0; d < DIM; d++) {
-         const hier::Box<DIM> face_box = pdat::FaceGeometry<DIM>::toFaceBox(box, d);
-         retval = tbox::Utilities::imin(retval,
+         const hier::Box<DIM> face_box = 
+            pdat::FaceGeometry<DIM>::toFaceBox(box, d);
+         retval = tbox::MathUtilities<int>::Min( retval,
                      d_array_ops.testReciprocal(
                         dst->getArrayData(d),
                         src->getArrayData(d),
@@ -152,8 +152,9 @@ int PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocal(
       }
    } else {
       for (int d = 0; d < DIM; d++) {
-         const hier::Box<DIM> face_box = pdat::FaceGeometry<DIM>::toFaceBox(box, d);
-         retval = tbox::Utilities::imin(retval,
+         const hier::Box<DIM> face_box = 
+            pdat::FaceGeometry<DIM>::toFaceBox(box, d);
+         retval = tbox::MathUtilities<int>::Min( retval,
                      d_array_ops.testReciprocalWithControlVolume(
                         dst->getArrayData(d),
                         src->getArrayData(d),
@@ -171,15 +172,16 @@ TYPE PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::maxPointwiseDivide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
 #endif
    TYPE retval = 0.0;
    for ( int d = 0; d < DIM; d++ ) {
-      const hier::Box<DIM> face_box = pdat::FaceGeometry<DIM>::toFaceBox(box, d);
+      const hier::Box<DIM> face_box = 
+         pdat::FaceGeometry<DIM>::toFaceBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
 						   denom->getArrayData(d),
 						   face_box);
-      retval = tbox::Utilities::dmax(retval, dirval);
+      retval = tbox::MathUtilities<TYPE>::Max(retval, dirval);
    }
    return( retval );
 }
@@ -191,7 +193,7 @@ TYPE PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::minPointwiseDivide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
 #endif
    TYPE retval = 0.0;
    for ( int d = 0; d < DIM; d++ ) {
@@ -199,7 +201,7 @@ TYPE PatchFaceDataMiscellaneousOpsReal<DIM,TYPE>::minPointwiseDivide(
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
 						   denom->getArrayData(d),
 						   face_box);
-      retval = tbox::Utilities::dmin(retval, dirval);
+      retval = tbox::MathUtilities<TYPE>::Min(retval, dirval);
    }
    return( retval );
 }

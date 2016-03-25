@@ -1,9 +1,9 @@
 //
-// File:	RefineClasses.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineClasses.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Simple structure for managing refinement data in equivalence classes.
 //
 
@@ -11,7 +11,6 @@
 #define included_xfer_RefineClasses_C
 
 #include <typeinfo>
-using namespace std;
 
 #include "RefineClasses.h"
 
@@ -21,9 +20,6 @@ using namespace std;
 #include "VariableDatabase.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -80,7 +76,7 @@ template<int DIM> const typename RefineClasses<DIM>::Data&
    RefineClasses<DIM>::getClassRepresentative(int equiv_class_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (equiv_class_id >= 0) && 
+   TBOX_ASSERT( (equiv_class_id >= 0) && 
            (equiv_class_id < d_refine_equivalence_classes.getSize()) );
 #endif 
    return(d_refine_equivalence_classes[equiv_class_id].getFirstItem());
@@ -98,7 +94,7 @@ template<int DIM> typename tbox::List<typename RefineClasses<DIM>::Data>::Iterat
 RefineClasses<DIM>::getIterator(int equiv_class_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (equiv_class_id >= 0) && 
+   TBOX_ASSERT( (equiv_class_id >= 0) && 
            (equiv_class_id < d_refine_equivalence_classes.getSize()) );
 #endif 
    return(typename tbox::List<typename RefineClasses<DIM>::Data>::
@@ -123,7 +119,7 @@ template<int DIM> void RefineClasses<DIM>::insertEquivalenceClassItem(
       tbox::perr << "Bad refine class data passed to "
            << "RefineClasses<DIM>::insertEquivalenceClassItem\n";
       printRefineItem(tbox::perr, data);
-      TBOX_ERROR("Check entries..." << endl);
+      TBOX_ERROR("Check entries..." << std::endl);
    } else {
 
       int eq_index = getEquivalenceClassIndex(data, descriptor);
@@ -190,17 +186,17 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
    if (dst_id < 0) {
       item_good = false;
       TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
-                 << "`Destination' patch data id invalid (< 0!)" << endl);
+                 << "`Destination' patch data id invalid (< 0!)" << std::endl);
    }
    if (item_good && (src_id < 0)) {
       item_good = false;
       TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
-                 << "`Source' patch data id invalid (< 0!)" << endl);
+                 << "`Source' patch data id invalid (< 0!)" << std::endl);
    }
    if (item_good && (scratch_id < 0)) {
       item_good = false;
       TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
-                 << "`Scratch' patch data id invalid (< 0!)" << endl);
+                 << "`Scratch' patch data id invalid (< 0!)" << std::endl);
    }
 
    tbox::Pointer< hier::PatchDataFactory<DIM> > dst_fact =
@@ -215,7 +211,7 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
       TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
                  << "It is not a valid operation to copy from `Source' patch data \n"
                  << pd->mapIndexToName(src_id) << " to `Scratch' patch data "
-                 << pd->mapIndexToName(scratch_id) << endl);
+                 << pd->mapIndexToName(scratch_id) << std::endl);
    }
 
    if ( item_good && !(scratch_fact->validCopyTo(dst_fact)) ) {
@@ -223,20 +219,20 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
       TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
                  << "It is not a valid operation to copy from `Scratch' patch data \n"
                  << pd->mapIndexToName(scratch_id) << " to `Destination' patch data "
-                 << pd->mapIndexToName(dst_fact) << endl);
+                 << pd->mapIndexToName(dst_fact) << std::endl);
    }
 
-   const hier::IntVector<DIM>& scratch_gcw = scratch_fact->getDefaultGhostCellWidth();
+   const hier::IntVector<DIM>& scratch_gcw = scratch_fact->getGhostCellWidth();
 
-   if (item_good && (dst_fact->getDefaultGhostCellWidth() > scratch_gcw)) {
+   if (item_good && (dst_fact->getGhostCellWidth() > scratch_gcw)) {
       item_good = false;
       TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
                  << "`Destination' patch data " << pd->mapIndexToName(dst_id)
                  << " has a larger ghost cell width than \n"
                  << "`Scratch' patch data " << pd->mapIndexToName(scratch_id)
                  << "\n`Destination' ghost width = " 
-                 << dst_fact->getDefaultGhostCellWidth()
-                 << "\n`Scratch' ghost width = " << scratch_gcw << endl);
+                 << dst_fact->getGhostCellWidth()
+                 << "\n`Scratch' ghost width = " << scratch_gcw << std::endl);
    }
 
    tbox::Pointer< RefineOperator<DIM> > refop = data_item.d_oprefine;
@@ -248,7 +244,7 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
                     << "\nhas larger stencil width than ghost cell width"
                     << "of `Scratch' patch data" << pd->mapIndexToName(scratch_id)
                     << "\noperator stencil width = " << refop->getStencilWidth()
-                    << "\n`Scratch'  ghost width = " << scratch_gcw << endl);
+                    << "\n`Scratch'  ghost width = " << scratch_gcw << std::endl);
       }
    }
 
@@ -260,14 +256,14 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
          item_good = false;
          TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
                     << "`Source old' patch data id invalid (< 0!),\n"
-                    << "yet a request has made to time interpolate" << endl);
+                    << "yet a request has made to time interpolate" << std::endl);
       }
       if (item_good && src_tnew_id < 0) {
          item_good = false;
          TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
                     << "`Source new' patch data id invalid (< 0!),\n"
                     << "yet a request has made to time interpolate with them" 
-                    << endl);
+                    << std::endl);
       }
 
       tbox::Pointer< hier::PatchDataFactory<DIM> > src_told_fact =
@@ -282,7 +278,7 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
                     << " and `Source old' patch data " 
                     << pd->mapIndexToName(src_told_id)
                     << " have different patch data types, yet a request has"
-                    << "\n been made to time interpolate with them" << endl);
+                    << "\n been made to time interpolate with them" << std::endl);
       }
 
       if ( item_good && typeid(*src_tnew_fact) != typeid(*src_fact) ) {
@@ -292,7 +288,7 @@ template<int DIM> bool RefineClasses<DIM>::checkRefineItem(
                     << " and `Source new' patch data "
                     << pd->mapIndexToName(src_tnew_id)
                     << " have different patch data types, yet a request has"
-                    << "\n been made to time interpolate with them" << endl);
+                    << "\n been made to time interpolate with them" << std::endl);
       }
 
    }
@@ -443,8 +439,8 @@ template<int DIM> bool RefineClasses<DIM>::checkPatchDataItemConsistency(
       items_match = ( typeid(*pdf1) == typeid(*pdf2) );
 
       if (items_match) {
-         items_match = ( pdf1->getDefaultGhostCellWidth() ==
-                         pdf2->getDefaultGhostCellWidth() );
+         items_match = ( pdf1->getGhostCellWidth() ==
+                         pdf2->getGhostCellWidth() );
       }
 
    }
@@ -483,8 +479,8 @@ template<int DIM> int RefineClasses<DIM>::getEquivalenceClassIndex(
    tbox::Pointer< hier::PatchDataFactory<DIM> > src_pdf =
       pd->getPatchDataFactory(src_id);
 
-   hier::IntVector<DIM> dst_ghosts = dst_pdf->getDefaultGhostCellWidth();
-   hier::IntVector<DIM> src_ghosts = src_pdf->getDefaultGhostCellWidth();
+   hier::IntVector<DIM> dst_ghosts = dst_pdf->getGhostCellWidth();
+   hier::IntVector<DIM> src_ghosts = src_pdf->getGhostCellWidth();
 
    int num_equiv_classes = d_refine_equivalence_classes.getSize();
    bool equiv_found = false;
@@ -500,7 +496,7 @@ template<int DIM> int RefineClasses<DIM>::getEquivalenceClassIndex(
       tbox::Pointer< hier::PatchDataFactory<DIM> > rep_dst_pdf =
          pd->getPatchDataFactory(rep_dst_id);
       hier::IntVector<DIM> rep_dst_ghosts =
-         rep_dst_pdf->getDefaultGhostCellWidth();
+         rep_dst_pdf->getGhostCellWidth();
 
       /*
        * Check if destinations are equivalent
@@ -522,7 +518,7 @@ template<int DIM> int RefineClasses<DIM>::getEquivalenceClassIndex(
          tbox::Pointer< hier::PatchDataFactory<DIM> > rep_src_pdf =
             pd->getPatchDataFactory(rep_src_id);
          hier::IntVector<DIM> rep_src_ghosts =
-            rep_src_pdf->getDefaultGhostCellWidth();
+            rep_src_pdf->getGhostCellWidth();
          if ((src_ghosts == rep_src_ghosts) &&
              (typeid(*src_pdf) == typeid(*rep_src_pdf))) {
             src_equiv = true;
@@ -554,69 +550,69 @@ template<int DIM> int RefineClasses<DIM>::getEquivalenceClassIndex(
 *************************************************************************
 */
 
-template<int DIM> void RefineClasses<DIM>::printClassData(ostream& stream) const
+template<int DIM> void RefineClasses<DIM>::printClassData(std::ostream& stream) const
 {
    stream << "RefineClasses<DIM>::printClassData()\n";
    stream << "--------------------------------------\n";
    for (int i = 0; i < d_refine_equivalence_classes.getSize(); i++) {
-      stream << "EQUIVALENCE CLASS # " << i << endl;
+      stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       for (typename tbox::List<typename RefineClasses<DIM>::Data>::Iterator
            li(d_refine_equivalence_classes[i]); li; li++) {
 
-         stream << "Item # " << j << endl;
+         stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
          printRefineItem(stream, li());
 
          j++;
       }
-      stream << endl;
+      stream << std::endl;
    }
 
 }
 
 template<int DIM> void RefineClasses<DIM>::printRefineItem(
-   ostream& stream,
+   std::ostream& stream,
    const typename RefineClasses<DIM>::Data& data) const
 {
    stream << "\n";
    stream << "desination component:   " 
-          << data.d_dst << endl;
+          << data.d_dst << std::endl;
    stream << "source component:       " 
-          << data.d_src << endl;
+          << data.d_src << std::endl;
    stream << "scratch component:      " 
-          << data.d_scratch << endl;
+          << data.d_scratch << std::endl;
    stream << "fine boundary represents variable:      "
-          << data.d_fine_bdry_reps_var << endl;
+          << data.d_fine_bdry_reps_var << std::endl;
    stream << "tag:      "
-          << data.d_tag << endl;
+          << data.d_tag << std::endl;
 
    if (data.d_oprefine.isNull()) {
-      stream << "NULL refining operator" << endl;
+      stream << "NULL refining operator" << std::endl;
    } else {
       stream << "refine operator name:          "
              << typeid(*data.d_oprefine).name()
-             << endl;
+             << std::endl;
       stream << "operator priority:      "
              << data.d_oprefine->getOperatorPriority()
-             << endl;
+             << std::endl;
       stream << "operator stencil width: "
              << data.d_oprefine->getStencilWidth()
-             << endl;
+             << std::endl;
    }
    if (!data.d_time_interpolate) {
-      stream << "time interpoate is false" << endl;
+      stream << "time interpoate is false" << std::endl;
    } else {
       stream << "old source component:   " 
-             << data.d_src_told << endl;
+             << data.d_src_told << std::endl;
       stream << "new source component:   " 
-             << data.d_src_tnew << endl;
+             << data.d_src_tnew << std::endl;
       stream << "time interpolation operator name:          "
              << typeid(*data.d_optime).name()
-             << endl;
+             << std::endl;
    }
-   stream << endl;
+   stream << std::endl;
 }
 
 }

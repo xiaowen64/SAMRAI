@@ -1,9 +1,9 @@
 //
-// File:	PatchBoundaryNodeSum.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/PatchBoundaryNodeSum.h $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 696 $
-// Modified:	$Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for summing node data at patch boundaries
 //
  
@@ -37,7 +37,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_xfer_CoarsenSchedule
@@ -93,15 +92,45 @@ namespace SAMRAI {
 template<int DIM> class PatchBoundaryNodeSum
 {
 public:
+
+    /*!     
+    *  @brief Static function used to predetermine number of patch data     
+    *         slots ahared among all PatchBoundaryNodeSum  
+    *         objects (i.e., static members).  To get a correct count,     
+    *         this routine should only be called once.     
+    *     
+    *  @return integer number of internal patch data slots required
+    *          to perform sum.     
+    *  @param max_variables_to_register integer value indicating     
+    *          maximum number of patch data ids that will be registered     
+    *          with node sum objects.     
+    */    
+   static int getNumSharedPatchDataSlots(int max_variables_to_register);
+ 
+    /*!     
+    *  @brief Static function used to predetermine number of patch data     
+    *         slots unique to each PatchBoundaryNodeSum     
+    *         object (i.e., non-static members).  To get a correct count, 
+    *         this routine should be called exactly once for each object
+    *         that will be constructed.     
+    *     
+    *  @return integer number of internal patch data slots required     
+    *          to perform sum.     
+    *  @param max_variables_to_register integer value indicating     
+    *          maximum number of patch data ids that will be registered     
+    *          with node sum objects.     
+    */    
+   static int getNumUniquePatchDataSlots(int max_variables_to_register);
+
    /*!
     *  @brief Constructor initializes object to default (mostly undefined) 
     *  state.
     *
-    *  @param object_name const string reference for name of object used 
+    *  @param object_name const std::string reference for name of object used 
     *  in error reporting.  When assertion checking is on, the string 
     *  cannot be empty.
     */
-   PatchBoundaryNodeSum(const string& object_name);
+   PatchBoundaryNodeSum(const std::string& object_name);
 
    /*!
     *  @brief Destructor for the schedule releases all internal storage.
@@ -231,7 +260,7 @@ private:
 
    enum PATCH_BDRY_NODE_SUM_DATA_ID { ID_UNDEFINED = -1 };
 
-   string d_object_name;
+   std::string d_object_name;
    bool d_setup_called;
 
    int d_num_reg_sum;

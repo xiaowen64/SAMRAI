@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/pointer/Makefile.in $
 ## Package:	SAMRAI test
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for the pointer tests 
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/pointer
 VPATH	      =	@srcdir@
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 CPPFLAGS_EXTRA =  -DTESTING=1
@@ -20,13 +21,16 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
+NUM_TESTS = 1
+
+TEST_NPROCS = @TEST_NPROCS@
+
 testpointer:
 		$(MAKE) main-pointer
 
 main-pointer:	main-pointer.o $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) main-pointer.o $(LIBSAMRAI) $(LDLIBS) -o testpointer
 
-TEST_NPROCS = @TEST_NPROCS@ 
 
 check:		testpointer
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testpointer  
@@ -36,6 +40,13 @@ check2d:
 
 check3d:
 		$(MAKE) check
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean: 
 		$(SAMCLEAN)

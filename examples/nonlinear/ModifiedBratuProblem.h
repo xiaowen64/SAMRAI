@@ -1,9 +1,9 @@
 //
-// File:        $RCSfile$
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/nonlinear/ModifiedBratuProblem.h $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1768 $
+// Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 // Description: Class containing numerical routines for modified Bratu problem
 //
 
@@ -15,7 +15,7 @@
 #include "SAMRAI_config.h"
 #endif
 
-#if !defined(HAVE_PETSC) || !defined(HAVE_KINSOL) || !defined(HAVE_HYPRE)
+#if !defined(HAVE_PETSC) || !defined(HAVE_SUNDIALS) || !defined(HAVE_HYPRE)
 
 /*
 *************************************************************************
@@ -70,7 +70,7 @@ using namespace std;
 #include "CellPoissonFACSolver.h"
 
 #include "KINSOLAbstractFunctions.h"
-#include "PVodeTrioAbstractVector.h"
+#include "SundialsAbstractVector.h"
 #include "PETScAbstractVectorReal.h"
 #include "SNESAbstractFunctions.h"
 
@@ -222,31 +222,51 @@ public:
     * @name Interface functions overloaded from KINSOLAbstractFunctions.
     */
 
-   void evaluateNonlinearFunction(solv::PVodeTrioAbstractVector* soln,
-                                  solv::PVodeTrioAbstractVector* fval);
+   void evaluateNonlinearFunction(solv::SundialsAbstractVector* soln,
+                                  solv::SundialsAbstractVector* fval);
 
-   int precondSetup(solv::PVodeTrioAbstractVector* soln,
-                    solv::PVodeTrioAbstractVector* soln_scale,
-                    solv::PVodeTrioAbstractVector* fval,
-                    solv::PVodeTrioAbstractVector* fval_scale,
-                    solv::PVodeTrioAbstractVector* vtemp1,
-                    solv::PVodeTrioAbstractVector* vtemp2,
+#if 0
+   // SGS need to fix; make note for users
+   int precondSetup(solv::SundialsAbstractVector* soln,
+                    solv::SundialsAbstractVector* soln_scale,
+                    solv::SundialsAbstractVector* fval,
+                    solv::SundialsAbstractVector* fval_scale,
+                    solv::SundialsAbstractVector* vtemp1,
+                    solv::SundialsAbstractVector* vtemp2,
                     double mach_roundoff,
                     int& num_feval);
-
-   int precondSolve(solv::PVodeTrioAbstractVector* soln,
-                    solv::PVodeTrioAbstractVector* soln_scale,
-                    solv::PVodeTrioAbstractVector* fval,
-                    solv::PVodeTrioAbstractVector* fval_scale,
-                    solv::PVodeTrioAbstractVector* rhs,
-                    solv::PVodeTrioAbstractVector* vtemp,
+   int precondSolve(solv::SundialsAbstractVector* soln,
+                    solv::SundialsAbstractVector* soln_scale,
+                    solv::SundialsAbstractVector* fval,
+                    solv::SundialsAbstractVector* fval_scale,
+                    solv::SundialsAbstractVector* rhs,
+                    solv::SundialsAbstractVector* vtemp,
                     double mach_roundoff,
                     int& num_feval);
+#endif
+   
+   int precondSetup(solv::SundialsAbstractVector* soln,
+		    solv::SundialsAbstractVector* soln_scale,
+		    solv::SundialsAbstractVector* fval,
+		    solv::SundialsAbstractVector* fval_scale,
+		    solv::SundialsAbstractVector* vtemp1,
+		    solv::SundialsAbstractVector* vtemp2,
+		    int& num_feval);
 
-   int jacobianTimesVector(solv::PVodeTrioAbstractVector* vector,
-                           solv::PVodeTrioAbstractVector* product,
+   int precondSolve(solv::SundialsAbstractVector* soln,
+		    solv::SundialsAbstractVector* soln_scale,
+		    solv::SundialsAbstractVector* fval,
+		    solv::SundialsAbstractVector* fval_scale,
+		    solv::SundialsAbstractVector* rhs,
+		    solv::SundialsAbstractVector* vtemp,
+		    int& num_feval);
+
+   int jacobianTimesVector(solv::SundialsAbstractVector* vector,
+                           solv::SundialsAbstractVector* product,
                            const bool soln_changed,
-                           solv::PVodeTrioAbstractVector* soln);
+                           solv::SundialsAbstractVector* soln);
+
+
    //@}
 
    //@{
@@ -553,10 +573,15 @@ private:
     * in the hierarchy.  
     */
    bool d_use_old_solver;
-   solv::CellPoissonFACSolver<NDIM>* d_FAC_solver;
+   tbox::Pointer<solv::CellPoissonFACSolver<NDIM> > d_FAC_solver;
 
    int    d_max_precond_its;
    double d_precond_tol;
+
+
+
+   static tbox::Pointer<tbox::Timer> s_copy_timer;
+   static tbox::Pointer<tbox::Timer> s_pc_timer;
 
 };
 

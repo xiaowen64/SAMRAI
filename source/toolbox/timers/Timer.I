@@ -1,9 +1,9 @@
 //
-// File:        Timer.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Timer.I $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Timing wrapper for various routines.
 //
 
@@ -74,7 +74,7 @@ inline void Timer::stopExclusive()
  ***************************************************************************
  */
 
-inline const string &Timer::getName() const
+inline const std::string &Timer::getName() const
 {
    return(d_name);
 }
@@ -106,22 +106,20 @@ inline double Timer::getTotalSystemTime() const
 
 inline double Timer::getTotalWallclockTime() const
 {
+   double ret_val = d_wallclock_total;
 #ifndef HAVE_MPI
-   double clock_cycle = Clock::getClockCycle();
-#else 
-   double clock_cycle = 1.;
+   ret_val /= Clock::getClockCycle();
 #endif
-   return(d_wallclock_total/clock_cycle);
+   return(ret_val);
 }
 
 inline double Timer::getMaxWallclockTime() const
 {
+   double ret_val = d_max_wallclock;
 #ifndef HAVE_MPI
-   double clock_cycle = Clock::getClockCycle();
-#else 
-   double clock_cycle = 1.;
+   ret_val /= Clock::getClockCycle();
 #endif
-   return(d_max_wallclock/clock_cycle);
+   return(ret_val);
 }
 
 inline double Timer::getExclusiveUserTime() const
@@ -136,12 +134,11 @@ inline double Timer::getExclusiveSystemTime() const
 
 inline double Timer::getExclusiveWallclockTime() const
 {
+   double ret_val = d_wallclock_exclusive;
 #ifndef HAVE_MPI
-   double clock_cycle = Clock::getClockCycle();
-#else 
-   double clock_cycle = 1.;
+   ret_val /= Clock::getClockCycle();
 #endif
-   return(d_wallclock_exclusive/clock_cycle);
+   return(ret_val);
 }
 
 inline void Timer::setConcurrentTimer(const int id)
@@ -149,7 +146,7 @@ inline void Timer::setConcurrentTimer(const int id)
    d_concurrent_timers[id] = true;
 }
 
-inline bool* Timer::getConcurrentTimerVector() const
+inline const Array<bool>& Timer::getConcurrentTimerVector() const
 {
    return(d_concurrent_timers);
 }

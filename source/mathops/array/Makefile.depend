@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -13,12 +13,16 @@ FILE_0=ArrayDataBasicOps.o
 DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/Box.I		\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/Index.I			\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -29,8 +33,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -39,12 +42,13 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ArrayDataBasicOps.C ArrayDataBasicOps.h
+	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataBasicOps.C		\
+	ArrayDataBasicOps.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
@@ -56,12 +60,16 @@ FILE_1=ArrayDataMiscellaneousOpsReal.o
 DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/Box.I		\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/Index.I			\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -72,8 +80,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -82,12 +89,13 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ArrayDataMiscellaneousOpsReal.C ArrayDataMiscellaneousOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataMiscellaneousOpsReal.C	\
+	ArrayDataMiscellaneousOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
@@ -99,12 +107,16 @@ FILE_2=ArrayDataNormOpsComplex.o
 DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/Box.I		\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/Index.I			\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -115,8 +127,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -125,12 +136,13 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ArrayDataNormOpsComplex.C ArrayDataNormOpsComplex.h
+	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataNormOpsComplex.C	\
+	ArrayDataNormOpsComplex.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
@@ -142,12 +154,16 @@ FILE_3=ArrayDataNormOpsInteger.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/Box.I		\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/Index.I			\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -158,8 +174,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -168,12 +183,13 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ArrayDataNormOpsInteger.C ArrayDataNormOpsInteger.h
+	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataNormOpsInteger.C	\
+	ArrayDataNormOpsInteger.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
@@ -185,12 +201,16 @@ FILE_4=ArrayDataNormOpsReal.o
 DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/Box.I		\
-	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
-	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
-	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/Index.I			\
-	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/AbstractStream.I	\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/Box.I $(INCLUDE_SAM)/Box.h			\
+	$(INCLUDE_SAM)/BoxArray.I $(INCLUDE_SAM)/BoxArray.h		\
+	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
+	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
+	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
@@ -201,8 +221,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -211,12 +230,13 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ArrayDataNormOpsReal.C ArrayDataNormOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataNormOpsReal.C		\
+	ArrayDataNormOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C

@@ -1,18 +1,12 @@
 //
-// File:	OutersideData.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outerside/OutersideData.I $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated outerside centered patch data type
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -27,79 +21,79 @@ int OutersideData<DIM,TYPE>::getDepth() const
 }
 
 template<int DIM, class TYPE> inline
-TYPE *OutersideData<DIM,TYPE>::getPointer(const int axis,
-                                            const int side,
-                                            const int d)
+TYPE* OutersideData<DIM,TYPE>::getPointer(int side_normal,
+                                          int side,
+                                          int depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis][side].getPointer(d));
+   return(d_data[side_normal][side].getPointer(depth));
 }
 
 template<int DIM, class TYPE> inline
-const TYPE *OutersideData<DIM,TYPE>::getPointer(const int axis,
-                                                  const int side,
-                                                  const int d) const
+const TYPE* OutersideData<DIM,TYPE>::getPointer(int side_normal,
+                                                int side,
+                                                int depth) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis][side].getPointer(d));
+   return(d_data[side_normal][side].getPointer(depth));
 }
 
 template<int DIM, class TYPE> inline
-ArrayData<DIM,TYPE>
-&OutersideData<DIM,TYPE>::getArrayData(const int axis,
-					 const int side)
+ArrayData<DIM,TYPE>& 
+OutersideData<DIM,TYPE>::getArrayData(int side_normal,
+                                      int side)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
-   return(d_data[axis][side]);
+   return(d_data[side_normal][side]);
 }
 
 template<int DIM, class TYPE> inline
-const ArrayData<DIM,TYPE>
-&OutersideData<DIM,TYPE>::getArrayData(const int axis,
-					 const int side) const
+const ArrayData<DIM,TYPE>& 
+OutersideData<DIM,TYPE>::getArrayData(int side_normal,
+                                      int side) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
-   return(d_data[axis][side]);
+   return(d_data[side_normal][side]);
 }
 
 template<int DIM, class TYPE> inline
 TYPE& OutersideData<DIM,TYPE>::operator()(
-   const SideIndex<DIM>& i, const int side, const int d)
+   const SideIndex<DIM>& i, int side, int depth)
 {
    const int axis = i.getAxis();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis][side](i,d));
+   return(d_data[axis][side](i,depth));
 }
 
 template<int DIM, class TYPE> inline
 const TYPE& OutersideData<DIM,TYPE>::operator()(
-   const SideIndex<DIM>& i, const int side, const int d) const
+   const SideIndex<DIM>& i, int side, int depth) const
 {
    const int axis = i.getAxis();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis][side](i,d));
+   return(d_data[axis][side](i,depth));
 }
 
 #ifdef DEBUG_NO_INLINE

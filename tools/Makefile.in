@@ -1,0 +1,24 @@
+##
+## File:	$URL$
+## Package:	SAMRAI
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1730 $
+## Modified:	$LastChangedDate: 2007-11-28 17:14:09 -0800 (Wed, 28 Nov 2007) $
+## Description:	makefile for the tools directory
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source
+OBJECT        = ..
+
+default: tools
+
+include $(OBJECT)/config/Makefile.config
+
+SUBDIRS = restart
+
+tools:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+clean:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done

@@ -1,13 +1,12 @@
 //
-// File:        Foo.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/timers/Foo.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Routine to time some routines in the dummy class Foo.
 //
 #include "Foo.h"
-#include <assert.h>
 #include "tbox/Pointer.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Timer.h"
@@ -28,7 +27,7 @@ Foo::~Foo()
 
 void Foo::timerOff( )
 {
-   static tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
+   tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
       getTimer("dummy::SomeClassName::shouldBeTurnedOff");
    timer->start();
 
@@ -38,7 +37,7 @@ void Foo::timerOff( )
 
 void Foo::timerOn()
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::timerOn()");
    timer->start();
@@ -49,7 +48,7 @@ void Foo::timerOn()
 
 void Foo::zero(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::zero()");
    if (depth > 0) {
@@ -61,7 +60,7 @@ void Foo::zero(int depth)
 
 void Foo::one(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::one()");
    if (depth > 1) {
@@ -73,7 +72,7 @@ void Foo::one(int depth)
 
 void Foo::two(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::two()");
    if (depth > 2) {
@@ -85,7 +84,7 @@ void Foo::two(int depth)
 
 void Foo::three(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::three()");
    if (depth > 3) {
@@ -97,7 +96,7 @@ void Foo::three(int depth)
 
 void Foo::four(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::four()");
    if (depth > 4) {
@@ -109,7 +108,7 @@ void Foo::four(int depth)
 
 void Foo::five(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::five()");
    if (depth > 5) {
@@ -121,7 +120,7 @@ void Foo::five(int depth)
 
 void Foo::six(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::six()");
    if (depth > 6) {
@@ -133,7 +132,7 @@ void Foo::six(int depth)
 
 void Foo::seven(int depth)
 {
-   static tbox::Pointer<tbox::Timer> timer =
+   tbox::Pointer<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::seven()");
    if (depth > 7) {

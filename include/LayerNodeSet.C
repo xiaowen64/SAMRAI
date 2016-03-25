@@ -1,8 +1,8 @@
 /*
- * File:        $RCSfile$
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 346 $
- * Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerNodeSet.C $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Set of layer nodes in a distributed box graph.
  */
 
@@ -11,21 +11,15 @@
 
 #include "LayerNodeSet.h"
 
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 
 #include IOSTREAM_HEADER_FILE
 #include IOMANIP_HEADER_FILE
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "LayerNodeSet.I"
 #endif
-
-#include "tbox/Timer.h"
-#include "tbox/TimerManager.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -40,10 +34,16 @@ LayerNodeSet<DIM>::LayerNodeSet()
    : d_nodes(NULL),
      d_ratio(0),
      d_parallel_state(DISTRIBUTED),
-     d_rank(tbox::MPI::getRank())
+     d_rank(tbox::SAMRAI_MPI::getRank())
 {
    d_nodes = new NodeContainer[1];
+
+
+   t_acquire_nonlocal_nodes = tbox::TimerManager::getManager()->
+      getTimer("LayerNodeSet::acquireNonlocalNodes()");
+
    TBOX_ASSERT( d_nodes != NULL );
+
    return;
 }
 
@@ -60,14 +60,21 @@ LayerNodeSet<DIM>::LayerNodeSet( const LayerNodeSet &r)
       *d_nodes = *r.d_nodes;
    }
    else if ( d_parallel_state == GLOBALIZED ) {
-      int nprocs = tbox::MPI::getNodes();
-      d_nodes = new NodeContainer[tbox::MPI::getNodes()];
+      int nprocs = tbox::SAMRAI_MPI::getNodes();
+      d_nodes = new NodeContainer[tbox::SAMRAI_MPI::getNodes()];
       int n;
       for ( n=0; n<nprocs; ++n ) {
          d_nodes[n] = r.d_nodes[n];
       }
    }
+
+
+   t_acquire_nonlocal_nodes = tbox::TimerManager::getManager()->
+      getTimer("LayerNodeSet::acquireNonlocalNodes()");
+
+
    TBOX_ASSERT( d_nodes != NULL );
+
    return;
 }
 
@@ -93,7 +100,7 @@ LayerNodeSet<DIM> &LayerNodeSet<DIM>::operator=( const LayerNodeSet &r )
       *d_nodes = *r.d_nodes;
    }
    else {
-      const int nprocs = tbox::MPI::getNodes();
+      const int nprocs = tbox::SAMRAI_MPI::getNodes();
       d_nodes = new NodeContainer[nprocs];
       int n;
       for ( n=0; n<nprocs; ++n ) {
@@ -144,7 +151,7 @@ void LayerNodeSet<DIM>::setRefinementRatio( const hier::IntVector<DIM> &ratio )
 template<int DIM>
 void LayerNodeSet<DIM>::deallocateData()
 {
-   const int nproc = tbox::MPI::getNodes();
+   const int nproc = tbox::SAMRAI_MPI::getNodes();
    int n;
    switch (d_parallel_state) {
    case DISTRIBUTED:
@@ -177,7 +184,7 @@ void LayerNodeSet<DIM>::setParallelState( const ParallelState parallel_state )
                  << parallel_state << "\n");
    }
 
-   const int nproc = tbox::MPI::getNodes();
+   const int nproc = tbox::SAMRAI_MPI::getNodes();
    NodeContainer *tmp_nodes = NULL;
 
    if ( parallel_state != d_parallel_state ) {
@@ -275,11 +282,6 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes(
    // Nothing to do for a serial run.
 #if defined(HAVE_MPI)
 
-   // SGS this should not be done this way.  Static's are bad for 
-   // memory leak detection.  This is never freed correctly
-   static tbox::Pointer<tbox::Timer> t_acquire_nonlocal_nodes = 
-      tbox::TimerManager::getManager()->
-      getTimer("LayerNodeSet::acquireNonlocalNodes()");
    t_acquire_nonlocal_nodes->start();
    int n;
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -301,7 +303,7 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes(
    }
 #endif
 
-   const int nproc = tbox::MPI::getNodes();
+   const int nproc = tbox::SAMRAI_MPI::getNodes();
 
    /*
     * The presence of a hogging process indicates that no other
@@ -336,7 +338,7 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes(
                      recv_mesg_size.getPointer(),
                      1,
                      MPI_INT,
-                     tbox::MPI::getCommunicator());
+                     tbox::SAMRAI_MPI::getCommunicator());
 
       tbox::Array<int> proc_offset(nproc);
       int totl_size = 0;
@@ -352,7 +354,7 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes(
                       recv_mesg_size.getPointer(),
                       proc_offset.getPointer(),
                       MPI_INT,
-                      tbox::MPI::getCommunicator() );
+                      tbox::SAMRAI_MPI::getCommunicator() );
 
       /*
        * Extract node info received from other processors.
@@ -375,25 +377,25 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes(
       }
 #if 1
       int one = 1;
-      tbox::MPI::bcast( &mesg_size, one, hogging_process );
+      tbox::SAMRAI_MPI::bcast( &mesg_size, one, hogging_process );
 #else
       MPI_Bcast( &mesg_size,
                  1,
                  MPI_INT,
                  hogging_process,
-                 tbox::MPI::getCommunicator());
+                 tbox::SAMRAI_MPI::getCommunicator());
 #endif
       if ( d_rank != hogging_process ) {
          mesg.resizeArray(mesg_size);
       }
 #if 1
-      tbox::MPI::bcast( mesg.getPointer(), mesg_size, hogging_process );
+      tbox::SAMRAI_MPI::bcast( mesg.getPointer(), mesg_size, hogging_process );
 #else
       MPI_Bcast( mesg.getPointer(),
                  mesg_size,
                  MPI_INT,
                  hogging_process,
-                 tbox::MPI::getCommunicator());
+                 tbox::SAMRAI_MPI::getCommunicator());
 #endif
       if ( d_rank != hogging_process ) {
          const int *ptr = mesg.getPointer();
@@ -420,7 +422,7 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes_pack(
    tbox::Array<int> &send_mesg,
    int offset ) const
 {
-   const int rank = tbox::MPI::getRank();
+   const int rank = tbox::SAMRAI_MPI::getRank();
    /*
     * Node acquisition is done during moves away from distributed state.
     * Thus, do not rely on current value of d_parallel_state.  Instead note that
@@ -508,7 +510,7 @@ void LayerNodeSet<DIM>::acquireNonlocalNodes_unpack(
     * starting at the offset location.
     * Advance the proc_offset past the used data.
     */
-   const int nproc = tbox::MPI::getNodes();
+   const int nproc = tbox::SAMRAI_MPI::getNodes();
    int n;
    int node_com_buf_size = LayerNode<DIM>::commBufferSize();
 
@@ -557,8 +559,7 @@ void LayerNodeSet<DIM>::setTo( const hier::PatchLevel<DIM> &level )
    }
    d_ratio = level.getRatio();
    NodeContainer &node_container = getMutableNodeContainer();
-   typename hier::PatchLevel<DIM>::Iterator p;
-   for ( p.initialize(level); p; p++ ) {
+   for ( typename hier::PatchLevel<DIM>::Iterator p(level); p; p++ ) {
       const hier::Patch<DIM> &patch = *level.getPatch(*p);
       const hier::Box<DIM> &box = patch.getBox();
       LayerNode<DIM> node( box, *p, d_rank );
@@ -591,7 +592,7 @@ LayerNodeSet<DIM>::addBox( const hier::Box<DIM> &box,
    NodeContainer &node_container = getMutableNodeContainer();
 
    if ( node_container.size() == 0 ) {
-      Node new_node = Node( box, 0, tbox::MPI::getRank() );
+      Node new_node = Node( box, 0, tbox::SAMRAI_MPI::getRank() );
       return (node_container.insert(new_node)).first;
    }
    else {
@@ -600,7 +601,7 @@ LayerNodeSet<DIM>::addBox( const hier::Box<DIM> &box,
       typename Node::LocalIndex new_index = (*ni).getLocalIndex() + 1;
       if ( use_vacant_index ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert( new_index >= 0 );
+         TBOX_ASSERT( new_index >= 0 );
 #endif
          if ( size_t(new_index) != node_container.size() ) {
             /*
@@ -757,7 +758,7 @@ void LayerNodeSet<DIM>::setTo( const LayerNodeSet &layer )
          setParallelState(GLOBALIZED);
       }
       else {
-         const int nproc = tbox::MPI::getNodes();
+         const int nproc = tbox::SAMRAI_MPI::getNodes();
          int n;
          for ( n=0; n<nproc; ++n ) {
             NodeContainer &nodes = d_nodes[n];
@@ -778,9 +779,9 @@ void LayerNodeSet<DIM>::setTo( const LayerNodeSet &layer )
 ***********************************************************************
 */
 template<int DIM>
-void LayerNodeSet<DIM>::printClassData( ostream &co, int detail_depth ) const
+void LayerNodeSet<DIM>::printClassData( std::ostream &co, int detail_depth ) const
 {
-   int nprocs = tbox::MPI::getNodes();
+   int nprocs = tbox::SAMRAI_MPI::getNodes();
    int n, global_size;
    if ( getParallelState() == GLOBALIZED ) {
       for ( n=0, global_size=0; n<nprocs; ++n )

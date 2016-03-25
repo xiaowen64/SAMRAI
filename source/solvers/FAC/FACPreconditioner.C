@@ -1,9 +1,9 @@
 //
-// File:        FACPreconditioner.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/FAC/FACPreconditioner.C $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 704 $
-// Modified:    $Date: 2005-11-04 11:33:31 -0800 (Fri, 04 Nov 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: FAC algorithm for solving linear equations on a hierarchy
 //
 
@@ -13,17 +13,11 @@
 
 #include "HierarchyDataOpsManager.h"
 #include "FACPreconditioner.h"
-#include "tbox/IEEE.h"
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "FACPreconditioner.I"
@@ -43,7 +37,7 @@ namespace SAMRAI {
 */
 
 template<int DIM>  FACPreconditioner<DIM>::FACPreconditioner (
-   const string& name,
+   const std::string& name,
    FACOperatorStrategy<DIM> &user_ops,
    tbox::Pointer<tbox::Database> database
 ) :
@@ -56,17 +50,17 @@ template<int DIM>  FACPreconditioner<DIM>::FACPreconditioner (
    d_error_vector() ,
    d_tmp_error() ,
    d_max_iterations(0) ,
-   d_residual_tolerance(tbox::IEEE::getSignalingNaN()) ,
-   d_relative_residual_tolerance(tbox::IEEE::getSignalingNaN()) ,
+   d_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()) ,
+   d_relative_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()) ,
    d_presmoothing_sweeps(1) ,
    d_postsmoothing_sweeps(1) ,
    d_algorithm_choice("default") ,
    d_number_iterations(0) ,
-   d_residual_norm(tbox::IEEE::getSignalingNaN()) ,
-   d_rhs_norm(tbox::IEEE::getSignalingNaN()) ,
+   d_residual_norm(tbox::MathUtilities<double>::getSignalingNaN()) ,
+   d_rhs_norm(tbox::MathUtilities<double>::getSignalingNaN()) ,
    d_convergence_factor() ,
-   d_avg_convergence_factor(tbox::IEEE::getSignalingNaN()) ,
-   d_net_convergence_factor(tbox::IEEE::getSignalingNaN()) ,
+   d_avg_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()) ,
+   d_net_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()) ,
    d_do_log(false) ,
    d_controlled_level_ops()
 {
@@ -247,7 +241,7 @@ template<int DIM> void FACPreconditioner<DIM>::initializeSolverState(
          TBOX_ERROR("FACPreconditioner<DIM>::FACPreconditioner<DIM> error ..."
                     << "\n   object name = " << d_object_name
                     << "\n   hierarchy level " << ln 
-                    << " does not exist" << endl);
+                    << " does not exist" << std::endl);
       }
    }
    d_fac_operator.initializeOperatorState( solution, rhs );
@@ -305,8 +299,8 @@ template<int DIM> bool FACPreconditioner<DIM>::solveSystem(
    SAMRAIVectorReal<DIM,double> &f)
 {
 
-   d_residual_norm = tbox::IEEE::getSignalingNaN();
-   d_avg_convergence_factor = tbox::IEEE::getSignalingNaN();
+   d_residual_norm = tbox::MathUtilities<double>::getSignalingNaN();
+   d_avg_convergence_factor = tbox::MathUtilities<double>::getSignalingNaN();
 
    /*
     * Set the solution-vector-dependent data if not preset.
@@ -865,7 +859,7 @@ template<int DIM> double FACPreconditioner<DIM>::computeFullCompositeResidual(
 *                                                                       *
 *************************************************************************
 */
-template<int DIM> void FACPreconditioner<DIM>::printClassData(ostream& os) const {
+template<int DIM> void FACPreconditioner<DIM>::printClassData(std::ostream& os) const {
    os << "printing FACPreconditioner<DIM> data...\n"
       << "FACPreconditioner<DIM>: this = " << (FACPreconditioner<DIM>*)this << "\n"
       << "d_object_name = " << d_object_name << "\n"
@@ -879,7 +873,7 @@ template<int DIM> void FACPreconditioner<DIM>::printClassData(ostream& os) const
       << "d_number_iterations = " << d_number_iterations << "\n"
       << "d_residual_norm = " << d_residual_norm << "\n"
       << "d_rhs_norm = " << d_rhs_norm << "\n"
-      << endl;
+      << std::endl;
 
 }
 

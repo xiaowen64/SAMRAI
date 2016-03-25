@@ -1,9 +1,9 @@
 //
-// File:	PatchLevelFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchLevelFactory.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Abstract factory class for creating patch level objects
 //
 
@@ -28,15 +28,17 @@ template<int DIM> tbox::Pointer< PatchLevel<DIM> > PatchLevelFactory<DIM>::alloc
    const IntVector<DIM>& ratio_to_level_zero,
    const tbox::Pointer< GridGeometry<DIM> > grid_geometry,
    const tbox::Pointer< PatchDescriptor<DIM> > descriptor,
-   tbox::Pointer< PatchFactory<DIM> > factory) const
+   tbox::Pointer< PatchFactory<DIM> > factory,
+   const bool defer_boundary_box_creation) const
 {
    PatchLevel<DIM> *pl =
       new PatchLevel<DIM>(boxes,
-                           mapping,
-                           ratio_to_level_zero,
-                           grid_geometry,
-                           descriptor,
-                           factory);
+                          mapping,
+                          ratio_to_level_zero,
+                          grid_geometry,
+                          descriptor,
+                          factory,
+                          defer_boundary_box_creation);
    return(tbox::Pointer< PatchLevel<DIM> >(pl));
 }
 
@@ -45,14 +47,16 @@ template<int DIM> tbox::Pointer< PatchLevel<DIM> > PatchLevelFactory<DIM>::alloc
    const tbox::Pointer< GridGeometry<DIM> > grid_geometry,
    const tbox::Pointer< PatchDescriptor<DIM> > descriptor,
    tbox::Pointer< PatchFactory<DIM> > factory,
-   const ComponentSelector component_selector) const
+   const ComponentSelector component_selector,
+   const bool defer_boundary_box_creation) const
 {
    PatchLevel<DIM> *pl =
       new PatchLevel<DIM>(database,
-                           grid_geometry,
-                           descriptor,
-                           factory,
-                           component_selector);
+                          grid_geometry,
+                          descriptor,
+                          factory,
+                          component_selector,
+                          defer_boundary_box_creation);
    return(tbox::Pointer< PatchLevel<DIM> >(pl));
 }
 

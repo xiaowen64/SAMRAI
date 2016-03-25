@@ -1,29 +1,24 @@
 //
-// File:        EdgeMultiblockTest.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/EdgeMultiblockTest.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 1.5 $
-// Modified:    $Date: 2004/02/11 23:46:08 $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for edge-centered patch data
 //
 
 #include "EdgeMultiblockTest.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "BoundaryBox.h"
-#include "SkeletonPatchGeometry.h"
+#include "BlockPatchGeometry.h"
 #include "EdgeDoubleConstantRefine.h"
 #include "EdgeIndex.h"
 #include "EdgeIterator.h"
 #include "EdgeVariable.h"
 #include "MultiblockTester.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "Variable.h"
 #include "VariableDatabase.h"
 #include "tbox/Database.h"
@@ -38,9 +33,9 @@ EdgeMultiblockTest::EdgeMultiblockTest(
    const string& refine_option)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(!refine_option.empty());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!refine_option.empty());
 #endif
 
    d_object_name = object_name;
@@ -54,44 +49,41 @@ EdgeMultiblockTest::EdgeMultiblockTest(
    int num_blocks = main_input_db->getDatabase("Multiblock")->
                                    getInteger("num_blocks");
 
-   d_skel_grid_geometry =
-      new tbox::Pointer<geom::SkeletonGridGeometry<NDIM> >[num_blocks];
+   d_skel_grid_geometry.resizeArray(num_blocks);
 
    char geom_name[32];
 
    for (int g = 0; g < num_blocks; g++) {
 
-      sprintf(geom_name, "SkeletonGridGeometry%d", g);
+      sprintf(geom_name, "BlockGridGeometry%d", g);
 
       if (main_input_db->keyExists(geom_name)) {
-         d_skel_grid_geometry[g] = new geom::SkeletonGridGeometry<NDIM>(
+         d_skel_grid_geometry[g] = new geom::BlockGridGeometry<NDIM>(
                                       geom_name,
-                                      main_input_db->getDatabase(geom_name));
+                                      main_input_db->getDatabase(geom_name),
+                                      g);
 
       } else {
          break;
       }
    }
 
-   setGridGeometrySize(num_blocks);
+   tbox::Pointer< hier::MultiblockGridGeometry<NDIM> > mblk_geometry =
+      new hier::MultiblockGridGeometry<NDIM>(d_skel_grid_geometry);
 
-   for (int b = 0; b < num_blocks; b++) {
-
-      setGridGeometry(d_skel_grid_geometry[b],b);
-   }
+   setGridGeometry(mblk_geometry);
 
    readTestInput(main_input_db->getDatabase("EdgeMultiblockTest"));
 }
 
 EdgeMultiblockTest::~EdgeMultiblockTest()
 {
-   delete[] d_skel_grid_geometry;
 }
 
 void EdgeMultiblockTest::readTestInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -105,7 +97,7 @@ void EdgeMultiblockTest::readTestInput(tbox::Pointer<tbox::Database> db)
 void EdgeMultiblockTest::registerVariables(MultiblockTester* commtest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(commtest != (MultiblockTester*)NULL);
+   TBOX_ASSERT(commtest != (MultiblockTester*)NULL);
 #endif
 
    int nvars = d_variable_src_name.getSize();
@@ -177,7 +169,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 {
    (void) time;
 
-   tbox::Pointer< geom::SkeletonPatchGeometry<NDIM> >
+   tbox::Pointer< geom::BlockPatchGeometry<NDIM> >
       pgeom = patch.getPatchGeometry();
 
    const tbox::Array<hier::BoundaryBox<NDIM> > node_bdry = 
@@ -318,7 +310,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
 void EdgeMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch<NDIM>& patch,
-   tbox::List<mblk::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
+   tbox::List<xfer::MultiblockRefineSchedule<NDIM>::SingularityPatch>&
       sing_patches,
    const hier::Box<NDIM>& fill_box,
    const hier::BoundaryBox<NDIM>& bbox)
@@ -365,7 +357,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
       if (sing_patches.size()) {
 
          for (tbox::List
-              <mblk::MultiblockRefineSchedule<NDIM>::SingularityPatch>::
+              <xfer::MultiblockRefineSchedule<NDIM>::SingularityPatch>::
               Iterator sp(sing_patches); sp; sp++) {
             tbox::Pointer< pdat::EdgeData<NDIM,double> > sing_data =
                sp().d_patch->getPatchData(d_variables[i], getDataContext());
@@ -468,9 +460,9 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 *                                                                       *
 *************************************************************************
 */
-void EdgeMultiblockTest::verifyResults(
+bool EdgeMultiblockTest::verifyResults(
    hier::Patch<NDIM>& patch, 
-   const tbox::Pointer<mblk::MultiblockPatchHierarchy<NDIM> > hierarchy, 
+   const tbox::Pointer<hier::MultiblockPatchHierarchy<NDIM> > hierarchy, 
    int level_number,
    int block_number)
 {
@@ -492,7 +484,7 @@ void EdgeMultiblockTest::verifyResults(
    hier::Box<NDIM> tbox(pbox);
    tbox.grow(tgcw);
 
-   tbox::List<mblk::MultiblockPatchHierarchy<NDIM>::Neighbor>& neighbors =
+   tbox::List<hier::MultiblockPatchHierarchy<NDIM>::Neighbor>& neighbors =
       hierarchy->getNeighbors(block_number);
    hier::BoxList<NDIM> singularity(
       hierarchy->getSingularityBoxList(block_number));
@@ -520,7 +512,7 @@ void EdgeMultiblockTest::verifyResults(
             for (int d = 0; d < depth; d++) {
                double result = (*edge_data)(ci(),d);
 
-               if (!tbox::Utilities::deq(correct, result)) {
+               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                        << " : edge index = " << ci() << endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
@@ -539,7 +531,7 @@ void EdgeMultiblockTest::verifyResults(
          hier::Box<NDIM> patch_edge_box =
             pdat::EdgeGeometry<NDIM>::toEdgeBox(pbox, axis);
 
-         for (tbox::List<mblk::MultiblockPatchHierarchy<NDIM>::Neighbor>::
+         for (tbox::List<hier::MultiblockPatchHierarchy<NDIM>::Neighbor>::
               Iterator ne(neighbors); ne; ne++) {
 
             correct = ne().d_id;
@@ -555,7 +547,7 @@ void EdgeMultiblockTest::verifyResults(
                      for (int d = 0; d < depth; d++) {
                         double result = (*edge_data)(ci(),d);
    
-                        if (!tbox::Utilities::deq(correct, result)) {
+                        if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                            tbox::perr << "Test FAILED: ...."
                                 << " : edge index = " << ci() << endl;
                            tbox::perr << "  Variable = " 
@@ -572,7 +564,7 @@ void EdgeMultiblockTest::verifyResults(
          } 
       } 
 
-      tbox::Pointer< geom::SkeletonPatchGeometry<NDIM> > pgeom =
+      tbox::Pointer< geom::BlockPatchGeometry<NDIM> > pgeom =
          patch.getPatchGeometry();
 
       for (int b = 0; b < NDIM; b++) {
@@ -590,7 +582,7 @@ void EdgeMultiblockTest::verifyResults(
 
                int num_sing_neighbors = 0;
                for (tbox::List
-                    <mblk::MultiblockPatchHierarchy<NDIM>::Neighbor>::
+                    <hier::MultiblockPatchHierarchy<NDIM>::Neighbor>::
                     Iterator ns(neighbors); ns; ns++) {
                   if (ns().d_is_singularity) {
                      hier::BoxList<NDIM> neighbor_ghost(
@@ -641,7 +633,7 @@ void EdgeMultiblockTest::verifyResults(
                         for (int d = 0; d < depth; d++) {
                            double result = (*edge_data)(ci(),d);
 
-                           if (!tbox::Utilities::deq(correct, result)) {
+                           if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                               tbox::perr << "Test FAILED: ...."
                                    << " : edge index = " << ci() << endl;
                               tbox::perr << "  Variable = " 
@@ -672,6 +664,7 @@ void EdgeMultiblockTest::verifyResults(
    tbox::plog << "level_number = " << level_number << endl;
    tbox::plog << "Patch box = " << patch.getBox() << endl << endl; 
 
+   return (!test_failed);
 }
 
 void EdgeMultiblockTest::postprocessRefine(

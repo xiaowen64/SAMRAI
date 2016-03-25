@@ -1,9 +1,9 @@
 //
-// File:        BoxTree.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTree.h $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 601 $
-// Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1808 $
+// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
 // Description: Utility class to reduce complexity of box calculus operations.
 //
 
@@ -102,7 +102,7 @@ public:
     * findLocalOverlapIndices(), an unrecoverable assertion will be thrown.
     *
     * @param boxes input array of boxes.
-    * @param shifts the amount by which each box is shifted when there
+    * @param box_shifts the amount by which each box is shifted when there
     *               are periodic boundary conditions.  If there are no
     *               periodic boundary conditions you can pass an array
     *               of length zero; otherwise the array must contain

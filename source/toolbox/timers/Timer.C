@@ -1,16 +1,17 @@
 //
-// File:        Timer.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Timer.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Timer class to track elapsed time in portions of a program. 
 //
 
 #include "tbox/Timer.h"
 
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/IOStream.h"
+#include "tbox/SAMRAIManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
 
@@ -21,12 +22,6 @@ extern "C" {
 }
 #endif
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #define TBOX_TIMER_VERSION (1)
 
@@ -37,10 +32,6 @@ extern "C" {
 namespace SAMRAI {
    namespace tbox {
 
-#ifndef TIMER_MAX_CONCURRENT_TIMERS
-#define TIMER_MAX_CONCURRENT_TIMERS (128)
-#endif
-
 /*
 *************************************************************************
 *                                                                       *
@@ -49,15 +40,15 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-Timer::Timer(const string& name,
-                       const int id)
+Timer::Timer(const std::string& name,
+             const int id)
 {
    d_name = name;
    d_identifier = id;
    d_is_running = false; 
    d_is_active = true; 
    d_accesses = 0;
-   d_concurrent_timers = new bool[TIMER_MAX_CONCURRENT_TIMERS];
+   d_concurrent_timers.resizeArray( tbox::SAMRAIManager::getMaxNumberTimers() );
 
 #ifdef HAVE_VAMPIR
    string::size_type position;
@@ -101,7 +92,7 @@ Timer::Timer(const string& name,
 
 Timer::~Timer()
 {
-   delete [] d_concurrent_timers;
+   d_concurrent_timers.resizeArray(0);
 }
 
 /*
@@ -136,8 +127,8 @@ void Timer::start()
    if (d_is_active) {
 
       Clock::timestamp(d_user_start_total, 
-                            d_system_start_total, 
-                            d_wallclock_start_total);
+                       d_system_start_total, 
+                       d_wallclock_start_total);
 
       d_is_running = true;
 
@@ -177,8 +168,8 @@ void Timer::stop()
 #endif
 
       Clock::timestamp(d_user_stop_total, 
-                            d_system_stop_total, 
-                            d_wallclock_stop_total);
+                       d_system_stop_total, 
+                       d_wallclock_stop_total);
 
       d_is_running = false;
 
@@ -193,17 +184,18 @@ void Timer::stop()
 
 void Timer::reset()
 {
-   d_user_total = 0.;
-   d_system_total = 0.;
-   d_wallclock_total = 0.;
+   d_user_total = 0.0;
+   d_system_total = 0.0;
+   d_wallclock_total = 0.0;
 
-   d_user_exclusive = 0.;
-   d_system_exclusive = 0.;
-   d_wallclock_exclusive = 0.;
+   d_user_exclusive = 0.0;
+   d_system_exclusive = 0.0;
+   d_wallclock_exclusive = 0.0;
 
-   d_max_wallclock = 0.;
+   d_max_wallclock = 0.0;
 
-   for (int i = 0; i < TIMER_MAX_CONCURRENT_TIMERS; i++) {
+   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
+   for (int i = 0; i < max_timers; i++) {
       d_concurrent_timers[i] = false;
    }
 }
@@ -226,9 +218,9 @@ void Timer::reset()
 double Timer::computeLoadBalanceEfficiency() 
 {
    double wall_time = d_wallclock_total;
-   double sum = MPI::sumReduction(wall_time);
+   double sum = SAMRAI_MPI::sumReduction(wall_time);
    computeMaxWallclock();
-   int nprocs = MPI::getNodes();
+   int nprocs = SAMRAI_MPI::getNodes();
    double eff = 100.;
    if (d_max_wallclock > 0.) {
       eff = 100.*(sum/(double)nprocs)/d_max_wallclock;
@@ -239,14 +231,14 @@ double Timer::computeLoadBalanceEfficiency()
 void Timer::computeMaxWallclock()  
 {
    double wall_time = d_wallclock_total;
-   d_max_wallclock = MPI::maxReduction(wall_time);   
+   d_max_wallclock = SAMRAI_MPI::maxReduction(wall_time);   
 }
 
 void Timer::putToDatabase(
    Pointer<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    db->putInteger("TBOX_TIMER_VERSION",
                    TBOX_TIMER_VERSION);
@@ -266,7 +258,7 @@ void Timer::getFromRestart(
    Pointer<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    int ver = db->getInteger("TBOX_TIMER_VERSION");
    if (ver != TBOX_TIMER_VERSION) {

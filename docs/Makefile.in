@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/docs/Makefile.in $
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for the entire SAMRAI distribution
 ##
 
@@ -20,7 +20,7 @@ Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 Doxyfile: $(srcdir)/Doxyfile.in $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status --file=$(subdir)/$@
-dox: Doxyfile
+dox: Doxyfile doxygenBinaryWarning
 	@mkdir -p @dox_output_dir@.	&& \
 	@DOXYGEN_BIN@ Doxyfile	&& \
 	echo "# $@ was updated at `date` using this Doxyfile:" > $@	&& \
@@ -33,7 +33,7 @@ redox:
 devDoxyfile: $(srcdir)/devDoxyfile.in $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status --file=$(subdir)/$@
-devdox: devDoxyfile
+devdox: devDoxyfile doxygenBinaryWarning
 	@mkdir -p @dox_output_dir@.	&& \
 	@DOXYGEN_BIN@ devDoxyfile	&& \
 	echo "# $@ was updated at `date` using this Doxyfile:" > $@	&& \
@@ -52,3 +52,10 @@ grey-dox-bg:
 	    echo 'body { background: #bbbbbb; }' >> $${i}	;\
 	  done	;\
 	fi
+
+doxygenBinaryWarning:
+	if test -z "@DOXYGEN_BIN@"; then	\
+	  echo "Missing doxygen binary.  Please use --with-doxygen=PATH with configure." >&1	;\
+	  exit 1	;\
+	fi	;\
+	echo "Warning: try to use the most recent version of doxygen.  Older versions have been known to hang."

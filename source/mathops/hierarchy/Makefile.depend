@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -58,25 +58,27 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyDataOpsComplex.C HierarchyDataOpsComplex.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyDataOpsComplex.C	\
+	HierarchyDataOpsComplex.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -148,25 +150,27 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyDataOpsInteger.C HierarchyDataOpsInteger.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyDataOpsInteger.C	\
+	HierarchyDataOpsInteger.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -199,6 +203,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsInteger.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -221,8 +226,10 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/CellIterator.h $(INCLUDE_SAM)/CellOverlap.I	\
 	$(INCLUDE_SAM)/CellOverlap.h $(INCLUDE_SAM)/CellVariable.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/EdgeData.I	\
-	$(INCLUDE_SAM)/EdgeData.h $(INCLUDE_SAM)/EdgeDataFactory.I	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
+	$(INCLUDE_SAM)/EdgeDataFactory.I				\
 	$(INCLUDE_SAM)/EdgeDataFactory.h $(INCLUDE_SAM)/EdgeGeometry.I	\
 	$(INCLUDE_SAM)/EdgeGeometry.h $(INCLUDE_SAM)/EdgeIndex.I	\
 	$(INCLUDE_SAM)/EdgeIndex.h $(INCLUDE_SAM)/EdgeIterator.I	\
@@ -252,8 +259,18 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/HierarchySideDataOpsInteger.h			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/NodeData.I		\
-	$(INCLUDE_SAM)/NodeData.h $(INCLUDE_SAM)/NodeDataFactory.I	\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
+	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h $(INCLUDE_SAM)/NodeGeometry.I	\
 	$(INCLUDE_SAM)/NodeGeometry.h $(INCLUDE_SAM)/NodeIndex.I	\
 	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/NodeIterator.I	\
@@ -332,6 +349,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SideIndex.h $(INCLUDE_SAM)/SideIterator.I	\
 	$(INCLUDE_SAM)/SideIterator.h $(INCLUDE_SAM)/SideOverlap.I	\
 	$(INCLUDE_SAM)/SideOverlap.h $(INCLUDE_SAM)/SideVariable.h	\
+	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
 	$(INCLUDE_SAM)/VariableContext.h				\
@@ -348,10 +366,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -362,15 +378,16 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyDataOpsComplex.h HierarchyDataOpsInteger.h		\
-	HierarchyDataOpsManager.C HierarchyDataOpsManager.h		\
-	HierarchyDataOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyDataOpsComplex.h	\
+	HierarchyDataOpsInteger.h HierarchyDataOpsManager.C		\
+	HierarchyDataOpsManager.h HierarchyDataOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -380,6 +397,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsInteger.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -415,11 +433,20 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/HierarchySideDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsInteger.C			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
-	$(INCLUDE_SAM)/NodeDataFactory.C $(INCLUDE_SAM)/NodeGeometry.C	\
-	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
-	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
-	$(INCLUDE_SAM)/OuteredgeData.C					\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
+	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
+	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
+	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
 	$(INCLUDE_SAM)/OuteredgeGeometry.C				\
 	$(INCLUDE_SAM)/OuterfaceData.C					\
@@ -530,25 +557,27 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	HierarchyDataOpsReal.C HierarchyDataOpsReal.h
+	$(INCLUDE_SAM)/tbox/Utilities.h HierarchyDataOpsReal.C		\
+	HierarchyDataOpsReal.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\

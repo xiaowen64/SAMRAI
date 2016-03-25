@@ -1,5 +1,5 @@
 NonlinearSolverStrategy
-PVodeTrio_SAMRAIVector
+Sundials_SAMRAIVector
 PETSc_SAMRAIVectorReal
 SAMRAIVectorReal
 OuternodeSumTransaction
@@ -20,9 +20,9 @@ CellPoissonFACOps
 KINSOLSolver
 KINSOLAbstractFunctions
 KINSOL_SAMRAIContext
-PVodeTrioAbstractVector
-PVODEAbstractFunctions
-PVODESolver
+SundialsAbstractVector
+CVODEAbstractFunctions
+CVODESolver
 PETScAbstractVectorReal
 SNES_SAMRAIContext
 SNESAbstractFunctions

@@ -2,11 +2,11 @@
 #define included_solv_SimpleCellRobinBcCoefs_C
 
 /*
- * File:         SimpleCellRobinBcCoefs.C
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/SimpleCellRobinBcCoefs.C $
  * Package:      SAMRAI solvers
- * Copyright:    (c) 1997-2005 The Regents of the University of California
- * Revision:     $Revision: 601 $
- * Modified:     $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+ * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 1704 $
+ * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description:  Level solver for diffusion-like elliptic problems.
  */
 
@@ -20,12 +20,6 @@
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifndef NULL
 #define NULL (0)
@@ -48,7 +42,7 @@ namespace SAMRAI {
 */
 
 template<int DIM>  SimpleCellRobinBcCoefs<DIM>::SimpleCellRobinBcCoefs(
-   const string& object_name)
+   const std::string& object_name)
    : d_object_name(object_name),
      d_hierarchy(NULL),
      d_ln_min(-1),
@@ -107,7 +101,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setHierarchy(
 
 
 template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBoundaries(
-   const string &boundary_type,
+   const std::string &boundary_type,
    const int fluxes,
    const int flags,
    int *bdry_types)
@@ -192,6 +186,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBoundaries(
 
 template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
+   tbox::Pointer<pdat::ArrayData<DIM,double> > &bcoef_data ,
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
@@ -291,6 +286,9 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
       if ( !acoef_data.isNull() ) {
          acoef_data->fill( 1.0 );
       }
+      if ( !bcoef_data.isNull() ) {
+         bcoef_data->fill( 0.0 );
+      }
 
       if ( !gcoef_data.isNull() ) {
 
@@ -328,6 +326,9 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
 
       if ( !acoef_data.isNull() ) {
          acoef_data->fill( 0.0 );
+      }
+      if ( !bcoef_data.isNull() ) {
+         bcoef_data->fill( 1.0 );
       }
 
       if ( !gcoef_data.isNull() ) {
@@ -379,6 +380,20 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
             }
             else {
                a(*ai,0) = 0.0;
+            }
+         }
+      }
+
+      if ( !bcoef_data.isNull() ) {
+         pdat::ArrayData<DIM,double> &b = *bcoef_data;
+         pdat::ArrayDataIterator<DIM> bi(b.getBox());
+         for ( ; bi; bi++ ) {
+	    pdat::FaceIndex<DIM> fi( bi()+offset_to_inside, axis, face );
+            if ( flag_data(fi,face) == 0 ) {
+               b(*bi,0) = 0.0;
+            }
+            else {
+               b(*bi,0) = 1.0;
             }
          }
       }

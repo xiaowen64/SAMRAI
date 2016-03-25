@@ -1,9 +1,9 @@
 //
-// File:        CartesianPatchGeometry.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/cartesian/patch_geom/CartesianPatchGeometry.C $
 // Package:     SAMRAI geometry package
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Simple Cartesian grid geometry for an AMR hierarchy.
 //
 
@@ -13,10 +13,7 @@
 #include "CartesianPatchGeometry.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 #ifndef NULL
@@ -48,9 +45,9 @@ template<int DIM>  CartesianPatchGeometry<DIM>::CartesianPatchGeometry(
                            touches_regular_bdry, touches_periodic_bdry)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(dx == (double*)NULL));
-   assert(!(x_lo == (double*)NULL));
-   assert(!(x_up == (double*)NULL));
+   TBOX_ASSERT(!(dx == (double*)NULL));
+   TBOX_ASSERT(!(x_lo == (double*)NULL));
+   TBOX_ASSERT(!(x_up == (double*)NULL));
 #endif
    for (int id = 0; id < DIM; id++) {
       d_dx[id]   = dx[id];
@@ -79,25 +76,25 @@ template<int DIM>  CartesianPatchGeometry<DIM>::~CartesianPatchGeometry()
 *                                                                       *
 *************************************************************************
 */
-template<int DIM> void CartesianPatchGeometry<DIM>::printClassData(ostream& os) const
+template<int DIM> void CartesianPatchGeometry<DIM>::printClassData(std::ostream& os) const
 {
    os << "Printing CartesianPatchGeometry data: this = "
-      << (CartesianPatchGeometry*)this << endl;
+      << (CartesianPatchGeometry*)this << std::endl;
    os << "x_lo = ";
    for (int id1 = 0; id1 < DIM; id1++) {
       os << d_x_lo[id1] << "   ";
    }
-   os << endl;
+   os << std::endl;
    os << "x_up = ";
    for (int id2 = 0; id2 < DIM; id2++) {
       os << d_x_up[id2] << "   ";
    }
-   os << endl;
+   os << std::endl;
    os << "dx = ";
    for (int id3 = 0; id3 < DIM; id3++) {
       os << d_dx[id3] << "   ";
    }
-   os << endl;
+   os << std::endl;
  
    hier::PatchGeometry<DIM>::printClassData(os);
 }

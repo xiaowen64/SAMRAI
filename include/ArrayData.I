@@ -1,22 +1,12 @@
 //
-// File:	ArrayData.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/array/ArrayData.I $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated array data structure supporting patch data types
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#include <assert.h>
-#define included_assert
-#endif
-#endif
-
-#ifndef included_tbox_IEEE
-#include <tbox/IEEE.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -24,8 +14,8 @@
 namespace SAMRAI {
     namespace pdat {
 
-template<int DIM, class TYPE>
-inline const hier::Box<DIM>& ArrayData<DIM,TYPE>::getBox() const
+template<int DIM, class TYPE> inline 
+const hier::Box<DIM>& ArrayData<DIM,TYPE>::getBox() const
 {
    return(d_box);
 }
@@ -49,46 +39,48 @@ int ArrayData<DIM,TYPE>::getOffset() const
 }
 
 template<int DIM, class TYPE> inline
-TYPE *ArrayData<DIM,TYPE>::getPointer(const int d)
+TYPE *ArrayData<DIM,TYPE>::getPointer(int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    return(d_array.getPointer(d * d_offset));
 }
 
 template<int DIM, class TYPE> inline
-const TYPE *ArrayData<DIM,TYPE>::getPointer(const int d) const
+const TYPE *ArrayData<DIM,TYPE>::getPointer(int d) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    return(d_array.getPointer(d * d_offset));
 }
 
 template<int DIM, class TYPE> inline
-TYPE& ArrayData<DIM,TYPE>::operator()(const hier::Index<DIM>& i, const int d)
+TYPE& ArrayData<DIM,TYPE>::operator()(const hier::Index<DIM>& i, 
+                                      int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    const int index = d_box.offset(i) + d*d_offset;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((index >= 0) && (index < d_depth*d_offset));
+   TBOX_ASSERT((index >= 0) && (index < d_depth*d_offset));
 #endif
    return(d_array[index]);
 }
 
 template<int DIM, class TYPE> inline
 const TYPE&
-ArrayData<DIM,TYPE>::operator()(const hier::Index<DIM>& i, const int d) const
+ArrayData<DIM,TYPE>::operator()(const hier::Index<DIM>& i, 
+                                int d) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    const int index = d_box.offset(i) + d*d_offset;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((index >= 0) && (index < d_depth*d_offset));
+   TBOX_ASSERT((index >= 0) && (index < d_depth*d_offset));
 #endif
    return(d_array[index]);
 }
@@ -110,19 +102,20 @@ bool ArrayData<DIM,TYPE>::isStandardType()
 
 template<int DIM, class TYPE>  inline
 size_t ArrayData<DIM,TYPE>::getSizeOfData(
-   const hier::Box<DIM>& box, const int depth)
+   const hier::Box<DIM>& box, 
+   int depth)
 {
    return(tbox::Arena::align(box.size() * depth * sizeof(TYPE)));
 }
 
 template<int DIM, class TYPE> inline
 int ArrayData<DIM,TYPE>::getDataStreamSize(
-   const hier::BoxList<DIM>& dest_boxes,
-   const hier::IntVector<DIM>& source_offset) const
+   const hier::BoxList<DIM>& boxes,
+   const hier::IntVector<DIM>& source_shift) const
 {
-   (void) source_offset;
+   (void) source_shift;
 
-   const int nelements = dest_boxes.getTotalSizeOfBoxes();
+   const int nelements = boxes.getTotalSizeOfBoxes();
 
    if (typeid(TYPE) == typeid(bool)) {
       return(tbox::AbstractStream::sizeofBool(d_depth * nelements));

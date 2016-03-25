@@ -1,9 +1,9 @@
 /*
- * File:        CartesianRobainBcHelper.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CartesianRobinBcHelper.h $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 601 $
- * Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1818 $
+ * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -32,7 +32,7 @@
 #include "Patch.h"
 #endif
 
-#ifndef included_tbox_ArrayData
+#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
 #endif
 
@@ -54,7 +54,6 @@
 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -101,9 +100,10 @@ public:
     * Requires a concrete implementation of RobinBcCoefStrategy<DIM>.
     *
     * @param object_name Name of the object, for general referencing.
+    * @param coef_strategy Coefficients strategy being helped.
     */
    CartesianRobinBcHelper(
-      string object_name=string(),
+      std::string object_name=std::string(),
       RobinBcCoefStrategy<DIM> *coef_strategy=NULL );
 
 
@@ -135,12 +135,12 @@ public:
    virtual void postprocessRefineBoxes (
       hier::Patch<DIM> &fine ,
       const hier::Patch<DIM> &coarse ,
-      const hier::BoxList<DIM> &fine_box ,
+      const hier::BoxList<DIM> &fine_boxes ,
       const hier::IntVector<DIM> &ratio );
    virtual void postprocessRefine (
       hier::Patch<DIM> &fine ,
       const hier::Patch<DIM> &coarse ,
-      const hier::Box<DIM> &fine_boxes ,
+      const hier::Box<DIM> &fine_box ,
       const hier::IntVector<DIM> &ratio );
 
    //@}
@@ -253,7 +253,7 @@ public:
     *                          bool homogeneous_bc=false )
     * for each.
     *
-    * @param patch hier::Patch on which to set boundary condition
+    * @param level PatchLevel on which to set boundary condition
     * @param fill_time Solution time corresponding to filling
     * @param ghost_width_to_fill Max ghost width requiring fill
     * @param target_data_id hier::Patch data index of data to be set.
@@ -431,7 +431,7 @@ private:
    hier::Box<DIM> makeFaceBoundaryBox(
       const hier::BoundaryBox<DIM> &boundary_box ) const;
 
-   string d_object_name;
+   std::string d_object_name;
 
    /*!
     * @brief Coefficient strategy giving a way to get to

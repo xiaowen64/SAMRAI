@@ -1,9 +1,9 @@
 //
-// File:	SkeletonCoarsen.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/skeleton/operators/SkeletonCoarsen.C $
 // Package:	SAMRAI geometry
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Weighted averaging operator for cell-centered double data on 
 //              a Moving mesh.
 //
@@ -17,12 +17,6 @@
 
 #include<float.h>
 #include<math.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 
 namespace SAMRAI {
@@ -40,7 +34,7 @@ template<int DIM> SkeletonCoarsen<DIM>::~SkeletonCoarsen()
 
 template<int DIM> bool SkeletonCoarsen<DIM>::findCoarsenOperator(
    const tbox::Pointer< hier::Variable<DIM> >& var,
-   const string &op_name) const
+   const std::string &op_name) const
 {
    NULL_USE(var);
    if (op_name == d_name_id) {
@@ -50,7 +44,7 @@ template<int DIM> bool SkeletonCoarsen<DIM>::findCoarsenOperator(
    }
 }
 
-template<int DIM> const string& SkeletonCoarsen<DIM>::getOperatorName() const
+template<int DIM> const std::string& SkeletonCoarsen<DIM>::getOperatorName() const
 {
    return(d_name_id);
 }

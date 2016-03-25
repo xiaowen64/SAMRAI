@@ -1,9 +1,9 @@
 ##
-## File:        genfiles.sh
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -41,11 +41,11 @@ done
 #
 
 for t in \
-BergerRigoutsos BoxGeneratorStrategy HistogramBox \
-GriddingAlgorithm StandardTagAndInitStrategy StandardTagAndInitialize \
-TagAndInitializeStrategy BalanceUtilities LoadBalancer \
-LoadBalanceStrategy BaseGriddingAlgorithm \
-AsyncBergerRigoutsos AsyncBergerRigoutsosNode
+AsyncBergerRigoutsos AsyncBergerRigoutsosNode BalanceUtilities \
+BaseGriddingAlgorithm BergerRigoutsos BoxGeneratorStrategy GriddingAlgorithm \
+HistogramBox LoadBalancer LoadBalanceStrategy MultiblockGriddingAlgorithm \
+MultiblockGriddingTagger StandardTagAndInitialize StandardTagAndInitStrategy \
+TagAndInitializeStrategy 
 do
 ${MT} default.filenames ./tmpXd mesh $t NDIM
 done
@@ -63,6 +63,7 @@ ${MT} default.filenames ./tmpXd tbox tbox::Pointer mesh::StandardTagAndInitializ
 ${MT} default.filenames ./tmpXd tbox tbox::Pointer mesh::StandardTagAndInitStrategy NDIM
 ${MT} default.filenames ./tmpXd tbox tbox::Pointer mesh::TagAndInitializeStrategy NDIM
 ${MT} default.filenames ./tmpXd tbox tbox::Pointer mesh::AsyncBergerRigoutsos NDIM
+${MT} default.filenames ./tmpXd tbox tbox::Pointer mesh::MultiblockGriddingAlgorithm NDIM
 
 #
 # now copy the new template files into the repository

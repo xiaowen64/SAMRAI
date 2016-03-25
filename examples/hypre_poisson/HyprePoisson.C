@@ -1,9 +1,9 @@
 /*
- * File:        $RCSfile$
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/hypre_poisson/HyprePoisson.C $
  * Package:     SAMRAI application
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 706 $
- * Modified:    $Date: 2005-11-04 12:12:05 -0800 (Fri, 04 Nov 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Numerical routines for example Hypre Poisson solver
  */
 
@@ -24,12 +24,6 @@
 #include "Variable.h"
 #include "VariableDatabase.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 
 extern "C" {
@@ -242,7 +236,7 @@ void HyprePoisson::resetHierarchyConfiguration (
 * Solve the Poisson problem.                                            *
 *************************************************************************
 */
-int HyprePoisson::solvePoisson()
+bool HyprePoisson::solvePoisson()
 {
 
   if ( d_hierarchy.isNull() ) {
@@ -301,7 +295,10 @@ int HyprePoisson::solvePoisson()
    */
   d_poisson_hypre.deallocateSolverState();
 
-  return 0;
+  /*
+   * Return whether solver converged.
+   */
+  return solver_ret ? true : false;
 }
 
 
@@ -410,7 +407,7 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    const hier::Patch<NDIM> &patch ,
    const hier::Box<NDIM> &region ,
    const string &variable_name ,
-   int depth_id )
+   int depth_id ) const
 {
    pdat::CellData<NDIM,double>::Iterator icell( patch.getBox() );
 

@@ -1,9 +1,9 @@
 //
-// File:	SAMRAIManager.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/SAMRAIManager.h $
 // Package:     SAMRAI initialization and shutdown
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 406 $
-// Modified:	$Date: 2005-06-01 09:48:43 -0700 (Wed, 01 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: SAMRAI class to manage package startup and shutdown
 //
 
@@ -52,27 +52,71 @@ struct SAMRAIManager
    static void shutdown();
 
    /*!
-    * Return maximum number of patch data entries supported by SAMRAI patches.
+    * Return maximum number of patch data entries supported by SAMRAI.
     * The value is either the default value (256) or the value set by calling
     * the setMaxNumberPatchDataEntries() function.
     */
    static int getMaxNumberPatchDataEntries();
 
    /*!
-    * Set maximum number of patch data entries supported by SAMRAI patches.
-    * Note that this routine cannot be called more than once and it cannot be
-    * called anytime after the max patch data entries value has been accessed
-    * either by the user or internally within SAMRAI.  Typically, the first
-    * access of this value occurs whenever any objects related to the patch 
-    * hierarchy or variables are created.  If the argument value is < 0, the 
-    * default value is used.
+    * Set maximum number of patch data entries supported by SAMRAI to the 
+    * maximum of the current value and the argument value.
+    * 
+    * Note that this routine cannot be called anytime after the max patch 
+    * data entries value has been accessed via the getMaxNumberPatchDataEntries()
+    * function, either by the user or internally within SAMRAI.  Typically, the 
+    * first internal access of this value occurs whenever any objects related 
+    * to the patch hierarchy or variables are created. 
     */
    static void setMaxNumberPatchDataEntries(int maxnum);
+
+   /*!
+    * Return maximum number of timers supported by SAMRAI.
+    * The value is either the default value (128) or the value set by
+    * calling the setMaxNumberTimers() function.
+    */
+   static int getMaxNumberTimers();
+
+   /*!
+    * Set maximum number of timers supported by SAMRAI to the
+    * maximum of the current value and the argument value.
+    *
+    * Note that this routine cannot be called anytime after the max
+    * statistics value has been accessed via the getMaxTimers()
+    * function, either by the user or internally within SAMRAI.  Typically,
+    * the first internal access of this value occurs whenever the
+    * timer manager is accessed.
+    */
+   static void setMaxNumberTimers(int maxnum);
+
+   /*!
+    * Return maximum number of statistics supported by SAMRAI.
+    * The value is either the default value (128) or the value set by 
+    * calling the setMaxNumberStatistics() function.
+    */
+   static int getMaxNumberStatistics();
+
+   /*!
+    * Set maximum number of statistics supported by SAMRAI to the
+    * maximum of the current value and the argument value.
+    *
+    * Note that this routine cannot be called anytime after the max 
+    * statistics value has been accessed via the getMaxStatistics()
+    * function, either by the user or internally within SAMRAI.  Typically, 
+    * the first internal access of this value occurs whenever the 
+    * statistician is accessed. 
+    */
+   static void setMaxNumberStatistics(int maxnum);
 
 private:
    static int s_max_patch_data_entries;
    static bool s_max_patch_data_entries_accessed;
-   static bool s_max_patch_data_entries_set_by_user;
+
+   static int s_max_timers;
+   static bool s_max_timers_accessed;
+
+   static int s_max_statistics;
+   static bool s_max_statistics_accessed;
 };
 
 }

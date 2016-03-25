@@ -1,9 +1,9 @@
 //
-// File:        ImplicitIntegrator.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/implicit/ImplicitIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Implicit time integration manager class for nonlinear problems.
 //
 
@@ -15,18 +15,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
-using namespace std;
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
-#include "tbox/IEEE.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
-#include "tbox/IEEE.h"
+#include "tbox/MathUtilities.h"
 
 #define ALGS_IMPLICIT_INTEGRATOR_VERSION (1)
 
@@ -52,18 +44,18 @@ namespace SAMRAI {
 */
 
 template<int DIM>  ImplicitIntegrator<DIM>::ImplicitIntegrator(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    ImplicitEquationStrategy<DIM>* implicit_equations,
    solv::NonlinearSolverStrategy<DIM>* nonlinear_solver,
    const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(implicit_equations != ((ImplicitEquationStrategy<DIM>*)NULL));
-   assert(nonlinear_solver != ((solv::NonlinearSolverStrategy<DIM>*)NULL));
-   assert(!hierarchy.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(implicit_equations != ((ImplicitEquationStrategy<DIM>*)NULL));
+   TBOX_ASSERT(nonlinear_solver != ((solv::NonlinearSolverStrategy<DIM>*)NULL));
+   TBOX_ASSERT(!hierarchy.isNull());
 #endif
 
    d_object_name         = object_name;
@@ -77,7 +69,7 @@ template<int DIM>  ImplicitIntegrator<DIM>::ImplicitIntegrator(
    d_final_time =
    d_current_time =
    d_current_dt =
-   d_old_dt = tbox::IEEE::getSignalingNaN();
+   d_old_dt = tbox::MathUtilities<double>::getSignalingNaN();
 
    d_integrator_step      = 0;
    d_max_integrator_steps = 0;
@@ -158,7 +150,7 @@ template<int DIM> void ImplicitIntegrator<DIM>::initialize()
 template<int DIM> int ImplicitIntegrator<DIM>::advanceSolution(const double dt,
                                               const bool first_step)
 {
-   int retcode = tbox::IEEE::getINT_MAX();
+   int retcode = tbox::MathUtilities<int>::getMax();
 
    if (stepsRemaining() && (d_current_time < d_final_time)) {
 
@@ -210,10 +202,11 @@ template<int DIM> double ImplicitIntegrator<DIM>::getNextDt(
    double dt_next = d_implicit_equations->getNextDt(good_solution,
                                                     solver_retcode);
 
-   double global_dt_next = tbox::MPI::minReduction(dt_next);
+   double global_dt_next = tbox::SAMRAI_MPI::minReduction(dt_next);
 
-   global_dt_next = tbox::Utilities::dmin(global_dt_next,
-                                         d_final_time - d_current_time); 
+   global_dt_next = 
+      tbox::MathUtilities<double>::Min(global_dt_next,
+                                       d_final_time - d_current_time); 
 
    return(global_dt_next);
 }
@@ -235,7 +228,7 @@ template<int DIM> bool ImplicitIntegrator<DIM>::checkNewSolution(
       d_implicit_equations->checkNewSolution(solver_retcode);
 
    int good = (good_solution ? 1 : 0);
-   int global_good = tbox::MPI::minReduction(good);
+   int global_good = tbox::SAMRAI_MPI::minReduction(good);
 
    return (global_good == 0 ? false : true);
 }
@@ -275,7 +268,7 @@ template<int DIM> void ImplicitIntegrator<DIM>::getFromInput(
    tbox::Pointer<tbox::InputDatabase> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
  
   if ( tbox::RestartManager::getManager()->isFromRestart() ) {
@@ -349,7 +342,7 @@ template<int DIM> void ImplicitIntegrator<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION",
@@ -416,29 +409,29 @@ template<int DIM> void ImplicitIntegrator<DIM>::getFromRestart()
 *************************************************************************
 */
 
-template<int DIM> void ImplicitIntegrator<DIM>::printClassData(ostream& os) const
+template<int DIM> void ImplicitIntegrator<DIM>::printClassData(std::ostream& os) const
 {
-   os << "\nImplicitIntegrator<DIM>::printClassData..." << endl;
+   os << "\nImplicitIntegrator<DIM>::printClassData..." << std::endl;
    os << "ImplicitIntegrator<DIM>: this = "
-      << (ImplicitIntegrator<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl; 
+      << (ImplicitIntegrator<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl; 
    os << "d_implicit_equations = " 
-      << (ImplicitEquationStrategy<DIM>*)d_implicit_equations << endl;
+      << (ImplicitEquationStrategy<DIM>*)d_implicit_equations << std::endl;
    os << "d_nonlinear_solver = " 
-      << (solv::NonlinearSolverStrategy<DIM>*)d_nonlinear_solver << endl;
+      << (solv::NonlinearSolverStrategy<DIM>*)d_nonlinear_solver << std::endl;
    os << "d_patch_hierarchy = " 
-      << (hier::PatchHierarchy<DIM>*)d_patch_hierarchy << endl;
+      << (hier::PatchHierarchy<DIM>*)d_patch_hierarchy << std::endl;
    os << "d_solution_vector = " 
-      << (solv::SAMRAIVectorReal<DIM,double>*)d_solution_vector << endl;
+      << (solv::SAMRAIVectorReal<DIM,double>*)d_solution_vector << std::endl;
 
-   os << "d_finest_level = " << d_finest_level << endl;
-   os << "d_initial_time = " << d_initial_time << endl;
-   os << "d_final_time = " << d_final_time << endl;
-   os << "d_current_time = " << d_current_time << endl;
-   os << "d_current_dt = " << d_current_dt << endl;
-   os << "d_old_dt = " << d_old_dt << endl;
-   os << "d_integrator_step = " << d_integrator_step << endl;
-   os << "d_max_integrator_steps = " << d_max_integrator_steps << endl;
+   os << "d_finest_level = " << d_finest_level << std::endl;
+   os << "d_initial_time = " << d_initial_time << std::endl;
+   os << "d_final_time = " << d_final_time << std::endl;
+   os << "d_current_time = " << d_current_time << std::endl;
+   os << "d_current_dt = " << d_current_dt << std::endl;
+   os << "d_old_dt = " << d_old_dt << std::endl;
+   os << "d_integrator_step = " << d_integrator_step << std::endl;
+   os << "d_max_integrator_steps = " << d_max_integrator_steps << std::endl;
 }
 
 }

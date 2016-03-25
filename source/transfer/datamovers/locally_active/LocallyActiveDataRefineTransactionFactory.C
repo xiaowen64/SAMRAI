@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataRefineTransactionFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineTransactionFactory.C $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 579 $
-// Modified:	$Date: 2005-08-22 15:01:30 -0700 (Mon, 22 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Interface for factory objects that create transactions for
 //              locally-active data refine schedules.
 //

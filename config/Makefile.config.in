@@ -1,9 +1,9 @@
 ##
-## File:        Makefile.config.in
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/config/Makefile.config.in $
 ## Package:     SAMRAI makefile system
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1730 $
+## Modified:    $LastChangedDate: 2007-11-28 17:14:09 -0800 (Wed, 28 Nov 2007) $
 ## Description: configuration makefile included by all SAMRAI makefiles
 ##
 
@@ -47,61 +47,60 @@ SHELL         = /bin/sh
 SAMRAI_TARGET=@SAMRAI_TARGET@
 
 INCLUDE_SAM   = $(SAMRAI)/include
-
+LIB_SAM       = $(OBJECT)/lib
+BIN_SAM       = $(OBJECT)/bin
 
 LIB_SUFFIX=@LIB_SUFFIX@
 
 # For use in dependency lists to check of SAMRAI has been rebuilt
 LIBSAMRAIDEPEND   = \
-	$(OBJECT)/lib/libSAMRAI$(LIB_SUFFIX) 
+	$(LIB_SAM)/libSAMRAI$(LIB_SUFFIX) 
 
 LIBSAMRAI     = \
-	$(OBJECT)/lib/libSAMRAI$(LIB_SUFFIX)
+	$(LIB_SAM)/libSAMRAI$(LIB_SUFFIX)
 
 LIBSAMRAI1D = \
-	$(OBJECT)/lib/libSAMRAI1d_appu$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_algs$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_solv$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_geom$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_mblk$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_mesh$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_math_std$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_math_special$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_pdat_std$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_pdat_special$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_xfer$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI1d_hier$(LIB_SUFFIX) 
+	$(LIB_SAM)/libSAMRAI1d_appu$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_algs$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_solv$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_geom$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_mesh$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_math_std$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_math_special$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_pdat_std$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_pdat_special$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_xfer$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI1d_hier$(LIB_SUFFIX) 
 
 LIBSAMRAI2D = \
-	$(OBJECT)/lib/libSAMRAI2d_appu$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_algs$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_solv$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_geom$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_mblk$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_mesh$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_math_std$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_math_special$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_pdat_std$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_pdat_special$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_xfer$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI2d_hier$(LIB_SUFFIX) 
+	$(LIB_SAM)/libSAMRAI2d_appu$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_algs$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_solv$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_geom$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_mesh$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_math_std$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_math_special$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_pdat_std$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_pdat_special$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_xfer$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI2d_hier$(LIB_SUFFIX) 
 
 LIBSAMRAI3D = \
-	$(OBJECT)/lib/libSAMRAI3d_appu$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_algs$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_solv$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_geom$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_mblk$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_mesh$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_math_std$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_math_special$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_pdat_std$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_pdat_special$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_xfer$(LIB_SUFFIX) \
-	$(OBJECT)/lib/libSAMRAI3d_hier$(LIB_SUFFIX) 
+	$(LIB_SAM)/libSAMRAI3d_appu$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_algs$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_solv$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_geom$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_mesh$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_math_std$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_math_special$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_pdat_std$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_pdat_special$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_xfer$(LIB_SUFFIX) \
+	$(LIB_SAM)/libSAMRAI3d_hier$(LIB_SUFFIX) 
 
 M4	      =	@M4@
 RM            = rm -f
+CP            = cp
 XARGS	      = @XARGS@
 
 F77           = @F77@
@@ -113,14 +112,14 @@ CFLAGS        = @C_FLAGS@ $(CFLAGS_EXTRA)
 CXX           = @CXX@
 CXXFLAGS      =	@CXX_FLAGS@ $(CXXFLAGS_EXTRA)
 
-CPPFLAGS      = -I. -I$(OBJECT)/include -I$(INCLUDE_SAM) @INC_PATH@ $(CPPFLAGS_EXTRA)
+CPPFLAGS      = @CPPFLAGS@ -I. -I$(OBJECT)/include -I$(INCLUDE_SAM) @INC_PATH@ $(CPPFLAGS_EXTRA)
 
 AR	      = @AR@
 
-LDFLAGS       = @LD_FLAGS@ -L$(OBJECT)/lib @LIB_PATH@ $(LDFLAGS_EXTRA)
+LDFLAGS       = @LD_FLAGS@ -L$(LIB_SAM) @LIB_PATH@ $(LDFLAGS_EXTRA)
 LDLIBS        = $(LDLIBS_EXTRA) @LIB_NAME@
 
-CXXLD_FLAGS   = -L$(OBJECT)/lib @CXXLD_FLAGS@ @LIB_PATH@ $(LDFLAGS_EXTRA)
+CXXLD_FLAGS   = -L$(LIB_SAM) @CXXLD_FLAGS@ @LIB_PATH@ $(LDFLAGS_EXTRA)
 CXXLDLIBS     = $(LDLIBS_EXTRA) @LIB_NAME@
 
 # Are object files dependent on template implementation files (.C) 

@@ -2,11 +2,11 @@
 #define included_solv_CartesianRobinBcHelper_C
 
 /*
- * File:        CartesianRobainBcHelper.C
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CartesianRobinBcHelper.C $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 552 $
- * Modified:    $Date: 2005-08-17 11:32:27 -0700 (Wed, 17 Aug 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -20,23 +20,19 @@
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
+
 #include IOMANIP_HEADER_FILE
 
 #include "CartesianRobinBcHelper.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 extern "C" {
 void settype1cells2d_(
    double *data,
    const int &difirst, const int &dilast,
    const int &djfirst, const int &djlast,
-   const double *a, const double *g,
+   const double *a, const double *b, const double *g,
    const int &ifirst, const int &ilast,
    const int &jfirst, const int &jlast,
    const int &ibeg, const int &iend,
@@ -53,7 +49,7 @@ void settype1cells3d_(
    const int &difirst, const int &dilast,
    const int &djfirst, const int &djlast,
    const int &dkfirst, const int &dklast,
-   const double *a, const double *g,
+   const double *a, const double *b, const double *g,
    const int &ifirst, const int &ilast,
    const int &jfirst, const int &jlast,
    const int &kfirst, const int &klast,
@@ -88,7 +84,7 @@ namespace SAMRAI {
 */
 
 template<int DIM>  CartesianRobinBcHelper<DIM>::CartesianRobinBcHelper(
-   string object_name,
+   std::string object_name,
    RobinBcCoefStrategy<DIM> *coef_strategy)
   : d_object_name(object_name),
     d_coef_strategy(NULL),
@@ -242,10 +238,12 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
       const hier::Box<DIM> coefbox = makeFaceBoundaryBox(boundary_box);
       tbox::Pointer<pdat::ArrayData<DIM,double> >
         acoef_data = new pdat::ArrayData<DIM,double>( coefbox, 1 ),
+        bcoef_data = new pdat::ArrayData<DIM,double>( coefbox, 1 ),
         gcoef_data = homogeneous_bc ? NULL :
                      new pdat::ArrayData<DIM,double>( coefbox, 1 );
       t_use_set_bc_coefs->start();
       d_coef_strategy->setBcCoefs( acoef_data,
+                                   bcoef_data,
                                    gcoef_data,
                                    variable_ptr,
                                    patch,
@@ -273,6 +271,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[0], ghost_box.upper()[0],
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -291,6 +290,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[0], ghost_box.upper()[0],
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -309,6 +309,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[0], ghost_box.upper()[0],
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -327,6 +328,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[0], ghost_box.upper()[0],
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -354,6 +356,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 ghost_box.lower()[2], ghost_box.upper()[2],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -375,6 +378,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 ghost_box.lower()[2], ghost_box.upper()[2],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -396,6 +400,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 ghost_box.lower()[2], ghost_box.upper()[2],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -417,6 +422,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 ghost_box.lower()[2], ghost_box.upper()[2],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -438,6 +444,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 ghost_box.lower()[2], ghost_box.upper()[2],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -459,6 +466,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 				 ghost_box.lower()[1], ghost_box.upper()[1],
 				 ghost_box.lower()[2], ghost_box.upper()[2],
 				 acoef_data->getPointer(),
+				 bcoef_data->getPointer(),
 				 gcoef_data?gcoef_data->getPointer():NULL,
 				 coefbox.lower()[0], coefbox.upper()[0],
 				 coefbox.lower()[1], coefbox.upper()[1],
@@ -497,7 +505,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
       for ( int n=0; n<n_node_boxes; ++n ) {
 	 const hier::BoundaryBox<DIM> &bb = node_boxes[n];
 #ifdef DEBUG_CHECK_ASSERTIONS
-	 assert( bb.getBoundaryType() == 2 );	// Must be a node boundary.
+	 TBOX_ASSERT( bb.getBoundaryType() == 2 );	// Must be a node boundary.
 #endif
 	 const hier::Box<DIM> &bb_box = bb.getBox();
 	 const hier::Index<DIM> &lower = bb_box.lower();
@@ -530,7 +538,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 	    trimBoundaryBox(edge_boxes[n],ghost_box) :
             trimBoundaryBox(edge_boxes[n],patch_box);
 #ifdef DEBUG_CHECK_ASSERTIONS
-	 assert( boundary_box.getBoundaryType() == 2 );
+	 TBOX_ASSERT( boundary_box.getBoundaryType() == 2 );
 #endif
 	 const hier::Index<DIM> &lower = boundary_box.getBox().lower();
 	 const hier::Index<DIM> &upper = boundary_box.getBox().upper();
@@ -551,13 +559,13 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
       for ( int n=0; n<n_node_boxes; ++n ) {
 	 const hier::BoundaryBox<DIM> &bb = node_boxes[n];
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert( bb.getBoundaryType() == 3 );	// Must be an node boundary.
+      TBOX_ASSERT( bb.getBoundaryType() == 3 );	// Must be an node boundary.
 #endif
       const hier::Box<DIM> &bb_box = bb.getBox();
       const hier::Index<DIM> &lower = bb_box.lower();
       const hier::Index<DIM> &upper = bb_box.upper();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert( lower == upper );
+      TBOX_ASSERT( lower == upper );
 #endif
       const int location_index = bb.getLocationIndex();
       settype3cells3d_( data.getPointer(0),
@@ -622,7 +630,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesAtNodes (
    TBOX_ERROR(d_object_name << ": Using incomplete implementation"
               << "CartesianRobinBcHelper<DIM>::setBoundaryValuesAtNodes"
               << "is not implemented because there is not a need for it (yet)"
-              << endl);
+              << std::endl);
    return;
 }
 
@@ -647,7 +655,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setCoefImplementation (
 {
    if ( ! coef_strategy ) {
       TBOX_ERROR(d_object_name << ": Invalid pointer value"
-                 << endl);
+                 << std::endl);
    }
    d_coef_strategy = coef_strategy;
    return;
@@ -768,8 +776,8 @@ template<int DIM> hier::BoundaryBox<DIM> CartesianRobinBcHelper<DIM>::trimBounda
       key_direction = boundary_box.getLocationIndex()/4;
       for ( d=0; d<DIM; ++d ) {
          if ( d == key_direction ) {
-           newlo(d) = tbox::Utilities::imax( blo(d) , plo(d) );
-           newup(d) = tbox::Utilities::imin( bup(d) , pup(d) );
+           newlo(d) = tbox::MathUtilities<int>::Max( blo(d) , plo(d) );
+           newup(d) = tbox::MathUtilities<int>::Min( bup(d) , pup(d) );
          }
          else {
             newlo(d) = blo(d);
@@ -791,9 +799,9 @@ template<int DIM> hier::BoundaryBox<DIM> CartesianRobinBcHelper<DIM>::trimBounda
          }
          else {
             // Min side.  Use max between boundary and patch boxes.
-            newlo(d) = tbox::Utilities::imax( blo(d) , plo(d) );
+            newlo(d) = tbox::MathUtilities<int>::Max( blo(d) , plo(d) );
             // Max side.  Use min between boundary and patch boxes.
-            newup(d) = tbox::Utilities::imin( bup(d) , pup(d) );
+            newup(d) = tbox::MathUtilities<int>::Min( bup(d) , pup(d) );
          }
       }
       break;

@@ -1,9 +1,9 @@
 //
-// File:	BoundaryLookupTable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryLookupTable.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1811 $
+// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
 // Description:	 Lookup table to aid in BoundaryBox construction
 //
 
@@ -22,11 +22,17 @@ namespace SAMRAI {
 
 
 /*!
- * Class BoundaryLookupTable<DIM> is a singleton class that contains a table
- * that organizes all of the possible directions where a physical boundary
- * can exist around a domain.  It is used by GridGeometry<DIM> during
- * the construction of boundary boxes and by PatchGeometry<DIM> to determine
- * the box regions that need to be filled during a physical boundary fill.
+ * Class BoundaryLookupTable<DIM> is a singleton class that maintains 
+ * a table that organizes all of the possible boundary region cases 
+ * for a patch.  It is used primarily by the hier::GridGeometry<DIM> 
+ * during the construction of physical boundary boxes for patches and
+ * by the hier::PatchGeometry<DIM> class to determine box regions 
+ * to be filled during a physical boundary fill.
+ *
+ * This class is useful for any situation where enumerating the
+ * cases for boundary regions around a box is needed. The main advantage
+ * of using this class is that such calculations can be programmed in
+ * a dimension-independent way.
  *
  * @see hier::BoundaryBox
  * @see hier::GridGeometry
@@ -37,7 +43,8 @@ template<int DIM> class BoundaryLookupTable
 {
 public:
    /*!
-    * @brief Return pointer to singleton instance of the boundary lookup table. 
+    * @brief Return pointer to singleton instance of the boundary 
+    * lookup table. 
     *
     * Note that when the database is accessed for the first time, the
     * Singleton instance is registered with the ShutdownRegistry
@@ -58,70 +65,93 @@ public:
    static void freeLookupTable();
 
    /*!
-    * @brief Set the lookup table to return original numbering scheme
+    * @brief Set the lookup table to use boundary box location
+    * numbering scheme used in SAMRAI prior to version 2.0, when
+    * all spatial geometry dependent classes became templated on
+    * the spatial dimension.
     *
-    * For codimension 2 in 3-dimensional problems, the numbering scheme
-    * for the location indices of BoundaryBox has been changed.  To use
-    * the original numbering scheme for backward compatibility, call this
-    * static function with the argument set to true;
+    * To use the older numbering scheme for backward compatibility, 
+    * call this function with the argument set to true.  Otherwise,
+    * the new numbering scheme is applied.
     *
-    * @param use_original bool argument set to true if using original scheme
+    * In the newer (version 2.0 and beyond) the location numbering 
+    * scheme for boundary boxes of codimension 2 in 3 spatial 
+    * dimensions changed so that the numbering scheme generalizes
+    * consistently to all spatial dimensions. 
+    * 
+    * @param use_original bool argument true if original location
+    *                     index numbering scheme is desired
     */ 
-   static void setUsingOriginalLocations(const bool use_original);
+   static void setUsingOriginalLocations(bool use_original);
    
    /*!
-    * @brief Return array of active directions for specific case.
+    * @brief Get array of active directions for specific boundary 
+    * region case.  Such active directions refer to those coordinate 
+    * directions in which the boundary region would have to be shifted 
+    * to be contained in the corresponding box region (whose boundary
+    * we are interested in).
     *
-    * Returns integer array of length codim of the active directions for 
-    * the boundary of codimension codim indexed by loc.
+    * @return  const reference to integer array of length codim 
+    *          containing the active directions for boundary case.
     *
-    * @param loc Location index being used
-    * @param codim Codimension being used
+    * @param loc integer location index of boundary region
+    * @param codim integer codimension of boundary region
     */
-   const tbox::Array<int>& getDirections(const int loc, const int codim) const;
+   const tbox::Array<int>& getDirections(int loc, int codim) const;
 
    /*!
-    * @brief Returns array containd maximum locations for each codimension.
+    * @brief Get array of maximum number of locations for each 
+    * codimension boundary case. 
     *
-    * Returns integer array of length DIM of the maximum limits, for each 
-    * codimension, of the location indicies.
+    * @return integer array of length DIM, each entry of which indicates
+    *         the maximum number of boundary locations for each 
+    *         codimension
     */
    const tbox::Array<int>& getMaxLocationIndices() const;
 
    /*!
-    * @brief Determines if boundary is lower boundary
+    * @brief Determines if given boundary information indicates a
+    * a lower boundary region (i.e., the associated box region 
+    * contains higher values along the axis in the coordinate 
+    * direction than the boundary region).
     *
-    * Returns true if the boundary type of codimension codim indexed by loc
-    * is a lower boundary in the specified dimension.
+    * @return bool true if the boundary type of codimension codim indexed 
+    * by loc is a lower boundary in the specified dimension; 
+    * return false if the boundary is an upper boundary.
     *
-    * @param loc Location index of boundary being tested
-    * @param codim Codimension of boundary being tested
-    * @param dim dimension identifier
+    * @param loc integer location index of boundary region
+    * @param codim integer codimension of boundary region
+    * @param index integer spatial dimension identifier
     */
-   bool isLower(const int loc, const int codim, const int dim) const;
+   bool isLower(int loc, int codim, int index) const;
 
    /*!
-    * @brief Determines if boundary is upper boundary
+    * @brief Determines if given boundary information indicates a
+    * an upper boundary region (i.e., the associated box region 
+    * contains lower values along the axis in the coordinate 
+    * direction than the boundary region).
     *
-    * Returns true if the boundary type of codimension codim indexed by loc
-    * is a upper boundary in the specified dimension.
+    * @return bool true if the boundary type of codimension codim indexed 
+    * by loc is an upper boundary in the specified dimension; 
+    * return false if the boundary is a lower boundary.
     *
-    * @param loc Location index of boundary being tested
-    * @param codim Codimension of boundary being tested
-    * @param dim dimension identifier
+    * @param loc integer location index of boundary region
+    * @param codim integer codimension of boundary region
+    * @param index integer spatial dimension identifier
     */
-   bool isUpper(const int loc, const int codim, const int index) const;
+   bool isUpper(int loc, int codim, int index) const;
 
    /*!
-    * @brief execute the mapping between original numbering and new scheme
+    * @brief Map boundary box location index between the original 
+    * numbering and new scheme.  In particular, for codimension 2 
+    * in 3 spatial dimensions, the value of the argument is mapped 
+    * from the original numbering scheme to the new scheme, or vice versa.
     *
-    * For codimension 2 in 3 dimensions, maps the value of the argument
-    * from the original numbering scheme to the new scheme, or vice versa,
-    * and returns the mapped value.
-    *
-    * @param loc location index to be mapped
+    * @return integer location index for other numbering scheme.
+    * 
+    * @param loc integer location index of boundary region
     */
-   int mapLocationIndex(const int loc) const;
+   int mapLocationIndex(int loc) const;
 
 protected:
    /**
@@ -147,7 +177,7 @@ private:
     * Private member function that recursively computes the entries in the
     * lookup table for a given codimension.
     */
-   void buildTable(int *table, int codim, int ibeg);
+   void buildTable(int *table, int codim, int ibeg, int (&work)[DIM], int &lvl, int *&ptr);
 
    /*
     * Static data members used to control access to and destruction of

@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -26,7 +26,6 @@ FILE_1=ArenaManager.o
 DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
-	$(INCLUDE_SAM)/tbox/Complex.h					\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
@@ -41,8 +40,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/StandardArena.I				\
 	$(INCLUDE_SAM)/tbox/StandardArena.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ArenaManager.C
+	$(INCLUDE_SAM)/tbox/Utilities.h ArenaManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -59,11 +57,12 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
-	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/Pointer.I	\
+	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
-	$(INCLUDE_SAM)/tbox/ReferenceCounter.h Array.C
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h Array.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -125,7 +124,6 @@ FILE_6=FixedArena.o
 DEPENDS_6:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
-	$(INCLUDE_SAM)/tbox/Complex.h					\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
@@ -135,8 +133,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	FixedArena.C
+	$(INCLUDE_SAM)/tbox/Utilities.h FixedArena.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
@@ -147,10 +144,16 @@ ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
 
 FILE_7=MemoryUtilities.o
 DEPENDS_7:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/MPI.I	\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/MemoryUtilities.h	\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/IOStream.h					\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryUtilities.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Utilities.h\
 	MemoryUtilities.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -216,13 +219,11 @@ ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
 FILE_11=ScratchArena.o
 DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
-	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/DescribedClass.h\
 	$(INCLUDE_SAM)/tbox/IOStream.h					\
 	$(INCLUDE_SAM)/tbox/ScratchArena.I				\
 	$(INCLUDE_SAM)/tbox/ScratchArena.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ScratchArena.C
+	$(INCLUDE_SAM)/tbox/Utilities.h ScratchArena.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
@@ -234,13 +235,11 @@ ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
 FILE_12=StandardArena.o
 DEPENDS_12:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
-	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/DescribedClass.h\
 	$(INCLUDE_SAM)/tbox/IOStream.h					\
 	$(INCLUDE_SAM)/tbox/StandardArena.I				\
 	$(INCLUDE_SAM)/tbox/StandardArena.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	StandardArena.C
+	$(INCLUDE_SAM)/tbox/Utilities.h StandardArena.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\

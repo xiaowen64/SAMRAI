@@ -1,9 +1,9 @@
 //
-// File:        Tracer.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/Tracer.I $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: A simple call sequence tracking class
 //
 
@@ -16,11 +16,11 @@ namespace SAMRAI {
 
 
 inline
-Tracer::Tracer(const string& message)
+Tracer::Tracer(const std::string& message)
 {
    d_message = message;
    if (s_stream) {
-      (*s_stream) << "Entering " << d_message << endl << flush;
+      (*s_stream) << "Entering " << d_message << std::endl << std::flush;
    }
 }
 
@@ -28,12 +28,12 @@ inline
 Tracer::~Tracer()
 {
    if (s_stream) {
-      (*s_stream) << "Exiting " << d_message << endl << flush;
+      (*s_stream) << "Exiting " << d_message << std::endl << std::flush;
    }
 }
 
 inline
-void Tracer::setTraceStream(ostream* stream)
+void Tracer::setTraceStream(std::ostream* stream)
 {
    s_stream = stream;
 }

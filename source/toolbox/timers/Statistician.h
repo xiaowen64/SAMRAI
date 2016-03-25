@@ -1,7 +1,7 @@
 //
-// File:        Statistician.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistician.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
 // Modified:    \f$ \f$
 // Description: Singleton manager class for statistic objects.
@@ -29,8 +29,7 @@
 #include "tbox/Statistic.h"
 #endif
 #ifndef included_String
-#include <string>
-using namespace std;
+#include <std::string>
 #define included_String
 #endif
 
@@ -66,8 +65,8 @@ class StatisticRestartDatabase;
  * A variety of print options exist to dump statistics data.  Notably,
  * the printSpreadSheetOutput("print_dir") will write statistics data in
  * a tab-separated format to files in the supplied directory name.  The
- * naming convention for statistics data is "<name>-<type>.txt" where <name>
- * is the name of the statistic and <type> is either proc or patch stat.  The
+ * naming convention for statistics data is "\<name\>-\<type\>.txt" where \<name\>
+ * is the name of the statistic and \<type\> is either proc or patch stat.  The
  * files may be read in to a spreadsheet program such as MS Excel.
  *
  * For more information about data that can be recorded with statistics,
@@ -133,8 +132,8 @@ public:
     * When assertion checking is active, an assertion will result if wither
     * string is empty.
     */
-   virtual Pointer<Statistic> getStatistic(const string& name,
-                                                     const string& stat_type);
+   virtual Pointer<Statistic> getStatistic(const std::string& name,
+                                                     const std::string& stat_type);
 
    /**
     * Return true if a statistic whose name matches the argument string
@@ -144,7 +143,7 @@ public:
     * If the name string is empty, a null pointer is returned.
     */
    virtual bool checkStatisticExists(Pointer<Statistic>& stat,
-                                     const string& name) const;
+                                     const std::string& name) const;
 
    /**
     * Return integer number of local processor statistics maintained 
@@ -183,7 +182,7 @@ public:
     * with that name, then a warning message results and the return value
     * will be the invalid instance identifier "-1".
     */
-   virtual int getProcStatId(const string& name) const;
+   virtual int getProcStatId(const std::string& name) const;
 
    /**
     * Return number of sequence entries for processor statistic with given 
@@ -283,7 +282,7 @@ public:
     * tabulated data, see the printGlobalProcStatDataFormatted() method.
     */
    virtual void printGlobalProcStatData(int proc_stat_id,
-                                        ostream& os,
+                                        std::ostream& os,
                                         int precision = 12); 
 
    /**
@@ -291,7 +290,7 @@ public:
     * stream.  Floating point precision may be specified (default is 12).  
     */
    virtual void printGlobalProcStatDataFormatted(int proc_stat_id,
-                                                 ostream& os,
+                                                 std::ostream& os,
                                                  int precision = 12);
 
    /**
@@ -301,7 +300,7 @@ public:
     */
    virtual void printGlobalProcStatDataFormatted(int proc_stat_id,
                                                  int proc_id,
-                                                 ostream& os,
+                                                 std::ostream& os,
                                                  int precision = 12);
 
    /**
@@ -310,7 +309,7 @@ public:
     * with that name, then a warning message results and the return value
     * will be the invalid instance identifier "-1".
     */
-   virtual int getPatchStatId(const string& name) const;
+   virtual int getPatchStatId(const std::string& name) const;
 
    /**
     * Return number of sequence entries for patch statistic with given
@@ -558,7 +557,7 @@ public:
     * tabulated data, see the printGlobalPatchStatDataFormatted() method.
     */
    virtual void printGlobalPatchStatData(int patch_stat_id,
-                                         ostream& os,
+                                         std::ostream& os,
                                          int precision = 12);
 
    /**
@@ -566,7 +565,7 @@ public:
     * stream.  Floating point precision may be specified (default is 12).
     */
    virtual void printGlobalPatchStatDataFormatted(int patch_stat_id,
-                                                  ostream& os,
+                                                  std::ostream& os,
                                                   int precision = 12);
 
    /**
@@ -585,7 +584,7 @@ public:
     * by this statistician object.  Note that no fancy formatting is done.
     * Floating point precision can be specified (default is 12).
     */
-   virtual void printLocalStatData(ostream& os,
+   virtual void printLocalStatData(std::ostream& os,
                                    int precision = 12) const;
 
    /**
@@ -593,34 +592,34 @@ public:
     * The data will NOT be in tabulated form.  Floating point precision 
     * can be specified (default is 12).
     */
-   virtual void printAllGlobalStatData(ostream& os,
+   virtual void printAllGlobalStatData(std::ostream& os,
                                        int precision = 12);
 
    /**
     * Print sums of all global statistic data information to given 
     * output stream. Floating point precision can be specified (default is 12).
     */
-   virtual void printAllSummedGlobalStatData(ostream& os,
+   virtual void printAllSummedGlobalStatData(std::ostream& os,
                                              int precision = 12);
 
    /**
     * Print sums of all global statistic data information to specified
     * filename. Floating point precision can be specified (default is 12).
     */
-   virtual void printAllSummedGlobalStatData(const string& filename,
+   virtual void printAllSummedGlobalStatData(const std::string& filename,
                                              int precision = 12);
 
 
    /**
     * Write all statistics data in tab-separated format to files in the 
-    * supplied directory name.  The naming convention used is "<name>-<type>.txt" 
-    * where <name> is the name of the statistic and <type> is either proc or 
+    * supplied directory name.  The naming convention used is "\<name\>-\<type\>.txt" 
+    * where \<name\> is the name of the statistic and \<type\> is either proc or 
     * patch stat.  Floating point precision may be specified (default is 12).
     * The files may be read in to a spreadsheet program such as MS Excel.  If 
     * no directory name is supplied, the files will be written to the directory 
     * where the application is run. 
     */
-  virtual void printSpreadSheetOutput(const string& dirname = string(),
+  virtual void printSpreadSheetOutput(const std::string& dirname = std::string(),
                                       int precision = 12);
 
    /**
@@ -632,7 +631,7 @@ public:
     */
   virtual void printSpreadSheetOutputForProcessor(
      const int proc_id,
-     const string& dirname = string(),
+     const std::string& dirname = std::string(),
      int precision = 12);
 
 protected:
@@ -670,7 +669,7 @@ protected:
     * false and return a null pointer.
     */
    virtual bool checkProcStatExists(Pointer<Statistic>& stat,
-                                    const string& name) const;
+                                    const std::string& name) const;
 
    /**
     * Return true if a patch statistic whose name matches the
@@ -680,7 +679,7 @@ protected:
     * false and return a null pointer.
     */
    virtual bool checkPatchStatExists(Pointer<Statistic>& stat,
-                                     const string& name) const;
+                                     const std::string& name) const;
 
 private:
    /**
@@ -764,7 +763,7 @@ public:
     * is true.  If the run is started froma restart file and the second
     * boolean argument is true, we initialize the statistics from restart.
     */
-   StatisticRestartDatabase(const string& object_name,
+   StatisticRestartDatabase(const std::string& object_name,
                                  bool register_for_restart,
                                  bool read_from_restart);
 
@@ -786,7 +785,7 @@ public:
    void getFromRestart();
 
 private:
-   string d_object_name;
+   std::string d_object_name;
    bool d_registered_for_restart;
 
 };

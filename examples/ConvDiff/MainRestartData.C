@@ -1,13 +1,12 @@
 //
-// File:	MainRestartData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/ConvDiff/MainRestartData.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Concrete subclass of tbox::Serializable for storing data in main.
 //
 
-#include <assert.h>
 #include "MainRestartData.h"
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h"
@@ -27,7 +26,7 @@ MainRestartData::MainRestartData(
 :
    d_object_name(object_name)
 {
-   assert( !input_db.isNull() );
+   TBOX_ASSERT( !input_db.isNull() );
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
@@ -121,7 +120,7 @@ void MainRestartData::setIterationNumber(const int iter_num)
 */
 void MainRestartData::putToDatabase( tbox::Pointer<tbox::Database> db)
 {
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 
    db->putInteger("d_max_timesteps",d_max_timesteps);
    db->putDouble("d_start_time",d_start_time);
@@ -136,7 +135,7 @@ void MainRestartData::getFromInput(
    tbox::Pointer<tbox::Database> input_db,
    bool is_from_restart)
 {
-   assert(!input_db.isNull());
+   TBOX_ASSERT(!input_db.isNull());
 
    if (input_db->keyExists("max_timesteps")) {
       d_max_timesteps = input_db->getInteger("max_timesteps");

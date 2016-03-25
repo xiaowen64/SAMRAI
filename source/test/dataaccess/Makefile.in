@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dataaccess/Makefile.in $
 ## Package:	SAMRAI tests
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for testing data access functionality
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      =	@top_srcdir@
 SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/dataaccess
 VPATH	      =	@srcdir@
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check
@@ -19,6 +20,10 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA	= -DNDIM=$(PDIM) -DTESTING=1
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+NUM_TESTS = 2
+
+TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS	= main.o
 
@@ -40,8 +45,6 @@ main-data3:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o \
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o datatest3
 
-TEST_NPROCS = @TEST_NPROCS@
-
 check:
 		$(MAKE) check2d
 		$(MAKE) check3d
@@ -52,6 +55,12 @@ check2d:	datatest2
 check3d:	datatest3 
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./datatest3
 
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

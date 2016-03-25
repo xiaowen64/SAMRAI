@@ -1,9 +1,9 @@
 //
-// File:	RefineOperator.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/operators/RefineOperator.h $
 // Package:	SAMRAI transfer 
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description: Abstract base class for spatial refinement operators.
 //
 
@@ -30,7 +30,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -70,7 +69,7 @@ namespace SAMRAI {
  *
  * Since spatial refinement operators usually depend on patch data centering
  * and data type as well as the mesh coordinate system, they are defined
- * in the {\it geometry} package.
+ * in the <EM>geometry</EM> package.
  *
  * @see xfer::Geometry
  */
@@ -96,12 +95,12 @@ public:
     */
    virtual bool findRefineOperator(
       const tbox::Pointer< hier::Variable<DIM> >& var,
-      const string &op_name) const = 0;
+      const std::string &op_name) const = 0;
 
    /**
     * Return name string identifier of the refinement operation.
     */
-   virtual const string& getOperatorName() const = 0;
+   virtual const std::string& getOperatorName() const = 0;
 
    /**
     * Return the priority of this operator relative to other refinement

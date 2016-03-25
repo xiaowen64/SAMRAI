@@ -1,9 +1,9 @@
 //
-// File:	ParallelBuffer.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/ParallelBuffer.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Parallel I/O class buffer to manage parallel ostreams output
 //
 
@@ -16,11 +16,9 @@
 #endif
 
 #include <iostream>
-using namespace std;
 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -34,7 +32,7 @@ namespace SAMRAI {
  * ostream class.
  */
 
-class ParallelBuffer : public streambuf
+class ParallelBuffer : public std::streambuf
 {
 public:
    /**
@@ -62,33 +60,33 @@ public:
     * A sample prefix is "P=XXXXX: ", where XXXXX represents the node
     * number.
     */
-   void setPrefixString(const string &text);
+   void setPrefixString(const std::string &text);
 
    /**
     * Set the primary output stream.  If not NULL, then output data is
     * sent to this stream.  The primary output stream is typically stderr
     * or stdout or perhaps a log file.
     */
-   void setOutputStream1(ostream *stream);
+   void setOutputStream1(std::ostream *stream);
 
    /**
     * Set the secondary output stream.  If not NULL, then output data is sent
     * to this stream.  The secondary output stream is typically NULL or a log
     * file that mirrors the primary output stream.
     */
-   void setOutputStream2(ostream *stream);
+   void setOutputStream2(std::ostream *stream);
    
    /**
     * Write a text string to the output stream.  Note that the string is 
     * not actually written until an end-of-line is detected.
     */
-   void outputString(const string &text);
+   void outputString(const std::string &text);
 
    /**
     * Write a text string of the specified length to the output file.  Note
     * that the string is not actually written until an end-of-line is detected.
     */
-   void outputString(const string &text, const int length);
+   void outputString(const std::string &text, const int length);
 
    /**
     * Synchronize the parallel buffer (called from streambuf).
@@ -100,7 +98,7 @@ public:
     * Write the specified number of characters into the output stream (called
     * from streambuf).
     */
-   virtual streamsize xsputn (const string &text, streamsize n);
+   virtual std::streamsize xsputn (const std::string &text, std::streamsize n);
 #endif
 
    /**
@@ -120,16 +118,16 @@ public:
 #endif
 
 private:
-   void copyToBuffer(const string &text, const int length);
+   void copyToBuffer(const std::string &text, const int length);
    void outputBuffer();		// output internal buffer data to streams
 
-   bool     d_active;           // whether this output stream is active
-   string   d_prefix;           // string prefix to prepend output strings
-   ostream* d_ostream1;         // primary output stream for buffer
-   ostream* d_ostream2;         // secondary output stream (e.g., for log file)
-   char*    d_buffer;           // internal buffer to store accumulated string
-   int      d_buffer_size;      // size of the internal output buffer
-   int      d_buffer_ptr;       // number of charcters in the output buffer
+   bool          d_active;       // whether this output stream is active
+   std::string   d_prefix;       // string prefix to prepend output strings
+   std::ostream* d_ostream1;     // primary output stream for buffer
+   std::ostream* d_ostream2;     // secondary output stream (e.g., for log file)
+   char*         d_buffer;       // internal buffer to store accumulated string
+   int           d_buffer_size;  // size of the internal output buffer
+   int           d_buffer_ptr;   // number of charcters in the output buffer
 };
 
 

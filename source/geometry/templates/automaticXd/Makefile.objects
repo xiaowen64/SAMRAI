@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -10,7 +10,8 @@
 
 
 
-libdefault:	CartesianCellComplexConservativeLinearRefine-NDIM${NDIM}.o	\
+libdefault:	BlockGridGeometry-NDIM${NDIM}.o BlockPatchGeometry-NDIM${NDIM}.o\
+	CartesianCellComplexConservativeLinearRefine-NDIM${NDIM}.o	\
 	CartesianCellComplexLinearRefine-NDIM${NDIM}.o			\
 	CartesianCellComplexWeightedAverage-NDIM${NDIM}.o		\
 	CartesianCellDoubleConservativeLinearRefine-NDIM${NDIM}.o	\
@@ -43,8 +44,11 @@ libdefault:	CartesianCellComplexConservativeLinearRefine-NDIM${NDIM}.o	\
 	CartesianSideDoubleWeightedAverage-NDIM${NDIM}.o		\
 	CartesianSideFloatConservativeLinearRefine-NDIM${NDIM}.o	\
 	CartesianSideFloatWeightedAverage-NDIM${NDIM}.o			\
-	SkeletonCoarsen-NDIM${NDIM}.o SkeletonGridGeometry-NDIM${NDIM}.o\
+	SkeletonCoarsen-NDIM${NDIM}.o SkeletonCoarsen-NDIM${NDIM}.o	\
+	SkeletonGridGeometry-NDIM${NDIM}.o				\
 	SkeletonPatchGeometry-NDIM${NDIM}.o SkeletonRefine-NDIM${NDIM}.o\
+	tbox__Pointer-geom__BlockGridGeometry-NDIM${NDIM}.o		\
+	tbox__Pointer-geom__BlockPatchGeometry-NDIM${NDIM}.o		\
 	tbox__Pointer-geom__CartesianCellDoubleConservativeLinearRefine-NDIM${NDIM}.o\
 	tbox__Pointer-geom__CartesianCellDoubleLinearRefine-NDIM${NDIM}.o\
 	tbox__Pointer-geom__CartesianCellDoubleWeightedAverage-NDIM${NDIM}.o\

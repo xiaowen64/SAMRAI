@@ -1,0 +1,37 @@
+##
+## File:	$URL$
+## Package:	SAMRAI templates
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Description:	makefile for the template classes
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/patchdata/templates/automaticNond
+VPATH	      =	@srcdir@
+OBJECT        = ../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+include $(SRCDIR)/Makefile.objects
+
+library:	lib1d lib2d lib3d
+
+lib1d:
+	$(MAKE) NDIM=1 libXd
+
+lib2d:
+	$(MAKE) NDIM=2 libXd
+
+lib3d:
+	$(MAKE) NDIM=3 libXd
+
+libXd:	libdefault libdcomplex libfloat libbool libchar
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

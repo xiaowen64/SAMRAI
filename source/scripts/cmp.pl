@@ -1,10 +1,10 @@
 #!/usr/local/bin/perl
 ##
-## File:        cmp.pl
-## Package:     SAMRAI scripts
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/scripts/cmp.pl $
+## Package:     SAMRAI templates
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: perl script to compare two files but ignore CVS comments
 ##
 
@@ -23,7 +23,7 @@ while (!eof(AFILE) && !eof(BFILE)) {
    $BLINE = <BFILE>;
    $_ = $ALINE;
 
-   if (!/^(\/\/|c|C|#|##| \*)[ ]*(Release:[\t ]*\$Name|Revision:[\t ]*\$Revision|Modified:[\t ]*\$Date):[^\$]*\$/o) {
+   if (!/^(\/\/|c|C|#|##| \*)[ ]*(Release:[\t ]*\$Name|Revision:[\t ]*\$LastChangedRevision|Modified:[\t ]*\$LastChangedDate):[^\$]*\$/o) {
       if ($ALINE ne $BLINE) {
          exit 1;
       }

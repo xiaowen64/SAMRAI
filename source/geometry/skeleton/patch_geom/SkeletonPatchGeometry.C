@@ -1,10 +1,10 @@
 //
-// File:        SkeletonPatchGeometry.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/skeleton/patch_geom/SkeletonPatchGeometry.C $
 // Package:     SAMRAI geometry package
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 332 $
-// Modified:    $Date: 2005-05-03 11:39:46 -0700 (Tue, 03 May 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Skeleton grid geometry for an AMR hierarchy.
 //
 
@@ -54,10 +54,10 @@ template<int DIM>  SkeletonPatchGeometry<DIM>::~SkeletonPatchGeometry()
 *                                                                       *
 *************************************************************************
 */
-template<int DIM> void SkeletonPatchGeometry<DIM>::printClassData(ostream& os) const
+template<int DIM> void SkeletonPatchGeometry<DIM>::printClassData(std::ostream& os) const
 {
    os << "Printing SkeletonPatchGeometry data: this = "
-      << (SkeletonPatchGeometry<DIM>*)this << endl;
+      << (SkeletonPatchGeometry<DIM>*)this << std::endl;
  
    hier::PatchGeometry<DIM>::printClassData(os);
 }

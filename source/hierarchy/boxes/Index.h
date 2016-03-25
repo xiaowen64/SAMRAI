@@ -1,9 +1,9 @@
 //
-// File:	Index.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/Index.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Interface for the AMR Index object
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -83,9 +82,19 @@ public:
    Index(const Index<DIM>& rhs);
 
    /**
+    * Construct an index equal to the argument IntVector.
+    */
+   Index(const IntVector<DIM>& rhs);
+
+   /**
     * The assignment operator sets the index equal to the argument.
     */
    Index<DIM>& operator=(const Index<DIM>& rhs);
+
+   /**
+    * The assignment operator sets the index equal to the argument IntVector.
+    */
+   Index<DIM>& operator=(const IntVector<DIM>& rhs);
 
    /**
     * The index destructor does nothing interesting.

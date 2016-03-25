@@ -1,9 +1,9 @@
 //
-// File:	DatabaseBox.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/database/DatabaseBox.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A box structure representing a portion of the AMR index space
 //
 
@@ -20,7 +20,7 @@ namespace SAMRAI {
 DatabaseBox::DatabaseBox(const int dimension, const int *lower, const int *upper)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((dimension >= 0) && (dimension <= DatabaseBox_MAX_DIM));
+   TBOX_ASSERT((dimension >= 0) && (dimension <= DatabaseBox_MAX_DIM));
 #endif
    d_data.d_dimension = dimension;
    for (int i = 0; i < d_data.d_dimension; i++) {

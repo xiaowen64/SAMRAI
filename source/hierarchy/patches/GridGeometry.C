@@ -1,9 +1,9 @@
 //
-// File:	GridGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/GridGeometry.C $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for geometry management in AMR hierarchy
 //
 
@@ -14,9 +14,6 @@
 
 #include <stdlib.h>
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include "GridGeometry.h"
 #include "BoundaryLookupTable.h"
@@ -28,7 +25,7 @@
 #include "PatchDataFactory.h"
 #include "PatchDescriptor.h"
 #include "PatchLevel.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Pointer.h"
 #include "tbox/Utilities.h"
 
@@ -46,10 +43,10 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM>  GridGeometry<DIM>::GridGeometry(const string &object_name)
+template<int DIM>  GridGeometry<DIM>::GridGeometry(const std::string &object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
    d_object_name = object_name;
    d_periodic_shift = IntVector<DIM>(0);
@@ -89,7 +86,7 @@ template<int DIM> void GridGeometry<DIM>::computeBoundaryBoxesOnLevel(
    bool do_all_patches) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghost_width >= hier::IntVector<DIM>(0));
+   TBOX_ASSERT(ghost_width >= hier::IntVector<DIM>(0));
 
    int num_per_dirs = 0;
    for (int i = 0; i < DIM; i++) {
@@ -123,7 +120,7 @@ template<int DIM> void GridGeometry<DIM>::computeBoundaryBoxesOnLevel(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
             for (int k = 0; k < boundaries[n+j].getSize(); k++) {
-               assert(checkBoundaryBox(boundaries[n+j][k], *patch,
+               TBOX_ASSERT(checkBoundaryBox(boundaries[n+j][k], *patch,
                                        domain, num_per_dirs, ghost_width));
             }
 #endif
@@ -293,10 +290,10 @@ void hier::GridGeometry<DIM>::setGeometryOnPatches(
     * All components of ratio must be nonzero.  Additionally,
     * all components not equal to 1 must have the same sign.
     */
-   assert(ratio_to_level_zero != hier::IntVector<DIM>(0));
+   TBOX_ASSERT(ratio_to_level_zero != hier::IntVector<DIM>(0));
    if (DIM > 1) {
       for (int i = 0; i < DIM; i++) {
-      assert( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
+      TBOX_ASSERT( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
               || (ratio_to_level_zero(i) == 1)
               || (ratio_to_level_zero((i+1)%DIM) == 1) );
       }
@@ -364,7 +361,7 @@ template<int DIM> void GridGeometry<DIM>::computeShiftsForLevel(
    const BoxArray<DIM>& physical_domain) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(shifts.getSize() == level.getNumberOfPatches());
+   TBOX_ASSERT(shifts.getSize() == level.getNumberOfPatches());
 #endif
 
    IntVector<DIM> periodic_shift = getPeriodicShift(level.getRatio());
@@ -703,11 +700,11 @@ template<int DIM> void GridGeometry<DIM>::computePhysicalDomain(
     */
    int i;
    for (i = 0; i < DIM; i++) {
-      assert( ratio_to_level_zero(i) != 0 );
+      TBOX_ASSERT( ratio_to_level_zero(i) != 0 );
    }
    if (DIM > 1) {
       for (i = 0; i < DIM; i++) {
-	 assert( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
+	 TBOX_ASSERT( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
 		 || (ratio_to_level_zero(i) == 1)
 		 || (ratio_to_level_zero((i+1)%DIM) == 1) );
       }
@@ -748,7 +745,7 @@ hier::IntVector<DIM> hier::GridGeometry<DIM>::computeMaxGhostWidth(
    const tbox::Pointer<hier::PatchDescriptor<DIM> > descriptor)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert ( !(descriptor.isNull()) );
+   TBOX_ASSERT( !(descriptor.isNull()) );
 #endif
 
    /*
@@ -870,11 +867,11 @@ template<int DIM> IntVector<DIM> GridGeometry<DIM>::getPeriodicShift(
     */
    int k;
    for (k = 0; k < DIM; k++) {
-      assert( ratio_to_level_zero(k) != 0 );
+      TBOX_ASSERT( ratio_to_level_zero(k) != 0 );
    }
    if (DIM > 1) {
       for (k = 0; k < DIM; k++) {
-	 assert( (ratio_to_level_zero(k)*ratio_to_level_zero((k+1)%DIM) > 0)
+	 TBOX_ASSERT( (ratio_to_level_zero(k)*ratio_to_level_zero((k+1)%DIM) > 0)
 		 || (ratio_to_level_zero(k) == 1)
 		 || (ratio_to_level_zero((k+1)%DIM) == 1) );
       }
@@ -1069,23 +1066,23 @@ template<int DIM> bool GridGeometry<DIM>::checkBoundaryBox(
 *************************************************************************
 */
 
-template<int DIM> void hier::GridGeometry<DIM>::printClassData(ostream& stream) const
+template<int DIM> void hier::GridGeometry<DIM>::printClassData(std::ostream& stream) const
 {
 
-   stream << "\nhier::GridGeometry<DIM>::printClassData..." << endl;
+   stream << "\nhier::GridGeometry<DIM>::printClassData..." << std::endl;
    stream << "hier::GridGeometry<DIM>: this = "
-          << (hier::GridGeometry<DIM>*)this << endl;
-   stream << "d_object_name = " << d_object_name << endl;
+          << (hier::GridGeometry<DIM>*)this << std::endl;
+   stream << "d_object_name = " << d_object_name << std::endl;
 
    const int n = d_physical_domain.getNumberOfBoxes();
-   stream << "Number of boxes describing physical domain = " << n << endl;
-   stream << "Boxes describing physical domain..." << endl;
+   stream << "Number of boxes describing physical domain = " << n << std::endl;
+   stream << "Boxes describing physical domain..." << std::endl;
    d_physical_domain.print(stream);
 
 
-   stream << "\nd_periodic_shift = " << d_periodic_shift << endl;
+   stream << "\nd_periodic_shift = " << d_periodic_shift << std::endl;
 
-   stream << "d_max_data_ghost_width = " << d_max_data_ghost_width << endl;
+   stream << "d_max_data_ghost_width = " << d_max_data_ghost_width << std::endl;
 
 
 }

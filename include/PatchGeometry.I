@@ -1,18 +1,12 @@
 //
-// File:	PatchGeometry.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchGeometry.I $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 729 $
-// Modified:	$Date: 2005-11-11 13:49:10 -0800 (Fri, 11 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for geometry management on patches
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 
 #ifndef included_tbox_Utilities
@@ -61,8 +55,8 @@ bool
 PatchGeometry<DIM>::getTouchesRegularBoundary(int axis, int upperlower) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(axis >= 0 && axis < DIM);
-   assert(upperlower == 0 || upperlower == 1);
+   TBOX_ASSERT(axis >= 0 && axis < DIM);
+   TBOX_ASSERT(upperlower == 0 || upperlower == 1);
 #endif
 
    return(d_touches_regular_bdry[axis][upperlower]);
@@ -73,8 +67,8 @@ bool
 PatchGeometry<DIM>::getTouchesPeriodicBoundary(int axis, int upperlower) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(axis >= 0 && axis < DIM);
-   assert(upperlower == 0 || upperlower == 1);
+   TBOX_ASSERT(axis >= 0 && axis < DIM);
+   TBOX_ASSERT(upperlower == 0 || upperlower == 1);
 #endif
 
    return(d_touches_periodic_bdry[axis][upperlower]);
@@ -92,7 +86,7 @@ const tbox::Array< BoundaryBox<DIM> >&
 PatchGeometry<DIM>::getEdgeBoundary() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(DIM >= 2);
+   TBOX_ASSERT(DIM >= 2);
 #endif
 
    // The "funny" indexing prevents a warning when compiling for 
@@ -106,7 +100,7 @@ const tbox::Array< BoundaryBox<DIM> >&
 PatchGeometry<DIM>::getFaceBoundary() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(DIM >= 3);
+   TBOX_ASSERT(DIM >= 3);
 #endif
 
    // The "funny" indexing prevents a warning when compiling for 
@@ -120,7 +114,7 @@ const tbox::Array< BoundaryBox<DIM> >&
 PatchGeometry<DIM>::getCodimensionBoundary(const int codim) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((codim > 0) && (codim <= DIM));
+   TBOX_ASSERT((codim > 0) && (codim <= DIM));
 #endif
    return(d_patch_boundaries[codim-1]);
 }

@@ -1,17 +1,14 @@
 //
-// File:        LocallyActiveDataTester.C
-// Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2002 The Regents of the University of California
-// Revision:    $Revision: 481 $
-// Modified:    $Date: 2005-07-21 13:50:43 -0700 (Thu, 21 Jul 2005) $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/LocallyActiveDataTester.C $
+// Package:     SAMRAI test
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to test locally-active data communication
 //
 
 #include "LocallyActiveDataTester.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include <stdlib.h>
 
 #include "LocallyActiveVariableDatabase.h"
@@ -38,8 +35,8 @@
 #include "CellDoubleConstantRefine.h"
 #include "CartesianCellDoubleLinearRefine.h"
 #include "CartesianCellDoubleWeightedAverage.h"
-#include "tbox/IEEE.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "tbox/TimerManager.h"
 
 /*
@@ -113,9 +110,9 @@ LocallyActiveDataTester::LocallyActiveDataTester(const string& object_name,
                                  tbox::Pointer<appu::VisItDataWriter<NDIM> > visit_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!hierarchy.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
 #endif
 
    d_object_name   = object_name;
@@ -297,11 +294,13 @@ void LocallyActiveDataTester::setActivePatchesOnHierarchy()
                d_total_work_units[ln]++; 
                if (d_test_to_run != "COARSEN_TEST") {
                   level_mgr->setPatchDataActive(
-                     d_functions[fn].d_func_data_index, ip);
+                     hier::PatchDataId(d_functions[fn].d_func_data_index), 
+                     hier::PatchNumber(ip) );
                }
                if (d_test_to_run != "REFINE_TEST") {
                   level_mgr->setPatchDataActive(
-                     d_functions[fn].d_soln_data_index, ip);
+                     hier::PatchDataId(d_functions[fn].d_soln_data_index), 
+                     hier::PatchNumber(ip) );
                }
             }
 
@@ -428,16 +427,17 @@ bool LocallyActiveDataTester::patchIsActiveForFunction(
                if (shift_in_dim[idim]) {
                   if (centroid[idim] < p_xlo) {
                      centroid[idim] = centroid[idim] + domain_length[idim];
-                  }
-                  if (p_xhi < centroid[idim]) {
-                     centroid[idim] = centroid[idim] - domain_length[idim];
+                  } else {
+                     if (p_xhi < centroid[idim]) {
+                        centroid[idim] = centroid[idim] - domain_length[idim];
+                     }
                   }
                }
                double func_lo = centroid[idim] - d_functions[fn].d_radius;
                double func_hi = centroid[idim] + d_functions[fn].d_radius;
                test_patch_is_active = test_patch_is_active &&
-                     ( tbox::Utilities::dmax(func_lo, p_xlo) <=
-                       tbox::Utilities::dmin(func_hi, p_xhi)); 
+                     ( tbox::MathUtilities<double>::Max(func_lo, p_xlo) <=
+                       tbox::MathUtilities<double>::Min(func_hi, p_xhi) ); 
             }
             patch_is_active = test_patch_is_active; 
       
@@ -479,7 +479,7 @@ void LocallyActiveDataTester::initializeFunctionData()
             }
                
             hier::LocallyActiveDataPatchLevelManager<NDIM>::Iterator p =
-               level_mgr->getIterator(data_id);
+               level_mgr->getIterator( hier::PatchDataId(data_id) );
             for ( ; p; p++) {
 
                tbox::Pointer<hier::Patch<NDIM> > patch = level->getPatch(p());
@@ -521,7 +521,7 @@ void LocallyActiveDataTester::setGaussianDataOnPatch(
    tbox::Pointer< pdat::CellData<NDIM,double> > func_data = 
       patch->getPatchData(d_functions[fn].d_func_data_index);
 
-   func_data->fillAll(tbox::IEEE::getSignalingNaN());
+   func_data->fillAll(tbox::MathUtilities<double>::getSignalingNaN());
 
    init_(ifirst(0),ilast(0),
          ifirst(1),ilast(1),
@@ -539,7 +539,7 @@ void LocallyActiveDataTester::setGaussianDataOnPatch(
 
    tbox::Pointer< pdat::CellData<NDIM,double> > soln_data = 
       patch->getPatchData(d_functions[fn].d_soln_data_index);
-   soln_data->fillAll(tbox::IEEE::getSignalingNaN());
+   soln_data->fillAll(tbox::MathUtilities<double>::getSignalingNaN());
 }
 
 void LocallyActiveDataTester::setRefineTestDataOnPatch(
@@ -552,7 +552,7 @@ void LocallyActiveDataTester::setRefineTestDataOnPatch(
                                              func_data_id);
    tbox::Pointer< pdat::CellData<NDIM,double> > func_data = 
       patch->getPatchData(func_data_id);
-   func_data->fillAll(tbox::IEEE::getSignalingNaN());
+   func_data->fillAll(tbox::MathUtilities<double>::getSignalingNaN());
    func_data->fill(func_init_val, patch->getBox());
 }
 
@@ -566,7 +566,7 @@ void LocallyActiveDataTester::setCoarsenTestDataOnPatch(
                                               soln_data_id);
    tbox::Pointer< pdat::CellData<NDIM,double> > soln_data = 
       patch->getPatchData(soln_data_id);
-   soln_data->fillAll(tbox::IEEE::getSignalingNaN());
+   soln_data->fillAll(tbox::MathUtilities<double>::getSignalingNaN());
    soln_data->fillAll(soln_init_val, patch->getBox());
 }
 
@@ -596,8 +596,9 @@ void LocallyActiveDataTester::initializeFunctionDataForVisitCheck()
                tbox::Pointer< hier::Patch<NDIM> > patch = level->getPatch(ip());
                tbox::Pointer< pdat::CellData<NDIM,double> > func_data = patch->getPatchData(f_id);
 
-               if (level_mgr->getPatchDataActive(f_id, ip())) {
-                  func_data->fillAll( (double)fn );
+               if ( level_mgr->getPatchDataActive( hier::PatchDataId(f_id), 
+                                                   hier::PatchNumber(ip()) ) ) {
+                  func_data->fillAll( static_cast<double>(fn) );
                } else {
                   func_data->fillAll( -1.0 );
                }
@@ -619,8 +620,9 @@ void LocallyActiveDataTester::initializeFunctionDataForVisitCheck()
                tbox::Pointer< hier::Patch<NDIM> > patch = level->getPatch(ip());
                tbox::Pointer< pdat::CellData<NDIM,double> > soln_data = patch->getPatchData(s_id);
 
-               if (level_mgr->getPatchDataActive(s_id, ip())) {
-                  soln_data->fillAll( (double)fn );
+               if ( level_mgr->getPatchDataActive( hier::PatchDataId(s_id), 
+                                                   hier::PatchNumber(ip()) ) ) {
+                  soln_data->fillAll( static_cast<double>(fn) );
                } else {
                   soln_data->fillAll( -1.0 );
                }
@@ -796,7 +798,7 @@ void LocallyActiveDataTester::computeLaplacians()
             int soln_id = d_functions[fn].d_soln_data_index;
 
             hier::LocallyActiveDataPatchLevelManager<NDIM>::Iterator p =
-               level_mgr->getIterator(func_id);
+               level_mgr->getIterator( hier::PatchDataId(func_id) );
             for ( ; p; p++) {
                tbox::Pointer< hier::Patch<NDIM> > patch = level->getPatch(p());
 
@@ -1008,15 +1010,16 @@ void LocallyActiveDataTester::setPatchBoundaryValues(
  * Check values.
  *
  ************************************************************************/
-void LocallyActiveDataTester::checkTestResult(ostream& os) const
+int LocallyActiveDataTester::checkTestResult(ostream& os) const
 {
+   int fail_count = 0;
    if (d_check_results) {
 
       if (d_test_to_run == "REFINE_TEST") {
-         checkRefineTestResult(os);
+         fail_count += checkRefineTestResult(os);
       }
       if (d_test_to_run == "COARSEN_TEST") {
-         checkCoarsenTestResult(os);
+         fail_count += checkCoarsenTestResult(os);
       }
   
       if (d_test_to_run == "LAPLACIAN_TEST") {
@@ -1025,10 +1028,13 @@ void LocallyActiveDataTester::checkTestResult(ostream& os) const
       }
 
    }
+   return(fail_count); 
 }
 
-void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
+int LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
 {
+   int fail_count = 0;
+
    bool all_correct_fine = true;
    bool all_correct_coarse = true;
 
@@ -1059,7 +1065,7 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
     * Check patch data results.
     */
 
-   if (tbox::MPI::getRank() == 0) {
+   if (tbox::SAMRAI_MPI::getRank() == 0) {
       tbox::pout << "\n\n***************************************************"
                  << "\nChecking results for fine level: fine_ln = " << fine_ln << endl;
    }
@@ -1072,7 +1078,7 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
       int soln_id = d_functions[fn].d_soln_data_index;
 
       hier::LocallyActiveDataPatchLevelManager<NDIM>::Iterator p =
-         fine_level_mgr->getIterator(soln_id);
+         fine_level_mgr->getIterator( hier::PatchDataId(soln_id) );
       for ( ; p; p++) {
          tbox::Pointer< hier::Patch<NDIM> > patch = fine_level->getPatch(p());
          const hier::Box<NDIM>& pbox = patch->getBox();
@@ -1082,12 +1088,13 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
          double correct_val = getCoarsenTestValue(fine_ln, p(), soln_id);
          for (pdat::CellIterator<NDIM> ic(pbox); ic; ic++) {
             pdat::CellIndex<NDIM> cell = ic();
-            if ( !tbox::Utilities::deq((*pdata)(cell), correct_val) ) {
+            if ( !tbox::MathUtilities<double>::equalEps((*pdata)(cell), correct_val) ) {
                correct_on_patch = false;
             }
          }
          
          if (!correct_on_patch) {
+            fail_count++; 
             all_correct_fine = false;
             tbox::perr << "\tCOARSEN_TEST FAILED: function " << fn
                        << " , patch " << p() << " , level " << fine_ln << endl; 
@@ -1097,7 +1104,7 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
    }  // iterate over functions
 
    if (all_correct_fine) {
-      tbox::perr << "\n\tAll results correct on level " << fine_ln << "..." << endl;
+      tbox::pout << "\n\tAll results correct on level " << fine_ln << "..." << endl;
    }
 
    tbox::pout << "\n\n***************************************************"
@@ -1111,7 +1118,7 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
       int soln_id = d_functions[fn].d_soln_data_index;
 
       hier::LocallyActiveDataPatchLevelManager<NDIM>::Iterator p =
-         coarse_level_mgr->getIterator(soln_id);
+         coarse_level_mgr->getIterator( hier::PatchDataId(soln_id) );
       for ( ; p; p++) {
          tbox::Pointer< hier::Patch<NDIM> > patch = coarse_level->getPatch(p());
          const hier::Box<NDIM>& pbox = patch->getBox();
@@ -1121,7 +1128,8 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
 
          for (int fib = 0; fib < fine_intersect_boxes[p()].size(); fib++) {
             int fine_patch_id = fine_intersect_boxes[p()][fib];
-            if ( fine_level_mgr->getPatchDataActive(soln_id, fine_patch_id) ) {
+            if ( fine_level_mgr->getPatchDataActive( hier::PatchDataId(soln_id), 
+                                                     hier::PatchNumber(fine_patch_id) ) ) {
                hier::Box<NDIM> cfbox(fine_level->getBoxForPatch(fine_patch_id));
                cfbox.coarsen(refratio);
                hier::Box<NDIM> check_box = pbox * cfbox; 
@@ -1130,12 +1138,13 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
                bool correct_on_region = true;
                for (pdat::CellIterator<NDIM> ic(check_box); ic; ic++) {
                   pdat::CellIndex<NDIM> cell = ic();
-                  if ( !tbox::Utilities::deq((*pdata)(cell), correct_val) ) {
+                  if ( !tbox::MathUtilities<double>::equalEps((*pdata)(cell), correct_val) ) {
                      correct_on_region = false;
                   }
                }
 
                if (!correct_on_region) {
+                  fail_count++;
                   all_correct_coarse = false;
                   tbox::perr << "COARSEN_TEST FAILED: function " << fn
                              << " , patch " << p() << " , level " << coarse_ln << endl; 
@@ -1156,12 +1165,13 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
                bool correct_on_region = true;
                for (pdat::CellIterator<NDIM> ic(check_box); ic; ic++) {
                   pdat::CellIndex<NDIM> cell = ic();
-                  if ( !tbox::Utilities::deq((*pdata)(cell), correct_val) ) {
+                  if ( !tbox::MathUtilities<double>::equalEps((*pdata)(cell), correct_val) ) {
                      correct_on_region = false;
                   }
                }
 
                if (!correct_on_region) {
+                  fail_count++; 
                   all_correct_coarse = false;
                   tbox::perr << "COARSEN_TEST FAILED: function " << fn
                              << " , patch " << p() << " , level " << coarse_ln << endl; 
@@ -1177,33 +1187,36 @@ void LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
    } // iterate over functions
 
    if (all_correct_coarse) {
-      tbox::perr << "\n\tAll results correct on level " << coarse_ln << "..." << endl;
+      tbox::plog << "\n\tAll results correct on level " << coarse_ln << "..." << endl;
    }
 
    if (all_correct_coarse && all_correct_fine) {
       tbox::pout << "\n\n***************************************************" << endl;
-      tbox::perr << "\n\tAll results correct..." << endl;
+      tbox::plog << "\n\tAll results correct..." << endl;
       tbox::pout << "\n\n***************************************************" << endl;
    } else {
       tbox::pout << "\n\n***************************************************" << endl;
    }
 
+   return(fail_count);
 }
 
-void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
+int LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
 {
+   int fail_count = 0;
+
    for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
       bool all_correct_on_physical_boundary = true;
       tbox::Array<bool> all_correct_from_level(ln+1);
       for (int j = 0; j < ln+1; j++) {
          all_correct_from_level[j] = true;
       }
-      tbox::Array<int> global_check(tbox::MPI::getNodes()); 
+      tbox::Array<int> global_check(tbox::SAMRAI_MPI::getNodes()); 
       int p, global_check_value;
 
       bool level_is_done = false;
 
-      if (tbox::MPI::getRank() == 0) {
+      if (tbox::SAMRAI_MPI::getRank() == 0) {
          tbox::pout << "\n\n***************************************************"
               << "\n\tChecking refine results for level: ln = " << ln << endl;
       }
@@ -1234,7 +1247,9 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
             hier::Box<NDIM>::grow(patch->getBox(), d_nghosts_function);
          for (int fn = 0; fn < d_functions.getSize(); fn++) {
             unchecked_boxes[ip()].resizeArray(d_functions.getSize());
-            if (level_mgr->getPatchDataActive(d_functions[fn].d_func_data_index, ip())) {
+            if ( level_mgr->getPatchDataActive( 
+                            hier::PatchDataId(d_functions[fn].d_func_data_index), 
+                            hier::PatchNumber(ip()) ) ) {
                unchecked_boxes[ip()][fn].unionBoxes(test_overlap_box);
                patch_is_done[ip()] = false;
             }
@@ -1245,7 +1260,7 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
        *  Check results in physical boundary ghost regions.
        */
 
-      if (tbox::MPI::getRank() == 0) {
+      if (tbox::SAMRAI_MPI::getRank() == 0) {
          tbox::pout << "\n\tChecking results in physical boundary ghost regions... " << endl;
       }
 
@@ -1255,7 +1270,8 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
               patch->getPatchGeometry()->getTouchesRegularBoundary() ) {
             for (int fn = 0; fn < d_functions.getSize(); fn++) {
                int data_id = d_functions[fn].d_func_data_index;
-               if (level_mgr->getPatchDataActive(data_id, ip())) {
+               if ( level_mgr->getPatchDataActive( hier::PatchDataId(data_id), 
+                                                   hier::PatchNumber(ip()) ) ) {
                   double correct_val = getRefineTestValue(ln, ip(), data_id);
                   all_correct_on_physical_boundary =
                      ( all_correct_on_physical_boundary &&
@@ -1266,25 +1282,28 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
          }  // if patch is not done && patch touches physical boundary
       }  // iterate over all patches local to processor
 
-      for (p = 0; p < tbox::MPI::getNodes(); p++) {
+      for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
          global_check[p] = 1;
       }
-      global_check[tbox::MPI::getRank()] = (all_correct_on_physical_boundary ? 1 : 0);
-      tbox::MPI::minReduction(global_check.getPointer(), tbox::MPI::getNodes());
+      global_check[tbox::SAMRAI_MPI::getRank()] = (all_correct_on_physical_boundary ? 1 : 0);
+      tbox::SAMRAI_MPI::minReduction(global_check.getPointer(), tbox::SAMRAI_MPI::getNodes());
 
-      if (tbox::MPI::getRank() == 0) {
+      if (tbox::SAMRAI_MPI::getRank() == 0) {
          global_check_value = 1;
-         for (p = 0; p < tbox::MPI::getNodes(); p++) {
-            global_check_value = tbox::Utilities::imin(global_check_value, global_check[p]);
+         for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
+            global_check_value = 
+               tbox::MathUtilities<int>::Min(global_check_value, 
+                                             global_check[p]);
          }
          if (global_check_value == 1) {
             tbox::pout << "\n\tAll results correct on physical boundary for level " 
                  << ln << " ..." << endl;
          } else {
+            fail_count++;
             all_correct_on_physical_boundary = false;
             tbox::perr << "\n\tFAILED: - Incorrect results on physical boundary for level " 
                  << ln << " on processors: " << endl << "\t";
-            for (p = 0; p < tbox::MPI::getNodes(); p++) {
+            for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
                if (global_check[p] == 0) {
                   tbox::perr << p << " , "; 
                }
@@ -1303,7 +1322,7 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
 
          tbox::Pointer< hier::PatchLevel<NDIM> > src_level = d_hierarchy->getPatchLevel(check_ln);
 
-         if (tbox::MPI::getRank() == 0) { 
+         if (tbox::SAMRAI_MPI::getRank() == 0) { 
             tbox::pout << "\n\tChecking results on level " << ln
                  << " filled from level " << check_ln << "... " << endl;
          }
@@ -1315,26 +1334,29 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
                                            patch_is_done,
                                            os);
 
-         for (p = 0; p < tbox::MPI::getNodes(); p++) {
+         for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
             global_check[p] = 1;
          }
-         global_check[tbox::MPI::getRank()] = (all_correct_from_level[check_ln] ? 1 : 0);
-         tbox::MPI::minReduction(global_check.getPointer(), tbox::MPI::getNodes());
+         global_check[tbox::SAMRAI_MPI::getRank()] = (all_correct_from_level[check_ln] ? 1 : 0);
+         tbox::SAMRAI_MPI::minReduction(global_check.getPointer(), tbox::SAMRAI_MPI::getNodes());
 
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             global_check_value = 1;
-            for (p = 0; p < tbox::MPI::getNodes(); p++) {
-               global_check_value = tbox::Utilities::imin(global_check_value, global_check[p]);
+            for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
+               global_check_value = 
+                  tbox::MathUtilities<int>::Min(global_check_value, 
+                                                global_check[p]);
             }
             if (global_check_value == 1) {
                tbox::pout << "\n\tAll results correct on level " << ln 
                     << " filled from level " << check_ln << " ..." << endl;
             } else {
+               fail_count++;
                all_correct_from_level[check_ln] = false;
                tbox::perr << "\n\tFAILED: - Incorrect results on level " << ln 
                     << " filled from level " << check_ln
                     << "  on processors (see log files): " << endl << "\t";
-               for (p = 0; p < tbox::MPI::getNodes(); p++) {
+               for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
                   if (global_check[p] == 0) {
                      tbox::perr << p << " , ";
                   }
@@ -1351,23 +1373,26 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
 
       }  // while !level_is_done && check_ln >= 0
 
-      for (p = 0; p < tbox::MPI::getNodes(); p++) {
+      for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
          global_check[p] = 1;
       }
-      global_check[tbox::MPI::getRank()] = (level_is_done ? 1 : 0);
-      tbox::MPI::minReduction(global_check.getPointer(), tbox::MPI::getNodes());
+      global_check[tbox::SAMRAI_MPI::getRank()] = (level_is_done ? 1 : 0);
+      tbox::SAMRAI_MPI::minReduction(global_check.getPointer(), tbox::SAMRAI_MPI::getNodes());
 
-      if (tbox::MPI::getRank() == 0) {
+      if (tbox::SAMRAI_MPI::getRank() == 0) {
          global_check_value = 1;
-         for (p = 0; p < tbox::MPI::getNodes(); p++) {
-            global_check_value = tbox::Utilities::imin(global_check_value, global_check[p]);
+         for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
+            global_check_value = 
+               tbox::MathUtilities<int>::Min(global_check_value, 
+                                             global_check[p]);
          }
          if (global_check_value == 1) {
             tbox::pout << "\n\tLevel " << ln << " checking is done ..." << endl;
          } else {
+            fail_count++;
             tbox::perr << "\n\tFAILED: - Result checking is done, but unchecked boxes"
                  << "  remain on processors (see log files): " << endl << "\t";
-            for (p = 0; p < tbox::MPI::getNodes(); p++) {
+            for (p = 0; p < tbox::SAMRAI_MPI::getNodes(); p++) {
                if (global_check[p] == 0) {
                   tbox::perr << p << " , ";
                }
@@ -1394,7 +1419,7 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
 
       }
 
-      if (tbox::MPI::getRank() == 0) {
+      if (tbox::SAMRAI_MPI::getRank() == 0) {
          bool level_test_successful = true;
       
          level_test_successful = level_test_successful && all_correct_on_physical_boundary;
@@ -1414,6 +1439,7 @@ void LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
 
    } // iterate over levels
 
+   return(fail_count);
 }
 
 bool LocallyActiveDataTester::checkRefineTestOnLevelInterior(
@@ -1424,11 +1450,11 @@ bool LocallyActiveDataTester::checkRefineTestOnLevelInterior(
    ostream& os) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!check_level.isNull());
-   assert(!src_level.isNull());
-   assert(src_level->getLevelNumber() <= check_level->getLevelNumber());
-   assert(unchecked_boxes.size() == check_level->getNumberOfPatches());
-   assert(patch_is_done.size() == check_level->getNumberOfPatches());
+   TBOX_ASSERT(!check_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(src_level->getLevelNumber() <= check_level->getLevelNumber());
+   TBOX_ASSERT(unchecked_boxes.size() == check_level->getNumberOfPatches());
+   TBOX_ASSERT(patch_is_done.size() == check_level->getNumberOfPatches());
 #endif
 
    bool ret_all_correct = true;
@@ -1483,7 +1509,8 @@ bool LocallyActiveDataTester::checkRefineTestOnLevelInterior(
 
                      const int data_id = d_functions[fn].d_func_data_index;
 
-                     if (src_level_mgr->getPatchDataActive(data_id, sp)) {
+                     if ( src_level_mgr->getPatchDataActive( hier::PatchDataId(data_id), 
+                                                             hier::PatchNumber(sp) ) ) {
                         double correct_val =
                                getRefineTestValue(src_ln, sp, data_id);
                         for (hier::BoxList<NDIM>::Iterator cbox(boxes_to_check); cbox; cbox++) {
@@ -1605,7 +1632,7 @@ bool LocallyActiveDataTester::checkRefineTestOnBox(
    bool all_good = true;
    for (pdat::CellIterator<NDIM> ic(region); ic; ic++) {
       pdat::CellIndex<NDIM> cell = ic();
-      if ( !tbox::Utilities::deq((*pdata)(cell), correct_value) ) {
+      if ( !tbox::MathUtilities<double>::equalEps((*pdata)(cell), correct_value) ) {
          all_good = false;
       }
    }
@@ -1943,7 +1970,7 @@ void LocallyActiveDataTester::getGriddingParametersFromInput(
    tbox::Pointer<tbox::InputDatabase> gridding_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!gridding_db.isNull());
+   TBOX_ASSERT(!gridding_db.isNull());
 #endif
  
    int ln;
@@ -2072,7 +2099,7 @@ void LocallyActiveDataTester::getRandomFunctionDataFromInput(
 
       double min_len = xhi[0]-xlo[0];
       for (id = 1; id < NDIM; id++) {
-         min_len = tbox::Utilities::dmin(min_len, xhi[id]-xlo[id]);
+         min_len = tbox::MathUtilities<double>::Min(min_len, xhi[id]-xlo[id]);
       }
       
       double fun1d = pow( (double)d_num_test_functions, (1.0/double(NDIM)) );
@@ -2363,7 +2390,8 @@ void LocallyActiveDataTester::printHierarchyData(
             if (d_test_to_run == "COARSEN_TEST") {
                data_id = d_functions[fn].d_soln_data_index;
             }
-            if ( level_mgr->getPatchDataActive(data_id, ib) ) {
+            if ( level_mgr->getPatchDataActive( hier::PatchDataId(data_id), 
+                                                hier::PatchNumber(ib) ) ) {
                os << fn << " , "; 
             }
          }
@@ -2386,7 +2414,7 @@ void LocallyActiveDataTester::printHierarchyData(
 
             hier::LocallyActiveDataPatchLevelManager<NDIM>::Iterator p =
                var_db->getLocallyActiveDataPatchLevelManager(level)->
-               getIterator(func_id);
+               getIterator( hier::PatchDataId(func_id) );
             for ( ; p; p++) {
                tbox::Pointer< hier::Patch<NDIM> > patch = level->getPatch(p());
 

@@ -1,18 +1,15 @@
 //
-// File:        SampleApp.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/emb_bdry/SampleApp.C $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2002 The Regents of the University of California
+// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to manage functions for QM calculations.
 //
 
 #include "SampleApp.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 
 /*
@@ -94,27 +91,41 @@ SampleApp::SampleApp(const string& object_name,
 
    Pointer<CellVariable<NDIM,int> > mark_var = 
       new CellVariable<NDIM,int>("mark",1);
+
    Pointer<VariableContext> cur_cxt = variable_db->getContext("CURRENT");
    IntVector<NDIM> zero_ghosts(0);
    d_mark_id = variable_db->registerVariableAndContext(mark_var,
                                                        cur_cxt,
                                                        zero_ghosts);
+
    viz_writer->registerPlotQuantity("MARK", "SCALAR", d_mark_id);
+
+#ifdef USE_NONUNIFORM_LB
+   Pointer<CellVariable<NDIM,double> > weight_var = 
+      new CellVariable<NDIM,double>("weight",1);
+   IntVector<NDIM> one_ghost(0);
+   d_weight_id = variable_db->registerVariableAndContext(weight_var,
+                                                       cur_cxt,
+                                                       one_ghost);
+
+   viz_writer->registerPlotQuantity("WEIGHT", "SCALAR", d_weight_id);
+#else
+   d_weight_id = -1;
+#endif
 
    /*
     * Create RefineAlgorithm used for regridding
     */
    d_fill_new_level = new RefineAlgorithm<NDIM>();
 
-   Pointer<RefineOperator<NDIM> > refine_op = 
+   Pointer<RefineOperator<NDIM> > int_refine_op = 
       grid_geom->lookupRefineOperator(mark_var, "CONSTANT_REFINE");
 
    d_fill_new_level->registerRefine(d_mark_id, // dst
                                     d_mark_id, // src
                                     d_mark_id, // scratch
-                                    refine_op);
-   
-   
+                                    int_refine_op);
+
 
 
 }
@@ -124,9 +135,13 @@ SampleApp::~SampleApp()
 }
 
 
+int SampleApp::getWorkloadIndex() const
+{
+   return(d_weight_id);
+}
+
 void SampleApp::setMarkerOnPatch(
    const Pointer<Patch<NDIM> >& patch,
-   const int level_number,
    const double time,
    const bool initial_time)
 {
@@ -180,11 +195,52 @@ void SampleApp::setMarkerOnPatch(
 
 }
 
+void SampleApp::setWeightOnPatch(
+   const Pointer<Patch<NDIM> >& patch,
+   const double time,
+   const bool initial_time)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(d_weight_id >= 0);
+#endif
+
+   if (!patch->checkAllocated(d_weight_id)) {
+      patch->allocatePatchData(d_weight_id);
+   }
+   Pointer< CellData<NDIM,double> > weight = patch->getPatchData(d_weight_id);
+
+   // Initiallly, all cells have weight = 1
+   weight->fillAll(1.0);
+
+
+   // Loop through cut cells on patch and assign weights.  Based on timings,
+   // cut cells take about 116.7 times longer to compute than regular cells,
+   // so thats the weight we use.
+   int eb_index = d_eb_geom->getIndexCutCellDataId();
+   if (patch->checkAllocated(eb_index)) {
+      Pointer< IndexData<NDIM,CutCell<NDIM> > > eboundary =
+         patch->getPatchData(eb_index);
+
+      for (IndexData<NDIM,CutCell<NDIM> >::Iterator cc(*eboundary); cc; cc++) {
+         Index<NDIM> ind = cc().getIndex();
+         CellIndex<NDIM> cind(ind);
+         Box<NDIM> box(ind,ind);
+         if (!box.intersects(weight->getGhostBox())) {
+            TBOX_ERROR("ouch");
+         }
+         (*weight)(cind) = 116.7 ;
+         //(*weight)(cind) = 1.;
+      }
+   }
+
+   
+
+}
+
 
 
 void SampleApp::tagCellsOnPatch(
    const Pointer<Patch<NDIM> >& patch,
-   const int level_number,
    const double time,
    const int tag_index,
    const bool initial_time)
@@ -342,7 +398,7 @@ void SampleApp::initializeLevelData(
    }
    
    /*
-    * Create schedules and fill marker data on new level
+    * Create schedules and fill marker and weight data on new level
     */
    if ((level_number > 0) || (!old_level.isNull())) {
       Pointer<RefineSchedule<NDIM> > sched = 
@@ -362,13 +418,22 @@ void SampleApp::initializeLevelData(
    if (d_tag_growing_sphere) {
       
       for (PatchLevel<NDIM>::Iterator ip(level); ip; ip++) {
-         Pointer<Patch<NDIM> > patch = level->getPatch(ip());   
-         
-         setMarkerOnPatch(patch, level_number, time, initial_time);
+         Pointer<Patch<NDIM> > patch = level->getPatch(ip());
+         setMarkerOnPatch(patch, time, initial_time);
       }
       
    }
       
+#ifdef USE_NONUNIFORM_LB
+   /*
+    * Set the weight on the new level
+    */
+   for (PatchLevel<NDIM>::Iterator ip(level); ip; ip++) {
+      Pointer<Patch<NDIM> > patch = level->getPatch(ip());
+      setWeightOnPatch(patch, time, initial_time);
+   }
+#endif
+
 }
 
 
@@ -395,7 +460,7 @@ void SampleApp::applyGradientDetector(
    for (PatchLevel<NDIM>::Iterator ip(level); ip; ip++) {
       Pointer<Patch<NDIM> > patch = level->getPatch(ip());
       
-      tagCellsOnPatch(patch, level_number, time, tag_index, initial_time); 
+      tagCellsOnPatch(patch, time, tag_index, initial_time); 
 
    } // loop over patches
 }
@@ -406,7 +471,7 @@ SampleApp::getFromInput(tbox::Pointer<tbox::Database> db)
 {   
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    d_tag_cut_cells = 

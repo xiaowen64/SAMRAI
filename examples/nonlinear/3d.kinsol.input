@@ -1,9 +1,9 @@
 //
-// File:        $RCSfile$
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/nonlinear/3d.kinsol.input $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision$
-// Modified:    $Date$
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Input file for 3D nonlinear solver example using KINSOL.
 //
 // This is the input file for the 3D nonlinear solver example using KINSOL.
@@ -103,7 +103,7 @@ ModifiedBratuProblem{
 
 KINSOLSolver{
     max_nonlinear_iterations = 20
-    KINSOL_log_filename      = "outputs/2d/nkLog.32x32.8"
+    KINSOL_log_filename      = "nkLog.32x32.8"
     KINSOL_print_flag        = 3
 
     uses_preconditioner      = TRUE

@@ -1,9 +1,9 @@
 c
-c  File:        pdat_dbugstuff3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/fortran/pdat_dbugstuff3d.i $
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    $Revision$
-c  Modified:    $Date$
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1704 $
+c  Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 c  Description: m4 include file for 3d patchdata debugging routines
 c
 define(SAMRAI_FORTDIR,.)dnl

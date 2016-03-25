@@ -1,16 +1,13 @@
 //
-// File:        SampleIndexData.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/dataops/SampleIndexData.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 480 $
-// Modified:    $Date: 2005-07-14 13:46:02 -0700 (Thu, 14 Jul 2005) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: SampleIndexData example demonstrating IndexData type.
 //
 
 #include "SampleIndexData.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include "tbox/Utilities.h"
 

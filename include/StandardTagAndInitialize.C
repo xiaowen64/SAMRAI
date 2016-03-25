@@ -1,9 +1,9 @@
 //
-// File:        StandardTagAndInitialize.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/StandardTagAndInitialize.C $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 63 $
-// Modified:    $Date: 2004-12-14 12:24:05 -0800 (Tue, 14 Dec 2004) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Routines for performing cell-tagging and initializing 
 //              a new level.
 //
@@ -13,18 +13,13 @@
 
 #include "StandardTagAndInitialize.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "CellIntegerConstantRefine.h"
 #include "CellData.h"
 #include "Box.h"
 #include "Patch.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "tbox/Pointer.h"
 
 #ifdef DEBUG_NO_INLINE
@@ -92,12 +87,12 @@ static int GCD(const int a, const int b);
 */
 
 template<int DIM> StandardTagAndInitialize<DIM>::StandardTagAndInitialize(
-    const string& object_name,
+    const std::string& object_name,
     StandardTagAndInitStrategy<DIM>* tag_strategy,
     tbox::Pointer<tbox::Database> input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
    
    d_object_name = object_name;
@@ -134,7 +129,7 @@ template<int DIM> StandardTagAndInitialize<DIM>::StandardTagAndInitialize(
                   << "\nThe supplied implementation of the "
                   << "\nStandardTagAndInitStrategy is NULL.  It must be"
                   << "\nnon-NULL to use the GRADIENT_DETECTOR or"
-                  << "\nRICHARDSON_EXTRAPOLATION tagging options." << endl);
+                  << "\nRICHARDSON_EXTRAPOLATION tagging options." << std::endl);
      }
    }
 }
@@ -164,13 +159,13 @@ template<int DIM> void StandardTagAndInitialize<DIM>::initializeLevelData(
    const bool allocate_data) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0) 
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0) 
            && (level_number <= hierarchy->getFinestLevelNumber()) );
    if ( !(old_level.isNull()) ) {
-      assert( level_number == old_level->getLevelNumber() );
+      TBOX_ASSERT( level_number == old_level->getLevelNumber() );
    }
-   assert(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
 #endif
 
    if (d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL)) {
@@ -200,12 +195,12 @@ template<int DIM> void StandardTagAndInitialize<DIM>::resetHierarchyConfiguratio
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (coarsest_level >= 0)
            && (coarsest_level <= finest_level) 
            && (finest_level <= hierarchy->getFinestLevelNumber()) );
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
-      assert(!(hierarchy->getPatchLevel(ln0)).isNull());
+      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln0)).isNull());
    }
 #endif
 
@@ -249,11 +244,11 @@ template<int DIM> void StandardTagAndInitialize<DIM>::tagCellsForRefinement(
    const double regrid_start_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert( (level_number>=0) 
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT( (level_number>=0) 
            && (level_number <= hierarchy->getFinestLevelNumber()) );
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
-   assert(tag_index>=0);
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(tag_index>=0);
 #endif
 
    if (d_use_richardson_extrapolation)  {
@@ -274,7 +269,7 @@ template<int DIM> void StandardTagAndInitialize<DIM>::tagCellsForRefinement(
       NULL_USE(coarsest_sync_level);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL));
+      TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL));
 #endif
       d_tag_strategy->applyGradientDetector(hierarchy,
                                             level_number,
@@ -303,7 +298,7 @@ template<int DIM> void StandardTagAndInitialize<DIM>::tagCellsForRefinement(
          tbox::Pointer< pdat::CellData<DIM,int> > tag_data = 
             patch->getPatchData(tag_index);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert( !(tag_data.isNull()) );
+         TBOX_ASSERT( !(tag_data.isNull()) );
 #endif
 
          for (int ib = 0; ib < refine_boxes.getNumberOfBoxes(); ib++) {
@@ -390,8 +385,8 @@ StandardTagAndInitialize<DIM>::tagCellsUsingRichardsonExtrapolation(
    const bool can_be_refined)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(regrid_start_time <= regrid_time);
-   assert(d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL));
+   TBOX_ASSERT(regrid_start_time <= regrid_time);
+   TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL));
 #endif
  
    tbox::Pointer< hier::PatchLevel<DIM> > patch_level = 
@@ -444,14 +439,14 @@ StandardTagAndInitialize<DIM>::tagCellsUsingRichardsonExtrapolation(
       bool last_step = (step_cnt == (n_steps - 1));
 
 #ifdef DEBUG_TIMES
-      tbox::plog << "\nAdvancing Data on level in Rich. Extrap" << endl;
-      tbox::plog << "level number = " << patch_level->getLevelNumber() << endl;
-      tbox::plog << "level in hierarchy? " << patch_level->inHierarchy() << endl;
-      tbox::plog << "start time = " << start_time << endl;
-      tbox::plog << "end time = " << end_time << endl;
-      tbox::plog << "first step? = " << first_step << endl;
-      tbox::plog << "last step? = " << last_step << endl;
-      tbox::plog << "regrid advance? = " << regrid_advance << endl;
+      tbox::plog << "\nAdvancing Data on level in Rich. Extrap" << std::endl;
+      tbox::plog << "level number = " << patch_level->getLevelNumber() << std::endl;
+      tbox::plog << "level in hierarchy? " << patch_level->inHierarchy() << std::endl;
+      tbox::plog << "start time = " << start_time << std::endl;
+      tbox::plog << "end time = " << end_time << std::endl;
+      tbox::plog << "first step? = " << first_step << std::endl;
+      tbox::plog << "last step? = " << last_step << std::endl;
+      tbox::plog << "regrid advance? = " << regrid_advance << std::endl;
 #endif
 
       (void) d_tag_strategy->advanceLevel(patch_level,
@@ -499,9 +494,9 @@ StandardTagAndInitialize<DIM>::tagCellsUsingRichardsonExtrapolation(
       tbox::Pointer< pdat::CellData<DIM,int> > 
          ctags = coarse_patch->getPatchData(tag_index);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!ftags.isNull());
-      assert(!ctags.isNull());
-      assert(ctags->getDepth() == ftags->getDepth());
+      TBOX_ASSERT(!ftags.isNull());
+      TBOX_ASSERT(!ctags.isNull());
+      TBOX_ASSERT(ctags->getDepth() == ftags->getDepth());
 #endif
 
       const hier::Index<DIM> filo = ftags->getGhostBox().lower();
@@ -540,7 +535,7 @@ StandardTagAndInitialize<DIM>::tagCellsUsingRichardsonExtrapolation(
 
           } else {
              TBOX_ERROR("StandardTagAndInitialize error...\n"
-                     << "DIM > 3 not supported." << endl);
+                     << "DIM > 3 not supported." << std::endl);
 
           }
 
@@ -605,10 +600,10 @@ StandardTagAndInitialize<DIM>::preprocessErrorEstimation(
    const bool initial_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert( (level_number>=0) 
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT( (level_number>=0) 
            && (level_number <= hierarchy->getFinestLevelNumber()) );
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
 #endif 
 
    if (d_use_richardson_extrapolation) {
@@ -665,8 +660,8 @@ StandardTagAndInitialize<DIM>::preprocessRichardsonExtrapolation(
    const bool initial_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(regrid_start_time <= regrid_time);
-   assert(d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL));
+   TBOX_ASSERT(regrid_start_time <= regrid_time);
+   TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy<DIM>*)NULL));
 #endif
 
    tbox::Pointer< hier::PatchLevel<DIM> > patch_level = 
@@ -707,12 +702,12 @@ StandardTagAndInitialize<DIM>::preprocessRichardsonExtrapolation(
    }
 
 #ifdef DEBUG_TIMES
-      tbox::plog << "\nRegridding on level using Rich. Extrap" << endl;
-      tbox::plog << "level number = " << patch_level->getLevelNumber() << endl;
-      tbox::plog << "level in hierarchy? " << patch_level->inHierarchy() << endl;
-      tbox::plog << "coarser hier level = " << level_number-1 << endl;
-      tbox::plog << "coarser start time = " << coarse_start_time << endl;
-      tbox::plog << "coarser end time = " << coarse_end_time << endl;
+      tbox::plog << "\nRegridding on level using Rich. Extrap" << std::endl;
+      tbox::plog << "level number = " << patch_level->getLevelNumber() << std::endl;
+      tbox::plog << "level in hierarchy? " << patch_level->inHierarchy() << std::endl;
+      tbox::plog << "coarser hier level = " << level_number-1 << std::endl;
+      tbox::plog << "coarser start time = " << coarse_start_time << std::endl;
+      tbox::plog << "coarser end time = " << coarse_end_time << std::endl;
 #endif
 
    /*
@@ -755,14 +750,14 @@ StandardTagAndInitialize<DIM>::preprocessRichardsonExtrapolation(
    bool regrid_advance = true;
  
 #ifdef DEBUG_TIMES
-      tbox::plog << "\nAdvancing Data on coarser in Rich. Extrap" << endl;
-      tbox::plog << "level number = " << coarser_level->getLevelNumber() << endl;
-      tbox::plog << "level in hierarchy? " << patch_level->inHierarchy() << endl;
-      tbox::plog << "start time = " << coarse_start_time << endl;
-      tbox::plog << "end time = " << coarse_end_time << endl;
-      tbox::plog << "first step? = " << first_step << endl;
-      tbox::plog << "last step? = " << last_step << endl;
-      tbox::plog << "regrid advance? = " << regrid_advance << endl;
+      tbox::plog << "\nAdvancing Data on coarser in Rich. Extrap" << std::endl;
+      tbox::plog << "level number = " << coarser_level->getLevelNumber() << std::endl;
+      tbox::plog << "level in hierarchy? " << patch_level->inHierarchy() << std::endl;
+      tbox::plog << "start time = " << coarse_start_time << std::endl;
+      tbox::plog << "end time = " << coarse_end_time << std::endl;
+      tbox::plog << "first step? = " << first_step << std::endl;
+      tbox::plog << "last step? = " << last_step << std::endl;
+      tbox::plog << "regrid advance? = " << regrid_advance << std::endl;
 #endif
 
    (void) d_tag_strategy->advanceLevel(coarser_level,
@@ -810,7 +805,7 @@ template<int DIM> bool StandardTagAndInitialize<DIM>::coarsestLevelBoxesOK(
    const hier::BoxArray<DIM>& boxes) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(boxes.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(boxes.getNumberOfBoxes() > 0);
 #endif
 
    bool boxes_ok = true;
@@ -822,7 +817,7 @@ template<int DIM> bool StandardTagAndInitialize<DIM>::coarsestLevelBoxesOK(
          for (int i = 0; i < DIM; i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
             if ( !((n_cells(i) % error_coarsen_ratio) == 0) ) {
-               tbox::perr << "Bad domain box: " << boxes.getBox(ib) << endl;
+               tbox::perr << "Bad domain box: " << boxes.getBox(ib) << std::endl;
                TBOX_WARNING(d_object_name << "At least one box on the \n"
                   << "coarsest level could not be coarsened by the ratio: "
                   << error_coarsen_ratio);
@@ -912,10 +907,10 @@ template<int DIM> void StandardTagAndInitialize<DIM>::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
-   tbox::Array<string> tagging_method;
+   tbox::Array<std::string> tagging_method;
    if (db->keyExists("tagging_method")) {
       tagging_method = db->getStringArray("tagging_method");
    }
@@ -987,8 +982,8 @@ template<int DIM> void StandardTagAndInitialize<DIM>::getFromInput(
    
 static int GCD(const int a, const int b)
 {
-   int at = tbox::Utilities::imin(a,b);
-   int bt = tbox::Utilities::imax(a,b);
+   int at = tbox::MathUtilities<int>::Min(a,b);
+   int bt = tbox::MathUtilities<int>::Max(a,b);
 
    if ( at == 0 || bt == 0 ) return(bt);
 

@@ -1,9 +1,9 @@
 /*
- * File:        SimpleCellrboinBcCoefs.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/SimpleCellRobinBcCoefs.h $
  * Package:     SAMRAI solver package
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1818 $
+ * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
  * Description: Robin boundary condition problem-dependent interfaces
  */
 
@@ -32,7 +32,7 @@
 #include "Patch.h"
 #endif
 
-#ifndef included_tbox_ArrayData
+#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
 #endif
 
@@ -77,7 +77,7 @@ public:
    /*!
     * @brief Constructor
     */
-   SimpleCellRobinBcCoefs(const string& object_name=string());
+   SimpleCellRobinBcCoefs(const std::string& object_name=std::string());
 
 
    /*!
@@ -101,11 +101,14 @@ public:
     * @param acoef_data boundary coefficient data.
     *        This is defined to include index range for
     *        the boundary faces on the boundary box @c bdry_box.
+    *        If this is a null pointer, then the calling function
+    *        is not interested in a, and you can disregard it.
+    * @param bcoef_data boundary coefficient data.
+    *        This is defined to include index range for
+    *        the boundary faces on the boundary box @c bdry_box.
     * @param gcoef_data boundary coefficient data.
     *        This is defined to include index range for
     *        the boundary faces on the boundary box @c bdry_box.
-    *        If this is a null pointer, then the calling function
-    *        is not interested in g, and you can disregard it.
     * @param variable variable to set the coefficients for.
     * @param patch patch requiring bc coefficients
     * @param bdry_box boundary box showing where on the boundary
@@ -115,6 +118,7 @@ public:
     */
    void setBcCoefs (
       tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
+      tbox::Pointer<pdat::ArrayData<DIM,double> > &bcoef_data ,
       tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
       const tbox::Pointer< hier::Variable<DIM> > &variable ,
       const hier::Patch<DIM> &patch ,
@@ -181,7 +185,7 @@ public:
     * it can sometimes make the PoissonHYPRESolver class more efficient.
     */
 
-   void setBoundaries(const string& boundary_type,
+   void setBoundaries(const std::string& boundary_type,
                       const int fluxes = -1,
                       const int flags = -1,
                       int* bdry_types = NULL);
@@ -274,7 +278,7 @@ private:
    /*!
     * @brief object name
     */
-   string d_object_name;
+   std::string d_object_name;
    tbox::Pointer< hier::PatchHierarchy<DIM> > d_hierarchy;
    int d_ln_min;
    int d_ln_max;

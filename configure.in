@@ -1,9 +1,9 @@
 dnl
 dnl File:        configure.in
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2005 The Regents of the University of California
-dnl Revision:    $Revision: 1.268 $
-dnl Modified:    $Date: 2004/11/04 17:09:29 $
+dnl Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+dnl Revision:    $LastChangedRevision: 1783 $
+dnl Modified:    $LastChangedDate: 2007-12-17 13:07:31 -0800 (Mon, 17 Dec 2007) $
 dnl Description: autoconfig configuration file
 dnl
 
@@ -293,6 +293,13 @@ esac
 fi
 
 DEPENDS_ON_TEMPLATE_IMPLEMENTATION="yes"
+# For insure add -Zsl option for linking
+case $CXX in 
+   *insure*)
+            LIB_NAME="$LIB_NAME -Zsl"
+            ;;
+esac
+
 case $CXX_ID in
    gnu)
       DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
@@ -338,7 +345,7 @@ case $CXX_ID in
       AC_DEFINE(INCLUDE_TEMPLATE_IMPLEMENTATION)
       case $ARCH in
          LINUX)
-            CXX_FLAGS="$CXX_FLAGS -wd1476 -wd1505"
+            CXX_FLAGS="$CXX_FLAGS -wd1476 -wd1505 -wd873"
             ;;
       esac
       ;;
@@ -727,6 +734,13 @@ BTNG_AC_LOG_VAR(SAMRAI_PERL)
 dnl
 dnl Whether restrict key word works.
 dnl
+BTNG_AC_LOG(begin stringize)
+AC_C_STRINGIZE
+BTNG_AC_LOG(end stringize)
+
+dnl
+dnl Whether restrict key word works.
+dnl
 BTNG_C_RESTRICT
 
 dnl
@@ -802,18 +816,27 @@ if test "${dl_PREFIX+set}" = set; then
 fi
 
 
-dnl
-dnl Set fortran library.
-dnl
-BTNG_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, before getting fortran libs)
-BTNG_SUPPORT_FORTRAN_FROM_C(1)
-if test -n "$fortran_LIBS" ; then
-  LIBS="$LIBS $fortran_LIBS"
-  SAMRAI_SPLIT_LIBS_STRING(fortran_LIBS,fortran_LIB_PATH,fortran_LIB_NAME)
-  LIB_PATH="$fortran_LIB_PATH $LIB_PATH"
-  LIB_NAME="$fortran_LIB_NAME $LIB_NAME"
-fi
-BTNG_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, after getting fortran libs)
+
+dnl dnl
+dnl dnl Set up the Fortran libraries.
+dnl dnl
+AC_F77_LIBRARY_LDFLAGS
+SAMRAI_SPLIT_LIBS_STRING(FLIBS,FLIBS_PATH,FLIBS_NAME)
+LIB_NAME="${LIB_NAME} ${FLIBS_NAME}"
+LIB_PATH="${LIB_PATH} ${FLIBS_PATH}"
+BTNG_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
+dnl dnl
+dnl dnl Set fortran library.
+dnl dnl
+dnl BTNG_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, before getting fortran libs)
+dnl BTNG_SUPPORT_FORTRAN_FROM_C(1)
+dnl if test -n "$fortran_LIBS" ; then
+dnl   LIBS="$LIBS $fortran_LIBS"
+dnl   SAMRAI_SPLIT_LIBS_STRING(fortran_LIBS,fortran_LIB_PATH,fortran_LIB_NAME)
+dnl   LIB_PATH="$fortran_LIB_PATH $LIB_PATH"
+dnl   LIB_NAME="$fortran_LIB_NAME $LIB_NAME"
+dnl fi
+dnl BTNG_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, after getting fortran libs)
 
 
 dnl
@@ -990,10 +1013,10 @@ if test "${PETSC_DIR+set}" = set; then
   INC_PATH="$petsc_INCLUDES $INC_PATH"
   AC_DEFINE(HAVE_PETSC,1,PETSC library is available so use it)
   if test $PETSC_VERSION_MAJOR -ne 2 || \
-     test $PETSC_VERSION_MINOR -ne 1 || \
-     test $PETSC_VERSION_SUBMINOR -ne 6 ; then
+     test $PETSC_VERSION_MINOR -ne 3 || \
+     test $PETSC_VERSION_SUBMINOR -ne 3 ; then
      AC_MSG_WARN([
-SAMRAI requires PETSc-2.1.6.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
+SAMRAI requires PETSc-2.3.3.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
 which may not work properly!
 ])
   fi
@@ -1047,59 +1070,31 @@ if test "$enable_xdr" = "yes"; then
 fi
 
 dnl
-dnl If KINSOL is requested, then set up the KINSOL libraries and include paths.
+dnl If Sundials is requested, then set up the Sundials libraries and include paths.
 dnl
 
-AC_ARG_WITH(kinsol,
-[  --with-kinsol=PATH	Use the KINSOL nonlinear equation package
+AC_ARG_WITH(sundials,
+[  --with-sundials=PATH	Use the Sundials solver package
 			and specify where it is.],
-,with_kinsol='no')
+,with_sundials='no')
 
-if test "$with_kinsol" = no; then
-   AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the KINSOL library])
-   AC_DEFINE(LACKS_KINSOL)
+if test "$with_sundials" = no; then
+   AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the Sundials library])
+   AC_DEFINE(LACKS_SUNDIALS)
 else
-   kinsol_dir="$with_kinsol"
-   BTNG_AC_LOG_VAR(with_kinsol kinsol_dir)
-   if test ! -d "$kinsol_dir" ; then
+   sundials_dir="$with_sundials"
+   if test ! -d "$sundials_dir" ; then
      AC_MSG_ERROR(
-       [You MUST specify an existing path when using --with-kinsol=PATH])
+       [You MUST specify an existing path when using --with-sundials=PATH])
    fi
-   AC_DEFINE(HAVE_KINSOL)
+   AC_DEFINE(HAVE_SUNDIALS)
+   LIB_PATH="$LIB_PATH -L$sundials_dir/lib"
+   LIB_NAME="$LIB_NAME -lsundials_cvode -lsundials_kinsol"
+   INC_PATH="-I$sundials_dir/include $INC_PATH"
 fi
-BTNG_AC_LOG_VAR(with_kinsol kinsol_dir)
+AC_SUBST(SUNDIALS_C_FILES)
 
-dnl
-dnl If PVODE is requested, then set up the PVODE libraries and include paths.
-dnl
-
-AC_ARG_WITH(pvode,
-[  --with-pvode=PATH	Use the PVODE ODE solver package
-			and specify where it is.],
-,with_pvode='no')
-
-PVODE_C_FILES="error_in_script.c"
-if test "$with_pvode" = no; then
-   AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the PVODE library])
-   AC_DEFINE(LACKS_PVODE)
-else
-   pvode_dir="$with_pvode"
-   if test ! -d "$pvode_dir" ; then
-     AC_MSG_ERROR(
-       [You MUST specify an existing path when using --with-pvode=PATH])
-   fi
-   AC_DEFINE(HAVE_PVODE)
-   dnl Since both kinsol and pvode have same files we only want to compile
-   dnl the shared files in one of the packages
-   if test "$with_kinsol" = no; then
-     PVODE_C_FILES="iterativ.c cvode.c cvspgmr.c llnlmath.c spgmr.c"
-   else
-     PVODE_C_FILES="cvode.c cvspgmr.c"
-   fi
-fi
-AC_SUBST(PVODE_C_FILES)
-
-BTNG_AC_LOG_VAR(with_pvode pvode_dir)
+BTNG_AC_LOG_VAR(with_sundials sundials_dir)
 
 dnl
 dnl If CUBES is requested, then set up the CUBES libraries and include paths.
@@ -1391,8 +1386,10 @@ SAMRAI_LINK_FILES([ esyscmd(find examples/hypre_poisson samrai_find_excludes sam
 SAMRAI_LINK_FILES([ esyscmd(find examples/FAC           samrai_find_excludes samrai_typical_example_files | sort) ])
 SAMRAI_LINK_FILES([ esyscmd(find examples/LinAdv        samrai_find_excludes samrai_typical_example_files | sort) ])
 SAMRAI_LINK_FILES([ esyscmd(find examples/mblkcomm      samrai_find_excludes samrai_typical_example_files | sort) ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/MblkEuler     samrai_find_excludes samrai_typical_example_files | sort) ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/MblkLinAdv    samrai_find_excludes samrai_typical_example_files | sort) ])
 SAMRAI_LINK_FILES([ esyscmd(find examples/memory        samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/pvode         samrai_find_excludes samrai_typical_example_files | sort) ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/sundials      samrai_find_excludes samrai_typical_example_files | sort) ])
 SAMRAI_LINK_FILES([ esyscmd(find examples/patchbdrysum  samrai_find_excludes samrai_typical_example_files | sort) ])
 SAMRAI_LINK_FILES([ esyscmd(find examples/timers        samrai_find_excludes samrai_typical_example_files | sort) ])
 
@@ -1401,19 +1398,8 @@ SAMRAI_LINK_FILES([ source/test/clustering/async_br/front2d.input
                     source/test/clustering/async_br/front3d.input ])
 SAMRAI_LINK_FILES([ source/test/dlbg/front2d.input
                     source/test/dlbg/front3d.input ])
-SAMRAI_LINK_FILES([ source/test/locally_active/test-coarsen-2d.input
-                    source/test/locally_active/test-coarsen-3d.input
-                    source/test/locally_active/test-refine-2d-2levels.input
-                    source/test/locally_active/test-refine-2d-2levels-perxandy.input
-                    source/test/locally_active/test-refine-2d-2levels-perx.input
-                    source/test/locally_active/test-refine-2d-2levels-pery.input
-                    source/test/locally_active/test-refine-2d-3levels-ALL.input
-                    source/test/locally_active/test-refine-2d-3levels.input
-                    source/test/locally_active/test-refine-2d-3levels-MOD2.input
-                    source/test/locally_active/test-refine-3d-3levels-ALL.input
-                    source/test/locally_active/test-refine-3d-3levels-EVEN_ODD.input
-                    source/test/locally_active/test-refine-3d-3levels-MOD2.input
-                    source/test/locally_active/test-refine-3d.input ])
+SAMRAI_LINK_FILES([ esyscmd(echo source/test/hypre/*.input) ])
+SAMRAI_LINK_FILES([ source/test/FAC/inputs ])
 
 dnl Undefine the m4 symbols not needed anymore.
 dnl (Keep samrai_find_excludes in case it do more finds below.)
@@ -1443,12 +1429,15 @@ dnl They are run by the generated config.status script.
 
 rm -rf Templates.DB ti_files ii_files
 
-mkdir -p config include lib $subdirs
+mkdir -p config include lib bin $subdirs
 
 cp $srcdir/COPYRIGHT COPYRIGHT
-cp $srcdir/RELEASE RELEASE 
-cp $srcdir/INSTALL INSTALL 
+cp $srcdir/RELEASE-NOTES RELEASE-NOTES 
+cp $srcdir/INSTALL-NOTES INSTALL-NOTES 
 cp $srcdir/examples/nonlinear/*.input source/test/nonlinear
+cp $srcdir/examples/MblkEuler/*.f  examples/MblkEuler
+mkdir -p source/test/testtools
+cp $srcdir/source/test/testtools/* source/test/testtools
 cp $srcdir/source/test/applications/ConvDiff/*.input source/test/applications/ConvDiff
 cp $srcdir/source/test/applications/ConvDiff/*.boxes source/test/applications/ConvDiff
 cp $srcdir/source/test/applications/Euler/*.input source/test/applications/Euler
@@ -1465,11 +1454,14 @@ cp $srcdir/source/test/communication/*.input source/test/communication
 cp $srcdir/source/test/communication/*.input source/test/communication
 cp $srcdir/source/test/emb_bdry/*.input source/test/emb_bdry
 cp $srcdir/source/test/hierarchy/*.input source/test/hierarchy
-cp $srcdir/source/test/hypre/*.input source/test/hypre
 cp $srcdir/source/test/inputdb/*.input  source/test/inputdb
+cp $srcdir/source/test/locally_active/*.input  source/test/locally_active
 cp $srcdir/source/test/mblkcomm/*.input  source/test/mblkcomm
+cp $srcdir/source/test/MblkEuler/*.input  source/test/MblkEuler
+cp $srcdir/source/test/MblkLinAdv/*.input  source/test/MblkLinAdv
 cp $srcdir/source/test/patchbdrysum/*.input source/test/patchbdrysum
-cp $srcdir/source/test/pvode/*.input  source/test/pvode
+cp $srcdir/source/test/patch_configuration/*.input source/test/patch_configuration
+cp $srcdir/source/test/sundials/*.input   source/test/sundials
 cp $srcdir/source/test/schedules/*.input  source/test/schedules
 cp $srcdir/source/test/schedules/*.boxes  source/test/schedules
 cp $srcdir/source/test/schedules/*.sh     source/test/schedules
@@ -1484,33 +1476,6 @@ for i in $readme; do
    cp $srcdir/$i $i
 done
 
-dnl
-dnl Copy other includes (e.g., KINSOL) as needed.
-dnl
-
-
-
-
-if test -n "$kinsol_dir"; then
-   for i in iterativ.c kinsol.c kinspgmr.c llnlmath.c spgmr.c; do
-      cp $kinsol_dir/source/$i source/solvers/packages/pvode_trio/kinsol/kinsol/$i
-   done
-   for i in iterativ.h kinsol.h kinspgmr.h llnlmath.h llnltyps.h spgmr.h; do
-      cp $kinsol_dir/include/$i source/solvers/packages/pvode_trio/kinsol/kinsol/$i
-      cp $kinsol_dir/include/$i include/$i
-   done
-fi
-
-if test -n "$pvode_dir"; then
-   for i in $PVODE_C_FILES; do
-      cp $pvode_dir/source/$i source/solvers/packages/pvode_trio/pvode/pvode/$i
-   done
-   for i in iterativ.h cvode.h cvspgmr.h llnlmath.h llnltyps.h spgmr.h; do
-      cp $pvode_dir/include/$i source/solvers/packages/pvode_trio/pvode/pvode/$i
-      cp $pvode_dir/include/$i include/$i
-   done
-fi
-
 ],
 [
 
@@ -1518,9 +1483,7 @@ dnl These commands set the environment for commands executing
 dnl after file generations.
 srcdir=$srcdir
 subdirs="$subdirs"
-kinsol_dir=$kinsol_dir
-pvode_dir=$pvode_dir
-PVODE_C_FILES="$PVODE_C_FILES"
+sundials_dir=$sundials_dir
 if test ! `cd $srcdir && pwd -P` = `pwd -P`; then
   source_tree_is_not_compile_tree=1
 fi

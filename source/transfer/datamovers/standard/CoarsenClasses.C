@@ -1,9 +1,9 @@
 //
-// File:	CoarsenClasses.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenClasses.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Simple structure for managing coarsening data in equivalence classes.
 //
 
@@ -11,7 +11,6 @@
 #define included_xfer_CoarsenClasses_C
 
 #include <typeinfo>
-using namespace std;
 
 #include "CoarsenClasses.h"
 
@@ -21,9 +20,6 @@ using namespace std;
 #include "VariableDatabase.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -82,7 +78,7 @@ template<int DIM> const typename CoarsenClasses<DIM>::Data&
    CoarsenClasses<DIM>::getClassRepresentative(int equiv_class_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (equiv_class_id >= 0) && 
+   TBOX_ASSERT( (equiv_class_id >= 0) && 
            (equiv_class_id < d_coarsen_equivalence_classes.getSize()) );
 #endif 
    return(d_coarsen_equivalence_classes[equiv_class_id].getFirstItem());
@@ -100,7 +96,7 @@ template<int DIM> typename tbox::List<typename CoarsenClasses<DIM>::Data>::Itera
 CoarsenClasses<DIM>::getIterator(int equiv_class_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (equiv_class_id >= 0) && 
+   TBOX_ASSERT( (equiv_class_id >= 0) && 
            (equiv_class_id < d_coarsen_equivalence_classes.getSize()) );
 #endif 
    return(typename tbox::List<typename CoarsenClasses<DIM>::Data>::
@@ -125,7 +121,7 @@ template<int DIM> void CoarsenClasses<DIM>::insertEquivalenceClassItem(
       tbox::perr << "Bad refine class data passed to "
            << "CoarsenClasses<DIM>::insertEquivalenceClassItem\n";
       printCoarsenItem(tbox::perr, data);
-      TBOX_ERROR("Check entries..." << endl);
+      TBOX_ERROR("Check entries..." << std::endl);
    } else {
 
       int eq_index = getEquivalenceClassIndex(data, descriptor);
@@ -191,12 +187,12 @@ template<int DIM> bool CoarsenClasses<DIM>::checkCoarsenItem(
    if (dst_id < 0) {
       item_good = false;
       TBOX_ERROR("Bad data given to CoarsenClasses<DIM>...\n"
-                 << "`Destination' patch data id invalid (< 0!)" << endl);
+                 << "`Destination' patch data id invalid (< 0!)" << std::endl);
    }
    if (item_good && (src_id < 0)) {
       item_good = false;
       TBOX_ERROR("Bad data given to CoarsenClasses<DIM>...\n"
-                 << "`Source' patch data id invalid (< 0!)" << endl);
+                 << "`Source' patch data id invalid (< 0!)" << std::endl);
    }
 
    tbox::Pointer< hier::PatchDataFactory<DIM> > dfact =
@@ -209,12 +205,12 @@ template<int DIM> bool CoarsenClasses<DIM>::checkCoarsenItem(
       TBOX_ERROR("Bad data given to CoarsenClasses<DIM>...\n"
                  << "It is not a valid operation to copy from `Source' patch data \n" 
                  << pd->mapIndexToName(src_id) << " to `Destination' patch data " 
-                 << pd->mapIndexToName(dst_id) << endl);
+                 << pd->mapIndexToName(dst_id) << std::endl);
    }
 
    tbox::Pointer< CoarsenOperator<DIM> > coarsop = data_item.d_opcoarsen;
    if (item_good && !coarsop.isNull()) {
-      if (coarsop->getStencilWidth() > sfact->getDefaultGhostCellWidth()) {
+      if (coarsop->getStencilWidth() > sfact->getGhostCellWidth()) {
          item_good = false;
          TBOX_ERROR("Bad data given to CoarsenClasses<DIM>...\n"
                     << "Coarsen operator "  << coarsop->getOperatorName()
@@ -222,8 +218,8 @@ template<int DIM> bool CoarsenClasses<DIM>::checkCoarsenItem(
                     << "of `Source' patch data" << pd->mapIndexToName(src_id)
                     << "\noperator stencil width = " << coarsop->getStencilWidth()
                     << "\n`Source'  ghost width = " 
-                    << sfact->getDefaultGhostCellWidth()
-                    << endl);
+                    << sfact->getGhostCellWidth()
+                    << std::endl);
       }
    }
 
@@ -354,8 +350,8 @@ template<int DIM> bool CoarsenClasses<DIM>::checkPatchDataItemConsistency(
       items_match = ( typeid(*pdf1) == typeid(*pdf2) );
 
       if (items_match) {
-         items_match = ( pdf1->getDefaultGhostCellWidth() ==
-                         pdf2->getDefaultGhostCellWidth() );
+         items_match = ( pdf1->getGhostCellWidth() ==
+                         pdf2->getGhostCellWidth() );
       }
 
    }
@@ -394,8 +390,8 @@ template<int DIM> int CoarsenClasses<DIM>::getEquivalenceClassIndex(
    tbox::Pointer< hier::PatchDataFactory<DIM> > src_pdf =
       pd->getPatchDataFactory(src_id);
 
-   hier::IntVector<DIM> dst_ghosts = dst_pdf->getDefaultGhostCellWidth();
-   hier::IntVector<DIM> src_ghosts = src_pdf->getDefaultGhostCellWidth();
+   hier::IntVector<DIM> dst_ghosts = dst_pdf->getGhostCellWidth();
+   hier::IntVector<DIM> src_ghosts = src_pdf->getGhostCellWidth();
 
    int num_equiv_classes = d_coarsen_equivalence_classes.getSize();
    bool equiv_found = false;
@@ -411,7 +407,7 @@ template<int DIM> int CoarsenClasses<DIM>::getEquivalenceClassIndex(
       tbox::Pointer< hier::PatchDataFactory<DIM> > rep_dst_pdf =
          pd->getPatchDataFactory(rep_dst_id);
       hier::IntVector<DIM> rep_dst_ghosts =
-         rep_dst_pdf->getDefaultGhostCellWidth();
+         rep_dst_pdf->getGhostCellWidth();
 
       /*
        * Check if destinations are equivalent
@@ -433,7 +429,7 @@ template<int DIM> int CoarsenClasses<DIM>::getEquivalenceClassIndex(
          tbox::Pointer< hier::PatchDataFactory<DIM> > rep_src_pdf =
             pd->getPatchDataFactory(rep_src_id);
          hier::IntVector<DIM> rep_src_ghosts =
-            rep_src_pdf->getDefaultGhostCellWidth();
+            rep_src_pdf->getGhostCellWidth();
          if ((src_ghosts == rep_src_ghosts) &&
              (typeid(*src_pdf) == typeid(*rep_src_pdf))) {
             src_equiv = true;
@@ -479,58 +475,58 @@ template<int DIM> int CoarsenClasses<DIM>::getNumberItemsInEquivalenceClass(
 *************************************************************************
 */
 
-template<int DIM> void CoarsenClasses<DIM>::printClassData(ostream& stream) const
+template<int DIM> void CoarsenClasses<DIM>::printClassData(std::ostream& stream) const
 {
    stream << "CoarsenClasses<DIM>::printClassData()\n";
    stream << "--------------------------------------\n";
    for (int i = 0; i < d_coarsen_equivalence_classes.getSize(); i++) {
-      stream << "EQUIVALENCE CLASS # " << i << endl;
+      stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       for (typename tbox::List<typename CoarsenClasses<DIM>::Data>::Iterator
            li(d_coarsen_equivalence_classes[i]); li; li++) {
 
-         stream << "Item # " << j << endl;
+         stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
          printCoarsenItem(stream, li());
 
          j++;
       }
-      stream << endl;
+      stream << std::endl;
    }
 
 }
 
 template<int DIM> void CoarsenClasses<DIM>::printCoarsenItem(
-   ostream& stream,
+   std::ostream& stream,
    const typename CoarsenClasses<DIM>::Data& data) const
 {
    stream << "\n";
    stream << "desination component:   " 
-          << data.d_dst << endl;
+          << data.d_dst << std::endl;
    stream << "source component:       " 
-          << data.d_src << endl;
+          << data.d_src << std::endl;
    stream << "fine boundary represents variable:       "
-          << data.d_fine_bdry_reps_var << endl;
+          << data.d_fine_bdry_reps_var << std::endl;
    stream << "gcw to coarsen:       "
-          << data.d_gcw_to_coarsen << endl;
+          << data.d_gcw_to_coarsen << std::endl;
    stream << "tag:       "
-          << data.d_tag << endl;
+          << data.d_tag << std::endl;
 
    if (data.d_opcoarsen.isNull()) {
-      stream << "NULL coarsening operator" << endl;
+      stream << "NULL coarsening operator" << std::endl;
    } else {
       stream << "coarsen operator name:          "
              << typeid(*data.d_opcoarsen).name()
-             << endl;
+             << std::endl;
       stream << "operator priority:      "
              << data.d_opcoarsen->getOperatorPriority()
-             << endl;
+             << std::endl;
       stream << "operator stencil width: "
              << data.d_opcoarsen->getStencilWidth()
-             << endl;
+             << std::endl;
    }
-   stream << endl;
+   stream << std::endl;
 }
 
 }

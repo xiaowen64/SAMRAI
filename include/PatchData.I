@@ -1,18 +1,12 @@
 //
-// File:	PatchData.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/PatchData.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 301 $
-// Modified:	$Date: 2005-04-25 10:32:08 -0700 (Mon, 25 Apr 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Abstract base class for patch data objects
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -36,7 +30,7 @@ template<int DIM> inline
 void PatchData<DIM>::setGhostBox(const Box<DIM>& ghost_box)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghost_box * d_box == d_box);
+   TBOX_ASSERT(ghost_box * d_box == d_box);
 #endif
    d_ghost_box = ghost_box;
 }

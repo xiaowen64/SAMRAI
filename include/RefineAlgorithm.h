@@ -1,9 +1,9 @@
 //
-// File:	RefineAlgorithm.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineAlgorithm.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 697 $
-// Modified:	$Date: 2005-11-03 12:27:48 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Refine algorithm for data transfer between AMR levels
 //
  
@@ -235,6 +235,21 @@ public:
       tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory = 
          (xfer::RefineTransactionFactory<DIM>*)NULL);
 
+   /*
+    * @brief Similar to the above, except with fill_pattern specified.
+    *
+    * @param fill_pattern Indicates which parts of the destination level
+    * to fill.  See RefineSchedule for valid values.
+    */
+   tbox::Pointer< xfer::RefineSchedule<DIM> > createSchedule(
+      const std::string& fill_pattern,
+      tbox::Pointer< hier::PatchLevel<DIM> > level,
+      xfer::RefinePatchStrategy<DIM>* patch_strategy =
+         ((xfer::RefinePatchStrategy<DIM>*)NULL),
+      tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory = 
+         (xfer::RefineTransactionFactory<DIM>*)NULL);
+
+
    /*!
     * @brief Create a communication schedule that moves data from the interiors
     * of the source data components on a source level into the interior and 
@@ -272,6 +287,22 @@ public:
     *                            will be used.
     */
    tbox::Pointer< xfer::RefineSchedule<DIM> > createSchedule(
+      tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
+      tbox::Pointer< hier::PatchLevel<DIM> > src_level,
+      xfer::RefinePatchStrategy<DIM>* patch_strategy =
+            ((xfer::RefinePatchStrategy<DIM>*)NULL),
+      bool use_time_interpolation = false,
+      tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory =
+         (xfer::RefineTransactionFactory<DIM>*)NULL);
+
+   /*
+    * @brief Similar to the above, except with fill_pattern specified.
+    *
+    * @param fill_pattern Indicates which parts of the destination level
+    * to fill.  See RefineSchedule for valid values.
+    */
+   tbox::Pointer< xfer::RefineSchedule<DIM> > createSchedule(
+      const std::string& fill_pattern,
       tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
       tbox::Pointer< hier::PatchLevel<DIM> > src_level,
       xfer::RefinePatchStrategy<DIM>* patch_strategy =
@@ -424,6 +455,108 @@ public:
          (xfer::RefineTransactionFactory<DIM>*)NULL);
 
    /*!
+    * @brief Similar to the version of createSchedule without the
+    * @c fill_pattern argument.
+    * 
+    * @param fill_pattern Indicates which parts of the destination level
+    * to fill.  See RefineSchedule for valid values.
+    * 
+    * @param level          tbox::Pointer to destination level; cannot be
+    *                           null.
+    * @param next_coarser_level Integer number of next coarser patch level in
+    *                           a patch hierarchy relative to the destination
+    *                           level.  Note that when the destination level
+    *                           has number zero (i.e., the coarsest level), this
+    *                           value should be < 0.
+    * @param hierarchy      tbox::Pointer to patch hierarchy from which data to
+    *                       fill level should come.  This pointer may be null
+    *                       only when the next_coarser_level is < 0.
+    * @param patch_strategy tbox::Pointer to a refine patch strategy that
+    *                       provides user-defined physical boundary filling
+    *                       operations and user-defined spatial interpolation
+    *                       operations.  If this patch strategy is null
+    *                       (default state), then no physical boundary filling
+    *                       or user-defined interpolation is performed.  Note
+    *                       that this may cause problems since interpolation of
+    *                       data from coarser levels to some finer level may
+    *                       require physical boundary data.
+    * @param use_time_interpolation Optional boolean flag to create the schedule with
+    *                               the ability to perform time interpolation
+    *                               Default is no time interpolation (false).
+    * @param transaction_factory Optional tbox::Pointer to a refine transaction
+    *                            factory that creates data transactions for the
+    *                            schedule.  If this pointer is null (default state),
+    *                            then a StandardRefineTransactionFactory object
+    *                            will be used.
+    *
+    */
+   tbox::Pointer< xfer::RefineSchedule<DIM> > createSchedule(
+      const std::string& fill_pattern,
+      tbox::Pointer< hier::PatchLevel<DIM> > level,
+      const int next_coarser_level,
+      tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
+      xfer::RefinePatchStrategy<DIM>* patch_strategy =
+            ((xfer::RefinePatchStrategy<DIM>*)NULL),
+      bool use_time_interpolation = false,
+      tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory =
+         (xfer::RefineTransactionFactory<DIM>*)NULL);
+
+   /*!
+    * @brief Similar to the version of createSchedule without the
+    * @c fill_pattern argument.
+    *
+    * @param fill_pattern Indicates which parts of the destination level
+    * to fill.  See RefineSchedule for valid values.
+    *
+    * @param dst_level          tbox::Pointer to destination level; cannot be
+    *                           null.
+    * @param src_level          tbox::Pointer to source level. This pointer may
+    *                           be null.  In this case, data on the destination
+    *                           level will be filled only using interpolated
+    *                           data from coarser hierarchy levels.  When this
+    *                           pointer is not null, the source level must live
+    *                           in the same AMR hierarchy index space as the
+    *                           destination level.
+    * @param next_coarser_level Integer number of next coarser patch level in
+    *                           a patch hierarchy relative to the destination
+    *                           level.  Note that when the destination level
+    *                           has number zero (i.e., the coarsest level), this
+    *                           value should be < 0.
+    * @param hierarchy      tbox::Pointer to patch hierarchy from which data to
+    *                       fill level should come.  This pointer may be null
+    *                       only when the next_coarser_level is < 0.
+    * @param patch_strategy tbox::Pointer to a refine patch strategy that
+    *                       provides user-defined physical boundary filling
+    *                       operations and user-defined spatial interpolation
+    *                       operations.  If this patch strategy is null
+    *                       (default state), then no physical boundary filling
+    *                       or user-defined interpolation is performed.  Note
+    *                       that this may cause problems since interpolation of
+    *                       data from coarser levels to some finer level may
+    *                       require physical boundary data.
+    * @param use_time_interpolation Optional boolean flag to create the schedule with
+    *                               the ability to perform time interpolation
+    *                               Default is no time interpolation (false).
+    * @param transaction_factory Optional tbox::Pointer to a refine transaction
+    *                            factory that creates data transactions for the
+    *                            schedule.  If this pointer is null (default state),
+    *                            then a StandardRefineTransactionFactory object
+    *                            will be used.
+    *
+    */
+   tbox::Pointer< xfer::RefineSchedule<DIM> > createSchedule(
+      const std::string& fill_pattern,
+      tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
+      tbox::Pointer< hier::PatchLevel<DIM> > src_level,
+      const int next_coarser_level,
+      tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
+      xfer::RefinePatchStrategy<DIM>* patch_strategy =
+            ((xfer::RefinePatchStrategy<DIM>*)NULL),
+      bool use_time_interpolation = false,
+      tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory =
+         (xfer::RefineTransactionFactory<DIM>*)NULL);
+
+   /*!
     * @brief Given a previously-generated refine schedule, check for consistency
     * with this refine algorithm object to see whether a call to resetSchedule()
     * is a valid operation.
@@ -474,7 +607,7 @@ public:
     *
     * @param stream Output data stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    RefineAlgorithm(const RefineAlgorithm<DIM>&);	// not implemented

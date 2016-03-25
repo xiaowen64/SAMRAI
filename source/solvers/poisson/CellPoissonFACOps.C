@@ -2,10 +2,10 @@
 #define included_solv_CellPoissonFACOps_C
 
 /*
- * File:        CellPoissonFACOps.C
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 719 $
- * Modified:    $Date: 2005-11-10 11:45:11 -0800 (Thu, 10 Nov 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACOps.C $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1786 $
+ * Modified:    $LastChangedDate: 2007-12-17 19:58:43 -0800 (Mon, 17 Dec 2007) $
  * Description: Operator class for cell-centered scalar Poisson using FAC
  */
 
@@ -31,6 +31,7 @@
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "CoarsenAlgorithm.h"
 #include "CoarsenOperator.h"
 #include "CoarsenSchedule.h"
@@ -38,12 +39,6 @@
 #include "RefineOperator.h"
 #include "RefineSchedule.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "CellPoissonFACOps.I"
@@ -552,7 +547,7 @@ extern "C" {
 ********************************************************************
 */
 template<int DIM>  CellPoissonFACOps<DIM>::CellPoissonFACOps(
-   const string &object_name ,
+   const std::string &object_name ,
    tbox::Pointer<tbox::Database> database
 ) :
    d_object_name(object_name) ,
@@ -635,8 +630,8 @@ template<int DIM>  CellPoissonFACOps<DIM>::CellPoissonFACOps(
 
    if ( s_cell_scratch_var.isNull() ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert( s_cell_scratch_var.isNull() );
-      assert( s_cell_scratch_var.isNull() );
+      TBOX_ASSERT( s_cell_scratch_var.isNull() );
+      TBOX_ASSERT( s_cell_scratch_var.isNull() );
 #endif
       s_cell_scratch_var = new pdat::CellVariable<DIM,double>
          ("CellPoissonFACOps::private_cell_scratch");
@@ -1149,12 +1144,12 @@ template<int DIM> void CellPoissonFACOps<DIM>::postprocessOneCycle(
          double avg_factor, final_factor;
          d_preconditioner->getConvergenceFactors( avg_factor, final_factor );
          tbox::plog
-            << "iter=" << setw(4) << fac_cycle_num
+            << "iter=" << std::setw(4) << fac_cycle_num
             << " resid=" << d_preconditioner->getResidualNorm()
             << " net conv=" << d_preconditioner->getNetConvergenceFactor()
             << " final conv=" << d_preconditioner->getNetConvergenceFactor()
             << " avg conv=" << d_preconditioner->getAvgConvergenceFactor()
-            << endl;
+            << std::endl;
       }
    }
    return;
@@ -1387,8 +1382,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::smoothErrorByRedBlack(
       // Red sweep.
       xeqScheduleGhostFillNoCoarse(data_id, ln);
       int pn;
-      typename hier::PatchLevel<DIM>::Iterator pi;
-      for ( pi.initialize(*level); pi; pi++ ) {
+      for (typename hier::PatchLevel<DIM>::Iterator pi(*level); pi; pi++ ) {
          pn = *pi;
          tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(pn);
 
@@ -1437,7 +1431,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::smoothErrorByRedBlack(
       xeqScheduleGhostFillNoCoarse(data_id, ln);
 
       // Black sweep.
-      for ( pi.initialize(*level); pi; pi++ ) {
+      for (typename hier::PatchLevel<DIM>::Iterator pi(*level); pi; pi++ ) {
          pn = *pi;
          tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(pn);
 
@@ -1477,7 +1471,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::smoothErrorByRedBlack(
                                      *residual_data ,
                                      *err_data ,
                                      'b' ,
-                                     &red_maxres );
+                                     &blk_maxres );
 
          if ( deallocate_flux_data_when_done ) {
             patch->deallocatePatchData(flux_id);
@@ -1490,9 +1484,9 @@ template<int DIM> void CellPoissonFACOps<DIM>::smoothErrorByRedBlack(
            only if it is numerically possible (user gave a
            non negative value for residual tolerance).
           */
-         maxres = tbox::Utilities::dmax(red_maxres,blk_maxres);
+         maxres = tbox::MathUtilities<double>::Max(red_maxres, blk_maxres);
          not_converged = maxres>residual_tolerance;
-         not_converged = tbox::MPI::maxReduction( not_converged );
+         not_converged = tbox::SAMRAI_MPI::maxReduction( not_converged );
       }
    }        // End sweep number isweep
    if ( d_enable_logging ) tbox::plog
@@ -1539,7 +1533,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::ewingFixFlux (
       for ( bn=0; bn<nboxes; ++bn ) {
          const hier::BoundaryBox<DIM> &boundary_box=bboxes[bn];
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert( boundary_box.getBoundaryType() == 1 );
+         TBOX_ASSERT( boundary_box.getBoundaryType() == 1 );
 #endif
          const hier::Box<DIM> &bdry_box = boundary_box.getBox();
          const hier::Index<DIM> &blower = bdry_box.lower();
@@ -1596,7 +1590,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::ewingFixFlux (
       for ( bn=0; bn<nboxes; ++bn ) {
          const hier::BoundaryBox<DIM> &boundary_box=bboxes[bn];
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert( boundary_box.getBoundaryType() == 1 );
+         TBOX_ASSERT( boundary_box.getBoundaryType() == 1 );
 #endif
          const hier::Box<DIM> &bdry_box = boundary_box.getBox();
          const hier::Index<DIM> &blower = bdry_box.lower();
@@ -1842,8 +1836,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::computeCompositeResidualOnLevel(
     * S2. Compute flux on patches in level.
     */
    int pn;
-   typename hier::PatchLevel<DIM>::Iterator pi;
-   for ( pi.initialize(*level); pi; pi++ ) {
+   for (typename hier::PatchLevel<DIM>::Iterator pi(*level); pi; pi++ ) {
       pn = *pi;
       tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(pn);
 
@@ -1874,7 +1867,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::computeCompositeResidualOnLevel(
    /*
     * S4. Compute residual on patches in level.
     */
-   for ( pi.initialize(*level); pi; pi++ ) {
+   for (typename hier::PatchLevel<DIM>::Iterator pi(*level); pi; pi++ ) {
       pn = *pi;
       tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(pn);
       tbox::Pointer<pdat::CellData<DIM,double> >
@@ -1902,7 +1895,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::computeCompositeResidualOnLevel(
          tbox::Pointer<pdat::OutersideData<DIM,double> >
             oflux_data = patch->getPatchData( d_oflux_scratch_id );
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert( oflux_data );
+         TBOX_ASSERT( oflux_data );
 #endif
          oflux_data->copy(*flux_data);
       }
@@ -2102,7 +2095,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::checkInputPatchDataIndices() cons
       vdb.mapIndexToVariable(d_flux_id, var);
       tbox::Pointer<pdat::SideVariable<DIM,double> > flux_var = var;
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert( flux_var );
+      TBOX_ASSERT( flux_var );
 #endif
    }
 
@@ -2124,8 +2117,8 @@ template<int DIM> void CellPoissonFACOps<DIM>::computeFluxOnPatch(
    pdat::SideData<DIM,double> &Dgradw_data ) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( patch.inHierarchy() );
-   assert( w_data.getGhostCellWidth() >= hier::IntVector<DIM>(1) );
+   TBOX_ASSERT( patch.inHierarchy() );
+   TBOX_ASSERT( w_data.getGhostCellWidth() >= hier::IntVector<DIM>(1) );
 #endif
 
    tbox::Pointer< geom::CartesianPatchGeometry<DIM> > patch_geom
@@ -2403,7 +2396,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::redOrBlackSmoothingOnPatch(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( red_or_black == 'r' || red_or_black == 'b' );
+   TBOX_ASSERT( red_or_black == 'r' || red_or_black == 'b' );
 #endif
    const int offset = red_or_black == 'r' ? 0 : 1;
    tbox::Pointer< geom::CartesianPatchGeometry<DIM> > patch_geom

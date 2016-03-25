@@ -1,7 +1,7 @@
 c
-c  File:        edgeops2d.m4
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/patchbdrysum/edgeops2d.m4 $
 c  Package:     SAMRAI test
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    

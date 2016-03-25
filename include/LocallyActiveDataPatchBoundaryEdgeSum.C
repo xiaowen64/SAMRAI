@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataPatchBoundaryEdgeSum.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryEdgeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 696 $
-// Modified:	$Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for summing locally-active edge data at patch boundaries
 //
 
@@ -13,7 +13,6 @@
 
 #include "LocallyActiveDataPatchBoundaryEdgeSum.h"
 
-#include "LocallyActiveVariableDatabase.h"
 #include "EdgeData.h"
 #include "EdgeDataFactory.h"
 #include "OuteredgeData.h"
@@ -21,11 +20,9 @@
 #include "LocallyActiveDataRefineAlgorithm.h"
 #include "LocallyActiveDataRefinePatchStrategy.h"
 #include "RefineOperator.h"
+#include "VariableDatabase.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace algs {
@@ -55,6 +52,37 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 /*
 *************************************************************************
 *                                                                       *
+* Static functions to determine number of patch data slots needed       *
+* for LocallyActiveDataPatchBoundaryEdgeSum objects.                    *
+*                                                                       *
+*************************************************************************
+*/
+
+template<int DIM>
+int 
+LocallyActiveDataPatchBoundaryEdgeSum<DIM>::getNumSharedPatchDataSlots(
+   int max_variables_to_register)
+{ 
+   // edge boundary sum requires two internal outeredge variables
+   // (source and destination) for each registered variable. 
+
+   return( 2 * max_variables_to_register );
+}
+
+template<int DIM>
+int
+LocallyActiveDataPatchBoundaryEdgeSum<DIM>::getNumUniquePatchDataSlots(
+   int max_variables_to_register)
+{
+   // all patch data slots used by edge boundary sum are static
+   // and shared among all objects.
+ 
+   return( 0 );
+}
+
+/*
+*************************************************************************
+*                                                                       *
 * Constructor patch boundary edge sum objects initializes data members  *
 * to default (undefined) states.                                        *
 *                                                                       *
@@ -63,10 +91,10 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 
 template<int DIM> 
 LocallyActiveDataPatchBoundaryEdgeSum<DIM>::LocallyActiveDataPatchBoundaryEdgeSum(
-   const string& object_name)
+   const std::string& object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
 
    d_object_name = object_name;
@@ -96,6 +124,7 @@ LocallyActiveDataPatchBoundaryEdgeSum<DIM>::~LocallyActiveDataPatchBoundaryEdgeS
 {
 
    s_instance_counter--;
+
    if (s_instance_counter == 0) {
       const int arr_length_depth = s_oedge_src_id_array.size();
       for (int id = 0; id < arr_length_depth; id++) {
@@ -104,13 +133,13 @@ LocallyActiveDataPatchBoundaryEdgeSum<DIM>::~LocallyActiveDataPatchBoundaryEdgeS
          for (int iv = 0; iv < arr_length_nvar; iv++) {
 
             if (s_oedge_src_id_array[id][iv] >= 0) {
-               hier::LocallyActiveVariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+               hier::VariableDatabase<DIM>::getDatabase()->
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_oedge_src_id_array[id][iv]);
             }
             if (s_oedge_dst_id_array[id][iv] >= 0) {
-               hier::LocallyActiveVariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+               hier::VariableDatabase<DIM>::getDatabase()->
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_oedge_dst_id_array[id][iv]);
             }
 
@@ -145,18 +174,18 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::registerSum(
                  << "\nCannot call registerSum with this LocallyActiveDataPatchBoundaryEdgeSum"
                  << "\nobject since it has already been used to create communication"
                  << "\nschedules; i.e., setupSum() has been called."
-                 << endl);
+                 << std::endl);
    }
 
    if (edge_data_id < 0) {
       TBOX_ERROR("LocallyActiveDataPatchBoundaryEdgeSum<DIM> register error..."
                  << "\nobject named " << d_object_name
                  << "\n edge_data_id = " << edge_data_id
-                 << " is an invalid patch data identifier." << endl);
+                 << " is an invalid patch data identifier." << std::endl);
    }
 
-   hier::LocallyActiveVariableDatabase<DIM>* var_db = 
-      hier::LocallyActiveVariableDatabase<DIM>::getDatabase();
+   hier::VariableDatabase<DIM>* var_db = 
+      hier::VariableDatabase<DIM>::getDatabase();
 
    tbox::Pointer< pdat::EdgeDataFactory<DIM,double> > edge_factory =
       var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id);
@@ -166,13 +195,13 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::registerSum(
       TBOX_ERROR("LocallyActiveDataPatchBoundaryEdgeSum<DIM> register error..."
                  << "\nobject named " << d_object_name
                  << "\n edge_data_id = " << edge_data_id
-                 << " does not correspond to edge data of type double." << endl);
+                 << " does not correspond to edge data of type double." << std::endl);
 
    } else {
 
-      static string 
+      static std::string 
          tmp_oedge_src_variable_name("LocallyActiveDataPatchBoundaryEdgeSum__internal-oedge-src");
-      static string 
+      static std::string 
          tmp_oedge_dst_variable_name("LocallyActiveDataPatchBoundaryEdgeSum__internal-oedge-dst");
 
       const int reg_sum_id = d_num_reg_sum;
@@ -226,14 +255,14 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::registerSum(
       char var_suffix[17];
       sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
 
-      string toedge_src_var_name = tmp_oedge_src_variable_name + var_suffix;
+      std::string toedge_src_var_name = tmp_oedge_src_variable_name + var_suffix;
       d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(toedge_src_var_name);
       if (d_tmp_oedge_src_variable[reg_sum_id].isNull()) {
          d_tmp_oedge_src_variable[reg_sum_id] =
             new pdat::OuteredgeVariable<DIM,double>(toedge_src_var_name, data_depth);
       }
 
-      string toedge_dst_var_name = tmp_oedge_dst_variable_name + var_suffix;
+      std::string toedge_dst_var_name = tmp_oedge_dst_variable_name + var_suffix;
       d_tmp_oedge_dst_variable[reg_sum_id] = var_db->getVariable(toedge_dst_var_name);
       if (d_tmp_oedge_dst_variable[reg_sum_id].isNull()) {
          d_tmp_oedge_dst_variable[reg_sum_id] =
@@ -242,13 +271,15 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::registerSum(
 
       if ( s_oedge_src_id_array[data_depth][data_depth_id] < 0 ) {
          s_oedge_src_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_oedge_src_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_oedge_src_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
       if ( s_oedge_dst_id_array[data_depth][data_depth_id] < 0) {
          s_oedge_dst_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_oedge_dst_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_oedge_dst_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
 
       d_user_edge_data_id[reg_sum_id] = edge_data_id;
@@ -281,9 +312,9 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::setupSum(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    d_setup_called = true;
@@ -349,15 +380,16 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::doLevelSum(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {
       tbox::Pointer<hier::Patch<DIM> > patch = level->getPatch(ip());
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
          const int src_id = d_user_edge_data_id[i];
-         if ( level_mgr->getPatchDataActive(src_id, ip()) ) {
+         if ( level_mgr->getPatchDataActive( hier::PatchDataId(src_id), 
+                                             hier::PatchNumber(ip()) ) ) {
             tbox::Pointer< pdat::EdgeData<DIM,double> > edge_data =
                patch->getPatchData(src_id);
             tbox::Pointer< pdat::OuteredgeData<DIM,double> > oedge_data =
@@ -374,7 +406,8 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::doLevelSum(
       tbox::Pointer<hier::Patch<DIM> > patch = level->getPatch(ip2());
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
          const int dst_id = d_user_edge_data_id[i];
-         if ( level_mgr->getPatchDataActive(dst_id, ip2()) ) {
+         if ( level_mgr->getPatchDataActive( hier::PatchDataId(dst_id), 
+                                             hier::PatchNumber(ip2()) ) ) {
             tbox::Pointer< pdat::EdgeData<DIM,double> > edge_data =
                patch->getPatchData(dst_id);
             tbox::Pointer< pdat::OuteredgeData<DIM,double> > oedge_data =
@@ -401,19 +434,24 @@ void LocallyActiveDataPatchBoundaryEdgeSum<DIM>::setInternalWorkDataActive(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
    d_level = level;
    d_level_mgr = new hier::LocallyActiveDataPatchLevelManager<DIM>(d_level);
 
    for (int ip = 0; ip < d_level->getNumberOfPatches(); ip++) {
+      hier::PatchNumber pnum(ip);
       for (int i = 0; i < d_num_reg_sum; i++) {
-         if ( level_mgr->getPatchDataActive(d_user_edge_data_id[i], ip) ) {
-            d_level_mgr->setPatchDataActive(d_user_edge_data_id[i], ip);
-            d_level_mgr->setPatchDataActive(d_oedge_src_id[i], ip);
-            d_level_mgr->setPatchDataActive(d_oedge_dst_id[i], ip);
+         if ( level_mgr->getPatchDataActive( 
+                         hier::PatchDataId(d_user_edge_data_id[i]), pnum ) ) {
+            d_level_mgr->setPatchDataActive( 
+                         hier::PatchDataId(d_user_edge_data_id[i]), pnum );
+            d_level_mgr->setPatchDataActive(
+                         hier::PatchDataId(d_oedge_src_id[i]), pnum );
+            d_level_mgr->setPatchDataActive(
+                         hier::PatchDataId(d_oedge_dst_id[i]), pnum );
          }
       }
    }

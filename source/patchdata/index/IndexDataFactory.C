@@ -1,10 +1,10 @@
 //
-// File:	IndexDataFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/index/IndexDataFactory.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: hier::Patch data factory for irregularly indexed patch data
 //
 
@@ -30,7 +30,8 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM, class TYPE> IndexDataFactory<DIM,TYPE>::IndexDataFactory(const hier::IntVector<DIM>& ghosts) : d_ghosts(ghosts)
+template<int DIM, class TYPE> IndexDataFactory<DIM,TYPE>::IndexDataFactory(const hier::IntVector<DIM>& ghosts) 
+   :   hier::PatchDataFactory<DIM>(ghosts)
 {
 }
 
@@ -48,9 +49,9 @@ template<int DIM, class TYPE> IndexDataFactory<DIM,TYPE>::~IndexDataFactory()
 
 template<int DIM, class TYPE>
 tbox::Pointer< hier::PatchDataFactory<DIM> >
-IndexDataFactory<DIM,TYPE>::cloneFactory()
+IndexDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
-   return(new IndexDataFactory<DIM,TYPE>(d_ghosts));
+   return(new IndexDataFactory<DIM,TYPE>(ghosts));
 }
 
 /*
@@ -70,9 +71,18 @@ IndexDataFactory<DIM,TYPE>::allocate(
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
    }
-   hier::PatchData<DIM> *pd = new (pool) IndexData<DIM,TYPE>(box, d_ghosts);
+   hier::PatchData<DIM> *pd = new (pool) IndexData<DIM,TYPE>(box, this -> d_ghosts);
    return(tbox::Pointer< hier::PatchData<DIM> >(pd, pool));
 }
+
+template<int DIM, class TYPE>
+tbox::Pointer< hier::PatchData<DIM> >
+IndexDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
+                                     tbox::Pointer<tbox::Arena> pool) const
+{
+   return (allocate(patch.getBox(), pool));
+}
+
 
 /*
 *************************************************************************
@@ -86,30 +96,8 @@ template<int DIM, class TYPE>
 tbox::Pointer< hier::BoxGeometry<DIM> >
 IndexDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
 {
-   hier::BoxGeometry<DIM> *boxgeometry = new CellGeometry<DIM>(box, d_ghosts);
+   hier::BoxGeometry<DIM> *boxgeometry = new CellGeometry<DIM>(box, this -> d_ghosts);
    return(tbox::Pointer< hier::BoxGeometry<DIM> >(boxgeometry));
-}
-
-/*
-*************************************************************************
-*									*
-* Get and set the default ghost cell widths for the irregular data	*
-* objects created with this factory.					*
-*									*
-*************************************************************************
-*/
-
-template<int DIM, class TYPE>
-const hier::IntVector<DIM>&
-IndexDataFactory<DIM,TYPE>::getDefaultGhostCellWidth() const
-{
-   return(d_ghosts);
-}
-
-template<int DIM, class TYPE>
-void IndexDataFactory<DIM,TYPE>::setDefaultGhostCellWidth(const hier::IntVector<DIM>& ghosts)
-{
-   d_ghosts = ghosts;
 }
 
 /*

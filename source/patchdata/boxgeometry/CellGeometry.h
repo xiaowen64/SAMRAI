@@ -1,9 +1,9 @@
 //
-// File:	CellGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/CellGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for cell centered objects
 //
 
@@ -32,16 +32,15 @@
 namespace SAMRAI {
     namespace pdat {
 
-/**
+/*!
  * Class CellGeometry<DIM> manages the mapping between the AMR index space
  * and the cell-centered geometry index space.  It is a subclass of
  * hier::BoxGeometry<DIM> and it computes intersections between cell-
- * centered box geometries.  That is, cell geometry objects calculate the
- * cell-centered data residing in the intersection of two boxes defining
- * regions of index space on an AMR patch hierarchy.  Since the AMR index 
- * space is also cell-centered, cell-centered data storage maps directly 
- * onto a cell geometry box with no modifications. 
+ * centered box geometries for communication operations. 
  *
+ * See header file for CellData<DIM> class for a more detailed
+ * description of the data layout.  
+ * 
  * @see hier::BoxGeometry
  * @see pdat::CellOverlap
  */
@@ -49,20 +48,27 @@ namespace SAMRAI {
 template<int DIM> class CellGeometry : public hier::BoxGeometry<DIM>
 {
 public:
-   /**
-    * Construct the cell geometry object given the box and ghost cell width.
+   /*!
+    * @brief Convert an AMR index box space box into a cell geometry box.  
+    * A cell geometry box is the same as the given AMR index box space box.
     */
-   CellGeometry(const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts);
+   static hier::Box<DIM> toCellBox(const hier::Box<DIM>& box);
 
-   /**
-    * The virtual destructor does nothing interesting.
+   /*!
+    * @brief Construct the cell geometry object given an AMR index
+    * space box and ghost cell width.
+    */
+   CellGeometry(const hier::Box<DIM>& box, 
+                const hier::IntVector<DIM>& ghosts);
+
+   /*!
+    * @brief The virtual destructor does nothing interesting.
     */
    virtual ~CellGeometry<DIM>();
 
-   /**
-    * Compute the overlap in index space between the source box geometry
-    * and the destination box geometry.  Refer to the box geometry class
-    * for a detailed description of calculateOverlap().
+   /*!
+    * @brief Compute the overlap in cell-centered index space between 
+    * the source box geometry and the destination box geometry. 
     */
    virtual tbox::Pointer< hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
@@ -72,22 +78,17 @@ public:
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
 
-   /**
-    * Return the box extents for this cell centered box geometry object.
+   /*!
+    * @brief Return the box for this cell centered box geometry 
+    * object.
     */
    const hier::Box<DIM>& getBox() const;
 
-   /**
-    * Return the ghost cell width for this cell centered box geometry object.
+   /*!
+    * @brief Return the ghost cell width for this cell centered box 
+    * geometry object.
     */
    const hier::IntVector<DIM>& getGhosts() const;
-
-   /**
-    * Convert an AMR abstract box into a cell geometry box.  The lower
-    * index is the same, but the upper index is one greater in each
-    * dimension.
-    */
-   static hier::Box<DIM> toCellBox(const hier::Box<DIM>& box);
 
 private:
    /**

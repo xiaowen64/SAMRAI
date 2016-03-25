@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -15,9 +15,10 @@ libdefault:	tbox__Array-bool.o tbox__Array-char.o tbox__Array-charPointer.o	\
 	tbox__Array-int.o tbox__Array-string.o				\
 	tbox__Array-tbox__AsyncCommGroupPointer.o			\
 	tbox__Array-tbox__AsyncCommStage__StagedGroupPointer.o		\
-	tbox__Array-tbox__DatabaseBox.o tbox__Array-tbox__MPI__request.o\
-	tbox__Array-tbox__MPI__status.o					\
+	tbox__Array-tbox__DatabaseBox.o					\
 	tbox__Array-tbox__RelaunchableJobPointer.o			\
+	tbox__Array-tbox__SAMRAI_MPI__request.o				\
+	tbox__Array-tbox__SAMRAI_MPI__status.o				\
 	tbox__Array-tbox__Schedule__ScheduleMessageStream.o		\
 	tbox__Array-tbox__Statistic__PatchStat.o			\
 	tbox__Array-tbox__Statistic__ProcStat.o tbox__List-double.o	\

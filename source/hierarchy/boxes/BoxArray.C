@@ -1,9 +1,9 @@
 //
-// File:	BoxArray.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxArray.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An array of boxes that complements BoxList
 //
 
@@ -17,12 +17,6 @@
 #endif
 #ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#include <assert.h>
-#define included_assert
-#endif
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -152,7 +146,7 @@ template<int DIM> void BoxArray<DIM>::rotate(int rotation_number)
       NULL_USE(rotation_number);
       
       TBOX_ERROR("BoxArray<DIM>::rotate() error ..."
-		 << "\n   Rotation only implemented for 2D and 3D " << endl);
+		 << "\n   Rotation only implemented for 2D and 3D " << std::endl);
    }
 }
 
@@ -175,15 +169,33 @@ template<int DIM> void BoxArray<DIM>::coarsen(const IntVector<DIM>& ratio)
 /*
 *************************************************************************
 *                                                                       *
+* Return the bounding box for all boxes in the box array.               *
+*                                                                       *
+*************************************************************************
+*/
+
+template<int DIM> Box<DIM> BoxArray<DIM>::getBoundingBox() const
+{
+   Box<DIM> bbox;
+   const int n = getNumberOfBoxes();
+   for (int i = 0; i < n; i++) {
+      bbox += d_boxes[i];
+   }
+   return(bbox);
+}
+
+/*
+*************************************************************************
+*                                                                       *
 * Print boxes in array.                                                 *
 *                                                                       *
 *************************************************************************
 */
 
-template<int DIM> void BoxArray<DIM>::print(ostream& os) const
+template<int DIM> void BoxArray<DIM>::print(std::ostream& os) const
 {
    for (int i = 0; i < getNumberOfBoxes(); i++) {
-      os << "Box # " << i << ":  " << d_boxes[i] << endl;
+      os << "Box # " << i << ":  " << d_boxes[i] << std::endl;
    }
 }
 

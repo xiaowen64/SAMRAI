@@ -1,9 +1,9 @@
 /*
- * File:        PoissonSpecifications.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/PoissonSpecifications.h $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Specifications for the scalar Poisson equation
  */
 
@@ -16,7 +16,6 @@
 
 #ifndef included_SAMRAI_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -54,13 +53,13 @@ public:
     *
     * @param object_name Name of object.
     */
-   PoissonSpecifications( const string &object_name );
+   PoissonSpecifications( const std::string &object_name );
 
    /*!
     * @brief Copy constructor.
     */
    PoissonSpecifications(
-      const string &object_name,
+      const std::string &object_name,
       const PoissonSpecifications &r );
 
    /*!
@@ -79,7 +78,7 @@ public:
    /*!
     * @brief Print out class data.
     */
-   void printClassData( ostream &stream ) const;
+   virtual void printClassData( std::ostream &stream ) const;
 
    //@{
    //! @name Functions for setting and getting D
@@ -223,7 +222,7 @@ private:
    /*!
     * @brief Object name.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    int d_D_id;
    double d_D_constant;

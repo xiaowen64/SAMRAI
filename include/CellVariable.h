@@ -1,9 +1,9 @@
 //
-// File:	CellVariable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/cell/CellVariable.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Variable class for defining cell centered variables
 //
 
@@ -18,7 +18,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_Variable
@@ -28,24 +27,14 @@ using namespace std;
 namespace SAMRAI {
     namespace pdat {
 
-/**
+/*!
  * Class CellVariable<DIM> is a templated variable class used to define 
- * cell-centered quantities on an AMR mesh.  It is templated on the type 
- * of the underlying data (e.g., double, int, bool, etc.).  Cell variable 
- * data is associated with the centers of cells.  For example, a 
- * three-dimensional cell variable can be used to create cell-centered
- * data arrays over a box [l0:u0,l1:u1,l2:u2] that can be dimensioned as: 
- * \verbatim
-
-     [ l0 : u0 ,
-       l1 : u1 ,
-       l2 : u2 , d ]
-
- * \endverbatim
- * where d is the depth index (i.e., number of values at each cell index 
- * location).  One- and two-dimensional cell variables define storage similarly.
- * For more information on indexing and manipulating cell patch data objects, 
- * see the classes CellData<DIM> and CellGeometry<DIM>.
+ * cell-centered quantities on an AMR mesh.   It is a subclass of 
+ * hier::Variable and is templated on the type of the underlying data 
+ * (e.g., double, int, bool, etc.).
+ *
+ * See header file for CellData<DIM> class for a more detailed
+ * description of the data layout. 
  *
  * @see pdat::CellData
  * @see pdat::CellDataFactory
@@ -56,31 +45,32 @@ template<int DIM, class TYPE>
 class CellVariable : public hier::Variable<DIM>
 {
 public:
-   /**
-    * Create a cell variable object having properties specified by the
-    * name and depth (i.e., number of data values at each index location).
+   /*!
+    * @brief Create a cell-centered variable object with the given name and
+    * depth (i.e., number of data values at each cell index location).
     * A default depth of one is provided. 
     */
-   CellVariable(const string &name,
-                      int depth = 1);
+   CellVariable(const std::string &name,
+                int depth = 1);
 
-   /**
-    * Virtual destructor for cell variable objects.
+   /*!
+    * @brief Virtual destructor for cell variable objects.
     */
    virtual ~CellVariable<DIM,TYPE>();
 
-   /**
-    * Return true so that the cell data quantities will always be treated as though
-    * fine values represent them on coarse-fine interfaces.  Note that this is 
-    * really artificial since the cell data index space matches the cell-centered 
-    * index space for AMR patches.  Thus, cell data does not live on patch borders
-    * and so there is no ambiguity reagrding coarse-fine interface values.
+   /*!
+    * @brief Return true indicating that cell data quantities will always 
+    * be treated as though fine values take precedence on coarse-fine 
+    * interfaces.  Note that this is really artificial since the cell 
+    * data index space matches the cell-centered index space for AMR 
+    * patches.  However, some value must be supplied for communication 
+    * operations.
     */
    bool fineBoundaryRepresentsVariable() const {return true;}
 
-   /**
-    * Return false since the cell data index space matches the cell-centered
-    * index space for AMR patches.  Thus, cell data does not live on patch borders.
+   /*!
+    * @brief Return false indicating that cell data on a patch interior
+    * does not exist on the patch boundary.
     */
    bool dataLivesOnPatchBorder() const {return false;}
 

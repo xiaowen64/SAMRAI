@@ -1,17 +1,17 @@
 c
-c  File:        algs_upfluxsum1d.m4
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/algs_upfluxsum1d.f $
 c  Package:     SAMRAI algorithms
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: F77 routines for updating 1d flux sums from fluxes.
 c
 c
-c  File:        pdat_m4arrdim1d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/algs_upfluxsum1d.f $
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for dimensioning 1d arrays in FORTRAN routines.
 c
 c

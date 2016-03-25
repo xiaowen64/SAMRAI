@@ -1,9 +1,9 @@
 //
-// File:        LoadBalancer.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/LoadBalancer.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 454 $
-// Modified:    $Date: 2005-06-16 12:44:09 -0700 (Thu, 16 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
 
@@ -14,13 +14,6 @@
 
 #include <stdlib.h>
 #include <fstream>
-using namespace std;
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 #include "BoxUtilities.h"
 #include "BoxComm.h"
 #include "PatchDescriptor.h"
@@ -31,7 +24,7 @@ using namespace std;
 #include "CellDoubleConstantRefine.h"
 #include "tbox/Array.h"
 #include "tbox/List.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
@@ -50,11 +43,11 @@ namespace SAMRAI {
 */
 
 template<int DIM>  LoadBalancer<DIM>::LoadBalancer(
-   const string& name,
+   const std::string& name,
    tbox::Pointer<tbox::Database> input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
 
    d_object_name = name;
@@ -109,6 +102,8 @@ template<int DIM>  LoadBalancer<DIM>::LoadBalancer(
    d_max_workload_factor.resizeArray(0);
    d_bin_pack_method.resizeArray(0);
 
+   d_ignore_level_box_union_is_single_box = false;
+
    getFromInput(input_db);
 
    t_load_balance_boxes = tbox::TimerManager::getManager() ->
@@ -148,7 +143,7 @@ template<int DIM> void LoadBalancer<DIM>::setMaxWorkloadFactor(
    int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(factor > 0.0);
+   TBOX_ASSERT(factor > 0.0);
 #endif
    if (level_number >= 0) {
       int asize = d_max_workload_factor.getSize();
@@ -179,7 +174,7 @@ template<int DIM> void LoadBalancer<DIM>::setWorkloadPatchDataIndex(
       TBOX_ERROR(d_object_name << " error: "
                  << "\n   data_id " << data_id << " passed to "
                  << "setWorkloadPatchDataIndex()"
-                 << " does not refer to cell-centered double patch data. " << endl);
+                 << " does not refer to cell-centered double patch data. " << std::endl);
    }
 
    if (level_number >= 0) {
@@ -223,7 +218,7 @@ template<int DIM> void LoadBalancer<DIM>::setUniformWorkload(
 }
 
 template<int DIM> void LoadBalancer<DIM>::setBinPackMethod(
-   const string& method,
+   const std::string& method,
    int level_number)
 {
 
@@ -231,7 +226,7 @@ template<int DIM> void LoadBalancer<DIM>::setBinPackMethod(
           method == "SPATIAL") ) {
       TBOX_ERROR(d_object_name << " error: "
                  << "\n   String " << method << " passed to setBinPackMethod()"
-                 << " is not a valid method string identifier." << endl);
+                 << " is not a valid method string identifier." << std::endl);
 
    }
    
@@ -325,13 +320,13 @@ template<int DIM> void LoadBalancer<DIM>::loadBalanceBoxes(
 {
    t_load_balance_boxes->start();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(level_number >= 0);
-   assert(physical_domain.getNumberOfBoxes() > 0);
-   assert(min_size > hier::IntVector<DIM>(0));   
-   assert(max_size >= min_size);   
-   assert(cut_factor > hier::IntVector<DIM>(0));   
-   assert(bad_interval >= hier::IntVector<DIM>(0));   
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(level_number >= 0);
+   TBOX_ASSERT(physical_domain.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(min_size > hier::IntVector<DIM>(0));   
+   TBOX_ASSERT(max_size >= min_size);   
+   TBOX_ASSERT(cut_factor > hier::IntVector<DIM>(0));   
+   TBOX_ASSERT(bad_interval >= hier::IntVector<DIM>(0));   
 #if 0
    /*
     * Additional assertion check for debugging - make sure given boxes
@@ -349,6 +344,15 @@ template<int DIM> void LoadBalancer<DIM>::loadBalanceBoxes(
    }
 #endif
 #endif
+
+   /*
+    * This method assumes in_boxes is not empty and will fail
+    * if it is.  So shortcut it for empty in_boxes.
+    */
+   if ( in_boxes.isEmpty() ) {
+      out_boxes = hier::BoxArray<DIM>(0);
+      return;
+   }
 
    /*
     * If uniform load balancing is used and the level domain can be
@@ -501,7 +505,7 @@ template<int DIM> void LoadBalancer<DIM>::chopUniformSingleBox(
    } else {
       BalanceUtilities<DIM>::computeDomainDependentProcessorLayout(
          processor_distribution,
-         tbox::MPI::getNodes(),
+         tbox::SAMRAI_MPI::getNodes(),
          in_box);
    }
 
@@ -598,7 +602,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithUniformWorkload(
    }
 
    double work_factor = getMaxWorkloadFactor(level_number);
-   double average_work = work_factor * total_work / tbox::MPI::getNodes();
+   double average_work = work_factor * total_work / tbox::SAMRAI_MPI::getNodes();
 
    hier::BoxList<DIM> tmp_box_list;
    tbox::List<double> tmp_work_list;
@@ -614,7 +618,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithUniformWorkload(
    if (tmp_box_list.getNumberItems() != tmp_work_list.getNumberItems()) {
       TBOX_ERROR(d_object_name << ": "
         << "Number of boxes generated != number of workload values generated."
-        << endl);
+        << std::endl);
    }
 
    /*
@@ -735,10 +739,10 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithNonuniformWorkload(
       local_work += patch_work;
    }
             
-   double total_work = tbox::MPI::sumReduction(local_work);
+   double total_work = tbox::SAMRAI_MPI::sumReduction(local_work);
 
    double work_factor = getMaxWorkloadFactor(level_number);
-   double average_work = work_factor * total_work / tbox::MPI::getNodes();
+   double average_work = work_factor * total_work / tbox::SAMRAI_MPI::getNodes();
 
    hier::BoxList<DIM> tmp_box_list;
    tbox::List<double> tmp_work_list;
@@ -758,7 +762,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithNonuniformWorkload(
    if (tmp_box_list.getNumberItems() != tmp_work_list.getNumberItems()) {
       TBOX_ERROR(d_object_name << ": "
         << "Number of boxes generated != number of workload values generated."
-        << endl);
+        << std::endl);
    }
 
    /*
@@ -794,41 +798,41 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithNonuniformWorkload(
 *************************************************************************
 */
 
-template<int DIM> void LoadBalancer<DIM>::printClassData(ostream& os) const
+template<int DIM> void LoadBalancer<DIM>::printClassData(std::ostream& os) const
 {
-   os << "\nLoadBalancer<DIM>::printClassData..." << endl;
+   os << "\nLoadBalancer<DIM>::printClassData..." << std::endl;
    os << "\nLoadBalancer<DIM>: this = "
-      << (LoadBalancer<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << (LoadBalancer<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_processor_layout_specified = "
-      << d_processor_layout_specified << endl;
+      << d_processor_layout_specified << std::endl;
    os << "d_processor_layout = "
-      << d_processor_layout << endl;
+      << d_processor_layout << std::endl;
    os << "d_master_workload_data_id = "
-      << d_master_workload_data_id << endl;
+      << d_master_workload_data_id << std::endl;
    os << "d_master_max_workload_factor = "
-      << d_master_max_workload_factor << endl;
+      << d_master_max_workload_factor << std::endl;
    os << "d_master_bin_pack_method = "
-      << d_master_bin_pack_method << endl;
+      << d_master_bin_pack_method << std::endl;
 
    int ln;
 
-   os << "d_workload_data_id..." << endl;
+   os << "d_workload_data_id..." << std::endl;
    for (ln = 0; ln < d_workload_data_id.getSize(); ln++) {
       os << "    d_workload_data_id[" << ln << "] = "
-         << d_workload_data_id[ln] << endl;
+         << d_workload_data_id[ln] << std::endl;
    }
-   os << "d_max_workload_factor..." << endl;
+   os << "d_max_workload_factor..." << std::endl;
    for (ln = 0; ln < d_max_workload_factor.getSize(); ln++) {
       os << "    d_max_workload_factor[" << ln << "] = "
-         << d_max_workload_factor[ln] << endl;
+         << d_max_workload_factor[ln] << std::endl;
    }
-   os << "d_bin_pack_method..." << endl;
+   os << "d_bin_pack_method..." << std::endl;
    for (ln = 0; ln < d_bin_pack_method.getSize(); ln++) {
       os << "    d_bin_pack_method[" << ln << "] = "
-         << d_bin_pack_method[ln] << endl;
+         << d_bin_pack_method[ln] << std::endl;
    }
-   os << "d_ignore_level_box_union_is_single_box = " << d_ignore_level_box_union_is_single_box << endl;
+   os << "d_ignore_level_box_union_is_single_box = " << d_ignore_level_box_union_is_single_box << std::endl;
 
 }
 
@@ -853,7 +857,7 @@ template<int DIM> void LoadBalancer<DIM>::getFromInput(
              d_master_bin_pack_method == "SPATIAL") ) {
          TBOX_WARNING(d_object_name << ": "
              << "Unknown 'bin_pack_method' " << d_master_bin_pack_method 
-             << " found in input. \nDefault 'GREEDY' will be used." << endl);
+             << " found in input. \nDefault 'GREEDY' will be used." << std::endl);
          d_master_bin_pack_method = "GREEDY";
       }
 
@@ -864,7 +868,7 @@ template<int DIM> void LoadBalancer<DIM>::getFromInput(
          TBOX_WARNING(d_object_name << ": "
              << "Invalid 'max_workload_factor' value " 
              << d_master_max_workload_factor 
-             << " found in input. \nDefault 1.0 will be used." << endl);
+             << " found in input. \nDefault 1.0 will be used." << std::endl);
          d_master_max_workload_factor = 1.0;
       }
 
@@ -883,11 +887,11 @@ template<int DIM> void LoadBalancer<DIM>::getFromInput(
             totprocs *= temp_processor_layout[n];
          }
   
-         if (totprocs != tbox::MPI::getNodes()) {
+         if (totprocs != tbox::SAMRAI_MPI::getNodes()) {
             TBOX_WARNING(d_object_name << ": "
                << "Input values for 'processor_layout' are inconsistent with"
                << "\nnumber of processors.  Processor layout information will"
-               << "\nbe generated when needed." << endl);
+               << "\nbe generated when needed." << std::endl);
          } else {
             for (int n = 0; n < DIM; n++) {
                d_processor_layout(n) = temp_processor_layout[n];
@@ -917,7 +921,7 @@ template<int DIM> void LoadBalancer<DIM>::binPackBoxes(
    hier::BoxArray<DIM>& boxes,
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& workloads,
-   const string& bin_pack_method) const
+   const std::string& bin_pack_method) const
 {
    t_bin_pack_boxes->start();
    /*
@@ -933,7 +937,7 @@ template<int DIM> void LoadBalancer<DIM>::binPackBoxes(
     * Finally, assign boxes to processors by bin packing.
     */
 
-   int num_procs = tbox::MPI::getNodes();
+   int num_procs = tbox::SAMRAI_MPI::getNodes();
 
    t_bin_pack_boxes_pack->start();
    if (bin_pack_method == "SPATIAL") {
@@ -952,7 +956,7 @@ template<int DIM> void LoadBalancer<DIM>::binPackBoxes(
    } else {
 
      TBOX_ERROR(d_object_name << ": "
-        << "Unknown bin pack method " << bin_pack_method << " found." << endl);
+        << "Unknown bin pack method " << bin_pack_method << " found." << std::endl);
 
    }
    t_bin_pack_boxes_pack->stop();
@@ -971,7 +975,7 @@ template<int DIM> void LoadBalancer<DIM>::binPackBoxes(
 template<int DIM> int LoadBalancer<DIM>::getWorkloadDataId(int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(level_number >= 0);
+   TBOX_ASSERT(level_number >= 0);
 #endif
    int wrk_id = (level_number < d_workload_data_id.getSize() ?
                  d_workload_data_id[level_number] :
@@ -983,7 +987,7 @@ template<int DIM> int LoadBalancer<DIM>::getWorkloadDataId(int level_number) con
 template<int DIM> double LoadBalancer<DIM>::getMaxWorkloadFactor(int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(level_number >= 0);
+   TBOX_ASSERT(level_number >= 0);
 #endif
    double factor = (level_number < d_max_workload_factor.getSize() ?
                     d_max_workload_factor[level_number] :
@@ -992,12 +996,12 @@ template<int DIM> double LoadBalancer<DIM>::getMaxWorkloadFactor(int level_numbe
    return(factor);
 }
 
-template<int DIM> string LoadBalancer<DIM>::getBinPackMethod(int level_number) const
+template<int DIM> std::string LoadBalancer<DIM>::getBinPackMethod(int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(level_number >= 0);
+   TBOX_ASSERT(level_number >= 0);
 #endif
-   string factor = (level_number < d_bin_pack_method.getSize() ?
+   std::string factor = (level_number < d_bin_pack_method.getSize() ?
                     d_bin_pack_method[level_number] :
                     d_master_bin_pack_method);
 

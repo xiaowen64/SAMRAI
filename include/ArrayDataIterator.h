@@ -1,14 +1,14 @@
 //
-// File:	ArrayDataIterator.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/array/ArrayDataIterator.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Iterator for array patch data types
 //
 
-#ifndef included_tbox_ArrayDataIterator
-#define included_tbox_ArrayDataIterator
+#ifndef included_pdat_ArrayDataIterator
+#define included_pdat_ArrayDataIterator
 
 #ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
@@ -25,7 +25,7 @@ namespace SAMRAI {
 
 /**
  * Class ArrayDataIterator is an iterator that provides methods for
- * stepping through the index space associated with a pdat\_ArrayData object.
+ * stepping through the index space associated with a pdat_ArrayData object.
  * The indices are enumerated in column-major (e.g., Fortran) order.
  * The iterator should be used as follows:
 

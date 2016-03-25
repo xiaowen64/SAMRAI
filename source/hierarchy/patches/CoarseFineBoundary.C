@@ -1,9 +1,9 @@
 //
-// File:	CoarseFineBoundary.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/CoarseFineBoundary.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1782 $
+// Modified:	$LastChangedDate: 2007-12-17 13:04:51 -0800 (Mon, 17 Dec 2007) $
 // Description:	For describing coarse-fine boundary interfaces
 //
 
@@ -12,12 +12,6 @@
 
 #include "CoarseFineBoundary.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 namespace SAMRAI {
     namespace hier {
@@ -33,7 +27,7 @@ template<int DIM>  CoarseFineBoundary<DIM>::CoarseFineBoundary(
    const IntVector<DIM>& max_ghost_width)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(max_ghost_width > IntVector<DIM>(-1));
+   TBOX_ASSERT(max_ghost_width > IntVector<DIM>(-1));
 #endif
    d_npatches = -1;
    computeFromHierarchy(hierarchy, ln, max_ghost_width);
@@ -45,7 +39,7 @@ template<int DIM> void CoarseFineBoundary<DIM>::computeFromHierarchy(
    const IntVector<DIM>& max_ghost_width)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(max_ghost_width > IntVector<DIM>(-1));
+   TBOX_ASSERT(max_ghost_width > IntVector<DIM>(-1));
 #endif
    const hier::PatchLevel<DIM>& level =
       dynamic_cast<const hier::PatchLevel<DIM>&> (*hierarchy.getPatchLevel(ln));
@@ -74,7 +68,7 @@ template<int DIM> void CoarseFineBoundary<DIM>::computeFromLevel(
 
    const hier::IntVector<DIM>& ratio = level.getRatio();
 
-   tbox::Pointer< hier::GridGeometry<DIM> > grid_geometry = level0.getGridGeometry();
+   tbox::Pointer< hier::GridGeometry<DIM> > grid_geometry = level.getGridGeometry();
 
    /*
     * Get the domain's periodic shift.
@@ -93,7 +87,7 @@ template<int DIM> void CoarseFineBoundary<DIM>::computeFromLevel(
     * periodic case).
     */
    BoxArray<DIM> periodic_adjusted_phys_domain(level0.getBoxes());
-   periodic_adjusted_phys_domain.refine(ratio);
+   // periodic_adjusted_phys_domain.refine(ratio);
    BoxArray<DIM> periodic_adjusted_level_domain(level.getBoxes());
 
    /*
@@ -101,18 +95,14 @@ template<int DIM> void CoarseFineBoundary<DIM>::computeFromLevel(
     * level across periodic boundaries.
     */
    if ( is_periodic ) {
-      bool is_level_zero = true;
       addPeriodicImageBoxes(periodic_adjusted_phys_domain,
-                            ratio,
-                            level0,
-                            is_level_zero);
+                            level0.getShiftsForLevel());
 
-      is_level_zero = false;
       addPeriodicImageBoxes(periodic_adjusted_level_domain,
-                            ratio,
-                            level,
-                            is_level_zero);
+                            level.getShiftsForLevel());
    }
+
+   periodic_adjusted_phys_domain.refine(ratio);
 
    /*
     * Here we add some boxes outside of non-periodic boundaries to the
@@ -201,13 +191,12 @@ template<int DIM> void CoarseFineBoundary<DIM>::computeFromLevel(
 
 template<int DIM> void CoarseFineBoundary<DIM>::addPeriodicImageBoxes(
    BoxArray<DIM>& boxes,
-   const IntVector<DIM>& shift_refine_ratio,
-   const PatchLevel<DIM>& level,
-   bool is_level_zero)
+   const tbox::Array<tbox::List<IntVector<DIM> > >& shifts)
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT( shifts.size() == boxes.getNumberOfBoxes() );
+#endif
    int current_size = boxes.getNumberOfBoxes();
-   const tbox::Array<tbox::List<IntVector<DIM> > >& shifts =
-      level.getShiftsForLevel();
 
    int ip;
    /*
@@ -228,11 +217,6 @@ template<int DIM> void CoarseFineBoundary<DIM>::addPeriodicImageBoxes(
     */
    const int old_size = current_size;
 
-   IntVector<DIM> shift_multiplier(1);
-   if (is_level_zero) {
-      shift_multiplier = shift_refine_ratio;
-   }
-
    for ( ip=0; ip<old_size; ++ip ) {
       const Box<DIM>& unshifted_box = boxes.getBox(ip);
       const tbox::List< IntVector<DIM> >& shifts_list = shifts[ip];
@@ -240,13 +224,13 @@ template<int DIM> void CoarseFineBoundary<DIM>::addPeriodicImageBoxes(
          typename tbox::List< IntVector<DIM> >::Iterator sh;
          for ( sh = shifts_list.listStart(); sh; sh++ ) {
             Box<DIM> shifted_box(unshifted_box);
-            shifted_box.shift( (*sh) * shift_multiplier );
+            shifted_box.shift( (*sh) );
             boxes(current_size++) = shifted_box;
          }
       }
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( current_size == new_size );
+   TBOX_ASSERT( current_size == new_size );
 #endif
 }
 
@@ -266,13 +250,25 @@ template<int DIM> const tbox::Array< BoundaryBox<DIM> >&
 template<int DIM> const tbox::Array< BoundaryBox<DIM> >&
    CoarseFineBoundary<DIM>::getEdgeBoundaries(int pn) const
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if ( DIM < 2 ) {
+      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There is\n"
+                 <<"no edge boundaries in " << DIM << "d.\n");
+   }
+#endif
   return getBoundaries( pn, DIM-1 );
 }
 
 template<int DIM> const tbox::Array< BoundaryBox<DIM> >&
    CoarseFineBoundary<DIM>::getFaceBoundaries(int pn) const
 {
-  return getBoundaries( pn, DIM-2 );
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if ( DIM < 3 ) {
+      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There is\n"
+                 <<"no face boundaries in " << DIM << "d.\n");
+   }
+#endif
+   return getBoundaries( pn, DIM-2 );
 }
 
 template<int DIM> const tbox::Array< BoundaryBox<DIM> >&
@@ -283,13 +279,13 @@ template<int DIM> const tbox::Array< BoundaryBox<DIM> >&
       TBOX_ERROR("The boundary boxes have not been computed.");
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( pn >= 0 && pn < d_npatches );
-   assert( boundary_type >= 0 && boundary_type <= DIM );
+   TBOX_ASSERT( pn >= 0 && pn < d_npatches );
+   TBOX_ASSERT( boundary_type >= 0 && boundary_type <= DIM );
 #endif
    return d_boundary_boxes[ pn*DIM + (boundary_type-1) ];
 }
 
-template<int DIM> void CoarseFineBoundary<DIM>::printClassData( ostream &os ) const {
+template<int DIM> void CoarseFineBoundary<DIM>::printClassData( std::ostream &os ) const {
    os << "\nCoarseFineBoundary<DIM>::printClassData...";
    os << "\n	number of patches: " << d_npatches;
    int pn, btype;

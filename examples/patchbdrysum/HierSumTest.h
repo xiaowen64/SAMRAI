@@ -1,10 +1,10 @@
 //
 // File:        Hierarchy Sum test
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name$
-// Revision:    $Revision: 422 $
-// Modified:    $Date: 2005-06-08 14:24:36 -0700 (Wed, 08 Jun 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: SAMRAI interface class for hierarchy node and edge sum test
 //
 
@@ -34,7 +34,7 @@
 #include "VariableContext.h"
 #include "VisItDataWriter.h"
 
-
+using namespace std;
 using namespace SAMRAI;
 using namespace tbox;
 using namespace hier;
@@ -102,14 +102,16 @@ public:
  ************************************************************************/
 
    /*!
-    * Set node values before the hierarchy sum operation.
+    * Set node values before the hierarchy sum operation and return integer 
+    * number of failures.
     */
-   void setInitialNodeValues(const Pointer<PatchHierarchy<NDIM> > hierarchy);
+   int setInitialNodeValues(const Pointer<PatchHierarchy<NDIM> > hierarchy);
 
    /*!
-    * Set edge values before the level sum operation.
+    * Set edge values before the level sum operation and return integer
+    * number of failures.
     */
-   void setInitialEdgeValues(const Pointer<PatchLevel<NDIM> > level);
+   int setInitialEdgeValues(const Pointer<PatchLevel<NDIM> > level);
 
    /*!
     * Setup the node hierarchy sum.
@@ -133,14 +135,16 @@ public:
    void doOuteredgeSum(const int level_num);
    
    /*!
-    * Check node result after hierarchy sum operation.
+    * Check node result after hierarchy sum operation and return integer number of
+    * test failures.
     */
-   void checkNodeResult(const Pointer<PatchHierarchy<NDIM> > hierarchy);
+   int checkNodeResult(const Pointer<PatchHierarchy<NDIM> > hierarchy);
 
    /*!
-    * Check edge result after level sum operation.
+    * Check edge result after level sum operation and return integer number of
+    * test failures.
     */
-   void checkEdgeResult(const Pointer<PatchLevel<NDIM> > level);
+   int checkEdgeResult(const Pointer<PatchLevel<NDIM> > level);
 
 
 

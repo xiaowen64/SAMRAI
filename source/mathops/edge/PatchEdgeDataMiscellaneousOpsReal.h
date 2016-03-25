@@ -1,9 +1,9 @@
 //
-// File:	PatchEdgeDataMiscellaneousOpsReal.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/edge/PatchEdgeDataMiscellaneousOpsReal.h $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1811 $
+// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
 // Description: Templated miscellaneous operations for real edge-centered data.
 //
 
@@ -16,9 +16,8 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
-#ifndef included_tbox_ArrayDataMiscellaneousOpsReal
+#ifndef included_math_ArrayDataMiscellaneousOpsReal
 #include "ArrayDataMiscellaneousOpsReal.h"
 #endif
 #ifndef included_hier_Box
@@ -61,7 +60,7 @@ namespace SAMRAI {
  * object must be either 1 or be equal to the depth of the other data objects.
  *
  * Since these operations are used only by the vector kernels for the KINSOL
- * and PVODE solver packages at this time, they are intended to be instantiated
+ * and CVODE solver packages at this time, they are intended to be instantiated
  * for the standard built-in types double and float (since those solvers only
  * treat double and float data).  To extend this class to other data types or
  * to include other operations, the member functions must be specialized or the
@@ -143,7 +142,7 @@ public:
     * The quotient is defined as (numerator/denominator)
     * where the denominator is nonzero.  When the denominator is zero, the
     * entry is skipped.  If the denominator is always zero, the value of
-    * tbox::IEEE::getFLT_MAX() is returned (see @tbox::IEEE).
+    * tbox::IEEE::getFLT_MAX() is returned (see @ref SAMRAI::tbox::IEEE).
     *
     * @b Note: This method is currently intended to support the
     * SUNDIALS vector wrapper only.  Please do not use it!

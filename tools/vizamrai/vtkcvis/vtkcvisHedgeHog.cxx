@@ -1,7 +1,7 @@
 /*=========================================================================
   Program:   Vizamrai
-  Date:      $Date$
-  Version:   $Revision$
+  Date:      $LastChangedDate: 2005-12-20 13:26:41 -0800 (Tue, 20 Dec 2005) $
+  Version:   $LastChangedRevision: 816 $
 
   Based on the hedgehog code from VTK with some local modifications.
 
@@ -28,7 +28,7 @@
 
 #include <float.h>
 
-vtkCxxRevisionMacro(vtkcvisHedgeHog, "$Revision$");
+vtkCxxRevisionMacro(vtkcvisHedgeHog, "$LastChangedRevision: 816 $");
 vtkStandardNewMacro(vtkcvisHedgeHog);
 
 vtkcvisHedgeHog::vtkcvisHedgeHog()

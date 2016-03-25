@@ -1,9 +1,9 @@
 //
-// File:	$Id: stl-LayerNodeSet-NDIMX.C 346 2005-05-09 19:43:12Z gunney $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/templates/special/stl-LayerNodeSet-NDIMX.C $
 // Package:	SAMRAI templates
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 346 $
-// Modified:	$Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Template instantiation for STL containers of LayerNodeSet.
 //
 

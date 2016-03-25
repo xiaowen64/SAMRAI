@@ -1,24 +1,20 @@
 //
-// File:        ArrayDataNormOpsInteger.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataNormOpsInteger.C $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Norm operations for integer data arrays.
 //
 
-#ifndef included_tbox_ArrayDataNormOpsInteger_C
-#define included_tbox_ArrayDataNormOpsInteger_C
+#ifndef included_math_ArrayDataNormOpsInteger_C
+#define included_math_ArrayDataNormOpsInteger_C
 
 #include "ArrayDataNormOpsInteger.h"
-#include "tbox/Utilities.h"
-#include <stdlib.h>
-#include <math.h>
+
+#include "tbox/MathUtilities.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -46,7 +42,7 @@ template<int DIM> void ArrayDataNormOpsInteger<DIM>::abs(
    const hier::Box<DIM>& box) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dst.getDepth() == src.getDepth());
+   TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
    const hier::Box<DIM> dst_box = dst.getBox();
    const hier::Box<DIM> src_box = src.getBox();
@@ -92,7 +88,8 @@ template<int DIM> void ArrayDataNormOpsInteger<DIM>::abs(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               dd[dst_counter+i0] = tbox::Utilities::iabs(sd[src_counter+i0]);
+               dd[dst_counter+i0] = 
+                  tbox::MathUtilities<int>::Abs(sd[src_counter+i0]);
             }
 
             int dim_jump = 0;

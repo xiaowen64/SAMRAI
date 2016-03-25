@@ -1,9 +1,9 @@
 //
-// File:	PatchCellDataBasicOps.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/cell/PatchCellDataBasicOps.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Basic templated cell-centered patch data operations.
 //
 
@@ -12,10 +12,7 @@
 
 #include "PatchCellDataBasicOps.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -71,7 +68,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::scale(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    d_array_ops.scale(dst->getArrayData(),
                      alpha, src->getArrayData(),
@@ -86,7 +83,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::addScalar(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    d_array_ops.addScalar(dst->getArrayData(),
                          src->getArrayData(), alpha,
@@ -101,7 +98,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::add(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.add(dst->getArrayData(),
                    src1->getArrayData(), src2->getArrayData(),
@@ -116,7 +113,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::subtract(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.subtract(dst->getArrayData(),
                         src1->getArrayData(), src2->getArrayData(),
@@ -131,7 +128,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::multiply(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.multiply(dst->getArrayData(),
                         src1->getArrayData(), src2->getArrayData(),
@@ -146,7 +143,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::divide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.divide(dst->getArrayData(),
                       src1->getArrayData(), src2->getArrayData(),
@@ -160,7 +157,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::reciprocal(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    d_array_ops.reciprocal(dst->getArrayData(),
                           src->getArrayData(),
@@ -177,7 +174,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::linearSum(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.linearSum(dst->getArrayData(),
                          alpha, src1->getArrayData(),
@@ -194,7 +191,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::axpy(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.axpy(dst->getArrayData(),
                     alpha, src1->getArrayData(),
@@ -211,7 +208,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::axmy(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    d_array_ops.axmy(dst->getArrayData(),
                     alpha, src1->getArrayData(),
@@ -225,7 +222,7 @@ TYPE PatchCellDataBasicOps<DIM,TYPE>::min(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    return( d_array_ops.min(data->getArrayData(), box) );
 }
@@ -236,7 +233,7 @@ TYPE PatchCellDataBasicOps<DIM,TYPE>::max(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    return( d_array_ops.max(data->getArrayData(), box) );
 }
@@ -249,7 +246,7 @@ void PatchCellDataBasicOps<DIM,TYPE>::setRandomValues(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull());
+   TBOX_ASSERT(!dst.isNull());
 #endif
    d_array_ops.setRandomValues(dst->getArrayData(),
                                width, low, box);

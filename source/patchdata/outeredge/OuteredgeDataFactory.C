@@ -1,10 +1,10 @@
 //
-// File:	OuteredgeDataFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outeredge/OuteredgeDataFactory.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Factory class for creating outeredge data objects
 //
 
@@ -12,17 +12,15 @@
 #define included_pdat_OuteredgeDataFactory_C
 
 #include "EdgeDataFactory.h"
-#include "OuteredgeDataFactory.h"
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
 #include "Box.h"
 #include "OuteredgeData.h"
+#include "OuteredgeDataFactory.h"
 #include "OuteredgeGeometry.h"
+#include "Patch.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "OuteredgeDataFactory.I"
@@ -41,22 +39,18 @@ namespace SAMRAI {
 
 template <int DIM, class TYPE>
 OuteredgeDataFactory<DIM,TYPE>::OuteredgeDataFactory(int depth)
-:  hier::PatchDataFactory<DIM>(),
-   d_depth(depth)
+:  hier::PatchDataFactory<DIM>(hier::IntVector<DIM>(0)),
+   d_depth(depth),
+   d_no_ghosts(hier::IntVector<DIM>(0))
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
-
-   d_no_ghosts = new hier::IntVector<DIM>(0);
 }
 
 template <int DIM, class TYPE>
 OuteredgeDataFactory<DIM,TYPE>::~OuteredgeDataFactory()
 {
-   if(d_no_ghosts)
-      delete d_no_ghosts;
-   d_no_ghosts = NULL;
 }
 
 /*
@@ -69,7 +63,7 @@ OuteredgeDataFactory<DIM,TYPE>::~OuteredgeDataFactory()
 
 template <int DIM, class TYPE>
 tbox::Pointer<hier::PatchDataFactory<DIM> >
-OuteredgeDataFactory<DIM,TYPE>::cloneFactory()
+OuteredgeDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
    return(new OuteredgeDataFactory<DIM,TYPE>(d_depth));
 }
@@ -97,6 +91,14 @@ tbox::Pointer<hier::PatchData<DIM> > OuteredgeDataFactory<DIM,TYPE>::allocate(
    return(tbox::Pointer<hier::PatchData<DIM> >(patchdata, pool));
 }
 
+template<int DIM, class TYPE>
+tbox::Pointer< hier::PatchData<DIM> >
+OuteredgeDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
+                                         tbox::Pointer<tbox::Arena> pool) const
+{
+   return (allocate(patch.getBox(), pool));
+}
+
 /*
 *************************************************************************
 *                                                                       *
@@ -109,34 +111,8 @@ template <int DIM, class TYPE>
 tbox::Pointer<hier::BoxGeometry<DIM> >
 OuteredgeDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
 {
-   hier::BoxGeometry<DIM> *boxgeometry = new OuteredgeGeometry<DIM>(box, 0);
+   hier::BoxGeometry<DIM>* boxgeometry = new OuteredgeGeometry<DIM>(box, 0);
    return(tbox::Pointer<hier::BoxGeometry<DIM> >(boxgeometry));
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Get and set the default ghost cell widths for the outeredge data      *
-* objects created with this factory.                                    *
-*                                                                       *
-*************************************************************************
-*/
-
-template <int DIM, class TYPE>
-const hier::IntVector<DIM>&
-OuteredgeDataFactory<DIM,TYPE>::getDefaultGhostCellWidth() const
-{
-   return(*d_no_ghosts);
-}
-
-template <int DIM, class TYPE>
-void OuteredgeDataFactory<DIM,TYPE>::setDefaultGhostCellWidth(
-   const hier::IntVector<DIM>& ghosts)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts == hier::IntVector<DIM>(0));
-#endif
-   (void) ghosts;
 }
 
 /*

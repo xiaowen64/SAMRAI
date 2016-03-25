@@ -1,9 +1,9 @@
 /*
- * File:        AsyncCommStage.C
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommStage.C $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Support for coordinating multiple asynchronous communications
  */
 
@@ -192,7 +192,7 @@ AsyncCommStage::StagedGroup::~StagedGroup()
 
 
 
-MPI::request *AsyncCommStage::StagedGroup::getRequestPointer() const
+SAMRAI_MPI::request *AsyncCommStage::StagedGroup::getRequestPointer() const
 {
    if ( d_stage == NULL ) {
       TBOX_ERROR("AssyncCommStage::StagedGroup::getRequestPointer():\n"
@@ -241,7 +241,7 @@ int AsyncCommStage::advanceSome(
 #endif
 
    Array<int> index( d_n_req );
-   Array<MPI::status> mpi_stat( d_n_req );
+   Array<SAMRAI_MPI::status> mpi_stat( d_n_req );
 
    if ( completed.size() < d_n_group ) {
       completed.setNull();
@@ -367,7 +367,7 @@ RelaunchableJob *AsyncCommStage::advanceAny()
 
    do {
 
-      MPI::status mpi_stat;
+      SAMRAI_MPI::status mpi_stat;
       int errf;
       t_wait_any->start();
       errf = MPI_Waitany( d_n_req,
@@ -485,7 +485,7 @@ bool AsyncCommStage::numberOfOutstandingGroups() const
 *                                                              *
 ****************************************************************
 */
-MPI::request *AsyncCommStage::lookupRequestPointer(
+SAMRAI_MPI::request *AsyncCommStage::lookupRequestPointer(
    const int igroup ) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -724,7 +724,7 @@ AsyncCommStage::StagedGroup::~StagedGroup()
 
 
 
-MPI::request *AsyncCommStage::StagedGroup::getRequestPointer() const
+SAMRAI_MPI::request *AsyncCommStage::StagedGroup::getRequestPointer() const
 {
    return NULL;
 }

@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -31,4 +31,28 @@ DEPENDS_1 +=\
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+FILE_2=tbox_Pointer-CellPoissonFACSolver-NDIM.o
+DEPENDS_2:=\
+	$(OBJECT)/include/SAMRAI_config.h				\
+	tbox_Pointer-CellPoissonFACSolver-NDIM.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_2 +=\
+	
+endif
+
+${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+
+FILE_3=tbox_Pointer-ModifiedBratuProblem.o
+DEPENDS_3:=\
+	$(OBJECT)/include/SAMRAI_config.h ModifiedBratuProblem.h	\
+	tbox_Pointer-ModifiedBratuProblem.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_3 +=\
+	
+endif
+
+${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 

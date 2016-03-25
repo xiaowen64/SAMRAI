@@ -1,9 +1,9 @@
 //
-// File:        TagAndInitializeStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/TagAndInitializeStrategy.C $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 258 $
-// Modified:    $Date: 2005-03-09 16:42:48 -0800 (Wed, 09 Mar 2005) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Strategy interface for params, tagging, init for gridding.
 //
 
@@ -14,12 +14,6 @@
 
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include <stdio.h>
 
@@ -54,8 +48,8 @@ template<int DIM> bool TagAndInitializeStrategy<DIM>::getUserSuppliedRefineBoxes
    const double time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( level_num>=0 );
-   assert( time >= 0.);
+   TBOX_ASSERT( level_num>=0 );
+   TBOX_ASSERT( time >= 0.);
 #endif
 
    /*
@@ -209,7 +203,7 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::resetRefineBoxes(
    const int level_num) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( level_num>=0 ); 
+   TBOX_ASSERT( level_num>=0 ); 
 #endif
  
    int i = d_reset_refine_boxes.getSize();
@@ -235,11 +229,11 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::resetRefineBoxes(
 */
 
 template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    d_object_name = object_name;
@@ -252,11 +246,11 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
                  << "provide a `RefineBoxes' database entry in the input\n"
                  << "to specify the level boxes to be refined.  See header\n"
                  << "for TagAndInitializeStrategy class for \n"
-                 << "discussion of the entry format." << endl);
+                 << "discussion of the entry format." << std::endl);
    }
    tbox::Pointer<tbox::Database> refine_box_db = 
       db->getDatabase("RefineBoxes");
-   tbox::Array<string> box_keys = refine_box_db->getAllKeys();
+   tbox::Array<std::string> box_keys = refine_box_db->getAllKeys();
    int nkeys = box_keys.getSize();
    
    d_refine_boxes.resizeArray(nkeys);
@@ -329,7 +323,7 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
                        << "        Level1 { boxes_0 = <box array> \n"
                        << "                 ...} \n"
                        << "See header for this class for further discussion\n"
-                       << "of the expected input format." << endl);
+                       << "of the expected input format." << std::endl);
          }
          tbox::Pointer<tbox::Database> level_refine_box_db = 
             refine_box_db->getDatabase(level_boxes_name);
@@ -358,7 +352,7 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
                TBOX_WARNING(d_object_name << ": You have entries for "
                             << "both 'cycles' and 'times' for level " << ln
                             << ".\n Because 'times' takes precedence, the "
-                            << "'cycles' entries will be ignored." << endl);
+                            << "'cycles' entries will be ignored." << std::endl);
             }
          } else {
             d_refine_boxes_times[ln].resizeArray(1);

@@ -1,9 +1,9 @@
 //
-// File:        StandardTagAndInitStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/StandardTagAndInitStrategy.C $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Strategy interface for Richardson extrapolation error detection.
 //
 
@@ -52,7 +52,7 @@ template<int DIM> void StandardTagAndInitStrategy<DIM>::applyGradientDetector(
    TBOX_WARNING("StandardTagAndInitStrategy<DIM>::applyGradientDetector()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes no cell tagging) is executed" << endl);
+                << "\ndoes no cell tagging) is executed" << std::endl);
 }
 
 template<int DIM> void StandardTagAndInitStrategy<DIM>::coarsenDataForRichardsonExtrapolation(
@@ -71,7 +71,7 @@ template<int DIM> void StandardTagAndInitStrategy<DIM>::coarsenDataForRichardson
                 << "coarsenDataForRichardsonExtrapolation()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes nothing) is executed" << endl);
+                << "\ndoes nothing) is executed" << std::endl);
 }
 
 template<int DIM> void StandardTagAndInitStrategy<DIM>::applyRichardsonExtrapolation(
@@ -94,7 +94,7 @@ template<int DIM> void StandardTagAndInitStrategy<DIM>::applyRichardsonExtrapola
                 << "applyRichardsonExtrapolation()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes nothing) is executed" << endl);
+                << "\ndoes nothing) is executed" << std::endl);
 }
 
 template<int DIM> double StandardTagAndInitStrategy<DIM>::getLevelDt(
@@ -108,7 +108,7 @@ template<int DIM> double StandardTagAndInitStrategy<DIM>::getLevelDt(
    TBOX_WARNING("StandardTagAndInitStrategy<DIM>::getLevelDt()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\nsimply returns 0.) is executed" << endl);
+                << "\nsimply returns 0.) is executed" << std::endl);
    return(0.0);
 }
 
@@ -123,7 +123,7 @@ template<int DIM> void StandardTagAndInitStrategy<DIM>::resetTimeDependentData(
    TBOX_WARNING("StandardTagAndInitStrategy<DIM>::resetTimeDependentData()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes nothing) is executed" << endl);
+                << "\ndoes nothing) is executed" << std::endl);
 }
 
 template<int DIM> double StandardTagAndInitStrategy<DIM>::advanceLevel(
@@ -145,7 +145,7 @@ template<int DIM> double StandardTagAndInitStrategy<DIM>::advanceLevel(
    TBOX_WARNING("StandardTagAndInitStrategy<DIM>::advanceLevel()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes nothing) is executed" << endl);
+                << "\ndoes nothing) is executed" << std::endl);
    return(0.0);
 }
 
@@ -157,7 +157,7 @@ template<int DIM> void StandardTagAndInitStrategy<DIM>::resetDataToPreadvanceSta
                 << "resetDataToPreadvanceState()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes nothing) is executed" << endl);
+                << "\ndoes nothing) is executed" << std::endl);
 }
 
 }

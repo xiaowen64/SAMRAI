@@ -1,9 +1,9 @@
 //
-// File:	PatchGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchGeometry.h $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 729 $
-// Modified:	$Date: 2005-11-11 13:49:10 -0800 (Fri, 11 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for geometry management on patches
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -219,7 +218,7 @@ public:
    /**
     * Print object data to the specified output stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    bool d_has_regular_boundary;

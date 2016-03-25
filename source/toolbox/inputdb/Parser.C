@@ -1,14 +1,14 @@
 //
-// File:	Parser.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/Parser.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Parser that reads the input database grammar
 //
 
 #include "tbox/Parser.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 
 #ifdef DEBUG_NO_INLINE
@@ -70,7 +70,7 @@ Parser::~Parser()
 */
 
 int Parser::parse(
-   const string& filename,
+   const std::string& filename,
    FILE* fstream,
    Pointer<Database> database)
 {
@@ -78,8 +78,8 @@ int Parser::parse(
    d_warnings   = 0;
 
    // Find the path in the filename, if one exists
-   string::size_type slash_pos = filename.find_last_of( '/' );
-   if(slash_pos == string::npos) {
+   std::string::size_type slash_pos = filename.find_last_of( '/' );
+   if(slash_pos == std::string::npos) {
       d_pathname   = "";
    } else {
       d_pathname   = filename.substr(0, slash_pos+1);      
@@ -135,11 +135,11 @@ void Parser::advanceLine(const int nline)
 *************************************************************************
 */
 
-void Parser::advanceCursor(const string& token)
+void Parser::advanceCursor(const std::string& token)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
    pd.d_cursor = pd.d_nextcursor;
-   for (string::const_iterator i = token.begin(); i != token.end(); i++) {
+   for (std::string::const_iterator i = token.begin(); i != token.end(); i++) {
       if (*i == '\t') {
          pd.d_nextcursor = ((pd.d_nextcursor + 7) & (~7)) + 1;
       } else {
@@ -156,15 +156,15 @@ void Parser::advanceCursor(const string& token)
 *************************************************************************
 */
 
-void Parser::error(const string& message)
+void Parser::error(const std::string& message)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
 
    pout << "Error in " << pd.d_filename << " at line " << pd.d_linenumber 
 	<< " column " << pd.d_cursor
-        << " : " << message << endl << flush;
+        << " : " << message << std::endl << std::flush;
 
-   pout << pd.d_linebuffer << endl << flush;
+   pout << pd.d_linebuffer << std::endl << std::flush;
 
    for(int i=0; i < pd.d_cursor; i++)
       pout << " ";
@@ -181,15 +181,15 @@ void Parser::error(const string& message)
 *************************************************************************
 */
 
-void Parser::warning(const string& message)
+void Parser::warning(const std::string& message)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
 
    pout << "Warning in " << pd.d_filename << " at line " << pd.d_linenumber 
 	<< " column " << pd.d_cursor
-        << " : " << message << endl << flush;
+        << " : " << message << std::endl << std::flush;
 
-   pout << pd.d_linebuffer << endl << flush;
+   pout << pd.d_linebuffer << std::endl << std::flush;
 
    for(int i=0; i < pd.d_cursor; i++)
       pout << " ";
@@ -206,7 +206,7 @@ void Parser::warning(const string& message)
 *************************************************************************
 */
 
-void Parser::setLine(const string& line)
+void Parser::setLine(const std::string& line)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
    pd.d_linebuffer            = line; 
@@ -221,7 +221,7 @@ void Parser::setLine(const string& line)
 *************************************************************************
 */
 
-Pointer<Database> Parser::getDatabaseWithKey(const string& key)
+Pointer<Database> Parser::getDatabaseWithKey(const std::string& key)
 {
    List< Pointer<Database> >::Iterator i(d_scope_stack);
    for ( ; i; i++) {
@@ -239,15 +239,15 @@ Pointer<Database> Parser::getDatabaseWithKey(const string& key)
 *************************************************************************
 */
 
-bool Parser::pushIncludeFile(const string& filename)
+bool Parser::pushIncludeFile(const std::string& filename)
 {
    FILE *fstream = NULL;
 
-   string filename_with_path;
+   std::string filename_with_path;
 
    // If this is not a fully qualified pathname use 
    // current search path
-   string::size_type slash_pos;
+   std::string::size_type slash_pos;
    slash_pos = filename.find_first_of( '/' );
    if ( slash_pos == 0 ) {
       filename_with_path = filename;
@@ -256,14 +256,14 @@ bool Parser::pushIncludeFile(const string& filename)
       filename_with_path += filename;
    }
 
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
       fstream = fopen(filename_with_path.c_str(), "r");
    }
 
    int worked = (fstream ? 1 : 0);
 
 #ifdef HAVE_MPI
-   worked = MPI::bcast(worked, 0);
+   worked = SAMRAI_MPI::bcast(worked, 0);
 #endif
 
    if (!worked) {
@@ -309,13 +309,13 @@ void Parser::popIncludeFile()
 int Parser::yyinput(char *buffer, const int max_size)
 {
    int byte = 0;
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
       byte = fread(buffer, 1, max_size, d_parse_stack.getFirstItem().d_fstream);
    }
 #ifdef HAVE_MPI
-   byte = MPI::bcast(byte, 0);
+   byte = SAMRAI_MPI::bcast(byte, 0);
    if (byte > 0) {
-      MPI::bcast(buffer, byte, 0);
+      SAMRAI_MPI::bcast(buffer, byte, 0);
    }
 #endif
    return(byte);

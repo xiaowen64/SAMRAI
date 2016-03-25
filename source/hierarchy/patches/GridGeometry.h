@@ -1,9 +1,9 @@
 //
-// File:	GridGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/GridGeometry.h $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 555 $
-// Modified:	$Date: 2005-08-17 14:38:20 -0700 (Wed, 17 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for geometry management in AMR hierarchy
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_hier_BoundaryBox
@@ -48,8 +47,7 @@ using namespace std;
 #include "tbox/Pointer.h"
 #endif
 #ifndef included_String
-#include <string>
-using namespace std;
+#include <std::string>
 #define included_String
 #endif
 
@@ -87,7 +85,7 @@ public:
    /**
     * Constructor for GridGeometry.
     */
-   GridGeometry(const string &object_name);
+   GridGeometry(const std::string &object_name);
 
    /**
     * Destructor for GridGeometry.
@@ -218,7 +216,7 @@ public:
    /**
     * Print object data to the specified output stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
    /**
     * Initialize the periodic shift on the coarsest level.  The IntVector
@@ -257,7 +255,7 @@ public:
     * version of this grid geometry object.
     */
    virtual tbox::Pointer<hier::GridGeometry<DIM> > makeRefinedGridGeometry(
-      const string& fine_geom_name,
+      const std::string& fine_geom_name,
       const hier::IntVector<DIM>& refine_ratio,
       bool register_for_restart) const = 0;
 
@@ -266,7 +264,7 @@ public:
     * version of this grid geometry object.
     */
    virtual tbox::Pointer<hier::GridGeometry<DIM> > makeCoarsenedGridGeometry(
-      const string& coarse_geom_name,
+      const std::string& coarse_geom_name,
       const hier::IntVector<DIM>& coarsen_ratio,
       bool register_for_restart) const = 0;
 
@@ -376,7 +374,7 @@ private:
    /*!
     * Object name used for error reporting purposes.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*!
     * Box array defining computational domain on coarsest level

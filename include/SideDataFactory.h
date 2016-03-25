@@ -1,9 +1,9 @@
 //
-// File:	SideDataFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/side/SideDataFactory.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Factory class for creating side data objects
 //
 
@@ -24,6 +24,9 @@
 #endif
 #ifndef included_hier_PatchDataFactory
 #include "PatchDataFactory.h"
+#endif
+#ifndef included_pdat_MultiblockSideDataTranslator
+#include "MultiblockSideDataTranslator.h"
 #endif
 #ifndef included_tbox_Arena
 #include "tbox/Arena.h"
@@ -85,12 +88,16 @@ public:
    virtual ~SideDataFactory<DIM,TYPE>();
 
    /**
-    * Virtual function to clone the patch data factory .  This will return
-    * a new instantiation of the factory with the same properties (e.g., same
-    * type and ghost cell width).  The properties of the cloned factory can
-    * then be changed without modifying the original.
+    * @brief Abstract virtual function to clone a patch data factory.
+
+    * This will return a new instantiation of the abstract factory
+    * with the same properties.  The properties of the cloned factory
+    * can then be changed without modifying the original.
+    *
+    * @param ghosts default ghost cell width for concrete classes created from
+    * the factory.
     */
-   virtual tbox::Pointer< hier::PatchDataFactory<DIM> > cloneFactory();
+   virtual tbox::Pointer< hier::PatchDataFactory<DIM> > cloneFactory(const hier::IntVector<DIM>& ghosts);
 
    /**
     * Virtual factory function to allocate a concrete side data object.
@@ -103,24 +110,20 @@ public:
       tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL)) const;
 
    /**
+    * Virtual factory function to allocate a concrete cell data object.
+    * Same as above function, except passes in a patch instead of a box.
+    */
+   virtual tbox::Pointer< hier::PatchData<DIM> > allocate(
+      const hier::Patch<DIM>& patch,
+      tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL)) const;
+
+   /**
     * Allocate the box geometry object associated with the patch data.
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
     */
    virtual tbox::Pointer< hier::BoxGeometry<DIM> > getBoxGeometry(
       const hier::Box<DIM>& box) const;
-
-   /**
-    * Get the default ghost cell width.  This is the ghost cell width that
-    * will be used in the instantiation of concrete side data objects.
-    */
-   virtual const hier::IntVector<DIM>& getDefaultGhostCellWidth() const;
-
-   /**
-    * Set the default ghost cell width.  This is the ghost cell width that
-    * will be used in the instantiation of concrete side data instances.
-    */
-   virtual void setDefaultGhostCellWidth(const hier::IntVector<DIM>& ghosts);
 
    /**
     * Get the default depth (number of components).  This is the default
@@ -171,11 +174,17 @@ public:
    bool validCopyTo(
       const tbox::Pointer< hier::PatchDataFactory<DIM> >& dst_pdf) const;   
 
+   /**
+    * Return pointer to a multiblock data translator
+    */
+   hier::MultiblockDataTranslator<DIM>* getMultiblockDataTranslator();
+
 private:
    int d_depth;
-   hier::IntVector<DIM> d_ghosts;
    bool d_fine_boundary_represents_var;
    hier::IntVector<DIM> d_directions;
+
+   MultiblockSideDataTranslator<DIM,TYPE>* d_mb_trans;
 
 };
 

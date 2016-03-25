@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -14,10 +14,13 @@ DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
 	$(INCLUDE_SAM)/tbox/IEEE.I $(INCLUDE_SAM)/tbox/IEEE.h		\
-	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/MPI.I	\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/ReferenceCounter.I\
+	$(INCLUDE_SAM)/tbox/IOStream.h					\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Utilities.h\
 	IEEE.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -29,12 +32,10 @@ ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
 
 FILE_1=List.o
 DEPENDS_1:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h					\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/IOStream.h\
+	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	List.C
+	$(INCLUDE_SAM)/tbox/Utilities.h List.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -45,9 +46,14 @@ ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 
 FILE_2=MathUtilities.o
 DEPENDS_2:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/IOStream.h					\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
-	$(INCLUDE_SAM)/tbox/MathUtilities.h MathUtilities.C
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h MathUtilities.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -59,10 +65,10 @@ ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 FILE_3=PIO.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/MPI.I	\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/PIO.h		\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/ParallelBuffer.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Utilities.h\
 	PIO.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -74,11 +80,15 @@ ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 
 FILE_4=ParallelBuffer.o
 DEPENDS_4:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
 	$(INCLUDE_SAM)/tbox/IOStream.h					\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
 	$(INCLUDE_SAM)/tbox/ParallelBuffer.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	ParallelBuffer.C
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h ParallelBuffer.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
@@ -99,16 +109,18 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h $(INCLUDE_SAM)/tbox/IEEE.I	\
 	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Pointer.I		\
-	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	SAMRAIManager.C
+	$(INCLUDE_SAM)/tbox/Utilities.h SAMRAIManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
@@ -145,9 +157,9 @@ ${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
 FILE_8=Utilities.o
 DEPENDS_8:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/MPI.I	\
-	$(INCLUDE_SAM)/tbox/MPI.h $(INCLUDE_SAM)/tbox/PIO.h		\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Utilities.h\
 	Utilities.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)

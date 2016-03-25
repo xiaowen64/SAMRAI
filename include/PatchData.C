@@ -1,9 +1,9 @@
 //
-// File:	PatchData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/PatchData.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 301 $
-// Modified:	$Date: 2005-04-25 10:32:08 -0700 (Mon, 25 Apr 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Abstract base class for patch data objects
 //
 
@@ -12,12 +12,6 @@
 
 #include "PatchData.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "tbox/Utilities.h"
 
@@ -57,13 +51,13 @@ template<int DIM>  PatchData<DIM>::~PatchData()
 template<int DIM> void PatchData<DIM>::getFromDatabase(tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("HIER_PATCH_DATA_VERSION");
    if (ver != HIER_PATCH_DATA_VERSION) {
       TBOX_ERROR("PatchData<DIM>::getFromDatabase() error...\n"
-              << "  Restart file version different than class version" << endl);
+              << "  Restart file version different than class version" << std::endl);
    }
 
    d_box = database->getDatabaseBox("d_box");
@@ -87,7 +81,7 @@ template<int DIM> void PatchData<DIM>::getFromDatabase(tbox::Pointer<tbox::Datab
 template<int DIM> void PatchData<DIM>::putToDatabase(tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
    
    database->putInteger("HIER_PATCH_DATA_VERSION", HIER_PATCH_DATA_VERSION);

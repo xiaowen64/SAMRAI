@@ -1,9 +1,9 @@
 //
-// File:	RefinePatchStrategy.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefinePatchStrategy.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
  
@@ -195,7 +195,7 @@ public:
    virtual void postprocessRefineBoxes(
       hier::Patch<DIM>& fine,
       const hier::Patch<DIM>& coarse,
-      const hier::BoxList<DIM>& fine_box,
+      const hier::BoxList<DIM>& fine_boxes,
       const hier::IntVector<DIM>& ratio);
 
 };

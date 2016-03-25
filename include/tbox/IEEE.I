@@ -1,11 +1,15 @@
 //
-// File:	IEEE.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/IEEE.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	IEEE routines to set up handlers and get signaling NaNs
 //
+
+#ifndef included_tbox_MathUtilities
+#include "tbox/MathUtilities.h"
+#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -14,65 +18,71 @@
 namespace SAMRAI {
    namespace tbox {
 
+/*
+ * Routines to get signaling NaN value.
+ */
 
 inline
 float IEEE::getSignalingFloatNaN()
 {
-   return(s_signaling_nan_float);
+   return(MathUtilities<float>::getSignalingNaN());
 }
 
 inline
 double IEEE::getSignalingNaN()
 {
-   return(s_signaling_nan_double);
+   return(MathUtilities<double>::getSignalingNaN());
 }
 
 inline
-int IEEE::getINT_MAX()
+dcomplex IEEE::getSignalingComplexNaN()
 {
-   return(s_int_max);
+   return(MathUtilities<dcomplex>::getSignalingNaN());
+}
+
+
+/*
+ * Routines to set signaling NaN value.
+ */
+
+inline
+void IEEE::setNaN(float& f)
+{
+   f = MathUtilities<float>::getSignalingNaN();
 }
 
 inline
-int IEEE::getINT_MIN()
+void IEEE::setNaN(double& d)
 {
-   return(s_int_min);
+   d = MathUtilities<double>::getSignalingNaN();
 }
 
 inline
-float IEEE::getFLT_MAX()
+void IEEE::setNaN(dcomplex& dc)
 {
-   return(s_flt_max);
+   dc = MathUtilities<dcomplex>::getSignalingNaN();
+}
+
+/*
+ * Routines to check against signaling NaN value.
+ */
+
+inline
+bool IEEE::isNaN(const float& f)
+{
+   return(MathUtilities<float>::isNaN(f));
 }
 
 inline
-float IEEE::getFLT_MIN()
+bool IEEE::isNaN(const double& d)
 {
-   return(s_flt_min);
+   return(MathUtilities<double>::isNaN(d));
 }
 
 inline
-float IEEE::getFLT_EPSILON()
+bool IEEE::isNaN(const dcomplex& dc)
 {
-   return(s_flt_epsilon);
-}
-
-inline
-double IEEE::getDBL_MAX()
-{
-   return(s_dbl_max);
-}
-
-inline
-double IEEE::getDBL_MIN()
-{
-   return(s_dbl_min);
-}
-
-inline
-double IEEE::getDBL_EPSILON()
-{
-   return(s_dbl_epsilon);
+   return(MathUtilities<dcomplex>::isNaN(dc));
 }
 
 #ifdef DEBUG_NO_INLINE

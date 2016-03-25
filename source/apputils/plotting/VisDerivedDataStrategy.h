@@ -1,9 +1,9 @@
 //
-// File:        VisDerivedDataStrategy.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/VisDerivedDataStrategy.h $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $Revision: 601 $
-// Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Interface for writing user-defined data to either
 //              VisIt or Vizamrai file
 //
@@ -22,7 +22,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Utilities
@@ -125,8 +124,8 @@ public:
       double *buffer,
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
-      const string& variable_name,
-      int   depth_index) = 0;
+      const std::string& variable_name,
+      int   depth_index) const = 0;
    };
 
 }

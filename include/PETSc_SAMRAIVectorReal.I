@@ -1,13 +1,13 @@
 //
-// File:        PETSc_SAMRAIVectorReal.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/PETSc_SAMRAIVectorReal.I $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1998 The Regents of the University of California
-// Revision:    $Revision: 7 $
-// Modified:    $Date: 2004-11-30 13:18:17 -0800 (Tue, 30 Nov 2004) $
+// Copyright:   (c) 1998 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1732 $
+// Modified:    $LastChangedDate: 2007-12-04 09:01:48 -0800 (Tue, 04 Dec 2007) $
 // Description: "Glue code" between PETSc vector interface and SAMRAI vectors.
 //
 
-#define SPVEC_CAST(x)  ( ((PETSc_SAMRAIVectorReal<DIM,TYPE>*) x) )
+#define C_PSVEC_CAST(x) (dynamic_cast<const PETSc_SAMRAIVectorReal<DIM,TYPE>*>(x))
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -15,167 +15,243 @@
 namespace SAMRAI {
     namespace solv {
 
-template<int DIM, class TYPE> inline
-tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > 
-PETSc_SAMRAIVectorReal<DIM,TYPE>::getSAMRAIVector()
-{
-   return(d_samrai_vector); 
-}
 
-template<int DIM, class TYPE> inline 
-double PETSc_SAMRAIVectorReal<DIM,TYPE>::dotWith(
-   const PETScAbstractVectorReal<TYPE>* y,
-   bool local_only) const
+template <int DIM, class TYPE>
+inline
+double
+PETSc_SAMRAIVectorReal<DIM, TYPE>::dotWith(
+    const PETScAbstractVectorReal<TYPE>* y,
+    bool local_only) const
 {
-   return( d_samrai_vector->dot(SPVEC_CAST(y)->getSAMRAIVector(),
-				local_only) );
-}
+    return d_samrai_vector->dot(C_PSVEC_CAST(y)->d_samrai_vector, local_only);
+}// dotWith
 
-template<int DIM, class TYPE> inline
-double PETSc_SAMRAIVectorReal<DIM,TYPE>::TdotWith(
-   const PETScAbstractVectorReal<TYPE>* y,
-   bool local_only) const
+template <int DIM, class TYPE>
+inline
+double
+PETSc_SAMRAIVectorReal<DIM,TYPE>::TdotWith(
+    const PETScAbstractVectorReal<TYPE>* y,
+    bool local_only) const
 {
-   return( d_samrai_vector->dot(SPVEC_CAST(y)->getSAMRAIVector(),
-				local_only) );
-}
+    return d_samrai_vector->dot(C_PSVEC_CAST(y)->d_samrai_vector, local_only);
+}// TdotWith
 
-template<int DIM, class TYPE> inline
-double PETSc_SAMRAIVectorReal<DIM,TYPE>::L1Norm(bool local_only) const
+template <int DIM, class TYPE>
+inline
+double
+PETSc_SAMRAIVectorReal<DIM,TYPE>::L1Norm(
+    bool local_only) const
 {
-   return( d_samrai_vector->L1Norm(local_only) );
-}
+    return d_samrai_vector->L1Norm(local_only);
+}// L1Norm
 
-template<int DIM, class TYPE> inline
-double PETSc_SAMRAIVectorReal<DIM,TYPE>::L2Norm(bool local_only) const
+template <int DIM, class TYPE>
+inline
+double
+PETSc_SAMRAIVectorReal<DIM,TYPE>::L2Norm(
+    bool local_only) const
 {
-   return( d_samrai_vector->L2Norm(local_only) );
-}
+    return d_samrai_vector->L2Norm(local_only);
+}// L2Norm
 
-template<int DIM, class TYPE> inline
-double PETSc_SAMRAIVectorReal<DIM,TYPE>::maxNorm(bool local_only) const
+template <int DIM, class TYPE>
+inline
+double
+PETSc_SAMRAIVectorReal<DIM,TYPE>::maxNorm(
+    bool local_only) const
 {
-   return( d_samrai_vector->maxNorm(local_only) );
-}
+    return d_samrai_vector->maxNorm(local_only);
+}// maxNorm
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::scaleVector(const TYPE alpha)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::scaleVector(
+    const TYPE alpha)
 {
-   d_samrai_vector->scale(alpha, d_samrai_vector);
-}
+    d_samrai_vector->scale(alpha, d_samrai_vector);
+    return;
+}// scaleVector
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::copyVector(
-   const PETScAbstractVectorReal<TYPE>* v_src)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::copyVector(
+    const PETScAbstractVectorReal<TYPE>* v_src)
 {
-   d_samrai_vector->copyVector(SPVEC_CAST(v_src)->getSAMRAIVector());
-}
+    d_samrai_vector->copyVector(C_PSVEC_CAST(v_src)->d_samrai_vector);
+    return;
+}// copyVector
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::setToScalar(const TYPE alpha)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::setToScalar(
+    const TYPE alpha)
 {
-   d_samrai_vector->setToScalar(alpha);
-}
+    d_samrai_vector->setToScalar(alpha);
+    return;
+}// setToScalar
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::setRandomValues(const TYPE width,
-                                                         const TYPE low) 
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::swapWith(
+    PETScAbstractVectorReal<TYPE>* v_other)
 {
-   d_samrai_vector->setRandomValues(width, low);
-}
+    d_samrai_vector->swapVectors(C_PSVEC_CAST(v_other)->d_samrai_vector);
+    return;
+}// swapWith
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::swapWith(
-   PETScAbstractVectorReal<TYPE>* v_other)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::setAXPY(
+    const TYPE alpha,
+    const PETScAbstractVectorReal<TYPE>* x)
 {
-   d_samrai_vector->swapVectors(SPVEC_CAST(v_other)->getSAMRAIVector());
-}
+    d_samrai_vector->axpy(alpha, C_PSVEC_CAST(x)->d_samrai_vector, d_samrai_vector);
+    return;
+}// setAXPY
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::setAXPY(
-   const TYPE alpha, 
-   const PETScAbstractVectorReal<TYPE>* x)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::setAXPBY(
+    const TYPE alpha,
+    const PETScAbstractVectorReal<TYPE>* x,
+    const TYPE beta)
 {
-   d_samrai_vector->axpy(alpha, 
-                         SPVEC_CAST(x)->getSAMRAIVector(), 
-                         d_samrai_vector);
-}
+    d_samrai_vector->linearSum(alpha, C_PSVEC_CAST(x)->d_samrai_vector, beta, d_samrai_vector);
+    return;
+}// setAXPBY
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::setAXPBY(
-   const TYPE alpha, 
-   const PETScAbstractVectorReal<TYPE>* x, 
-   const TYPE beta) 
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::setWAXPY(
+    const TYPE alpha,
+    const PETScAbstractVectorReal<TYPE>* x,
+    const PETScAbstractVectorReal<TYPE>* y)
 {
-   d_samrai_vector->linearSum(alpha, SPVEC_CAST(x)->getSAMRAIVector(),
-                              beta, d_samrai_vector);
-}
+    d_samrai_vector->axpy(alpha, C_PSVEC_CAST(x)->d_samrai_vector, C_PSVEC_CAST(y)->d_samrai_vector);
+    return;
+}// setWAXPY
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::setWAXPY(
-   const TYPE alpha, 
-   const PETScAbstractVectorReal<TYPE>* x,
-   const PETScAbstractVectorReal<TYPE>* y)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::pointwiseMultiply(
+    const PETScAbstractVectorReal<TYPE>* x,
+    const PETScAbstractVectorReal<TYPE>* y)
 {
-   d_samrai_vector->axpy(alpha, SPVEC_CAST(x)->getSAMRAIVector(), 
-                                SPVEC_CAST(y)->getSAMRAIVector());
-}
+    d_samrai_vector->multiply(C_PSVEC_CAST(x)->d_samrai_vector, C_PSVEC_CAST(y)->d_samrai_vector);
+    return;
+}// pointwiseMultiply
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::pointwiseMultiply(
-   const PETScAbstractVectorReal<TYPE>* x,
-   const PETScAbstractVectorReal<TYPE>* y)
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::pointwiseDivide(
+    const PETScAbstractVectorReal<TYPE>* x,
+    const PETScAbstractVectorReal<TYPE>* y)
 {
-   d_samrai_vector->multiply(SPVEC_CAST(x)->getSAMRAIVector(), 
-                             SPVEC_CAST(y)->getSAMRAIVector());
-}
+    d_samrai_vector->divide(C_PSVEC_CAST(x)->d_samrai_vector, C_PSVEC_CAST(y)->d_samrai_vector);
+    return;
+}// pointwiseDivide
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::pointwiseDivide(
-   const PETScAbstractVectorReal<TYPE>* x,
-   const PETScAbstractVectorReal<TYPE>* y)
+template <int DIM, class TYPE>
+inline
+double
+PETSc_SAMRAIVectorReal<DIM,TYPE>::maxPointwiseDivide(
+    const PETScAbstractVectorReal<TYPE>* y)
 {
-   d_samrai_vector->divide(SPVEC_CAST(x)->getSAMRAIVector(), 
-                           SPVEC_CAST(y)->getSAMRAIVector());
-}
+    return d_samrai_vector->maxPointwiseDivide(C_PSVEC_CAST(y)->d_samrai_vector);
+}// maxPointwiseDivide
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::vecMax(int& i, 
-                                                TYPE& max) const
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::vecMax(
+    int& i,
+    TYPE& max) const
 {
-   max = d_samrai_vector->max();
-   // Note: This is a bogus index value!
-   //       Hopefully, PETSc doesn't use it for anything.
-   i = 0;
-}
+    static const bool interior_only = true;
+    max = d_samrai_vector->max(interior_only);
+    // Note: This is a bogus index value!
+    //       Hopefully, PETSc doesn't use it for anything.
+    i = 0;
+    return;
+}// vecMax
 
-template<int DIM, class TYPE> inline
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::vecMin(int& i, 
-                                                TYPE& min) const
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::vecMin(
+    int& i,
+    TYPE& min) const
 {
-   min = d_samrai_vector->min();
-   // Note: This is a bogus index value!
-   //       Hopefully, PETSc doesn't use it for anything.
-   i = 0;
-}
+    static const bool interior_only = true;
+    min = d_samrai_vector->min(interior_only);
+    // Note: This is a bogus index value!
+    //       Hopefully, PETSc doesn't use it for anything.
+    i = 0;
+    return;
+}// vecMin
 
-template<int DIM, class TYPE> inline
-int PETSc_SAMRAIVectorReal<DIM,TYPE>::getDataSize() const
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::setRandomValues(
+    const TYPE width,
+    const TYPE low)
 {
-   // Note: This is a bogus value!
-   //       But, PETSc requires some value to be returned.
-   //       Hopefully, this will not cause problems.
-   return(0);
-}
+    d_samrai_vector->setRandomValues(width, low);
+    return;
+}// setRandomValues
 
-template<int DIM, class TYPE> inline
-int PETSc_SAMRAIVectorReal<DIM,TYPE>::getLocalDataSize() const
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::getDataArray(
+    TYPE** array)
 {
-   // Note: This is a bogus value!
-   //       But, PETSc requires some value to be returned.
-   //       Hopefully, this will not cause problems.
-   return(0);
-}
+    *array = NULL;
+    return;
+}// getDataArray
+
+template <int DIM, class TYPE>
+inline
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::restoreDataArray(
+    TYPE** array)
+{
+    *array = NULL;
+    return;
+}// restoreDataArray
+
+template <int DIM, class TYPE>
+inline
+int
+PETSc_SAMRAIVectorReal<DIM,TYPE>::getDataSize() const
+{
+    // Note: This is a bogus value!
+    //       But, PETSc requires some value to be returned.
+    //       Hopefully, this will not cause problems.
+    return 0;
+}// getDataSize
+
+template <int DIM, class TYPE>
+inline
+int
+PETSc_SAMRAIVectorReal<DIM,TYPE>::getLocalDataSize() const
+{
+    // Note: This is a bogus value!
+    //       But, PETSc requires some value to be returned.
+    //       Hopefully, this will not cause problems.
+    return 0;
+}// getLocalDataSize
+
 
 #ifdef DEBUG_NO_INLINE
 #undef inline

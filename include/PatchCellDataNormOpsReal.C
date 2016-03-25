@@ -1,9 +1,9 @@
 //
-// File:	PatchCellDataNormOpsReal.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/cell/PatchCellDataNormOpsReal.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated norm operations for real cell-centered patch data.
 //
 
@@ -12,10 +12,7 @@
 
 #include "PatchCellDataNormOpsReal.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -88,7 +85,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::sumControlVolumes(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
 #endif
    return( d_array_ops.sumControlVolumes(data->getArrayData(),
                                          cvol->getArrayData(),
@@ -102,7 +99,7 @@ void PatchCellDataNormOpsReal<DIM,TYPE>::abs(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    d_array_ops.abs(dst->getArrayData(),
                    src->getArrayData(),
@@ -116,7 +113,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::L1Norm(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval;
    if (cvol.isNull()) {
@@ -136,7 +133,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::L2Norm(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval;
    if (cvol.isNull()) {
@@ -157,7 +154,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::weightedL2Norm(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
 #endif
    double retval;
    if (cvol.isNull()) {
@@ -181,7 +178,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::RMSNorm(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval = L2Norm(data, box, cvol);
    if (cvol.isNull()) {
@@ -200,7 +197,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::weightedRMSNorm(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
 #endif
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (cvol.isNull()) {
@@ -218,7 +215,7 @@ double PatchCellDataNormOpsReal<DIM,TYPE>::maxNorm(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval;
    if (cvol.isNull()) {
@@ -239,7 +236,7 @@ TYPE PatchCellDataNormOpsReal<DIM,TYPE>::dot(
    const tbox::Pointer< pdat::CellData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
 #endif
    TYPE retval;
    if (cvol.isNull()) {
@@ -263,7 +260,7 @@ TYPE PatchCellDataNormOpsReal<DIM,TYPE>::integral(
    const tbox::Pointer< pdat::CellData<DIM,double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    TYPE retval = 0.0;
 

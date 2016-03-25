@@ -1,8 +1,8 @@
 /*
- * File:		$RCSfile$
- * Copyright:	(c) 1997-2005 The Regents of the University of California
- * Revision:	$Revision: 179 $
- * Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+ * File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/MDA_Access.h $
+ * Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:	$LastChangedRevision: 1704 $
+ * Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description:	Light-weight array class
  */
 
@@ -14,6 +14,8 @@
 #ifndef included_tbox_IOStream
 #include "tbox/IOStream.h"
 #endif
+
+#include "tbox/Utilities.h"
 
 using namespace std;
 
@@ -253,7 +255,7 @@ std::istream &streamGet( std::istream &is )
 {
   dim_t dim;
   is >> dim;
-  assert(dim == DIM);
+  TBOX_ASSERT(dim == DIM);
   for ( dim_t i=0; i<DIM; ++i )
     is >> d_start[i] >> d_size[i];
   return is;
@@ -1282,7 +1284,7 @@ private: void setPtr1() {
   /*
    * If the following assert fails, our d_ptr1 optimization may
    * give undefined result.
-  assert( d_order.fixedOffset() > 0 ||
+  TBOX_ASSERT( d_order.fixedOffset() > 0 ||
 	  (unsigned long)d_ptr > (unsigned long)(-d_order.fixedOffset()) );
    */
   d_ptr1 = d_ptr + d_order.fixedOffset();

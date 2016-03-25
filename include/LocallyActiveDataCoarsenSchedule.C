@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataCoarsenSchedule.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataCoarsenSchedule.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 684 $
-// Modified:	$Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Coarsening schedule for locally-active data transfer between AMR levels
 //
 
@@ -25,10 +25,8 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifndef NULL
 #define NULL (0)
@@ -51,7 +49,7 @@ template<int DIM> const hier::IntVector<DIM>
 template<int DIM> const hier::IntVector<DIM>
    LocallyActiveDataCoarsenSchedule<DIM>::s_constant_one_intvector = 
       hier::IntVector<DIM>(1);
-template<int DIM> string
+template<int DIM> std::string
    LocallyActiveDataCoarsenSchedule<DIM>::s_schedule_generation_method = 
       "BOX_TREE";
 
@@ -65,7 +63,7 @@ template<int DIM> string
 
 template<int DIM>
 void LocallyActiveDataCoarsenSchedule<DIM>::setScheduleGenerationMethod(
-   const string& method)
+   const std::string& method)
 {
    if ( !((method == "ORIG_NSQUARED") ||
           (method == "BOX_GRAPH") ||
@@ -74,7 +72,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::setScheduleGenerationMethod(
                  << "Given method string "
                  << method << " is invalid.\n Options are\n"
                  << "'ORIG_NSQUARED', 'BOX_GRAPH', and 'BOX_TREE'."
-                 << endl);
+                 << std::endl);
    }
 
    s_schedule_generation_method = method;
@@ -105,12 +103,12 @@ LocallyActiveDataCoarsenSchedule<DIM>::LocallyActiveDataCoarsenSchedule(
    bool fill_coarse_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!crse_level.isNull());
-   assert(!crse_level_mgr.isNull());
-   assert(!fine_level.isNull());
-   assert(!fine_level_mgr.isNull());
-   assert(!coarsen_classes.isNull());
-   assert(!transaction_factory.isNull());
+   TBOX_ASSERT(!crse_level.isNull());
+   TBOX_ASSERT(!crse_level_mgr.isNull());
+   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(!fine_level_mgr.isNull());
+   TBOX_ASSERT(!coarsen_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
    t_coarsen_data = tbox::TimerManager::getManager() -> 
@@ -163,18 +161,19 @@ LocallyActiveDataCoarsenSchedule<DIM>::LocallyActiveDataCoarsenSchedule(
       if (fine(i) > 1) {
          d_ratio_between_levels(i) = fine(i) / crse(i);
       } else {
-         d_ratio_between_levels(i) = tbox::Utilities::iabs( crse(i) / fine(i) );
+         d_ratio_between_levels(i) = 
+            tbox::MathUtilities<int>::Abs( crse(i) / fine(i) );
       }
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (i = 0; i < DIM; i++) {
-      assert( d_ratio_between_levels(i) != 0 );
+      TBOX_ASSERT( d_ratio_between_levels(i) != 0 );
    }
    if (DIM > 1) { 
       for (i = 0; i < DIM; i++) {
          if ( d_ratio_between_levels(i)*d_ratio_between_levels((i+1)%DIM) < 0 ) {
-            assert ( (d_ratio_between_levels(i) == 1) ||
+            TBOX_ASSERT( (d_ratio_between_levels(i) == 1) ||
                      (d_ratio_between_levels((i+1)%DIM) == 1) );
          }
       }
@@ -427,7 +426,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::generateSchedule()
 
       TBOX_ERROR("Internal LocallyActiveDataCoarsenSchedule<DIM> error..."
                  << "\n unrecognized schedule generation option: "
-                 << s_schedule_generation_method << endl);
+                 << s_schedule_generation_method << std::endl);
 
    }
 
@@ -608,7 +607,7 @@ LocallyActiveDataCoarsenSchedule<DIM>::getMaxGhostsToGrow() const
 
    for (int ici = 0; ici < d_number_coarsen_items; ici++) {
       const int src_id = d_coarsen_items[ici]->d_src;
-      gcw.max(pd->getPatchDataFactory(src_id)->getDefaultGhostCellWidth());
+      gcw.max(pd->getPatchDataFactory(src_id)->getGhostCellWidth());
       gcw.max(d_coarsen_items[ici]->d_gcw_to_coarsen);
    }
 
@@ -637,8 +636,8 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
    int src_patch_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
 #endif
 
    const int num_equiv_classes =
@@ -661,8 +660,10 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
       active_equivalence_class[nc] = false;
       for (typename tbox::List<typename xfer::CoarsenClasses<DIM>::Data>::Iterator 
            l(d_coarsen_classes->getIterator(nc)); l; l++) {
-         if ( src_level_mgr->getPatchDataActive(l().d_src, src_patch_id) &&
-              dst_level_mgr->getPatchDataActive(l().d_dst, dst_patch_id) ) {
+         if ( src_level_mgr->getPatchDataActive( hier::PatchDataId(l().d_src), 
+                                                 hier::PatchNumber(src_patch_id) ) &&
+              dst_level_mgr->getPatchDataActive( hier::PatchDataId(l().d_dst), 
+                                                 hier::PatchNumber(dst_patch_id) ) ) {
             active_equivalence_class[nc] = true;
          }
       }
@@ -719,7 +720,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
                tbox::Pointer< hier::PatchDataFactory<DIM> > dst_pdf =
                   dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id);
 
-               const hier::IntVector<DIM>& dst_gcw = dst_pdf->getDefaultGhostCellWidth();
+               const hier::IntVector<DIM>& dst_gcw = dst_pdf->getGhostCellWidth();
 
                hier::Box<DIM> dst_fill_box(hier::Box<DIM>::grow(dst_box, dst_gcw));
 
@@ -737,7 +738,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
                test_mask = hier::Box<DIM>::grow(src_box,
                                            hier::IntVector<DIM>::min(
                                               rep_item.d_gcw_to_coarsen,
-                                              src_pdf->getDefaultGhostCellWidth()) );
+                                              src_pdf->getGhostCellWidth()) );
 
                src_mask += test_mask;
 
@@ -753,7 +754,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
                              << "\n Overlap is NULL for "
                              << "\n src box = " << src_box
                              << "\n dst box = " << dst_box
-                             << "\n src mask = " << src_mask << endl);
+                             << "\n src mask = " << src_mask << std::endl);
                }
 
                if (!overlap->isOverlapEmpty()) {
@@ -762,7 +763,11 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
                        l(d_coarsen_classes->getIterator(nc)); l; l++) {
 
                      if (src_level_mgr->
-                            getPatchDataActive(l().d_src, src_patch_id)) {
+                            getPatchDataActive( hier::PatchDataId(l().d_src), 
+                                                hier::PatchNumber(src_patch_id) ) &&
+                         dst_level_mgr->
+                            getPatchDataActive( hier::PatchDataId(l().d_dst),
+                                                hier::PatchNumber(dst_patch_id) ) ) {
 
                         d_schedule->addTransaction(
                            d_transaction_factory->allocate(dst_level,
@@ -823,7 +828,8 @@ void LocallyActiveDataCoarsenSchedule<DIM>::coarsenSourceData(
       tbox::List<int> active_src_data_ids;
       for (int ici = 0; ici < d_number_coarsen_items; ici++) {
          const int src_data_id = d_coarsen_items[ici]->d_src;
-         if ( fine_level_mgr->getPatchDataActive(src_data_id, p()) ) {
+         if ( fine_level_mgr->getPatchDataActive( hier::PatchDataId(src_data_id), 
+                                                  hier::PatchNumber(p()) ) ) {
             /*
              * IMPORTANT! Proper generation of refine data lists requires
              *            appendItem(); addItem() is incorrect!
@@ -968,7 +974,7 @@ template<int DIM>
 void LocallyActiveDataCoarsenSchedule<DIM>::resetTempCoarseLevelDataManager()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_temp_crse_level.isNull());
+   TBOX_ASSERT(!d_temp_crse_level.isNull());
 #endif
 
    d_temp_level_active_data_mgr.setNull();
@@ -983,8 +989,11 @@ void LocallyActiveDataCoarsenSchedule<DIM>::resetTempCoarseLevelDataManager()
    for (int tp = 0; tp < num_temp_patches; tp++) {
       for (int ici = 0; ici < d_number_coarsen_items; ici++) {
          int data_id = d_coarsen_items[ici]->d_src;
-         if (fine_level_mgr->getPatchDataActive(data_id, tp)) {
-            d_temp_level_active_data_mgr->setPatchDataActive(data_id, tp);
+         if ( fine_level_mgr->getPatchDataActive( hier::PatchDataId(data_id), 
+                                                  hier::PatchNumber(tp) ) ) {
+            d_temp_level_active_data_mgr->
+               setPatchDataActive( hier::PatchDataId(data_id), 
+                                   hier::PatchNumber(tp) );
          }
       }
    }
@@ -1035,8 +1044,8 @@ void LocallyActiveDataCoarsenSchedule<DIM>::initialCheckCoarsenClassItems() cons
          tbox::Pointer< hier::PatchDataFactory<DIM> > sfact =
             pd->getPatchDataFactory(src_id);
 
-         const hier::IntVector<DIM>& dst_gcw = dfact->getDefaultGhostCellWidth();
-         const hier::IntVector<DIM>& src_gcw = sfact->getDefaultGhostCellWidth();
+         const hier::IntVector<DIM>& dst_gcw = dfact->getGhostCellWidth();
+         const hier::IntVector<DIM>& src_gcw = sfact->getGhostCellWidth();
 
          if (crs_item->d_gcw_to_coarsen > dst_gcw) {
             TBOX_ERROR("Bad data given to LocallyActiveDataCoarsenSchedule<DIM>...\n"
@@ -1046,7 +1055,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::initialCheckCoarsenClassItems() cons
                        << " with CoarsenAlgorithm<DIM>\n"
                        << " is larger than ghost cell width of data \n"
                        << "d_gcw_to_coarsen = " << crs_item->d_gcw_to_coarsen
-                       << "\n data ghost cell width = " << dst_gcw << endl);
+                       << "\n data ghost cell width = " << dst_gcw << std::endl);
          }
 
          if ( (crs_item->d_gcw_to_coarsen * d_ratio_between_levels) > src_gcw ) {
@@ -1060,7 +1069,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::initialCheckCoarsenClassItems() cons
                        << "\nratio between levels = " << d_ratio_between_levels
                        << "\n Thus, data ghost width must be >= "
                        << (crs_item->d_gcw_to_coarsen * d_ratio_between_levels)
-                       << endl);
+                       << std::endl);
          }
          if ( user_gcw > src_gcw) {
             TBOX_ERROR("Bad data given to LocallyActiveDataCoarsenSchedule<DIM>...\n"
@@ -1068,7 +1077,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::initialCheckCoarsenClassItems() cons
                        << user_gcw
                        << "\nis larger than ghost cell width of `Source'\n"
                        << "patch data " << pd->mapIndexToName(src_id)
-                       << " , which is " << src_gcw << endl);
+                       << " , which is " << src_gcw << std::endl);
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1088,13 +1097,13 @@ void LocallyActiveDataCoarsenSchedule<DIM>::initialCheckCoarsenClassItems() cons
  */
 
 template<int DIM>
-void LocallyActiveDataCoarsenSchedule<DIM>::printClassData(ostream& stream) const
+void LocallyActiveDataCoarsenSchedule<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "xfer::LocallyActiveDataCoarsenSchedule<DIM>::printClassData()" << endl;
-   stream << "---------------------------------------" << endl;
+   stream << "xfer::LocallyActiveDataCoarsenSchedule<DIM>::printClassData()" << std::endl;
+   stream << "---------------------------------------" << std::endl;
    stream << "s_schedule_generation_method = "
-          << s_schedule_generation_method << endl;
-   stream << "d_fill_coarse_data = " << d_fill_coarse_data << endl;
+          << s_schedule_generation_method << std::endl;
+   stream << "d_fill_coarse_data = " << d_fill_coarse_data << std::endl;
 
    d_coarsen_classes->printClassData(stream);
 

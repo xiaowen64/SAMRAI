@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryShapeSphere.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShapeSphere.I $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Sphere embedded boundary shape
 //              
 // 
@@ -13,6 +13,8 @@
 #ifdef DEBUG_NO_INLINE
 #define inline
 #endif
+
+#include "tbox/MathUtilities.h"
 
 namespace SAMRAI {
    namespace appu {
@@ -80,7 +82,7 @@ void EmbeddedBoundaryShapeSphere<DIM>::isInside(const int* nx,
             ijk = kstr + jstr + istr;
             rad_diff = d_radius*d_radius - rad_squared;
 
-            if (tbox::Utilities::deq(rad_diff,0.)) {
+            if (tbox::MathUtilities<double>::equalEps(rad_diff,0.)) {
                inout[ijk] = EmbeddedBoundaryDefines::ONBOUNDARY;
             } else if (rad_diff > 0.) {
                inout[ijk] = EmbeddedBoundaryDefines::INSIDE;

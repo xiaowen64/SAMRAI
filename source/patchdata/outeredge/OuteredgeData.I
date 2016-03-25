@@ -1,19 +1,14 @@
 //
-// File:	OuteredgeData.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outeredge/OuteredgeData.I $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 692 $
-// Modified:	$Date: 2005-10-28 13:37:46 -0700 (Fri, 28 Oct 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated outeredge centered patch data type
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
+
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -30,125 +25,141 @@ int OuteredgeData<DIM,TYPE>::getDepth() const
 
 template <int DIM, class TYPE> inline
 bool OuteredgeData<DIM,TYPE>::dataExists(int axis, 
-                                         int face_nrml) const
+                                         int face_normal) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((face_nrml >= 0) && (face_nrml < DIM));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
 #endif
-   return(d_data[axis][face_nrml][0].isInitialized());
+   return(d_data[axis][face_normal][0].isInitialized());
 }
 
 template <int DIM, class TYPE>
 inline
-TYPE *OuteredgeData<DIM,TYPE>::getPointer(int axis,
-                                          int face_nrml,
-                                          int s,
-                                          int d)
+TYPE* OuteredgeData<DIM,TYPE>::getPointer(int axis,
+                                          int face_normal,
+                                          int side,
+                                          int depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((face_nrml >= 0) && (face_nrml < DIM));
-   assert((s == 0) || (s == 1));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis][face_nrml][s].getPointer(d));
+   return(d_data[axis][face_normal][side].getPointer(depth));
 }
 
 template <int DIM, class TYPE>
 inline
-const TYPE *OuteredgeData<DIM,TYPE>::getPointer(int axis, 
-                                                int face_nrml, 
-                                                int s,  
-                                                int d) const
+const TYPE* OuteredgeData<DIM,TYPE>::getPointer(int axis, 
+                                                int face_normal, 
+                                                int side,  
+                                                int depth) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((face_nrml >= 0) && (face_nrml < DIM));
-   assert((s == 0) || (s == 1));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis][face_nrml][s].getPointer(d));
+   return(d_data[axis][face_normal][side].getPointer(depth));
 }
 
 template <int DIM, class TYPE>
 inline
-ArrayData<DIM,TYPE>
-&OuteredgeData<DIM,TYPE>::getArrayData(int axis,
-                                       int face_nrml,
-                                       int s)
+ArrayData<DIM,TYPE>& 
+OuteredgeData<DIM,TYPE>::getArrayData(int axis,
+                                      int face_normal,
+                                      int side)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((face_nrml >= 0) && (face_nrml < DIM));
-   assert((s == 0) || (s == 1));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
-   return(d_data[axis][face_nrml][s]);
+   return(d_data[axis][face_normal][side]);
 }
 
 template <int DIM, class TYPE>
 inline
-const ArrayData<DIM,TYPE>
-&OuteredgeData<DIM,TYPE>::getArrayData(int axis,
-                                       int face_nrml,
-                                       int s) const
+const ArrayData<DIM,TYPE>&
+OuteredgeData<DIM,TYPE>::getArrayData(int axis,
+                                      int face_normal,
+                                      int side) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((face_nrml >= 0) && (face_nrml < DIM));
-   assert((s == 0) || (s == 1));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
-   return(d_data[axis][face_nrml][s]);
+   return(d_data[axis][face_normal][side]);
 }
 
 template <int DIM, class TYPE>
 inline
 TYPE& OuteredgeData<DIM,TYPE>::operator()(
    const EdgeIndex<DIM>& i, 
-   int axis,
    int depth)
 {
-   for (int s = DIM-1; s >= 0; s--) {
-      if (i[s] == d_data[axis][s][0].getBox().lower()[s] ) {
-         return (d_data[axis][s][0](i,depth));
-      }
-      if (i[s] == d_data[axis][s][1].getBox().upper()[s] ) {
-         return (d_data[axis][s][1](i,depth));
-      }
-   }
+   const int axis = i.getAxis();
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+#endif
 
-   /*
-    * The following lines should only be executed if there's a bug
-    * in the Outeredge datatype.
-    */
-   TBOX_ERROR("Bad index used to access outeredge data\n"
-              <<"Given index is not an outeredge of this instance.\n");
-   return d_data[0][0][0](i,depth);
+   for (int face_normal = 0; face_normal < DIM; ++face_normal) {
+
+      if ( face_normal != axis ) {
+
+         for (int side = 0; side < 2; ++side) {
+
+            if ( d_data[axis][face_normal][side].getBox().contains(i) ) {
+               return ( d_data[axis][face_normal][side](i, depth));
+            }
+
+         }  // iterate over lower/upper sides
+
+      }  // data is undefined when axis == face_normal
+
+   }  // iterate over face normal directions
+
+   TBOX_ERROR("Attempt to access OuteredgeData value with bad index"
+              " edge index " << i << " with axis = " << axis << std::endl); 
+   return ( d_data[0][0][0](i,depth) );
 }
 
 template <int DIM, class TYPE>
 inline
 const TYPE& OuteredgeData<DIM,TYPE>::operator()(
    const EdgeIndex<DIM>& i, 
-   int axis,
    int depth) const
 {
-   for (int s = DIM-1; s >= 0; s--) {
-      if (i[s] == d_data[axis][s][0].getBox().lower()[s] ) {
-         return (d_data[axis][s][0](i,depth));
-      }
-      if (i[s] == d_data[axis][s][1].getBox().upper()[s] ) {
-         return (d_data[axis][s][1](i,depth));
-      }
-   }
+   const int axis = i.getAxis();
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+#endif
 
-   /*
-    * The following lines should only be executed if there's a bug
-    * in the Outeredge datatype.
-    */
-   TBOX_ERROR("Bad index used to access outeredge data\n"
-              <<"Given index is not an outeredge of this instance.\n");
-   return d_data[0][0][0](i,depth);
+   for (int face_normal = 0; face_normal < DIM; ++face_normal) {
+
+      if ( face_normal != axis ) {
+
+         for (int side = 0; side < 2; ++side) {
+
+            if ( d_data[axis][face_normal][side].getBox().contains(i) ) {
+               return ( d_data[axis][face_normal][side](i, depth));
+            }
+
+         }  // iterate over lower/upper sides
+
+      }  // data is undefined when axis == face_normal
+
+   }  // iterate over face normal directions
+
+   TBOX_ERROR("Attempt to access OuteredgeData value with bad index"
+              " edge index " << i << " with axis = " << axis << std::endl);
+   return ( d_data[0][0][0](i,depth) );
 }
 
 #ifdef DEBUG_NO_INLINE

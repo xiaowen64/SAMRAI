@@ -1,7 +1,7 @@
 c
-c  File:        solv_cartesianrobinbchelper3d.f
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/solv_cartesianrobinbchelper3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
@@ -13,7 +13,7 @@ c***********************************************************************
       subroutine settype1cells3d(
      &  data, 
      &  difirst, dilast, djfirst, djlast, dkfirst, dklast,
-     &  a, g,
+     &  a, b, g,
      &  ifirst, ilast, jfirst, jlast, kfirst, klast,
      &  ibeg, iend, jbeg, jend, kbeg, kend,
      &  face, ghos, inte, location,
@@ -25,6 +25,7 @@ c***********************************************************************
      &  data(difirst:dilast,djfirst:djlast,dkfirst:dklast)
       integer ifirst, ilast, jfirst, jlast, kfirst, klast
       double precision a(ifirst:ilast,jfirst:jlast,kfirst:klast)
+      double precision b(ifirst:ilast,jfirst:jlast,kfirst:klast)
       double precision g(ifirst:ilast,jfirst:jlast,kfirst:klast)
       integer ibeg, iend
       integer jbeg, jend
@@ -40,8 +41,8 @@ c        Assume g value of zero
             do k=kbeg,kend
                data(ghos,j,k) 
      &         = ( 0
-     &         + data(inte,j,k)*(1-a(face,j,k)*(1+0.5*h)))
-     &         / (1-a(face,j,k)*(1-0.5*h))
+     &         + data(inte,j,k)*( b(face,j,k)-0.5*h*a(face,j,k) ) )
+     &         / ( b(face,j,k)+0.5*h*a(face,j,k) )
             enddo
             enddo
             enddo
@@ -51,8 +52,8 @@ c        Assume g value of zero
             do k=kbeg,kend
                data(i,ghos,k) 
      &         = ( 0
-     &         + data(i,inte,k)*(1-a(i,face,k)*(1+0.5*h)))
-     &         / (1-a(i,face,k)*(1-0.5*h))
+     &         + data(i,inte,k)*( b(i,face,k)-0.5*h*a(i,face,k) ) )
+     &         / ( b(i,face,k)+0.5*h*a(i,face,k) )
             enddo
             enddo
             enddo
@@ -62,8 +63,8 @@ c        Assume g value of zero
             do k=kbeg,kend
                data(i,j,ghos) 
      &         = ( 0
-     &         + data(i,j,inte)*(1-a(i,j,face)*(1+0.5*h)))
-     &         / (1-a(i,j,face)*(1-0.5*h))
+     &         + data(i,j,inte)*( b(i,j,face)-0.5*h*a(i,j,face) ) )
+     &         / ( b(i,j,face)+0.5*h*a(i,j,face) )
             enddo
             enddo
             enddo
@@ -76,8 +77,8 @@ c        Assume finite g
             do k=kbeg,kend
                data(ghos,j,k) 
      &         = ( h*g(face,j,k)
-     &         + data(inte,j,k)*(1-a(face,j,k)*(1+0.5*h)))
-     &         / (1-a(face,j,k)*(1-0.5*h))
+     &         + data(inte,j,k)*( b(face,j,k)-0.5*h*a(face,j,k) ) )
+     &         / ( b(face,j,k)+0.5*h*a(face,j,k) )
             enddo
             enddo
             enddo
@@ -87,8 +88,8 @@ c        Assume finite g
             do k=kbeg,kend
                data(i,ghos,k) 
      &         = ( h*g(i,face,k)
-     &         + data(i,inte,k)*(1-a(i,face,k)*(1+0.5*h)))
-     &         / (1-a(i,face,k)*(1-0.5*h))
+     &         + data(i,inte,k)*( b(i,face,k)-0.5*h*a(i,face,k) ) )
+     &         / ( b(i,face,k)+0.5*h*a(i,face,k) )
             enddo
             enddo
             enddo
@@ -98,8 +99,8 @@ c        Assume finite g
             do k=kbeg,kend
                data(i,j,ghos) 
      &         = ( h*g(i,j,face)
-     &         + data(i,j,inte)*(1-a(i,j,face)*(1+0.5*h)))
-     &         / (1-a(i,j,face)*(1-0.5*h))
+     &         + data(i,j,inte)*( b(i,j,face)-0.5*h*a(i,j,face) ) )
+     &         / ( b(i,j,face)+0.5*h*a(i,j,face) )
             enddo
             enddo
             enddo

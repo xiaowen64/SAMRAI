@@ -1,11 +1,11 @@
 //
-// File:        CubesPatchInterface.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CubesPatchInterface.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1808 $
+// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
 // Description: Cubes embedded boundary shape
 //              
 // 
@@ -81,6 +81,8 @@ namespace SAMRAI {
  *      verbose          = TRUE
  *   }
  *
+ * \endverbatim
+ *
  * @see appu::EmbeddedBoundaryGeometry  
  * @see appu::CutCell  
  */
@@ -94,9 +96,12 @@ public:
     * @param object_name name of object of this class
     * @param input_db    the input database which contains the name of the
     *                    surface geometry. 
+    * @param grid_geom   grid geometry
+    * @param nghosts     number of ghost cells
+    *                 
     */
    CubesPatchInterface(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
       tbox::Pointer<geom::CartesianGridGeometry<DIM> > grid_geom,
       hier::IntVector<DIM> nghosts);
@@ -124,15 +129,17 @@ public:
       const int cell_flag_data_id,
       const int cell_vol_data_id,
       const int cutcell_data_id);
-   
-   /*
-    * Other interfaces here...
+
+   /*!
+    * Set whether to record areas and normal.  Some calculations do not
+    * require this information.  By default, it is set TRUE.
     */
+   void setRecordAreasAndNormal(const bool record_an);
 
    /*!
     * Dump data to supplied stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /*
     * Read name, command_file, and interactive start information from input.  
@@ -141,7 +148,7 @@ public:
     */
    void getFromInput(tbox::Pointer<tbox::Database> db);
 
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Timers interspersed throughout the class.
@@ -151,13 +158,21 @@ public:
    tbox::Pointer<tbox::Timer> t_set_cutareas;
 
    /*
+    * Whether or not to save the areas and normals.
+    */
+   bool d_record_areas_and_normal;
+
+
+
+
+   /*
     * Cubes objects used to represent the geometry
     */
 
    /*
     * Triangulated surface file name.
     */
-   string d_surf_tri_file;
+   std::string d_surf_tri_file;
 
    /*
     * Domain lower/upper bounds.

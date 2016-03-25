@@ -1,9 +1,9 @@
 //
-// File:        BoxTreeNode.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTreeNode.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 179 $
-// Modified:    $Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Basic building block used by BoxTree class.
 //
 
@@ -12,7 +12,7 @@
 
 #include "BoxTreeNode.h"
 #include "BoxGraphUtilities.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 
 
 namespace SAMRAI {
@@ -36,7 +36,7 @@ template<int DIM>  BoxTreeNode<DIM>::BoxTreeNode(
    int recurse_level)
 {
    d_dim = dim;
-   d_rank = tbox::MPI::getRank();
+   d_rank = tbox::SAMRAI_MPI::getRank();
 
    /*
     * Compute this node's domain, which is the bounding box

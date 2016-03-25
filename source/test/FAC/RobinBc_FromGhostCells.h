@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2005 The Regents of the University of California
-  Revision:	$Revision: 173 $
-  Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/RobinBc_FromGhostCells.h $
+  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	RobinBc_FromGhostCells class declaration
 */
 
@@ -10,11 +10,11 @@
 #define included_RobinBc_FromGhostCells
 
 
-#ifndef included_tbox_ArrayData
+#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
 #endif
 
-#ifndef included_solv::CartesianRobinBc
+#ifndef included_solv_CartesianRobinBc
 #include "CartesianRobinBc.h"
 #endif
 
@@ -23,7 +23,9 @@
 #endif
 
 #ifndef included_String
-#include "tbox/String.h"
+#include <string>
+using namespace std;
+#define included_String
 #endif
 
 

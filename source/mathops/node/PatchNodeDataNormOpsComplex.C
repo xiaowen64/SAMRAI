@@ -1,9 +1,9 @@
 //
-// File:	PatchNodeDataNormOpsComplex.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/node/PatchNodeDataNormOpsComplex.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Norm operations for complex node-centered patch data.
 //
 
@@ -13,10 +13,7 @@
 #include "PatchNodeDataNormOpsComplex.h"
 #include "NodeGeometry.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -62,7 +59,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::sumControlVolumes(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    return( d_array_ops.sumControlVolumes(data->getArrayData(),
@@ -76,7 +73,7 @@ template<int DIM> void PatchNodeDataNormOpsComplex<DIM>::abs(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.abs(dst->getArrayData(),
@@ -90,7 +87,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::L1Norm(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -110,7 +107,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::L2Norm(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -131,7 +128,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::weightedL2Norm(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
 #endif
    double retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -155,7 +152,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::RMSNorm(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval = L2Norm(data, box, cvol);
    if (cvol.isNull()) {
@@ -173,7 +170,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::weightedRMSNorm(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
 #endif
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (cvol.isNull()) {
@@ -190,7 +187,7 @@ template<int DIM> double PatchNodeDataNormOpsComplex<DIM>::maxNorm(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -211,7 +208,7 @@ template<int DIM> dcomplex PatchNodeDataNormOpsComplex<DIM>::dot(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
 #endif
    dcomplex retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -235,7 +232,7 @@ template<int DIM> dcomplex PatchNodeDataNormOpsComplex<DIM>::integral(
    const tbox::Pointer< pdat::NodeData<DIM,double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    dcomplex retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);

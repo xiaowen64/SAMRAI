@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataPatchLevelManager.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/LocallyActiveDataPatchLevelManager.h $
 // Package:     SAMRAI hierarchy	
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 468 $
-// Modified:	$Date: 2005-06-27 15:48:50 -0700 (Mon, 27 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Class for managing locally-active data on a single patch level.
 //
 
@@ -27,6 +27,10 @@
 #endif
 #ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
+#endif
+
+#ifndef included_hier_ErrorCheckIntTypes
+#include "ErrorCheckIntTypes.h"
 #endif
 
 #ifndef NULL
@@ -113,13 +117,14 @@ public:
     * 
     * @return iterator.
     *
-    * @param patch_data_index integer patch data index.
+    * @param patch_data_id const reference to PatchDataId type indicating 
+    *                   the patch data index of interest. 
     *
     * When assertion checking is active, an assertion will result when the
-    * manager has not been initialized with a level, or the data index is 
+    * manager has not been initialized with a level, or the patch data id is 
     * invalid (< 0).
     */
-   Iterator getIterator(int patch_data_index) const;
+   Iterator getIterator(const PatchDataId& patch_data_id) const;
 
    /*!
     * Return an iterator that will enumerate the patches on the local
@@ -203,41 +208,47 @@ public:
     * Check whether given patch data index is active on given patch and
     * return boolean true if data is active on patch; false otherwise.
     *
-    * @param patch_data_index integer patch data index.
-    * @param patch_number     integer patch number.
+    * @param patch_data_id const reference to PatchDataId type indicating 
+    *                   the patch data index of interest. 
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level, when the patch number 
     * is invalid for the level, or the data index is invalid (< 0).
     */
-   bool getPatchDataActive(int patch_data_index,
-                           int patch_number) const;
+   bool getPatchDataActive(const PatchDataId& patch_data_id,
+                           const PatchNumber& patch_number) const;
 
    /*!
     * Return const reference to component selector indicating active/inactive 
     * patch data indices for given patch.
     *
-    * @param patch_number     integer patch number.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the
-    * manager has not been initialized with a level, or hen the patch number
+    * manager has not been initialized with a level, or when the patch number
     * is invalid for the level.
     */
-   const hier::ComponentSelector& getAllPatchDataActive(int patch_number) const;
+   const hier::ComponentSelector& 
+      getAllPatchDataActive(const PatchNumber& patch_number) const;
 
    /*!
     * Set specified patch data active on given patch.  Note that this function
     * does not allocate the corresponding patch data.
     *
-    * @param patch_data_index integer patch data index.
-    * @param patch_number     integer patch number.
+    * @param patch_data_id const reference to PatchDataId type indicating 
+    *                   the patch data index of interest. 
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level, when the patch number
     * is invalid for the level, or the data index is invalid (< 0).
     */ 
-   void setPatchDataActive(int patch_data_index,
-                           int patch_number);
+   void setPatchDataActive(const PatchDataId& patch_data_id,
+                           const PatchNumber& patch_number);
 
    /*!
     * Set patch data active/inactive for given patch based on component
@@ -246,26 +257,28 @@ public:
     *
     * @param active_indices const reference to component selector containing
     *                       active/inactive patch data index information.
-    * @param patch_number   integer patch number.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the 
     * manager has not been initialized with a level or when the patch
     * number is invalid for the level.
     */
    void setPatchDataActive(const hier::ComponentSelector& active_indices,
-                           int patch_number);
+                           const PatchNumber& patch_number);
 
    /*!
     * Set all patch data active for given patch.  Note that this function does 
     * not allocate the corresponding patch data.
     *
-    * @param patch_number   integer patch number.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the 
     * manager has not been initialized with a level or when the patch
     * number is invalid for the level.
     */
-   void setAllPatchDataActive(int patch_number);
+   void setAllPatchDataActive(const PatchNumber& patch_number);
 
    /*!
     * Set patch data active/inactive for all patches based on component
@@ -284,27 +297,30 @@ public:
     * Set specified patch data inactive on given patch.  Note that this 
     * function does not deallocate the corresponding patch data.
     *
-    * @param patch_data_index integer patch data index.
-    * @param patch_number     integer patch number.
+    * @param patch_data_id const reference to PatchDataId type indicating
+    *                   the patch data index of interest.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level, when the patch number
     * is invalid for the level, or the data index is invalid (< 0).
     */
-   void setPatchDataInactive(int patch_data_index,
-                             int patch_number);
+   void setPatchDataInactive(const PatchDataId& patch_data_id,
+                             const PatchNumber& patch_number);
 
    /*!
     * Set all patch data inactive for given patch.  Note that this function does
     * not deallocate the corresponding patch data.
     *
-    * @param patch_number   integer patch number.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level or when the patch
     * number is invalid for the level.
     */
-   void setAllPatchDataInactive(int patch_number);
+   void setAllPatchDataInactive(const PatchNumber& patch_number);
 
    /*!
     * Set all patch data inactive for all patches.  Note that this function does 
@@ -330,20 +346,22 @@ public:
     * @return bool true if data is allocated on all active patches; false otherwise. 
     *              Note that if no patch is active for data, true is returned.
     *
-    * @param patch_data_index integer patch data index.
+    * @param patch_data_id const reference to PatchDataId type indicating
+    *                   the patch data index of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level or when the data index 
     * is invalid (< 0).
     */
-   bool checkAllocated(int patch_data_index) const;
+   bool checkAllocated(const PatchDataId& patch_data_id) const;
 
    /*!
     * Allocate data for given patch data index on all level patches on which
     * the data is active.  Each allocated patch data object will be stamped with
     * the given time value.
     *
-    * @param patch_data_index integer patch data index.
+    * @param patch_data_id const reference to PatchDataId type indicating
+    *                   the patch data index of interest.
     * @param timestamp        optional double data timestamp.
     * @param pool             optional pointer to memory arena for data.
     *
@@ -351,7 +369,7 @@ public:
     * manager has not been initialized with a level or when the data index
     * is invalid (< 0).
     */
-   void allocatePatchData(int patch_data_index,
+   void allocatePatchData(const PatchDataId& patch_data_id,
                           double timestamp = 0.0,
                           tbox::Pointer<tbox::Arena> pool = NULL) const;
 
@@ -373,7 +391,8 @@ public:
     * Allocate all active patch data for given patch.  Each allocated patch data 
     * object will be stamped with the given time value.
     *
-    * @param patch_number integer patch number.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     * @param timestamp    optional double data timestamp.
     * @param pool         optional pointer to memory arena for data.
     *
@@ -381,7 +400,7 @@ public:
     * manager has not been initialized with a level or when the patch
     * number is invalid for the level.
     */
-   void allocateAllPatchData(int patch_number,
+   void allocateAllPatchData(const PatchNumber& patch_number,
                              double timestamp = 0.0,
                              tbox::Pointer<tbox::Arena> pool = NULL) const;
 
@@ -390,13 +409,14 @@ public:
     * the data is active.  Note that the state of this manager object remains
     * intact after this operation.
     *
-    * @param patch_data_index integer patch data index.
+    * @param patch_data_id const reference to PatchDataId type indicating
+    *                   the patch data index of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level or when the data index
     * is invalid (< 0).
     */
-   void deallocatePatchData(int patch_data_index) const;
+   void deallocatePatchData(const PatchDataId& patch_data_id) const;
 
    /*!
     * Deallocate all active patch data on all level patches associated with this
@@ -412,13 +432,14 @@ public:
     * Deallocate all active patch data for given patch.  Note that the state of 
     * this manager object remains intact after this operation.
     *
-    * @param patch_number integer patch number.
+    * @param patch_number const reference to PatchNumber type indicating
+    *                   the number of the patch of interest.
     *
     * When assertion checking is active, an assertion will result when the
     * manager has not been initialized with a level or when the patch
     * number is invalid for the level.
     */
-   void deallocateAllPatchData(int patch_number) const;
+   void deallocateAllPatchData(const PatchNumber& patch_number) const;
 
    /*!
     * Print all active patch data information contained in the locally-active
@@ -426,7 +447,7 @@ public:
     *
     * @param os optional reference to output stream (default is plog).
     */
-   void printClassData(ostream& os = tbox::plog) const;
+   virtual void printClassData(std::ostream& os = tbox::plog) const;
 
 private:
    /*
@@ -504,13 +525,14 @@ public:
     * Note that this is a very special constructor used by the 
     * LocallyActiveDataPatchLevelManager class.
     *
-    * @param variable             smart pointer to variable.
+    * @param patch_data_id const reference to PatchDataId type indicating
+    *                   the patch data index of interest.
     * @param pl                   const pointer to patch level.
     * @param active_data_indices  const array of pointers to component selectors
     *                             describing active data on patch level.
     */
    LocallyActiveDataPatchLevelIterator(
-      int patch_data_index,
+      const PatchDataId& patch_data_id,
       const hier::PatchLevel<DIM>* pl,
       const tbox::Array< tbox::Pointer<hier::ComponentSelector> >* active_data_indices);
 

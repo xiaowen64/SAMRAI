@@ -1,9 +1,9 @@
 //
-// File:	OutersideGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OutersideGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for outerside centered objects
 //
 
@@ -34,30 +34,15 @@ namespace SAMRAI {
 
 template<int DIM> class SideGeometry;
 
-/**
- * Class OutersideGeometry<DIM> manages the mapping between the AMR index 
- * space and the outerside-centered geometry index space.  It is a 
- * subclass of hier::BoxGeometry<DIM> and it computes intersections between two
- * outerside-centered box geometries or between an outerside geometry and 
- * a side box geometry.  Outerside data differs from side data in that, given
- * a box, an outerside data object represents side-centered data living only 
- * on the boundary of the box.  However, for the sides over which outerside
- * data is defined, the outerside geometry index space is the same as the side
- * geometry index space.  For example, given a three-dimensional box
- * [l0:u0,l1:u1,l2:u2], the indices for a three-dimensional outerside data  
- * object run as follows:
- * 
-
-
- * - \b X sides (lower and upper) [l1:u1,l2:u2]
- * - \b Y sides (lower and upper) [l0:u0,l2:u2]
- * - \b Z sides (lower and upper) [l0:u0,l1:u1]
- * 
-
-
- * Recall that side data is defined so that the sides associated with a
- * given coordinate direction are those whose normal vector lies in that
- * direction.  Outerside data matches this conventions.
+/*!
+ * Class OutersideGeometry<DIM> manages the mapping between the AMR index
+ * and the outerside geometry index space.  It is a subclass of
+ * hier::BoxGeometry<DIM> and it computes intersections between outerside
+ * box geometries and side or outerside box geometries for communication
+ * operations.
+ *
+ * See header file for OutersideData<DIM> class for a more detailed
+ * description of the data layout.
  *
  * @see hier::BoxGeometry
  * @see pdat::SideGeometry
@@ -67,22 +52,21 @@ template<int DIM> class SideGeometry;
 template<int DIM> class OutersideGeometry : public hier::BoxGeometry<DIM>
 {
 public:
-   /**
-    * Construct the outerside geometry object given the box and ghost
-    * cell width.
+   /*!
+    * @brief Construct an outerside geometry object given an AMR index
+    * space box and ghost cell width.
     */
-   OutersideGeometry(const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts);
+   OutersideGeometry(const hier::Box<DIM>& box,
+                     const hier::IntVector<DIM>& ghosts);
 
-   /**
-    * The virtual destructor does nothing interesting.
+   /*!
+    * @brief The virtual destructor does nothing interesting.
     */
    virtual ~OutersideGeometry<DIM>();
 
-   /**
-    * Compute the overlap in index space between the source outerside
-    * geometry object (or a side geometry object) and the destination
-    * object (this).  Refer to the box geometry class for a detailed
-    * description of calculateOverlap().
+   /*!
+    * @brief Compute the overlap in side-centered index space on the
+    * boundaries of the source box geometry and the destination box geometry.
     */
    virtual tbox::Pointer< hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
@@ -92,13 +76,13 @@ public:
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
 
-   /**
-    * Return the box extents for this outerside box geometry object.
+   /*!
+    * @brief Return the box for this outerside box geometry object.
     */
    const hier::Box<DIM>& getBox() const;
 
-   /**
-    * Return the ghost cell width for this outerside box geometry object.
+   /*!
+    * @brief Return the ghost cell width for this outerside box geometry object.
     */
    const hier::IntVector<DIM>& getGhosts() const;
 

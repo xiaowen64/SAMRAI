@@ -1,9 +1,9 @@
 //
-// File:        Timer.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Timer.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Timer class to track elapsed time in portions of a program.
 //
 
@@ -27,7 +27,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -82,7 +81,7 @@ public:
    /**
     * Return string name for timer.
     */
-   const string &getName() const;
+   const std::string &getName() const;
 
    /**
     * Return integer identfier for timer.
@@ -167,7 +166,7 @@ public:
    /**
     * Return the concurrent timer vector. 
     */
-   bool* getConcurrentTimerVector() const;
+   const Array<bool>& getConcurrentTimerVector() const;
 
    /**
     * Return number of accesses to start()-stop() functions for the 
@@ -202,7 +201,7 @@ protected:
     * The constructor for the Timer class sets timer name string
     * and integer identifiers, and initializes the timer state.
     */
-   Timer(const string& name,
+   Timer(const std::string& name,
               const int id = -1);
 
    /*
@@ -216,9 +215,9 @@ private:
    /*
     * Class name, id, and concurrent timer flag.
     */
-   string d_name;
+   std::string d_name;
    int d_identifier;
-   bool* d_concurrent_timers;
+   Array<bool> d_concurrent_timers;
 
    bool d_is_running;
    bool d_is_active;

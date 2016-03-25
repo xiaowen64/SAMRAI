@@ -1,9 +1,9 @@
 //
-// File:	PatchCellDataOpsInteger.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/cell/PatchCellDataOpsInteger.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Operations for integer cell-centered patch data.
 //
 
@@ -12,10 +12,7 @@
 
 #include "PatchCellDataOpsInteger.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -62,10 +59,10 @@ template<int DIM> void PatchCellDataOpsInteger<DIM>::swapData(
    tbox::Pointer< pdat::CellData<DIM,int> > d1 = patch->getPatchData(data1_id);
    tbox::Pointer< pdat::CellData<DIM,int> > d2 = patch->getPatchData(data2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d1.isNull() && !d2.isNull());
-   assert(d1->getDepth() && d2->getDepth());
-   assert(d1->getBox() == d2->getBox());
-   assert(d1->getGhostBox() == d2->getGhostBox());
+   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   TBOX_ASSERT(d1->getDepth() && d2->getDepth());
+   TBOX_ASSERT(d1->getBox() == d2->getBox());
+   TBOX_ASSERT(d1->getGhostBox() == d2->getGhostBox());
 #endif
    patch->setPatchData( data1_id, d2 );
    patch->setPatchData( data2_id, d1 );
@@ -74,12 +71,12 @@ template<int DIM> void PatchCellDataOpsInteger<DIM>::swapData(
 template<int DIM> void PatchCellDataOpsInteger<DIM>::printData(
    const tbox::Pointer< pdat::CellData<DIM,int> >& data,
    const hier::Box<DIM>& box,
-   ostream& s) const
+   std::ostream& s) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
-   s << "Data box = " << box << endl;
+   s << "Data box = " << box << std::endl;
    data->print(box, s);
    s << "\n";
 }
@@ -90,7 +87,7 @@ template<int DIM> void PatchCellDataOpsInteger<DIM>::copyData(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    (dst->getArrayData()).copy(src->getArrayData(), box);
 }
@@ -101,7 +98,7 @@ template<int DIM> void PatchCellDataOpsInteger<DIM>::setToScalar(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull());
+   TBOX_ASSERT(!dst.isNull());
 #endif
    dst->fillAll(alpha, box);
 }
@@ -112,7 +109,7 @@ template<int DIM> void PatchCellDataOpsInteger<DIM>::abs(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    d_array_ops.abs(dst->getArrayData(),
                    src->getArrayData(),

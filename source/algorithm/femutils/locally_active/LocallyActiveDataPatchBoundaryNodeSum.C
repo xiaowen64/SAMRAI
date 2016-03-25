@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataPatchBoundaryNodeSum.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryNodeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 696 $
-// Modified:	$Date: 2005-11-03 12:27:01 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for summing locally-active node data at patch boundaries
 //
 
@@ -12,22 +12,21 @@
 
 #include "LocallyActiveDataPatchBoundaryNodeSum.h"
 
-#include "LocallyActiveVariableDatabase.h"
 #include "NodeData.h"
 #include "NodeDataFactory.h"
 #include "NodeGeometry.h"
 #include "OuternodeData.h"
 #include "OuternodeDoubleConstantCoarsen.h"
+#include "LocallyActiveVariableDatabase.h"
 #include "LocallyActiveDataOuternodeSumTransactionFactory.h"
 #include "LocallyActiveDataCoarsenAlgorithm.h"
 #include "LocallyActiveDataRefineAlgorithm.h"
 #include "LocallyActiveDataRefinePatchStrategy.h"
 #include "RefineOperator.h"
+#include "VariableDatabase.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 /*
 *************************************************************************
@@ -121,6 +120,37 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 /*
 *************************************************************************
 *                                                                       *
+* Static functions to determine number of patch data slots needed       *
+* for LocallyActiveDataPatchBoundaryNodeSum objects.                    *
+*                                                                       *
+*************************************************************************
+*/
+ 
+template<int DIM>
+int
+LocallyActiveDataPatchBoundaryNodeSum<DIM>::getNumSharedPatchDataSlots(
+   int max_variables_to_register)
+{
+   // node boundary sum requires two internal outernode variables
+   // (source and destination) for each registered variable.
+ 
+   return( 2 * max_variables_to_register );
+}
+ 
+template<int DIM>
+int
+LocallyActiveDataPatchBoundaryNodeSum<DIM>::getNumUniquePatchDataSlots(
+   int max_variables_to_register)
+{
+   // all patch data slots used by node boundary sum are static
+   // and shared among all objects.
+ 
+   return( 0 );
+}
+
+/*
+*************************************************************************
+*                                                                       *
 * Constructor patch boundary node sum objects initializes data members  *
 * to default (undefined) states.                                        *
 *                                                                       *
@@ -129,10 +159,10 @@ template<int DIM> tbox::Array< tbox::Array<int> >
 
 template<int DIM> 
 LocallyActiveDataPatchBoundaryNodeSum<DIM>::LocallyActiveDataPatchBoundaryNodeSum(
-   const string& object_name)
+   const std::string& object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
 
    d_object_name = object_name;
@@ -168,6 +198,7 @@ LocallyActiveDataPatchBoundaryNodeSum<DIM>::~LocallyActiveDataPatchBoundaryNodeS
 {
 
    s_instance_counter--;
+
    if (s_instance_counter == 0) {
       const int arr_length_depth = s_onode_src_id_array.size();
 
@@ -177,13 +208,13 @@ LocallyActiveDataPatchBoundaryNodeSum<DIM>::~LocallyActiveDataPatchBoundaryNodeS
          for (int iv = 0; iv < arr_length_nvar; iv++) {
           
             if (s_onode_src_id_array[id][iv] >= 0) {
-               hier::LocallyActiveVariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+               hier::VariableDatabase<DIM>::getDatabase()->
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_onode_src_id_array[id][iv]);
             }
             if (s_onode_dst_id_array[id][iv] >= 0) {
-               hier::LocallyActiveVariableDatabase<DIM>::getDatabase()->
-                  removeInternalSAMRAIWorkVariablePatchDataIndex(
+               hier::VariableDatabase<DIM>::getDatabase()->
+                  removeInternalSAMRAIVariablePatchDataIndex(
                      s_onode_dst_id_array[id][iv]);
             }
 
@@ -220,18 +251,18 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::registerSum(
                  << "\nCannot call registerSum with this LocallyActiveDataPatchBoundaryNodeSum"
                  << "\nobject since it has already been used to create communication"
                  << "\nschedules; i.e., setupSum() has been called."
-                 << endl);
+                 << std::endl);
    }
 
    if (node_data_id < 0) {
       TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM> register error..."
                  << "\nobject named " << d_object_name
                  << "\n node_data_id = " << node_data_id
-                 << " is an invalid patch data identifier." << endl);
+                 << " is an invalid patch data identifier." << std::endl);
    }
 
-   hier::LocallyActiveVariableDatabase<DIM>* var_db = 
-      hier::LocallyActiveVariableDatabase<DIM>::getDatabase();
+   hier::VariableDatabase<DIM>* var_db = 
+      hier::VariableDatabase<DIM>::getDatabase();
 
    tbox::Pointer< pdat::NodeDataFactory<DIM,double> > node_factory =
       var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id);
@@ -241,13 +272,13 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::registerSum(
       TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM> register error..."
                  << "\nobject named " << d_object_name
                  << "\n node_data_id = " << node_data_id
-                 << " does not correspond to node data of type double." << endl);
+                 << " does not correspond to node data of type double." << std::endl);
 
    } else {
 
-      static string 
+      static std::string 
          tmp_onode_src_variable_name("LocallyActiveDataPatchBoundaryNodeSum__internal-onode-src");
-      static string 
+      static std::string 
          tmp_onode_dst_variable_name("LocallyActiveDataPatchBoundaryNodeSum__internal-onode-dst");
 
       const int reg_sum_id = d_num_reg_sum;
@@ -301,14 +332,14 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::registerSum(
       char var_suffix[17];
       sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
 
-      string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
+      std::string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
       d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(tonode_src_var_name);
       if (d_tmp_onode_src_variable[reg_sum_id].isNull()) {
          d_tmp_onode_src_variable[reg_sum_id] =
             new pdat::OuternodeVariable<DIM,double>(tonode_src_var_name, data_depth);
       }
 
-      string tonode_dst_var_name = tmp_onode_dst_variable_name + var_suffix;
+      std::string tonode_dst_var_name = tmp_onode_dst_variable_name + var_suffix;
       d_tmp_onode_dst_variable[reg_sum_id] = var_db->getVariable(tonode_dst_var_name);
       if (d_tmp_onode_dst_variable[reg_sum_id].isNull()) {
          d_tmp_onode_dst_variable[reg_sum_id] =
@@ -317,13 +348,15 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::registerSum(
 
       if ( s_onode_src_id_array[data_depth][data_depth_id] < 0 ) {
          s_onode_src_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_onode_src_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_onode_src_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
       if ( s_onode_dst_id_array[data_depth][data_depth_id] < 0) {
          s_onode_dst_id_array[data_depth][data_depth_id] =
-            var_db->makeInternalSAMRAIWorkVariablePatchDataIndex(
-                    d_tmp_onode_dst_variable[reg_sum_id], hier::IntVector<DIM>(0));
+            var_db->registerInternalSAMRAIVariable(
+                    d_tmp_onode_dst_variable[reg_sum_id], 
+                    hier::IntVector<DIM>(0));
       }
 
       d_user_node_data_id[reg_sum_id] = node_data_id;
@@ -356,21 +389,23 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    if (d_hierarchy_setup_called) {
 
       TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum error...\n"
          << " object named " << d_object_name
-         << " already initialized via setupSum() for hierarchy" << endl);
+         << " already initialized via setupSum() for hierarchy" << std::endl);
 
    } else {
 
       d_setup_called = true;
       d_level_setup_called = true;
+
+      d_level_mgr.resizeArray(1);
 
       setInternalWorkDataActive(level, level_mgr);
 
@@ -413,8 +448,8 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum(
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(   (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(   (coarsest_level >= 0)
           && (finest_level >= coarsest_level)
           && (finest_level <= hierarchy->getFinestLevelNumber()) );
 #endif
@@ -423,13 +458,13 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum(
 
       TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum error...\n"
          << " object named " << d_object_name
-         << " already initialized via setupSum() for single level" << endl);
+         << " already initialized via setupSum() for single level" << std::endl);
 
    } else {
 
       TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum error...\n"
          << " object named " << d_object_name
-         << "\n functionality to sum over multiple hierarchy levels is incomplete" << endl);
+         << "\n functionality to sum over multiple hierarchy levels is incomplete" << std::endl);
 
       d_setup_called = true;
       d_hierarchy_setup_called = true;
@@ -526,9 +561,11 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::setupSum(
          for (int ip = 0; ip < fine_level->getNumberOfPatches(); ip++) {
             for (int i = 0; i < d_num_reg_sum; i++) {
                if ( d_level_mgr[fine_level_num]->
-                       getPatchDataActive(d_user_node_data_id[i], ip) ) {
+                       getPatchDataActive( hier::PatchDataId(d_user_node_data_id[i]), 
+                                           hier::PatchNumber(ip) ) ) {
                   d_cfbdry_tmp_level_mgr[fine_level_num]->
-                       setPatchDataActive(d_onode_dst_id[i], ip);
+                       setPatchDataActive( hier::PatchDataId(d_onode_dst_id[i]), 
+                                           hier::PatchNumber(ip) );
                }
             }
          }
@@ -601,7 +638,7 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::computeSum(
 
       TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM>::computeSum error...\n"
          << " object named " << d_object_name
-         << "\n functionality to sum over multiple hierarchy levels is incomplete" << endl);
+         << "\n functionality to sum over multiple hierarchy levels is incomplete" << std::endl);
 
       int ln;
 
@@ -682,9 +719,9 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLevelSum(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    copyNodeToOuternodeOnLevel(level,
@@ -695,7 +732,7 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLevelSum(
    int schedule_level_number = 0;
    if (!d_level_setup_called) {
       schedule_level_number = 
-         tbox::Utilities::imax(0, level->getLevelNumber()); 
+         tbox::MathUtilities<int>::Max(0, level->getLevelNumber()); 
    }
    d_single_level_sum_schedule[schedule_level_number]->fillData(0.0, false);
 
@@ -725,12 +762,12 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
    bool fill_hanging_nodes) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_level.isNull());
-   assert(!coarsened_fine_level.isNull());
-   assert(node_data_id.size() == onode_data_id.size());
+   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(!coarsened_fine_level.isNull());
+   TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
    for (int i = 0; i < node_data_id.size(); i++) {
-      assert(fine_level->checkAllocated(node_data_id[i]));
-      assert(coarsened_fine_level->checkAllocated(onode_data_id[i]));
+      TBOX_ASSERT(fine_level->checkAllocated(node_data_id[i]));
+      TBOX_ASSERT(coarsened_fine_level->checkAllocated(onode_data_id[i]));
    }
 #endif
 
@@ -932,7 +969,7 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
                      TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum::computeSum error...\n"
                         << " object named " << d_object_name
                         << "\n unrecognized coarse-fine boundary box location " 
-                        << bbox_loc << endl);
+                        << bbox_loc << std::endl);
                   }
 
                }  // switch(box_loc)
@@ -1066,17 +1103,18 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::copyNodeToOuternodeOnLevel(
    const tbox::Array<int>& onode_data_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
-   assert(node_data_id.size() == onode_data_id.size());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
+   TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {
       tbox::Pointer<hier::Patch<DIM> > patch = level->getPatch(ip());
       for (int i = 0; i < node_data_id.size(); i++) {
          const int src_id = node_data_id[i];         
-         if ( level_mgr->getPatchDataActive(src_id, ip()) ) {
+         if ( level_mgr->getPatchDataActive( hier::PatchDataId(src_id), 
+                                             hier::PatchNumber(ip()) ) ) {
             tbox::Pointer< pdat::NodeData<DIM,double> > node_data =
                patch->getPatchData(src_id);
             tbox::Pointer< pdat::OuternodeData<DIM,double> > onode_data =
@@ -1097,17 +1135,18 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::copyOuternodeToNodeOnLevel(
    const tbox::Array<int>& node_data_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
-   assert(node_data_id.size() == onode_data_id.size());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
+   TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++ ) {
       tbox::Pointer<hier::Patch<DIM> > patch = level->getPatch(ip());
       for (int i = 0; i < node_data_id.size(); i++) {
          const int dst_id = node_data_id[i];
-         if ( level_mgr->getPatchDataActive(dst_id, ip()) ) {
+         if ( level_mgr->getPatchDataActive( hier::PatchDataId(dst_id), 
+                                             hier::PatchNumber(ip()) ) ) {
             tbox::Pointer< pdat::OuternodeData<DIM,double> > onode_data =
                patch->getPatchData(onode_data_id[i]);
             tbox::Pointer< pdat::NodeData<DIM,double> > node_data =
@@ -1134,14 +1173,15 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::setInternalWorkDataActive(
    tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<DIM> > level_mgr)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!level_mgr.isNull());
-   assert(level_mgr->checkLevel(level));
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!level_mgr.isNull());
+   TBOX_ASSERT(level_mgr->checkLevel(level));
 #endif
 
    int set_level_number = 0;
    if (!d_level_setup_called) {
-      set_level_number = tbox::Utilities::imax(0, level->getLevelNumber());
+      set_level_number = 
+         tbox::MathUtilities<int>::Max(0, level->getLevelNumber());
    } else {
       d_level = level;      
    }
@@ -1150,11 +1190,16 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::setInternalWorkDataActive(
       new hier::LocallyActiveDataPatchLevelManager<DIM>(level);
 
    for (int ip = 0; ip < level->getNumberOfPatches(); ip++) {
+      hier::PatchNumber pnum(ip);
       for (int i = 0; i < d_num_reg_sum; i++) {
-         if ( level_mgr->getPatchDataActive(d_user_node_data_id[i], ip) ) {
-            d_level_mgr[set_level_number]->setPatchDataActive(d_user_node_data_id[i], ip);
-            d_level_mgr[set_level_number]->setPatchDataActive(d_onode_src_id[i], ip);
-            d_level_mgr[set_level_number]->setPatchDataActive(d_onode_dst_id[i], ip);
+         if ( level_mgr->getPatchDataActive( 
+                         hier::PatchDataId(d_user_node_data_id[i]), pnum) ) {
+            d_level_mgr[set_level_number]->setPatchDataActive(
+                                           hier::PatchDataId(d_user_node_data_id[i]), pnum);
+            d_level_mgr[set_level_number]->setPatchDataActive(
+                                           hier::PatchDataId(d_onode_src_id[i]), pnum);
+            d_level_mgr[set_level_number]->setPatchDataActive(
+                                           hier::PatchDataId(d_onode_dst_id[i]), pnum);
          }
       }
    }

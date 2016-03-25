@@ -1,9 +1,9 @@
 //
-// File:        HyperbolicPatchStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/HyperbolicPatchStrategy.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Interface to patch routines for hyperbolic integration scheme.
 //
  
@@ -49,7 +49,7 @@ template<int DIM> void HyperbolicPatchStrategy<DIM>::tagGradientDetectorCells(
    TBOX_WARNING("HyperbolicPatchStrategy::tagGradientDetectorCells()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes no cell tagging) is executed" << endl);
+                << "\ndoes no cell tagging) is executed" << std::endl);
 }
 
 
@@ -78,7 +78,7 @@ template<int DIM> void HyperbolicPatchStrategy<DIM>::tagRichardsonExtrapolationC
    TBOX_WARNING("HyperbolicPatchStrategy::tagRichardsonExtrapolationCells()"
                 << "\nNo class supplies a concrete implementation for "
                 << "\nthis method.  The default abstract method (which "
-                << "\ndoes no cell tagging) is executed" << endl);
+                << "\ndoes no cell tagging) is executed" << std::endl);
 }
 }
 }

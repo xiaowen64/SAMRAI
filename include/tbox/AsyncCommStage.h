@@ -1,9 +1,9 @@
 /*
- * File:        AsyncCommStage.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommStage.h $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Support for coordinating multiple asynchronous communications
  */
 
@@ -26,8 +26,8 @@
 #include "tbox/AsyncCommGroup.h"
 #endif
 
-#ifndef included_tbox_MPI
-#include "tbox/MPI.h"
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 
 #ifndef included_tbox_Timer
@@ -49,7 +49,7 @@ namespace SAMRAI {
  *   independently and asynchronously.
  *
  * This class allocates a set of AsyncCommGroup objects and
- * manages the space for their MPI::request's.  The requests are
+ * manages the space for their SAMRAI_MPI::request's.  The requests are
  * staged such that a single MPI_Waitany or MPI_Waitsome call
  * applies to all communication groups allocated by the stage.
  * Thus the communications performed by the AsyncCommGroup
@@ -196,7 +196,7 @@ public:
    bool numberOfOutstandingGroups() const;
 
    /*!
-    * @brief Return the number of pending MPI::request objects.
+    * @brief Return the number of pending SAMRAI_MPI::request objects.
     */
    bool numberOfOutstandingRequests() const;
 
@@ -220,7 +220,7 @@ private:
      ~StagedGroup();
      /*!
       * @brief The stage that generated this object
-      * and can provide MPI::request objects for it.
+      * and can provide SAMRAI_MPI::request objects for it.
       */
      AsyncCommStage *d_stage;
 
@@ -240,7 +240,7 @@ private:
      RelaunchableJob *d_handle;
 
      //!@ Override the virtual method to return requests on the stage.
-     MPI::request *getRequestPointer() const;
+     SAMRAI_MPI::request *getRequestPointer() const;
    };
 
 
@@ -285,13 +285,13 @@ private:
     *
     * The pointer is NOT guaranteed to be the same for the life
     * of the group, as a stage may rearange the array of
-    * MPI::request objects.  However, the pointer is valid
+    * SAMRAI_MPI::request objects.  However, the pointer is valid
     * until the next call to allocateCommGroup().
     *
     * This is private because only friend class StagedGroup should
     * use it.
     */
-   MPI::request *lookupRequestPointer( const int igroup )const;
+   SAMRAI_MPI::request *lookupRequestPointer( const int igroup )const;
 
 
    /*!
@@ -320,16 +320,16 @@ private:
    Array<StagedGroup*> d_group;
 
    /*!
-    * @brief MPI::request objects used by the groups.
+    * @brief SAMRAI_MPI::request objects used by the groups.
     *
     * This is mutable because the const method getRequestPointer()
-    * needs to return a non-const MPI::request pointer.
+    * needs to return a non-const SAMRAI_MPI::request pointer.
     * The pointer must be non-const for use in MPI calls.
     * getRequestPointer() should be const because no group
     * should require a non-const stage just to get the
     * request allocated for it.
     */
-   mutable Array<MPI::request> d_req;
+   mutable Array<SAMRAI_MPI::request> d_req;
 
    //!@brief Map from request index to group index.
    Array<int> d_req_to_group;
@@ -345,7 +345,7 @@ private:
 
    /*
     * Without MPI, this class manages the communication groups,
-    * but not their MPI::request.
+    * but not their SAMRAI_MPI::request.
     */
    int d_n_group;
    Array<StagedGroup*> d_group;

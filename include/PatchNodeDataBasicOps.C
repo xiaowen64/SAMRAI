@@ -1,9 +1,9 @@
 //
-// File:	PatchNodeDataBasicOps.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/node/PatchNodeDataBasicOps.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Basic templated node-centered patch data operations.
 //
 
@@ -13,10 +13,7 @@
 #include "PatchNodeDataBasicOps.h"
 #include "NodeGeometry.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -72,7 +69,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::scale(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.scale(dst->getArrayData(),
@@ -88,7 +85,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::addScalar(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.addScalar(dst->getArrayData(),
@@ -104,7 +101,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::add(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.add(dst->getArrayData(),
@@ -120,7 +117,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::subtract(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.subtract(dst->getArrayData(),
@@ -136,7 +133,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::multiply(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.multiply(dst->getArrayData(),
@@ -152,7 +149,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::divide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.divide(dst->getArrayData(),
@@ -167,7 +164,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::reciprocal(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.reciprocal(dst->getArrayData(),
@@ -185,7 +182,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::linearSum(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.linearSum(dst->getArrayData(),
@@ -203,7 +200,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::axpy(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.axpy(dst->getArrayData(),
@@ -221,7 +218,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::axmy(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.axmy(dst->getArrayData(),
@@ -236,7 +233,7 @@ TYPE PatchNodeDataBasicOps<DIM,TYPE>::min(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    return( d_array_ops.min(data->getArrayData(), node_box) );
@@ -248,7 +245,7 @@ TYPE PatchNodeDataBasicOps<DIM,TYPE>::max(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    return( d_array_ops.max(data->getArrayData(), node_box) );
@@ -262,7 +259,7 @@ void PatchNodeDataBasicOps<DIM,TYPE>::setRandomValues(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull());
+   TBOX_ASSERT(!dst.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    d_array_ops.setRandomValues(dst->getArrayData(),

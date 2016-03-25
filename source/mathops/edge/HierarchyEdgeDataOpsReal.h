@@ -1,9 +1,9 @@
 //
-// File:	HierarchyEdgeDataOpsReal.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/edge/HierarchyEdgeDataOpsReal.h $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1811 $
+// Modified:    $LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
 // Description: Templated operations for real edge data on multiple levels.
 //
 
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_math_HierarchyDataOpsReal
 #include "HierarchyDataOpsReal.h"
@@ -127,7 +126,7 @@ public:
     * Print data over multiple levels to specified output stream.
     */
    void printData(const int data_id,
-                  ostream& s,
+                  std::ostream& s,
                   const bool interior_only = true) const;
 
    /**
@@ -428,7 +427,7 @@ public:
     * The quotient is defined as (numerator/denominator)
     * where the denominator is nonzero.  When the denominator is zero, the
     * entry is skipped.  If the denominator is always zero, the value of
-    * tbox_IEEE::getFLT_MAX() is returned (see @tbox_IEEE).
+    * tbox_IEEE::getFLT_MAX() is returned (see @ref SAMRAI::tbox::IEEE).
     *
     * @b Note: This method is currently intended to support the
     * SUNDIALS vector wrapper only.  Please do not use it!

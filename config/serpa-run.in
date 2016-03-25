@@ -187,12 +187,12 @@ elif echo "${HOST}" | grep '^tc2k' > /dev/null ; then
     return ${?}
   }
 
-elif echo "${HOST}" | egrep '^(mcr|pengra|thunder)[0-9]' > /dev/null ; then
+elif echo "${HOST}" | egrep '^(zeus|thunder)[0-9]' > /dev/null ; then
 
   # For LC Linux clusters using srun.
   run_multiproc () {
     program=${1}; nproc=${2}; shift 2
-    com="${additional_env} srun -n${nproc} -N${nproc} -p pdebug ${program} ${@}"
+    com="${additional_env} srun -n${nproc} -p pdebug ${program} ${@}"
     echo ${com}
     eval ${com} ${output_redirection_string} ${errors_redirection_string}
     return ${?}

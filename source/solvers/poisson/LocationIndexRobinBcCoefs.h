@@ -1,9 +1,9 @@
 /*
- * File:        LocationIndexRobinBcCoefs.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/LocationIndexRobinBcCoefs.h $
  * Package:     SAMRAI solver package
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 724 $
- * Modified:    $Date: 2005-11-10 14:55:14 -0800 (Thu, 10 Nov 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1818 $
+ * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
  * Description: Robin boundary condition problem-dependent interfaces
  */
 
@@ -26,7 +26,7 @@
 #include "Patch.h"
 #endif
 
-#ifndef included_tbox_ArrayData
+#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
 #endif
 
@@ -93,7 +93,7 @@ public:
    /*!
     * @brief Constructor
     */
-   LocationIndexRobinBcCoefs( const string &object_name,
+   LocationIndexRobinBcCoefs( const std::string &object_name,
 				    tbox::Pointer<tbox::Database> database );
 
 
@@ -115,11 +115,14 @@ public:
     * @param acoef_data boundary coefficient data.
     *        This is defined to include index range for
     *        the boundary faces on the boundary box @c bdry_box.
+    *        If this is a null pointer, then the calling function
+    *        is not interested in a, and you can disregard it.
+    * @param bcoef_data boundary coefficient data.
+    *        This is defined to include index range for
+    *        the boundary faces on the boundary box @c bdry_box.
     * @param gcoef_data boundary coefficient data.
     *        This is defined to include index range for
     *        the boundary faces on the boundary box @c bdry_box.
-    *        If this is a null pointer, then the calling function
-    *        is not interested in g, and you can disregard it.
     * @param variable variable to set the coefficients for.
     * @param patch patch requiring bc coefficients
     * @param bdry_box boundary box showing where on the boundary
@@ -129,6 +132,7 @@ public:
     */
    void setBcCoefs (
       tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
+      tbox::Pointer<pdat::ArrayData<DIM,double> > &bcoef_data ,
       tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
       const tbox::Pointer< hier::Variable<DIM> > &variable ,
       const hier::Patch<DIM> &patch ,
@@ -175,17 +179,22 @@ public:
     *
     * @param location_index Set coefficients for this index.
     * @param a Value of coefficient a at given location index.
+    * @param b Value of coefficient b at given location index.
     * @param g Value of coefficient g at given location index.
     */
    void setRawCoefficients(int location_index,
                            double a,
+                           double b,
                            double g);
 
 
    /*!
     * @brief Access coefficients.
     */
-   void getCoefficients( int location_index, double &a, double &g ) const;
+   void getCoefficients( int location_index,
+                         double &a,
+                         double &b,
+                         double &g ) const;
 
 
 private:
@@ -200,12 +209,17 @@ private:
    /*
     * @brief Object name.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * @brief Mapping for a coefficient.
     */
    double d_a_map[2*DIM];
+
+   /*
+    * @brief Mapping for b coefficient.
+    */
+   double d_b_map[2*DIM];
    /*
     * @brief Mapping for g coefficient.
     */

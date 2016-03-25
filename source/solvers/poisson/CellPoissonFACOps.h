@@ -1,8 +1,8 @@
 /*
- * File:        CellPoissonFACOps.h
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACOps.h $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1818 $
+ * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
  * Description: Operator class for cell-centered scalar Poisson using FAC
  */
 
@@ -135,7 +135,6 @@
 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -229,7 +228,7 @@ public:
     * @param database Input database
     */
    CellPoissonFACOps(
-      const string &object_name=string() ,
+      const std::string &object_name=std::string() ,
       tbox::Pointer<tbox::Database> database=NULL );
 
    /*!
@@ -269,7 +268,7 @@ public:
     * Current smoothing choices are:
     * - "redblack": Red-black Gauss-Seidel smoothing.
     */
-   void setSmoothingChoice( const string &smoothing_choice );
+   void setSmoothingChoice( const std::string &smoothing_choice );
 
    /*!
     * @brief Set coarse level solver.
@@ -278,7 +277,7 @@ public:
     * - @c "redblack" (red-black smoothing until convergence--very slow!)
     * - @c "hypre" (only if the HYPRE library is available).
     */
-   void setCoarsestLevelSolverChoice( const string &choice );
+   void setCoarsestLevelSolverChoice( const std::string &choice );
 
    /*!
     * @brief Set tolerance for coarse level solve.
@@ -315,9 +314,9 @@ public:
     * Grids, I. Error Analysis", Mathematics of Computation, Vol. 56, No. 194,
     * April 1991, pp. 437-461.
     *
-    * @param method String selecting the coarse-fine discretization method.
+    * @param coarsefine_method String selecting the coarse-fine discretization method.
     */
-   void setCoarseFineDiscretization( const string &coarsefine_method );
+   void setCoarseFineDiscretization( const std::string &coarsefine_method );
 
    /*!
     * @brief Set the name of the prolongation method.
@@ -338,7 +337,7 @@ public:
     * @param prolongation_method String selecting the coarse-fine
     *        discretization method.
     */
-   void setProlongationMethod( const string &prolongation_method );
+   void setProlongationMethod( const std::string &prolongation_method );
 
 #ifdef HAVE_HYPRE
    /*!
@@ -511,17 +510,17 @@ public:
    //@{ @name FACOperatorStrategy<DIM> virtuals
 
    virtual void restrictSolution(
-      const SAMRAIVectorReal<DIM,double> &s ,
-      SAMRAIVectorReal<DIM,double> &d ,
+      const SAMRAIVectorReal<DIM,double> &source ,
+      SAMRAIVectorReal<DIM,double> &dest ,
       int dest_ln );
    virtual void restrictResidual(
-      const SAMRAIVectorReal<DIM,double> &s ,
-      SAMRAIVectorReal<DIM,double> &d ,
+      const SAMRAIVectorReal<DIM,double> &source ,
+      SAMRAIVectorReal<DIM,double> &dest ,
       int dest_ln );
 
    virtual void prolongErrorAndCorrect(
-      const SAMRAIVectorReal<DIM,double> &s ,
-      SAMRAIVectorReal<DIM,double> &d ,
+      const SAMRAIVectorReal<DIM,double> &source ,
+      SAMRAIVectorReal<DIM,double> &dest ,
       int dest_ln );
 
    virtual void smoothError(
@@ -533,7 +532,7 @@ public:
    virtual void solveCoarsestLevel(
       SAMRAIVectorReal<DIM,double> &error ,
       const SAMRAIVectorReal<DIM,double> &residual ,
-      int ln );
+      int coarsest_ln );
 
    virtual void computeCompositeResidualOnLevel(
       SAMRAIVectorReal<DIM,double> &residual ,
@@ -554,7 +553,7 @@ public:
    virtual void deallocateOperatorState();
 
    virtual void postprocessOneCycle(
-      int iteration_num ,
+      int fac_cycle_num ,
       const SAMRAIVectorReal<DIM,double> &current_soln ,
       const SAMRAIVectorReal<DIM,double> &residual );
 
@@ -683,13 +682,10 @@ private:
     *      and physical boundary condition.
     *
     * For each task, we maintain a refine or coarsen operator,
-    * a cache (array) of communication schedules and a list of keys
-    * assocating the schedules to the exact data being transfered.
-    * A key is a single integer uniquely identifying the data ids
-    * and destination level of the transfer, allowing a simple 1D
-    * lookup of the cached schedules.
+    * and a array of communication schedules (one for each
+    * destination level).
     *
-    * The 5 member functions named @c xeqSchedule... return
+    * The 5 member functions named @c xeqSchedule... execute
     * communication schedules appropriate for five specific tasks.
     * They use a cached schedule if possible or create and cache
     * a new schedule if needed.  These functions and the data
@@ -815,7 +811,7 @@ private:
    /*!
     * @brief Object name.
     */
-   string d_object_name;
+   std::string d_object_name;
 
 
 
@@ -880,19 +876,19 @@ private:
     * @brief Smoothing choice.
     * @see setSmoothingChoice.
     */
-   string d_smoothing_choice;
+   std::string d_smoothing_choice;
 
    /*!
     * @brief Coarse level solver.
     * @see setCoarsestLevelSolverChoice
     */
-   string d_coarse_solver_choice;
+   std::string d_coarse_solver_choice;
 
    /*!
     * @brief Coarse-fine discretization method.
     * @see setCoarseFineDiscretization().
     */
-   string d_cf_discretization;
+   std::string d_cf_discretization;
 
    /*!
     * @brief Coarse-fine discretization method.
@@ -902,7 +898,7 @@ private:
     *
     * @see setProlongationMethod()
     */
-   string d_prolongation_method;
+   std::string d_prolongation_method;
 
    /*!
     * @brief Tolerance specified to coarse solver

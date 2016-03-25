@@ -1,10 +1,10 @@
 //
-// File:        CutCell.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CutCell.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2000 The Regents of the University of California
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Cut cell struct for embedded boundary implementations.
 //
 
@@ -13,16 +13,10 @@
 
 #include "CutCell.h"
 
-using namespace std;
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#define included_assert
-#endif
-
 #include "CellIndex.h"
-#include "tbox/IEEE.h"
 #include "tbox/IOStream.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #define CUTCELL_VERSION 1
 
@@ -204,7 +198,7 @@ template<int DIM> double
 CutCell<DIM>::getArea(const int i) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < 2*DIM);
+   TBOX_ASSERT(i < 2*DIM);
 #endif
    return(d_area_fraction[i]);
 }
@@ -233,7 +227,7 @@ template<int DIM> double
 CutCell<DIM>::getNormal(const int i) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM);
+   TBOX_ASSERT(i < DIM);
 #endif
    return(d_normal[i]);
 }
@@ -305,8 +299,8 @@ template<int DIM> double
 CutCell<DIM>::getNewBase(const int i, const int j) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM);
-   assert(j < DIM);
+   TBOX_ASSERT(i < DIM);
+   TBOX_ASSERT(j < DIM);
 #endif
    return(d_newbase[i][j]);
 }
@@ -338,7 +332,7 @@ CutCell<DIM>::getBoundaryNode(const int i) const
       TBOX_ERROR("appu::CutCell::setBoundaryNode()"
                  << "\nBoundary node storage is not enabled.  Use the"
                  << "\nappu::CutCell<DIM>::enableBoundaryNodeStorage()"
-                 << "\nmethod to enable boundary node storage." << endl);
+                 << "\nmethod to enable boundary node storage." << std::endl);
    } 
    return(d_boundary_nodes[i]);
 }
@@ -355,7 +349,7 @@ template<int DIM> double
 CutCell<DIM>::getFluxFront(const int m) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(m < DIM+2);
+   TBOX_ASSERT(m < DIM+2);
 #endif
    return(d_flux_front[m]);
 }
@@ -385,7 +379,7 @@ CutCell<DIM>::setArea(const double area,
                             const int i) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < 2*DIM);
+   TBOX_ASSERT(i < 2*DIM);
 #endif
    d_area_fraction[i] = area;
 }
@@ -402,7 +396,7 @@ CutCell<DIM>::setNormal(const double normal,
                               const int i)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM);
+   TBOX_ASSERT(i < DIM);
 #endif
    d_normal[i] = normal;
 }
@@ -489,8 +483,8 @@ CutCell<DIM>::setNewBase(const double base,
                          const int j)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM);
-   assert(j < DIM);
+   TBOX_ASSERT(i < DIM);
+   TBOX_ASSERT(j < DIM);
 #endif
    d_newbase[i][j] = base;
 }
@@ -517,8 +511,8 @@ CutCell<DIM>::setNewBase(const double* base)
     * For the case where the base is all zero, render the normal and new
     * base zero as well.
     */
-   if (tbox::Utilities::deq(norm,0.0)) {
-      norm = tbox::IEEE::getDBL_MAX();
+   if (tbox::MathUtilities<double>::equalEps(norm,0.0)) {
+      norm = tbox::MathUtilities<double>::getMax();
    }
       
    for (i = 0; i < DIM; i++) {
@@ -531,12 +525,12 @@ CutCell<DIM>::setNewBase(const double* base)
       d_newbase[1][1] = d_normal[0];
    } else if (DIM==3) {
       int min_dir = 0;
-      if (tbox::Utilities::dabs(d_normal[1]) < 
-          tbox::Utilities::dabs(d_normal[0])) {
+      if (tbox::MathUtilities<double>::Abs(d_normal[1]) < 
+          tbox::MathUtilities<double>::Abs(d_normal[0])) {
          min_dir = 1;
       }
-      if (tbox::Utilities::dabs(d_normal[DIM-1]) < 
-          tbox::Utilities::dabs(d_normal[min_dir])) {
+      if (tbox::MathUtilities<double>::Abs(d_normal[DIM-1]) < 
+          tbox::MathUtilities<double>::Abs(d_normal[min_dir])) {
          min_dir = 2;
       }
 
@@ -594,7 +588,7 @@ CutCell<DIM>::setBoundaryNode(const BoundaryNode<DIM>& node)
       if (d_num_boundary_nodes >= DIM*DIM) {
          TBOX_ERROR("CutCell::setBoundaryNode()"
                     << "\nNumber of boundary nodes set exceeds max allowed"
-                    << "(DIM*DIM)." << endl);
+                    << "(DIM*DIM)." << std::endl);
       } else {
          d_boundary_nodes[d_num_boundary_nodes] = node;
          d_num_boundary_nodes++;
@@ -603,7 +597,7 @@ CutCell<DIM>::setBoundaryNode(const BoundaryNode<DIM>& node)
       TBOX_ERROR("appu::CutCell::setBoundaryNode()"
                  << "\nBoundary node storage is not enabled.  Use the"
                  << "\nappu::CutCell<DIM>::enableBoundaryNodeStorage()"
-                 << "\nmethod to enable boundary node storage." << endl);
+                 << "\nmethod to enable boundary node storage." << std::endl);
    } 
    
 }
@@ -621,7 +615,7 @@ CutCell<DIM>::setBoundaryNode(const BoundaryNode<DIM>& node,
                               const int i) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM*DIM);
+   TBOX_ASSERT(i < DIM*DIM);
 #endif
    if (s_enable_boundary_node_storage) {
       d_boundary_nodes[i] = node;
@@ -629,7 +623,7 @@ CutCell<DIM>::setBoundaryNode(const BoundaryNode<DIM>& node,
       TBOX_ERROR("appu::CutCell::setBoundaryNode()"
                  << "\nBoundary node storage is not enabled.  Use the"
                  << "\nappu::CutCell<DIM>::enableBoundaryNodeStorage()"
-                 << "\nmethod to enable boundary node storage." << endl);
+                 << "\nmethod to enable boundary node storage." << std::endl);
    } 
 }
 
@@ -651,7 +645,7 @@ CutCell<DIM>::setBoundaryNode(const pdat::NodeIndex<DIM>& node)
       TBOX_ERROR("appu::CutCell::setBoundaryNode()"
                  << "\nBoundary node storage is not enabled.  Use the"
                  << "\nappu::CutCell<DIM>::enableBoundaryNodeStorage()"
-                 << "\nmethod to enable boundary node storage." << endl);
+                 << "\nmethod to enable boundary node storage." << std::endl);
    } 
 }
 
@@ -677,20 +671,20 @@ CutCell<DIM>::setFluxFront(const int m, const double front)
 *************************************************************************
 */
 template<int DIM> void 
-CutCell<DIM>::printVolumeAndAreas(ostream &os) const
+CutCell<DIM>::printVolumeAndAreas(std::ostream &os) const
 {
-   tbox::pout << flush;
+   tbox::pout << std::flush;
    int i;
    
-   os << "index = "<< d_index <<endl;
-   os << "volume fraction = "<< d_vol_fraction << endl;
+   os << "index = "<< d_index << std::endl;
+   os << "volume fraction = "<< d_vol_fraction << std::endl;
    os << "area fraction = ";
    for (i = 0; i < 2*DIM; i++) {
       os << d_area_fraction[i] << " ";
    }
-   os << "surr vol = "<< d_surr_vol << endl;
-   os << endl;
-   os << endl;
+   os << "surr vol = "<< d_surr_vol << std::endl;
+   os << std::endl;
+   os << std::endl;
 }
 
 /*
@@ -701,16 +695,16 @@ CutCell<DIM>::printVolumeAndAreas(ostream &os) const
 *************************************************************************
 */
 template<int DIM> void 
-CutCell<DIM>::printNormal(ostream &os) const
+CutCell<DIM>::printNormal(std::ostream &os) const
 {
-   tbox::pout << flush;
-   os << "index = "<< d_index <<endl;
+   tbox::pout << std::flush;
+   os << "index = "<< d_index << std::endl;
    os << "normal = ";
    for (int i = 0; i < DIM; i++) {
       os << d_normal[i] << " ";
    }
-   os << "front area = "<< d_front_area <<endl;
-   os << endl;
+   os << "front area = "<< d_front_area << std::endl;
+   os << std::endl;
 }
 
 /*
@@ -721,52 +715,52 @@ CutCell<DIM>::printNormal(ostream &os) const
 *************************************************************************
 */
 template<int DIM> void 
-CutCell<DIM>::printBoundaryNodes(ostream &os) const
+CutCell<DIM>::printBoundaryNodes(std::ostream &os) const
 {
    if (s_enable_boundary_node_storage) {
-      tbox::pout << flush;
+      tbox::pout << std::flush;
       int i,j;
       
-      os << "cut cell index = " << d_index << endl;
+      os << "cut cell index = " << d_index << std::endl;
       os << "   front centroid:  ";
       for (i = 0; i < DIM; i++) {
          os << d_front_centroid[i] << "\t";
       }
-      os << endl;
+      os << std::endl;
       
-      os << "   number boundary nodes: " << d_num_boundary_nodes << endl;
+      os << "   number boundary nodes: " << d_num_boundary_nodes << std::endl;
       for (i = 0; i < d_num_boundary_nodes; i++) {
          BoundaryNode<DIM> bn = getBoundaryNode(i);
          pdat::NodeIndex<DIM> bnode = bn.getIndex();
-         os << "   boundary node: " << i << "\t" << bnode << endl;
+         os << "   boundary node: " << i << "\t" << bnode << std::endl;
          os << "      closest boundary point loc: " << "\t";
          for (i = 0; i < DIM; i++) {
             os << bn.getClosestBoundaryPoint(i) << "\t";
          }
-         os << endl;
+         os << std::endl;
          os << "      normal to boundary: " << "\t";
          for (i = 0; i < DIM; i++) {
             os << bn.getNormalToBoundary(i) << "\t";
          }
-         os << endl;
+         os << std::endl;
          double dist_to_boundary = bn.getDistanceToBoundary();
          os << "      distance to boundary: " << "\t" 
-            << dist_to_boundary << endl;
+            << dist_to_boundary << std::endl;
          bool on_boundary = bn.getNodeOnBoundary();
-         os << "      on boundary?: " << "\t" << on_boundary << endl;
+         os << "      on boundary?: " << "\t" << on_boundary << std::endl;
          
          int nn = bn.getNumberNearestNeighborNodes();
-         os << "      number nearest neighbors: " << nn << endl;
+         os << "      number nearest neighbors: " << nn << std::endl;
          for (j = 0; j < nn; j++) {
             pdat::NodeIndex<DIM> bnode_nbr = bn.getNearestNeighborNode(j);
             os << "      nearest neighbor: " << j 
-               << "\t" << bnode_nbr << endl;
+               << "\t" << bnode_nbr << std::endl;
          }
       }
    } else {
-      os << "Boundary Node data NOT COMPUTED" << endl;
+      os << "Boundary Node data NOT COMPUTED" << std::endl;
    }
-   os << endl;
+   os << std::endl;
 }
 
 
@@ -778,12 +772,12 @@ CutCell<DIM>::printBoundaryNodes(ostream &os) const
 *************************************************************************
 */
 template<int DIM> void 
-CutCell<DIM>::printAll(ostream &os) const
+CutCell<DIM>::printAll(std::ostream &os) const
 {
-   os << flush;
+   os << std::flush;
    int i,j;
 
-   os << "ptr_boundary_cell = "<< (CutCell<DIM>*) this <<endl;
+   os << "ptr_boundary_cell = "<< (CutCell<DIM>*) this << std::endl;
    printVolumeAndAreas(os);
    printNormal(os);
    
@@ -792,11 +786,11 @@ CutCell<DIM>::printAll(ostream &os) const
      for (j=0; j < DIM; j++) {
 	os << d_newbase[i][j] << " ";
      }
-     os << endl;
+     os << std::endl;
    }
 
    printBoundaryNodes(os);
-   os << endl;
+   os << std::endl;
 }
 
 /*
@@ -928,7 +922,7 @@ CutCell<DIM>::packStream(tbox::AbstractStream& stream)
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(int_buff_size == counter);
+   TBOX_ASSERT(int_buff_size == counter);
 #endif
    stream.pack(ibuffer, counter);
 
@@ -998,7 +992,7 @@ CutCell<DIM>::packStream(tbox::AbstractStream& stream)
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dbl_buff_size == counter);
+   TBOX_ASSERT(dbl_buff_size == counter);
 #endif
    stream.pack(dbuffer, counter);
 }
@@ -1070,7 +1064,7 @@ CutCell<DIM>::unpackStream(tbox::AbstractStream& stream,
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(int_buff_size == counter);
+   TBOX_ASSERT(int_buff_size == counter);
 #endif
 
    /*
@@ -1138,7 +1132,7 @@ CutCell<DIM>::unpackStream(tbox::AbstractStream& stream,
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dbl_buff_size == counter);
+   TBOX_ASSERT(dbl_buff_size == counter);
 #endif
 
 }
@@ -1212,7 +1206,7 @@ CutCell<DIM>::putToDatabase(
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(int_buff_size == counter);
+   TBOX_ASSERT(int_buff_size == counter);
 #endif
    database->putIntegerArray("ibuffer", ibuffer, int_buff_size);
 
@@ -1278,7 +1272,7 @@ CutCell<DIM>::putToDatabase(
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dbl_buff_size == counter);
+   TBOX_ASSERT(dbl_buff_size == counter);
 #endif
    database->putDoubleArray("dbuffer", dbuffer, dbl_buff_size);
 
@@ -1354,7 +1348,7 @@ CutCell<DIM>::getFromDatabase(
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(int_buff_size == counter);
+   TBOX_ASSERT(int_buff_size == counter);
 #endif
 
    /*
@@ -1419,7 +1413,7 @@ CutCell<DIM>::getFromDatabase(
     * error.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dbl_buff_size == counter);
+   TBOX_ASSERT(dbl_buff_size == counter);
 #endif
 
 }
@@ -1434,25 +1428,25 @@ CutCell<DIM>::getFromDatabase(
 template<int DIM> void
 CutCell<DIM>::initializeCutCellData()
 {
-   d_vol_fraction = tbox::IEEE::getSignalingNaN();
-   d_surr_vol = tbox::IEEE::getSignalingNaN();
-   d_front_area = tbox::IEEE::getSignalingNaN();
+   d_vol_fraction = tbox::MathUtilities<double>::getSignalingNaN();
+   d_surr_vol = tbox::MathUtilities<double>::getSignalingNaN();
+   d_front_area = tbox::MathUtilities<double>::getSignalingNaN();
 
    int i;
    for (i = 0; i < DIM; i++) {
-      d_normal[i] = tbox::IEEE::getSignalingNaN();
-      d_front_centroid[i] = tbox::IEEE::getSignalingNaN();
+      d_normal[i] = tbox::MathUtilities<double>::getSignalingNaN();
+      d_front_centroid[i] = tbox::MathUtilities<double>::getSignalingNaN();
    }
 
    int j;
    for (i = 0; i < DIM; i++) {
       for (j=0; j < DIM; j++) {
-         d_newbase[i][j] = tbox::IEEE::getSignalingNaN();
+         d_newbase[i][j] = tbox::MathUtilities<double>::getSignalingNaN();
       }
    }
 
    for (i = 0; i < 2*DIM; i++) {
-      d_area_fraction[i] = tbox::IEEE::getSignalingNaN();
+      d_area_fraction[i] = tbox::MathUtilities<double>::getSignalingNaN();
    }
 
    for (i = 0; i < DIM+2; i++) {

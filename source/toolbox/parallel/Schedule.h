@@ -1,9 +1,9 @@
 //
-// File:	Schedule.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/Schedule.h $
 // Package:	SAMRAI communication and data transfer package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Schedule of communication transactions between processors
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -29,8 +28,8 @@ using namespace std;
 #ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
 #endif
-#ifndef included_tbox_MPI
-#include "tbox/MPI.h"
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 #ifndef included_tbox_MessageStream
 #include "tbox/MessageStream.h"
@@ -109,21 +108,21 @@ public:
 
    /*!
     * Begin the communication process but do not deliver data to the
-    * transaction objects.  Member function {\tt finalizeCommunication()}
+    * transaction objects.  Member function <TT>finalizeCommunication()</TT>
     * must be called to finish the message communication.
     */
    void beginCommunication();
 
    /*!
     * Finish the communication and deliver the messages.  This member
-    * function completes communication began by {\tt beginCommunication()}.
+    * function completes communication began by <TT>beginCommunication()</TT>.
     */
    void finalizeCommunication();
 
    /*!
     * Print class data to the specified output stream.
     */
-   void printClassData(ostream& stream) const;
+   void printClassData(std::ostream& stream) const;
 
    /*!
     * This internal meassage stream structure must be declared public for the 

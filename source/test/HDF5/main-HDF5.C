@@ -1,9 +1,9 @@
 //
-// File:        main-HDF5.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/HDF5/main-HDF5.C $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 586 $
-// Modified:    $Date: 2005-08-23 10:49:46 -0700 (Tue, 23 Aug 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Tests HDF database in SAMRAI
 //
 
@@ -14,7 +14,7 @@
 #include "tbox/DatabaseBox.h"
 #include "tbox/Complex.h"
 #include "tbox/HDFDatabase.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/Pointer.h"
 #include "tbox/RestartManager.h"
@@ -115,51 +115,60 @@ public:
 
 int main(int argc, char *argv[]) 
 {
-   tbox::MPI::init(&argc, &argv);
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
-   tbox::PIO::logAllNodes("HDF5test.log");
-// tbox::PIO::logOnlyNodeZero("HDF5test.log");
+
+   /*
+    * Create block to force pointer deallocation.  If this is not done
+    * then there will be memory leaks reported.
+    */
+   {
+
+      tbox::PIO::logAllNodes("HDF5test.log");
 
 #ifdef HAVE_HDF5
 
-   tbox::pout << "\n--- HDF5 database tests BEGIN ---" << endl;
+      tbox::pout << "\n--- HDF5 database tests BEGIN ---" << endl;
 
-   tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
+      tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
 
-   RestartTester hdf_tester;
+      RestartTester hdf_tester;
 
-   tbox::pout << "\n--- HDF5 write database tests BEGIN ---" << endl;
+      tbox::pout << "\n--- HDF5 write database tests BEGIN ---" << endl;
 
-   arraydb_boxArray0.setDimension(3);
-   arraydb_boxArray1.setDimension(2);
-   arraydb_boxArray2.setDimension(1);
+      arraydb_boxArray0.setDimension(3);
+      arraydb_boxArray1.setDimension(2);
+      arraydb_boxArray2.setDimension(1);
 
-   restart_manager->writeRestartFile("test_dir", 0);
+      restart_manager->writeRestartFile("test_dir", 0);
 
-   tbox::pout << "\n--- HDF5 write database tests END ---" << endl;
+      tbox::pout << "\n--- HDF5 write database tests END ---" << endl;
 
-   tbox::pout << "\n--- HDF5 read database tests BEGIN ---" <<  endl;
+      tbox::pout << "\n--- HDF5 read database tests BEGIN ---" <<  endl;
 
-   restart_manager->openRestartFile("test_dir", 0, tbox::MPI::getNodes());
+      restart_manager->closeRestartFile();
 
-   hdf_tester.getFromDatabase();
+      restart_manager->openRestartFile("test_dir", 0, tbox::SAMRAI_MPI::getNodes());
 
-   restart_manager->closeRestartFile();
+      hdf_tester.getFromDatabase();
 
-   tbox::pout << "\n--- HDF5 read database tests END ---" << endl;
+      restart_manager->closeRestartFile();
 
-   tbox::pout << "\n--- HDF5 database tests END ---" << endl;
+      tbox::pout << "\n--- HDF5 read database tests END ---" << endl;
+
+      tbox::pout << "\n--- HDF5 database tests END ---" << endl;
 
 #endif
 
-   if (number_of_failures == 0) {
-      tbox::pout << "\nPASSED:  HDF5" << endl;
+      if (number_of_failures == 0) {
+	 tbox::pout << "\nPASSED:  HDF5" << endl;
+      }
    }
 
    tbox::SAMRAIManager::shutdown();
-   tbox::MPI::finalize();
+   tbox::SAMRAI_MPI::finalize();
 
-   return number_of_failures;
+   return(number_of_failures);
 
 }
 
@@ -170,7 +179,7 @@ void writeHDFTestData(tbox::Pointer<tbox::Database> db)
 {
    if (db.isNull()) {
       tbox::perr << "FAILED: - Test #0-write: database to write to is null" << endl;
-      tbox::MPI::abort();
+      tbox::SAMRAI_MPI::abort();
    }
 
    /*
@@ -185,19 +194,19 @@ void writeHDFTestData(tbox::Pointer<tbox::Database> db)
 
    if (arraydb.isNull()) {
       tbox::perr << "FAILED: - Test #1a-write: `arraydb' is null" << endl;
-      tbox::MPI::abort();
+      tbox::SAMRAI_MPI::abort();
    }
    if (scalardb.isNull()) {
       tbox::perr << "FAILED: - Test #1b-write: `scalardb' is null" << endl;
-      tbox::MPI::abort();
+      tbox::SAMRAI_MPI::abort();
    }
    if (scalardb_empty.isNull()) {
       tbox::perr << "FAILED: - Test #1c-write: `scalardb_empty' is null" << endl;
-      tbox::MPI::abort();
+      tbox::SAMRAI_MPI::abort();
    }
    if (scalardb_full.isNull()) {
       tbox::perr << "FAILED: - Test #1d-write: `scalardb_full' is null" << endl;
-      tbox::MPI::abort();
+      tbox::SAMRAI_MPI::abort();
    }
 
    /*

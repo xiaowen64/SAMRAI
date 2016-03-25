@@ -1,9 +1,9 @@
 //
-// File:        CartesianVizamraiDataWriter.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/CartesianVizamraiDataWriter.h $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1811 $
+// Modified:    $LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
 // Description: Simple tool to facilitate dumping data to file for Vizamrai
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_geom_CartesianPatchGeometry
 #include "CartesianPatchGeometry.h"
@@ -45,7 +44,6 @@ using namespace std;
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_FileStream
@@ -160,7 +158,7 @@ public:
     *
     * @param name   Name given to object.
     */
-   CartesianVizamraiDataWriter(const string& name);
+   CartesianVizamraiDataWriter(const std::string& name);
 
    /*!
     * The destructor for the writer does nothing interesting.
@@ -258,7 +256,7 @@ public:
     * When assertion checking is active, a non-recoverable exception results
     * if the string is empty.
     */
-   void setDirectoryName(const string& directory_name);
+   void setDirectoryName(const std::string& directory_name);
 
    /*!
     * Register a non-derived scalar variable quantity with given name and patch 
@@ -296,7 +294,7 @@ public:
     * @param scale_factor   Scaling factor applied to the variable data when writing
     *                 viz files.
     */
-   void registerPlotScalar(const string& variable_name,
+   void registerPlotScalar(const std::string& variable_name,
                            int data_id,
                            int depth_id = 0,
                            double scale_factor = 1.0);
@@ -344,7 +342,7 @@ public:
     * @param depth_id       Depth into the patch data array of the scalar plot
     *                 quantity.
     */
-   void resetLevelPlotScalar(const string& variable_name,
+   void resetLevelPlotScalar(const std::string& variable_name,
                                int level_number,
                                int data_id,
                                int depth_id = 0);
@@ -378,7 +376,7 @@ public:
     * @param scale_factor   Scaling factor applied to the variable data when writing
     *                 viz files.
     */
-   void registerPlotVector(const string& variable_name,
+   void registerPlotVector(const std::string& variable_name,
                            int data_id,
                            double scale_factor = 1.0);
 
@@ -415,9 +413,9 @@ public:
     * @param variable_name  Vizamrai name identifier for the variable.
     * @param level_number   The level number on which variable data is defined.
     * @param data_id        Cell-centered patch data descriptor identifyer for 
-    *                 the variable (may be double, float, or int).
+    *                       the variable (may be double, float, or int).
     */
-   void resetLevelPlotVector(const string& variable_name,
+   void resetLevelPlotVector(const std::string& variable_name,
                              int level_number,
                              int data_id); 
   
@@ -430,12 +428,12 @@ public:
     * When assertion checking is active, a non-recoverable exception results
     * if the argument string is empty.
     *
-    * @param ariable_name  Vizamrai name identifier for the variable.
+    * @param variable_name  Vizamrai name identifier for the variable.
     * @param derived_writer tbox::Pointer to the VizamraiDerivedDataStrategy class
     *                 (which implements 'writeDerivedDataToStream').
     */
    void registerDerivedPlotScalar(
-      const string& variable_name,
+      const std::string& variable_name,
       VisDerivedDataStrategy<DIM>* derived_writer = 
          (VisDerivedDataStrategy<DIM>*)NULL);
 
@@ -449,11 +447,12 @@ public:
     * if the argument string is empty.
     *
     * @param variable_name  Vizamrai name identifier for the variable.
+    * @param depth          number of components
     * @param derived_writer tbox::Pointer to the VizamraiDerivedDataStrategy class
     *                 (which implements 'writeDerivedDataToStream').
     */
    void registerDerivedPlotVector(
-      const string& variable_name,
+      const std::string& variable_name,
       int depth,
       VisDerivedDataStrategy<DIM>* derived_writer =
          (VisDerivedDataStrategy<DIM>*)NULL);  
@@ -482,17 +481,18 @@ public:
     * @param file_name File prefix for vizamrai data files 
     * @param extension Extension which may be appended to the file name
     *            (i.e. 'file_name.extension'
+    * @param plot_time Simulation time of the plot
     */
    void writePlotData(
       const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
-      const string& file_name,
+      const std::string& file_name,
       int extension = -1,
       double plot_time = 0.0);
 
    /*!
     * Send all data in this Vizamrai file writer to given output stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
 private:
    // The following two members are not implemented
@@ -505,7 +505,7 @@ private:
     * to be written to a plot file.
     */
    template<int DIMENSION> struct VizamraiItem {
-      string d_variable_name;     // name of variable in viz file
+      std::string d_variable_name;     // name of variable in viz file
       int d_data_id;              // master descriptor id for plot data
       tbox::Array<int> d_level_data_id;  // desc ids for plot data by level
       bool d_isa_vector;          // flag indicating if this item is to 
@@ -526,7 +526,7 @@ private:
     * (either vector or single value variable).
     */
    void registerPlotItem(
-      const string& variable_name, 
+      const std::string& variable_name, 
       int data_id,
       bool isa_vector,
       int depth_id,
@@ -537,7 +537,7 @@ private:
     * (either vector or single value variable).
     */
    void registerDerivedPlotItem(
-      const string& variable_name,
+      const std::string& variable_name,
       int depth,
       VisDerivedDataStrategy<DIM>* derived_writer);
 
@@ -545,8 +545,8 @@ private:
     * Return string representing complete name of output file given file name, directory 
     * name, plot file counter, and processor number.
     */
-   string getFileStreamName(
-      const string& file_name,
+   std::string getFileStreamName(
+      const std::string& file_name,
       int extention,
       bool istemporaryflag = false) const;
 
@@ -621,7 +621,7 @@ private:
    /*
     * Name of this Vizamrai data writer object (passed into constructor)
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Boolean flag used to know whether this object has successfully 
@@ -662,7 +662,7 @@ private:
    /*
     * Default directory into which Vizamrai files will be written.
     */
-   string d_directory_name;
+   std::string d_directory_name;
 
    /*
     * Master list of variable items written to plot files.

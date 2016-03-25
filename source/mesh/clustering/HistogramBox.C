@@ -1,9 +1,9 @@
 //
-// File:        HistogramBox.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/HistogramBox.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 602 $
-// Modified:    $Date: 2005-09-06 11:51:31 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Histogram class for computing tagged cell signatures.
 //
 
@@ -19,13 +19,11 @@
 #include "PatchHierarchy.h"
 #include "CellData.h"
 #include "CellIterator.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
+#include "tbox/MathUtilities.h"
 
 #ifdef DEBUG_NO_INLINE
 #include "HistogramBox.I"
@@ -114,7 +112,7 @@ template<int DIM> void HistogramBox<DIM>::resetHistogram()
    for (int id = 0; id < DIM; id++) {
       int hi = d_box.numberCells(id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(d_histogram[id].getSize() == hi);
+      TBOX_ASSERT(d_histogram[id].getSize() == hi);
 #endif
       for (int ic = 0; ic < hi; ic++) {
          d_histogram[id][ic] = 0;
@@ -167,9 +165,9 @@ template<int DIM> void HistogramBox<DIM>::boundTagHistogram(
    const int min_size) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (id >= 0) && (id < DIM) );
+   TBOX_ASSERT( (id >= 0) && (id < DIM) );
    for (int i = 0; i < id; i++) 
-      assert(d_histogram[i].getSize() == d_box.numberCells(i));
+      TBOX_ASSERT(d_histogram[i].getSize() == d_box.numberCells(i));
 #endif
 
    const int hist_lo = box_lo = d_box.lower(id);
@@ -195,7 +193,7 @@ template<int DIM> void HistogramBox<DIM>::boundTagHistogram(
          box_hi = box_lo+min_size-1;
          if (box_hi > hist_hi) {
             box_hi = hist_hi;
-            box_lo = tbox::Utilities::imax(hist_lo, box_hi-min_size+1);
+            box_lo = tbox::MathUtilities<int>::Max(hist_lo, box_hi-min_size+1);
          }
 
       }
@@ -223,7 +221,7 @@ template<int DIM> void HistogramBox<DIM>::setCommunicationMode(int mode)
 *************************************************************************
 */
 
-template<int DIM> void HistogramBox<DIM>::setCommunicator(tbox::MPI::comm comm)
+template<int DIM> void HistogramBox<DIM>::setCommunicator(tbox::SAMRAI_MPI::comm comm)
 {
    d_comm = comm;
 }
@@ -280,10 +278,10 @@ template<int DIM> int HistogramBox<DIM>::computeTagHistogram(
       t_commwait->stop();
    }
    else if (d_communication_mode == COMMUNICATOR_MODE) {
-      tbox::MPI::comm keep_me = tbox::MPI::getCommunicator();
-      tbox::MPI::setCommunicator(d_comm);
-      num_tags = tbox::MPI::bcast(num_tags, 0);
-      tbox::MPI::setCommunicator(keep_me);
+      tbox::SAMRAI_MPI::comm keep_me = tbox::SAMRAI_MPI::getCommunicator();
+      tbox::SAMRAI_MPI::setCommunicator(d_comm);
+      num_tags = tbox::SAMRAI_MPI::bcast(num_tags, 0);
+      tbox::SAMRAI_MPI::setCommunicator(keep_me);
    }
 
    return(num_tags);
@@ -356,7 +354,7 @@ template<int DIM> void HistogramBox<DIM>::computeLocalHistogram(
          tbox::Pointer< pdat::CellData<DIM,int> >
             tag_data = patch->getPatchData(tag_index);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!tag_data.isNull());
+         TBOX_ASSERT(!tag_data.isNull());
 #endif
 
          int ilo = intersection.lower(id);
@@ -437,14 +435,14 @@ template<int DIM> void HistogramBox<DIM>::reduceTags(
        * that are members of the communicator.
        */
 
-      tbox::MPI::comm keep_me = tbox::MPI::getCommunicator();
-      tbox::MPI::setCommunicator(d_comm);
-      tbox::MPI::allToOneSumReduction(buf_ptr, buf_size);
-      tbox::MPI::setCommunicator(keep_me);
+      tbox::SAMRAI_MPI::comm keep_me = tbox::SAMRAI_MPI::getCommunicator();
+      tbox::SAMRAI_MPI::setCommunicator(d_comm);
+      tbox::SAMRAI_MPI::allToOneSumReduction(buf_ptr, buf_size);
+      tbox::SAMRAI_MPI::setCommunicator(keep_me);
    }
 
    else {  //d_communication_mode = ORIG_FAST_REDUCE
-      tbox::MPI::sumReduction(buf_ptr, buf_size);
+      tbox::SAMRAI_MPI::sumReduction(buf_ptr, buf_size);
    }
 
    /*
@@ -483,7 +481,7 @@ template<int DIM> void HistogramBox<DIM>::reduceTags(
          tbox::Pointer< pdat::CellData<DIM,int> >
             tag_data = patch->getPatchData(tag_index);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!tag_data.isNull());
+         TBOX_ASSERT(!tag_data.isNull());
 #endif
 
          int ilo = intersection.lower(id);
@@ -515,7 +513,7 @@ template<int DIM> void HistogramBox<DIM>::reduceTags(
     */
 
    t_commwait->start();
-   tbox::MPI::sumReduction(histogram(id).getPointer(), 
+   tbox::SAMRAI_MPI::sumReduction(histogram(id).getPointer(), 
                           d_box.numberCells(id));
    t_commwait->stop();
 

@@ -1,9 +1,9 @@
 //
-// File:	CartesianGridGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/cartesian/grid_geom/CartesianGridGeometry.h $
 // Package:	SAMRAI geometry package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Simple Cartesian grid geometry for an AMR hierarchy.
 //
 
@@ -39,7 +39,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_xfer_Geometry
@@ -148,7 +147,7 @@ public:
     * Errors: passing in a null database pointer or an empty string
     * will result in an unrecoverable assertion.
     */
-   CartesianGridGeometry(const string& object_name,
+   CartesianGridGeometry(const std::string& object_name,
                                tbox::Pointer<tbox::Database> input_db,
                                bool register_for_restart = true);
 
@@ -163,7 +162,7 @@ public:
     * Errors: passing in an empty string, or null data pointers will
     * result in an unrecoverable assertion.
     */
-   CartesianGridGeometry(const string& object_name,
+   CartesianGridGeometry(const std::string& object_name,
                                const double* x_lo,
                                const double* x_up,
                                const hier::BoxArray<DIM>& domain,
@@ -182,7 +181,7 @@ public:
     * geometry object. This function is pure virtual in the hier::GridGeometry<DIM> base class.
     */
    tbox::Pointer<hier::GridGeometry<DIM> > makeRefinedGridGeometry(
-      const string& fine_geom_name,
+      const std::string& fine_geom_name,
       const hier::IntVector<DIM>& refine_ratio,
       bool register_for_restart) const;
 
@@ -191,7 +190,7 @@ public:
     * geometry object. This function is pure virtual in the hier::GridGeometry<DIM> base class.
     */
    tbox::Pointer<hier::GridGeometry<DIM> > makeCoarsenedGridGeometry(
-      const string& coarse_geom_name,
+      const std::string& coarse_geom_name,
       const hier::IntVector<DIM>& coarsen_ratio,
       bool register_for_restart) const;
 
@@ -233,7 +232,7 @@ public:
    /**
     * Print class data representation.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /**
     * Writes the state of the CartesianGridGeometry object to the
@@ -282,7 +281,7 @@ private:
     * Boolean is set in constructor and determines whether object should
     * dump its state to restart files during program execution.
     */
-   string d_object_name;
+   std::string d_object_name;
    bool d_registered_for_restart;
 
    double d_dx[DIM];                // mesh increments for level 0.

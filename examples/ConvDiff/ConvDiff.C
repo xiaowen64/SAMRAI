@@ -1,17 +1,14 @@
 //
-// File:        ConvDiff.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/ConvDiff/ConvDiff.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 712 $
-// Modified:    $Date: 2005-11-08 13:45:37 -0800 (Tue, 08 Nov 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Numerical routines for single patch in convection
 //              diffusion example.
 //
 
 #include "ConvDiff.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include <iostream>
 #include <iomanip>
@@ -45,11 +42,11 @@ using namespace std;
 #include "CellIndex.h"
 #include "CellIterator.h"
 #include "CellVariable.h"
-#include "tbox/IEEE.h"
 #include "Index.h"
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
 //integer constants for boundary conditions
@@ -101,9 +98,9 @@ ConvDiff::ConvDiff(
    tbox::Pointer<geom::CartesianGridGeometry<NDIM> > grid_geom) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!grid_geom.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!grid_geom.isNull());
 #endif
 
    d_object_name = object_name;
@@ -144,13 +141,13 @@ ConvDiff::ConvDiff(
     * data to NaNs so we make sure input has set it to appropriate
     * problem.
     */
-   d_data_problem = tbox::IEEE::getINT_MAX();
+   d_data_problem = tbox::MathUtilities<int>::getMax();
 
    // SPHERE problem...
-   d_radius = tbox::IEEE::getSignalingNaN();
-   tbox::IEEE::initializeArrayToSignalingNaN(d_center, NDIM);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_val_inside, NEQU);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_val_inside, NEQU);
+   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, NDIM);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_val_inside, NEQU);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_val_inside, NEQU);
 
    /*
     * Boundary condition initialization.
@@ -170,7 +167,7 @@ ConvDiff::ConvDiff(
    }
 
    d_bdry_edge_val.resizeArray(NUM_2D_EDGES);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_edge_val);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_val);
 #endif
 #if (NDIM == 3)
    d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
@@ -194,7 +191,7 @@ ConvDiff::ConvDiff(
    }
 
    d_bdry_face_val.resizeArray(NUM_3D_FACES);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_face_val);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_val);
 #endif
 
    /*
@@ -418,7 +415,7 @@ void ConvDiff::initializeDataOnPatch(hier::Patch<NDIM>& patch,
         patch.getPatchData(d_primitive_vars, getInteriorContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-     assert(!primitive_vars.isNull());
+     TBOX_ASSERT(!primitive_vars.isNull());
 #endif
      hier::IntVector<NDIM> ghost_cells = primitive_vars->getGhostCellWidth();
 
@@ -650,11 +647,11 @@ void ConvDiff::setPhysicalBoundaryConditions(
       patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!primitive_vars.isNull());
+   TBOX_ASSERT(!primitive_vars.isNull());
 #endif
    hier::IntVector<NDIM> ghost_cells = primitive_vars->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(primitive_vars->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(primitive_vars->getGhostCellWidth() == d_nghosts);
 #endif
 
 #if (NDIM == 2) 
@@ -769,7 +766,7 @@ void ConvDiff::registerVizamraiDataWriter(
    tbox::Pointer<appu::CartesianVizamraiDataWriter<NDIM> > viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(viz_writer.isNull()));
+   TBOX_ASSERT(!(viz_writer.isNull()));
 #endif
    d_vizamrai_writer = viz_writer;
 }
@@ -788,7 +785,7 @@ void ConvDiff::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter<NDIM> > viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(viz_writer.isNull()));
+   TBOX_ASSERT(!(viz_writer.isNull()));
 #endif
    d_visit_writer = viz_writer;
 }
@@ -894,7 +891,7 @@ void ConvDiff::getFromInput(tbox::Pointer<tbox::Database> db,
                             bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    if (db->keyExists("convection_coeff")){
@@ -1029,7 +1026,7 @@ void ConvDiff::getFromInput(tbox::Pointer<tbox::Database> db,
 void ConvDiff::putToDatabase( tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("CONV_DIFF_VERSION",CONV_DIFF_VERSION);
@@ -1129,8 +1126,8 @@ void ConvDiff::readDirichletBoundaryDataEntry(tbox::Pointer<tbox::Database> db,
                                            int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
 #endif
 #if (NDIM == 2)
    readStateDataEntry(db,
@@ -1151,8 +1148,8 @@ void ConvDiff::readNeumannBoundaryDataEntry(tbox::Pointer<tbox::Database> db,
                                            int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
 #endif
 #if (NDIM == 2)
    readStateDataEntry(db,
@@ -1174,10 +1171,10 @@ void ConvDiff::readStateDataEntry(tbox::Pointer<tbox::Database> db,
                                tbox::Array<double>& val)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
-   assert(array_indx >= 0);
-   assert(val.getSize() > array_indx);
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
+   TBOX_ASSERT(array_indx >= 0);
+   TBOX_ASSERT(val.getSize() > array_indx);
 #endif
 
    if (db->keyExists("val")) {
@@ -1205,11 +1202,11 @@ void ConvDiff::checkBoundaryData(int btype,
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
 #if (NDIM == 2) 
-   assert(btype == EDGE2D_BDRY_TYPE || 
+   TBOX_ASSERT(btype == EDGE2D_BDRY_TYPE || 
           btype == NODE2D_BDRY_TYPE);
 #endif
 #if (NDIM == 3)
-   assert(btype == FACE3D_BDRY_TYPE ||
+   TBOX_ASSERT(btype == FACE3D_BDRY_TYPE ||
           btype == EDGE3D_BDRY_TYPE ||
           btype == NODE3D_BDRY_TYPE);
 #endif
@@ -1224,7 +1221,7 @@ void ConvDiff::checkBoundaryData(int btype,
    for (int i = 0; i < bdry_boxes.getSize(); i++ ) {
       hier::BoundaryBox<NDIM> bbox = bdry_boxes[i];
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(bbox.getBoundaryType() == btype);
+      TBOX_ASSERT(bbox.getBoundaryType() == btype);
 #endif
       int bloc = bbox.getLocationIndex();
 
@@ -1232,13 +1229,13 @@ void ConvDiff::checkBoundaryData(int btype,
 #if (NDIM == 2)
       if (btype == EDGE2D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_2D_EDGES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = bloc;
       } else { // btype == NODE2D_BDRY_TYPE
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_2D_NODES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = d_node_bdry_edge[bloc];
@@ -1247,19 +1244,19 @@ void ConvDiff::checkBoundaryData(int btype,
 #if (NDIM == 3)
       if (btype == FACE3D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_FACES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = bloc;
       } else if (btype == EDGE3D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_EDGES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = d_edge_bdry_face[bloc];
       } else { // btype == NODE3D_BDRY_TYPE
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_NODES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = d_node_bdry_face[bloc];

@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -15,8 +15,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/PETScAbstractVectorReal.C			\
 	$(INCLUDE_SAM)/PETScAbstractVectorReal.h			\
 	$(INCLUDE_SAM)/tbox/Complex.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/Utilities.I	\
-	$(INCLUDE_SAM)/tbox/Utilities.h PETScAbstractVectorReal-double.C
+	$(INCLUDE_SAM)/tbox/PIO.h $(INCLUDE_SAM)/tbox/SAMRAI_MPI.I	\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Utilities.h\
+	PETScAbstractVectorReal-double.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\

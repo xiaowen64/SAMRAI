@@ -1,9 +1,9 @@
 //
-// File:	CoarsenSchedule.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenSchedule.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Coarsening schedule for data transfer between AMR levels
 //
  
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_hier_IntVector
@@ -103,7 +102,7 @@ public:
     *
     * If an invalid string is passed, an unrecoverable error will result.
     */
-   static void setScheduleGenerationMethod(const string& method);
+   static void setScheduleGenerationMethod(const std::string& method);
 
    /*!
     * Constructor to create a coarsen schedule that coarsens data from 
@@ -177,7 +176,7 @@ public:
     *
     * @param stream Output data stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    CoarsenSchedule(const CoarsenSchedule<DIM>&); // not implemented
@@ -313,7 +312,7 @@ private:
    /*!
     * Selects algorithm used to generate communication schedule.
     */
-   static string s_schedule_generation_method;
+   static std::string s_schedule_generation_method;
 
    /*!
     * Structures that store coarsen data items.

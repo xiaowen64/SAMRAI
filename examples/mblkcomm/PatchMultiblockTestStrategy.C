@@ -1,9 +1,9 @@
 //
-// File:        PatchMultiblockTestStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/PatchMultiblockTestStrategy.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 1.6 $
-// Modified:    $Date: 2004/02/11 23:46:08 $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for patch data test operations.
 //
 
@@ -13,12 +13,6 @@
 #include "CellData.h"
 #include "PatchLevel.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 using namespace SAMRAI;
 
@@ -51,7 +45,6 @@ PatchMultiblockTestStrategy::PatchMultiblockTestStrategy()
 
 PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
 {
-   if (d_grid_geometry) delete[] d_grid_geometry;
 }
 
 /*
@@ -66,7 +59,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -138,7 +131,7 @@ void PatchMultiblockTestStrategy::readRefinementInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    tbox::Array<string> box_keys = db->getAllKeys();
@@ -170,7 +163,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
       tbox::Pointer< pdat::CellData<NDIM,int> > tags =
          patch.getPatchData(tag_index);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!tags.isNull());
+      TBOX_ASSERT(!tags.isNull());
 #endif
       tags->fillAll(0);
 

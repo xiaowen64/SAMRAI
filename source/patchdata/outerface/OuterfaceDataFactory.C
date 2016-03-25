@@ -1,9 +1,9 @@
 //
-// File:	OuterfaceDataFactory.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outerface/OuterfaceDataFactory.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Factory class for creating outerface data objects
 //
 
@@ -17,11 +17,9 @@
 #include "Box.h"
 #include "OuterfaceData.h"
 #include "OuterfaceGeometry.h"
+#include "Patch.h"
 #include "FaceDataFactory.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "OuterfaceDataFactory.I"
@@ -39,22 +37,20 @@ namespace SAMRAI {
 
 template<int DIM, class TYPE>
 OuterfaceDataFactory<DIM,TYPE>::OuterfaceDataFactory(int depth)
-:  hier::PatchDataFactory<DIM>(),
-   d_depth(depth)
+:  hier::PatchDataFactory<DIM>(hier::IntVector<DIM>(0)),
+   d_depth(depth),
+   d_no_ghosts(hier::IntVector<DIM>(0))
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
 
-   d_no_ghosts = new hier::IntVector<DIM>(0);
+
 }
 
 template<int DIM, class TYPE>
 OuterfaceDataFactory<DIM,TYPE>::~OuterfaceDataFactory()
 {
-   if(d_no_ghosts)
-      delete d_no_ghosts;
-   d_no_ghosts = NULL;
 }
 
 /*
@@ -67,7 +63,7 @@ OuterfaceDataFactory<DIM,TYPE>::~OuterfaceDataFactory()
 
 template<int DIM, class TYPE>
 tbox::Pointer< hier::PatchDataFactory<DIM> >
-OuterfaceDataFactory<DIM,TYPE>::cloneFactory()
+OuterfaceDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
    return(new OuterfaceDataFactory<DIM,TYPE>(d_depth));
 }
@@ -95,6 +91,15 @@ tbox::Pointer< hier::PatchData<DIM> > OuterfaceDataFactory<DIM,TYPE>::allocate(
    return(tbox::Pointer< hier::PatchData<DIM> >(patchdata, pool));
 }
 
+template<int DIM, class TYPE>
+tbox::Pointer< hier::PatchData<DIM> >
+OuterfaceDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
+                                         tbox::Pointer<tbox::Arena> pool) const
+{
+   return (allocate(patch.getBox(), pool));
+}
+
+
 /*
 *************************************************************************
 *									*
@@ -109,32 +114,6 @@ OuterfaceDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
 {
    hier::BoxGeometry<DIM> *boxgeometry = new OuterfaceGeometry<DIM>(box, 0);
    return(tbox::Pointer< hier::BoxGeometry<DIM> >(boxgeometry));
-}
-
-/*
-*************************************************************************
-*									*
-* Get and set the default ghost cell widths for the outerface data	*
-* objects created with this factory.					*
-*									*
-*************************************************************************
-*/
-
-template<int DIM, class TYPE>
-const hier::IntVector<DIM>&
-OuterfaceDataFactory<DIM,TYPE>::getDefaultGhostCellWidth() const
-{
-   return(*d_no_ghosts);
-}
-
-template<int DIM, class TYPE>
-void OuterfaceDataFactory<DIM,TYPE>::setDefaultGhostCellWidth(
-   const hier::IntVector<DIM>& ghosts)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts == hier::IntVector<DIM>(0));
-#endif
-   NULL_USE(ghosts);
 }
 
 /*

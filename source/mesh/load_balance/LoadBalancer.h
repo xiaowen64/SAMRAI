@@ -1,9 +1,9 @@
 //
-// File:        LoadBalancer.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/LoadBalancer.h $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 650 $
-// Modified:    $Date: 2005-10-05 12:19:46 -0700 (Wed, 05 Oct 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
  
@@ -133,7 +133,7 @@ public:
     *                   input file.  This pointer may be null indicating no
     *                   input will be read.
     */
-   LoadBalancer(const string& name,
+   LoadBalancer(const std::string& name,
                       tbox::Pointer<tbox::Database> input_db = (tbox::Database*)NULL);
 
    /*!
@@ -210,7 +210,7 @@ public:
     *                      levels.
     */
    void setBinPackMethod(
-      const string& method,
+      const std::string& method,
       int level_number = -1);
 
    /*!
@@ -302,7 +302,7 @@ public:
    /*!
     * Print out all members of the class instance to given output stream.
     */
-   virtual void printClassData(ostream& os) const; 
+   virtual void printClassData(std::ostream& os) const; 
 
 private:
    // The following are not implemented, but are provided here for
@@ -367,19 +367,19 @@ private:
       hier::BoxArray<DIM>& boxes,
       hier::ProcessorMapping& mapping,
       tbox::Array<double>& workloads,
-      const string& bin_pack_method) const;
+      const std::string& bin_pack_method) const;
  
    /*
     * Utility functions to determine parameter values for level.
     */
    int    getWorkloadDataId(int level_number) const;
    double getMaxWorkloadFactor(int level_number) const;
-   string getBinPackMethod(int level_number) const;
+   std::string getBinPackMethod(int level_number) const;
 
    /*
     * String identifier for load balancer object.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Specification of processor layout.
@@ -399,7 +399,7 @@ private:
     */
    int    d_master_workload_data_id;
    double d_master_max_workload_factor;
-   string d_master_bin_pack_method;
+   std::string d_master_bin_pack_method;
 
    /*
     * Values for workload estimate data, workload factor, and bin pack method
@@ -407,7 +407,7 @@ private:
     */
    tbox::Array<int>    d_workload_data_id;
    tbox::Array<double> d_max_workload_factor;
-   tbox::Array<string> d_bin_pack_method;
+   tbox::Array<std::string> d_bin_pack_method;
 
    bool d_opt_for_single_box;
 

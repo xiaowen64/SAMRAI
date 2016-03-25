@@ -1,9 +1,9 @@
 //
-// File:        CartesianBoundaryUtilities2.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/CartesianBoundaryUtilities2.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility routines for manipulating 2D Cartesian boundary data
 //
 
@@ -11,9 +11,6 @@
 
 #include "CartesianBoundaryDefines.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include "CartesianPatchGeometry.h"
 #include "BoundaryBox.h"
 #include "CellIndex.h"
@@ -105,10 +102,10 @@ void CartesianBoundaryUtilities2::readBoundaryInput(
    const hier::IntVector<2>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
-   assert(!bdry_db.isNull());
-   assert(edge_conds.getSize() == NUM_2D_EDGES);
-   assert(node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
+   TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -142,7 +139,7 @@ void CartesianBoundaryUtilities2::readBoundaryInput(
  */
 
 void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
-   const string& varname,
+   const std::string& varname,
    tbox::Pointer< pdat::CellData<2,double> >& vardata,
    const hier::Patch<2>& patch,
    const hier::IntVector<2>& ghost_fill_width,
@@ -150,10 +147,10 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const tbox::Array<double>& bdry_edge_values)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(!vardata.isNull());
-   assert(bdry_edge_conds.getSize() == NUM_2D_EDGES);
-   assert(bdry_edge_values.getSize() == NUM_2D_EDGES*(vardata->getDepth()));
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_2D_EDGES);
+   TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES*(vardata->getDepth()));
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -177,7 +174,7 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
       pgeom->getCodimensionBoundary(EDGE2D_BDRY_TYPE);
    for (int i = 0; i < edge_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(edge_bdry[i].getBoundaryType() == EDGE2D_BDRY_TYPE);
+      TBOX_ASSERT(edge_bdry[i].getBoundaryType() == EDGE2D_BDRY_TYPE);
 #endif
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
@@ -219,7 +216,7 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
  */
 
 void CartesianBoundaryUtilities2::fillNodeBoundaryData(
-   const string& varname,
+   const std::string& varname,
    tbox::Pointer< pdat::CellData<2,double> >& vardata,
    const hier::Patch<2>& patch,
    const hier::IntVector<2>& ghost_fill_width,
@@ -227,10 +224,10 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const tbox::Array<double>& bdry_edge_values)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(!vardata.isNull());
-   assert(bdry_node_conds.getSize() == NUM_2D_NODES);
-   assert(bdry_edge_values.getSize() == NUM_2D_EDGES*(vardata->getDepth()));
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(bdry_node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES*(vardata->getDepth()));
 #endif
 
    if (!s_fortran_constants_stuffed) {
@@ -254,7 +251,7 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
       pgeom->getCodimensionBoundary(NODE2D_BDRY_TYPE);
    for (int i = 0; i < node_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(node_bdry[i].getBoundaryType() == NODE2D_BDRY_TYPE);
+      TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE2D_BDRY_TYPE);
 #endif
 
       int bnode_loc = node_bdry[i].getLocationIndex();
@@ -327,7 +324,7 @@ int CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
          TBOX_ERROR("Unknown node boundary condition type = "
             << node_btype << " passed to \n"
             << "CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry"
-            << endl); 
+            << std::endl); 
       }
    }
 
@@ -336,7 +333,7 @@ int CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
             << node_btype << " and node location = " << node_loc
             << "\n passed to "
             << "CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry"
-            << " are inconsistant." << endl);
+            << " are inconsistant." << std::endl);
    }
 
    return(ret_edge);
@@ -358,7 +355,7 @@ int CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
  */
 
 int CartesianBoundaryUtilities2::checkBdryData(
-   const string& varname,
+   const std::string& varname,
    const hier::Patch<2>& patch,
    int data_id,
    int depth,
@@ -368,9 +365,9 @@ int CartesianBoundaryUtilities2::checkBdryData(
    double bstate)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!varname.empty());
-   assert(data_id >= 0);
-   assert(depth >= 0);
+   TBOX_ASSERT(!varname.empty());
+   TBOX_ASSERT(data_id >= 0);
+   TBOX_ASSERT(depth >= 0);
 #endif
   
    int num_bad_values = 0;
@@ -384,7 +381,7 @@ int CartesianBoundaryUtilities2::checkBdryData(
    tbox::Pointer< pdat::CellData<2,double> > vardata = 
       patch.getPatchData(data_id);
 
-   string bdry_type_str;
+   std::string bdry_type_str;
    if (btype == EDGE2D_BDRY_TYPE) {
       bdry_type_str = "EDGE";
    } else if (btype == NODE2D_BDRY_TYPE) {
@@ -392,14 +389,14 @@ int CartesianBoundaryUtilities2::checkBdryData(
    } else {
       TBOX_ERROR("Unknown btype " << btype
          << " passed to CartesianBoundaryUtilities2::checkBdryData()! "
-         << endl);
+         << std::endl);
    }
 
-   tbox::plog << "\n\nCHECKING 2D " << bdry_type_str << " BDRY DATA..." << endl;
-   tbox::plog << "varname = " << varname << " : depth = " << depth << endl;
-   tbox::plog << "bbox = " << bbox.getBox() << endl;
+   tbox::plog << "\n\nCHECKING 2D " << bdry_type_str << " BDRY DATA..." << std::endl;
+   tbox::plog << "varname = " << varname << " : depth = " << depth << std::endl;
+   tbox::plog << "bbox = " << bbox.getBox() << std::endl;
    tbox::plog << "btype, bloc, bcase = "
-        << btype << ", = " << bloc << ", = " << bcase << endl;
+        << btype << ", = " << bloc << ", = " << bcase << std::endl;
 
    int idir;
    double valfact = 0.0, constval =0.0, dxfact=0.0;
@@ -430,7 +427,7 @@ int CartesianBoundaryUtilities2::checkBdryData(
          TBOX_ERROR("Unknown bcase " << bcase
             << " passed to CartesianBoundaryUtilities2::checkBdryData()"
             << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+            << " at location " << bloc << std::endl);
       }
 
    } else if (btype == NODE2D_BDRY_TYPE) {
@@ -455,7 +452,7 @@ int CartesianBoundaryUtilities2::checkBdryData(
          TBOX_ERROR("Unknown bcase " << bcase
             << " passed to CartesianBoundaryUtilities2::checkBdryData()"
             << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+            << " at location " << bloc << std::endl);
       }
 
    }
@@ -494,7 +491,7 @@ int CartesianBoundaryUtilities2::checkBdryData(
                          << " boundary value for " << varname
                          << " found in cell " << check
                          << "\n   found = " << (*vardata)(check, depth)
-                         << " : correct = " << offcheckval << endl);
+                         << " : correct = " << offcheckval << std::endl);
          }
          check(idir) += offsign;
       }
@@ -516,9 +513,9 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
    const hier::IntVector<2>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
-   assert(!bdry_db.isNull());
-   assert(edge_conds.getSize() == NUM_2D_EDGES);
+   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy*)NULL);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 #endif
 
    int num_per_dirs = 0;
@@ -530,7 +527,7 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
 
       for (int s = 0; s < NUM_2D_EDGES; s++) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case XLO: { bdry_loc_str = "boundary_edge_xlo";
                         break; }
@@ -558,7 +555,7 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
                   bdry_db->getDatabase(bdry_loc_str);
                if (!bdry_loc_db.isNull()) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
-                     string bdry_cond_str =
+                     std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
                      if (bdry_cond_str == "FLOW") {
                         edge_conds[s] = FLOW_BC;
@@ -578,16 +575,16 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
                                                         s);
                      } else {
                         TBOX_ERROR("Unknown edge boundary string = "
-                           << bdry_cond_str << " found in input." << endl);
+                           << bdry_cond_str << " found in input." << std::endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << endl);
+                        << bdry_loc_str << " input database." << std::endl);
                   }
                }
             } else {
                TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << endl);
+                  << " database entry not found in input." << std::endl);
             }
          } // if (need_data_read)
 
@@ -608,9 +605,9 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
    const hier::IntVector<2>& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!bdry_db.isNull());
-   assert(edge_conds.getSize() == NUM_2D_EDGES);
-   assert(node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
+   TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 #endif
 
    int num_per_dirs = 0;
@@ -622,7 +619,7 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
 
       for (int s = 0; s < NUM_2D_NODES; s++) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case XLO_YLO_2D: { bdry_loc_str = "boundary_node_xlo_ylo";
                                 break; }
@@ -640,7 +637,7 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
                bdry_db->getDatabase(bdry_loc_str);
             if (!bdry_loc_db.isNull()) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
-                  string bdry_cond_str =
+                  std::string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");
                   if (bdry_cond_str == "XFLOW") {
                      node_conds[s] = XFLOW_BC;
@@ -660,11 +657,11 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
                      node_conds[s] = YNEUMANN_BC;
                   } else {
                      TBOX_ERROR("Unknown node boundary string = "
-                        << bdry_cond_str << " found in input." << endl);
+                        << bdry_cond_str << " found in input." << std::endl);
                   }
 
-                  string proper_edge;
-                  string proper_edge_data;
+                  std::string proper_edge;
+                  std::string proper_edge_data;
                   bool no_edge_data_found = false;
                   if (bdry_cond_str == "XFLOW" ||
                       bdry_cond_str == "XDIRICHLET" ||
@@ -769,17 +766,17 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
                      TBOX_ERROR("Bdry condition " << bdry_cond_str
                         << " found for " << bdry_loc_str
                         << "\n but no " << proper_edge_data
-                        << " data found for edge " << proper_edge << endl);
+                        << " data found for edge " << proper_edge << std::endl);
                   }
 
                } else {
                   TBOX_ERROR("'boundary_condition' entry missing from "
-                     << bdry_loc_str << " input database." << endl);
+                     << bdry_loc_str << " input database." << std::endl);
                }
             }
          } else {
             TBOX_ERROR(bdry_loc_str
-               << " database entry not found in input." << endl);
+               << " database entry not found in input." << std::endl);
          }
 
       } // for (int s = 0 ...
@@ -801,7 +798,7 @@ void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
    int bcase)
 {
 
-   string bdry_type_str;
+   std::string bdry_type_str;
 
    if (btype == EDGE2D_BDRY_TYPE) {
 
@@ -824,7 +821,7 @@ void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
       } else {
          TBOX_ERROR("Unknown boundary location " << bloc
             << " passed to CartesianBoundaryUtilities2::checkBdryData()"
-            << "\n for " << bdry_type_str << " boundary " << endl);
+            << "\n for " << bdry_type_str << " boundary " << std::endl);
       }
 
    } else if (btype == NODE2D_BDRY_TYPE) {
@@ -853,7 +850,7 @@ void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
       TBOX_ERROR("Unknown boundary type " << btype
          << " passed to CartesianBoundaryUtilities2::checkBdryData()"
          << "\n for " << bdry_type_str
-         << " at location " << bloc << endl);
+         << " at location " << bloc << std::endl);
    }
   
 }

@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2000 The Regents of the University of California
-  Revision:	$Revision: 337 $
-  Modified:	$Date: 2005-05-03 16:02:41 -0700 (Tue, 03 May 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/SinusoidalFrontTagger.h $
+  Copyright:	(c) 1997-2000 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	SinusoidalFrontTagger class declaration
 */
 
@@ -11,8 +11,11 @@
 
 
 #include <string>
+
 #include "tbox/Pointer.h"
 #include "tbox/Database.h"
+
+using namespace std;
 
 
 /*
@@ -109,11 +112,11 @@ public:
       const bool initial_time ,
       const bool allocate_data );
 
-  bool packDerivedDataIntoDoubleBuffer(double *buffer,
+   bool packDerivedDataIntoDoubleBuffer(double *buffer,
 				       const hier::Patch<DIM> &patch,
 				       const hier::Box<DIM> &region,
 				       const string &variable_name,
-				       int depth_index);
+				       int depth_index) const;
 
 
 public:
@@ -229,4 +232,6 @@ private:
 };
 
 
+
 #endif	// included_ssup_SinusoidalFrontTagger
+

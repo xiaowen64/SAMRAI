@@ -1,10 +1,10 @@
 //
-// File:        SampleApp.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/emb_bdry/SampleApp.h $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2002 The Regents of the University of California
+// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to manage functions for QM calculations.
 //
  
@@ -23,6 +23,7 @@
 #include "tbox/IOStream.h"
 #include "StandardTagAndInitStrategy.h"
 
+using namespace std;
 using namespace SAMRAI;
 using namespace appu;
 using namespace tbox;
@@ -55,6 +56,11 @@ public:
     */
    virtual ~SampleApp();
 
+   /**
+    * Returns workload index for nonuniform load balance.
+    */
+   int getWorkloadIndex() const;
+   
    /*
     * Outputs boundary node information.
     */
@@ -92,29 +98,35 @@ public:
       const bool initial_time,
       const bool uses_richardson_extrapolation_too);
 
+   /**
+    * Sets the "mark" variable used to identify where to place refinement
+    * (called by initializeLevelData).
+    */
+   void setMarkerOnPatch(const Pointer<Patch<NDIM> >& patch,
+                         const double time,
+                         const bool initial_time);
+
+   /**
+    * Sets the "weight" variable used to assign workload weights on patch
+    * cells (called by initializeLevelData).
+    */
+   void setWeightOnPatch(const Pointer<Patch<NDIM> >& patch,
+                         const double time,
+                         const bool initial_time);
+  
+   /**
+    * Tags cells on a patch (called by gradient detector).
+    */
+   void tagCellsOnPatch(const Pointer<Patch<NDIM> >& patch,
+                        const double time,
+                        const int tag_index,
+                        const bool initial_time);
 private:
  
    /*
     * Reads in input parameters from the specified database.
     */
    void getFromInput(Pointer<Database> database);
-
-   /*
-    * Tags cells on a patch (called by gradient detector).
-    */
-   void setMarkerOnPatch(const Pointer<Patch<NDIM> >& patch,
-                         const int level_number,
-                         const double time,
-                         const bool initial_time);
-  
-   /*
-    * Tags cells on a patch (called by gradient detector).
-    */
-   void tagCellsOnPatch(const Pointer<Patch<NDIM> >& patch,
-                        const int level_number,
-                        const double time,
-                        const int tag_index,
-                        const bool initial_time);
   
 
    /*
@@ -136,6 +148,7 @@ private:
     * Local data
     */
    int d_mark_id;
+   int d_weight_id;
    
 
    /*

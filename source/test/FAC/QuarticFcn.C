@@ -1,16 +1,16 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2005 The Regents of the University of California
-  Revision:	$Revision: 173 $
-  Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
-  Description:	Quartic function functor.
-*/
+ * File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/QuarticFcn.C $
+ * Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:	$LastChangedRevision: 1704 $
+ * Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Description:	Quartic function functor.
+ */
 
 #include "SAMRAI_config.h"
 
 #include "QuarticFcn.h"
 #include IOSTREAM_HEADER_FILE
-#include <assert.h>
+#include "tbox/Utilities.h"
 
 #ifndef NAMESPACE_IS_BROKEN
 using namespace std;
@@ -289,9 +289,9 @@ istream &operator>>( istream &ci, QuarticFcn &qf ) {
   char dummy;
   EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
   dummy = ci.get();
-  assert ( dummy == '{' );
+  TBOX_ASSERT( dummy == '{' );
   while ( ci >> j ) {
-    assert ( j < NUMBER_OF_COEF );
+    TBOX_ASSERT( j < NUMBER_OF_COEF );
     ci >> dummy >> qf.d_coefs[j];
   }
   return ci;

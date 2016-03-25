@@ -1,9 +1,9 @@
 //
-// File:	FaceVariable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/face/FaceVariable.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Variable class for defining face centered variables
 //
 
@@ -18,7 +18,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_Variable
@@ -28,41 +27,20 @@ using namespace std;
 namespace SAMRAI {
     namespace pdat {
 
-/**
- * Class FaceVariable<DIM> is a templated variable class used to define 
- * face-centered quantities on an AMR mesh.  It is templated on the type 
- * of the underlying data (e.g., double, int, bool, etc.).   Face variable 
- * data is associated with the faces (or sides) of cells.  Face data is 
- * stored in DIM arrays, each of which holds values for faces having the 
- * same normal vector.  For example, a three-dimensional face variable 
- * can be used to create face-centered data arrays over a box 
- * [l0:u0,l1:u1,l2:u2] that can be dimensioned as: 
- * \verbatim
-
-     [ l0 : u0+1 ,
-       l1 : u1 ,
-       l2 : u2 , d ]   ,
-
-     [ l1 : u1+1 ,
-       l2 : u2 ,
-       l0 : u0 , d ]   ,
-
-     [ l2 : u2+1 ,
-       l0 : u0 ,
-       l1 : u1 , d ]   ,
-
- * \endverbatim
- * for the x, y, and z (or 0, 1, 2) face directions, respectively, and
- * where d is the depth index (i.e., number of values at each face index
- * location).  Note that the array orderings are permuted so that the leading
- * dimension corresponds to the face direction of array.  One- and two-
- * dimensional face variables define storage similarly.  For more information 
- * on indexing and manipulating face patch data objects, see the classes 
- * FaceData<DIM> and FaceGeometry<DIM>.
+/*!
+ * Class FaceVariable<DIM> is a templated variable class used to define
+ * face-centered quantities on an AMR mesh.   It is a subclass of
+ * hier::Variable and is templated on the type of the underlying data
+ * (e.g., double, int, bool, etc.).
  *
- * IMPORTANT: The class SideVariable<DIM> and associated classes define
- * the same storage as this face variable class, except that the indices
- * are not permuted in the side data type.
+ * Note that the indices in the face data arrays are permuted so that
+ * the leading index in each array corresponds to the associated face
+ * normal coordinate direction. See header file for FaceData<DIM> class 
+ * for a more detailed description of the data layout.
+ *
+ * IMPORTANT: The class SideVariable<DIM> and associated "side data" classes 
+ * define the same storage as this face variable class, except that the 
+ * individual array indices are not permuted in the side data type.
  *
  * @see pdat::FaceData
  * @see pdat::FaceDataFactory
@@ -74,36 +52,35 @@ template<int DIM, class TYPE>
 class FaceVariable : public hier::Variable<DIM>
 {
 public:
-   /**
-    * Create a face variable object having properties specified by the
-    * name, depth (i.e., number of data values at each index location),
-    * and coarse-fine interface representation.  Default arguments are 
-    * provided for the last two.  The default depth is one.  The 
-    * fine boundary representation boolean value indicates which values 
-    * (either coarse or fine) take precedence during coarsen and refine 
-    * operations.  The default state is that fine data values take precedence 
-    * on coarse-fine interfaces.  
+   /*!
+    * @brief Create an face-centered variable object with the given name and
+    * depth (i.e., number of data values at each edge index location).
+    * A default depth of one is provided.   The fine boundary representation
+    * boolean argument indicates which values (either coarse or fine) take
+    * precedence at coarse-fine mesh boundaries during coarsen and refine
+    * operations.  The default is that fine data values take precedence
+    * on coarse-fine interfaces.
     */
-   FaceVariable(const string &name,
-                      int depth = 1,
-                      const bool fine_boundary_represents_var = true);
+   FaceVariable(const std::string &name,
+                int depth = 1,
+                bool fine_boundary_represents_var = true);
 
-   /**
-    * Virtual destructor for face variable objects.
+   /*!
+    * @brief Virtual destructor for face variable objects.
     */
    virtual ~FaceVariable<DIM,TYPE>();
 
-   /**
-    * Return a boolean value indicating how data for the face variable will be treated
-    * on coarse-fine interfaces.  True (default case set in constructor) indicates
-    * that fine patch values take precedence.  False indicates that values on fine patches
-    * at a coarse-fine interface should be interpolated from coarser level values.
+   /*!
+    * @brief Return boolean indicating which face data values (coarse
+    * or fine) take precedence at coarse-fine mesh interfaces.  The
+    * value is set in the constructor.
     */
-   bool fineBoundaryRepresentsVariable() const {return d_fine_boundary_represents_var;}
+   bool fineBoundaryRepresentsVariable() const
+       {return d_fine_boundary_represents_var;}
 
-   /**
-    * Return true since the face data index space extends beyond the interior of
-    * patches.  That is, face data lives on patch borders.
+   /*!
+    * @brief Return true indicating that face data on a patch interior
+    * exists on the patch boundary.
     */
    bool dataLivesOnPatchBorder() const {return true;}
 

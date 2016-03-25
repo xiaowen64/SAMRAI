@@ -1,9 +1,9 @@
 //
-// File:	PatchGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchGeometry.C $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for geometry management on patches
 //
 
@@ -14,9 +14,6 @@
 
 #include "BoundaryLookupTable.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "PatchGeometry.I"
@@ -36,22 +33,22 @@ template<int DIM>  PatchGeometry<DIM>::PatchGeometry(
     */
    int i;
    for (i = 0; i < DIM; i++) {
-      assert( ratio_to_level_zero(i) != 0 );
+      TBOX_ASSERT( ratio_to_level_zero(i) != 0 );
    }
    if (DIM > 1) {
       for (i = 0; i < DIM; i++) {
-	 assert( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
+	 TBOX_ASSERT( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
 		 || (ratio_to_level_zero(i) == 1)
 		 || (ratio_to_level_zero((i+1)%DIM) == 1) );
       }
    }
 
-   assert(touches_regular_bdry.size() == DIM);
-   assert(touches_periodic_bdry.size() == DIM);
+   TBOX_ASSERT(touches_regular_bdry.size() == DIM);
+   TBOX_ASSERT(touches_periodic_bdry.size() == DIM);
 
    for (int i = 0; i < DIM; i++) {
-      assert(touches_regular_bdry[i].size() == 2); 
-      assert(touches_periodic_bdry[i].size() == 2); 
+      TBOX_ASSERT(touches_regular_bdry[i].size() == 2); 
+      TBOX_ASSERT(touches_periodic_bdry[i].size() == 2); 
    }
 #endif
 
@@ -85,7 +82,7 @@ PatchGeometry<DIM>::getBoundaryFillBox(const BoundaryBox<DIM>& bbox,
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < DIM; i++) {
-      assert( gcw(i) >= 0 );
+      TBOX_ASSERT( gcw(i) >= 0 );
    }
 #endif
 
@@ -102,9 +99,9 @@ PatchGeometry<DIM>::getBoundaryFillBox(const BoundaryBox<DIM>& bbox,
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Array<int> &location_index_max = blut->getMaxLocationIndices();
-   assert(bdry_type > 0);
-   assert(bdry_type <= DIM);
-   assert(location_index >= 0);
+   TBOX_ASSERT(bdry_type > 0);
+   TBOX_ASSERT(bdry_type <= DIM);
+   TBOX_ASSERT(location_index >= 0);
 #endif
 
    if (!fill_box.empty()) {
@@ -116,7 +113,7 @@ PatchGeometry<DIM>::getBoundaryFillBox(const BoundaryBox<DIM>& bbox,
          if (bdry_type == codim) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(location_index < location_index_max[codim-1]);
+            TBOX_ASSERT(location_index < location_index_max[codim-1]);
 #endif
             // Get the directions involved in this boundary type from the 
 	    // lookup table.
@@ -149,10 +146,10 @@ PatchGeometry<DIM>::setCodimensionBoundary(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < bdry_boxes.size(); i++) {
-      assert(bdry_boxes[i].getBoundaryType() == codim);
+      TBOX_ASSERT(bdry_boxes[i].getBoundaryType() == codim);
    }
-   assert(codim <= DIM);
-   assert(codim > 0);
+   TBOX_ASSERT(codim <= DIM);
+   TBOX_ASSERT(codim > 0);
 #endif
                                                                                 
    d_patch_boundaries[codim-1].resizeArray(bdry_boxes.size());
@@ -171,19 +168,20 @@ PatchGeometry<DIM>::setBoundaryBoxesOnPatch(
    }
 }
 
-template<int DIM> void PatchGeometry<DIM>::printClassData(ostream& stream) const
+template<int DIM> void PatchGeometry<DIM>::printClassData(
+   std::ostream& stream) const
 {
-   stream << "\nPatchGeometry<DIM>::printClassData..." << endl;
-   stream << "Ratio to level zero = " << d_ratio_to_level_zero << endl;
+   stream << "\nPatchGeometry<DIM>::printClassData..." << std::endl;
+   stream << "Ratio to level zero = " << d_ratio_to_level_zero << std::endl;
    stream << "d_has_regular_boundary = " 
-          << d_has_regular_boundary << endl;
-   stream << "Boundary boxes for patch..." << endl;
+          << d_has_regular_boundary << std::endl;
+   stream << "Boundary boxes for patch..." << std::endl;
    for (int d = 0; d < DIM; d++) {
       const int n = d_patch_boundaries[d].getSize();
-      stream << "Boundary box array " << d << " has " << n << " boxes" << endl;
+      stream << "Boundary box array " << d << " has " << n << " boxes" << std::endl;
       for (int i = 0; i < n; i++) {
          stream << "box " << i << " = "
-                << d_patch_boundaries[d][i].getBox() << endl;
+                << d_patch_boundaries[d][i].getBox() << std::endl;
       }
    }
 }

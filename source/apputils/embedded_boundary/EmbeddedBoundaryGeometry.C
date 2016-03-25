@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryGeometry.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 609 $
-// Modified:    $Date: 2005-09-13 15:15:49 -0700 (Tue, 13 Sep 2005) $
+// Revision:    $LastChangedRevision: 1820 $
+// Modified:    $LastChangedDate: 2007-12-21 08:43:36 -0800 (Fri, 21 Dec 2007) $
 // Description: Compute and store geometry information about the 
 //              embedded boundary
 //              
@@ -25,7 +25,6 @@
 #include "CellIndex.h"
 #include "CellIntegerConstantRefine.h"
 #include "CellDoubleConstantRefine.h"
-#include "tbox/IEEE.h"
 #include "IndexData.h"
 #include "IntVector.h"
 #include "tbox/IOStream.h"
@@ -38,6 +37,7 @@
 #include "tbox/RestartManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
 // Shapes used to cut embedded boundary
@@ -48,9 +48,6 @@
 #define EBGEOM_UNDEFINED (-1)
 #define CUTCASE_UNDEFINED (-1)
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #undef USE_SINGLE_POINT_FOR_INOUT
 //#define USE_SINGLE_POINT_FOR_INOUT 
@@ -58,8 +55,8 @@
 #define USE_ARRAY_FOR_INOUT
 #undef DEBUG_PRINT
 //#define DEBUG_PRINT
-#undef RECORD_STATS
-//#define RECORD_STATS
+//#undef RECORD_STATS
+#define RECORD_STATS
 
 
 #ifdef RECORD_STATS
@@ -161,7 +158,7 @@ namespace SAMRAI {
 */
 template<int DIM> 
 EmbeddedBoundaryGeometry<DIM>::EmbeddedBoundaryGeometry(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    const tbox::Pointer<geom::CartesianGridGeometry<DIM> > grid_geom,
    const hier::IntVector<DIM>& nghosts) 
@@ -233,6 +230,7 @@ EmbeddedBoundaryGeometry<DIM>::EmbeddedBoundaryGeometry(
          input_db->getDatabase("CubesPatchInterface"),
          d_grid_geometry,
          nghosts);
+      d_cubes_interface->setRecordAreasAndNormal(d_compute_areas_and_normal);
    }
 
    if (d_use_eleven_boundary_node || d_use_eleven_inside_outside) {
@@ -250,28 +248,28 @@ EmbeddedBoundaryGeometry<DIM>::EmbeddedBoundaryGeometry(
    if (DIM == 2) {
       d_edge_bdry_cond.resizeArray(NUM_2D_EDGES);
       for (i = 0; i < NUM_2D_EDGES; i++) {
-         d_edge_bdry_cond[i] = tbox::IEEE::getINT_MAX();
+         d_edge_bdry_cond[i] = tbox::MathUtilities<int>::getMax();
       }
    
       d_node_bdry_cond.resizeArray(NUM_2D_NODES);
       for (i = 0; i < NUM_2D_NODES; i++) {
-         d_node_bdry_cond[i] = tbox::IEEE::getINT_MAX();
+         d_node_bdry_cond[i] = tbox::MathUtilities<int>::getMax();
       }
    }
    
    if (DIM == 3) {
       d_face_bdry_cond.resizeArray(NUM_3D_FACES);
       for (i = 0; i < NUM_3D_FACES; i++) {
-         d_face_bdry_cond[i] = tbox::IEEE::getINT_MAX();
+         d_face_bdry_cond[i] = tbox::MathUtilities<int>::getMax();
       }
       d_edge_bdry_cond.resizeArray(NUM_3D_EDGES);
       for (i = 0; i < NUM_3D_EDGES; i++) {
-         d_edge_bdry_cond[i] = tbox::IEEE::getINT_MAX();
+         d_edge_bdry_cond[i] = tbox::MathUtilities<int>::getMax();
       }
       
       d_node_bdry_cond.resizeArray(NUM_3D_NODES);
       for (i = 0; i < NUM_3D_NODES; i++) {
-         d_node_bdry_cond[i] = tbox::IEEE::getINT_MAX();
+         d_node_bdry_cond[i] = tbox::MathUtilities<int>::getMax();
       }
    }
 
@@ -287,7 +285,7 @@ EmbeddedBoundaryGeometry<DIM>::EmbeddedBoundaryGeometry(
                        << "\nAdjust the 'nghosts' argument used for "
                        << "constructing this object, or set" 
                        << "\n'compute_boundary_node_data = FALSE' in "
-                       << "the input file." << endl);
+                       << "the input file." << std::endl);
          }
       }
    }
@@ -364,7 +362,7 @@ EmbeddedBoundaryGeometry<DIM>::buildEmbeddedBoundaryOnLevel(
       const tbox::Pointer<hier::PatchLevel<DIM> > old_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    /*
@@ -443,7 +441,7 @@ EmbeddedBoundaryGeometry<DIM>::buildEmbeddedBoundaryOnLevel(
          TBOX_ERROR(d_object_name << ":buildEmbeddedBoundaryOnLevel()"
                     << "\nThe grid geometry is NULL.  Make sure the"
                     << "\ngrid geometry is supplied to the constructor."
-                    << endl);
+                    << std::endl);
       }
          
       /*
@@ -488,7 +486,7 @@ EmbeddedBoundaryGeometry<DIM>::buildEmbeddedBoundaryOnLevel(
          number_cells += level_boxes(i).size();
       }
 
-      int cut_cells_on_level = tbox::MPI::sumReduction(cut_cells_on_proc);
+      int cut_cells_on_level = tbox::SAMRAI_MPI::sumReduction(cut_cells_on_proc);
       
       if (d_verbose) {
          
@@ -524,7 +522,7 @@ EmbeddedBoundaryGeometry<DIM>::buildEmbeddedBoundaryOnLevel(
          
          
          tbox::pout << "\n===================================================="
-                    << endl;
+                    << std::endl;
          
       }
 
@@ -652,9 +650,9 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevelWithPackage(
    int &cut_cells_on_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
-   if (d_use_cubes) assert(!d_cubes_interface.isNull());
-   if (d_use_eleven_boundary_node) assert(!d_eleven_interface.isNull());
+   TBOX_ASSERT(!(level.isNull()));
+   if (d_use_cubes) TBOX_ASSERT(!d_cubes_interface.isNull());
+   if (d_use_eleven_boundary_node) TBOX_ASSERT(!d_eleven_interface.isNull());
 #endif
 
    if (d_use_cubes && DIM != 3) {
@@ -836,7 +834,7 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
    double &max_area_error)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    /**************************************************************
@@ -867,9 +865,9 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
          patch->getPatchData(d_cell_vol_data_id);
       
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!(node_flag.isNull()));
-      assert(!(cell_flag.isNull()));
-      assert(!(cell_vol.isNull()));
+      TBOX_ASSERT(!(node_flag.isNull()));
+      TBOX_ASSERT(!(cell_flag.isNull()));
+      TBOX_ASSERT(!(cell_vol.isNull()));
 #endif
       /*
        * Assume cell is "flow" unless computed otherwise.
@@ -916,7 +914,7 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
    int i;
    hier::BoxArray<DIM> domain_boxes;
    domain_boxes = level->getGridGeometry()->getPhysicalDomain();
-   hier::Index<DIM> domain_ilo(tbox::IEEE::getINT_MAX());
+   hier::Index<DIM> domain_ilo( tbox::MathUtilities<int>::getMax() );
    for (int n = 0; n < domain_boxes.getNumberOfBoxes(); n++) {
       for (i = 0; i < DIM; i++) {
          if (domain_boxes(n).lower(i) < domain_ilo(i)) {
@@ -976,10 +974,10 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
          patch->getPatchData(d_node_flag_data_id);
       
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!(eboundary.isNull()));
-      assert(!(cell_flag.isNull()));
-      assert(!(cell_vol.isNull()));
-      assert(!(node_flag.isNull()));
+      TBOX_ASSERT(!(eboundary.isNull()));
+      TBOX_ASSERT(!(cell_flag.isNull()));
+      TBOX_ASSERT(!(cell_vol.isNull()));
+      TBOX_ASSERT(!(node_flag.isNull()));
 #endif         
 
       for (pdat::CellIterator<DIM> ic(interior); ic; ic++) {
@@ -1070,11 +1068,11 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
             l2_area_error += 
                area_error_estimate * area_error_estimate;
             max_volume_error = 
-               tbox::Utilities::dmax(volume_error_estimate,
-                                     max_volume_error);
+               tbox::MathUtilities<double>::Max(volume_error_estimate,
+                                                max_volume_error);
             max_area_error = 
-               tbox::Utilities::dmax(area_error_estimate,
-                                     max_area_error);
+               tbox::MathUtilities<double>::Max(area_error_estimate,
+                                                max_area_error);
 
 
                       
@@ -1085,12 +1083,12 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
       } // cell iterator
       
 #ifdef DEBUG_PRINT
-      tbox::plog << "----computeEmbeddedBoundaryOnLevel() "  << endl;
+      tbox::plog << "----computeEmbeddedBoundaryOnLevel() "  << std::endl;
       tbox::plog << "Patch: " << patch->getPatchNumber() 
-                 << "  Box: " << patch->getBox() << endl;
-      tbox::plog << "Cell Flag:" << endl;
+                 << "  Box: " << patch->getBox() << std::endl;
+      tbox::plog << "Cell Flag:" << std::endl;
       cell_flag->print(cell_flag->getGhostBox());
-      tbox::plog << "Node Flag:" << endl;
+      tbox::plog << "Node Flag:" << std::endl;
       node_flag->print(node_flag->getGhostBox());
 #endif
 
@@ -1114,7 +1112,7 @@ EmbeddedBoundaryGeometry<DIM>::tagInsideOutsideNodesOnLevel(
    const tbox::Pointer<hier::PatchLevel<DIM> > level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    int i;
@@ -1129,7 +1127,7 @@ EmbeddedBoundaryGeometry<DIM>::tagInsideOutsideNodesOnLevel(
          patch->getPatchData(d_node_flag_data_id);
       
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!(node_flag.isNull()));
+      TBOX_ASSERT(!(node_flag.isNull()));
 #endif
       
       const tbox::Pointer<geom::CartesianPatchGeometry<DIM> > pgeom = 
@@ -1266,7 +1264,7 @@ EmbeddedBoundaryGeometry<DIM>::computeTotalVolumeOnLevel(
    /*
     * Compute the total volume by summing processor contributions.
     */
-   double total_volume = tbox::MPI::sumReduction(vol_this_proc);
+   double total_volume = tbox::SAMRAI_MPI::sumReduction(vol_this_proc);
 
    return(total_volume);
 }
@@ -1287,7 +1285,7 @@ EmbeddedBoundaryGeometry<DIM>::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter<DIM> > visit_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(visit_writer.isNull()));
+   TBOX_ASSERT(!(visit_writer.isNull()));
 #endif
 
    d_visit_writer = visit_writer;
@@ -1324,7 +1322,7 @@ EmbeddedBoundaryGeometry<DIM>::registerVisItDataWriter(
    /*
     * Register flow and solid as a "material" data types.
     */
-   tbox::Array<string> names(2);
+   tbox::Array<std::string> names(2);
    names[0] = "Flow";
    names[1] = "Solid";
    d_visit_writer->registerMaterialNames(names);
@@ -1398,17 +1396,17 @@ EmbeddedBoundaryGeometry<DIM>::packMaterialFractionsIntoDoubleBuffer(
    double* dbuffer,
    const hier::Patch<DIM>& patch,
    const hier::Box<DIM>& region,
-   const string& material_name)
+   const std::string& material_name) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((region * patch.getBox()) == region);
+   TBOX_ASSERT((region * patch.getBox()) == region);
 #endif
 
    tbox::Pointer< pdat::CellData<DIM,double> > cell_vol  =
       patch.getPatchData(d_cell_vol_data_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!cell_vol.isNull());
+   TBOX_ASSERT(!cell_vol.isNull());
 #endif
 
    const hier::Box<DIM>& data_box = cell_vol->getGhostBox();
@@ -1454,7 +1452,8 @@ EmbeddedBoundaryGeometry<DIM>::packMaterialFractionsIntoDoubleBuffer(
             for (int i0 = 0; i0 < box_w0; i0++) {
                int dat_indx = dat_b1+i0;
                solid_frac = 1.0 - vol[dat_indx];
-               dbuffer[buf_b1+i0] = tbox::Utilities::dabs(solid_frac);       
+               dbuffer[buf_b1+i0] = 
+                  tbox::MathUtilities<double>::Abs(solid_frac);       
             }
             dat_b1 += dat_w0;
             buf_b1 += box_w0;
@@ -1497,8 +1496,8 @@ EmbeddedBoundaryGeometry<DIM>::postprocessRefine(
       fine.getPatchData(d_cell_vol_data_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(fcell_flag.isNull()));
-   assert(!(fcell_vol.isNull()));
+   TBOX_ASSERT(!(fcell_flag.isNull()));
+   TBOX_ASSERT(!(fcell_vol.isNull()));
 #endif
 
    const hier::Box<DIM> coarse_box = hier::Box<DIM>::coarsen(fine_box, ratio);
@@ -1611,11 +1610,11 @@ EmbeddedBoundaryGeometry<DIM>::postprocessRefine(
             l2_area_error += 
                area_error_estimate * area_error_estimate;
             max_volume_error = 
-               tbox::Utilities::dmax(volume_error_estimate,
-                                     max_volume_error);
+               tbox::MathUtilities<double>::Max(volume_error_estimate,
+                                                max_volume_error);
             max_area_error = 
-               tbox::Utilities::dmax(area_error_estimate,
-                                     max_area_error);
+               tbox::MathUtilities<double>::Max(area_error_estimate,
+                                                max_area_error);
 #endif
             
                
@@ -1918,8 +1917,8 @@ EmbeddedBoundaryGeometry<DIM>::calculateCutCellInformation(
        * be zero.
        */
       
-      if (tbox::Utilities::deq(areafront, 0.0)) {
-         areafront = tbox::IEEE::getDBL_MAX();
+      if (tbox::MathUtilities<double>::equalEps(areafront, 0.0)) {
+         areafront = tbox::MathUtilities<double>::getMax();
       }
       
       double tnormal[DIM];
@@ -1956,7 +1955,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
                  << "\nEither set 'compute_boundary_node_data' to"
                  << "\nfalse in input or use the static function"
                  << "\nappu::CutCell<DIM>::enableBoundaryNodeStorage()"
-                 << "\nto enable storage." << endl);
+                 << "\nto enable storage." << std::endl);
    }
    
    hier::Index<DIM> ic = cut_cell.getIndex();
@@ -2097,14 +2096,14 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
          
          if (cut_case == 0) {
             flow_side[0] = 0;
-            if (tbox::Utilities::deq(areas[DIM],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[DIM],0.)) {
                flow_side[1] = 0;
             } else {
                flow_side[1] = 1;
             }
          }
          if (cut_case == 1) {
-            if (tbox::Utilities::deq(areas[0],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[0],0.)) {
                flow_side[0] = 0;
             } else {
                flow_side[0] = 1;
@@ -2112,48 +2111,48 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
             flow_side[1] = 0;
          }
          if (cut_case == 2) {
-            if (tbox::Utilities::deq(areas[1],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[1],0.)) {
                flow_side[0] = 0;
             } else {
                flow_side[0] = 1;
             }
-            if (tbox::Utilities::deq(areas[2*DIM-1],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[2*DIM-1],0.)) {
                flow_side[1] = 0;
             } else {
                flow_side[1] = 1;
             }
          }
          if (cut_case == 3) {
-            if (tbox::Utilities::deq(areas[1],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[1],0.)) {
                flow_side[0] = 0;
             } else {
                flow_side[0] = 1;
             }
-            if (tbox::Utilities::deq(areas[DIM],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[DIM],0.)) {
                flow_side[1] = 1;
             } else {
                flow_side[1] = 0;
             }
          }
          if (cut_case == 4) {
-            if (tbox::Utilities::deq(areas[0],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[0],0.)) {
                flow_side[0] = 1;
             } else {
                flow_side[0] = 0;
             }
-            if (tbox::Utilities::deq(areas[2*DIM-1],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[2*DIM-1],0.)) {
                flow_side[1] = 0;
             } else {
                flow_side[1] = 1;
             }
          }
          if (cut_case == 5) {
-            if (tbox::Utilities::deq(areas[0],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[0],0.)) {
                flow_side[0] = 1;
             } else {
                flow_side[0] = 0;
             }
-            if (tbox::Utilities::deq(areas[DIM],0.)) {
+            if (tbox::MathUtilities<double>::equalEps(areas[DIM],0.)) {
                flow_side[1] = 1;
             } else {
                flow_side[1] = 0;
@@ -2167,7 +2166,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
       if (DIM == 3) {
          TBOX_ERROR(d_object_name << ":calculateBoundaryNodeInformation()"
                           << "\nBoundary node computation does not work"
-                            << "\nin 3D." << endl);
+                            << "\nin 3D." << std::endl);
       }
 
       /*
@@ -2175,7 +2174,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
        */
       for (i = 0; i < DIM; i++) {
          if (cut_case == CUTCASE_UNDEFINED) {
-            centroid[i] = tbox::IEEE::getSignalingNaN();
+            centroid[i] = tbox::MathUtilities<double>::getSignalingNaN();
          } else {
             if (flow_side[i] == 0) {
                centroid[i] = lower[i] + midpt[i]*dx[i];
@@ -2183,7 +2182,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
                centroid[i] = upper[i] - midpt[i]*dx[i];
             } else {
                TBOX_ERROR(d_object_name << ":calculateBoundaryNodeInformation()"
-                          << "\nflow_side is not properly set." << endl);
+                          << "\nflow_side is not properly set." << std::endl);
             }
          }
 
@@ -2215,7 +2214,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
             } else {
                TBOX_ERROR(d_object_name << "::calculateBoundaryNodeInfo()"
                           << "\ndid not find boundary node in 'distance to "
-                          << "shape' calculation" << endl);
+                          << "shape' calculation" << std::endl);
             }
          } else if (cut_case == 1) {
             if (bdry_node == ll || bdry_node == lr) {
@@ -2225,7 +2224,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
             } else {
                TBOX_ERROR(d_object_name << "::calculateBoundaryNodeInfo()"
                           << "\ndid not find boundary node in 'distance to "
-                          << "shape' calculation" << endl);
+                          << "shape' calculation" << std::endl);
             }
 
          } else {
@@ -2249,7 +2248,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
             } else {
                TBOX_ERROR(d_object_name << "::calculateBoundaryNodeInfo()"
                           << "\ndid not find boundary node in 'distance to "
-                          << "shape' calculation" << endl);
+                          << "shape' calculation" << std::endl);
             }
             
             distsq = 0.;
@@ -2668,7 +2667,7 @@ EmbeddedBoundaryGeometry<DIM>::calculateArea(
    } // DIM == 2
 
    if (DIM == 3) {
-      int face_nx[2];
+      int face_nx[2] = {0, 0};
       if (face_dim == 0) {
          face_nx[0] = nx[1];
          face_nx[1] = nx[DIM-1];
@@ -2957,7 +2956,7 @@ EmbeddedBoundaryGeometry<DIM>::classifyCell(
       if (inside_corner_ctr > ncorners) {
          TBOX_ERROR(d_object_name << ":classifyCell()"
                     << "\nSevere Error: the inside corner counter is "
-                    << "\ngreater than the number of corners!" << endl);
+                    << "\ngreater than the number of corners!" << std::endl);
       }
 
       /*
@@ -2999,7 +2998,7 @@ EmbeddedBoundaryGeometry<DIM>::classifyCell(
       classification = SOLID;
    } else {
       TBOX_ERROR(d_object_name << ":classifyCell()"
-                 <<"\nCould not classify cell!!" << endl);
+                 <<"\nCould not classify cell!!" << std::endl);
    }
    return(classification);
 
@@ -3026,7 +3025,7 @@ EmbeddedBoundaryGeometry<DIM>::refineEmbeddedBoundary(
    const tbox::Pointer<hier::PatchHierarchy<DIM> > hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    /*
@@ -3042,7 +3041,7 @@ EmbeddedBoundaryGeometry<DIM>::refineEmbeddedBoundary(
    if (level_number == 0) {
       TBOX_ERROR(d_object_name << ":refineEmbeddedBoundary()\n"
                  << "Operating on level 0 - no coarser level available." 
-                 << endl);
+                 << std::endl);
    }
      
    tbox::Pointer< xfer::RefineSchedule<DIM> > fill_sched;
@@ -3134,9 +3133,9 @@ EmbeddedBoundaryGeometry<DIM>::setEmbeddedBoundaryAtPhysicalBoundaries(
          
 #ifdef DEBUG_CHECK_ASSERTIONS
          if (DIM == 2) {
-            assert(node_bdry[i].getBoundaryType() == NODE2D_BDRY_TYPE);
+            TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE2D_BDRY_TYPE);
          } else if (DIM == 3) {
-            assert(node_bdry[i].getBoundaryType() == NODE3D_BDRY_TYPE);
+            TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE3D_BDRY_TYPE);
          }
 #endif
          
@@ -3306,7 +3305,7 @@ EmbeddedBoundaryGeometry<DIM>::setLevelRatioInformation(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    /*
@@ -3411,7 +3410,7 @@ EmbeddedBoundaryGeometry<DIM>::doNativeShapeInsideOutside(
 template<int DIM> void 
 EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
    const tbox::Pointer<hier::PatchLevel<DIM> > level,
-   const string& dirname) const
+   const std::string& dirname) const
 {
 
 #ifdef HAVE_HDF5 
@@ -3433,15 +3432,15 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
     */
    int i;
    int ln = level->getLevelNumber();
-   int pid = tbox::MPI::getRank();
+   int pid = tbox::SAMRAI_MPI::getRank();
    tbox::pout << "\n  writing eb mesh to file = " << dirname 
-        << "/ebmesh-l" << ln << "-p" << pid << "\n" << endl;
+        << "/ebmesh-l" << ln << "-p" << pid << "\n" << std::endl;
    
-   string fileprefix = "ebmesh";
+   std::string fileprefix = "ebmesh";
    const int size = fileprefix.length() + 16;
    char *buffer1 = new char[size];
    sprintf(buffer1, "%s-l%d-p%d", fileprefix.c_str(), ln, pid);
-   string filename(buffer1);
+   std::string filename(buffer1);
    filename = filename + ".hdf";
    if (write_to_dir) filename = dirname + "/" + filename;
    
@@ -3452,7 +3451,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
    int stat = db->mount(filename,"W");
    if (stat < 0) {
      TBOX_ERROR(d_object_name << "writeLevelEmbeddedBoundaryDataToFile():" 
-                << "\n Error opening HDF database: " << filename << endl);
+                << "\n Error opening HDF database: " << filename << std::endl);
    }
 
    /*
@@ -3501,7 +3500,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
       char *buffer2 = new char[16];
       int patch_id = patch->getPatchNumber();
       sprintf(buffer2, "patch_db[%d]", patch_id);
-      string name(buffer2);
+      std::string name(buffer2);
       delete buffer2;
       tbox::Pointer<tbox::Database> patch_db = db->putDatabase(name);
       
@@ -3542,7 +3541,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
          
          char *buffer3 = new char[16];
          sprintf(buffer3, "cut_cell[%d]", cut_cell_ctr);
-         string name(buffer3);
+         std::string name(buffer3);
          delete buffer3;
          tbox::Pointer<tbox::Database> cut_cell_db = 
             patch_db->putDatabase(name);
@@ -3580,7 +3579,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
 template<int DIM> void 
 EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
    const tbox::Pointer<hier::PatchLevel<DIM> > level,
-   const string& dirname) const
+   const std::string& dirname) const
 {
 
 #ifdef HAVE_HDF5
@@ -3591,15 +3590,15 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
     * i.e.   filename = "ebmesh-l<n>-p<pid>.hdf"
     */
    int ln = level->getLevelNumber();
-   int pid = tbox::MPI::getRank();
+   int pid = tbox::SAMRAI_MPI::getRank();
    tbox::pout << "\n  reading eb mesh from file = " << dirname 
-        << "/ebmesh-l" << ln << "-p" << pid << "\n" << endl;
+        << "/ebmesh-l" << ln << "-p" << pid << "\n" << std::endl;
    
-   string fileprefix = "ebmesh";
+   std::string fileprefix = "ebmesh";
    const int size = fileprefix.length() + 16;
    char *buffer1 = new char[size];
    sprintf(buffer1, "%s-l%d-p%d", fileprefix.c_str(), ln, pid);
-   string filename(buffer1);
+   std::string filename(buffer1);
    filename = dirname + "/" + filename + ".hdf";
    
    /*
@@ -3608,7 +3607,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
    tbox::Pointer<tbox::HDFDatabase> db = new tbox::HDFDatabase(filename);
    if (db->mount(filename,"R") < 0) {
      TBOX_ERROR(d_object_name << "::readLevelEmbeddedBoundaryDataFromFile():"
-                << "\n Error opening HDF database: " << filename << endl);
+                << "\n Error opening HDF database: " << filename << std::endl);
    }
 
 
@@ -3631,7 +3630,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
      TBOX_ERROR(d_object_name << "::readLevelEmbeddedBoundaryDataFromFile()"
                 <<"\nBoxes in file: " << filename
                 <<"\nare different than supplied Level " << ln
-                <<" boxes. ***Exiting." << endl);
+                <<" boxes. ***Exiting." << std::endl);
    }
 
    if (!d_grid_geometry.isNull()) {
@@ -3645,23 +3644,23 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
       db->getDoubleArray("domain_xhi",read_xhi,DIM);
 
       for (int i = 0; i < DIM; i++) {
-         if (!tbox::Utilities::deq(domain_xlo[i],read_xlo[i])) {
+         if (!tbox::MathUtilities<double>::equalEps(domain_xlo[i],read_xlo[i])) {
            TBOX_ERROR(d_object_name 
                       << "::readLevelEmbeddedBoundaryDataFromFile()"
                       <<"\nlevel xlo definition in: " << filename
                       <<"\nis different than supplied Level " << ln << " xlo"
                       <<"\n   level xlo[" << i << "]: " << domain_xlo[i]
                       <<"\n   read xlo[" << i << "]:  " << read_xlo[i]
-                      << endl);
+                      << std::endl);
          }
-         if (!tbox::Utilities::deq(domain_xhi[i],read_xhi[i])) {
+         if (!tbox::MathUtilities<double>::equalEps(domain_xhi[i],read_xhi[i])) {
            TBOX_ERROR(d_object_name 
                       << "::readLevelEmbeddedBoundaryDataFromFile()"
                       <<"\nlevel xhi definition in: " << filename
                       <<"\nis different than supplied Level " << ln << " xhi"
                       <<"\n   level xhi[" << i << "]: " << domain_xhi[i]
                       <<"\n   read xhi[" << i << "]:  " << read_xhi[i]
-                      << endl);
+                      << std::endl);
          }
       }
    }
@@ -3686,7 +3685,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
       char *buffer2 = new char[16];
       int patch_id = patch->getPatchNumber();
       sprintf(buffer2, "patch_db[%d]", patch_id);
-      string name(buffer2);
+      std::string name(buffer2);
       delete buffer2;
       tbox::Pointer<tbox::Database> patch_db = db->getDatabase(name);
 
@@ -3729,7 +3728,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
           */
          char *buffer3 = new char[16];
          sprintf(buffer3, "cut_cell[%d]", i);
-         string name(buffer3);
+         std::string name(buffer3);
          delete buffer3;
    
          /*
@@ -3799,7 +3798,7 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
    const bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(ebdb.isNull()));
+   TBOX_ASSERT(!(ebdb.isNull()));
 #endif
 
    if (!is_from_restart) {
@@ -3860,12 +3859,12 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
                     << "\ninside/outside info or compute Boundary nodes."
                     << "\nSet 'use_inside_outside' or 'use_boundary_node' in "
                     << "\nthe ElevenPatchInterface input to indicate which"
-                    << "\nyou prefer." << endl);
+                    << "\nyou prefer." << std::endl);
       }
       if (d_use_eleven_inside_outside && d_use_eleven_boundary_node) {
          TBOX_ERROR(d_object_name << ": You have both 'use_inside_outside' and"
                     << "\n'use_boundary_node' specified in input.  You cannot "
-                    << "\nuse both." << endl);
+                    << "\nuse both." << std::endl);
       }
       
    } else {
@@ -3877,12 +3876,12 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
 
          tbox::Pointer<tbox::Database> shapes_db = ebdb->getDatabase("Shapes");
    
-         tbox::Array<string> shapes_keys = shapes_db->getAllKeys();
+         tbox::Array<std::string> shapes_keys = shapes_db->getAllKeys();
          int num_shapes = shapes_keys.getSize();
    
          if (d_flow_type == "INTERNAL" && num_shapes > 1) {
             TBOX_ERROR(d_object_name << ": Must supply only one shape when"
-                       << " flow_type = INTERNAL" << endl);
+                       << " flow_type = INTERNAL" << std::endl);
          }
    
          /*
@@ -3898,15 +3897,15 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
          for (j = 0; j < num_shapes; j++) {
             tbox::Pointer<tbox::Database> shape_db = 
                shapes_db->getDatabase(shapes_keys[j]);
-            string type = shape_db->getString("type");
+            std::string type = shape_db->getString("type");
             tbox::Pointer< appu::EmbeddedBoundaryShape<DIM> > new_shape;
       
             if (type == "SPHERE") {
-               string object_name = shapes_keys[j];
+               std::string object_name = shapes_keys[j];
                new_shape =  new appu::EmbeddedBoundaryShapeSphere<DIM>(object_name, 
                                                                        shape_db);
             } else if (type == "POLYGON") {
-               string object_name = shapes_keys[j];
+               std::string object_name = shapes_keys[j];
                new_shape =  
                   new appu::EmbeddedBoundaryShapePolygon<DIM>(object_name, 
                                                               shape_db);
@@ -3919,26 +3918,26 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
       
       }
    }
+
+
+   d_compute_areas_and_normal = true;
+   d_compute_areas_and_normal = 
+      ebdb->getBoolWithDefault("compute_areas_and_normal",
+                               d_compute_areas_and_normal);
    
    /*
     * If SAMRAI is to be used for computing cutcell information, read
     * problem parameters controlling it here.
     */
-   
    if (!d_use_cubes) {
       
       if (ebdb->keyExists("max_subdivides")) {
          d_max_subdivides = ebdb->getInteger("max_subdivides");
          if (d_verbose) {
             tbox::pout << "  d_max_subdivides = "
-                       << d_max_subdivides << endl;
+                       << d_max_subdivides << std::endl;
          }
       }
-      
-      d_compute_areas_and_normal = true;
-      d_compute_areas_and_normal = 
-         ebdb->getBoolWithDefault("compute_areas_and_normal",
-                                  d_compute_areas_and_normal);
       
       d_use_recursive_algs = false;
       d_use_recursive_algs = 
@@ -3971,7 +3970,7 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
    if (DIM == 3 && d_compute_boundary_node_data) {
       TBOX_ERROR(d_object_name << ": Boundary nodes not working yet in 3D"
                  << "\nPlease set 'compute_boundary_node_data' in input"
-                 << "to FALSE." << endl);
+                 << "to FALSE." << std::endl);
    }
 
    // Cannot compute boundary node data if compute_areas_and_normal is 
@@ -3980,7 +3979,7 @@ EmbeddedBoundaryGeometry<DIM>::getFromInput(
       TBOX_ERROR(d_object_name << ": Cannot compute boundary node data"
                  << "\nif 'compute_areas_and_normal' is FALSE.  Please"
                  << "\nset 'compute_boundary_node_data' to FALSE." 
-                 << endl);
+                 << std::endl);
    }
 
 

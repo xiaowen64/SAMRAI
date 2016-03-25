@@ -1,9 +1,9 @@
 //
-// File:        VariableContext.I	
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/VariableContext.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 301 $
-// Modified:	$Date: 2005-04-25 10:32:08 -0700 (Mon, 25 Apr 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Simple integer id and namestring variable context
 //
 
@@ -27,7 +27,7 @@ int VariableContext::getIndex() const
 }
 
 inline
-const string& VariableContext::getName() const
+const std::string& VariableContext::getName() const
 {
    return(d_name);
 }

@@ -1,9 +1,9 @@
 //
-// File:	PatchNodeDataMiscellaneousOpsReal.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/node/PatchNodeDataMiscellaneousOpsReal.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated miscellaneous operations for real node-centered data.
 //
 
@@ -13,10 +13,7 @@
 #include "PatchNodeDataMiscellaneousOpsReal.h"
 #include "NodeGeometry.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -72,7 +69,7 @@ int PatchNodeDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPos(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
 #endif
    int retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -99,7 +96,7 @@ void PatchNodeDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalar(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
    if (cvol.isNull()) {
@@ -124,7 +121,7 @@ int PatchNodeDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocal(
    const tbox::Pointer< pdat::NodeData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    int retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -149,7 +146,7 @@ TYPE PatchNodeDataMiscellaneousOpsReal<DIM,TYPE>::maxPointwiseDivide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
 #endif
    TYPE retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);
@@ -166,7 +163,7 @@ TYPE PatchNodeDataMiscellaneousOpsReal<DIM,TYPE>::minPointwiseDivide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
 #endif
    TYPE retval;
    const hier::Box<DIM> node_box = pdat::NodeGeometry<DIM>::toNodeBox(box);

@@ -1,9 +1,9 @@
 //
-// File:	SideVariable.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/side/SideVariable.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Variable class for defining side centered variables
 //
 
@@ -14,9 +14,6 @@
 #include "SideDataFactory.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define ALL_DIRECTIONS (-1)
 
@@ -37,7 +34,7 @@ namespace SAMRAI {
 
 template<int DIM, class TYPE>
 SideVariable<DIM,TYPE>::SideVariable(
-   const string &name, 
+   const std::string &name, 
    int depth, 
    bool fine_boundary_represents_var,
    int direction)
@@ -50,7 +47,7 @@ SideVariable<DIM,TYPE>::SideVariable(
  
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((direction >= ALL_DIRECTIONS) && (direction < DIM));
+   TBOX_ASSERT((direction >= ALL_DIRECTIONS) && (direction < DIM));
 #endif
    d_directions = hier::IntVector<DIM>(1);
    if ( (direction != ALL_DIRECTIONS) ) {

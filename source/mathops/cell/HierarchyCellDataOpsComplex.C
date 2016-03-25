@@ -1,9 +1,9 @@
 //
-// File:	HierarchyCellDataOpsComplex.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/cell/HierarchyCellDataOpsComplex.C $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1776 $
+// Modified:    $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Operations for complex cell data on multiple levels.
 //
 
@@ -13,19 +13,12 @@
 #include "HierarchyCellDataOpsComplex.h"
 #include "PatchDescriptor.h"
 #include "CellDataFactory.h"
-#include "tbox/MPI.h"
-#include "tbox/Utilities.h"
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/MathUtilities.h"
 #include <typeinfo>
-using namespace std;
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 namespace SAMRAI {
     namespace math {
@@ -37,7 +30,7 @@ template<int DIM>  HierarchyCellDataOpsComplex<DIM>::HierarchyCellDataOpsComplex
 : HierarchyDataOpsComplex<DIM>()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
 #endif
    d_hierarchy = hierarchy;
    if ( (coarsest_level < 0) || (finest_level < 0) ) {
@@ -68,7 +61,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::setPatchHierarchy(
    tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
 #endif
    d_hierarchy = hierarchy;
 }
@@ -78,8 +71,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::resetLevels(
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (coarsest_level >= 0)
           && (finest_level >= coarsest_level)
           && (finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -109,8 +102,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::copyData(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -123,7 +116,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::copyData(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d = p->getPatchData(dst_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull()); 
+         TBOX_ASSERT(!d.isNull()); 
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -139,16 +132,16 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    tbox::Pointer< pdat::CellDataFactory<DIM,dcomplex> >
       d1fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id);
-   assert(!d1fact.isNull());
+   TBOX_ASSERT(!d1fact.isNull());
    tbox::Pointer< pdat::CellDataFactory<DIM,dcomplex> >
       d2fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id);
-   assert(!d2fact.isNull());
-   assert(d1fact->getDefaultDepth() == d2fact->getDefaultDepth());
-   assert(d1fact->getDefaultGhostCellWidth() == d2fact->getDefaultGhostCellWidth());
+   TBOX_ASSERT(!d2fact.isNull());
+   TBOX_ASSERT(d1fact->getDefaultDepth() == d2fact->getDefaultDepth());
+   TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
 #endif
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -165,29 +158,29 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::swapData(
 
 template<int DIM> void HierarchyCellDataOpsComplex<DIM>::printData(
    const int data_id,
-   ostream& s,
+   std::ostream& s,
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
 
-   s << "Patch descriptor id = " << data_id << endl;
+   s << "Patch descriptor id = " << data_id << std::endl;
    s << "Factory = " << typeid(*d_hierarchy->getPatchDescriptor()->
-			       getPatchDataFactory(data_id)).name() << endl;
+			       getPatchDataFactory(data_id)).name() << std::endl;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      s << "Level number = " << ln << endl;
+      s << "Level number = " << ln << std::endl;
       tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(ln);
       for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++) {
          tbox::Pointer< hier::Patch<DIM> > p = level->getPatch(ip());
 
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -202,8 +195,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::setToScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -215,7 +208,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::setToScalar(
 
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -239,8 +232,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::scale(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -253,7 +246,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::scale(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > dst = p->getPatchData(dst_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!dst.isNull());
+         TBOX_ASSERT(!dst.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : dst->getGhostBox() );
 
@@ -269,8 +262,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::addScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -283,7 +276,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::addScalar(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > dst = p->getPatchData(dst_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!dst.isNull());
+         TBOX_ASSERT(!dst.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : dst->getGhostBox() );
 
@@ -299,8 +292,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::add(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -314,7 +307,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::add(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -330,8 +323,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::subtract(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -345,7 +338,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::subtract(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -361,8 +354,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::multiply(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -376,7 +369,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::multiply(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -392,8 +385,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::divide(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -407,7 +400,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::divide(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -422,8 +415,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::reciprocal(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -436,7 +429,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::reciprocal(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d = p->getPatchData(dst_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -454,8 +447,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::linearSum(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -469,7 +462,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::linearSum(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -486,8 +479,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::axpy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -501,7 +494,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::axpy(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
          
@@ -518,8 +511,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::axmy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -533,7 +526,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::axmy(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -548,8 +541,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::abs(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -562,7 +555,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::abs(
          tbox::Pointer< pdat::CellData<DIM,double> > d = p->getPatchData(dst_id);
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -578,8 +571,8 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::setRandomValues(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -591,7 +584,7 @@ template<int DIM> void HierarchyCellDataOpsComplex<DIM>::setRandomValues(
 
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -613,8 +606,8 @@ template<int DIM> int HierarchyCellDataOpsComplex<DIM>::numberOfEntries(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -628,7 +621,7 @@ template<int DIM> int HierarchyCellDataOpsComplex<DIM>::numberOfEntries(
 
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d  = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -638,7 +631,7 @@ template<int DIM> int HierarchyCellDataOpsComplex<DIM>::numberOfEntries(
       }
    }
 
-   int global_entries = tbox::MPI::sumReduction(entries);
+   int global_entries = tbox::SAMRAI_MPI::sumReduction(entries);
    return( global_entries );
 }
 
@@ -647,9 +640,9 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::sumControlVolumes(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(vol_id >= 0);
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(vol_id >= 0);
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -664,7 +657,7 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::sumControlVolumes(
          tbox::Pointer< pdat::CellData<DIM,dcomplex> > d = p->getPatchData(data_id);
          tbox::Pointer< pdat::CellData<DIM,double> > cv  = p->getPatchData(vol_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!cv.isNull());
+         TBOX_ASSERT(!cv.isNull());
 #endif
          hier::Box<DIM> box = cv->getGhostBox();
 
@@ -672,7 +665,7 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::sumControlVolumes(
       }
    }
 
-   double global_sum = tbox::MPI::sumReduction(sum);
+   double global_sum = tbox::SAMRAI_MPI::sumReduction(sum);
    return( global_sum );
 }
 
@@ -681,8 +674,8 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::L1Norm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -700,7 +693,7 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::L1Norm(
          hier::Box<DIM> box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(!d.isNull());
+            TBOX_ASSERT(!d.isNull());
 #endif
             box = d->getGhostBox();
             cv  = p->getPatchData(vol_id);
@@ -710,7 +703,7 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::L1Norm(
       }
    }
 
-   double global_norm = tbox::MPI::sumReduction(norm);
+   double global_norm = tbox::SAMRAI_MPI::sumReduction(norm);
    return( global_norm );
 }
 
@@ -731,8 +724,8 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::weightedL2Norm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -751,7 +744,7 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::weightedL2Norm(
          hier::Box<DIM> box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(!d.isNull());
+            TBOX_ASSERT(!d.isNull());
 #endif
             box = d->getGhostBox();
             cv  = p->getPatchData(vol_id);
@@ -763,7 +756,7 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::weightedL2Norm(
       }
    }
 
-   double global_norm_squared = tbox::MPI::sumReduction(norm_squared);
+   double global_norm_squared = tbox::SAMRAI_MPI::sumReduction(norm_squared);
    return( sqrt(global_norm_squared) );
 }
 
@@ -800,8 +793,8 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::maxNorm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -819,17 +812,18 @@ template<int DIM> double HierarchyCellDataOpsComplex<DIM>::maxNorm(
          hier::Box<DIM> box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(!d.isNull());
+            TBOX_ASSERT(!d.isNull());
 #endif
             box = d->getGhostBox();
             cv  = p->getPatchData(vol_id);
          }
 
-         norm = tbox::Utilities::dmax(norm, d_patch_ops.maxNorm(d, box, cv));
+         norm = tbox::MathUtilities<double>::Max(norm, 
+                                             d_patch_ops.maxNorm(d, box, cv));
       }
    }
 
-   double global_norm = tbox::MPI::maxReduction(norm);
+   double global_norm = tbox::SAMRAI_MPI::maxReduction(norm);
    return( global_norm );
 }
 
@@ -839,8 +833,8 @@ template<int DIM> dcomplex HierarchyCellDataOpsComplex<DIM>::dot(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -861,7 +855,7 @@ template<int DIM> dcomplex HierarchyCellDataOpsComplex<DIM>::dot(
          hier::Box<DIM> box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(!d1.isNull());
+            TBOX_ASSERT(!d1.isNull());
 #endif
             box = d1->getGhostBox();
             cv  = p->getPatchData(vol_id);
@@ -871,7 +865,7 @@ template<int DIM> dcomplex HierarchyCellDataOpsComplex<DIM>::dot(
       }
    }
 
-   dcomplex global_dot = tbox::MPI::sumReduction(dprod);
+   dcomplex global_dot = tbox::SAMRAI_MPI::sumReduction(dprod);
    return( global_dot );
 }
 
@@ -880,8 +874,8 @@ template<int DIM> dcomplex HierarchyCellDataOpsComplex<DIM>::integral(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -898,8 +892,8 @@ template<int DIM> dcomplex HierarchyCellDataOpsComplex<DIM>::integral(
          tbox::Pointer< pdat::CellData<DIM,double> > vol = p->getPatchData(vol_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!data.isNull());
-         assert(!vol.isNull());
+         TBOX_ASSERT(!data.isNull());
+         TBOX_ASSERT(!vol.isNull());
 #endif
 
          hier::Box<DIM> box = data->getGhostBox();
@@ -908,7 +902,7 @@ template<int DIM> dcomplex HierarchyCellDataOpsComplex<DIM>::integral(
       }
    }
 
-   dcomplex global_integral = tbox::MPI::sumReduction(local_integral);
+   dcomplex global_integral = tbox::SAMRAI_MPI::sumReduction(local_integral);
    return( global_integral );
 }
 

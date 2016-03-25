@@ -1,10 +1,10 @@
 //
-// File:	IndexDataFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/index/IndexDataFactory.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: hier::Patch data factory for irregularly indexed patch data
 //
 
@@ -19,6 +19,9 @@
 #endif
 #ifndef included_hier_IntVector
 #include "IntVector.h"
+#endif
+#ifndef included_hier_Patch
+#include "Patch.h"
 #endif
 #ifndef included_hier_PatchData
 #include "PatchData.h"
@@ -67,13 +70,16 @@ public:
    virtual ~IndexDataFactory<DIM,TYPE>();
 
    /**
-    * Virtual function to clone the irregular data factor.  This will return
-    * a new instantiation of the factory with the samr properties (e.g, same
-    * type and ghost cell width).  The properties of the cloned factory can
-    * then be changed (e.g., change the ghost cell width) without modifying
-    * the original.
+    * @brief Abstract virtual function to clone a patch data factory.
+
+    * This will return a new instantiation of the abstract factory
+    * with the same properties.  The properties of the cloned factory
+    * can then be changed without modifying the original.
+    *
+    * @param ghosts default ghost cell width for concrete classes created from
+    * the factory.
     */
-   virtual tbox::Pointer< hier::PatchDataFactory<DIM> > cloneFactory();
+   virtual tbox::Pointer< hier::PatchDataFactory<DIM> > cloneFactory(const hier::IntVector<DIM>& ghosts);
 
    /**
     * Virtual factory function to allocate a concrete irregular data object.
@@ -86,24 +92,20 @@ public:
             tbox::Pointer<tbox::Arena> pool = (tbox::Arena *) NULL) const;
 
    /**
+    * Virtual factory function to allocate a concrete cell data object.
+    * Same as above function, except passes in a patch instead of a box.
+    */
+   virtual tbox::Pointer< hier::PatchData<DIM> > allocate(
+      const hier::Patch<DIM>& patch,
+      tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL)) const;
+
+   /**
     * Allocate the box geometry object associated with the patch data.
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
     */
    virtual tbox::Pointer< hier::BoxGeometry<DIM> >
    getBoxGeometry(const hier::Box<DIM>& box) const;
-
-   /**
-    * Get the default ghost cell width.  This is the ghost cell width that
-    * will be used in the instantiation of concrete irregular data instances.
-    */
-   virtual const hier::IntVector<DIM>& getDefaultGhostCellWidth() const;
-
-   /**
-    * Set the default ghost cell width.  This is the ghost cell width that
-    * will be used in the instantiation of concrete irregular data instances.
-    */
-   virtual void setDefaultGhostCellWidth(const hier::IntVector<DIM>& ghosts);
 
    /**
     * Calculate the amount of memory needed to store the irregular data
@@ -138,7 +140,6 @@ public:
 
 
 private:
-   hier::IntVector<DIM> d_ghosts;
 
    IndexDataFactory(const IndexDataFactory<DIM,TYPE>&);
    void operator=(const IndexDataFactory<DIM,TYPE>&);

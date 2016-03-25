@@ -1,9 +1,9 @@
 //
-// File:        BaseGriddingAlgorithm
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/BaseGriddingAlgorithm.h $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1818 $
+// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -186,6 +186,7 @@ public:
     *                          operation began on each level (this parameter is
     *                          ignored except when using Richardson
     *                          extrapolation)
+    * @param level_is_coarsest_to_sync Level is the coarsest to sync
     */
    virtual void regridAllFinerLevels(
       tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,

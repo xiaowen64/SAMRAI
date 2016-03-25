@@ -1,9 +1,9 @@
 //
-// File:	PatchDescriptor.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/PatchDescriptor.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Factory class for patch data objects that live on a patch
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -40,7 +39,6 @@ using namespace std;
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_DescribedClass
@@ -107,7 +105,7 @@ public:
     * @param factory   pointer to factory to add to patch descriptor, which must 
     *                  be non-null when assertion checking is active.
     */
-   int definePatchDataComponent(const string &name,
+   int definePatchDataComponent(const std::string &name,
                                 tbox::Pointer< PatchDataFactory<DIM> > factory);
 
    /*!
@@ -145,7 +143,7 @@ public:
     * @param name    string name of factory.
     */
    tbox::Pointer< PatchDataFactory<DIM> >
-   getPatchDataFactory(const string &name) const;
+   getPatchDataFactory(const std::string &name) const;
 
    /*!
     * Get the maximum number of components currently known to the patch 
@@ -168,12 +166,12 @@ public:
     * identifier of one of the factories is chosen.  If no matching factory is found, 
     * then an invalid negative index is returned.
     */
-   int mapNameToIndex(const string &name) const;
+   int mapNameToIndex(const std::string &name) const;
 
    /*!
     * Lookup a factory by identifier and return its name.
     */
-   const string& mapIndexToName(const int id) const;
+   const std::string& mapIndexToName(const int id) const;
 
    /*!
     * Return the IntVector indicating the maximum ghost cell width of all registered
@@ -184,14 +182,14 @@ public:
    /*!
     * Print patch descriptor data to given output stream (plog by default).
     */
-   void printClassData(ostream& stream = tbox::plog) const;
+   virtual void printClassData(std::ostream& stream = tbox::plog) const;
 
 private:
    PatchDescriptor(const PatchDescriptor<DIM>&);	// not implemented
    void operator=(const PatchDescriptor<DIM>&);	// not implemented
 
    int d_max_number_registered_components;
-   tbox::Array<string> d_names;
+   tbox::Array<std::string> d_names;
    tbox::Array< tbox::Pointer< PatchDataFactory<DIM> > > d_factories;
    tbox::List<int> d_free_indices;
 

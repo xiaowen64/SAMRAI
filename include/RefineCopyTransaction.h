@@ -1,9 +1,9 @@
 //
-// File:	RefineCopyTransaction.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineCopyTransaction.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 684 $
-// Modified:	$Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Communication transaction for data copies during data refining
 //
  
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_hier_BoxOverlap
 #include "BoxOverlap.h"
@@ -41,7 +40,7 @@ namespace SAMRAI {
  * @brief Class RefineCopyTransaction<DIM> represents a single copy communication 
  * transaction between two processors or a local data copy for refine schedules.  
  * Note that to there is an implicit hand-shaking between objects of this class 
-* and the RefineSchedule<DIM> object that constructs them.  Following the refine
+ * and the RefineSchedule<DIM> object that constructs them.  Following the refine
  * schedule implementation, the source patch data index for a copy transaction
  * always refers to the source data and the destination patch data index for a copy 
  * transaction is always the scratch data, all as defined in the 
@@ -156,7 +155,7 @@ public:
    /*!
     * Print out transaction information.
     */
-   virtual void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    RefineCopyTransaction(const RefineCopyTransaction<DIM>&); // not implemented

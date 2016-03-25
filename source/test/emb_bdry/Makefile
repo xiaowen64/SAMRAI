@@ -1,10 +1,10 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/emb_bdry/Makefile $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2004 The Regents of the University of California
+## Copyright:	(c) 1997-2004 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
-## Revision:	$Revision: 460 $
-## Modified:	$Date: 2005-06-16 16:37:57 -0700 (Thu, 16 Jun 2005) $
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for embedded boundary sample application
 ##
 

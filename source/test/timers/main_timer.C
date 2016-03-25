@@ -1,5 +1,5 @@
 //
-// File:        main.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/timers/main_timer.C $
 // Description: Test program to demonstrate/test timers.
 //
 
@@ -10,14 +10,68 @@
 #include "tbox/Database.h"
 #include "Foo.h"
 #include "tbox/InputManager.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/Pointer.h"
 #include "tbox/RestartManager.h"
-#include <string>
-using namespace std;
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
+#include "tbox/Utilities.h"
+
+#include <string>
+using namespace std;
+
+// Simple code to check timer overhead
+// Not part of test, but kept here in 
+// case it is useful for something
+#undef CHECK_PTIMER
+//#define CHECK_PTIMER
+
+#ifdef CHECK_PTIMER
+#include <sys/types.h>
+#include <sys/time.h>
+
+class PTimer
+{
+   public:
+      PTimer()
+        : d_accesses(0),
+          d_total_time(0.0),
+          d_last_start_time(0.0) { }
+
+      ~PTimer() { }
+
+      void start()
+      {
+         d_accesses++;
+
+         static struct timeval _tp;
+         gettimeofday(&_tp,(struct timezone *)0);
+         d_last_start_time = static_cast<double>( _tp.tv_sec ) +
+                             (1.0e-6) * (_tp.tv_usec);
+      }
+
+      void stop()
+      {
+         static struct timeval _tp;
+         gettimeofday(&_tp,(struct timezone *)0);
+         d_total_time += static_cast<double>( _tp.tv_sec ) +
+                             (1.0e-6) * (_tp.tv_usec) - d_last_start_time;
+      }
+
+      int    getNumAccesses() const { return d_accesses; }
+      double getTotalTime() const { return d_total_time; }
+
+   private:
+      PTimer(const PTimer&);
+      PTimer& operator = (const PTimer&);
+
+      int d_accesses;
+      double d_total_time;
+      double d_last_start_time;
+};
+#endif
+
 
 #ifndef NULL
 #define NULL (0)
@@ -27,9 +81,20 @@ using namespace SAMRAI;
 
 int main( int argc, char *argv[] )
 {
-   tbox::MPI::init(&argc, &argv);
+   int fail_count = 0;
+
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
+
+   /*
+    * Create block to force pointer deallocation.  If this is not done
+    * then there will be memory leaks reported.
+    */
+   {
+
    tbox::PIO::logAllNodes("Timer.log");      
+
+
 
    string input_filename;
    string restart_dirname;
@@ -43,7 +108,7 @@ int main( int argc, char *argv[] )
            << "  options:\n"
            << "  none at this time"
            << endl;
-        tbox::MPI::abort();
+        tbox::SAMRAI_MPI::abort();
         return (-1);
    } else {
       input_filename = argv[1];
@@ -91,7 +156,7 @@ int main( int argc, char *argv[] )
     */
    if (is_from_restart) {
       tbox::RestartManager::getManager()->
-         openRestartFile(restart_dirname, restore_num, tbox::MPI::getNodes());
+         openRestartFile(restart_dirname, restore_num, tbox::SAMRAI_MPI::getNodes());
    }
 
    tbox::Pointer<tbox::Database> restart_db =
@@ -105,7 +170,7 @@ int main( int argc, char *argv[] )
    /*
     * Add a timer "manually" (that is, not thru the input file).
     */
-   static tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
+   tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
       getTimer("apps::main::main");
    timer->start();
 
@@ -123,7 +188,7 @@ int main( int argc, char *argv[] )
     * Check time to call function with timer name that is NOT
     * registered.  That is, time a NULL timer call.
     */
-   static tbox::Pointer<tbox::Timer> timer_off = tbox::TimerManager::getManager()->
+   tbox::Pointer<tbox::Timer> timer_off = tbox::TimerManager::getManager()->
       getTimer("apps::main::timer_off");
    timer_off->start();
    for (i=0; i < ntimes; i++) {
@@ -135,7 +200,7 @@ int main( int argc, char *argv[] )
     * Check time to call function with timer name that IS
     * registered.  
     */
-   static tbox::Pointer<tbox::Timer> timer_on = tbox::TimerManager::getManager()->
+   tbox::Pointer<tbox::Timer> timer_on = tbox::TimerManager::getManager()->
       getTimer("apps::main::timer_on");
    tbox::Pointer<tbox::Timer> dummy_timer = tbox::TimerManager::getManager()->
       getTimer("apps::Foo::timerOn()");
@@ -150,7 +215,7 @@ int main( int argc, char *argv[] )
     * Foo->zero() calls Foo->one(), which calls Foo->two(), ... 
     * and so forth until we reach specified "exclusive_tree_depth.
     */  
-   static tbox::Pointer<tbox::Timer> timer_excl = tbox::TimerManager::getManager()->
+   tbox::Pointer<tbox::Timer> timer_excl = tbox::TimerManager::getManager()->
       getTimer("apps::main::exclusive_timer");
    timer_excl->start();
    for (i=0; i < ntimes; i++) {
@@ -202,8 +267,95 @@ int main( int argc, char *argv[] )
    timer_excl->stop();
    timer->stop();
 
-   tbox::TimerManager::getManager()->print(tbox::plog);
+#ifdef CHECK_PTIMER
 
+   const int nsleepsec = 1;
+   const int testit = 3;
+
+   tbox::Pointer<tbox::Timer> tarray1[testit];
+   tbox::Pointer<tbox::Timer> tarray2[testit];
+
+   for (int tcnt = 0; tcnt < testit; tcnt++) {
+
+       int mfactor = 1;
+       for (int i = 0; i < tcnt; ++i) {
+          mfactor *= 10;
+       }
+       string suffix( tbox::Utilities::intToString(mfactor, testit) );
+
+       string t1name( "ttest1-" + suffix );
+       tarray1[tcnt] = tbox::TimerManager::getManager()->getTimer(t1name, true);
+
+       string t2name( "ttest2-" + suffix );
+       tarray2[tcnt] = tbox::TimerManager::getManager()->getTimer(t2name, true);
+   }
+
+   tbox::pout << "\n\nEstimate SAMRAI Timer overhead..." << endl;
+
+   for (int tcnt = 0; tcnt < testit; tcnt++) {
+
+      int ntest = 1;
+      for (int i = 0; i < tcnt; ++i) {
+          ntest *= 10;
+      }
+
+      for (int i = 0; i < ntest; i++) {
+         tarray1[tcnt]->start();
+         tarray2[tcnt]->start();
+         sleep(nsleepsec);
+         tarray2[tcnt]->stop();
+         tarray1[tcnt]->stop();
+      }
+
+      double access_time1 = tarray1[tcnt]->getTotalWallclockTime();
+      double access_time2 = tarray2[tcnt]->getTotalWallclockTime();
+      tbox::pout.precision(16);
+      tbox::pout << "\ntcnt, ntest, accesses = "
+                 << tcnt << " , " << ntest << " , " 
+                 << tarray1[tcnt]->getNumberAccesses() << endl;
+      tbox::pout << "access_time1 = " << access_time1 << endl;
+      tbox::pout << "access_time2 = " << access_time2 << endl;
+      double access_time12 = access_time1 - access_time2;
+      double cost12 = access_time12/static_cast<double>(ntest);
+      tbox::pout << "Access time 12 overhead for each Timer: " << cost12 << " sec" << endl;
+   }
+
+   tbox::pout << "\n\nEstimate PTimer overhead..." << endl;
+
+   PTimer Ptarray1[testit];
+   PTimer Ptarray2[testit];
+
+   for (int tcnt = 0; tcnt < testit; tcnt++) {
+
+      int ntest = 1;
+      for (int i = 0; i < tcnt; ++i) {
+          ntest *= 10;
+      }
+
+      for (int i = 0; i < ntest; i++) {
+         Ptarray1[tcnt].start();
+         Ptarray2[tcnt].start();
+         sleep(nsleepsec);
+         Ptarray2[tcnt].stop();
+         Ptarray1[tcnt].stop();
+      }
+
+      double access_time1 = Ptarray1[tcnt].getTotalTime();
+      double access_time2 = Ptarray2[tcnt].getTotalTime();
+      tbox::pout.precision(16);
+      tbox::pout << "\ntcnt, ntest, accesses = "
+                 << tcnt << " , " << ntest << " , " 
+                 << Ptarray1[tcnt].getNumAccesses() << endl;
+      tbox::pout << "access_time1 = " << access_time1 << endl;
+      tbox::pout << "access_time2 = " << access_time2 << endl;
+      double access_time12 = access_time1 - access_time2;
+      double cost12 = access_time12/static_cast<double>(ntest);
+      tbox::pout << "Access time 12 overhead for each Timer: " << cost12 << " sec" << endl;
+   }
+
+#endif
+
+   tbox::TimerManager::getManager()->print(tbox::plog);
 
    /*
     * We're done.  Write the restart file.  
@@ -218,11 +370,14 @@ int main( int argc, char *argv[] )
 
    delete foo;
 
-   tbox::pout << "\nPASSED:  timertest" << endl;
+   if ( fail_count == 0 ) {
+      tbox::pout << "\nPASSED:  timertest" << endl;
+   }
+   }
 
    tbox::SAMRAIManager::shutdown();
-   tbox::MPI::finalize();
-   return(0);
+   tbox::SAMRAI_MPI::finalize();
+   return(fail_count);
 }
 
 

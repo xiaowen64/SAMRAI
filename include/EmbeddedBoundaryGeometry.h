@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryGeometry.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 609 $
-// Modified:    $Date: 2005-09-13 15:15:49 -0700 (Tue, 13 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Construction and management of embedded boundary data 
 //              on an AMR hierarchy.
 // 
@@ -341,7 +341,7 @@ public:
     * and grid_geom arguments must be supplied and may not be NULL.
     */
    EmbeddedBoundaryGeometry(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db = NULL,
       const tbox::Pointer<geom::CartesianGridGeometry<DIM> > grid_geom = NULL,
       const hier::IntVector<DIM>& nghosts = hier::IntVector<DIM>(0));
@@ -454,7 +454,7 @@ public:
     */
    void writeLevelEmbeddedBoundaryDataToFile(
       const tbox::Pointer<hier::PatchLevel<DIM> > level,
-      const string& dirname) const;
+      const std::string& dirname) const;
  
    ///
    ///  The following routine:
@@ -478,7 +478,7 @@ public:
       double* dbuffer,
       const hier::Patch<DIM>& patch,
       const hier::Box<DIM>& region,
-      const string& material_name);
+      const std::string& material_name) const;
 
    ///
    ///  The following routines:
@@ -720,7 +720,7 @@ private:
     */
    void readLevelEmbeddedBoundaryDataFromFile(
       const tbox::Pointer<hier::PatchLevel<DIM> > level,
-      const string& dirname) const;
+      const std::string& dirname) const;
 
    /*
     * These private member functions read data from input and restart.
@@ -737,7 +737,7 @@ private:
    /*
     * Name used for this object.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Grid geometry which embedded boundary is applied.
@@ -760,7 +760,7 @@ private:
    /*
     * INTERNAL or EXTERNAL flow.
     */
-   string d_flow_type;          
+   std::string d_flow_type;          
    
    /*
     * Number of ghosts used for the embedded boundary.
@@ -825,7 +825,7 @@ private:
     */
    bool d_read_ebdry;
    bool d_write_ebdry;
-   string d_ebdry_dirname;
+   std::string d_ebdry_dirname;
 
    /*
     * Bools specifying if we should use recursive or non-recursive algorithms

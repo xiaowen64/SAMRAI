@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataFillBox.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataFillBox.C $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 481 $
-// Modified:	$Date: 2005-07-21 13:50:43 -0700 (Thu, 21 Jul 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for "smart" boxlist ops in locally-active data comm ops
 //
 
@@ -13,9 +13,6 @@
 #include "LocallyActiveDataFillBox.h"
 
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace xfer {
@@ -73,7 +70,7 @@ LocallyActiveDataFillBox<DIM>::getActiveRefineVarData() const
 {
    if (!d_refine_data) {
       TBOX_ERROR("LocallyActiveDataFillBox<DIM>::getActiveRefineVarData error... "
-                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << std::endl);
    }
    return(d_refine_var_data);
 }
@@ -84,7 +81,7 @@ LocallyActiveDataFillBox<DIM>::getActiveCoarsenVarData() const
 {
    if (d_refine_data) {
       TBOX_ERROR("LocallyActiveDataFillBox<DIM>::getActiveCoarsenVarData error... "
-                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << std::endl);
    }
    return(d_coarsen_var_data);
 }
@@ -108,10 +105,10 @@ void LocallyActiveDataFillBox<DIM>::clearLocallyActiveFillBoxData()
 }
 
 template<int DIM>
-void LocallyActiveDataFillBox<DIM>::printClassData(ostream& os) const
+void LocallyActiveDataFillBox<DIM>::printClassData(std::ostream& os) const
 {
    const hier::Box<DIM> print_box(*d_box);
-   os << "\n Box = " << print_box << endl;
+   os << "\n Box = " << print_box << std::endl;
    if (d_refine_data) {
       if (d_refine_var_data.getNumberItems() == 0) {
          os << "  no refine var ids ";
@@ -143,14 +140,14 @@ template<int DIM>
 bool LocallyActiveDataFillBox<DIM>::checkData(
    const hier::Box<DIM>& box,
    const tbox::List<const typename xfer::RefineClasses<DIM>::Data*>& var_data,
-   ostream& os) const
+   std::ostream& os) const
 {
    bool ret_val = true;
 
    if (!d_refine_data) {
 
       TBOX_ERROR("LocallyActiveDataFillBox<DIM>::checkData error... "
-                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << std::endl);
       ret_val = false;
 
    } else {
@@ -159,7 +156,7 @@ bool LocallyActiveDataFillBox<DIM>::checkData(
          ret_val = false;
          os << "LocallyActiveDataFillBox<DIM>::checkData..."
             << "   this box = " << *d_box
-            << "\n   input box = " << box << endl;
+            << "\n   input box = " << box << std::endl;
       }
 
       if (ret_val) {
@@ -167,7 +164,7 @@ bool LocallyActiveDataFillBox<DIM>::checkData(
             ret_val = false;
             os << "LocallyActiveDataFillBox<DIM>::checkData..."
                << "   # var items in this set = " << d_refine_var_data.getNumberItems()
-               << "\n   # var items in input = " << var_data.getNumberItems() << endl;
+               << "\n   # var items in input = " << var_data.getNumberItems() << std::endl;
          } else {
             typename tbox::List<const typename xfer::RefineClasses<DIM>::Data*>::Iterator 
                lavdi_input(var_data);
@@ -205,14 +202,14 @@ template<int DIM>
 bool LocallyActiveDataFillBox<DIM>::checkData(
    const hier::Box<DIM>& box,
    const tbox::List<const typename xfer::CoarsenClasses<DIM>::Data*>& var_data,
-   ostream& os) const
+   std::ostream& os) const
 {
    bool ret_val = true;
 
    if (d_refine_data) {
 
       TBOX_ERROR("LocallyActiveDataFillBox<DIM>::checkData error... "
-                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << std::endl);
       ret_val = false;
 
    } else {
@@ -221,7 +218,7 @@ bool LocallyActiveDataFillBox<DIM>::checkData(
          ret_val = false;
          os << "LocallyActiveDataFillBox<DIM>::checkData..."
             << "   this box = " << *d_box
-            << "\n   input box = " << box << endl;
+            << "\n   input box = " << box << std::endl;
       }
 
       if (ret_val) {
@@ -229,7 +226,7 @@ bool LocallyActiveDataFillBox<DIM>::checkData(
             ret_val = false;
             os << "LocallyActiveDataFillBox<DIM>::checkData..."
                << "   # var items in this set = " << d_coarsen_var_data.getNumberItems()
-               << "\n   # var items in input = " << var_data.getNumberItems() << endl;
+               << "\n   # var items in input = " << var_data.getNumberItems() << std::endl;
          } else {
             typename tbox::List<const typename xfer::CoarsenClasses<DIM>::Data*>::Iterator 
                lavdi_input(var_data);

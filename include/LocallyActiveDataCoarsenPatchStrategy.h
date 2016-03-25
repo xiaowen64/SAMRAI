@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataCoarsenPatchStrategy.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataCoarsenPatchStrategy.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 306 $
-// Modified:	$Date: 2005-04-26 13:49:29 -0700 (Tue, 26 Apr 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Strategy interface to user routines for coarsening locally-active AMR data.
 //
  

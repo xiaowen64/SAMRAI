@@ -1,9 +1,9 @@
 //
-// File:	OutersideGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OutersideGeometry.C $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for outerside centered objects
 //
 
@@ -16,7 +16,7 @@
 #include "SideOverlap.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -38,7 +38,7 @@ template<int DIM>  OutersideGeometry<DIM>::OutersideGeometry(
    const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    d_box    = box;
    d_ghosts = ghosts;
@@ -63,7 +63,8 @@ template<int DIM>  OutersideGeometry<DIM>::~OutersideGeometry()
 *************************************************************************
 */
 
-template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > OutersideGeometry<DIM>::calculateOverlap(
+template<int DIM> 
+tbox::Pointer< hier::BoxOverlap<DIM> > OutersideGeometry<DIM>::calculateOverlap(
    const hier::BoxGeometry<DIM>& dst_geometry,
    const hier::BoxGeometry<DIM>& src_geometry,
    const hier::Box<DIM>& src_mask,
@@ -99,7 +100,8 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > OutersideGeometry<DIM>:
 *************************************************************************
 */
 
-template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > OutersideGeometry<DIM>::doOverlap(
+template<int DIM> 
+tbox::Pointer< hier::BoxOverlap<DIM> > OutersideGeometry<DIM>::doOverlap(
    const SideGeometry<DIM>& dst_geometry,
    const OutersideGeometry<DIM>& src_geometry,
    const hier::Box<DIM>& src_mask,
@@ -107,7 +109,7 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > OutersideGeometry<DIM>:
    const hier::IntVector<DIM>& src_offset)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert (dst_geometry.getDirectionVector() == hier::IntVector<DIM>(1));
+   TBOX_ASSERT(dst_geometry.getDirectionVector() == hier::IntVector<DIM>(1));
 #endif
 
    hier::BoxList<DIM> dst_boxes[DIM];

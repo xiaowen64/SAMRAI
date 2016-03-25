@@ -1,9 +1,9 @@
 //
-// File:	FillBoxSet.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/FillBoxSet.C $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Utility class for "smart" boxlist operations in comm schedules.
 //
 
@@ -12,9 +12,6 @@
 
 #include "FillBoxSet.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "FillBoxSet.I"
@@ -84,11 +81,11 @@ void FillBoxSet<DIM>::addFillBox(const hier::Box<DIM>& box)
 }
 
 template<int DIM> 
-void FillBoxSet<DIM>::print(ostream& os) const
+void FillBoxSet<DIM>::print(std::ostream& os) const
 {
-   os << "d_bounding_box = " << d_bounding_box << endl;
-   os << "d_recompute_bounding_box = " << d_recompute_bounding_box << endl;
-   os << "d_boxes = " << endl;
+   os << "d_bounding_box = " << d_bounding_box << std::endl;
+   os << "d_recompute_bounding_box = " << d_recompute_bounding_box << std::endl;
+   os << "d_boxes = " << std::endl;
    d_boxes.print(os);
 }
 

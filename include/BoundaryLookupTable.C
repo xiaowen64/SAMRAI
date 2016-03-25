@@ -1,9 +1,9 @@
 //
-// File:        BoundaryLookupTable.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryLookupTable.C $
 // Package:     SAMRAI hierarchy 
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:  Lookup table to aid in BoundaryBox construction
 //
 
@@ -14,12 +14,6 @@
 
 #include "tbox/ShutdownRegistry.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "BoundaryLookupTable.I"
@@ -61,7 +55,8 @@ template<int DIM>  BoundaryLookupTable<DIM>::BoundaryLookupTable()
    }
 
    if (d_table[0].isNull()) {
-      int factrl[DIM+1] = {1};
+      int factrl[DIM+1];
+      factrl[0] = 1;
       for (int i = 1; i <= DIM; i++) factrl[i] = i * factrl[i-1];
       d_ncomb.resizeArray(DIM);
       d_max_li.resizeArray(DIM);
@@ -71,7 +66,11 @@ template<int DIM>  BoundaryLookupTable<DIM>::BoundaryLookupTable()
 
 	 tbox::Array<int> work;
 	 work.resizeArray(codim*d_ncomb[cdm1]);
-	 buildTable(work.getPointer(), codim, 1);
+
+	 int recursive_work[DIM];
+	 int recursive_work_lvl = 0;
+	 int *recursive_work_ptr;
+	 buildTable(work.getPointer(), codim, 1, recursive_work, recursive_work_lvl, recursive_work_ptr);
 
 	 d_table[cdm1].resizeArray(d_ncomb[cdm1]);
 	 for (int j=0; j<d_ncomb[cdm1]; j++) {
@@ -99,18 +98,18 @@ template<int DIM>  BoundaryLookupTable<DIM>::~BoundaryLookupTable()
 *************************************************************************
 */
 
-template<int DIM> void BoundaryLookupTable<DIM>::buildTable(int *table, int codim, int ibeg)
+template<int DIM> void BoundaryLookupTable<DIM>::buildTable(int *table, int codim, int ibeg, int (&work)[DIM], int &lvl, int *&ptr)
 {
-   static int work[DIM];
-   static int lvl = 0;
-   static int *ptr;
+//   static int work[DIM];
+//   static int lvl = 0;
+//   static int *ptr;
    lvl++;                                  
    if (lvl == 1) ptr = table;              
    int iend = DIM - codim + lvl;          
    for (int i = ibeg; i <= iend; i++) {    
       work[lvl-1] = i;
       if (lvl != codim) {
-	 buildTable(ptr, codim, i+1);
+	 buildTable(ptr, codim, i+1,work, lvl, ptr);
       } else {
          for (int j = 0; j < codim; j++) {
 	    *(ptr+j) = work[j];

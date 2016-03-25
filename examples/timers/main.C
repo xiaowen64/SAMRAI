@@ -1,9 +1,9 @@
 //
-// File:        main.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/timers/main.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2002 The Regents of the University of California
-// Revision:    $Revision: 7 $
-// Modified:    $Date: 2004-11-30 13:18:17 -0800 (Tue, 30 Nov 2004) $
+// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Example program to demonstrate timers.
 //
 
@@ -16,7 +16,7 @@ using namespace std;
 #include "tbox/SAMRAIManager.h"
 #include "tbox/Database.h"
 #include "tbox/InputManager.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/Pointer.h"
 #include "tbox/Timer.h"
@@ -26,7 +26,7 @@ using namespace SAMRAI;
 
 int main( int argc, char *argv[] )
 {
-   tbox::MPI::init(&argc, &argv);
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
 
    {
@@ -34,7 +34,7 @@ int main( int argc, char *argv[] )
 
 #ifdef HAVE_TAU
       TAU_PROFILE("main()", "int (int, char **)", TAU_DEFAULT);
-      TAU_PROFILE_SET_NODE(tbox::MPI::getRank());
+      TAU_PROFILE_SET_NODE(tbox::SAMRAI_MPI::getRank());
 #endif
 
 
@@ -45,7 +45,7 @@ int main( int argc, char *argv[] )
 	      << "  options:\n"
 	      << "  none at this time"
 	      << endl;
-	 tbox::MPI::abort();
+	 tbox::SAMRAI_MPI::abort();
 	 return (-1);
       } 
 
@@ -105,7 +105,7 @@ int main( int argc, char *argv[] )
     * We're done.  Shut down application ...
     */
    tbox::SAMRAIManager::shutdown();
-   tbox::MPI::finalize();
+   tbox::SAMRAI_MPI::finalize();
    return(0);
 }
 

@@ -1,25 +1,22 @@
 //
-// File:	ArrayDataMiscellaneousOpsReal.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/array/ArrayDataMiscellaneousOpsReal.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Miscellaneous templated operations for real array data
 //
 
-#ifndef included_tbox_ArrayDataMiscellaneousOpsReal_C
-#define included_tbox_ArrayDataMiscellaneousOpsReal_C
+#ifndef included_math_ArrayDataMiscellaneousOpsReal_C
+#define included_math_ArrayDataMiscellaneousOpsReal_C
 
 #include "ArrayDataMiscellaneousOpsReal.h"
+
+#include "tbox/MathUtilities.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
-#include "tbox/IEEE.h"
-#include "tbox/Utilities.h"
 
 namespace SAMRAI {
     namespace math {
@@ -75,7 +72,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPosWithControlVolume(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(data1.getDepth() == data2.getDepth());
+   TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 #endif
 
    int test = 1;
@@ -89,7 +86,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPosWithControlVolume(
       const int ddepth  = data1.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -138,8 +135,9 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPosWithControlVolume(
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
                if (cvd[cv_counter+i0] > 0.0) {
-                  if ( tbox::Utilities::dabs(dd2[d2_counter+i0]) > 0.0
-                       && (dd1[d1_counter+i0] * dd2[d2_counter+i0] <= 0.0) ) {
+                  if ( tbox::MathUtilities<TYPE>::Abs(dd2[d2_counter+i0]) > 0.0
+                       && (dd1[d1_counter+i0] * dd2[d2_counter+i0] <= 0.0) 
+                     ) {
                      test = 0;
                   }
                }
@@ -197,7 +195,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPos(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(data1.getDepth() == data2.getDepth());
+   TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 #endif
 
    int test = 1;
@@ -246,7 +244,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::computeConstrProdPos(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-               if ( tbox::Utilities::dabs(dd2[d2_counter+i0]) > 0.0
+               if ( tbox::MathUtilities<TYPE>::Abs(dd2[d2_counter+i0]) > 0.0
                     && (dd1[d1_counter+i0] * dd2[d2_counter+i0] <= 0.0) ) {
                   test = 0;
                }
@@ -301,7 +299,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalarWithControlVolume(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dst.getDepth() == src.getDepth());
+   TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
 
    const hier::Box<DIM> d_box = dst.getBox();
@@ -313,7 +311,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalarWithControlVolume(
       const int ddepth  = dst.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -363,9 +361,9 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalarWithControlVolume(
             for (int i0 = 0; i0 < box_w[0]; i0++) {
 
                if (cvd[cv_counter+i0] > 0.0) {
-                  dd[d_counter+i0] =
-                     ( (tbox::Utilities::dabs(sd[s_counter+i0]) >= alpha) ?
-                       1.0 : 0.0 );
+                  dd[d_counter+i0] = ( 
+                  (tbox::MathUtilities<TYPE>::Abs(sd[s_counter+i0]) >= alpha) 
+                      ?  1.0 : 0.0 );
                }
             }
 
@@ -419,7 +417,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalar(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dst.getDepth() == src.getDepth());
+   TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
 
    const hier::Box<DIM> d_box = dst.getBox();
@@ -467,10 +465,9 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::compareToScalar(
          for (int nb = 0; nb < num_d0_blocks; nb++) {
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
-
-               dd[d_counter+i0] =
-                  ( (tbox::Utilities::dabs(sd[s_counter+i0]) >= alpha) ?
-                    1.0 : 0.0 );
+               dd[d_counter+i0] = ( 
+                  (tbox::MathUtilities<TYPE>::Abs(sd[s_counter+i0]) >= alpha) 
+                      ?  1.0 : 0.0 );
             }
 
             int dim_jump = 0;
@@ -518,7 +515,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocalWithControlVolume(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dst.getDepth() == src.getDepth());
+   TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
 
    int test = 1;
@@ -532,7 +529,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocalWithControlVolume(
       const int ddepth  = dst.getDepth();
       const int cvdepth = cvol.getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert((ddepth == cvdepth) || (cvdepth == 1));
+      TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 #endif
 
       int box_w[DIM];
@@ -640,7 +637,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::testReciprocal(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dst.getDepth() == src.getDepth());
+   TBOX_ASSERT(dst.getDepth() == src.getDepth());
 #endif
 
    int test = 1;
@@ -742,7 +739,7 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::maxPointwiseDivide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(denom.getDepth() == numer.getDepth());
+   TBOX_ASSERT(denom.getDepth() == numer.getDepth());
 #endif
 
    TYPE max = 0.0, quot;
@@ -792,9 +789,10 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::maxPointwiseDivide(
 
             for (int i0 = 0; i0 < box_w[0]; i0++) {
                if ( dd[d_counter+i0] == 0.0 ) {
-                  quot = tbox::Utilities::dabs(nd[n_counter+i0]);
+                  quot = tbox::MathUtilities<TYPE>::Abs(nd[n_counter+i0]);
                } else {
-                  quot = tbox::Utilities::dabs(nd[n_counter+i0]/dd[d_counter+i0]);
+                  quot = tbox::MathUtilities<TYPE>::Abs(nd[n_counter+i0] /
+                         dd[d_counter+i0]);
                }
                if ( max < quot ) max = quot;
             }
@@ -845,11 +843,11 @@ ArrayDataMiscellaneousOpsReal<DIM,TYPE>::minPointwiseDivide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(denom.getDepth() == numer.getDepth());
+   TBOX_ASSERT(denom.getDepth() == numer.getDepth());
 #endif
 
-   TYPE min  = (TYPE) tbox::IEEE::getDBL_MAX();
-   TYPE quot = (TYPE) tbox::IEEE::getDBL_MAX();
+   TYPE min  = tbox::MathUtilities<TYPE>::getMax();
+   TYPE quot = tbox::MathUtilities<TYPE>::getMax();
 
    const hier::Box<DIM> n_box = numer.getBox();
    const hier::Box<DIM> d_box = denom.getBox();

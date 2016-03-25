@@ -1,9 +1,9 @@
 // 
-// File:        HierarchyTester.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/hierarchy/HierarchyTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Manager class for patch hierarchy refine/coarsen tests.
 //
 
@@ -16,6 +16,9 @@
 
 #ifndef included_noprefix_Database
 #include "tbox/Database.h"
+#endif
+#ifndef included_noprefix_GriddingAlgorithm
+#include "GriddingAlgorithm.h"
 #endif
 #ifndef included_noprefix_IntVector
 #include "IntVector.h"
@@ -83,9 +86,10 @@ public:
    void setupInitialHierarchy(Pointer<Database> main_input_db);
 
    /**
-    * After hierarchy refine/coarsen operations are performed, check results.
+    * After hierarchy refine/coarsen operations are performed, check results
+    * and return integer number of test failures.
     */
-   void runHierarchyTestAndVerify();
+   int runHierarchyTestAndVerify();
 
    /**
     * The following two functions are declared pure virtual in the
@@ -144,6 +148,15 @@ private:
     */
    Pointer<PatchHierarchy<NDIM> > d_initial_patch_hierarchy;
    Pointer<PatchHierarchy<NDIM> > d_test_patch_hierarchy;
+
+   /*
+    * Pointers to gridding algorithm object is cached in test object
+    * so that test operates properly.  If this object goes out 
+    * of scope (i.e., is deleted) before test runs, boundary box 
+    * calculations will be incorrect since the test assumes 
+    * internal variables in gridding algorithm exist.
+    */
+   Pointer< GriddingAlgorithm<NDIM> > d_gridding_algorithm;
 
 };
 

@@ -1,9 +1,9 @@
 //
-// File:	RefineSchedule.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineSchedule.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Refine schedule for data transfer between AMR levels
 //
  
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -91,6 +90,15 @@ namespace SAMRAI {
  *       RefineSchedule<DIM>::setScheduleGenerationMethod(), which
  *       sets the option for all instances of the class.
  *
+ * Some constructors accept the argument @c fill_pattern.  This
+ * string controls which types of cells are filled and which are
+ * omitted from the filling process.  Valid values are:
+ * - @c "DEFAULT_FILL" Fill interior and ghost cells.
+ * - @c "FILL_INTERIORS_ONLY" Fill interior cells only.
+ * - @c "FILL_LEVEL_BORDERS_ONLY" Fill ghosts on level borders only.
+ * - @c "FILL_LEVEL_BORDERS_AND_INTERIORS" Fill interior and
+ *      ghosts on level borders.
+ *
  * @see xfer::RefineAlgorithm
  * @see xfer::RefinePatchStrategy
  * @see xfer::RefineClasses
@@ -111,7 +119,7 @@ public:
     *
     * If an invalid string is passed, an unrecoverable error will result.
     */
-   static void setScheduleGenerationMethod(const string& method);
+   static void setScheduleGenerationMethod(const std::string& method);
 
    /*!
     * @brief Constructor to create a refine schedule that moves data from the 
@@ -124,6 +132,8 @@ public:
     * same index space.  However, the levels do not have to be in the same AMR patch 
     * hierarchy.  Generally, this constructor is called by a RefineAlgorithm<DIM> object.
     *
+    * @param fill_pattern    Indicates which parts of the destination level
+    *                        to fill.  See RefineSchedule for valid values.
     * @param dst_level       Pointer to destination patch level.
     * @param src_level       Pointer to source patch level.
     * @param refine_classes  Pointer to structure containing patch data and
@@ -145,6 +155,7 @@ public:
     * factory pointer, is null.
     */
    RefineSchedule(
+      const std::string& fill_pattern,
       tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
       tbox::Pointer< hier::PatchLevel<DIM> > src_level,
       const tbox::Pointer< xfer::RefineClasses<DIM> > refine_classes,
@@ -166,6 +177,8 @@ public:
     * However, the levels do not have to be in the same AMR patch hierarchy.
     * In general, this constructor is called by a RefineAlgorithm<DIM> object.
     *
+    * @param fill_pattern    Indicates which parts of the destination level
+    *                        to fill.  See RefineSchedule for valid values.
     * @param dst_level       Pointer to destination patch level.
     * @param src_level       Pointer to source patch level; must be in same
     *                        index space as destination level.  This pointer
@@ -201,6 +214,7 @@ public:
     * factory pointer, is null.
     */
    RefineSchedule(
+      const std::string& fill_pattern,
       tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
       tbox::Pointer< hier::PatchLevel<DIM> > src_level,
       int next_coarser_level,
@@ -311,7 +325,7 @@ public:
     *
     * @param stream Output data stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    RefineSchedule(const RefineSchedule<DIM>&);	// not implemented
@@ -344,7 +358,8 @@ private:
       int next_coarser_level,
       tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
       const tbox::Array< xfer::FillBoxSet<DIM> >& fill_boxes,
-      bool use_time_interpolation);
+      bool use_time_interpolation,
+      bool skip_generate_schedule);
 
    /*!
     * @brief Recursively fill the destination level with data at the
@@ -463,13 +478,16 @@ private:
       tbox::Array< xfer::FillBoxSet<DIM> >& unfilled_boxes,
       const bool use_time_interpolation);
 
+
    /*!
-    * @brief Calculate the default fill boxes for the specified patch level.
+    * @brief Calculate the fill boxes for the specified patch level.
     *
-    * The default fill boxes cover the interiors plus the ghost cells.
+    * Acceptable values for @c fill_pattern is discussed in the
+    * class documentation.
     */
-   void allocateDefaultFillBoxes(
-      tbox::Array< xfer::FillBoxSet<DIM> >& fill,
+   void allocateFillBoxes(
+      const std::string& fill_pattern,
+      tbox::Array< xfer::FillBoxSet<DIM> >& fill_boxes,
       tbox::Pointer< hier::PatchLevel<DIM> > level,
       const hier::IntVector<DIM>& fill_ghost_width);
 
@@ -563,7 +581,7 @@ private:
    /*!
     * Selects algorithm used to generate communication schedule.
     */
-   static string s_schedule_generation_method;
+   static std::string s_schedule_generation_method;
 
    /*!
     * Structures that store refine data items.

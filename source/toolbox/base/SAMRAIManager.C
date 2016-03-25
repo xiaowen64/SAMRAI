@@ -1,17 +1,18 @@
 //
-// File:	SAMRAIManager.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/SAMRAIManager.C $
 // Package:	SAMRAI initialization and shutdown
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 406 $
-// Modified:	$Date: 2005-06-01 09:48:43 -0700 (Wed, 01 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	SAMRAI class to manage package startup and shutdown
 //
 
 #include "tbox/SAMRAIManager.h"
 #include "tbox/IEEE.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/ShutdownRegistry.h"
+#include "tbox/MathUtilities.h"
 #include "tbox/Utilities.h"
 
 #include <new>
@@ -23,20 +24,34 @@ namespace SAMRAI {
 /*
 *************************************************************************
 *									*
-* Set default number of patch data components to 256.                   *
-* This value can be changed by calling the static function              *
-* SAMRAIManager::setMaxNumberPatchDataEntries().  To avoid              *
-* potentially errant behavior, the value should be set early            *
-* on in the program execution (i.e., before constructing a patch        *
-* hierarchy, or performing any operations involving variables).         *
-* One set by the user it cannot be rest during program execution.       *
+* Set static members to set maximum number of patch data entries,       *
+* statistics, and timers supported by the code.                         *
+* These numbers are used to set the sizes of certain array containers   *
+* used in the SAMRAI library.  They are set here so that they may be    *
+* resized if necessary from a single access point (i.e., via the        *
+* SAMRAIManager) if the default sizes (set here) are insufficient.      *
+*                                                                       *
+* These values can be changed by calling the static functions:          *
+* SAMRAIManager::setMaxNumberPatchDataEntries(),                        *
+* SAMRAIManager::setMaxNumberTimers().                                  *
+* SAMRAIManager::setMaxNumberStatistics().                              *
+*									*
+* To avoid potentially erroneous or unexpected behavior, these          *
+* value should be set early on during program execution before they     *
+* are accessed in the library. Once accessed within the library,        *
+* they cannot be reset during program execution.                        *
 *									*
 *************************************************************************
 */
 
 int SAMRAIManager::s_max_patch_data_entries = 256;
 bool SAMRAIManager::s_max_patch_data_entries_accessed = false;
-bool SAMRAIManager::s_max_patch_data_entries_set_by_user = false;
+
+int SAMRAIManager::s_max_timers = 128;
+bool SAMRAIManager::s_max_timers_accessed = false;
+
+int SAMRAIManager::s_max_statistics = 128;
+bool SAMRAIManager::s_max_statistics_accessed = false;
 
 /*
 *************************************************************************
@@ -54,17 +69,17 @@ bool SAMRAIManager::s_max_patch_data_entries_set_by_user = false;
 
 static void badnew()
 {
-   TBOX_ERROR("operator `new' failed -- program abort!" << endl);
+   TBOX_ERROR("operator `new' failed -- program abort!" << std::endl);
 }
 
 void SAMRAIManager::startup()
 {
-   MPI::initialize();
+   SAMRAI_MPI::initialize();
    PIO::initialize();
-   IEEE::setupExceptionHandlers();
+   IEEE::setupFloatingPointExceptionHandlers();
 
 #ifndef LACKS_PROPER_MEMORY_HANDLER
-   set_new_handler(badnew);
+   std::set_new_handler(badnew);
 #endif
 }
 
@@ -86,9 +101,9 @@ void SAMRAIManager::shutdown()
 /*
 *************************************************************************
 *									*
-* Functions to get ans set the maximum number of patch data components  *
-* that will be supported.  Note that the set routine can only be called *
-* once during program execution.                                        *
+* Functions to get and set the maximum number of patch data entries     *
+* that will be supported.  Note that the set routine cannot be called   *
+* after the max number has been accessed.                               *
 *									*
 *************************************************************************
 */
@@ -101,19 +116,73 @@ int SAMRAIManager::getMaxNumberPatchDataEntries()
 
 void SAMRAIManager::setMaxNumberPatchDataEntries(int maxnum)
 {
-   if (s_max_patch_data_entries_set_by_user) {
-      TBOX_ERROR("SAMRAIManager::setMaxNumberPatchDataEntries() has already been \n"
-                 << "called.  It cannot be called more than once! -- program abort!"
-                 << endl);
-   }
    if (s_max_patch_data_entries_accessed) {
-      TBOX_ERROR("SAMRAIManager::getMaxNumberPatchDataEntries() has already been \n"
-                 << "called and the value cannot be reset after that by calling \n"
-                 << "SAMRAIManager::setMaxNumberPatchDataEntries() -- program abort!"
-                 << endl);
+      TBOX_ERROR("SAMRAIManager::setMaxNumberPatchDataEntries() error..."
+                 << "\nThe max patch data entries value has already been accessed and cannot"
+                 << "\nbe reset after that point by calling this method -- program abort!"
+                 << std::endl);
+   } else {
+      s_max_patch_data_entries = MathUtilities<int>::Max(maxnum,
+                                                         s_max_patch_data_entries);
    }
-   s_max_patch_data_entries = ( (maxnum < 0) ? s_max_patch_data_entries : maxnum );
-   s_max_patch_data_entries_set_by_user = true; 
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Functions to get and set the maximum number of timers                 *
+* that will be supported.  Note that the set routine cannot be called   *
+* after the max number has been accessed.                               *
+*                                                                       *
+*************************************************************************
+*/
+
+int SAMRAIManager::getMaxNumberTimers()
+{
+   s_max_timers_accessed = true;
+   return (s_max_timers);
+}
+
+void SAMRAIManager::setMaxNumberTimers(int maxnum)
+{
+   if (s_max_timers_accessed) {
+      TBOX_ERROR("SAMRAIManager::setMaxNumberTimers() error..."
+                 << "\nThe max timers value has already been accessed and cannot"
+                 << "\nbe reset after that point by calling this method -- program abort!"
+                 << std::endl);
+   } else {
+      s_max_timers = MathUtilities<int>::Max(maxnum,
+                                             s_max_timers);
+   }
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Functions to get and set the maximum number of statistics             *
+* that will be supported.  Note that the set routine cannot be called   *
+* after the max number has been accessed.                               *
+*                                                                       *
+*************************************************************************
+*/
+
+int SAMRAIManager::getMaxNumberStatistics()
+{
+   s_max_statistics_accessed = true;
+   return (s_max_statistics);
+}
+
+void SAMRAIManager::setMaxNumberStatistics(int maxnum)
+{
+   if (s_max_statistics_accessed) {
+      TBOX_ERROR("SAMRAIManager::setMaxNumberStatistics() error..."
+                 << "\nThe max statistics value has already been accessed and cannot"
+                 << "\nbe reset after that point by calling this method -- program abort!"
+                 << std::endl);
+   } else {
+      s_max_statistics = MathUtilities<int>::Max(maxnum,
+                                                 s_max_statistics);
+   }
 }
 
 

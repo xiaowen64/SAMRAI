@@ -1,0 +1,18 @@
+#! /bin/sh
+##
+## File:        $URL$
+## Package:     SAMRAI templates
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision$
+## Modified:    $LastChangedDate$
+## Description: shell script generating Cscope cross reference symbol database
+##
+
+# Go to the top level SAMRAI directory and make sure we get there.
+cd `dirname $0`/../.. || exit 1;
+test -d "source/hierarchy/patches" || exit 1
+pwd
+
+rm -fr cscope.*
+find . -name \*.[cChI] -type f > cscope.files
+cscope -b -q -k

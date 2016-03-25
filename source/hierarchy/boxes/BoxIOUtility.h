@@ -1,9 +1,9 @@
 //
-// File:        BoxIOUtility.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxIOUtility.h $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility class to read and write boxes to an HDF database.
 //
 
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_hier_BoxArray
 #include "BoxArray.h"
@@ -31,8 +30,7 @@ using namespace std;
 #include "tbox/Pointer.h"
 #endif
 #ifndef included_String
-#include <string>
-using namespace std;
+#include <std::string>
 #define included_String
 #endif
 
@@ -66,7 +64,7 @@ public:
     * The constructor requires the name of the HDF database
     * to write or read to, and the IOTYPE.
     */
-   BoxIOUtility(const string& dirname,
+   BoxIOUtility(const std::string& dirname,
                       const IOTYPE iotype);
 
    /**
@@ -111,7 +109,7 @@ public:
    /**
     * Print the boxes stored in the database to the specified IO stream.
     */
-   void printBoxes(ostream& os);
+   void printBoxes(std::ostream& os);
 
 private:
 
@@ -124,7 +122,7 @@ private:
    /*
     * HDF database name.
     */
-   string d_hdf_dirname;
+   std::string d_hdf_dirname;
 
    /*
     * The IO type - read or write

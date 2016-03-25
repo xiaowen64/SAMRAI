@@ -1,10 +1,10 @@
 //
-// File:	OuteredgeDataFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outeredge/OuteredgeDataFactory.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Factory class for creating outeredge data objects
 //
 
@@ -74,16 +74,18 @@ public:
     */
    virtual ~OuteredgeDataFactory<DIM,TYPE>();
 
-   /*!
-    * @brief
-    * Virtual function to clone the patch data factory .
+   /**
+    * @brief Abstract virtual function to clone a patch data factory.
+
+    * This will return a new instantiation of the abstract factory
+    * with the same properties.  The properties of the cloned factory
+    * can then be changed without modifying the original.
     *
-    * This will return
-    * a new instantiation of the factory with the same properties (e.g., same
-    * type and depth).  The properties of the cloned factory can then be
-    * changed without modifying the original.
+    * @param ghosts default ghost cell width for concrete classes created from
+    * the factory.
     */
-   virtual tbox::Pointer<hier::PatchDataFactory<DIM> > cloneFactory();
+   virtual tbox::Pointer< hier::PatchDataFactory<DIM> > cloneFactory(const hier::IntVector<DIM>& ghosts);
+
 
    /*!
     * @brief
@@ -97,6 +99,14 @@ public:
       const hier::Box<DIM>& box,
       tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL)) const;
 
+   /**
+    * Virtual factory function to allocate a concrete cell data object.
+    * Same as above function, except passes in a patch instead of a box.
+    */
+   virtual tbox::Pointer< hier::PatchData<DIM> > allocate(
+      const hier::Patch<DIM>& patch,
+      tbox::Pointer<tbox::Arena> pool = tbox::Pointer<tbox::Arena>(NULL)) const;
+
    /*!
     * @brief
     * Allocate the box geometry object associated with the patch data.
@@ -106,27 +116,6 @@ public:
     */
    virtual tbox::Pointer<hier::BoxGeometry<DIM> >
    getBoxGeometry(const hier::Box<DIM>& box) const;
-
-   /*!
-    * @brief
-    * Get the default ghost cell width.
-    *
-    * This is the ghost cell width that will be used in the instantiation of 
-    * concrete outeredge data objects.  This is set to zero currently for 
-    * outeredge data objects.
-    */
-   virtual const hier::IntVector<DIM>& getDefaultGhostCellWidth() const;
-
-   /*!
-    * @brief
-    * Set the default ghost cell width.
-    *
-    * This is the ghost cell width that will be used in the instantiation of 
-    * concrete outeredge data instances.  This routine should not be called 
-    * with a non-zero ghost cell width and will cause an abort if the code is 
-    * compiled with assertions enabled.
-    */
-   virtual void setDefaultGhostCellWidth(const hier::IntVector<DIM>& ghosts);
 
    /*!
     * @brief
@@ -176,8 +165,7 @@ public:
    
 private:
    int d_depth;
-
-   hier::IntVector<DIM> *d_no_ghosts;
+   hier::IntVector<DIM> d_no_ghosts;
 
 };
 

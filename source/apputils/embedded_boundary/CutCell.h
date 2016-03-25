@@ -1,10 +1,10 @@
 //
-// File:        CutCell.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CutCell.h $
 // Package:     SAMRAI applications
-// Copyright:   (c) 1997-2000 The Regents of the University of California
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 726 $
-// Modified:    $Date: 2005-11-10 17:19:40 -0800 (Thu, 10 Nov 2005) $
+// Revision:    $LastChangedRevision: 1808 $
+// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
 // Description: Cut cell class for embedded boundary implementations
 //
 
@@ -74,8 +74,6 @@ public:
     * Static function to set whether storage will be allocated for boundary 
     * node information.
     *
-    * @param  enable_bn bool indicating whether boundary node data storage
-    *                   should be enabled.
     */
    static void enableBoundaryNodeStorage();
 
@@ -280,22 +278,22 @@ public:
    /*!
     * Print volume and area data for the cell.
     */
-   void printVolumeAndAreas(ostream& os) const;
+   void printVolumeAndAreas(std::ostream& os) const;
 
    /*!
     * Print normal data for the cell.
     */
-   void printNormal(ostream& os) const;
+   void printNormal(std::ostream& os) const;
 
    /*!
     * Print boundary nodes for the cell.
     */
-   void printBoundaryNodes(ostream& os) const;
+   void printBoundaryNodes(std::ostream& os) const;
 
    /*!
     * Print all data in the struct.
     */
-   void printAll(ostream& os) const;
+   void printAll(std::ostream& os) const;
 
    /*!
     * The copySourceItem() method allows CutCell to be a templated

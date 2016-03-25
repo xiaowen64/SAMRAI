@@ -1,8 +1,8 @@
 /*
- * File:        $RCSfile$
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 706 $
- * Modified:    $Date: 2005-11-04 12:12:05 -0800 (Fri, 04 Nov 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/hypre_poisson/HyprePoisson.h $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Example user class for solving Poisson using Hypre.
  */
 
@@ -12,6 +12,8 @@
 #ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
 #endif
+
+using namespace std;
 
 #if !defined(HAVE_HYPRE)
 
@@ -135,7 +137,7 @@ public:
       const hier::Patch<NDIM> &patch ,
       const hier::Box<NDIM> &region ,
       const string &variable_name ,
-      int depth_id );
+      int depth_id ) const;
 
    //@}
 
@@ -150,8 +152,10 @@ public:
     * -# Set boundary conditions
     * -# Specify Poisson equation parameters
     * -# Call solver
+    *
+    * @return whether solver converged
     */
-   int solvePoisson();
+   bool solvePoisson();
 
    /*!
     * @brief Set up external plotter to plot internal

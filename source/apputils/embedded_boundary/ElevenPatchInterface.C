@@ -1,11 +1,11 @@
 //
-// File:        ElevenPatchInterface.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/ElevenPatchInterface.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 609 $
-// Modified:    $Date: 2005-09-13 15:15:49 -0700 (Tue, 13 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: SAMRAI interface to Eleven library
 //              
 //
@@ -24,13 +24,9 @@
 #include "CutCell.h"
 #include "EmbeddedBoundaryDefines.h"
 #include "IndexData.h"
-#include "tbox/IEEE.h"
 #include "tbox/Utilities.h"
 
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
   namespace appu {
@@ -44,7 +40,7 @@ namespace SAMRAI {
 */
 template<int DIM> 
 ElevenPatchInterface<DIM>::ElevenPatchInterface(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db)
 {
   d_object_name = object_name;
@@ -82,7 +78,7 @@ void ElevenPatchInterface<DIM>::calculateCutCellInfo(
 {
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
-              << "\ninformation." << endl);
+              << "\ninformation." << std::endl);
 }
 
 /*
@@ -99,7 +95,7 @@ bool ElevenPatchInterface<DIM>::isInside(
 
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
-              << "\ninformation." << endl);
+              << "\ninformation." << std::endl);
 
   return true;
 }
@@ -128,7 +124,7 @@ void ElevenPatchInterface<DIM>::isInside(
 {
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
-              << "\ninformation." << endl);
+              << "\ninformation." << std::endl);
 }
 
 
@@ -144,12 +140,12 @@ void ElevenPatchInterface<DIM>::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    TBOX_ERROR(d_object_name << ":Unable to use ELEVEN."
               << "\nPlease contact SAMRAI developers to find out more"
-              << "\ninformation." << endl);
+              << "\ninformation." << std::endl);
 
 }
 
@@ -162,9 +158,9 @@ void ElevenPatchInterface<DIM>::getFromInput(
 */
 template<int DIM>
 void ElevenPatchInterface<DIM>::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
-   os << "d_object_name = " << d_object_name << endl;
+   os << "d_object_name = " << d_object_name << std::endl;
 }
 
 

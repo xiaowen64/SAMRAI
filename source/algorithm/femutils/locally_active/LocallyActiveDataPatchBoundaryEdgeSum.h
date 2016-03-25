@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataPatchBoundaryEdgeSum.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryEdgeSum.h $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 703 $
-// Modified:	$Date: 2005-11-03 14:46:35 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for summing locally-active edge data at patch boundaries
 //
  
@@ -31,7 +31,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_xfer_LocallyActiveDataRefineSchedule
@@ -45,12 +44,13 @@ namespace SAMRAI {
     namespace algs {
 
  /*!
- *  @brief Class LocallyActiveDataPatchBoundaryEdgeSum provides operations summing 
- *  locally-active edge data values at edges that are shared by multiple patches 
- *  on a single level.  Note that this utility only works on a SINGLE patch level, not 
- *  on a multiple levels in an AMR patch hierarchy like the LocallyActiveDataPatchBoundaryNodeSum 
- *  class. Unlike node data, edge data at coarse-fine boundaries are not co-located, so the sum 
- *  operation is not clearly defined.
+ *  @brief Class LocallyActiveDataPatchBoundaryEdgeSum provides operations 
+ *  summing locally-active edge data values at edges that are shared by 
+ *  multiple patches on a single level.  Note that this utility only works 
+ *  on a SINGLE patch level, not  on a multiple levels in an AMR patch 
+ *  hierarchy like the LocallyActiveDataPatchBoundaryNodeSum class. Unlike 
+ *  node data, edge data at coarse-fine boundaries are not co-located, so 
+ *  the sum operation across levels depends on application requirements.
  *
  *  Usage of a patch boundry edge sum involves the following sequence of steps:
  *
@@ -64,8 +64,8 @@ namespace SAMRAI {
  *         my_edge_sum.registerSum(edge_data_id2);
  *         etc...
  *     \endverbatim
- *  -# Setup the sum operations for a single level involving patches defined to be active
- *     by a given level manager.  For example,
+ *  -# Setup the sum operations for a single level involving patches defined 
+ *     to be active by a given level manager.  For example,
  *     \verbatim
  *         my_edge_sum.setupSum(level, level_mgr);
  *     \endverbatim
@@ -82,15 +82,45 @@ namespace SAMRAI {
 template<int DIM> class LocallyActiveDataPatchBoundaryEdgeSum
 {
 public:
-      /*!
+
+   /*!
+    *  @brief Static function used to predetermine number of patch data
+    *         slots ahared among all LocallyActiveDataPatchBoundaryEdgeSum
+    *         objects (i.e., static members).  To get a correct count,
+    *         this routine should only be called once.
+    *
+    *  @return integer number of internal patch data slots required
+    *          to perform sum.
+    *  @param max_variables_to_register integer value indicating
+    *          maximum number of patch data ids that will be registered  
+    *          with edge sum objects.
+    */
+   static int getNumSharedPatchDataSlots(int max_variables_to_register);
+
+   /*!
+    *  @brief Static function used to predetermine number of patch data
+    *         slots unique to each LocallyActiveDataPatchBoundaryEdgeSum
+    *         object (i.e., non-static members).  To get a correct count,
+    *         this routine should be called exactly once for each object
+    *         that will be constructed.
+    *
+    *  @return integer number of internal patch data slots required
+    *          to perform sum.
+    *  @param max_variables_to_register integer value indicating
+    *          maximum number of patch data ids that will be registered
+    *          with edge sum objects.
+    */
+   static int getNumUniquePatchDataSlots(int max_variables_to_register);
+
+   /*!
     *  @brief Constructor initializes object to default (mostly undefined) 
     *  state.
     *
-    *  @param object_name const string reference for name of object used 
+    *  @param object_name const std::string reference for name of object used 
     *  in error reporting.  When assertion checking is on, the string
     *  cannot be empty.
     */
-   LocallyActiveDataPatchBoundaryEdgeSum(const string& object_name);
+   LocallyActiveDataPatchBoundaryEdgeSum(const std::string& object_name);
 
    /*!
     *  @brief Destructor for the schedule releases all internal storage.
@@ -159,7 +189,7 @@ private:
 
    enum PATCH_BDRY_EDGE_SUM_DATA_ID { ID_UNDEFINED = -1 };
 
-   string d_object_name;
+   std::string d_object_name;
    bool d_setup_called;
 
    int d_num_reg_sum;

@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/nonlinear/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 173 $
-## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for nonlinear solver test
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      = @top_srcdir@
 SRCDIR	      =	@top_srcdir@/examples/nonlinear
 SUBDIR        = source/test/nonlinear
 VPATH	      =	@top_srcdir@/examples/nonlinear
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check	
@@ -20,11 +21,15 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
-CXX_OBJS      = main.o ModifiedBratuProblem.o 
+CXX_OBJS      = main.o ModifiedBratuProblem.o  tbox_Pointer-CellPoissonFACSolver-NDIM.o tbox_Pointer-ModifiedBratuProblem.o
 FXD_OBJS      = FACjacobian.o bcFluxCopy.o bcFluxFix.o bratufunc.o err.o evalBratu.o evalDiffusionCoef.o evalExponential.o evalF.o evalFaceFluxes.o evalJv.o evalSource.o setbc.o
 F1D_OBJS      = $(FXD_OBJS) adjcrsfineoffdiag.o
 F2D_OBJS      = $(FXD_OBJS)
 F3D_OBJS      = $(FXD_OBJS)
+
+NUM_TESTS = 2
+
+TEST_NPROCS = @TEST_NPROCS@
 
 main2d:
 		if test -f stamp-3d; then $(MAKE) clean; fi
@@ -48,10 +53,10 @@ clean-check:
 		$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) *.f main2d main3d
+		$(RM) *.o *.f main2d main3d
 
 redo:
-		$(RM) main2d main3d core *.ii *.int.c
+		$(RM) *.o main2d main3d core *.ii *.int.c
 		$(RM) -r ti_files ii_files
 
 include $(SRCDIR)/Makefile.depend
@@ -115,9 +120,6 @@ setbc.o:	$(FORTRAN)/setbc.m4
 		$(M4) $(M4DIRS) $(FORTRAN)/setbc.m4 > setbc.f
 		$(F77) $(FFLAGS) -c setbc.f -o $@
 
-
-TEST_NPROCS = @TEST_NPROCS@ 
-
 check:
 		$(MAKE) check2d
 		$(MAKE) check3d
@@ -132,3 +134,9 @@ check2d:	main2d
 # It can be run using check3dx
 check3d:	main3d
 
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile

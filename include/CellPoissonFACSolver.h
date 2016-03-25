@@ -1,8 +1,8 @@
 /*
- * File:         CellPoissonFACSolver.h
- * Copyright:    (c) 1997-2005 The Regents of the University of California
- * Revision:     $Revision: 453 $
- * Modified:     $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACSolver.h $
+ * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 1818 $
+ * Modified:     $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
  * Description:  High-level solver (wrapper) for scalar poisson equation.
  */
 
@@ -145,7 +145,7 @@ public:
     * @param object_name Name of object used in outputs
     * @param database tbox::Database for initialization (may be NULL)
     */
-   CellPoissonFACSolver( const string &object_name,
+   CellPoissonFACSolver( const std::string &object_name,
                                tbox::Pointer<tbox::Database> database
                                   = tbox::Pointer<tbox::Database>() );
 
@@ -272,7 +272,7 @@ public:
     * it can sometimes make the PoissonHYPRESolver class more efficient.
     */
 
-   void setBoundaries(const string& boundary_type,
+   void setBoundaries(const std::string& boundary_type,
                       const int fluxes = -1,
                       const int flags = -1,
                       int* bdry_types = NULL);
@@ -349,7 +349,7 @@ public:
     * - @c "redblack"
     * - @c "hypre" (only if the HYPRE library is available).
     */
-   void setCoarsestLevelSolverChoice( const string &choice );
+   void setCoarsestLevelSolverChoice( const std::string &choice );
 
    /*!
     * @brief Set tolerance for coarse level solve.
@@ -404,9 +404,9 @@ public:
     * Grids, I. Error Analysis", Mathematics of Computation, Vol. 56, No. 194,
     * April 1991, pp. 437-461.
     *
-    * @param method String selecting the coarse-fine discretization method.
+    * @param coarsefine_method String selecting the coarse-fine discretization method.
     */
-   void setCoarseFineDiscretization( const string &coarsefine_method );
+   void setCoarseFineDiscretization( const std::string &coarsefine_method );
 
    /*!
     * @brief Set the name of the prolongation method.
@@ -424,9 +424,9 @@ public:
     * coefficients for non-hierarchy data, because linear refinement
     * requires boundary conditions to be set on temporary levels.
     *
-    * @param method String selecting the coarse-fine discretization method.
+    * @param prolongation_method String selecting the coarse-fine discretization method.
     */
-   void setProlongationMethod( const string &prolongation_method );
+   void setProlongationMethod( const std::string &prolongation_method );
 
    /*!
     * @brief Set the number of pre-smoothing sweeps during
@@ -493,8 +493,8 @@ public:
     * @param solution solution patch data index for u
     * @param rhs right hand side patch data index for f
     * @param hierarchy The patch hierarchy to solve on
-    * @param coarse_ln The coarsest level in the solve
-    * @param fine_ln The finest level in the solve
+    * @param coarse_level The coarsest level in the solve
+    * @param fine_level The finest level in the solve
     */
    void initializeSolverState( const int solution,
                                const int rhs,
@@ -576,7 +576,7 @@ private:
    /*!
     * @brief Object name.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*!
     * @brief Object holding the specifications of the Poisson equation.

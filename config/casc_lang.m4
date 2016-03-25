@@ -14,7 +14,7 @@ dnl * languages, see the builtin autoconf macros AC_LANG_C,
 dnl * AC_LANG_CPLUSPLUS, and other related macros
 dnl **********************************************************************
 
-AC_DEFUN(CASC_LANG_MPISWITCH,
+AC_DEFUN([CASC_LANG_MPISWITCH],
 [
    if "$1" = "CC"; then
       CC_switch_save=$CC
@@ -43,7 +43,7 @@ dnl * argument.  Again, the only acceptable arguments are "CC", "CXX", and
 dnl * "F77".
 dnl *********************************************************************
 
-AC_DEFUN(CASC_LANG_MPIUNSWITCH,
+AC_DEFUN([CASC_LANG_MPIUNSWITCH],
 [
    if "$1" = "CC"; then
       $CC=$CC_switch_save

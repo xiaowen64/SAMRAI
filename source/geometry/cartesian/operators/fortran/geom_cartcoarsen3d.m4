@@ -1,9 +1,9 @@
 c
-c  File:        geom_cartcoarsen3d.m4
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/cartesian/operators/fortran/geom_cartcoarsen3d.m4 $
 c  Package:     SAMRAI geometry
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    $Revision$
-c  Modified:    $Date$
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1704 $
+c  Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 c  Description: FORTRAN routines for spatial coarsening of 3d patch data
 c               on a regular Cartesian mesh.
 c

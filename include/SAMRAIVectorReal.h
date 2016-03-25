@@ -1,9 +1,9 @@
 //
-// File:	SAMRAIVectorReal.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/SAMRAIVectorReal.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 557 $
-// Modified:    $Date: 2005-08-17 14:49:22 -0700 (Wed, 17 Aug 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1768 $
+// Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 // Description: Vector class for real data on SAMRAI hierarchy.
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_math_HierarchyDataOpsReal
@@ -49,7 +48,6 @@ using namespace std;
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -68,7 +66,7 @@ namespace SAMRAI {
  * Specifically, this class provides a set of common vector operations 
  * to manipulate all of the data components as a whole.  The most obvious 
  * use of this class is in SAMRAI applications that use solver libraries, 
- * such as KINSOL, PVODE, or PETSc.  Specific vector objects that can be 
+ * such as KINSOL, CVODE, or PETSc.  Specific vector objects that can be 
  * used with these packages are defined elsewhere in SAMRAI.  However, all
  * these vactor interfaces are built using this vector class.  
  *
@@ -100,7 +98,7 @@ namespace SAMRAI {
  *            can be reset (such as after remeshing) by calling the 
  *            resetLevels() function.
  * - @b (2) Register each data component with the vector by providing
- *            the variable and its storage location (i.e., patch descriptor
+ *            the variable and its storage location (i.e., patch data
  *            index), and the control volume index if needed. 
  *            See the addComponent() functions.
  * - @b (3) Manipulate data using vector operations.
@@ -112,7 +110,7 @@ namespace SAMRAI {
  * the vector (using the addComponent() function).  
  * Then, the allocateVectorData() function will allocate storage for all 
  * components when called.  Alternatively, patch data objects (corresponding 
- * to the variables and vector data component descriptor indices) may be 
+ * to the variables and vector patch data indices) may be 
  * explicitly created elsewhere.  However, depending on the circumstance, this 
  * second alternative may be more confusing and require more bookkeeping on 
  * the user's part.  See the documentation accompanying the addComponent()
@@ -158,7 +156,7 @@ public:
     * stream can be changed at any time via the setOutputStream() function.
     */
    SAMRAIVectorReal(
-      const string& name,
+      const std::string& name,
       tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
       const int coarsest_level,
       const int finest_level);
@@ -167,7 +165,7 @@ public:
     * Virtual destructor for SAMRAIVectorReal<DIM> class.  The destructor 
     * destroys all vector component information.  However, the destructor 
     * does not deallocate the vector component storage, nor does it return the 
-    * component descriptor indices to the patch descriptor free list.
+    * vector patch data indices to the patch descriptor free list.
     * The freeVectorComponents() function is provided for this task.  The 
     * reason for this is that an application may create a vector based on 
     * some pre-existing patch data objects that must live beyond the 
@@ -178,13 +176,13 @@ public:
    /**
     * Set string identifier for this vector object.
     */
-   void setName(const string &name);
+   void setName(const std::string &name);
 
    /**
     * Set output stream for vector object.  When the print() function is
     * called, all vector data will be sent to the given output stream. 
     */
-   void setOutputStream(ostream& s);
+   void setOutputStream(std::ostream& s);
 
    /**
     * Return reference to the output stream used by this vector object.  
@@ -193,7 +191,7 @@ public:
     * packages.  Specifically, SAMRAI vectors and package-specific wrappers
     * for those vectors may all access the same output stream.
     */
-   ostream& getOutputStream();
+   std::ostream& getOutputStream();
   
    /**
     * Reset range of patch levels over which vector is defined.  This 
@@ -207,7 +205,7 @@ public:
    /**
     * Return string identifier for this vector object.
     */
-   const string& getName() const;
+   const std::string& getName() const;
 
    /**
     * Return pointer to patch hierarchy associated with the vector.
@@ -250,12 +248,12 @@ public:
    getComponentVariable(const int component) const; 
 
    /**
-    * Return patch descriptor index for specified vector component.
+    * Return patch data index for specified vector component.
     */
    int getComponentDescriptorIndex(const int component) const;
 
    /**
-    * Return patch descriptor index of control volume data for vector component.
+    * Return patch data index of control volume data for vector component.
     */
    int getControlVolumeIndex(const int component) const;
 
@@ -264,14 +262,14 @@ public:
     * (i.e., a new vector).  Each patch data component in the new vector 
     * will match the corresponding component in this vector object.  However,
     * the data for the components of the new vector will be assigned to 
-    * different patch descriptor indices than the original.  In short, 
+    * different patch data indices than the original.  In short, 
     * the cloned vector will have an identical structure to the original, 
     * but its data storage will be distinct.  Before the new vector object 
     * can be used, its data must be allocated explicitly.
     *
     * Note that this function maps the variables associated with the new
     * vector to the new vector component data indices (i.e., patch 
-    * descriptor indices) in the variable database.  Thus the mapping
+    * data indices) in the variable database.  Thus the mapping
     * between variables and patch data for the new vector can be obtained
     * from the variable database if needed.
     *
@@ -279,7 +277,7 @@ public:
     * is used for the new vector.  
     */
    tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > 
-      cloneVector(const string& name) const;
+      cloneVector(const std::string& name) const;
 
    /**
     * Destroy the storage corresponding to the vector components and
@@ -290,9 +288,9 @@ public:
 
    /**
     * Add a new variable and patch data component to this vector.
-    * The integer values passed in represent the patch descriptor indices
+    * The integer values passed in represent the patch data indices
     * for the vector component data and the component control volume data. 
-    * If the control volume patch descriptor index is not specified 
+    * If the control volume patch data index is not specified 
     * (i.e., control_vol_id < 0), no weighting will be applied in 
     * vector operations associated with the component.  This routine
     * also accepts a hierarchy data operation object for the component
@@ -301,13 +299,13 @@ public:
     * for the given variable type are used.
     *
     * Note that this function maps the variable to the component data
-    * index (i.e., patch descriptor index) in the variable database.
+    * index (i.e., patch data index) in the variable database.
     * Thus, the mapping between the variable and its patch data for the 
     * vector can be obtained from the variable database if needed.
     * 
     * When assertion checking is active, this routine checks make sure
     * that the type of the variable matches the types associated with
-    * the patch descriptor indices passed in. 
+    * the patch data indices passed in. 
     */
    void addComponent(
       const tbox::Pointer< hier::Variable<DIM> >& var, 
@@ -326,7 +324,7 @@ public:
 
    /**
     * Deallocate data storage for all components of this vector object. 
-    * Note that this routine will not free the associated descriptor 
+    * Note that this routine will not free the associated data 
     * indices in the patch descriptor.  See freeVectorComponents() function.
     */
    void deallocateVectorData();
@@ -334,7 +332,7 @@ public:
    /**
     * Print component information and data for this vector object.
     */
-   void print(ostream& s = tbox::plog,
+   void print(std::ostream& s = tbox::plog,
 	      const bool interior_only = true) const;
 
    /**
@@ -614,7 +612,7 @@ private:
    /*
     * Private function to set attributes for the specified vector component.
     * The component will be associated with the given variable and patch 
-    * descriptor index information.  This function is specialized for 
+    * data index information.  This function is specialized for 
     * either double or float vector types.  This function is called from 
     * addComponent() and clonevector(). 
     * 
@@ -641,7 +639,7 @@ private:
    static tbox::Pointer< math::HierarchyDataOpsReal<DIM,TYPE> > s_node_ops;
    static tbox::Pointer< math::HierarchyDataOpsReal<DIM,TYPE> > s_side_ops;
 
-   string d_vector_name;
+   std::string d_vector_name;
 
    tbox::Pointer< hier::PatchHierarchy<DIM> > d_hierarchy;
    int  d_coarsest_level;
@@ -661,7 +659,7 @@ private:
    tbox::Array<int> d_variableid_2_vectorcomponent_map;
 
    // output stream for vector data
-   ostream* d_output_stream; 
+   std::ostream* d_output_stream; 
 
 };
 

@@ -1,0 +1,101 @@
+##
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/patch_configuration/Makefile.in $
+## Package:     SAMRAI tests
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Description: makefile for SAMRAI patch configuration tests
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/test/patch_configuration
+VPATH         = @srcdir@
+TESTTOOLS     = ../testtools
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+AUTOTEST     = $(SAMRAI)/source/test/patch_configuration
+CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM)  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = PatchConfigurationTester.o main.o
+
+NUM_TESTS = 12
+
+TEST_NPROCS = @TEST_NPROCS@
+
+test2d:
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o test2d
+
+test3d:
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 test-3d
+
+test-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	test2d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d test-2d-3levels.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d test-2d-3levels-perx.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d test-2d-3levels-pery.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d test-2d-3levels-perxandy.input;
+
+check3d:	test3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-perx.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-pery.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-perz.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-perxandy.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-perxandz.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-peryandz.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d test-3d-3levels-perxandyandz.input;
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
+
+#clean-check:
+#		$(SAMCLEAN)
+
+clean-check:
+		$(RM) *.f *.o
+	 	$(RM) test*d 
+
+clean:		clean-check
+		$(RM) *.log* *.log.*
+
+redo:
+		$(RM) *core* test*d
+
+include $(SRCDIR)/Makefile.depend

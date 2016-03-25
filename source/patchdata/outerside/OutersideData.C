@@ -1,9 +1,9 @@
 //
-// File:	OutersideData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outerside/OutersideData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated outerside centered patch data type
 //
 
@@ -21,9 +21,6 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
 #include <stdio.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_OUTERSIDEDATA_VERSION 1
 
@@ -46,13 +43,13 @@ namespace SAMRAI {
 template<int DIM, class TYPE>
 OutersideData<DIM,TYPE>::OutersideData(
    const hier::Box<DIM>& box,
-   const int depth,
+   int depth,
    tbox::Pointer<tbox::Arena> pool)
 :  hier::PatchData<DIM>(box, hier::IntVector<DIM>(0)),
    d_depth(depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
@@ -114,7 +111,7 @@ void OutersideData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src)
     const SideData<DIM,TYPE>* const t_src =
       dynamic_cast<const SideData<DIM,TYPE> *>(&src);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_src != NULL);
+   TBOX_ASSERT(t_src != NULL);
 #endif
 
    for (int axis = 0; axis < DIM; axis++ ) {
@@ -133,7 +130,7 @@ void OutersideData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
    SideData<DIM,TYPE> *t_dst =
       dynamic_cast<SideData<DIM,TYPE> *>(&dst);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
+   TBOX_ASSERT(t_dst != NULL);
 #endif
    for (int d = 0; d < DIM; d++) {
       t_dst->getArrayData(d).copy(d_data[d][0], d_data[d][0].getBox());
@@ -152,26 +149,26 @@ void OutersideData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
 
 template<int DIM, class TYPE>
 void OutersideData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
-                                     const hier::BoxOverlap<DIM>& overlap)
+                                   const hier::BoxOverlap<DIM>& overlap)
 {
    NULL_USE(src);
    NULL_USE(overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!"Copy with outerside as destination is not defined yet...");
+   TBOX_ERROR("Copy with outerside as destination is not defined yet...");
 #endif
 }
 
 template<int DIM, class TYPE>
 void OutersideData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
-                                      const hier::BoxOverlap<DIM>& overlap) const
+                                    const hier::BoxOverlap<DIM>& overlap) const
 {
    SideData<DIM,TYPE> *t_dst = 
       dynamic_cast<SideData<DIM,TYPE> *>(&dst);
    const SideOverlap<DIM> *t_overlap =
       dynamic_cast<const SideOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
@@ -183,26 +180,52 @@ void OutersideData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
 
 /*
 *************************************************************************
-*									*
-* Perform a fast copy between two arrays at the                         *
-* specified depths, where their	index spaces overlap.			*
-*									*
+*                                                                       *
+* Perform a fast copy from a side data object to this outerside data    *
+* object at the specified depths, where their index spaces overlap.     *
+*                                                                       *
 *************************************************************************
 */
 
 template<int DIM, class TYPE>
 void OutersideData<DIM,TYPE>::copyDepth(int dst_depth,
-					  const SideData<DIM,TYPE>& src,
-					  int src_depth)
+                                        const SideData<DIM,TYPE>& src,
+                                        int src_depth)
 {
    for (int axis = 0; axis < DIM; axis++ ) {
-      const ArrayData<DIM,TYPE> &side_array = src.getArrayData(axis);
+      const ArrayData<DIM,TYPE>& src_side_array = src.getArrayData(axis);
       for ( int loc = 0; loc < 2; loc++ ) {
-         ArrayData<DIM,TYPE> &oside_array = d_data[axis][loc];
-	 oside_array.copyDepth(dst_depth,
-			       side_array,
-			       src_depth,
-			       oside_array.getBox());
+         ArrayData<DIM,TYPE>& dst_oside_array = d_data[axis][loc];
+	 dst_oside_array.copyDepth(dst_depth,
+                                   src_side_array,
+                                   src_depth,
+                                   dst_oside_array.getBox());
+      }
+   }
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Perform a fast copy to a side data object from this outerside data    *
+* object at the specified depths, where their index spaces overlap.     *
+*                                                                       *
+*************************************************************************
+*/
+
+template <int DIM, class TYPE>
+void OutersideData<DIM,TYPE>::copyDepth2(int dst_depth,
+                                         SideData<DIM,TYPE>& dst,
+                                         int src_depth) const
+{
+   for (int axis = 0; axis < DIM; axis++ ) {
+      ArrayData<DIM,TYPE>& dst_side_array = dst.getArrayData(axis);
+      for ( int loc = 0; loc < 2; loc++ ) {
+         const ArrayData<DIM,TYPE>& src_oside_array = d_data[axis][loc];
+         dst_side_array.copyDepth(dst_depth,
+                                  src_oside_array,
+                                  src_depth,
+                                  src_oside_array.getBox());
       }
    }
 }
@@ -229,7 +252,7 @@ int OutersideData<DIM,TYPE>::getDataStreamSize(
    const SideOverlap<DIM> *t_overlap =
       dynamic_cast<const SideOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();  
@@ -260,7 +283,7 @@ void OutersideData<DIM,TYPE>::packStream(
    const SideOverlap<DIM> *t_overlap =
       dynamic_cast<const SideOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
@@ -287,7 +310,7 @@ void OutersideData<DIM,TYPE>::unpackStream(
    const SideOverlap<DIM> *t_overlap =
       dynamic_cast<const SideOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
@@ -314,10 +337,10 @@ void OutersideData<DIM,TYPE>::unpackStream(
 
 template<int DIM, class TYPE>
 size_t OutersideData<DIM,TYPE>::getSizeOfData(
-   const hier::Box<DIM>& box, const int depth)
+   const hier::Box<DIM>& box, int depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    size_t size = 0;
    for (int d = 0; d < DIM; d++) {
@@ -340,10 +363,10 @@ size_t OutersideData<DIM,TYPE>::getSizeOfData(
 */
 
 template<int DIM, class TYPE>
-void OutersideData<DIM,TYPE>::fill(const TYPE& t, const int d)
+void OutersideData<DIM,TYPE>::fill(const TYPE& t, int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       d_data[i][0].fill(t, d);
@@ -353,11 +376,11 @@ void OutersideData<DIM,TYPE>::fill(const TYPE& t, const int d)
 
 template<int DIM, class TYPE>
 void OutersideData<DIM,TYPE>::fill(const TYPE& t,
-                                const hier::Box<DIM>& box,
-                                const int d)
+                                   const hier::Box<DIM>& box,
+                                   int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       d_data[i][0].fill(t, SideGeometry<DIM>::toSideBox(box, i), d);
@@ -375,7 +398,8 @@ void OutersideData<DIM,TYPE>::fillAll(const TYPE& t)
 }
 
 template<int DIM, class TYPE>
-void OutersideData<DIM,TYPE>::fillAll(const TYPE& t, const hier::Box<DIM>& box)
+void OutersideData<DIM,TYPE>::fillAll(const TYPE& t, 
+                                      const hier::Box<DIM>& box)
 {
    for (int i = 0; i < DIM; i++) {
       d_data[i][0].fillAll(t, SideGeometry<DIM>::toSideBox(box, i));
@@ -392,7 +416,9 @@ void OutersideData<DIM,TYPE>::fillAll(const TYPE& t, const hier::Box<DIM>& box)
 */
 
 template<int DIM, class TYPE>
-void OutersideData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int prec) const
+void OutersideData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                                    std::ostream& os, 
+                                    int prec) const
 {
    for (int d = 0; d < d_depth; d++) {
       print(box, d, os, prec);
@@ -400,36 +426,61 @@ void OutersideData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int 
 }
 
 template<int DIM, class TYPE>
-void OutersideData<DIM,TYPE>::print(
-   const hier::Box<DIM>& box, const int d, ostream& os, int prec) const
+void OutersideData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                                    int depth, 
+                                    std::ostream& os,
+                                    int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   for (int axis = 0; axis < DIM; axis++) {
-      os << "Array Axis hier::Index = " << axis << endl;
+   for (int side_normal = 0; side_normal < DIM; side_normal++) {
+      os << "Array side normal  = " << side_normal << std::endl;
       for (int side = 0; side < 2; side++) {
-         os << "Side hier::Index = " << ((side == 0) ? "lower" : "upper") << endl;
-         printAxisSide(axis, side, box, d, os, prec);
+         os << "side = " << ((side == 0) ? "lower" : "upper") << std::endl;
+         printAxisSide(side_normal, side, box, depth, os, prec);
       }
    }
 }
 
 template<int DIM, class TYPE>
-void OutersideData<DIM,TYPE>::printAxisSide(
-   const int axis, const int side, const hier::Box<DIM>& box, ostream& os, int prec) const
+void OutersideData<DIM,TYPE>::printAxisSide(int side_normal, 
+                                            int side, 
+                                            const hier::Box<DIM>& box, 
+                                            std::ostream& os, 
+                                            int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
 #endif
-   if (d_depth > 1) {
-      for (int d = 0; d < d_depth; d++) {
-         os << "Array Component hier::Index = " << d << endl;
-         printAxisSide(axis, side, box, d, os, prec);
-      }
-   } else {
-       printAxisSide(axis, side, box, 0, os, prec);
+   for (int d = 0; d < d_depth; d++) {
+      os << "Array depth = " << d << std::endl;
+      printAxisSide(side_normal, side, box, d, os, prec);
+   }
+}
+
+template <int DIM, class TYPE>
+void OutersideData<DIM,TYPE>::printAxisSide(int side_normal, 
+                                            int side,
+                                            const hier::Box<DIM>& box,                                                               int depth,                     
+                                            std::ostream& os,
+                                            int prec) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT((side == 0) || (side == 1));
+#endif
+   const hier::Box<DIM> sidebox = 
+      SideGeometry<DIM>::toSideBox(box, side_normal);
+   const hier::Box<DIM> region = 
+      sidebox * d_data[side_normal][side].getBox();
+   os.precision(prec);
+   for (typename hier::Box<DIM>::Iterator i(region); i; i++) {
+      os << "array" << i() << " = " 
+         << d_data[side_normal][side](i(),depth) << std::endl;
+      os << std::flush;
    }
 }
 
@@ -448,13 +499,13 @@ void OutersideData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("PDAT_OUTERSIDEDATA_VERSION");
    if (ver != PDAT_OUTERSIDEDATA_VERSION) {
       TBOX_ERROR("OutersideData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << endl);
+          << " : Restart file version different than class version" << std::endl);
    }
 
    d_depth = database->getInteger("d_depth");
@@ -486,7 +537,7 @@ void OutersideData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_OUTERSIDEDATA_VERSION",
@@ -507,29 +558,6 @@ void OutersideData<DIM,TYPE>::putSpecializedToDatabase(
    }
 }
 
-/*
- * Print bool data (C++ default format)
- */
-template <int DIM, class TYPE>
-void OutersideData<DIM,TYPE>::printAxisSide(
-   const int axis, const int side,
-   const hier::Box<DIM>& box, const int d, ostream& os,
-   int prec) const
-{
-   NULL_USE(prec);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
-   assert((axis >= 0) && (axis < DIM));
-   assert((side == 0) || (side == 1));
-#endif
-   const hier::Box<DIM> sidebox = SideGeometry<DIM>::toSideBox(box, axis);
-   const hier::Box<DIM> region = sidebox * d_data[axis][side].getBox();
-   os.precision( ((prec < 0) ? 12 : prec) );
-   for (typename hier::Box<DIM>::Iterator i(region); i; i++) {
-      os << "array" << i() << " = " << d_data[axis][side](i(),d) << endl;
-      os << flush;
-   }
-}
 
 }
 }

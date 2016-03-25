@@ -2,11 +2,11 @@
 #define included_solv_GhostCellRobinBcCoefs_C
 
 /*
- * File:        GhostCellRobinBcCoefs.C
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/GhostCellRobinBcCoefs.C $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -24,12 +24,6 @@
 
 #include "GhostCellRobinBcCoefs.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 
 namespace SAMRAI {
@@ -44,7 +38,7 @@ namespace SAMRAI {
 */
 
 template<int DIM>  GhostCellRobinBcCoefs<DIM>::GhostCellRobinBcCoefs(
-   string object_name )
+   std::string object_name )
    : d_object_name(object_name),
      d_ghost_data_id(-1)
 {
@@ -120,6 +114,7 @@ template<int DIM> void GhostCellRobinBcCoefs<DIM>::setGhostDataId(
 
 template<int DIM> void GhostCellRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
+   tbox::Pointer<pdat::ArrayData<DIM,double> > &bcoef_data ,
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
@@ -138,10 +133,13 @@ template<int DIM> void GhostCellRobinBcCoefs<DIM>::setBcCoefs (
    /*
     * Set acoef_data to 1.0/(1+0.5*h) uniformly.  This value
     * corresponds to the fact that the solution is fixed at
-    * the ghost cell centers.
+    * the ghost cell centers.  bcoef_data is 1-acoef_data.
     */
    if ( !acoef_data.isNull() ) {
       acoef_data->fill( 1.0/(1+0.5*h) );
+   }
+   if ( !bcoef_data.isNull() ) {
+      bcoef_data->fill( 0.5*h/(1+0.5*h) );
    }
 
    if ( !gcoef_data.isNull() ) {

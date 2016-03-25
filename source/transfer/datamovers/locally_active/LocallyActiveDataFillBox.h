@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataFillBox.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataFillBox.h $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 481 $
-// Modified:	$Date: 2005-07-21 13:50:43 -0700 (Thu, 21 Jul 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for "smart" boxlist ops in locally-active data comm ops
 //
 
@@ -30,7 +30,6 @@
 #endif
 #ifndef included_iostream
 #include <iostream>
-using namespace std;
 #define included_iostream
 #endif
 
@@ -121,7 +120,7 @@ public:
     * Print all class member data for this locally-active fill box object
     * to specified output stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /*!
     * Clear all class member data for this locally-active fill box object.
@@ -143,7 +142,7 @@ public:
     */
    bool checkData(const hier::Box<DIM>& box,
                   const tbox::List<const typename xfer::RefineClasses<DIM>::Data*>& var_data,
-                  ostream& os) const;
+                  std::ostream& os) const;
 
    /*!
     * @brief Check given box and list of coarsen items for equality with those maintained
@@ -160,7 +159,7 @@ public:
     */
    bool checkData(const hier::Box<DIM>& box,
                   const tbox::List<const typename xfer::CoarsenClasses<DIM>::Data*>& var_data,
-                  ostream& os) const;
+                  std::ostream& os) const;
 
 private:
    const hier::Box<DIM>* d_box;

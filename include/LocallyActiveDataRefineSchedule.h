@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataRefineSchedule.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.h $
 // Package:     SAMRAI data transfer
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 697 $
-// Modified:	$Date: 2005-11-03 12:27:48 -0800 (Thu, 03 Nov 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Refine schedule for locally-active data transfer between AMR levels
 //
  
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_hier_Box
@@ -109,6 +108,7 @@ template<int DIM> class LocallyActiveDataRefineSchedule :
 public tbox::DescribedClass
 {
 public:
+
    /*!
     * Static function to set box intersection algorithm to use during
     * schedule construction for all LocallyActiveDataRefineSchedule<DIM> 
@@ -124,7 +124,7 @@ public:
     *
     * If an invalid string is passed, an unrecoverable error will result.
     */
-   static void setScheduleGenerationMethod(const string& method);
+   static void setScheduleGenerationMethod(const std::string& method);
 
    /*!
     * @brief Constructor to create a refine schedule that moves data from the
@@ -255,7 +255,7 @@ public:
     *                                  than the destination level if such data
     *                                  is needed for proper interpolation.
     */
-   void fillData(double time,
+   void fillData(double fill_time,
                  bool do_physical_boundary_fill = true) const;
 
    /*!
@@ -263,7 +263,7 @@ public:
     *
     * @param stream Output data stream.
     */
-   void printClassData(ostream& stream) const;
+   virtual void printClassData(std::ostream& stream) const;
 
 private:
    /*
@@ -443,7 +443,9 @@ private:
    /*!
     * Selects algorithm used to generate communication schedule.
     */
-   static string s_schedule_generation_method;
+   static std::string s_schedule_generation_method;
+
+   static bool s_printing;
 
    /*!
     * Structures that store refine data items.

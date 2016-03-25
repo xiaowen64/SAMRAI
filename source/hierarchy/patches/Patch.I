@@ -1,18 +1,12 @@
 //
-// File:	Patch.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/Patch.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Patch container class for patch data objects
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 #ifndef included_hier_PatchData
 #include "PatchData.h"
 #endif
@@ -78,7 +72,7 @@ template<int DIM> inline
 tbox::Pointer< PatchData<DIM> > Patch<DIM>::getPatchData(const int id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((id >= 0) && (id < d_patch_data.getSize()));
+   TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
 #endif
    return(d_patch_data[id]);
 }
@@ -91,7 +85,7 @@ tbox::Pointer< PatchData<DIM> > Patch<DIM>::getPatchData(
    int id = VariableDatabase<DIM>::getDatabase()->
             mapVariableAndContextToIndex(variable, context);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((id >= 0) && (id < d_patch_data.getSize()));
+   TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
 #endif
    return(d_patch_data[id]);
 }
@@ -102,7 +96,7 @@ void Patch<DIM>::setPatchData(
    tbox::Pointer< PatchData<DIM> > data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((id >= 0) && (id < d_patch_data.getSize()));
+   TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
 #endif
    d_patch_data[id] = data;
 }
@@ -129,8 +123,8 @@ template<int DIM> inline
 void Patch<DIM>::setTime(const double timestamp, const int id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((id >= 0) && (id < d_patch_data.getSize()));
-   assert(!d_patch_data[id].isNull());
+   TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+   TBOX_ASSERT(!d_patch_data[id].isNull());
 #endif
    d_patch_data[id]->setTime(timestamp);
 }

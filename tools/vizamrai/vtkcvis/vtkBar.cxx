@@ -1,10 +1,10 @@
 /*=========================================================================
 
   Program:   Visualization Toolkit
-  Module:    $RCSfile$
+  Module:    $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/tools/vizamrai/vtkcvis/vtkBar.cxx $
   Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+  Date:      $LastChangedDate: 2005-12-20 13:26:41 -0800 (Tue, 20 Dec 2005) $
+  Version:   $LastChangedRevision: 816 $
 
   Copyright (c) 1993-2002 Ken Martin, Will Schroeder, Bill Lorensen 
   All rights reserved.
@@ -20,5 +20,5 @@
 
 //----------------------------------------------------------------------------
 
-vtkCxxRevisionMacro(vtkBar, "$Revision$");
+vtkCxxRevisionMacro(vtkBar, "$LastChangedRevision: 816 $");
 vtkStandardNewMacro(vtkBar);

@@ -1,9 +1,18 @@
+/*
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/GaussianFcn.C $
+ * Package:     SAMRAI tests
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Description: Gaussian function support for FAC solver tests.
+ */
+
 #include "SAMRAI_config.h"
 
 #include "GaussianFcn.h"
 #include <math.h>
 #include <stdlib.h>
-#include <assert.h>
+#include "tbox/Utilities.h"
 
 #include <string>
 
@@ -88,21 +97,21 @@ istream &operator>>( istream &ci, GaussianFcn &gf ) {
   char dummy, name[6];
   EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
   ci >> dummy;
-  assert ( dummy == '{' );
+  TBOX_ASSERT( dummy == '{' );
   EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
   while ( ci.peek() != '}' ) {
     ci.read(name,2);
     if ( name[0]=='l' ) {
       // Expect form lambda=<float>
       ci.read(name,5);
-      assert( !strncmp(name,"mbda=",5) );
+      TBOX_ASSERT( !strncmp(name,"mbda=",5) );
       ci >> gf.d_lambda;
       EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
     }
     else if ( name[0]=='a' ) {
       // Expect form amp=<float>
       ci.read(name,2);
-      assert( !strncmp(name,"p=",2) );
+      TBOX_ASSERT( !strncmp(name,"p=",2) );
       ci >> gf.d_amp;
       EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
     }
@@ -111,8 +120,8 @@ istream &operator>>( istream &ci, GaussianFcn &gf ) {
       unsigned short dim( name[1]=='x' ? 0 :
 			  name[1]=='y' ? 1 :
 			  name[1]=='z' ? 2 : 3 );
-      assert( dim < NDIM );
-      ci >> dummy; assert( dummy == '=' );
+      TBOX_ASSERT( dim < NDIM );
+      ci >> dummy; TBOX_ASSERT( dummy == '=' );
       ci >> gf.d_center[dim];
       EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
     }

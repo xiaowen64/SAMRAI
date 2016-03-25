@@ -1,19 +1,17 @@
 //
-// File:	ParallelBuffer.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/ParallelBuffer.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Parallel I/O class buffer to manage parallel ostreams output
 //
 
 #include "tbox/ParallelBuffer.h"
 
 #include <string>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #ifndef NULL
 #define NULL 0
@@ -38,7 +36,7 @@ namespace SAMRAI {
 ParallelBuffer::ParallelBuffer()
 {
    d_active        = true;
-   d_prefix        = string();
+   d_prefix        = std::string();
    d_ostream1      = NULL;
    d_ostream2      = NULL;
    d_buffer        = NULL;
@@ -88,7 +86,7 @@ void ParallelBuffer::setActive(bool active)
 *************************************************************************
 */
 
-void ParallelBuffer::setPrefixString(const string &text)
+void ParallelBuffer::setPrefixString(const std::string &text)
 {
    d_prefix = text;
 }
@@ -101,7 +99,7 @@ void ParallelBuffer::setPrefixString(const string &text)
 *************************************************************************
 */
 
-void ParallelBuffer::setOutputStream1(ostream *stream)
+void ParallelBuffer::setOutputStream1(std::ostream *stream)
 {
    d_ostream1 = stream;
 }
@@ -114,7 +112,7 @@ void ParallelBuffer::setOutputStream1(ostream *stream)
 *************************************************************************
 */
 
-void ParallelBuffer::setOutputStream2(ostream *stream)
+void ParallelBuffer::setOutputStream2(std::ostream *stream)
 {
    d_ostream2 = stream;
 }
@@ -128,7 +126,7 @@ void ParallelBuffer::setOutputStream2(ostream *stream)
 *************************************************************************
 */
 
-void ParallelBuffer::outputString(const string &text)
+void ParallelBuffer::outputString(const std::string &text)
 {
    outputString(text, text.length());
 }
@@ -143,7 +141,7 @@ void ParallelBuffer::outputString(const string &text)
 *************************************************************************
 */
 
-void ParallelBuffer::outputString(const string &text, const int length)
+void ParallelBuffer::outputString(const std::string &text, const int length)
 {
    if ((length > 0) && d_active) {
 
@@ -205,14 +203,15 @@ void ParallelBuffer::outputString(const string &text, const int length)
 *************************************************************************
 */
 
-void ParallelBuffer::copyToBuffer(const string &text, const int length)
+void ParallelBuffer::copyToBuffer(const std::string &text, const int length)
 {
    /*
     * First check whether we need to increase the size of the buffer
     */
 
    if (d_buffer_ptr+length > d_buffer_size) {
-      const int new_size = Utilities::imax(d_buffer_ptr+length, 2*d_buffer_size);
+      const int new_size = 
+         tbox::MathUtilities<int>::Max(d_buffer_ptr+length, 2*d_buffer_size);
       char *new_buffer = new char[new_size];
 
       if (d_buffer_ptr > 0) {
@@ -229,7 +228,7 @@ void ParallelBuffer::copyToBuffer(const string &text, const int length)
     */
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(d_buffer_ptr+length <= d_buffer_size);
+   TBOX_ASSERT(d_buffer_ptr+length <= d_buffer_size);
 #endif
 
    strncpy(d_buffer+d_buffer_ptr, text.c_str(), length);
@@ -291,7 +290,7 @@ int ParallelBuffer::sync()
 */
 
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__) || defined(__KCC))
-streamsize ParallelBuffer::xsputn(const string &text, streamsize n)
+std::streamsize ParallelBuffer::xsputn(const std::string &text, std::streamsize n)
 {
    sync();
    if (n > 0) outputString(text, n);

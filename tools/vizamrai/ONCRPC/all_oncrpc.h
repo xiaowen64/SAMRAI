@@ -27,7 +27,10 @@
 
 #include <stdio.h>
 #include <time.h>
-#include <string.h>
+
+#include <string>
+using namespace std;
+
 #include <stdlib.h>
 #include <malloc.h>
 

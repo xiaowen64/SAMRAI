@@ -1,9 +1,9 @@
 //
-// File:	FACPreconditioner.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/FAC/FACPreconditioner.h $
 // Package:	SAMRAI solvers
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 704 $
-// Modified:	$Date: 2005-11-04 11:33:31 -0800 (Fri, 04 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	FAC algorithm for solving linear equations on a hierarchy
 //
 
@@ -76,8 +76,9 @@ public:
     *
     * @param name Object name
     * @param user_ops Reference to user-specified FAC operator
+    * @param database Input database with initialization parameters
     */
-   FACPreconditioner( const string& name,
+   FACPreconditioner( const std::string& name,
 			    FACOperatorStrategy<DIM> &user_ops,
 			    tbox::Pointer<tbox::Database> database=NULL );
 
@@ -283,7 +284,7 @@ public:
     * - "pernice": algorithm coded by BTNG, interpretting the
     *        code originally written by Michael Pernice.
     */
-   void setAlgorithmChoice( const string &choice );
+   void setAlgorithmChoice( const std::string &choice );
 
 
    //@}
@@ -371,7 +372,7 @@ public:
    /*!
     * @brief Print data members for debugging.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
 
 private:
@@ -506,7 +507,7 @@ private:
    /*!
     * @brief Name of this FAC solver object.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*!
     * @brief Object providing problem-specific routines.
@@ -560,7 +561,7 @@ private:
    double d_relative_residual_tolerance;
    int d_presmoothing_sweeps;
    int d_postsmoothing_sweeps;
-   string d_algorithm_choice;
+   std::string d_algorithm_choice;
    //@}
 
    //@{

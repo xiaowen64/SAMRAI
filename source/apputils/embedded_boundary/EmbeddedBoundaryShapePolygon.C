@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryShapePolygonX.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShapePolygon.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 609 $
-// Modified:    $Date: 2005-09-13 15:15:49 -0700 (Tue, 13 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Polygon embedded boundary shape
 //              
 // 
@@ -15,11 +15,8 @@
 
 #include "EmbeddedBoundaryShapePolygon.h"
 
-#include "tbox/IEEE.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "EmbeddedBoundaryShapePolygon.I"
@@ -30,13 +27,13 @@ namespace SAMRAI {
 
 template<int DIM>
 EmbeddedBoundaryShapePolygon<DIM>::EmbeddedBoundaryShapePolygon(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db)
 {
    d_object_name = object_name;
 
-   d_height = tbox::IEEE::getSignalingNaN();
-   d_eps    = tbox::IEEE::getDBL_EPSILON();
+   d_height = tbox::MathUtilities<double>::getSignalingNaN();
+   d_eps    = tbox::MathUtilities<double>::getEpsilon();
    
    getFromInput(input_db);
 }
@@ -48,27 +45,27 @@ EmbeddedBoundaryShapePolygon<DIM>::~EmbeddedBoundaryShapePolygon<DIM>()
 
 
 template<int DIM>
-void EmbeddedBoundaryShapePolygon<DIM>::printClassData(ostream& os) const
+void EmbeddedBoundaryShapePolygon<DIM>::printClassData(std::ostream& os) const
 {
 
-   os << endl;
-   os << "d_object_name = " << d_object_name << endl;
+   os << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    
 
-   os << "d_eps = " << d_eps << endl;
-   os << "d_num_vertices = " << d_num_vertices << endl;
+   os << "d_eps = " << d_eps << std::endl;
+   os << "d_num_vertices = " << d_num_vertices << std::endl;
    
    for (int j = 0; j < d_num_vertices; j++) {
 
       os << "d_vx[" << j << "] = " << d_vx[j] << "\t"
-         << "d_vy[" << j << "] = " << d_vy[j] << endl;
+         << "d_vy[" << j << "] = " << d_vy[j] << std::endl;
    }
    
    if (DIM == 3) {
-      os << "height (z) = " << d_height << endl;
+      os << "height (z) = " << d_height << std::endl;
    }
 
-   os << endl;
+   os << std::endl;
 }
 
 template<int DIM>
@@ -76,14 +73,14 @@ void EmbeddedBoundaryShapePolygon<DIM>::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
     * Read in coordinates of the nodes of the polygon in X,Y space.
     */
    tbox::Pointer<tbox::Database> vertices_db = db->getDatabase("vertices");
-   tbox::Array<string> vertices = vertices_db->getAllKeys();
+   tbox::Array<std::string> vertices = vertices_db->getAllKeys();
 
    d_num_vertices = vertices.getSize();
 
@@ -95,12 +92,12 @@ void EmbeddedBoundaryShapePolygon<DIM>::getFromInput(
    if (d_num_vertices < 3) {
       TBOX_ERROR(d_object_name << ": " 
                  << "\n You must supply at least 3 vertices to define "
-                 << "a polygon." << endl);
+                 << "a polygon." << std::endl);
    }
    
    tbox::Array<double> vertices_temp;
    for (i=0 ; i < d_num_vertices; i++) {
-      string name = vertices[i];
+      std::string name = vertices[i];
 
       vertices_temp = vertices_db->getDoubleArray(name);
 
@@ -110,7 +107,7 @@ void EmbeddedBoundaryShapePolygon<DIM>::getFromInput(
                     << i << "]'"
                     << "\n   required size = " << DIM
                     << "\n   supplied size = " << vertices_temp.getSize()
-                    << endl);
+                    << std::endl);
       }
 
       d_vx[i] = vertices_temp[0];
@@ -146,7 +143,7 @@ void EmbeddedBoundaryShapePolygon<DIM>::getFromInput(
          TBOX_ERROR(d_object_name << ": "
                     << "\nPolygon must be convex"
                     << "correct vertices in input file."
-                    << endl);
+                    << std::endl);
             
    }
    
@@ -160,7 +157,7 @@ void EmbeddedBoundaryShapePolygon<DIM>::getFromInput(
       } else {
          TBOX_ERROR(d_object_name << ": " 
                     << "\n'height' entry not supplied - in 3D you must supply "
-                    << "a height." << endl);
+                    << "a height." << std::endl);
       }
    }
 

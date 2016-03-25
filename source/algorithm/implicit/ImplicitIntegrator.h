@@ -1,9 +1,9 @@
 //
-// File:        ImplicitIntegrator.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/implicit/ImplicitIntegrator.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 47 $
-// Modified:    $Date: 2004-12-09 16:08:57 -0800 (Thu, 09 Dec 2004) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Implicit time integration manager class.
 //
 
@@ -34,7 +34,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_tbox_Serializable
@@ -103,7 +102,7 @@ public:
     * among input parameters fail.
     */
    ImplicitIntegrator(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
       ImplicitEquationStrategy<DIM>* implicit_equations,
       solv::NonlinearSolverStrategy<DIM>* nonlinear_solver,
@@ -219,7 +218,7 @@ public:
    /**
     * Print out all members of integrator instance to given output stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /**
     * Write out state of object to given database.
@@ -247,7 +246,7 @@ private:
    /*
     * String used to identify specific class instantiation.
     */
-   string d_object_name; 
+   std::string d_object_name; 
 
    /*
     * Pointers to implicit equation and solver strategy objects and patch

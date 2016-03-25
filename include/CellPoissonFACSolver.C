@@ -2,28 +2,21 @@
 #define included_solv_CellPoissonFACSolver_C
 
 /*
- * File:         CellPoissonFACSolver.C
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACSolver.C $
  * Package:      SAMRAI solvers
- * Copyright:    (c) 1997-2005 The Regents of the University of California
- * Revision:     $Revision: 719 $
- * Modified:     $Date: 2005-11-10 11:45:11 -0800 (Thu, 10 Nov 2005) $
+ * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 1704 $
+ * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: High-level solver (wrapper) for scalar poisson equation.
  */
 
 #include "CellVariable.h"
 #include "CellPoissonFACSolver.h"
-#include "tbox/IEEE.h"
 #include "tbox/PIO.h"
 #include "tbox/Utilities.h"
 
 #include IOMANIP_HEADER_FILE
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "CellPoissonFACSolver.I"
@@ -48,7 +41,7 @@ namespace SAMRAI {
 */
 
 template<int DIM>  CellPoissonFACSolver<DIM>::CellPoissonFACSolver (
-   const string &object_name,
+   const std::string &object_name,
    tbox::Pointer<tbox::Database> database )
    :
    d_object_name(object_name),
@@ -165,15 +158,15 @@ template<int DIM> void CellPoissonFACSolver<DIM>::getFromInput(
          setPostsmoothingSweeps(num_post_sweeps);
       }
       if ( database->isString("coarse_fine_discretization") ) {
-         string s = database->getString("coarse_fine_discretization");
+         std::string s = database->getString("coarse_fine_discretization");
          setCoarseFineDiscretization(s);
       }
       if ( database->isString("prolongation_method") ) {
-         string s = database->getString("prolongation_method");
+         std::string s = database->getString("prolongation_method");
          setProlongationMethod(s);
       }
       if ( database->isString("coarse_solver_choice") ) {
-         string s = database->getString("coarse_solver_choice");
+         std::string s = database->getString("coarse_solver_choice");
          setCoarsestLevelSolverChoice(s);
       }
       if ( database->isDouble("coarse_solver_tolerance") ) {
@@ -244,7 +237,7 @@ template<int DIM> void CellPoissonFACSolver<DIM>::initializeSolverState(
       d_ln_min = 0;
    }
    if ( d_ln_max == -1 ) {
-      d_ln_min = d_hierarchy->getFinestLevelNumber();
+      d_ln_max = d_hierarchy->getFinestLevelNumber();
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -336,7 +329,7 @@ template<int DIM> void CellPoissonFACSolver<DIM>::enableLogging( bool logging )
 
 
 
-template<int DIM> void CellPoissonFACSolver<DIM>::setBoundaries(const string& boundary_type,
+template<int DIM> void CellPoissonFACSolver<DIM>::setBoundaries(const std::string& boundary_type,
                                                const int fluxes,
                                                const int flags,
                                                int* bdry_types)

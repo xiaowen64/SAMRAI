@@ -1,9 +1,9 @@
 //
-// File:        TagAndInitializeStrategy.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/TagAndInitializeStrategy.h $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 258 $
-// Modified:    $Date: 2005-03-09 16:42:48 -0800 (Wed, 09 Mar 2005) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Strategy interface for params, tagging, init for gridding.
 //
 
@@ -322,12 +322,12 @@ public:
     * Read user supplied refine boxes from the provided database.  The 
     * database must be non-null, or an unrecoverable exception will be thrown.
     */
-   void getFromInput(const string& object_name,
+   void getFromInput(const std::string& object_name,
                      tbox::Pointer<tbox::Database> db);
    
 private:
 
-   string d_object_name;
+   std::string d_object_name;
 
    /* 
     * Arrays of data for user-specified refinement.  The user controls

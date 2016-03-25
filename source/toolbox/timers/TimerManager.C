@@ -1,9 +1,9 @@
 //
-// File:        TimerManager.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/TimerManager.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 477 $
-// Modified:    $Date: 2005-07-07 15:33:13 -0700 (Thu, 07 Jul 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to manage different timer objects used throughout the 
 //              library.
 //
@@ -11,15 +11,13 @@
 #include "tbox/TimerManager.h"
 
 #include "tbox/InputDatabase.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/RestartManager.h"
+#include "tbox/SAMRAIManager.h"
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/IOStream.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace tbox {
@@ -28,25 +26,15 @@ namespace SAMRAI {
 #ifndef NULL
 #define NULL (0)
 #endif
-#ifndef TIMER_MANAGER_MAX_TIMERS
-#define TIMER_MANAGER_MAX_TIMERS (128)
-#endif
-#ifndef TIMER_UNREG_ACCESS_TIME
-#define TIMER_UNREG_ACCESS_TIME (3.8e-7)
-#endif
-#ifndef TIMER_REG_ACCESS_TIME
-#define TIMER_REG_ACCESS_TIME (1.0e-5)
-#endif
-#ifndef MAIN_TIMER_IDENTIFIER
-#define MAIN_TIMER_IDENTIFIER  (-1)
-#endif
-#ifndef INACTIVE_TIMER_IDENTIFIER
-#define INACTIVE_TIMER_IDENTIFIER  (-9999)
-#endif
 
 TimerManager* TimerManager::s_timer_manager_instance = 
                    (TimerManager*)NULL;
 bool TimerManager::s_registered_callback = false;
+
+int TimerManager::s_main_timer_identifier = -1;
+int TimerManager::s_inactive_timer_identifier = -9999;
+double TimerManager::s_timer_reg_access_time = 1.0e-5;
+double TimerManager::s_timer_unreg_access_time = 3.8e-7;
 
 /*
 *************************************************************************
@@ -76,6 +64,9 @@ void TimerManager::createManager(
 TimerManager* TimerManager::getManager()
 {
    if (!s_timer_manager_instance) {
+      TBOX_WARNING("TimerManager::getManager() is called before\n"
+                   <<"createManager().  Creating the timer manager\n"
+                   <<"(without using input database.)\n");
       createManager(NULL);
    }
 
@@ -102,7 +93,7 @@ void TimerManager::registerSingletonSubclassInstance(
    } else {
       TBOX_ERROR("TimerManager internal error...\n"
                  << "Attemptng to set Singleton instance to subclass instance,"
-                 << "\n but Singleton instance already set." << endl);
+                 << "\n but Singleton instance already set." << std::endl);
    }
 }
 
@@ -125,20 +116,22 @@ TimerManager::TimerManager(Pointer<Database> input_db)
     */
 #ifdef HAVE_TAU
    d_main_timer = new Timer("UNINSTRUMENTED PARTS", 
-                                 MAIN_TIMER_IDENTIFIER);
+                            s_main_timer_identifier);
 #else 
    d_main_timer = new Timer("TOTAL RUN TIME", 
-                                 MAIN_TIMER_IDENTIFIER);
+                            s_main_timer_identifier);
 #endif
 
-   d_timers.resizeArray(TIMER_MANAGER_MAX_TIMERS); 
+   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
+
+   d_timers.resizeArray( max_timers );
    d_num_timers = 0;
 
-   d_inactive_timers.resizeArray(TIMER_MANAGER_MAX_TIMERS);
+   d_inactive_timers.resizeArray( max_timers );
    d_num_inactive_timers = 0;
 
-   d_running_timers = new bool[TIMER_MANAGER_MAX_TIMERS];
-   for (int i = 0; i < TIMER_MANAGER_MAX_TIMERS; i++) {
+   d_running_timers.resizeArray( max_timers );
+   for (int i = 0; i < max_timers; i++) {
       d_running_timers[i] = false;
    }
 
@@ -186,7 +179,7 @@ TimerManager::~TimerManager()
    d_inactive_timers.setNull();
    d_num_inactive_timers = 0;
 
-   delete [] d_running_timers;
+   d_running_timers.resizeArray(0);
 
    d_exclusive_timer_stack.clearItems();
 
@@ -219,7 +212,7 @@ TimerManager::~TimerManager()
 
 bool TimerManager::checkTimerExistsInArray(
    Pointer<Timer>& timer,
-   const string& name,
+   const std::string& name,
    const Array< Pointer<Timer> >& timer_array,
    int array_size) const
 {
@@ -241,12 +234,14 @@ bool TimerManager::checkTimerExistsInArray(
 }
 
 Pointer<Timer> TimerManager::getTimer(
-   const string& name,
+   const std::string& name,
    bool ignore_timer_input)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
+
+   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
 
    bool timer_active = true;
    if (!ignore_timer_input) {   
@@ -266,9 +261,9 @@ Pointer<Timer> TimerManager::getTimer(
                                     name,
                                     d_timers,
                                     d_num_timers) ) {
-         if (d_num_timers == TIMER_MANAGER_MAX_TIMERS) {
+         if ( d_num_timers == max_timers ) {
             TBOX_ERROR("TimerManager::getTimer error ..."
-               << "\n   Max timers exceeded with timer " << name << endl);
+               << "\n   Max timers exceeded with timer " << name << std::endl);
          }
          timer = new Timer(name, d_num_timers);
          d_timers[d_num_timers] = timer;
@@ -279,11 +274,11 @@ Pointer<Timer> TimerManager::getTimer(
                                      name,
                                      d_inactive_timers,
                                      d_num_inactive_timers) ) {
-          if (d_num_inactive_timers == TIMER_MANAGER_MAX_TIMERS) {
+          if ( d_num_inactive_timers == max_timers ) {
              TBOX_ERROR("TimerManager::getTimer error ..."
-                << "\n   Max timers exceeded with timer " << name << endl);
+                << "\n   Max timers exceeded with timer " << name << std::endl);
           }
-          timer = new Timer(name, INACTIVE_TIMER_IDENTIFIER);
+          timer = new Timer(name, s_inactive_timer_identifier);
           timer->setInactive(); 
           d_inactive_timers[d_num_inactive_timers] = timer;
 	  d_num_inactive_timers++;
@@ -294,10 +289,10 @@ Pointer<Timer> TimerManager::getTimer(
 
 bool TimerManager::checkTimerExists(
    Pointer<Timer>& timer,
-   const string& name) const
+   const std::string& name) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
 
    bool timer_found = checkTimerExistsInArray(timer,
@@ -325,10 +320,10 @@ bool TimerManager::checkTimerExists(
 */
 
 bool TimerManager::checkTimerRunning(
-   const string& name) const
+   const std::string& name) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
 
    bool is_running = false;
@@ -367,10 +362,12 @@ void TimerManager::resetAllTimers()
 void TimerManager::startTime(Timer* timer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(timer == (Timer*)NULL));
+   TBOX_ASSERT(!(timer == (Timer*)NULL));
 #endif
    int id = timer->getIdentifier();
-   if (id >= 0) d_running_timers[id] = true;
+   if (id >= 0) {
+      d_running_timers[id] = true;
+   }
 
    if (d_print_exclusive) {
       if (!d_exclusive_timer_stack.isEmpty()) {
@@ -395,10 +392,12 @@ void TimerManager::startTime(Timer* timer)
 void TimerManager::stopTime(Timer* timer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-  assert(!(timer == (Timer*)NULL));
+  TBOX_ASSERT(!(timer == (Timer*)NULL));
 #endif
    int id = timer->getIdentifier();
-   if (id >= 0) d_running_timers[id] = false;
+   if (id >= 0) {
+      d_running_timers[id] = false;
+   }
 
    if (d_print_exclusive) {
       timer->stopExclusive();
@@ -423,15 +422,15 @@ void TimerManager::stopTime(Timer* timer)
 
 
 bool TimerManager::checkTimerInNameLists(
-   const string& copy) 
+   const std::string& copy) 
 {
-   string name = copy;
+   std::string name = copy;
   /*
    * string::size_type is generally an int, but it may depend on vendor's
    * implementation of string class.  Just to be safe, we use the definition
    * from the string class (string::size_type).
    */
-   string::size_type string_length, list_entry_length, position;
+   std::string::size_type string_length, list_entry_length, position;
 
   /*
    * Specification of whether we will use the timer after comparing to
@@ -466,7 +465,7 @@ bool TimerManager::checkTimerInNameLists(
       position = name.find("::");
       if (position < name.size()) {
          occurrences++;
-         string substring = name.substr(position+2);
+         std::string substring = name.substr(position+2);
          position = substring.find("::");
          if (position < substring.size()) {
             occurrences++;
@@ -479,7 +478,7 @@ bool TimerManager::checkTimerInNameLists(
          * name and compare to the list entries.
          */
          position = name.find("::");
-         string package = name.substr(0,position);
+         std::string package = name.substr(0,position);
 
          /*
           * Iterate through package list and see if the timer's package
@@ -487,7 +486,7 @@ bool TimerManager::checkTimerInNameLists(
           */
          bool package_exists = false;
          string_length = package.size();
-         for (List<string>::Iterator i(d_package_names); i; i++) {
+         for (List<std::string>::Iterator i(d_package_names); i; i++) {
             list_entry_length = i().size();
             if (string_length == list_entry_length) {
                package_exists = ( i() == package );
@@ -508,7 +507,7 @@ bool TimerManager::checkTimerInNameLists(
       position = name.find("::");
       if (position < name.size()) {
          occurrences++;
-         string substring = name.substr(position+2);
+         std::string substring = name.substr(position+2);
          position = substring.find("::");
          if (position < substring.size()) {
             occurrences++;
@@ -532,7 +531,7 @@ bool TimerManager::checkTimerInNameLists(
           * it directly to the class list.
           */
          position = name.find("::");
-         string class_name;
+         std::string class_name;
          if (position < name.size()) {
             class_name = name.substr(0,position);
          } else {
@@ -543,9 +542,9 @@ bool TimerManager::checkTimerInNameLists(
           * Is class name dimensional?  
           */
          string_length = class_name.size();
-         string dim = class_name.substr(string_length-1,1);
+         std::string dim = class_name.substr(string_length-1,1);
          bool is_dimensional = false;
-         string nondim_class_name;
+         std::string nondim_class_name;
          if ( dim == "1" || dim == "2" || dim == "3") { 
             is_dimensional = true; 
             nondim_class_name = class_name.substr(0,string_length-1);
@@ -559,7 +558,7 @@ bool TimerManager::checkTimerInNameLists(
           */
          string_length = nondim_class_name.size();
          bool class_exists = false;
-         for (List<string>::Iterator i(d_class_names); i; i++) {
+         for (List<std::string>::Iterator i(d_class_names); i; i++) {
             list_entry_length = i().size();
             if (string_length == list_entry_length) {
                class_exists = ( i() == nondim_class_name );
@@ -572,7 +571,7 @@ bool TimerManager::checkTimerInNameLists(
           */
          string_length = class_name.size();
          if (is_dimensional && !class_exists) {
-            for (List<string>::Iterator i(d_class_names); i; i++) {
+            for (List<std::string>::Iterator i(d_class_names); i; i++) {
                list_entry_length = i().size();
                if (string_length == list_entry_length) {
                   class_exists = ( i() == class_name );
@@ -605,19 +604,19 @@ bool TimerManager::checkTimerInNameLists(
           * Parse name before "::" - this is the class name. 
           */
          position = name.find("::");
-         string class_name = name.substr(0,position);
+         std::string class_name = name.substr(0,position);
 
          /*
           * Is class name dimensional?  
           */
          string_length = class_name.size();
-         string dim = class_name.substr(string_length-1,1);
+         std::string dim = class_name.substr(string_length-1,1);
          bool is_dimensional = false;
-         string nondim_name;
+         std::string nondim_name;
          if ( dim == "1" || dim == "2" || dim == "3") { 
             is_dimensional = true; 
-            string nondim_class_name = class_name.substr(0,string_length-1);
-            string method_name = name.substr(position);
+            std::string nondim_class_name = class_name.substr(0,string_length-1);
+            std::string method_name = name.substr(position);
             nondim_name = nondim_class_name;
             nondim_name += method_name;
 
@@ -632,7 +631,7 @@ bool TimerManager::checkTimerInNameLists(
           */
          bool class_method_exists = false;
          string_length = nondim_name.size();
-         for (List<string>::Iterator i(d_class_method_names); i; i++) {
+         for (List<std::string>::Iterator i(d_class_method_names); i; i++) {
             list_entry_length = i().size();
             if (string_length == list_entry_length) {
                class_method_exists = ( i() == nondim_name );
@@ -645,7 +644,7 @@ bool TimerManager::checkTimerInNameLists(
           */
          if (is_dimensional && !class_method_exists) {
             string_length = name.size();
-            for (List<string>::Iterator i(d_class_method_names); i; i++) {
+            for (List<std::string>::Iterator i(d_class_method_names); i; i++) {
                list_entry_length = i().size();
                if (string_length == list_entry_length) {
                   class_method_exists = ( i() == name );
@@ -673,7 +672,7 @@ bool TimerManager::checkTimerInNameLists(
 *************************************************************************
 */
 
-void TimerManager::print(ostream& os)
+void TimerManager::print(std::ostream& os)
 {
    /*
     * There are 18 possible timer values that users may wish to look at.
@@ -703,7 +702,7 @@ void TimerManager::print(ostream& os)
     */
    double (*timer_values)[18] = new double[d_num_timers+1][18];
    int (*max_processor_id)[2] = new int[d_num_timers+1][2];
-   Array<string> timer_names(d_num_timers+1);
+   Array<std::string> timer_names(d_num_timers+1);
 
    /*
     * Fill in timer_values and timer_names arrays, based on values of
@@ -766,8 +765,8 @@ void TimerManager::print(ostream& os)
       }
    }
 
-   string table_title;
-   Array<string> column_titles(4);
+   std::string table_title;
+   Array<std::string> column_titles(4);
    int column_ids[3] = {0,0,0};
    int j,k;
 
@@ -810,12 +809,12 @@ void TimerManager::print(ostream& os)
  
                   if ( j == 0) {
 #ifndef LACKS_SSTREAM
-                    ostringstream out;
+                    std::ostringstream out;
 #endif
                     if ( k == 0 ) {
 #ifndef LACKS_SSTREAM
                        out << "EXCLUSIVE TIME \nPROCESSOR:" 
-                           << MPI::getRank();
+                           << SAMRAI_MPI::getRank();
                        table_title = out.str();
 #else
                        table_title = "EXCLUSIVE TIME \nPROCESSOR:";
@@ -826,7 +825,7 @@ void TimerManager::print(ostream& os)
                     } else if ( k == 1 ) {
 #ifndef LACKS_SSTREAM
                        out << "TOTAL TIME \nPROCESSOR:" 
-                           << MPI::getRank();
+                           << SAMRAI_MPI::getRank();
                        table_title = out.str();
 #else
                        table_title = "TOTAL TIME \nPROCESSOR:";
@@ -916,8 +915,8 @@ void TimerManager::print(ostream& os)
               (k == 1 && d_print_total) ) {
 
             int max_array_id = 0;
-            string table_title_line_1;
-            string table_title_line_2;            
+            std::string table_title_line_1;
+            std::string table_title_line_2;            
             if ( k == 0 ) {
                table_title_line_1 = "EXCLUSVE \n";
                max_array_id = 0;
@@ -942,8 +941,8 @@ void TimerManager::print(ostream& os)
             column_titles[3] = "";
             if (d_print_processor) {
 #ifndef LACKS_SSTREAM
-               ostringstream out;
-	       out << "Proc: " << MPI::getRank();
+               std::ostringstream out;
+	       out << "Proc: " << SAMRAI_MPI::getRank();
                column_titles[0] = out.str();
 #else
                column_titles[0] = "Proc: ";
@@ -1029,8 +1028,8 @@ void TimerManager::print(ostream& os)
       if ( d_print_user ) {
 	if (d_print_processor) {
 #ifndef LACKS_SSTREAM
-           ostringstream out;
-           out << "USER TIME \nPROCESSOR: " << MPI::getRank();
+           std::ostringstream out;
+           out << "USER TIME \nPROCESSOR: " << SAMRAI_MPI::getRank();
            table_title = out.str();
 #else
            table_title = "USER TIME \nPROCESSOR: ";
@@ -1049,8 +1048,8 @@ void TimerManager::print(ostream& os)
       } else if ( d_print_sys ) {
 	if (d_print_processor) {
 #ifndef LACKS_SSTREAM
-           ostringstream out;
-           out << "SYSTEM TIME \nPROCESSOR: " << MPI::getRank();
+           std::ostringstream out;
+           out << "SYSTEM TIME \nPROCESSOR: " << SAMRAI_MPI::getRank();
            table_title = out.str();
 #else
            table_title = "SYSTEM TIME \nPROCESSOR:";
@@ -1069,8 +1068,8 @@ void TimerManager::print(ostream& os)
       } else if ( d_print_wall ) {
 	if (d_print_processor) {
 #ifndef LACKS_SSTREAM
-           ostringstream out;
-           out << "WALLCLOCK TIME \nPROCESSOR: " << MPI::getRank();
+           std::ostringstream out;
+           out << "WALLCLOCK TIME \nPROCESSOR: " << SAMRAI_MPI::getRank();
            table_title = out.str();
 #else
            table_title = "WALLCLOCK TIME \nPROCESSOR: ";
@@ -1098,9 +1097,7 @@ void TimerManager::print(ostream& os)
    /*
     * Print overhead stats - number of accesses and estimated cost 
     * (estimated cost computed based on the number of accesses and
-    * a fixed REG_ACCESS_TIME - defined as a constant; the REG_ACCESS_TIME
-    * is taken as an average of access times measured across a few different
-    * machines).  
+    * a fixed s_timer_reg_access_time value).
     * Store the number of accesses in max_processor_id[0] and the estimated
     * cost in timer_values[0] and use the printTable method.
     */   
@@ -1128,16 +1125,16 @@ void TimerManager::print(ostream& os)
 }
 
 void TimerManager::printTable(
-                   const string& table_title, 
-		   const Array<string> column_titles,   
-                   const Array<string> timer_names,
+                   const std::string& table_title, 
+		   const Array<std::string> column_titles,   
+                   const Array<std::string> timer_names,
 		   const int column_ids[],
 		   const double timer_values[][18],
-		   ostream& os)
+		   std::ostream& os)
 {
-   string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++";
-   string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
-   string ascii_line  = ascii_line1;
+   std::string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++";
+   std::string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
+   std::string ascii_line  = ascii_line1;
    ascii_line  += ascii_line2;
 
    /*
@@ -1147,7 +1144,7 @@ void TimerManager::printTable(
     * will generate [1   ].  We us left justification because it is
     * more convenient to output columns of tables.
     */
-   os.setf(ios::left);
+   os.setf(std::ios::left);
 
    os << ascii_line << table_title << "\n";
 
@@ -1179,13 +1176,13 @@ void TimerManager::printTable(
       d_print_percentage = false;
    } else {
       os << ascii_line
-         << setw(maxlen+3) << "Timer Name" << ' ';
+         << std::setw(maxlen+3) << "Timer Name" << ' ';
       for (i = 0; i < 3; i++) {
          if ( !column_titles[i].empty() ) {
-	   os << setw(15) << column_titles[i].c_str() << "  ";
+	   os << std::setw(15) << column_titles[i].c_str() << "  ";
          }
       }
-      os << endl;
+      os << std::endl;
    }
 
    /* 
@@ -1226,7 +1223,7 @@ void TimerManager::printTable(
 
       if (frac > d_print_threshold) {
 	
-	 os << setw(maxlen+3) << timer_names[n].c_str() << ' ';
+	 os << std::setw(maxlen+3) << timer_names[n].c_str() << ' ';
 
          /*
           * Print column values
@@ -1248,14 +1245,14 @@ void TimerManager::printTable(
                  int perc = computePercentageInt(timer_values[n][j],
 					      timer_values[d_num_timers][j]);
 
-		 ostringstream out;
+		 std::ostringstream out;
 		 out << timer_values[n][j] << " (" << perc << "%)";
-		 os << setw(15) << out.str().c_str() << "  ";
+		 os << std::setw(15) << out.str().c_str() << "  ";
 #else 
-                 os << setw(15) << timer_values[n][j] << "  ";
+                 os << std::setw(15) << timer_values[n][j] << "  ";
 #endif
 	      } else {
-	         os << setw(15) << timer_values[n][j] << "  ";
+	         os << std::setw(15) << timer_values[n][j] << "  ";
 	      }
 
 
@@ -1263,7 +1260,7 @@ void TimerManager::printTable(
 
 	 } // loop over columns
 
-	 os << endl;
+	 os << std::endl;
 
       } // if meets d_print_threshold condition
 
@@ -1271,30 +1268,30 @@ void TimerManager::printTable(
 
    delete[] ordered_list;
 
-   os << ascii_line  << endl;
-   os.setf(ios::right);
+   os << ascii_line  << std::endl;
+   os.setf(std::ios::right);
 
 }
 
 void TimerManager::printTable(
-                   const string& table_title, 
-		   const Array<string> column_titles,   
-                   const Array<string> timer_names,
+                   const std::string& table_title, 
+		   const Array<std::string> column_titles,   
+                   const Array<std::string> timer_names,
                    const int max_processor_id[][2],
                    const int max_array_id,
 		   const int column_ids[],
 		   const double timer_values[][18],
-		   ostream& os)
+		   std::ostream& os)
 {
-   string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
-   string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
-   string ascii_line  = ascii_line1;
+   std::string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
+   std::string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
+   std::string ascii_line  = ascii_line1;
    ascii_line  += ascii_line2;
 
    /*
     * Left-justify all output in this method.
     */
-   os.setf(ios::left);
+   os.setf(std::ios::left);
 
    os << ascii_line 
       << table_title << "\n"
@@ -1314,13 +1311,13 @@ void TimerManager::printTable(
    /*
     * Print table header
     */
-   os << setw(maxlen+3) << "Timer Name" << ' ';
+   os << std::setw(maxlen+3) << "Timer Name" << ' ';
    for (i = 0; i < 4; i++) {
       if ( !column_titles[i].empty() ) {
-	os << setw(15) << column_titles[i].c_str() << "  ";
+	os << std::setw(15) << column_titles[i].c_str() << "  ";
       }
    }
-   os << endl;
+   os << std::endl;
 
    /* 
     * Organize timers largest to smallest.  Apply this to the LAST NONZERO
@@ -1359,7 +1356,7 @@ void TimerManager::printTable(
 
       if (frac > d_print_threshold) {
 
-         os << setw(maxlen+3) << timer_names[n].c_str() << ' ';
+         os << std::setw(maxlen+3) << timer_names[n].c_str() << ' ';
 
          /*
           * Print columns.
@@ -1381,14 +1378,14 @@ void TimerManager::printTable(
 #ifndef LACKS_SSTREAM
                      int perc = computePercentageInt(timer_values[n][k],
                                               timer_values[d_num_timers][k]);
-                     ostringstream out;
+                     std::ostringstream out;
                      out << timer_values[n][k] << " (" << perc << "%)";
-                     os << setw(15) << out.str().c_str() << "  ";
+                     os << std::setw(15) << out.str().c_str() << "  ";
 #else
-                     os << setw(15) << timer_values[n][k] << "  ";
+                     os << std::setw(15) << timer_values[n][k] << "  ";
 #endif
                   } else {
-                     os << setw(15) << timer_values[n][k] << "  ";
+                     os << std::setw(15) << timer_values[n][k] << "  ";
                   }
 
                } else {
@@ -1400,7 +1397,7 @@ void TimerManager::printTable(
                    * before and after this call).
                    */ 
 	          if (n < d_num_timers) {
-                     os << setw(15) << max_processor_id[n][max_array_id];
+                     os << std::setw(15) << max_processor_id[n][max_array_id];
                   }
 
                } // column 3
@@ -1409,7 +1406,7 @@ void TimerManager::printTable(
 
          } // loop over columns
 
-         os << endl;
+         os << std::endl;
 
       } //  matches d_print_threshold conditions
 
@@ -1417,24 +1414,24 @@ void TimerManager::printTable(
 
    delete[] ordered_list;
 
-   os << ascii_line  << endl;
-   os.setf(ios::right);
+   os << ascii_line  << std::endl;
+   os.setf(std::ios::right);
 }
 
 void TimerManager::printOverhead(
-                   const Array<string> timer_names,
+                   const Array<std::string> timer_names,
 		   const double timer_values[][18],
-		   ostream& os)
+		   std::ostream& os)
 {
-   string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
-   string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
-   string ascii_line  = ascii_line1;
+   std::string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
+   std::string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
+   std::string ascii_line  = ascii_line1;
    ascii_line  += ascii_line2;
 
    /*
     * Left-justify all output in this method.
     */
-   os.setf(ios::left);
+   os.setf(std::ios::left);
 
    os << ascii_line 
       << "TIMER OVERHEAD STATISTICS \n"
@@ -1454,10 +1451,10 @@ void TimerManager::printOverhead(
    /*
     * Print table header
     */
-   os << setw(maxlen+3) << "Timer Name"
-      << setw(25) << "Number Accesses" << "  "
-      << setw(25) << "Estimated Cost"
-      << endl;
+   os << std::setw(maxlen+3) << "Timer Name"
+      << std::setw(25) << "Number Accesses" << "  "
+      << std::setw(25) << "Estimated Cost"
+      << std::endl;
 
    /*
     * Compute totals: total number of REGISTERED accesses and total cost.  
@@ -1467,14 +1464,14 @@ void TimerManager::printOverhead(
    for (i = 0; i < d_num_inactive_timers; i++) {
       total_inactive_accesses += d_inactive_timers[i]->getNumberAccesses();
    }
-   double est_cost = double(total_inactive_accesses) * TIMER_UNREG_ACCESS_TIME;
+   double est_cost = s_timer_unreg_access_time * total_inactive_accesses;
    double total_est_cost = est_cost;
 
    int total_accesses = 0;
    for (n = 0; n < d_num_timers; n++) {
       total_accesses += d_timers[n]->getNumberAccesses(); 
    }
-   est_cost = double(total_accesses)*TIMER_REG_ACCESS_TIME;
+   est_cost = s_timer_reg_access_time * total_accesses;
   
    /*
     * If we are keeping exclusive or concurrent times, each access costs
@@ -1489,19 +1486,19 @@ void TimerManager::printOverhead(
     * Output the rows of the table.  Start first with the inactive timers...
     */ 
    int num_accesses = total_inactive_accesses;
-   est_cost = num_accesses * TIMER_UNREG_ACCESS_TIME;
+   est_cost = s_timer_unreg_access_time * num_accesses;
    int perc = computePercentageInt(est_cost, total_est_cost);
 
-   os << setw(maxlen+3) << "inactive timers"
-      << setw(25) << num_accesses << "  ";
+   os << std::setw(maxlen+3) << "inactive timers"
+      << std::setw(25) << num_accesses << "  ";
 #ifndef LACKS_SSTREAM
-   ostringstream out;
+   std::ostringstream out;
    out << est_cost << " (" << perc << "%)";
-   os << setw(25) << out.str().c_str();
+   os << std::setw(25) << out.str().c_str();
 #else
-   os << setw(25) << est_cost << " (" << perc << "%)";
+   os << std::setw(25) << est_cost << " (" << perc << "%)";
 #endif
-   os << endl;
+   os << std::endl;
 
    /* 
     * Now print the rest of the timers.  While we are cycling through them, 
@@ -1511,7 +1508,7 @@ void TimerManager::printOverhead(
    for (n = 0; n < d_num_timers; n++) {
 
       int num_accesses = d_timers[n]->getNumberAccesses();
-      est_cost = num_accesses * TIMER_REG_ACCESS_TIME;
+      est_cost = s_timer_reg_access_time * num_accesses;
 
       /*
        * If we are keeping exclusive or concurrent times, each access costs
@@ -1523,25 +1520,25 @@ void TimerManager::printOverhead(
 
       perc = computePercentageInt(est_cost, total_est_cost);
 
-      os  << setw(maxlen+3) << timer_names[n].c_str()
-          << setw(25) << num_accesses << "  ";
+      os  << std::setw(maxlen+3) << timer_names[n].c_str()
+          << std::setw(25) << num_accesses << "  ";
 #ifndef LACKS_SSTREAM
-      ostringstream out2;
+      std::ostringstream out2;
       out2 << est_cost << " (" << perc << "%)";
-      os   << setw(25) << out2.str().c_str();
+      os   << std::setw(25) << out2.str().c_str();
 #else
-      os << setw(25) << est_cost << " (" << perc << "%)";
+      os << std::setw(25) << est_cost << " (" << perc << "%)";
 #endif
-      os << endl;
+      os << std::endl;
    } 
 
    /* 
     * Output the totals.
     */
-   os  << setw(maxlen+3) << "TOTAL:"
-       << setw(25) << total_accesses << "  "
-       << setw(25) << total_est_cost 
-       << "\n" << endl; 
+   os  << std::setw(maxlen+3) << "TOTAL:"
+       << std::setw(25) << total_accesses << "  "
+       << std::setw(25) << total_est_cost 
+       << "\n" << std::endl; 
 
    /*
     * Compare the total estimated cost with overall program wallclock time.  
@@ -1554,18 +1551,21 @@ void TimerManager::printOverhead(
       << perc_dbl << "% \n";
    if (perc_dbl > 5.) {
      os << "WARNING:  TIMERS ARE USING A SIGNIFICANT FRACTION OF RUN TIME"
-        << endl;
+        << std::endl;
    }
 
-   os << ascii_line  << endl;
-   os.setf(ios::right);
+   os << ascii_line  << std::endl;
+   os.setf(std::ios::right);
 }
 
-void TimerManager::printConcurrent(ostream& os)
+void TimerManager::printConcurrent(std::ostream& os)
 {
-   string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
-   string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
-   string ascii_line  = ascii_line1;
+  
+   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
+
+   std::string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
+   std::string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
+   std::string ascii_line  = ascii_line1;
    ascii_line  += ascii_line2;
 
    os << ascii_line 
@@ -1587,9 +1587,9 @@ void TimerManager::printConcurrent(ostream& os)
    /*
     * Print table header
     */
-   os << setw(maxlen+3) << "Timer Name"
-      << setw(25) << "Nested Timers" 
-      << endl;
+   os << std::setw(maxlen+3) << "Timer Name"
+      << std::setw(25) << "Nested Timers" 
+      << std::endl;
 
    /*
     * Output the rows of the table.
@@ -1597,15 +1597,15 @@ void TimerManager::printConcurrent(ostream& os)
    
    for (n = 0; n < d_num_timers; n++) {
 
-      os << setw(maxlen+3) << d_timers[n]->getName().c_str();
+      os << std::setw(maxlen+3) << d_timers[n]->getName().c_str();
 
-      bool* bool_vec = d_timers[n]->getConcurrentTimerVector();
+      const Array<bool>& bool_vec = d_timers[n]->getConcurrentTimerVector();
       int count = 0;
-      for (i = 0; i < TIMER_MANAGER_MAX_TIMERS; i++) {
+      for (i = 0; i < max_timers; i++) {
          if (bool_vec[i]) count++;
       }
       if (count == 0) {
-	os << setw(25) << "none " << endl;
+	os << std::setw(25) << "none " << std::endl;
       } else {       
         /*
          * Format it like:    Timer Name      Concurrent Timer #1
@@ -1615,13 +1615,13 @@ void TimerManager::printConcurrent(ostream& os)
          * line or subsequent lines.
          */
         count = 0;
-        for (int j = 0; j < TIMER_MANAGER_MAX_TIMERS; j++) {
+        for (int j = 0; j < max_timers; j++) {
            if (bool_vec[j]) {
               if (count == 0) {
-                 os << setw(25) << d_timers[j]->getName().c_str() << endl;
+                 os << std::setw(25) << d_timers[j]->getName().c_str() << std::endl;
               } else {
-                 os << setw(maxlen+3) << " " 
-                    << d_timers[j]->getName().c_str() << endl;
+                 os << std::setw(maxlen+3) << " " 
+                    << d_timers[j]->getName().c_str() << std::endl;
               }
               count++;
            }
@@ -1629,7 +1629,7 @@ void TimerManager::printConcurrent(ostream& os)
       }
 
    }
-   os << ascii_line  << endl;
+   os << ascii_line  << std::endl;
 }
 
 
@@ -1662,7 +1662,7 @@ void TimerManager::checkConsistencyAcrossProcessors()
     * their MD5 signatures and compare those as integers.
     */
 
-   int max_num_timers = MPI::maxReduction( d_num_timers );
+   int max_num_timers = SAMRAI_MPI::maxReduction( d_num_timers );
 
    Array<int> max_timer_lengths(max_num_timers);
    Array<int> rank_of_max(max_num_timers);
@@ -1672,7 +1672,7 @@ void TimerManager::checkConsistencyAcrossProcessors()
          i < d_num_timers ? int(d_timers[i]->getName().size()) : 0;
    }
 
-   MPI::maxReduction( max_timer_lengths.getPointer(),
+   SAMRAI_MPI::maxReduction( max_timer_lengths.getPointer(),
                       max_num_timers,
                       rank_of_max.getPointer() );
 
@@ -1703,7 +1703,7 @@ void TimerManager::checkConsistencyAcrossProcessors()
       }
    }
 
-   int max_inconsistency_count = MPI::maxReduction( inconsistency_count );
+   int max_inconsistency_count = SAMRAI_MPI::maxReduction( inconsistency_count );
    if ( max_inconsistency_count > 0 ) {
       d_print_summed = false; 
       d_print_max = false;
@@ -1731,7 +1731,7 @@ void TimerManager::checkConsistencyAcrossProcessors()
 void TimerManager::buildTimerArrays(
                    double timer_values[][18], 
                    int max_processor_id[][2],
-                   Array<string> timer_names)
+                   Array<std::string> timer_names)
 {
   /*
    * timer_values - 2D array dimensioned [d_num_timers][18]
@@ -1811,39 +1811,39 @@ void TimerManager::buildTimerArrays(
                          double user_time = 
                             d_timers[n]->getExclusiveUserTime();
                          timer_values[n][3] = 
-                            MPI::sumReduction(user_time);
+                            SAMRAI_MPI::sumReduction(user_time);
                       }
 		      if (d_print_sys) {
                          double sys_time = 
                             d_timers[n]->getExclusiveSystemTime();
                          timer_values[n][4] =   
-                            MPI::sumReduction(sys_time);
+                            SAMRAI_MPI::sumReduction(sys_time);
                       }
 		      if (d_print_wall) {
 			 double wall_time = 
 			    d_timers[n]->getExclusiveWallclockTime();
                          timer_values[n][5] =   
-			    MPI::sumReduction(wall_time);
+			    SAMRAI_MPI::sumReduction(wall_time);
                       }
                     } else if (k == 0 && j == 2) {
 		      if (d_print_user) {
                          double user_time = 
                             d_timers[n]->getExclusiveUserTime();
                          timer_values[n][6] =   
-			    MPI::maxReduction(user_time);
+			    SAMRAI_MPI::maxReduction(user_time);
                       }
 		      if (d_print_sys) {
                          double sys_time = 
                             d_timers[n]->getExclusiveSystemTime();
                          timer_values[n][7] =   
-			    MPI::maxReduction(sys_time);
+			    SAMRAI_MPI::maxReduction(sys_time);
                       }
 		      if (d_print_wall) {
                          int max_id;
 			 double wall_time = 
 			    d_timers[n]->getExclusiveWallclockTime();
                          timer_values[n][8] =
-			    MPI::maxReduction(wall_time,&max_id);
+			    SAMRAI_MPI::maxReduction(wall_time,&max_id);
                          max_processor_id[n][0] = max_id;
                       }
 
@@ -1865,39 +1865,39 @@ void TimerManager::buildTimerArrays(
                          double user_time = 
                             d_timers[n]->getTotalUserTime();
                          timer_values[n][12] =   
-			    MPI::sumReduction(user_time);
+			    SAMRAI_MPI::sumReduction(user_time);
                       }
 		      if (d_print_sys) {
                          double sys_time = 
                             d_timers[n]->getTotalSystemTime();
                          timer_values[n][13] =   
-			    MPI::sumReduction(sys_time);
+			    SAMRAI_MPI::sumReduction(sys_time);
                       }
 		      if (d_print_wall) {
 			 double wall_time = 
 			    d_timers[n]->getTotalWallclockTime();
                          timer_values[n][14] =   
-			    MPI::sumReduction(wall_time);
+			    SAMRAI_MPI::sumReduction(wall_time);
                       }
                     } else if (k == 1 && j == 2) {
 		      if (d_print_user) {
                          double user_time = 
                             d_timers[n]->getTotalUserTime();
                          timer_values[n][15] =   
-			    MPI::maxReduction(user_time);
+			    SAMRAI_MPI::maxReduction(user_time);
                       }
 		      if (d_print_sys) {
                          double sys_time = 
                             d_timers[n]->getTotalSystemTime();
                          timer_values[n][16] =   
-			    MPI::maxReduction(sys_time);
+			    SAMRAI_MPI::maxReduction(sys_time);
                       }
 		      if (d_print_wall) {
                          int max_id;
 			 double wall_time = 
 			    d_timers[n]->getTotalWallclockTime();
                          timer_values[n][17] =
-			    MPI::maxReduction(wall_time,&max_id);
+			    SAMRAI_MPI::maxReduction(wall_time,&max_id);
                          max_processor_id[n][1] = max_id;
                       }
 
@@ -1921,28 +1921,28 @@ void TimerManager::buildTimerArrays(
     if (d_print_user) {
        double main_time = d_main_timer->getTotalUserTime();
        timer_values[d_num_timers][0] = main_time;
-       timer_values[d_num_timers][3] = MPI::sumReduction(main_time);
+       timer_values[d_num_timers][3] = SAMRAI_MPI::sumReduction(main_time);
        timer_values[d_num_timers][6] = main_time;
        timer_values[d_num_timers][9] = main_time;
-       timer_values[d_num_timers][12] = MPI::sumReduction(main_time);
+       timer_values[d_num_timers][12] = SAMRAI_MPI::sumReduction(main_time);
        timer_values[d_num_timers][15] = main_time;
     }
     if (d_print_sys) {
        double main_time = d_main_timer->getTotalSystemTime();
        timer_values[d_num_timers][1] = main_time;
-       timer_values[d_num_timers][4] = MPI::sumReduction(main_time);
+       timer_values[d_num_timers][4] = SAMRAI_MPI::sumReduction(main_time);
        timer_values[d_num_timers][7] = main_time;
        timer_values[d_num_timers][10] = main_time;
-       timer_values[d_num_timers][13] = MPI::sumReduction(main_time);
+       timer_values[d_num_timers][13] = SAMRAI_MPI::sumReduction(main_time);
        timer_values[d_num_timers][16] = main_time;
     }
     if (d_print_wall) {
        double main_time = d_main_timer->getTotalWallclockTime();
        timer_values[d_num_timers][2] = main_time;
-       timer_values[d_num_timers][5] = MPI::sumReduction(main_time);
+       timer_values[d_num_timers][5] = SAMRAI_MPI::sumReduction(main_time);
        timer_values[d_num_timers][8] = main_time;
        timer_values[d_num_timers][11] = main_time;
-       timer_values[d_num_timers][14] = MPI::sumReduction(main_time);
+       timer_values[d_num_timers][14] = SAMRAI_MPI::sumReduction(main_time);
        timer_values[d_num_timers][17] = main_time;
     }
 
@@ -2165,7 +2165,7 @@ void TimerManager::getFromInput(
                                          d_print_threshold);
       }
 
-      Array<string> timer_list;
+      Array<std::string> timer_list;
       if (input_db->keyExists("timer_list")) {
 	timer_list = input_db->getStringArray("timer_list");
       }
@@ -2176,7 +2176,7 @@ void TimerManager::getFromInput(
        *  d_class_names, and d_class_method_names lists.
        */
       for (int i = 0; i < timer_list.getSize(); i++) {
-	string entry = timer_list[i];
+	std::string entry = timer_list[i];
 	addTimerToNameLists(entry);
       }
       d_length_package_names      = d_package_names.getNumberItems();
@@ -2188,7 +2188,7 @@ void TimerManager::getFromInput(
 }
 
 void TimerManager::addTimerToNameLists(
-   const string& name)
+   const std::string& name)
 {
    /*
     * Evaluate whether the name is a package, class, or class::method 
@@ -2204,7 +2204,7 @@ void TimerManager::addTimerToNameLists(
     *    Class::method   - "Class::method" put to class_method list                                         
     */
 
-   string::size_type position, string_length;
+   std::string::size_type position, string_length;
 
    /*
     *  Step thru the input list and form the d_package_names,
@@ -2213,7 +2213,7 @@ void TimerManager::addTimerToNameLists(
 
    if (!name.empty()) {    // Nested if #1
 
-      string entry = name;
+      std::string entry = name;
 
       /*
        *  Once we have determined whether the entry is a package,
@@ -2285,7 +2285,7 @@ void TimerManager::addTimerToNameLists(
              * Check for first three options... 
              */
             string_length = entry.size();
-            string substring = entry.substr(string_length-3,string_length);
+            std::string substring = entry.substr(string_length-3,string_length);
             if (substring == "::*") {
                entry = entry.substr(0,string_length-3);
 

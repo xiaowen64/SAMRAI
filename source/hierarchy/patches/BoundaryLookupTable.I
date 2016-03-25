@@ -1,17 +1,14 @@
 //
-// File:	BoundaryLookupTable.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryLookupTable.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 699 $
-// Modified:	$Date: 2005-11-03 12:30:16 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	
 //
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 #include "tbox/ShutdownRegistry.h"
@@ -74,8 +71,8 @@ const tbox::Array<int>& BoundaryLookupTable<DIM>::getDirections(
    const int codim) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((codim > 0) && (codim <= DIM));
-   assert((loc >= 0) && (loc < d_max_li[codim-1]));
+   TBOX_ASSERT((codim > 0) && (codim <= DIM));
+   TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim-1]));
 #endif
 
    int location_index = loc;
@@ -93,9 +90,9 @@ bool BoundaryLookupTable<DIM>::isLower(const int loc,
                                         const int index) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((codim > 0) && (codim <= DIM));
-   assert((loc >= 0) && (loc < d_max_li[codim-1]));
-   assert((index >= 0) && (index < codim));
+   TBOX_ASSERT((codim > 0) && (codim <= DIM));
+   TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim-1]));
+   TBOX_ASSERT((index >= 0) && (index < codim));
 #endif
    return(!isUpper(loc, codim, index));
 }
@@ -106,9 +103,9 @@ bool BoundaryLookupTable<DIM>::isUpper(const int loc,
                                         const int index) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((codim > 0) && (codim <= DIM));
-   assert((loc >= 0) && (loc < d_max_li[codim-1]));
-   assert((index >= 0) && (index < codim));
+   TBOX_ASSERT((codim > 0) && (codim <= DIM));
+   TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim-1]));
+   TBOX_ASSERT((index >= 0) && (index < codim));
 #endif
 
    int location_index = loc;
@@ -132,8 +129,8 @@ template<int DIM> inline
 int BoundaryLookupTable<DIM>::mapLocationIndex(const int loc) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(loc < d_max_li[1]);
-   assert(loc >= 0);
+   TBOX_ASSERT(loc < d_max_li[1]);
+   TBOX_ASSERT(loc >= 0);
 #endif
 
    int retval = loc;

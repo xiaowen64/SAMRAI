@@ -1,9 +1,9 @@
 //
-// File:	OuternodeGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OuternodeGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 483 $
-// Modified:	$Date: 2005-07-22 16:00:34 -0700 (Fri, 22 Jul 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for outernode centered objects
 //
 
@@ -35,80 +35,55 @@ namespace SAMRAI {
 template<int DIM> class NodeGeometry;
 
 /*!
-  @brief Manages the mapping between the AMR index 
-  space and the outernode-centered geometry index space.
-
-  This is a 
-  subclass of hier::BoxGeometry<DIM> and it computes intersections between two
-  outernode-centered box geometries or between an outernode geometry and 
-  a side box geometry.  Outernode data differs from node data in that, given
-  a box, an outernode data object represents node-centered data living only 
-  on the boundary of the box.  However, for the sides over which outernode
-  data is defined, the outernode geometry index space is the same as the side
-  geometry index space.  For example, given a three-dimensional box
-  [l0:u0,l1:u1,l2:u2], the indices for a three-dimensional outernode data  
-  object run as follows:
-
-  - @b X sides (lower and upper) [l1+1:u1-1,l2+1:u2-1]
-  - @b Y sides (lower and upper) [l0:u0,l2+1:u2-1]
-  - @b Z sides (lower and upper) [l0:u0,l1:u1]
-
-  The reduction in some of the index ranges prevent nodes on edges and
-  corners of the box from being repeated by different sides of the box.
-  Recall that side data is defined so that the sides associated with a
-  given coordinate direction are those whose normal vector lies in that
-  direction.  Outernode data matches this conventions.
-
-  @see hier::BoxGeometry
-  @see pdat::NodeGeometry
-  @see pdat::NodeOverlap
+ * Class OuternodeGeometry<DIM> manages the mapping between the AMR index
+ * and the outernode geometry index space.  It is a subclass of
+ * hier::BoxGeometry<DIM> and it computes intersections between outernode
+ * box geometries and node or outernode box geometries for communication
+ * operations.
+ *
+ * See header file for OuternodeData<DIM> class for a more detailed
+ * description of the data layout.
+ *
+ * @see hier::BoxGeometry
+ * @see pdat::NodeGeometry
+ * @see pdat::NodeOverlap
 */
 
 template<int DIM> class OuternodeGeometry : public hier::BoxGeometry<DIM>
 {
 public:
    /*!
-     @brief
-     Construct the outernode geometry object given the box and ghost
-     cell width.
-   */
+    * @brief Construct an outernode geometry object given an AMR index
+    * space box and ghost cell width.
+    */
    OuternodeGeometry(const hier::Box<DIM>& box,
-			   const hier::IntVector<DIM>& ghosts);
-
+                     const hier::IntVector<DIM>& ghosts);
+ 
    /*!
-     @brief
-     The virtual destructor does nothing interesting.
-   */
+    * @brief The virtual destructor does nothing interesting.
+    */
    virtual ~OuternodeGeometry<DIM>();
-
+ 
    /*!
-     @brief
-     Return a hier::BoxOverlap<DIM> object to describe the
-     overlap in index space between the source outernode
-     geometry object (or a node geometry object) and the destination
-     object (this).
-
-     Refer to the box geometry class for a detailed
-     description of calculateOverlap().
-   */
-   virtual tbox::Pointer< hier::BoxOverlap<DIM> > calculateOverlap(
+    * @brief Compute the overlap in node-centered index space on the
+    * boundaries of the source box geometry and the destination box geometry.
+    */
+   virtual tbox::Pointer<hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
       const hier::BoxGeometry<DIM>& src_geometry,
       const hier::Box<DIM>& src_mask,
       const bool overwrite_interior,
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
-
+ 
    /*!
-     @brief
-     Return the box extents for this outernode box geometry object.
-   */
+    * @brief Return the box for this outernode box geometry object.
+    */
    const hier::Box<DIM>& getBox() const;
-
+ 
    /*!
-     @brief
-     Return the ghost cell width for this outernode box geometry object.
-   */
+    * @brief Return the ghost cell width for this outernode box geometry object.
+    */
    const hier::IntVector<DIM>& getGhosts() const;
 
 private:

@@ -1,9 +1,9 @@
 //
-// File:	pdat_OuternodeDoubleConstantCoarsen.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/operators/constant/outernode/OuternodeDoubleConstantCoarsen.C $
 // Package:	SAMRAI patchdata
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: ConstantCoarsen averaging operator for outernode-centered 
 //              double data on a mesh.
 //
@@ -14,10 +14,7 @@
 #include <math.h>
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 #include "Index.h"
 #include "OuternodeData.h"
@@ -102,7 +99,7 @@ template<int DIM> OuternodeDoubleConstantCoarsen<DIM>::~OuternodeDoubleConstantC
 
 template<int DIM> bool OuternodeDoubleConstantCoarsen<DIM>::findCoarsenOperator(
    const tbox::Pointer<hier::Variable<DIM> >& var,
-   const string &op_name) const
+   const std::string &op_name) const
 {
    const tbox::Pointer< pdat::OuternodeVariable<DIM, double> > cast_var(var);
    if ( !cast_var.isNull() && (op_name == d_name_id) ) {
@@ -112,7 +109,7 @@ template<int DIM> bool OuternodeDoubleConstantCoarsen<DIM>::findCoarsenOperator(
    }
 }
 
-template<int DIM> const string&
+template<int DIM> const std::string&
 OuternodeDoubleConstantCoarsen<DIM>::getOperatorName() const
 {
    return(d_name_id);
@@ -143,9 +140,9 @@ template<int DIM> void OuternodeDoubleConstantCoarsen<DIM>::coarsen(
    tbox::Pointer< pdat::OuternodeData<DIM,double> > 
       cdata = coarse.getPatchData(dst_component);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fdata.isNull());
-   assert(!cdata.isNull());
-   assert(cdata->getDepth() == fdata->getDepth());
+   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 
    const hier::Index<DIM> filo = fine.getBox().lower();

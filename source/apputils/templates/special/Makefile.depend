@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -13,8 +13,9 @@ FILE_0=pdat__IndexData-NDIM_appu__CutCell_NDIM_X.o
 DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/BoundaryBox.I	\
-	$(INCLUDE_SAM)/BoundaryBox.h					\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/BoundaryBox.I $(INCLUDE_SAM)/BoundaryBox.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h				\
 	$(INCLUDE_SAM)/BoundaryNode.h $(INCLUDE_SAM)/Box.I		\
@@ -28,7 +29,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/CellIndex.I $(INCLUDE_SAM)/CellIndex.h		\
 	$(INCLUDE_SAM)/CellOverlap.I $(INCLUDE_SAM)/CellOverlap.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/CutCell.h	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/CutCell.h					\
 	$(INCLUDE_SAM)/EmbeddedBoundaryDefines.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IndexData.C		\
 	$(INCLUDE_SAM)/IndexData.I $(INCLUDE_SAM)/IndexData.h		\
@@ -44,7 +47,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/PatchDataFactory.h				\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/Variable.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -60,8 +64,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -72,12 +75,13 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	pdat__IndexData-NDIM_appu__CutCell_NDIM_X.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C				\
 	$(INCLUDE_SAM)/BoundaryNode.C $(INCLUDE_SAM)/Box.C		\
@@ -101,8 +105,9 @@ FILE_1=tbox__Array-pdat__IndexDataNode-NDIM_appu__CutCell_NDIM_X.o
 DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/BoundaryBox.I	\
-	$(INCLUDE_SAM)/BoundaryBox.h					\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/BoundaryBox.I $(INCLUDE_SAM)/BoundaryBox.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h				\
 	$(INCLUDE_SAM)/BoundaryNode.h $(INCLUDE_SAM)/Box.I		\
@@ -116,7 +121,9 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/CellIndex.I $(INCLUDE_SAM)/CellIndex.h		\
 	$(INCLUDE_SAM)/CellOverlap.I $(INCLUDE_SAM)/CellOverlap.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/CutCell.h	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/CutCell.h					\
 	$(INCLUDE_SAM)/EmbeddedBoundaryDefines.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IndexData.I		\
 	$(INCLUDE_SAM)/IndexData.h $(INCLUDE_SAM)/IntVector.I		\
@@ -131,7 +138,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/PatchDataFactory.h				\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/Variable.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -147,8 +155,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -159,12 +166,13 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	tbox__Array-pdat__IndexDataNode-NDIM_appu__CutCell_NDIM_X.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C				\
 	$(INCLUDE_SAM)/BoundaryNode.C $(INCLUDE_SAM)/Box.C		\
@@ -192,7 +200,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/NodeIndex.h $(INCLUDE_SAM)/tbox/Arena.I		\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.C		\
 	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
-	$(INCLUDE_SAM)/tbox/Complex.h					\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
 	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
@@ -201,7 +208,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	tbox__Array-pdat__NodeIndex-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -216,8 +223,9 @@ FILE_3=tbox__List-pdat__IndexDataNode-NDIM_appu__CutCell_NDIM_X.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataIterator.I	\
-	$(INCLUDE_SAM)/ArrayDataIterator.h $(INCLUDE_SAM)/BoundaryBox.I	\
-	$(INCLUDE_SAM)/BoundaryBox.h					\
+	$(INCLUDE_SAM)/ArrayDataIterator.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/BoundaryBox.I $(INCLUDE_SAM)/BoundaryBox.h	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.h				\
 	$(INCLUDE_SAM)/BoundaryNode.h $(INCLUDE_SAM)/Box.I		\
@@ -231,7 +239,9 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/CellIndex.I $(INCLUDE_SAM)/CellIndex.h		\
 	$(INCLUDE_SAM)/CellOverlap.I $(INCLUDE_SAM)/CellOverlap.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
-	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/CutCell.h	\
+	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
+	$(INCLUDE_SAM)/CutCell.h					\
 	$(INCLUDE_SAM)/EmbeddedBoundaryDefines.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IndexData.I		\
 	$(INCLUDE_SAM)/IndexData.h $(INCLUDE_SAM)/IntVector.I		\
@@ -246,7 +256,8 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/PatchDataFactory.h				\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/Variable.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h $(INCLUDE_SAM)/Variable.I		\
 	$(INCLUDE_SAM)/Variable.h $(INCLUDE_SAM)/VariableContext.I	\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
@@ -262,8 +273,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/List.I		\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
@@ -274,12 +284,13 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
+	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	tbox__List-pdat__IndexDataNode-NDIM_appu__CutCell_NDIM_X.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C				\
 	$(INCLUDE_SAM)/BoundaryNode.C $(INCLUDE_SAM)/Box.C		\

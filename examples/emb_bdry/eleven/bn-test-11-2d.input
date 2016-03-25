@@ -1,10 +1,10 @@
 //
-// File:        input_3d.amr
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/emb_bdry/eleven/bn-test-11-2d.input $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2002 The Regents of the University of California
+// Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 1.1.1.1 $
-// Modified:    $Date: 2004/11/30 00:28:19 $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Input file for SAMRAI embedded boundary ELEVEN example
 //
 

@@ -1,9 +1,9 @@
 ##
-## File:        Makefile.in
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/communication/Makefile.in $
 ## Package:     SAMRAI tests
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision: 173 $
-## Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: makefile for SAMRAI communication tests
 ##
 
@@ -11,6 +11,7 @@ SAMRAI        = @top_srcdir@
 SRCDIR        = @top_srcdir@/examples/communication
 SUBDIR        = source/test/communication
 VPATH         = @top_srcdir@/examples/communication
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check	
@@ -20,14 +21,18 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
+NUM_TESTS = 36
+
+TEST_NPROCS = @TEST_NPROCS@
+
 CXX_OBJS      = CommTester.o PatchDataTestStrategy.o main.o \
 		CellDataTest.o \
 		EdgeDataTest.o \
 		FaceDataTest.o \
 		NodeDataTest.o \
-                OuterfaceDataTest.o \
+		OuterfaceDataTest.o \
 		OuternodeDataTest.o \
-                OutersideDataTest.o \
+		OutersideDataTest.o \
 		Pointer-CommTester.o \
 		SideDataTest.o
 
@@ -60,8 +65,6 @@ test3d:
 test-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
-
-TEST_NPROCS = @TEST_NPROCS@ 
 
 check:
 		$(MAKE) check2d
@@ -142,6 +145,13 @@ check3d:	test3d
 			./test3d side-test-refine3d-a.input; \
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./test3d side-test-refine3d-b.input
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

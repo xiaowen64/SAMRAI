@@ -1,9 +1,9 @@
 //
-// File:	PIO.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/PIO.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Parallel I/O classes pout, perr, and plog and control class
 //
 
@@ -18,12 +18,10 @@
 #include <fstream>
 #include <iostream>
 #define included_fstream
-using namespace std;
 #endif
 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -64,14 +62,14 @@ struct PIO
     * Log messages for node zero only to the specified filename.  All output
     * to pout, perr, and plog on node zero will go to the log file.
     */
-   static void logOnlyNodeZero(const string &filename);
+   static void logOnlyNodeZero(const std::string &filename);
 
    /**
     * Log messages from all nodes.  The diagnostic data for processor XXXXX
     * will be sent to a file with the name filename.XXXXX, where filename is
     * the function argument.
     */
-   static void logAllNodes(const string &filename);
+   static void logAllNodes(const std::string &filename);
 
    /**
     * Temporarily suspend file logging.  Log file output will be discarded,
@@ -90,7 +88,7 @@ private:
    static void shutdownFilestream();	// shutdown the log filestream
 
    static int       s_rank;		// processor rank in MPI group
-   static ofstream* s_filestream;	// NULL or log filestream
+   static std::ofstream* s_filestream;	// NULL or log filestream
 };
 
 /**
@@ -98,20 +96,20 @@ private:
  * only.  Output from other nodes is ignored.  If logging is enabled, then
  * output is mirrored to the log stream, as well.
  */
-extern ostream pout;
+extern std::ostream pout;
 
 /**
  * Parallel output stream perr writes to the standard error from all nodes.
  * Output is prepended with the processor number.  If logging is enabled,
  * then output is mirrored to the log stream, as well.
  */
-extern ostream perr;
+extern std::ostream perr;
 
 /**
  * Parallel output stream plog writes output to the log file.  When logging
  * from multiple processors, the processor number is appended to the filename.
  */
-extern ostream plog;
+extern std::ostream plog;
 
 
 }

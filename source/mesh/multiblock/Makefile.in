@@ -1,0 +1,44 @@
+##
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/mesh/clustering/Makefile.in $
+## Package:	SAMRAI communication and data transfer package
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 878 $
+## Modified:	$LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $
+## Description:	makefile for library directory 
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/mesh/multiblock
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+# For classes that are non-dimensional.
+OBJS=
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library: lib1d lib2d lib3d
+
+# These are for the standard dimensions
+# E.G. make lib2d
+lib1d:
+	$(MAKE) NDIM=1 libXd
+
+lib2d:
+	$(MAKE) NDIM=2 libXd
+
+lib3d:
+	$(MAKE) NDIM=3 libXd
+
+
+# This will work for whatever the user sets NDIM to be.
+# E.G. make NDIM=5
+libXd:	$(OBJS)
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

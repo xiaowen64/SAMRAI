@@ -1,9 +1,9 @@
 //
-// File:        PatchDataTestStrategy.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/PatchDataTestStrategy.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 368 $
-// Modified:    $Date: 2005-05-18 18:01:09 -0700 (Wed, 18 May 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for patch data test operations.
 //
 
@@ -14,9 +14,6 @@
 #include "SAMRAI_config.h"
 #endif
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifndef included_tbox_Array
 #include "tbox/Array.h"
@@ -50,12 +47,13 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_VariableContext
 #include "VariableContext.h"
 #endif
+
+using namespace std;
 
 namespace SAMRAI {
 
@@ -145,7 +143,7 @@ public:
    void setGridGeometry(tbox::Pointer<geom::CartesianGridGeometry<NDIM> > grid_geom) 
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!grid_geom.isNull());
+      TBOX_ASSERT(!grid_geom.isNull());
 #endif
       d_grid_geometry = grid_geom;
    }
@@ -162,7 +160,7 @@ public:
    void setDataContext(tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS    
-      assert(!context.isNull());
+      TBOX_ASSERT(!context.isNull());
 #endif 
       d_data_context = context;
    }
@@ -242,7 +240,7 @@ public:
    /**
     * Virtual function for checking results of communication operations.
     */
-   virtual void verifyResults(hier::Patch<NDIM>& patch,
+   virtual bool verifyResults(hier::Patch<NDIM>& patch,
                               const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
                               int level_number) = 0;
 

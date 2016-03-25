@@ -1,21 +1,15 @@
 //
-// File:        OutersideDataTest.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/OutersideDataTest.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 415 $
-// Modified:    $Date: 2005-06-01 16:30:29 -0700 (Wed, 01 Jun 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for outerside-centered patch data
 //
 
 #include "OutersideDataTest.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#include <assert.h>
-#define included_assert
-#endif
-#endif
 
 #include "ArrayData.h"
 #include "BoundaryBox.h"
@@ -30,6 +24,7 @@
 #include "OutersideGeometry.h"
 #include "OutersideVariable.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
 namespace SAMRAI {
@@ -42,9 +37,9 @@ OutersideDataTest::OutersideDataTest(
    const string& refine_option)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(!refine_option.empty());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!refine_option.empty());
 #endif
 
    d_object_name = object_name;
@@ -93,7 +88,7 @@ OutersideDataTest::~OutersideDataTest()
 void OutersideDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -158,7 +153,7 @@ void OutersideDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 void OutersideDataTest::registerVariables(CommTester* commtest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(commtest != (CommTester*)NULL);
+   TBOX_ASSERT(commtest != (CommTester*)NULL);
 #endif
 
    int nvars = d_variable_src_name.getSize();
@@ -269,7 +264,7 @@ void OutersideDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    const double* dx = pgeom->getDx();
@@ -312,7 +307,7 @@ void OutersideDataTest::checkPatchInteriorData(
             for (int d = 0; d < depth; d++) {
                value = d_Dcoef + d_Acoef*x + d_Bcoef*y + d_Ccoef*z;
 
-               if (!(tbox::Utilities::deq((*data)(si(),d), value))) {
+               if (!(tbox::MathUtilities<double>::equalEps((*data)(si(),d), value))) {
                   tbox::perr << "FAILED: -- patch interior not properly filled" << endl;
                }
             }
@@ -336,7 +331,7 @@ void OutersideDataTest::setLinearData(
    hier::Patch<NDIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >
@@ -397,7 +392,7 @@ void OutersideDataTest::setLinearData(
    hier::Patch<NDIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >
@@ -462,13 +457,13 @@ void OutersideDataTest::setLinearData(
 *************************************************************************
 */
 
-void OutersideDataTest::verifyResults(
+bool OutersideDataTest::verifyResults(
    hier::Patch<NDIM>& patch, 
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy, 
    int level_number)
 {
    (void) hierarchy;
-
+   bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 
       tbox::plog << "\nEntering OutersideDataTest::verifyResults..." << endl;
@@ -494,7 +489,6 @@ void OutersideDataTest::verifyResults(
          setLinearData(solution, tbox, patch);//, hierarchy, level_number);
       }
 
-      bool test_failed = false;
       for (int i = 0; i < d_variables_dst.getSize(); i++) {
          
          tbox::Pointer< pdat::SideData<NDIM,double> > side_data =
@@ -510,7 +504,7 @@ void OutersideDataTest::verifyResults(
                   double correct = (*solution)(si());
                   for (int d = 0; d < depth; d++) {
                      double result = (*side_data)(si(),d);
-                     if (!tbox::Utilities::deq(correct, result)) {
+                     if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                         tbox::perr << "Test FAILED: ...." 
                              << " : side_data index = " << si() << endl;
                         tbox::perr << "    hier::Variable<NDIM> = "
@@ -537,6 +531,8 @@ void OutersideDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl << endl; 
 
    }
+
+   return (!test_failed);
 
 }
 

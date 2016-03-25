@@ -1,9 +1,9 @@
 //
-// File:	inputdb.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/inputdb/inputdb.C $
 // Package:	SAMRAI input database testing
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 586 $
-// Modified:	$Date: 2005-08-23 10:49:46 -0700 (Tue, 23 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Test driver for the SAMRAI input database
 //
 
@@ -19,22 +19,25 @@
 #include "tbox/InputDatabase.h"
 #include "tbox/InputManager.h"
 #include "Index.h"
-#include "tbox/Utilities.h"
-#include "tbox/MPI.h"
+#include "tbox/MathUtilities.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/Pointer.h"
 #include "tbox/SAMRAIManager.h"
 
 using namespace SAMRAI;
+using namespace std;
 
 int main(int argc, char **argv)
 {
    /*
     * Initialize tbox::MPI and SAMRAI.  Enable logging.
     */
-   tbox::MPI::init(&argc, &argv);
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
    tbox::PIO::logOnlyNodeZero("inputdb.log");
+
+   int fail_count = 0;
 
    {
       string input_filename = argv[1];
@@ -53,7 +56,7 @@ int main(int argc, char **argv)
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
-            tbox::MPI::setCallAbortInSerialInsteadOfExit(flag);
+            tbox::SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(flag);
          }
       }
 
@@ -86,20 +89,34 @@ int main(int argc, char **argv)
       string s0   = prim_type_db->getString("s0");
       tbox::DatabaseBox box0    = prim_type_db->getDatabaseBox("box0");
 
-      if (i0 != i0_correct) 
+      if (i0 != i0_correct) {
+         fail_count++;
 	 tbox::perr << "Integer test #0 FAILED" << endl;
-      if (!tbox::Utilities::feq(f0,f0_correct)) 
+      }
+      if (!tbox::MathUtilities<float>::equalEps(f0, f0_correct)) {
+         fail_count++;
 	 tbox::perr << "Float test #0 FAILED" << endl;
-      if (!tbox::Utilities::deq(d0,d0_correct)) 
+      }
+      if (!tbox::MathUtilities<double>::equalEps(d0,d0_correct)) {
+         fail_count++;
 	 tbox::perr << "Double test #0 FAILED" << endl;
-      if (b0 != b0_correct) 
+      }
+      if (b0 != b0_correct) {
+         fail_count++;
 	 tbox::perr << "Bool test #0 FAILED" << endl; 
-      if (!tbox::Utilities::ceq(c0,c0_correct) )
+      }
+      if (!tbox::MathUtilities<dcomplex>::equalEps(c0,c0_correct) ) {
+         fail_count++;
 	 tbox::perr << "Complex test #0 FAILED" << endl; 
-      if (s0 != s0_correct) 
+      }
+      if (s0 != s0_correct) {
+         fail_count++;
 	 tbox::perr << "String test #0 FAILED" << endl; 
-      if (!(box0 == box0_correct)) 
+      }
+      if (!(box0 == box0_correct))  {
+         fail_count++;
 	 tbox::perr << "Box test #0 FAILED" << endl; 
+      }
 
       /*******************************************************************
        * Test Arrays of primitive types 
@@ -139,20 +156,34 @@ int main(int argc, char **argv)
       tbox::Array<tbox::DatabaseBox> box1  = smart_array_db->getDatabaseBoxArray("box1");
 
       for (int i = 0; i < nsize; i++) {
-	 if (i1[i] != i1_correct[i]) 
+	 if (i1[i] != i1_correct[i]) {
+            fail_count++;
 	    tbox::perr << "Integer test #1 FAILED" << endl;
-	 if (!tbox::Utilities::feq(f1[i],f1_correct[i])) 
+         }
+	 if (!tbox::MathUtilities<float>::equalEps(f1[i], f1_correct[i])) {
+            fail_count++; 
 	    tbox::perr << "Float test #1 FAILED" << endl;
-	 if (!tbox::Utilities::deq(d1[i],d1_correct[i])) 
+         } 
+	 if (!tbox::MathUtilities<double>::equalEps(d1[i],d1_correct[i])) {
+            fail_count++;
 	    tbox::perr << "Double test #1 FAILED" << endl; 
-	 if (b1[i] != b1_correct[i]) 
+         }
+	 if (b1[i] != b1_correct[i]) {
+            fail_count++;
 	    tbox::perr << "Bool test #1 FAILED" << endl; 
-	 if (!tbox::Utilities::ceq(c1[i],c1_correct[i]) )
+         }
+	 if (!tbox::MathUtilities<dcomplex>::equalEps(c1[i],c1_correct[i]) ) {
+            fail_count++;
 	    tbox::perr << "Complex test #1 FAILED" << endl;
-	 if (s1[i] != s1_correct[i]) 
+         }
+	 if (s1[i] != s1_correct[i]) {
+            fail_count++;
 	    tbox::perr << "String test #1 FAILED" << endl;
-	 if (!(box1[i] == box1_correct[i]) )
+         } 
+	 if (!(box1[i] == box1_correct[i]) ) {
+            fail_count++;
 	    tbox::perr << "Box test #1 FAILED" << endl; 
+         }
       }
 
       /*
@@ -194,20 +225,34 @@ int main(int argc, char **argv)
       basic_array_db->getDatabaseBoxArray("box2",box2,nsize);
 
       for (int i = 0; i < nsize; i++) {
-	 if (i2[i] != i2_correct[i]) 
+	 if (i2[i] != i2_correct[i]) {
+            fail_count++;
 	    tbox::perr << "Integer test #2 FAILED" << endl;
-	 if (!tbox::Utilities::feq(f2[i],f2_correct[i])) 
+         }
+	 if (!tbox::MathUtilities<float>::equalEps(f2[i], f2_correct[i])) {
+            fail_count++;
 	    tbox::perr << "Float test #2 FAILED" << endl;
-	 if (!tbox::Utilities::deq(d2[i],d2_correct[i])) 
+         } 
+	 if (!tbox::MathUtilities<double>::equalEps(d2[i],d2_correct[i])) {
+            fail_count++; 
 	    tbox::perr << "Double test #2 FAILED" << endl; 
-	 if (b2[i] != b2_correct[i]) 
+         }
+	 if (b2[i] != b2_correct[i]) {
+            fail_count++;
 	    tbox::perr << "Bool test #2 FAILED" << endl; 
-	 if (!tbox::Utilities::ceq(c2[i],c2_correct[i]) )
+         } 
+	 if (!tbox::MathUtilities<dcomplex>::equalEps(c2[i],c2_correct[i]) ) {
+            fail_count++;
 	    tbox::perr << "Complex test #2 FAILED" << endl; 
-	 if (s2[i] != s2_correct[i]) 
+         } 
+	 if (s2[i] != s2_correct[i]) {
+            fail_count++;
 	    tbox::perr << "String test #2 FAILED" << endl; 
-	 if (!(box2[i] == box2_correct[i]) )
+         }
+	 if (!(box2[i] == box2_correct[i]) ) {
+            fail_count++;
 	    tbox::perr << "Box test #2 FAILED" << endl; 
+         } 
       }
 
       /*******************************************************************
@@ -224,20 +269,34 @@ int main(int argc, char **argv)
       string s3   = with_default_db->getStringWithDefault("s3",s0_correct);
       tbox::DatabaseBox box3    = with_default_db->getDatabaseBoxWithDefault("box3",box0_correct);
 
-      if (i3 != i0_correct) 
+      if (i3 != i0_correct) {
+         fail_count++;
 	 tbox::perr << "Integer test #3 FAILED" << endl;
-      if (!tbox::Utilities::feq(f3,f0_correct)) 
+      }
+      if (!tbox::MathUtilities<float>::equalEps(f3, f0_correct)) {
+         fail_count++;
 	 tbox::perr << "Float test #3 FAILED" << endl;
-      if (!tbox::Utilities::deq(d3,d0_correct)) 
+      }
+      if (!tbox::MathUtilities<double>::equalEps(d3,d0_correct)) {
+         fail_count++;
 	 tbox::perr << "Double test #3 FAILED" << endl;
-      if (b3 != b0_correct) 
+      }
+      if (b3 != b0_correct) {
+         fail_count++;
 	 tbox::perr << "Bool test #3 FAILED" << endl; 
-      if (!tbox::Utilities::ceq(c3,c0_correct) )
+      }
+      if (!tbox::MathUtilities<dcomplex>::equalEps(c3,c0_correct) ) {
+         fail_count++;
 	 tbox::perr << "Complex test #3 FAILED" << endl; 
-      if (s3 != s0_correct) 
+      } 
+      if (s3 != s0_correct) {
+         fail_count++;
 	 tbox::perr << "String test #3 FAILED" << endl; 
-      if (!(box3 == box0_correct)) 
+      }
+      if (!(box3 == box0_correct)) {
+         fail_count++;
 	 tbox::perr << "Box test #3 FAILED" << endl; 
+      }
 
       /*******************************************************************
        * Test replacing values in the database
@@ -268,13 +327,12 @@ int main(int argc, char **argv)
       input_db = NULL;
    }
 
-   tbox::pout << "\nPASSED:  inputdb" << endl;
+   if ( fail_count == 0 ) { 
+      tbox::pout << "\nPASSED:  inputdb" << endl;
+   }
  
    tbox::SAMRAIManager::shutdown();
+   tbox::SAMRAI_MPI::finalize();
 
-#ifdef HAVE_MPI
-   MPI_Finalize();
-#endif
-
-   return(0);
+   return(fail_count);
 }

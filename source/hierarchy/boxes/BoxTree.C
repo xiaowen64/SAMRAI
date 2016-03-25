@@ -1,9 +1,9 @@
 //
-// File:        BoxTree.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTree.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 266 $
-// Modified:    $Date: 2005-03-15 16:26:07 -0800 (Tue, 15 Mar 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility class to reduce complexity of box calculus operations.
 //
 
@@ -16,14 +16,6 @@
 
 #include <iostream>
 #include <iomanip>
-using namespace std;
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 
 namespace SAMRAI {
@@ -147,7 +139,7 @@ template<int DIM> void BoxTree<DIM>::findLocalOverlapIndices(
    if (!d_have_mapping) {
       TBOX_ERROR("BoxTree<DIM>::findLocalOverlapIndices() error!!"
                  << "\n Processor mapping must be passed to class constructor"
-                 << "to use this method. None was passed." << endl);
+                 << "to use this method. None was passed." << std::endl);
    }
 
    bool find_local_overlap_indices = true;

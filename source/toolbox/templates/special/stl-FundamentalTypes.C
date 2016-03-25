@@ -1,9 +1,9 @@
 //
-// File:	$Id: stl-FundamentalTypes.C 173 2005-01-19 17:09:04Z smithsg $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/special/stl-FundamentalTypes.C $
 // Package:	SAMRAI templates
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Template instantiation for STL containers of int.
 //
 
@@ -83,7 +83,14 @@ template class std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std:
 
 template class std::_Rb_tree<int, std::pair<int const, std::vector<int, std::allocator<int> > >, std::_Select1st<std::pair<int const, std::vector<int, std::allocator<int> > > >, std::less<int>, std::allocator<std::pair<int const, std::vector<int, std::allocator<int> > > > >;
 
-template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::insert_unique<int*>(int*, int*);
+// Symbol depends on version of GNU compiler that is being used
+#if __GNUC__ > 3 
+   template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::_M_insert_unique<int*>(int*, int*);
+   template void std::fill<int*, int>(int*, int*, int const&);
+#else
+   template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::insert_unique<int*>(int*, int*);
+#endif
+
 
 // The following are required by the gps-gcc test case.
 

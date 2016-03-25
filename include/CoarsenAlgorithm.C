@@ -1,9 +1,9 @@
 //
-// File:	CoarsenAlgorithm.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenAlgorithm.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Coarsening algorithm for data transfer between AMR levels
 //
  
@@ -18,9 +18,6 @@
 #include "tbox/Utilities.h"
 #include "StandardCoarsenTransactionFactory.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -72,7 +69,7 @@ template<int DIM> void CoarsenAlgorithm<DIM>::registerCoarsen(
       TBOX_ERROR("CoarsenAlgorithm<DIM>::registerCoarsen error..."
                  << "\nCannot call registerCoarsen with this coarsen algorithm"
                  << "\nobject since it has already been used to create a coarsen schedule."
-                 << endl);
+                 << std::endl);
    }
 
    typename xfer::CoarsenClasses<DIM>::Data data;
@@ -134,7 +131,7 @@ template<int DIM> bool CoarsenAlgorithm<DIM>::checkConsistency(
    tbox::Pointer< xfer::CoarsenSchedule<DIM> > schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!schedule.isNull());
+   TBOX_ASSERT(!schedule.isNull());
 #endif
    return( d_coarsen_classes->
            checkConsistency(schedule->getEquivalenceClasses()) );
@@ -144,7 +141,7 @@ template<int DIM> void CoarsenAlgorithm<DIM>::resetSchedule(
    tbox::Pointer< xfer::CoarsenSchedule<DIM> > schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!schedule.isNull());
+   TBOX_ASSERT(!schedule.isNull());
 #endif
    if (d_coarsen_classes->checkConsistency(schedule->getEquivalenceClasses())) {
       schedule->reset(d_coarsen_classes);
@@ -152,7 +149,7 @@ template<int DIM> void CoarsenAlgorithm<DIM>::resetSchedule(
       TBOX_ERROR("CoarsenAlgorithm<DIM>::resetSchedule error..."
                  << "\n CoarsenClasses<DIM> object passed to reset routine"
                  << "\n inconsistent with that owned by existing schedule."
-                 << endl);
+                 << std::endl);
    }
 }
 
@@ -164,11 +161,11 @@ template<int DIM> void CoarsenAlgorithm<DIM>::resetSchedule(
 *************************************************************************
 */
 
-template<int DIM> void CoarsenAlgorithm<DIM>::printClassData(ostream& stream) const
+template<int DIM> void CoarsenAlgorithm<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "CoarsenAlgorithm<DIM>::printClassData()" << endl;
-   stream << "----------------------------------------" << endl;
-   stream << "d_fill_coarse_data = " << d_fill_coarse_data << endl;
+   stream << "CoarsenAlgorithm<DIM>::printClassData()" << std::endl;
+   stream << "----------------------------------------" << std::endl;
+   stream << "d_fill_coarse_data = " << d_fill_coarse_data << std::endl;
 
    d_coarsen_classes->printClassData(stream);
 }

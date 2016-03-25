@@ -1,9 +1,9 @@
 //
-// File:	HDFDatabase.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/HDFDatabase.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A database structure that stores HDF5 format data.
 //
 
@@ -46,7 +46,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hdf5
@@ -83,7 +82,7 @@ public:
     * 
     * When assertion checking is active, the name string must be non-empty.
     */
-   HDFDatabase(const string& name);
+   HDFDatabase(const std::string& name);
 
    /**
     * The database destructor closes the HDF5 group or data file.
@@ -96,7 +95,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual bool keyExists(const string& key);
+   virtual bool keyExists(const std::string& key);
 
    /**
     * Return an array of all keys in the current database.  Note that 
@@ -104,7 +103,7 @@ public:
     * will appear in the array.  To get the keys of any other
     * database, you must call this routine for that database. 
     */
-   virtual Array<string> getAllKeys();
+   virtual Array<std::string> getAllKeys();
 
    /**
     * Return the size of the array associated with the key.  If the key
@@ -112,14 +111,14 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual int getArraySize(const string& key);
+   virtual int getArraySize(const std::string& key);
 
    /**
     * Return true or false depending on whether the specified key 
     * represents a database entry.  If the key does not exist or if
     * the string is empty, then false is returned. 
     */
-   virtual bool isDatabase(const string& key);
+   virtual bool isDatabase(const std::string& key);
 
    /**
     * Create a new database with the specified key name and return a
@@ -128,7 +127,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Pointer<Database> putDatabase(const string& key);
+   virtual Pointer<Database> putDatabase(const std::string& key);
 
    /**
     * Get the database with the specified key name.  If the specified
@@ -137,14 +136,14 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Pointer<Database> getDatabase(const string& key);
+   virtual Pointer<Database> getDatabase(const std::string& key);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a boolean entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isBool(const string& key);
+   virtual bool isBool(const std::string& key);
 
    /**
     * Create a boolean scalar entry in the database with the specified
@@ -152,7 +151,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putBool(const string& key, const bool& data);
+   virtual void putBool(const std::string& key, const bool& data);
 
    /**
     * Create a boolean array entry in the database with the specified
@@ -161,7 +160,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putBoolArray(
-      const string& key, const Array<bool>& data);
+      const std::string& key, const Array<bool>& data);
 
    /**
     * Create a boolean array entry in the database with the specified
@@ -170,7 +169,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putBoolArray(
-      const string& key, const bool* const data, const int nelements);
+      const std::string& key, const bool* const data, const int nelements);
 
    /**
     * Get a boolean entry in the database with the specified key name.
@@ -179,7 +178,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual bool getBool(const string& key);
+   virtual bool getBool(const std::string& key);
 
    /**
     * Get a boolean entry in the database with the specified key name.
@@ -189,7 +188,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual bool getBoolWithDefault(
-      const string& key, const bool& defaultvalue);
+      const std::string& key, const bool& defaultvalue);
 
    /**
     * Get a boolean entry from the database with the specified key
@@ -198,7 +197,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<bool> getBoolArray(const string& key);
+   virtual Array<bool> getBoolArray(const std::string& key);
 
    /**
     * Get a boolean entry from the database with the specified key
@@ -210,14 +209,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getBoolArray(
-      const string& key, bool* data, const int nelements);
+      const std::string& key, bool* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a box entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isDatabaseBox(const string& key);
+   virtual bool isDatabaseBox(const std::string& key);
 
    /**
     * Create a box scalar entry in the database with the specified
@@ -225,7 +224,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putDatabaseBox(const string& key, const DatabaseBox& data);
+   virtual void putDatabaseBox(const std::string& key, const DatabaseBox& data);
 
    /**
     * Create a box array entry in the database with the specified
@@ -234,7 +233,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putDatabaseBoxArray(
-      const string& key, const Array<DatabaseBox>& data);
+      const std::string& key, const Array<DatabaseBox>& data);
 
    /**
     * Create a box array entry in the database with the specified
@@ -243,7 +242,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putDatabaseBoxArray(
-      const string& key, const DatabaseBox* const data, const int nelements);
+      const std::string& key, const DatabaseBox* const data, const int nelements);
 
    /**
     * Get a box entry in the database with the specified key name.
@@ -252,7 +251,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual DatabaseBox getDatabaseBox(const string& key);
+   virtual DatabaseBox getDatabaseBox(const std::string& key);
 
    /**
     * Get a box entry in the database with the specified key name.
@@ -262,7 +261,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual DatabaseBox getDatabaseBoxWithDefault(
-      const string& key, const DatabaseBox& defaultvalue);
+      const std::string& key, const DatabaseBox& defaultvalue);
 
    /**
     * Get a box entry from the database with the specified key
@@ -271,7 +270,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<DatabaseBox> getDatabaseBoxArray(const string& key);
+   virtual Array<DatabaseBox> getDatabaseBoxArray(const std::string& key);
 
    /**
     * Get a box entry from the database with the specified key
@@ -283,14 +282,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getDatabaseBoxArray(
-      const string& key, DatabaseBox* data, const int nelements);
+      const std::string& key, DatabaseBox* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a char entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isChar(const string& key);
+   virtual bool isChar(const std::string& key);
 
    /**
     * Create a character scalar entry in the database with the specified
@@ -298,7 +297,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putChar(const string& key, const char& data);
+   virtual void putChar(const std::string& key, const char& data);
 
    /**
     * Create a character array entry in the database with the specified
@@ -307,7 +306,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putCharArray(
-      const string& key, const Array<char>& data);
+      const std::string& key, const Array<char>& data);
 
    /**
     * Create a character array entry in the database with the specified
@@ -316,7 +315,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putCharArray(
-      const string& key, const char* const data, const int nelements);
+      const std::string& key, const char* const data, const int nelements);
 
    /**
     * Get a character entry in the database with the specified key name.
@@ -325,7 +324,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual char getChar(const string& key);
+   virtual char getChar(const std::string& key);
 
    /**
     * Get a character entry in the database with the specified key name.
@@ -335,7 +334,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual char getCharWithDefault(
-      const string& key, const char& defaultvalue);
+      const std::string& key, const char& defaultvalue);
 
    /**
     * Get a character entry from the database with the specified key
@@ -344,7 +343,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<char> getCharArray(const string& key);
+   virtual Array<char> getCharArray(const std::string& key);
 
    /**
     * Get a character entry from the database with the specified key
@@ -356,14 +355,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getCharArray(
-      const string& key, char* data, const int nelements);
+      const std::string& key, char* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a complex entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isComplex(const string& key);
+   virtual bool isComplex(const std::string& key);
 
    /**
     * Create a complex scalar entry in the database with the specified
@@ -371,7 +370,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putComplex(const string& key, const dcomplex& data);
+   virtual void putComplex(const std::string& key, const dcomplex& data);
 
    /**
     * Create a complex array entry in the database with the specified
@@ -380,7 +379,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putComplexArray(
-      const string& key, const Array<dcomplex>& data);
+      const std::string& key, const Array<dcomplex>& data);
 
    /**
     * Create a complex array entry in the database with the specified
@@ -389,7 +388,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putComplexArray(
-      const string& key, const dcomplex* const data, const int nelements);
+      const std::string& key, const dcomplex* const data, const int nelements);
 
    /**
     * Get a complex entry in the database with the specified key name.
@@ -398,7 +397,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual dcomplex getComplex(const string& key);
+   virtual dcomplex getComplex(const std::string& key);
 
    /**
     * Get a complex entry in the database with the specified key name.
@@ -408,7 +407,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual dcomplex getComplexWithDefault(
-      const string& key, const dcomplex& defaultvalue);
+      const std::string& key, const dcomplex& defaultvalue);
 
    /**
     * Get a complex entry from the database with the specified key
@@ -417,7 +416,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<dcomplex> getComplexArray(const string& key);
+   virtual Array<dcomplex> getComplexArray(const std::string& key);
 
    /**
     * Get a complex entry from the database with the specified key
@@ -429,14 +428,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getComplexArray(
-      const string& key, dcomplex* data, const int nelements);
+      const std::string& key, dcomplex* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a double entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isDouble(const string& key);
+   virtual bool isDouble(const std::string& key);
 
    /**
     * Create a double scalar entry in the database with the specified
@@ -444,7 +443,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putDouble(const string& key, const double& data);
+   virtual void putDouble(const std::string& key, const double& data);
 
    /**
     * Create a double array entry in the database with the specified
@@ -453,7 +452,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putDoubleArray(
-      const string& key, const Array<double>& data);
+      const std::string& key, const Array<double>& data);
 
    /**
     * Create a double array entry in the database with the specified
@@ -462,7 +461,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putDoubleArray(
-      const string& key, const double* const data, const int nelements);
+      const std::string& key, const double* const data, const int nelements);
 
    /**
     * Get a double entry in the database with the specified key name.
@@ -471,7 +470,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual double getDouble(const string& key);
+   virtual double getDouble(const std::string& key);
 
    /**
     * Get a double entry in the database with the specified key name.
@@ -481,7 +480,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual double getDoubleWithDefault(
-      const string& key, const double& defaultvalue);
+      const std::string& key, const double& defaultvalue);
 
    /**
     * Get a double entry from the database with the specified key
@@ -490,7 +489,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<double> getDoubleArray(const string& key);
+   virtual Array<double> getDoubleArray(const std::string& key);
 
    /**
     * Get a double entry from the database with the specified key
@@ -502,14 +501,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getDoubleArray(
-      const string& key, double* data, const int nelements);
+      const std::string& key, double* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a float entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isFloat(const string& key);
+   virtual bool isFloat(const std::string& key);
 
    /**
     * Create a float scalar entry in the database with the specified
@@ -517,7 +516,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putFloat(const string& key, const float& data);
+   virtual void putFloat(const std::string& key, const float& data);
 
    /**
     * Create a float array entry in the database with the specified
@@ -526,7 +525,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putFloatArray(
-      const string& key, const Array<float>& data);
+      const std::string& key, const Array<float>& data);
 
    /**
     * Create a float array entry in the database with the specified
@@ -535,7 +534,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putFloatArray(
-      const string& key, const float* const data, const int nelements);
+      const std::string& key, const float* const data, const int nelements);
 
    /**
     * Get a float entry in the database with the specified key name.
@@ -544,7 +543,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual float getFloat(const string& key);
+   virtual float getFloat(const std::string& key);
 
    /**
     * Get a float entry in the database with the specified key name.
@@ -554,7 +553,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual float getFloatWithDefault(
-      const string& key, const float& defaultvalue);
+      const std::string& key, const float& defaultvalue);
 
    /**
     * Get a float entry from the database with the specified key
@@ -563,7 +562,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<float> getFloatArray(const string& key);
+   virtual Array<float> getFloatArray(const std::string& key);
 
    /**
     * Get a float entry from the database with the specified key
@@ -575,14 +574,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getFloatArray(
-      const string& key, float* data, const int nelements);
+      const std::string& key, float* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents an integer entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isInteger(const string& key);
+   virtual bool isInteger(const std::string& key);
 
    /**
     * Create an integer scalar entry in the database with the specified
@@ -590,7 +589,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putInteger(const string& key, const int& data);
+   virtual void putInteger(const std::string& key, const int& data);
 
    /**
     * Create an integer array entry in the database with the specified
@@ -599,7 +598,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putIntegerArray(
-      const string& key, const Array<int>& data);
+      const std::string& key, const Array<int>& data);
 
    /**
     * Create an integer array entry in the database with the specified
@@ -608,7 +607,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void putIntegerArray(
-      const string& key, const int* const data, const int nelements);
+      const std::string& key, const int* const data, const int nelements);
 
    /**
     * Get an integer entry in the database with the specified key name.
@@ -617,7 +616,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual int getInteger(const string& key);
+   virtual int getInteger(const std::string& key);
 
    /**
     * Get an integer entry in the database with the specified key name.
@@ -627,7 +626,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual int getIntegerWithDefault(
-      const string& key, const int& defaultvalue);
+      const std::string& key, const int& defaultvalue);
 
    /**
     * Get an integer entry from the database with the specified key
@@ -636,7 +635,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Array<int> getIntegerArray(const string& key);
+   virtual Array<int> getIntegerArray(const std::string& key);
 
    /**
     * Get an integer entry from the database with the specified key
@@ -648,14 +647,14 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getIntegerArray(
-      const string& key, int* data, const int nelements);
+      const std::string& key, int* data, const int nelements);
 
    /**
     * Return true or false depending on whether the specified key
     * represents a string entry.  If the key does not exist or if
     * the string is empty, then false is returned.
     */
-   virtual bool isString(const string& key);
+   virtual bool isString(const std::string& key);
 
    /**
     * Create a string scalar entry in the database with the specified
@@ -663,7 +662,7 @@ public:
     * 
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual void putString(const string& key, const string& data);
+   virtual void putString(const std::string& key, const std::string& data);
 
    /**
     * Create a string array entry in the database with the specified
@@ -672,7 +671,7 @@ public:
     * When assertion checking is active, the key string must be non-empty. 
     */
    virtual void putStringArray(
-      const string& key, const Array<string>& data);
+      const std::string& key, const Array<std::string>& data);
 
    /**
     * Create a string array entry in the database with the specified
@@ -681,7 +680,7 @@ public:
     * When assertion checking is active, the key string must be non-empty. 
     */
    virtual void putStringArray(
-      const string& key, const string* const data, const int nelements);
+      const std::string& key, const std::string* const data, const int nelements);
 
    /**
     * Get a string entry in the database with the specified key name.
@@ -690,7 +689,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty. 
     */
-   virtual string getString(const string& key);
+   virtual std::string getString(const std::string& key);
 
    /**
     * Get a string entry in the database with the specified key name.
@@ -699,8 +698,8 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty. 
     */
-   virtual string getStringWithDefault(
-      const string& key, const string& defaultvalue);
+   virtual std::string getStringWithDefault(
+      const std::string& key, const std::string& defaultvalue);
 
    /**
     * Get a string entry from the database with the specified key
@@ -709,7 +708,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty. 
     */
-   virtual Array<string> getStringArray(const string& key);
+   virtual Array<std::string> getStringArray(const std::string& key);
 
    /**
     * Get a string entry from the database with the specified key
@@ -721,7 +720,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     */
    virtual void getStringArray(
-      const string& key, string* data, const int nelements);
+      const std::string& key, std::string* data, const int nelements);
 
    /**
     * Print contents of current database to the specified output stream.  
@@ -730,7 +729,7 @@ public:
     * will have their contents printed.  To view the contents of any other
     * database, you must call this print routine for that database. 
     */
-   virtual void printClassData(ostream& os = pout);
+   virtual void printClassData(std::ostream& os = pout);
 
    /**
     * Open a database file using the fileName.  The file name string is
@@ -740,8 +739,8 @@ public:
     *
     * When assertion checking is active, strings must be non-empty.
     */
-   virtual int mount(const string& file_name,
-                     const string& flags);
+   virtual int mount(const std::string& file_name,
+                     const std::string& flags);
 
    /**
     * Close the database file.
@@ -775,7 +774,7 @@ private:
    /*
     * Private constructor used internally to create sub-databases.
     */
-   HDFDatabase(const string& name, hid_t group_ID);
+   HDFDatabase(const std::string& name, hid_t group_ID);
 
    /*
     * Private utility routine for inserting array data in the database
@@ -856,12 +855,12 @@ private:
     * searching for keys in the database.
     */
    struct KeyData {
-      string d_key;   // group or dataset name
+      std::string d_key;   // group or dataset name
       int    d_type;  // type of entry
    };
 
-   static string s_top_level_search_group;
-   static string s_group_to_search;
+   static std::string s_top_level_search_group;
+   static std::string s_group_to_search;
    static int s_still_searching;
    static int s_found_group;
 
@@ -894,7 +893,7 @@ private:
     * Name of this database object (passed into constructor, and list
     * of (key,type) pairs assembled when searching for keys.
     */ 
-   string d_database_name;
+   std::string d_database_name;
 
    List<KeyData> d_keydata;
 

@@ -1,9 +1,9 @@
 //
-// File:	ComponentSelector.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/ComponentSelector.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 456 $
-// Modified:	$Date: 2005-06-16 12:46:43 -0700 (Thu, 16 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Simple bit vector of a fixed length (128 bits)
 //
 
@@ -12,10 +12,7 @@
 #endif
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -174,7 +171,7 @@ inline
 bool ComponentSelector::isSet(const int i) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < getSize()));
+   TBOX_ASSERT((i >= 0) && (i < getSize()));
 #endif
    const int index = ((unsigned) i)/s_bits_per_long;
    const int bitps = ((unsigned) i) & (s_bits_per_long - 1);
@@ -185,7 +182,7 @@ inline
 void ComponentSelector::setFlag(const int i)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < getSize()));
+   TBOX_ASSERT((i >= 0) && (i < getSize()));
 #endif
    const int index  = ((unsigned) i)/s_bits_per_long;
    const int bitps  = ((unsigned) i) & (s_bits_per_long - 1);
@@ -196,7 +193,7 @@ inline
 void ComponentSelector::clrFlag(const int i)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((i >= 0) && (i < getSize()));
+   TBOX_ASSERT((i >= 0) && (i < getSize()));
 #endif
    const int index  = ((unsigned) i)/s_bits_per_long;
    const int bitps  = ((unsigned) i) & (s_bits_per_long - 1);

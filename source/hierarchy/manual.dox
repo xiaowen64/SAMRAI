@@ -1,9 +1,9 @@
 /*
-  File:        $Id$
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/manual.dox $
   Package:     SAMRAI Doxygen manual
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision$
-  Modified:    $Date$
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1704 $
+  Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description: Generation of SAMRAI Doxygen source code manual
 */
 
@@ -21,6 +21,7 @@ namespace SAMRAI {
   -# @ref package_hierarchy_patches "AMR patch hierarchy structure"
   -# @ref package_hierarchy_variables "AMR patch data and variable support"
   -# @ref package_hierarchy_dlbg "Distributed layered box-graph data"
+  -# @ref package_hierarchy_multiblock "Multiblock AMR patch hierarchy structure"
 
   All class names in the Hierarchy package are in the namespace
   "hier".

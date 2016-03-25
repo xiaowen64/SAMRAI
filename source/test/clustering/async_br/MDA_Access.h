@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///home/gunney/csg/svnrepository/mda/branches/v_0_1/MDA_Access.h $
-  Copyright:	(c) 2005 The Regents of the University of California
-  Revision:	$Revision: 558 $
-  Modified:	$Date: 2005-08-17 14:55:42 -0700 (Wed, 17 Aug 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/MDA_Access.h $
+  Copyright:	(c) 2005 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	Light-weight array class
 */
 
@@ -12,6 +12,8 @@
 #include <sys/types.h>
 #include <assert.h>
 #include <iostream>
+
+#include <tbox/Utilities.h>
 
 // If restrict pointer is broken, remove request from code.
 #ifdef RESTRICT_IS_BROKEN
@@ -246,7 +248,7 @@ std::istream &streamGet( std::istream &is )
 {
   dim_t dim;
   is >> dim;
-  assert(dim == DIM);
+  TBOX_ASSERT(dim == DIM);
   for ( dim_t i=0; i<DIM; ++i )
     is >> d_start[i] >> d_size[i];
   return is;
@@ -1199,7 +1201,7 @@ private: void setPtr1() {
   /*
     If the following assert fails, our d_ptr1 optimization may
     give undefined result.
-  assert( d_order.fixedOffset() > 0 ||
+  TBOX_ASSERT( d_order.fixedOffset() > 0 ||
           (unsigned long)d_ptr > (unsigned long)(-d_order.fixedOffset()) );
   */
   d_ptr1 = d_ptr + d_order.fixedOffset();

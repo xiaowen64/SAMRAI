@@ -1,9 +1,9 @@
 //
-// File:	XDRStream.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/stream/XDRStream.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Stream class that converts into XDR for portable communication
 //
 
@@ -11,9 +11,6 @@
 #include <string>
 using namespace std;
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "tbox/XDRStream.I"
@@ -184,7 +181,7 @@ AbstractStream& XDRStream::operator>>(dcomplex& data)
 void XDRStream::pack(const dcomplex *data, const int n)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(sizeof(dcomplex) == 2*sizeof(double));
+   TBOX_ASSERT(sizeof(dcomplex) == 2*sizeof(double));
 #endif
    if (XDR_PACK_VECTOR((double *) data, 2*n, double)) {
       TBOX_ERROR("XDRStream: Error in encoding double complex...\n");
@@ -194,7 +191,7 @@ void XDRStream::pack(const dcomplex *data, const int n)
 void XDRStream::unpack(dcomplex *data, const int n)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(sizeof(dcomplex) == 2*sizeof(double));
+   TBOX_ASSERT(sizeof(dcomplex) == 2*sizeof(double));
 #endif
    if (XDR_UNPACK_VECTOR((double *) data, 2*n, double)) {
       TBOX_ERROR("XDRStream: Error in decoding double complex...\n");

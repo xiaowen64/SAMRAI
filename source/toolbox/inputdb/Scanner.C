@@ -445,11 +445,11 @@ char *yytext;
 #define INITIAL 0
 
 //
-// File:	Scanner.l
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/Scanner.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+
 // Description:	Lex scanner description for the SAMRAI input database
 //
 
@@ -859,7 +859,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_char = yytext[1];
+   SAMRAI_yylval.u_char = yytext[1];
    return(T_CHAR);
 }
 	YY_BREAK
@@ -868,7 +868,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_integer = atol(yytext);
+   SAMRAI_yylval.u_integer = atol(yytext);
    return(T_INTEGER);
 }
 	YY_BREAK
@@ -877,7 +877,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_keyword = new string(yytext);
+   SAMRAI_yylval.u_keyword = new string(yytext);
    return(T_KEYWORD);
 }
 	YY_BREAK
@@ -886,7 +886,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_double = atof(yytext);
+   SAMRAI_yylval.u_double = atof(yytext);
    return(T_DOUBLE);
 }
 	YY_BREAK
@@ -896,7 +896,7 @@ YY_RULE_SETUP
 {
    Parser::getParser()->advanceCursor(yytext);
    string s(yytext);
-   yylval.u_string = new string(s.substr(1,s.length()-2));
+   SAMRAI_yylval.u_string = new string(s.substr(1,s.length()-2));
    return(T_STRING);
 }
 	YY_BREAK

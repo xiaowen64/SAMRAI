@@ -1,3 +1,10 @@
+File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/README $
+Package:     SAMRAI tests
+Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+Revision:    $LastChangedRevision: 1768 $
+Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+Description: README SAMRAI test package.
+
 The SAMRAI/source/test directory contains test codes that
 verify correctness of various components in the library.  
 All tests included here are run through our autotest suite
@@ -101,7 +108,7 @@ pointer:
 
    All test source code is contained in the SAMRAI/source/test/pointer directory.
 
-pvode:
+sundials:
 
 schedules:
 

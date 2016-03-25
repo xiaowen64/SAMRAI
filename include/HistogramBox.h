@@ -1,9 +1,9 @@
 //
-// File:        HistogramBox.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/HistogramBox.h $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 296 $
-// Modified:    $Date: 2005-04-14 16:39:17 -0700 (Thu, 14 Apr 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Histogram class for computing tagged cell signatures.
 //
 
@@ -25,8 +25,8 @@
 #ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
 #endif
-#ifndef included_tbox_MPI
-#include "tbox/MPI.h"
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 #ifndef included_tbox_Timer
 #include "tbox/Timer.h"
@@ -116,7 +116,7 @@ public:
     * (This function should only by called from within
     * BergerRigoutsos<DIM>::findBoxesContainingTags.)
     */
-   void setCommunicator(tbox::MPI::comm comm);
+   void setCommunicator(tbox::SAMRAI_MPI::comm comm);
 
    /*!
     * Compute histogram for integer tags (matching tag_val) within
@@ -212,7 +212,7 @@ private:
    hier::Box<DIM> d_box;
    tbox::Array<int> d_histogram[DIM];
 
-   tbox::MPI::comm d_comm;
+   tbox::SAMRAI_MPI::comm d_comm;
    int d_communication_mode;
 
    static tbox::Pointer<tbox::Timer> t_compute;

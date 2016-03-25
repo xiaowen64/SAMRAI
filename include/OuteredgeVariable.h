@@ -1,10 +1,10 @@
 //
-// File:	OuteredgeVariable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outeredge/OuteredgeVariable.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 601 $
-// Modified:	$Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Variable class for defining outeredge centered variables
 //
 
@@ -26,55 +26,18 @@ namespace SAMRAI {
 
 /*!
  * @brief Class OuteredgeVariable<DIM> is a templated variable class
- * used to define edge-centered quantities on patch boundaries.
+ * used to define edge-centered data quantities only on patch boundaries.
+ * It is a subclass of hier::Variable and is templated on the type
+ * of the underlying data (e.g., double, int, bool, etc.).  
  *
- * It is templated on the type
- * of the underlying data (e.g., double, int, bool, etc.).  Outeredge variable
- * data is associated with the edges of cells.  However, it differs
- * from the EdgeVariable class in that outeredge quantities reside only
- * on the sides residing on the boundary of a patch.  
- *
- * Outeredge data is stored in DIM*DIM*2 arrays, containing the data for the 
- * patch boundary sides with each of the possible outward pointing normal 
- * directions. Where an outeredge falls on more than one side (patch edges 
- * and corners), the outeredge belongs to the array associated with the 
- * higher dimensional direction. In each of these arrays, memory allocation 
- * is in column-major ordering (e.g., Fortran style) so that the leftmost 
- * index runs fastest in memory.  For example, a three-dimensional outeredge 
- * data object instantiated with a box [l0:u0,l1:u1,l2:u2] allocates 12
- * data (i.e., 3x2 pairs) arrays dimensioned as:
- * \verbatim
- *
- *        (i,j,s) 
- *    X:  (X,Y,[0,1])  [l0:l0,l1:u1,l2+1:u2,d],  [u0:u0,l1:u1,l2+1:u2,d]
- *        (X,Z,[0,1])  [l0:l0,l1+1:u1,l2:u2,d],  [u0:u0,l1+1:u1,l2:u2,d]
- *
- *    Y:  (Y,X,[0,1])  [l0:u0,l1:l1,l2+1:u2,d],  [l0:u0,u1:u1,l2+1:u2,d]
- *        (Y,Z,[0,1])  [l0:u0+1,l1:l1,l2:u2,d],  [l0:u0+1,u1:u1,l2:u2,d]
- *
- *    Z:  (Z,X,[0,1])  [l0:u0,l1:u1+1,l2:l2,d],  [l0:u0,l1:u1+1,u2:u2,d]
- *        (Z,Y,[0,1])  [l0:u0+1,l1:u1,l2:l2,d],  [l0:u0+1,l1:u1,u2:u2,d]
- *
- * \endverbatim
- * where X,Y,and Z can be specified 0, 1, 2, respectively.  
- * One- and two-dimensional edge data arrays are managed similary.  The
- * "j" dimension corresponds with the "axis" of standard EdgeData<DIM>. i.e.
- *
- *    Outeredge box(i,j,s) =  EdgeData<DIM>.getBox(j) 
- *
- * The specific data boxes are constructed based on the value of i and s. 
- * To avoid duplication of outeredge values, the data boxes in lower 
- * dimensions of i are trimmed.  That is, higher dimensions (e.g. Z) take
- * precedent over lower dimensions (e.g. X) if the databox could be defined
- * over both.
- *
- * For more information on indexing and manipulating outeredge patch data 
- * objects, see the classes OuteredgeData<DIM> and OuteredgeGeometry<DIM>.
+ * Note that the data layout in the outeredge data arrays matches the corresponding 
+ * array sections provided by the edge data implementation.  See header file for 
+ * the OuteredgeData<DIM> class for a more detailed description of the data layout. 
  *
  * @see pdat::EdgeData
  * @see pdat::OuteredgeData
  * @see pdat::OuteredgeDataFactory
- * @see hier::Variable<DIM>
+ * @see hier::Variable
  */
 
 template <int DIM, class TYPE>
@@ -84,11 +47,12 @@ public:
    /*!
     * @brief Create an outeredge variable object having properties
     * specified by the name and depth (i.e., number of data values
-    * at each index location).  The default depth is one.   The ghost 
-    * cell width for all outeredge data is currently fixed at zero; 
-    * this may be changed in the future if needed.
+    * at each index location).  The default depth is one.   
+    * 
+    * Note that The ghost cell width for all outeredge data is currently 
+    * fixed at zero; this may be changed in the future if needed.
     */
-   OuteredgeVariable(const string &name, 
+   OuteredgeVariable(const std::string &name, 
                      int depth = 1);
 
    /*!
@@ -97,15 +61,14 @@ public:
    virtual ~OuteredgeVariable<DIM,TYPE>();
 
    /*!
-    * @brief Return a boolean true value indicating that fine patch values take precedence
-    * on coarse-fine interfaces.
+    * @brief Return a boolean true value indicating that fine patch 
+    * values take precedence on coarse-fine interfaces.
     */
    bool fineBoundaryRepresentsVariable() const {return true;}
 
    /*!
-    * Return true since the edge data index space (and hence the outeredge data index
-    * space) extends beyond the interior of patches.  That is, outeredge data lives
-    * on patch borders.
+    * @brief Return true indicating that outeredge data 
+    * exists on the patch boundary.
     */
    bool dataLivesOnPatchBorder() const {return true;}
 

@@ -1,9 +1,9 @@
 //
-// File:	RefineAlgorithm.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineAlgorithm.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 697 $
-// Modified:	$Date: 2005-11-03 12:27:48 -0800 (Thu, 03 Nov 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Refine algorithm for data transfer between AMR levels
 //
 
@@ -18,9 +18,6 @@
 #include "tbox/Utilities.h"
 #include "StandardRefineTransactionFactory.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -70,7 +67,7 @@ template<int DIM> void RefineAlgorithm<DIM>::registerRefine(
       TBOX_ERROR("RefineAlgorithm<DIM>::registerRefine error..."
                  << "\nCannot call registerRefine with this refine algorithm"
                  << "\nobject since it has already been used to create a refine schedule."
-                 << endl);
+                 << std::endl);
    }
 
    typename xfer::RefineClasses<DIM>::Data data;
@@ -109,14 +106,14 @@ template<int DIM> void RefineAlgorithm<DIM>::registerRefine(
    tbox::Pointer< xfer::TimeInterpolateOperator<DIM> > optime)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!optime.isNull());
+   TBOX_ASSERT(!optime.isNull());
 #endif
 
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm<DIM>::registerRefine error..."
                  << "\nCannot call registerRefine with this RefineAlgorithm"
                  << "\nobject since it has already been used to create a refine schedule."
-                 << endl);
+                 << std::endl);
    }
 
    typename xfer::RefineClasses<DIM>::Data data;
@@ -154,7 +151,7 @@ RefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    d_schedule_created = true;
@@ -166,7 +163,46 @@ RefineAlgorithm<DIM>::createSchedule(
       trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
    }
 
-   return(new xfer::RefineSchedule<DIM>(level,
+   return(new xfer::RefineSchedule<DIM>("DEFAULT_FILL",
+                                        level,
+                                        level, 
+                                        d_refine_classes, 
+                                        trans_factory,
+                                        patch_strategy));
+}
+
+/*
+*************************************************************************
+*									*
+* Create a communication schedule that will move data from the          *
+* interiors of the given level into the ghost cells and                 *
+* interiors of the same level.                                          *
+*									*
+*************************************************************************
+*/
+
+template<int DIM> tbox::Pointer< xfer::RefineSchedule<DIM> >
+RefineAlgorithm<DIM>::createSchedule(
+   const std::string& fill_pattern,
+   tbox::Pointer< hier::PatchLevel<DIM> > level,
+   xfer::RefinePatchStrategy<DIM>* patch_strategy,
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!level.isNull());
+#endif
+
+   d_schedule_created = true;
+
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > trans_factory =
+      transaction_factory;
+
+   if (trans_factory.isNull()) {
+      trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
+   }
+
+   return(new xfer::RefineSchedule<DIM>(fill_pattern,
+                                        level,
                                         level, 
                                         d_refine_classes, 
                                         trans_factory,
@@ -192,8 +228,8 @@ RefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
 #endif
 
    d_schedule_created = true;
@@ -205,7 +241,50 @@ RefineAlgorithm<DIM>::createSchedule(
       trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
    }
 
-   return(new xfer::RefineSchedule<DIM>(dst_level,
+   return(new xfer::RefineSchedule<DIM>("DEFAULT_FILL",
+                                        dst_level,
+                                        src_level,
+                                        d_refine_classes,
+                                        trans_factory,
+                                        patch_strategy,
+                                        use_time_interpolation));
+}
+
+/*
+*************************************************************************
+*									*
+* Create a communication schedule that will move data from the          *
+* interiors of the source level into the ghost cell and interiors       *
+* of the destination level.						*
+*									*
+*************************************************************************
+*/
+
+template<int DIM> tbox::Pointer< xfer::RefineSchedule<DIM> >
+RefineAlgorithm<DIM>::createSchedule(
+   const std::string& fill_pattern,
+   tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
+   tbox::Pointer< hier::PatchLevel<DIM> > src_level,
+   xfer::RefinePatchStrategy<DIM>* patch_strategy,
+   bool use_time_interpolation,
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+#endif
+
+   d_schedule_created = true;
+
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > trans_factory =
+      transaction_factory;
+
+   if (trans_factory.isNull()) {
+      trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
+   }
+
+   return(new xfer::RefineSchedule<DIM>(fill_pattern,
+                                        dst_level,
                                         src_level,
                                         d_refine_classes,
                                         trans_factory,
@@ -233,8 +312,8 @@ RefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
 #endif
 
    d_schedule_created = true;
@@ -246,7 +325,56 @@ RefineAlgorithm<DIM>::createSchedule(
       trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
    }
 
-   return(new xfer::RefineSchedule<DIM>(level,
+   return(new xfer::RefineSchedule<DIM>("DEFAULT_FILL",
+                                        level,
+                                        level,
+                                        next_coarser_level,
+                                        hierarchy,
+                                        d_refine_classes,
+                                        trans_factory,
+                                        patch_strategy,
+                                        use_time_interpolation));
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Create a communication schedule that moves data from the interiors    *
+* of the level and coarser levels in the hierarchy into the interior    *
+* and boundary cells of the given level.                                *
+*                                                                       *
+* This version takes the argument fill_pattern for specifying which     *
+* cells to fill.                                                        *
+*									*
+*************************************************************************
+*/
+
+template<int DIM> tbox::Pointer< xfer::RefineSchedule<DIM> >
+RefineAlgorithm<DIM>::createSchedule(
+   const std::string &fill_pattern,
+   tbox::Pointer< hier::PatchLevel<DIM> > level,
+   const int next_coarser_level,
+   tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
+   xfer::RefinePatchStrategy<DIM>* patch_strategy,
+   bool use_time_interpolation,
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+#endif
+
+   d_schedule_created = true;
+
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > trans_factory =
+      transaction_factory;
+
+   if (trans_factory.isNull()) {
+      trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
+   }
+
+   return(new xfer::RefineSchedule<DIM>(fill_pattern,
+                                        level,
                                         level,
                                         next_coarser_level,
                                         hierarchy,
@@ -277,8 +405,8 @@ RefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
 #endif
 
    d_schedule_created = true;
@@ -290,7 +418,57 @@ RefineAlgorithm<DIM>::createSchedule(
       trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
    }
 
-   return(new xfer::RefineSchedule<DIM>(dst_level,
+   return(new xfer::RefineSchedule<DIM>("DEFAULT_FILL",
+                                        dst_level,
+                                        src_level,
+                                        next_coarser_level,
+                                        hierarchy,
+                                        d_refine_classes,
+                                        trans_factory,
+                                        patch_strategy,
+                                        use_time_interpolation)); 
+}
+
+/*
+*************************************************************************
+*									*
+* Create a communication schedule that moves data from the interiors	*
+* of the source level and coarser levels in the hierarchy into the      *
+* ghost cells and interior cells of the destination level.              *
+*									*
+* This version takes the argument fill_pattern for specifying which     *
+* cells to fill.                                                        *
+*									*
+*************************************************************************
+*/
+
+template<int DIM> tbox::Pointer< xfer::RefineSchedule<DIM> >
+RefineAlgorithm<DIM>::createSchedule(
+   const std::string &fill_pattern,
+   tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
+   tbox::Pointer< hier::PatchLevel<DIM> > src_level,
+   const int next_coarser_level,
+   tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
+   xfer::RefinePatchStrategy<DIM>* patch_strategy,
+   bool use_time_interpolation,
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+#endif
+
+   d_schedule_created = true;
+
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > trans_factory =
+      transaction_factory;
+
+   if (trans_factory.isNull()) {
+      trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
+   }
+
+   return(new xfer::RefineSchedule<DIM>(fill_pattern,
+                                        dst_level,
                                         src_level,
                                         next_coarser_level,
                                         hierarchy,
@@ -312,7 +490,7 @@ template<int DIM> bool RefineAlgorithm<DIM>::checkConsistency(
    tbox::Pointer< xfer::RefineSchedule<DIM> > schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!schedule.isNull());
+   TBOX_ASSERT(!schedule.isNull());
 #endif
    return( d_refine_classes->
            checkConsistency(schedule->getEquivalenceClasses()) );
@@ -322,7 +500,7 @@ template<int DIM> void RefineAlgorithm<DIM>::resetSchedule(
    tbox::Pointer< xfer::RefineSchedule<DIM> > schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!schedule.isNull());
+   TBOX_ASSERT(!schedule.isNull());
 #endif
    if ( d_refine_classes->
         checkConsistency(schedule->getEquivalenceClasses()) ) {
@@ -331,7 +509,7 @@ template<int DIM> void RefineAlgorithm<DIM>::resetSchedule(
       TBOX_ERROR("RefineAlgorithm<DIM>::resetSchedule error..."
                  << "\n Items in xfer::RefineClasses<DIM> object passed to reset" 
                  << "\n routine are inconsistent with those in existing schedule."
-                 << endl);
+                 << std::endl);
    }
 }
 
@@ -358,10 +536,10 @@ void RefineAlgorithm<DIM>::setEquivalenceClasses(
 *************************************************************************
 */
 
-template<int DIM> void RefineAlgorithm<DIM>::printClassData(ostream& stream) const
+template<int DIM> void RefineAlgorithm<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "RefineAlgorithm<DIM>::printClassData()" << endl;
-   stream << "----------------------------------------" << endl;
+   stream << "RefineAlgorithm<DIM>::printClassData()" << std::endl;
+   stream << "----------------------------------------" << std::endl;
    d_refine_classes->printClassData(stream);
 }
 

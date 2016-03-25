@@ -1,9 +1,9 @@
 //
-// File:	FillBoxSet.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/FillBoxSet.h $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 651 $
-// Modified:	$Date: 2005-10-05 14:54:35 -0700 (Wed, 05 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Utility class for "smart" boxlist operations in comm schedules.
 //
 
@@ -24,7 +24,6 @@
 #endif
 #ifndef included_iostream
 #include <iostream>
-using namespace std;
 #define included_iostream
 #endif
 
@@ -153,7 +152,7 @@ public:
     * Print all class member data for this fill box set object
     * to specified output stream.
     */
-   virtual void print(ostream& os = tbox::plog) const;
+   virtual void print(std::ostream& os = tbox::plog) const;
 
 private:
    hier::Box<DIM> d_bounding_box;

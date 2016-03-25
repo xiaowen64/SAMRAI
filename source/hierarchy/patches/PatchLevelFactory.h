@@ -1,9 +1,9 @@
 //
-// File:	PatchLevelFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchLevelFactory.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Abstract factory class for creating patch level objects
 //
 
@@ -70,7 +70,8 @@ public:
             const IntVector<DIM>& ratio_to_level_zero,
             const tbox::Pointer< GridGeometry<DIM> > grid_geometry,
             const tbox::Pointer< PatchDescriptor<DIM> > descriptor,
-            tbox::Pointer< PatchFactory<DIM> > factory = NULL) const;
+            tbox::Pointer< PatchFactory<DIM> > factory = NULL,
+            const bool defer_boundary_box_creation = false) const;
 
    /**
     * Allocate a patch level using the data from the database to 
@@ -90,7 +91,8 @@ public:
             const tbox::Pointer< PatchDescriptor<DIM> > descriptor,
             tbox::Pointer< PatchFactory<DIM> > factory = NULL,
             const ComponentSelector component_selector = 
-                  ComponentSelector(false)) const;
+                  ComponentSelector(false),
+            const bool defer_boundary_box_creation = false) const;
         
 private:
    PatchLevelFactory(const PatchLevelFactory<DIM>&); // not implemented

@@ -1,9 +1,9 @@
 //
-// File:	EdgeGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/EdgeGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for edge centered objects
 //
 
@@ -32,32 +32,14 @@
 namespace SAMRAI {
     namespace pdat {
 
-/**
+/*!
  * Class EdgeGeometry<DIM> manages the mapping between the AMR index space
  * and the edge-centered geometry index space.  It is a subclass of
  * hier::BoxGeometry<DIM> and it computes intersections between edge-
- * centered box geometries.  That is, edge geometry objects calculate the 
- * edge-centered data residing in the intersection of two boxes defining 
- * regions of index space on an AMR patch hierarchy.  For example, given 
- * a three-dimensional box [l0:u0,l1:u1,l2:u2], the indices for a 
- * three-dimensional edge data object run as follows:
- * 
-
-
- * - \b X edges [l0:u0,l1:u1+1,l2:u2+1]
- * - \b Y edges [l0:u0+1,l1:u1,l2:u2+1]
- * - \b Z edges [l0:u0+1,l1:u1+1,l2:u2]
- * 
-
-
- * Recall that edge data is defined so that the edges associated with a
- * given coordinate direction are those whose tangent vector lies in that
- * direction.
+ * centered box geometries for communication operations.
  *
- * Note that the intersection between two edge-centered boxes can be 
- * complicated, since edge geometries contain indices on the edges of 
- * boxes.  Thus, there may be overlap between two boxes, even though 
- * the boxes do not intersect in the AMR index space.
+ * See header file for EdgeData<DIM> class for a more detailed
+ * description of the data layout.
  *
  * @see hier::BoxGeometry
  * @see pdat::EdgeOverlap
@@ -66,20 +48,30 @@ namespace SAMRAI {
 template<int DIM> class EdgeGeometry : public hier::BoxGeometry<DIM>
 {
 public:
-   /**
-    * Construct the edge geometry object given the box and ghost cell width.
+   /*!
+    * @brief Convert an AMR index box space box into an edge geometry box.
+    * An edge geometry box extends the given AMR index box space box
+    * by one in upper dimension for each coordinate direction not equal
+    * to the axis direction.
     */
-   EdgeGeometry(const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts);
+   static hier::Box<DIM> toEdgeBox(const hier::Box<DIM>& box, 
+                                   int axis);
 
-   /**
-    * The virtual destructor does nothing interesting.
+   /*!
+    * @brief Construct the edge geometry object given an AMR index
+    * space box and ghost cell width.
+    */
+   EdgeGeometry(const hier::Box<DIM>& box, 
+                const hier::IntVector<DIM>& ghosts);
+
+   /*!
+    * @brief The virtual destructor does nothing interesting.
     */
    virtual ~EdgeGeometry<DIM>();
 
-   /**
-    * Compute the overlap in index space between the source edge box
-    * geometry object and the destination box geometry.  Refer to the
-    * box geometry class for a detailed description of calculateOverlap().
+   /*!
+    * @brief Compute the overlap in edge-centered index space between
+    * the source box geometry and the destination box geometry.
     */
    virtual tbox::Pointer< hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
@@ -89,24 +81,17 @@ public:
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
 
-   /**
-    * Return the box extents for this edge centered box geometry object.
+   /*!
+    * @brief Return the box for this edge centered box geometry
+    * object.
     */
    const hier::Box<DIM>& getBox() const;
-
-   /**
-    * Return the ghost cell width for this edge centered box geometry object.
+ 
+   /*!
+    * @brief Return the ghost cell width for this edge centered box
+    * geometry object.
     */
    const hier::IntVector<DIM>& getGhosts() const;
-
-   /**
-    * Convert an AMR abstract box into a edge geometry box.  The box indices
-    * are cyclically shifted such that the edge direction is first.  The edge
-    * direction runs from the corresponding lower index to the upper index
-    * plus one.  All other indices run as in the original box.  The axes
-    * are given by X=0, Y=1, and Z=2.
-    */
-   static hier::Box<DIM> toEdgeBox(const hier::Box<DIM>& box, const int axis);
 
 private:
    /**

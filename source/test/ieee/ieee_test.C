@@ -1,10 +1,10 @@
 //
-// File:	ieee_test.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/ieee/ieee_test.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 586 $
-// Modified:	$Date: 2005-08-23 10:49:46 -0700 (Tue, 23 Aug 2005) $
-// Description:	simple test code for the tbox::IEEE exception handlers
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Description:	simple test code for the IEEE exception handlers
 //
 
 #include "SAMRAI_config.h"
@@ -18,7 +18,7 @@ using namespace std;
 #include "tbox/SAMRAIManager.h"
 #include "tbox/Array.h"
 #include "tbox/Pointer.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/IEEE.h"
 
@@ -44,10 +44,10 @@ int main(int argc, char **argv)
    /*
     * Initialize MPI, SAMRAI, and enable logging.
     */
-   tbox::MPI::init(&argc, &argv);
+   tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::startup();
 
-   tbox::IEEE::setupExceptionHandlers();
+   tbox::IEEE::setupFloatingPointExceptionHandlers();
 
    /*
     * Try using variables set to NaN and see if the signal handler catches
@@ -56,8 +56,10 @@ int main(int argc, char **argv)
     * there was an error, even though this is the desired behavior.
     */
 
+   int fail_count = 0;
+
 #ifdef SIGOPS_SUN_F0
-   float f0 = tbox::IEEE::getSignalingFloatNaN();
+   float f0 = tbox::MathUtilities<float>::getSignalingNaN();
    tbox::pout << "\nThis operation should stop the executable if signal handling " 
         << "\nis working (under solaris)..." << endl;
    tbox::pout << "f0 = " << f0 << endl;
@@ -67,7 +69,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef SIGOPS_SUN_D0
-   double d0 = tbox::IEEE::getSignalingNaN();
+   double d0 = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::pout << "\nThis operation should stop the executable if signal handling " 
         << "\nis working (under solaris)..." << endl;
    tbox::pout << "d0 = " << d0 << endl;
@@ -77,8 +79,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef SIGOPS_SUN_F1
-   float f1;
-   tbox::IEEE::setNaN(f1); 
+   float f1 = tbox::MathUtilities<float>::getSignalingNaN();
    tbox::pout << "\nThis operation should stop the executable if signal handling " 
         << "\nis working (under solaris)..." << endl;
    tbox::pout << "f1 = " << f1 << endl;
@@ -88,8 +89,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef SIGOPS_SUN_D1
-   double d1;
-   tbox::IEEE::setNaN(d1); 
+   double d1 = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::pout << "\nThis operation should stop the executable if signal handling " 
         << "\nis working (under solaris)..." << endl;
    tbox::pout << "d1 = " << d1 << endl;
@@ -122,8 +122,9 @@ int main(int argc, char **argv)
     * Check if the isNaN() method is working correctly
     */
 #ifdef SIGOPS_F0
-   bool is_f0_nan = tbox::IEEE::isNaN(f0);
+   bool is_f0_nan = tbox::MathUtilities<float>::isNaN(f0);
    if (!is_f0_nan) {
+     fail_count++;
      tbox::perr << "Test f0 FAILED" << endl;
    } else {
      tbox::plog << "Test f0 passed" << endl;
@@ -131,8 +132,9 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef SIGOPS_D0
-   bool is_d0_nan = tbox::IEEE::isNaN(d0);
+   bool is_d0_nan = tbox::MathUtilities<float>::isNaN(d0);
    if (!is_d0_nan) {
+     fail_count++;
      tbox::perr << "Test d0 FAILED" << endl;
    } else {
      tbox::plog << "Test d0 passed" << endl;
@@ -142,6 +144,7 @@ int main(int argc, char **argv)
 #ifdef SIGOPS_F1
    bool is_f1_nan = tbox::IEEE::isNaN(f1);
    if (!is_f1_nan) {
+     fail_count++;
      tbox::perr << "Test f1 FAILED" << endl;
    } else {
      tbox::plog << "Test f1 passed" << endl;
@@ -151,6 +154,7 @@ int main(int argc, char **argv)
 #ifdef SIGOPS_D1
    bool is_d1_nan = tbox::IEEE::isNaN(d1);
    if (!is_d1_nan) {
+     fail_count++;
      tbox::perr << "Test d1 FAILED" << endl;
    } else {
      tbox::plog << "Test d1 passed" << endl;
@@ -160,6 +164,7 @@ int main(int argc, char **argv)
 #ifdef SIGOPS_F2
    bool is_f2_nan = tbox::IEEE::isNaN(f2);
    if (is_f2_nan) {
+     fail_count++;
      tbox::perr << "Test f2 FAILED" << endl;
    } else {
      tbox::plog << "Test f2 passed" << endl;
@@ -169,6 +174,7 @@ int main(int argc, char **argv)
 #ifdef SIGOPS_D2
    bool is_d2_nan = tbox::IEEE::isNaN(d2);
    if (is_d2_nan) {
+     fail_count++;
      tbox::perr << "Test d2 FAILED" << endl;
    } else {
      tbox::plog << "Test d2 passed" << endl;
@@ -182,6 +188,7 @@ int main(int argc, char **argv)
    for (int i = 0; i < f3.getSize(); i++) {
       bool is_f3_nan = tbox::IEEE::isNaN(f3[i]);
       if (!is_f3_nan) {
+         fail_count++;
          tbox::perr << "Test f3 FAILED; i = " << i << endl;
       } else {
          tbox::plog << "Test f3 passed" << endl;
@@ -195,6 +202,7 @@ int main(int argc, char **argv)
    for (int i = 0; i < d3.getSize(); i++) {
       bool is_d3_nan = tbox::IEEE::isNaN(d3[i]);
       if (!is_d3_nan) {
+         fail_count++;
          tbox::perr << "Test d3 FAILED; i = " << i << endl;
       } else {
          tbox::plog << "Test d3 passed" << endl;
@@ -202,10 +210,12 @@ int main(int argc, char **argv)
     }
 #endif
 
-   tbox::pout << "\nPASSED:  ieee" << endl;
+   if ( fail_count == 0 ) {
+      tbox::pout << "\nPASSED:  ieee" << endl;
+   }
 
    tbox::SAMRAIManager::shutdown();
-   tbox::MPI::finalize();
+   tbox::SAMRAI_MPI::finalize();
 
-   return(0);
+   return(fail_count);
 }

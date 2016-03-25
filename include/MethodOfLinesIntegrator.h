@@ -1,9 +1,9 @@
 //
-// File:        MethodOfLinesIntegrator.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/method_of_lines/MethodOfLinesIntegrator.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Basic method-of-lines time integration algorithm
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -67,7 +66,6 @@ using namespace std;
 #endif 
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif 
 #ifndef included_mesh_StandardTagAndInitStrategy
@@ -183,7 +181,7 @@ public:
     * or an empty string will result in an unrecoverable exception.
     */
    MethodOfLinesIntegrator(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
       MethodOfLinesPatchStrategy<DIM>* patch_strategy,
       bool register_for_restart = true);
@@ -229,13 +227,13 @@ public:
                          const hier::IntVector<DIM>& ghosts,
                          const MOL_VAR_TYPE m_v_type,
                          const tbox::Pointer< xfer::Geometry<DIM> >& transfer_geom,
-                         const string &coarsen_name = string(),
-                         const string &refine_name = string());
+                         const std::string &coarsen_name = std::string(),
+                         const std::string &refine_name = std::string());
 
    /*!
     * Print all data members of MethodOfLinesIntegrator<DIM> object.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
    /*!
     * Initialize data on a new level after it is inserted into an AMR patch
@@ -377,7 +375,7 @@ private:
     * restart files and for error reporting purposes.  The boolean
     * is used to control restart file writing operations.
     */
-   string d_object_name;
+   std::string d_object_name;
    bool d_registered_for_restart;
 
    /*

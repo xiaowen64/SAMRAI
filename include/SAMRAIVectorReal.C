@@ -1,9 +1,9 @@
 //
-// File:        SAMRAIVectorReal.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/SAMRAIVectorReal.C $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 412 $
-// Modified:    $Date: 2005-06-01 13:38:46 -0700 (Wed, 01 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Vector class for data on SAMRAI hierarchy.
 //
 
@@ -18,12 +18,6 @@
 
 #include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "HierarchyCellDataOpsReal.h"
 #include "HierarchyEdgeDataOpsReal.h"
@@ -37,8 +31,9 @@
 #include "FaceVariable.h"
 #include "NodeVariable.h"
 #include "SideVariable.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #ifdef DEBUG_NO_INLINE
 #include "SAMRAIVectorReal.I"
@@ -83,14 +78,14 @@ template<int DIM, class TYPE> tbox::Pointer< math::HierarchyDataOpsReal<DIM,TYPE
 
 template<int DIM, class TYPE>
 SAMRAIVectorReal<DIM,TYPE>::SAMRAIVectorReal(
-   const string &name,
+   const std::string &name,
    tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert(   (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(   (coarsest_level >= 0)
           && (finest_level >= coarsest_level)
           && (finest_level <= hierarchy->getFinestLevelNumber()) );
 #endif
@@ -189,7 +184,7 @@ void SAMRAIVectorReal<DIM,TYPE>::operator=(
 */
 
 template<int DIM, class TYPE>
-void SAMRAIVectorReal<DIM,TYPE>::setName(const string &name)
+void SAMRAIVectorReal<DIM,TYPE>::setName(const std::string &name)
 {
    d_vector_name = name;
 }
@@ -220,10 +215,10 @@ void SAMRAIVectorReal<DIM,TYPE>::resetLevels(const int coarsest_level,
 
 template<int DIM, class TYPE>
 tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> >
-SAMRAIVectorReal<DIM,TYPE>::cloneVector(const string &name) const
+SAMRAIVectorReal<DIM,TYPE>::cloneVector(const std::string &name) const
 {
 
-   string new_name = (name.empty() ? d_vector_name : name);
+   std::string new_name = (name.empty() ? d_vector_name : name);
    tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > new_vec = 
       new SAMRAIVectorReal<DIM,TYPE>(new_name, 
                                        d_hierarchy, 
@@ -303,23 +298,33 @@ void SAMRAIVectorReal<DIM,TYPE>::addComponent(
    const tbox::Pointer< math::HierarchyDataOpsReal<DIM,TYPE> > vop) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!hier::VariableDatabase<DIM>::getDatabase()->
-        checkVariablePatchDataIndex(var, comp_data_id)) {
+   hier::VariableDatabase<DIM>* var_db = 
+      hier::VariableDatabase<DIM>::getDatabase();
+   tbox::Pointer< hier::PatchDescriptor<DIM> > patch_descriptor =
+      var_db->getPatchDescriptor();
+   if (!var_db->checkVariablePatchDataIndexType(var, comp_data_id)) {
       TBOX_ERROR("Error in SAMRAIVectorReal<DIM>::addComponent : "
                  << "Vector name = " << d_vector_name
                  << "\nVariable " << var->getName()
-                 << " type does not match type of data id "
-                 << "= " << comp_data_id << " in patch descriptor." << endl);
+                 << " type does not match data type associated with" 
+                 << " comp_data_id patch data index function argument"
+                 << "\n\t var type = " << typeid(*var).name()
+                 << "\n\t comp_data_id type = " 
+                 << typeid(*(patch_descriptor->getPatchDataFactory(comp_data_id))).name()
+                 << std::endl);
    }
     
    if (comp_vol_id >= 0) {
-      if (!hier::VariableDatabase<DIM>::getDatabase()->
-           checkVariablePatchDataIndex(var, comp_vol_id)) {
+      if (!var_db->checkVariablePatchDataIndexType(var, comp_vol_id)) {
          TBOX_ERROR("Error in SAMRAIVectorReal<DIM>::addComponent : " 
                     << "Vector name = " << d_vector_name
                     << "\nVariable " << var->getName() 
-                    << " type does not match type of control volume id "
-                    << "= " << comp_vol_id << " in patch descriptor." << endl);
+                    << " type does not match data type associated with"
+                    << " comp_vol_id patch data index function argument"
+                    << "\n\t var type = " << typeid(*var).name()
+                    << "\n\t comp_vol_id type = "
+                    << typeid(*(patch_descriptor->getPatchDataFactory(comp_vol_id))).name()
+                    << std::endl);
       }
    }
 #endif
@@ -332,7 +337,7 @@ void SAMRAIVectorReal<DIM,TYPE>::addComponent(
    d_control_volume_data_id.resizeArray(d_number_components);
 
    hier::VariableDatabase<DIM>::getDatabase()->registerPatchDataIndex(var,
-                                                                 comp_data_id);
+                                                                      comp_data_id);
 
    setComponent(d_number_components-1,
                 var, 
@@ -354,8 +359,8 @@ void SAMRAIVectorReal<DIM,TYPE>::allocateVectorData(
    tbox::Pointer<tbox::Arena> pool)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -373,8 +378,8 @@ template<int DIM, class TYPE>
 void SAMRAIVectorReal<DIM,TYPE>::deallocateVectorData()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -398,17 +403,17 @@ void SAMRAIVectorReal<DIM,TYPE>::deallocateVectorData()
 */
 
 template<int DIM, class TYPE>
-void SAMRAIVectorReal<DIM,TYPE>::print(ostream& s, bool interior_only) const
+void SAMRAIVectorReal<DIM,TYPE>::print(std::ostream& s, bool interior_only) const
 {
-   s << "\nVector : " << getName() << endl;
+   s << "\nVector : " << getName() << std::endl;
    s << "coarsest level = " << d_coarsest_level 
-     << " : finest level = " << d_finest_level << endl;
-   s << "d_number_components = " << d_number_components << endl;
+     << " : finest level = " << d_finest_level << std::endl;
+   s << "d_number_components = " << d_number_components << std::endl;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      s << "Printing data components on level " << ln << endl;
+      s << "Printing data components on level " << ln << std::endl;
       for (int i = 0; i < d_number_components; i++) {
-         s << "Vector component index = " << i << endl; 
+         s << "Vector component index = " << i << std::endl; 
 	 d_component_operations[i]->resetLevels(ln,ln);
          d_component_operations[i]->printData(d_component_data_id[i],
 					      s,
@@ -448,7 +453,7 @@ void SAMRAIVectorReal<DIM,TYPE>::setComponent(
    const tbox::Pointer< math::HierarchyDataOpsReal<DIM,TYPE> > vop)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(comp_id < d_number_components);
+   TBOX_ASSERT(comp_id < d_number_components);
 #endif
 
    d_component_variable[comp_id] = var;
@@ -511,7 +516,7 @@ void SAMRAIVectorReal<DIM,TYPE>::setComponent(
       d_component_operations[comp_id]  = vop;
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(d_component_operations[comp_id].isNull()));
+   TBOX_ASSERT(!(d_component_operations[comp_id].isNull()));
 #endif
 
    d_control_volume_data_id[comp_id] = vol_id;
@@ -521,9 +526,8 @@ void SAMRAIVectorReal<DIM,TYPE>::setComponent(
    int oldsize = d_variableid_2_vectorcomponent_map.getSize();
    int newsize = var_id + 1;
    if (oldsize < newsize) {
-      newsize = tbox::Utilities::imax(oldsize +
-                                     DESCRIPTOR_ID_ARRAY_SCRATCH_SPACE,
-                                     newsize);
+      newsize = tbox::MathUtilities<int>::Max(
+                oldsize + DESCRIPTOR_ID_ARRAY_SCRATCH_SPACE, newsize );
       d_variableid_2_vectorcomponent_map.resizeArray(newsize);
       for (int i = oldsize; i < newsize; i++) {
          d_variableid_2_vectorcomponent_map[i] = -1;
@@ -531,7 +535,7 @@ void SAMRAIVectorReal<DIM,TYPE>::setComponent(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(d_variableid_2_vectorcomponent_map[var_id] == -1);
+   TBOX_ASSERT(d_variableid_2_vectorcomponent_map[var_id] == -1);
 #endif
 
    d_variableid_2_vectorcomponent_map[var_id] = comp_id;
@@ -854,7 +858,7 @@ double SAMRAIVectorReal<DIM,TYPE>::maxNorm(bool local_only) const
 
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
-      norm = tbox::Utilities::dmax( norm, 
+      norm = tbox::MathUtilities<double>::Max( norm, 
                    d_component_operations[i]->maxNorm(
                                               d_component_data_id[i], 
                                               d_control_volume_data_id[i]) );
@@ -889,7 +893,7 @@ int SAMRAIVectorReal<DIM,TYPE>::computeConstrProdPos(
    int i = 0;
    while (test && (i < d_number_components)) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
-      test = tbox::Utilities::imin( test,
+      test = tbox::MathUtilities<int>::Min( test,
                    d_component_operations[i]->
                    computeConstrProdPos(d_component_data_id[i],
                                         x->getComponentDescriptorIndex(i),
@@ -923,7 +927,7 @@ int SAMRAIVectorReal<DIM,TYPE>::testReciprocal(
 
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
-      test = tbox::Utilities::imin( test,
+      test = tbox::MathUtilities<int>::Min( test,
                    d_component_operations[i]->
                    testReciprocal(d_component_data_id[i],
                                   x->getComponentDescriptorIndex(i),
@@ -945,10 +949,10 @@ TYPE SAMRAIVectorReal<DIM,TYPE>::maxPointwiseDivide(
 	 d_component_operations[i]->maxPointwiseDivide(d_component_data_id[i],
          denom->getComponentDescriptorIndex(i),
 						       true);
-      max = tbox::Utilities::dmax( max, component_max );
+      max = tbox::MathUtilities<double>::Max( max, component_max );
    }
 
-   max = tbox::MPI::maxReduction(max);
+   max = tbox::SAMRAI_MPI::maxReduction(max);
    return( max );
 }
 

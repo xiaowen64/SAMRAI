@@ -1,9 +1,9 @@
 /*
- * File:        AsyncCommGroup.h
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommGroup.h $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: All-to-one and one-to-all communication using a tree.
  */
 
@@ -22,8 +22,8 @@
 #include "tbox/RelaunchableJob.h"
 #endif
 
-#ifndef included_tbox_MPI
-#include "tbox/MPI.h"
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 
 #ifndef included_tbox_Timer
@@ -156,7 +156,7 @@ public:
     * to create a new communicator to avoid interference with other
     * communications within SAMRAI.
     */
-   void setMPICommunicator( MPI::comm &mpi_communicator );
+   void setMPICommunicator( SAMRAI_MPI::comm &mpi_communicator );
 
 
    /*!
@@ -302,7 +302,7 @@ public:
    int getNumberOfChildren() const;
 
 
-  void logCurrentState( ostream &co ) const;
+  void logCurrentState( std::ostream &co ) const;
 
 
 private:
@@ -316,7 +316,7 @@ private:
     * AsyncCommStage), this method may be overiden to provide
     * externally managed requests.
     */
-   virtual MPI::request *getRequestPointer() const;
+   virtual SAMRAI_MPI::request *getRequestPointer() const;
 
 
    /*
@@ -577,10 +577,10 @@ private:
     * This is set to NULL if getRequestPointer() is overriden to
     * provide the requests externally.
     */
-   mutable MPI::request *d_internal_requests;
+   mutable SAMRAI_MPI::request *d_internal_requests;
 
    int d_mpi_tag;
-   MPI::comm d_mpi_communicator;
+   SAMRAI_MPI::comm d_mpi_communicator;
 
    bool d_use_blocking_send_to_children;
    bool d_use_blocking_send_to_parent;
@@ -589,7 +589,7 @@ private:
 
 
    // Make some temporary variable statuses to avoid repetitious allocations.
-   MPI::status d_mpi_status;
+   SAMRAI_MPI::status d_mpi_status;
 
    int d_mpi_err;
 

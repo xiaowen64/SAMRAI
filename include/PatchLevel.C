@@ -1,9 +1,9 @@
 //
-// File:   PatchLevel.C
+// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchLevel.C $
 // Package:   SAMRAI hierarchy
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:   $Revision: 507 $
-// Modified:   $Date: 2005-08-04 17:06:06 -0700 (Thu, 04 Aug 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:   $LastChangedRevision: 1704 $
+// Modified:   $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:   A collection of patches at one level of the AMR hierarchy
 //
 
@@ -12,12 +12,10 @@
 
 #include "PatchLevel.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 #include <stdio.h>
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #define HIER_PATCH_LEVEL_VERSION (3)
 
@@ -84,18 +82,18 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
    bool defer_boundary_box_creation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(boxes.getNumberOfBoxes() == mapping.getSizeOfMappingArray());
-   assert(!grid_geometry.isNull());
-   assert(!descriptor.isNull());
+   TBOX_ASSERT(boxes.getNumberOfBoxes() == mapping.getSizeOfMappingArray());
+   TBOX_ASSERT(!grid_geometry.isNull());
+   TBOX_ASSERT(!descriptor.isNull());
    /*
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   assert(ratio_to_level_zero != hier::IntVector<DIM>(0));
+   TBOX_ASSERT(ratio_to_level_zero != hier::IntVector<DIM>(0));
 
    if (DIM > 1) {
       for (int i = 0; i < DIM; i++) {
-	 assert( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
+	 TBOX_ASSERT( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
 		 || (ratio_to_level_zero(i) == 1)
 		 || (ratio_to_level_zero((i+1)%DIM) == 1) );
       }
@@ -189,9 +187,9 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
    bool defer_boundary_box_creation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level_database.isNull());
-   assert(!grid_geometry.isNull());
-   assert(!descriptor.isNull());
+   TBOX_ASSERT(!level_database.isNull());
+   TBOX_ASSERT(!grid_geometry.isNull());
+   TBOX_ASSERT(!descriptor.isNull());
 #endif
 
    d_geometry = grid_geometry;
@@ -391,8 +389,8 @@ template<int DIM> void hier::PatchLevel<DIM>::setRefinedPatchLevel(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_level.isNull());
-   assert(refine_ratio > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(!coarse_level.isNull());
+   TBOX_ASSERT(refine_ratio > hier::IntVector<DIM>(0));
 #endif
 
    /*
@@ -425,12 +423,12 @@ template<int DIM> void hier::PatchLevel<DIM>::setRefinedPatchLevel(
          int coarse_rat = coarse_ratio(i);
          int refine_rat = refine_ratio(i);
          if (coarse_rat < 0) {
-            if (tbox::Utilities::iabs(coarse_rat) >= refine_rat) {
+            if ( tbox::MathUtilities<int>::Abs(coarse_rat) >= refine_rat ) {
                d_ratio_to_level_zero(i) =
-                  - (tbox::Utilities::iabs(coarse_rat / refine_rat));
+                  - ( tbox::MathUtilities<int>::Abs(coarse_rat / refine_rat) );
             } else {
                d_ratio_to_level_zero(i) =
-                  tbox::Utilities::iabs(refine_rat / coarse_rat);
+                  tbox::MathUtilities<int>::Abs(refine_rat / coarse_rat);
             }
          } else {
             d_ratio_to_level_zero(i) = coarse_rat * refine_rat;
@@ -534,8 +532,8 @@ template<int DIM> void PatchLevel<DIM>::setCoarsenedPatchLevel(
    bool defer_boundary_box_creation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_level.isNull());
-   assert(coarsen_ratio > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(coarsen_ratio > hier::IntVector<DIM>(0));
 #endif
 
    /*
@@ -574,11 +572,11 @@ template<int DIM> void PatchLevel<DIM>::setCoarsenedPatchLevel(
                d_ratio_to_level_zero(i) = fine_rat / coarsen_rat;
             } else {
                d_ratio_to_level_zero(i) =
-                  - (tbox::Utilities::iabs(coarsen_rat / fine_rat));
+                  - ( tbox::MathUtilities<int>::Abs(coarsen_rat / fine_rat) );
             } 
          } else {
             d_ratio_to_level_zero(i) =
-               - (tbox::Utilities::iabs(fine_rat * coarsen_rat)); 
+               - ( tbox::MathUtilities<int>::Abs(fine_rat * coarsen_rat) ); 
          }
       }
 
@@ -694,7 +692,7 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
    ComponentSelector component_selector)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("HIER_PATCH_LEVEL_VERSION");
@@ -709,13 +707,13 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
 
    if (!(d_number_patches > 0)) {
       TBOX_ERROR("PatchLevel<DIM>::getFromDatabase() error...\n"
-                 << "   d_number_patches in database is not positive" << endl);
+                 << "   d_number_patches in database is not positive" << std::endl);
    }
 
    if (d_number_patches != d_boxes.getNumberOfBoxes()) {
       TBOX_ERROR("PatchLevel<DIM>::getFromDatabase() error...\n"
                  << "   d_number_patches not same as the number of boxes on "
-                 << "this level" << endl);
+                 << "this level" << std::endl);
    }
 
    d_mapping.setProcessorMapping(database->getIntegerArray("d_mapping"));
@@ -723,7 +721,7 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
    if (d_number_patches != d_mapping.getSizeOfMappingArray()) {
       TBOX_ERROR("PatchLevel<DIM>::getFromDatabase() error...\n"
                  << "   d_number_patches not same as size of processor "
-                 << "mapping array" << endl);
+                 << "mapping array" << std::endl);
    }
 
    int* temp_ratio = d_ratio_to_level_zero;
@@ -745,7 +743,7 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
 
    d_patches.resizeArray(d_number_patches);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUF_SIZE > (5 + 1 + 4 + 1 + 5 + 1 + 4 + 1) );
+   TBOX_ASSERT( NAME_BUF_SIZE > (5 + 1 + 4 + 1 + 5 + 1 + 4 + 1) );
 #endif
    char patch_name[NAME_BUF_SIZE];
    tbox::Pointer<tbox::Database> patch_database;
@@ -758,7 +756,7 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
          if (!(database->isDatabase(patch_name))) {
             TBOX_ERROR("PatchLevel<DIM>::getFromDatabase() error...\n"
                        << "   patch name " << patch_name 
-                       << " not found in database" << endl);
+                       << " not found in database" << std::endl);
          }
          patch_database = database->getDatabase(patch_name);
 
@@ -793,7 +791,7 @@ template<int DIM> void PatchLevel<DIM>::putToDatabase(
    const ComponentSelector& patchdata_write_table)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("HIER_PATCH_LEVEL_VERSION", HIER_PATCH_LEVEL_VERSION);
@@ -828,7 +826,7 @@ template<int DIM> void PatchLevel<DIM>::putToDatabase(
  */
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUF_SIZE > (5 + 1 + 4 + 1 + 5 + 1 + 4 + 1) );
+   TBOX_ASSERT( NAME_BUF_SIZE > (5 + 1 + 4 + 1 + 5 + 1 + 4 + 1) );
 #endif
    char patch_name[NAME_BUF_SIZE];
    tbox::Pointer<tbox::Database> patch_database;
@@ -844,8 +842,8 @@ template<int DIM> void PatchLevel<DIM>::putToDatabase(
 }
 
 
-template<int DIM> int PatchLevel<DIM>::recursivePrint( ostream &os ,
-                                                       const string &border ,
+template<int DIM> int PatchLevel<DIM>::recursivePrint( std::ostream &os ,
+                                                       const std::string &border ,
                                                        unsigned short depth )
 {
   int npatch = getNumberOfPatches();
@@ -875,7 +873,7 @@ template<int DIM> tbox::Pointer< BoxGraph<DIM> > PatchLevel<DIM>::getBoxGraph()
    if (d_box_graph.isNull()) {
 
       IntVector<DIM> dst_growth = d_descriptor->getMaxGhostWidth();
-      int max_gcw = tbox::Utilities::imax(dst_growth.max(),1);
+      int max_gcw = tbox::MathUtilities<int>::Max(dst_growth.max(),1);
       
       d_box_graph = new BoxGraph<DIM>(d_boxes,
                                        d_shifts,
@@ -975,8 +973,8 @@ template<int DIM> void PatchLevel<DIM>::setPatchTouchesBoundaryArrays()
       }
    }
 
-   tbox::MPI::sumReduction(tmp_reg_array.getPointer(), npatches);
-   tbox::MPI::sumReduction(tmp_per_array.getPointer(), npatches);
+   tbox::SAMRAI_MPI::sumReduction(tmp_reg_array.getPointer(), npatches);
+   tbox::SAMRAI_MPI::sumReduction(tmp_per_array.getPointer(), npatches);
 
    for (int ip = 0; ip < npatches; ip++) {
       d_patch_touches_regular_boundary[ip] = 

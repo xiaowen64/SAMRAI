@@ -1,7 +1,7 @@
 dnl Define a macro for supporting generalized serial-parallel run.
 
 
-AC_DEFUN(SAMRAI_SERPA,[
+AC_DEFUN([SAMRAI_SERPA],[
 dnl Support a generalized way to run a program in serial or parallel mode.
 dnl (serpa is serial + parallel).
 dnl
@@ -259,7 +259,7 @@ elif echo "${HOST}" | egrep '^(mcr|pengra|thunder)[0-9]' > /dev/null ; then
   # For LC Linux clusters using srun.
   run_multiproc () {
     program=${1}; nproc=${2}; shift 2
-    com="${additional_env} srun -n${nproc} -N${nproc} -p pdebug ${program} ${@}"
+    com="${additional_env} srun -n${nproc} -p pdebug ${program} ${@}"
     echo ${com}
     eval ${com} ${output_redirection_string} ${errors_redirection_string}
     return ${?}

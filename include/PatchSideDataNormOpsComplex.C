@@ -1,9 +1,9 @@
 //
-// File:	PatchSideDataNormOpsComplex.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/side/PatchSideDataNormOpsComplex.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Norm operations for complex side-centered patch data.
 //
 
@@ -12,12 +12,9 @@
 
 #include "PatchSideDataNormOpsComplex.h"
 #include "SideGeometry.h"
-#include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -69,12 +66,12 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::sumControlVolumes(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
 #endif
    double retval = 0.0;
    const hier::IntVector<DIM>& directions = data->getDirectionVector();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(directions ==
+   TBOX_ASSERT(directions ==
           hier::IntVector<DIM>::min(directions, cvol->getDirectionVector()));
 #endif
    for (int d = 0; d < DIM; d++) {
@@ -94,8 +91,8 @@ template<int DIM> void PatchSideDataNormOpsComplex<DIM>::abs(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
-   assert(dst->getDirectionVector() == src->getDirectionVector());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
 #endif
    const hier::IntVector<DIM>& directions = dst->getDirectionVector();
    for (int d = 0; d < DIM; d++) {
@@ -114,7 +111,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::L1Norm(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval = 0.0;
    const hier::IntVector<DIM>& directions = data->getDirectionVector();
@@ -127,7 +124,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::L1Norm(
       }
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(directions ==
+      TBOX_ASSERT(directions ==
              hier::IntVector<DIM>::min(directions, cvol->getDirectionVector()));
 #endif
       for (int d = 0; d < DIM; d++) {
@@ -148,7 +145,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::L2Norm(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval = 0.0;
    const hier::IntVector<DIM>& directions = data->getDirectionVector();
@@ -162,7 +159,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::L2Norm(
       }
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(directions ==
+      TBOX_ASSERT(directions ==
              hier::IntVector<DIM>::min(directions, cvol->getDirectionVector()));
 #endif
       for (int d = 0; d < DIM; d++) {
@@ -186,12 +183,12 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::weightedL2Norm(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
 #endif
    double retval = 0.0;
    const hier::IntVector<DIM>& directions = data->getDirectionVector();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(directions ==
+   TBOX_ASSERT(directions ==
           hier::IntVector<DIM>::min(directions, weight->getDirectionVector()));
 #endif
    if (cvol.isNull()) {
@@ -206,7 +203,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::weightedL2Norm(
       } 
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(directions ==
+      TBOX_ASSERT(directions ==
              hier::IntVector<DIM>::min(directions, cvol->getDirectionVector()));
 #endif
       for (int d = 0; d < DIM; d++) {
@@ -230,7 +227,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::RMSNorm(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval = L2Norm(data, box, cvol);
    if (cvol.isNull()) {
@@ -248,7 +245,7 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::weightedRMSNorm(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
 #endif
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (cvol.isNull()) {
@@ -265,27 +262,29 @@ template<int DIM> double PatchSideDataNormOpsComplex<DIM>::maxNorm(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    double retval = 0.0;
    const hier::IntVector<DIM>& directions = data->getDirectionVector();
    if (cvol.isNull()) {
       for (int d = 0; d < DIM; d++) {
          if (directions(d)) {
-            const hier::Box<DIM> side_box = pdat::SideGeometry<DIM>::toSideBox(box, d);
-            retval = tbox::Utilities::dmax(retval, 
+            const hier::Box<DIM> side_box = 
+               pdat::SideGeometry<DIM>::toSideBox(box, d);
+            retval = tbox::MathUtilities<double>::Max(retval, 
                         d_array_ops.maxNorm(data->getArrayData(d), side_box) );
          }
       }
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(directions ==
+      TBOX_ASSERT(directions ==
              hier::IntVector<DIM>::min(directions, cvol->getDirectionVector()));
 #endif
       for (int d = 0; d < DIM; d++) {
          if (directions(d)) {
-            const hier::Box<DIM> side_box = pdat::SideGeometry<DIM>::toSideBox(box, d);
-            retval = tbox::Utilities::dmax(retval, 
+            const hier::Box<DIM> side_box = 
+               pdat::SideGeometry<DIM>::toSideBox(box, d);
+            retval = tbox::MathUtilities<double>::Max(retval, 
                      d_array_ops.maxNormWithControlVolume(
                                  data->getArrayData(d), 
                                  cvol->getArrayData(d), side_box) );
@@ -302,8 +301,8 @@ template<int DIM> dcomplex PatchSideDataNormOpsComplex<DIM>::dot(
    const tbox::Pointer< pdat::SideData<DIM,double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data1.isNull() && !data2.isNull());
-   assert(data1->getDirectionVector() == data2->getDirectionVector()); 
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector()); 
 #endif
    dcomplex retval = dcomplex(0.0,0.0);
    const hier::IntVector<DIM>& directions = data1->getDirectionVector();
@@ -318,7 +317,7 @@ template<int DIM> dcomplex PatchSideDataNormOpsComplex<DIM>::dot(
       }
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(directions ==
+      TBOX_ASSERT(directions ==
              hier::IntVector<DIM>::min(directions, cvol->getDirectionVector()));
 #endif
       for (int d = 0; d < DIM; d++) {
@@ -341,13 +340,13 @@ template<int DIM> dcomplex PatchSideDataNormOpsComplex<DIM>::integral(
    const tbox::Pointer< pdat::SideData<DIM,double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    dcomplex retval = dcomplex(0.0,0.0);
    const hier::IntVector<DIM>& directions = data->getDirectionVector();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(directions ==
+   TBOX_ASSERT(directions ==
           hier::IntVector<DIM>::min(directions, vol->getDirectionVector()));
 #endif
    for (int d = 0; d < DIM; d++) {

@@ -1,20 +1,14 @@
 //
-// File:        EdgeDataTest.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/EdgeDataTest.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 415 $
-// Modified:    $Date: 2005-06-01 16:30:29 -0700 (Wed, 01 Jun 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: AMR communication tests for edge-centered patch data
 //
 
 #include "EdgeDataTest.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "ArrayData.h"
 #include "BoundaryBox.h"
@@ -27,6 +21,7 @@
 #include "EdgeIterator.h"
 #include "EdgeVariable.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
 namespace SAMRAI {
@@ -44,9 +39,9 @@ EdgeDataTest::EdgeDataTest(
    const string& refine_option)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!main_input_db.isNull());
-   assert(!refine_option.empty());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!refine_option.empty());
 #endif
 
    d_object_name = object_name;
@@ -88,7 +83,7 @@ EdgeDataTest::~EdgeDataTest()
 void EdgeDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -156,7 +151,7 @@ void EdgeDataTest::readTestInput(tbox::Pointer<tbox::Database> db)
 void EdgeDataTest::registerVariables(CommTester* commtest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(commtest != (CommTester*)NULL);
+   TBOX_ASSERT(commtest != (CommTester*)NULL);
 #endif
 
    int nvars = d_variable_src_name.getSize();
@@ -197,7 +192,7 @@ void EdgeDataTest::setConstantData(
    double axfact) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    if (!box.empty()) {
@@ -222,9 +217,9 @@ void EdgeDataTest::setConservativeData(
    int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0)
+   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -411,7 +406,7 @@ void EdgeDataTest::setConstantBoundaryData(
    double axfact) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    int lid = bbox.getLocationIndex();
    const hier::IntVector<NDIM>& gcw = data->getGhostCellWidth();
@@ -422,23 +417,23 @@ void EdgeDataTest::setConstantBoundaryData(
       for (int axis = 0; axis < NDIM; axis++) {
          if (axis == 0) {
             if (lid % 2) {
-               fillbox.growLower(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+               fillbox.growLower(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
             } else {
-               fillbox.growUpper(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+               fillbox.growUpper(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
             } 
          }
          if (axis == 1) {
             if ( (lid == 0) || (lid == 1) || (lid == 4) || (lid == 5) ) {
-               fillbox.growLower(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+               fillbox.growLower(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
             } else {
-               fillbox.growUpper(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+               fillbox.growUpper(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
             }
          }
          if (axis == 2) {
             if (lid < 4) {
-               fillbox.growLower(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+               fillbox.growLower(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
             } else {
-               fillbox.growUpper(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+               fillbox.growUpper(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
             }
          }
       }
@@ -446,71 +441,71 @@ void EdgeDataTest::setConstantBoundaryData(
    } else if ( bbox.getBoundaryType() == 1 ) {
       for (int axis = 0; axis < NDIM; axis++) {
          if (lid == 2*axis) {
-            fillbox.growLower(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+            fillbox.growLower(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
          } else if (lid == 2*axis+1) {
-            fillbox.growUpper(axis, tbox::Utilities::imax(gcw(axis)-1,0));
+            fillbox.growUpper(axis, tbox::MathUtilities<int>::Max(gcw(axis)-1,0));
          }
       }
    } else if ( bbox.getBoundaryType() == 2 ) {
       switch(lid) {
          case 0: {
-            fillbox.growLower(1, tbox::Utilities::imax(gcw(1)-1,0));
-            fillbox.growLower(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growLower(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
+            fillbox.growLower(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 1: {
-            fillbox.growUpper(1, tbox::Utilities::imax(gcw(1)-1,0));
-            fillbox.growLower(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growUpper(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
+            fillbox.growLower(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 2: {
-            fillbox.growLower(1, tbox::Utilities::imax(gcw(1)-1,0));
-            fillbox.growUpper(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growLower(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
+            fillbox.growUpper(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 3: {
-            fillbox.growUpper(1, tbox::Utilities::imax(gcw(1)-1,0));
-            fillbox.growUpper(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growUpper(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
+            fillbox.growUpper(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 4: {
-            fillbox.growLower(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growLower(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growLower(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growLower(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 5: {
-            fillbox.growLower(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growUpper(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growLower(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growUpper(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 6: {
-            fillbox.growUpper(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growLower(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growUpper(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growLower(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 7: {
-            fillbox.growUpper(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growUpper(2, tbox::Utilities::imax(gcw(2)-1,0));
+            fillbox.growUpper(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growUpper(2, tbox::MathUtilities<int>::Max(gcw(2)-1,0));
             break;
          }
          case 8: {
-            fillbox.growLower(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growLower(1, tbox::Utilities::imax(gcw(1)-1,0));
+            fillbox.growLower(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growLower(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
             break;
          }
          case 9: {
-            fillbox.growUpper(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growLower(1, tbox::Utilities::imax(gcw(1)-1,0));
+            fillbox.growUpper(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growLower(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
             break;
          }
          case 10: {
-            fillbox.growLower(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growUpper(1, tbox::Utilities::imax(gcw(1)-1,0));
+            fillbox.growLower(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growUpper(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
             break;
          }
          case 11: {
-            fillbox.growUpper(0, tbox::Utilities::imax(gcw(0)-1,0));
-            fillbox.growUpper(1, tbox::Utilities::imax(gcw(1)-1,0));
+            fillbox.growUpper(0, tbox::MathUtilities<int>::Max(gcw(0)-1,0));
+            fillbox.growUpper(1, tbox::MathUtilities<int>::Max(gcw(1)-1,0));
             break;
          }
       }
@@ -534,15 +529,14 @@ void EdgeDataTest::setConstantBoundaryData(
 *************************************************************************
 */
 
-void EdgeDataTest::verifyResults(
+bool EdgeDataTest::verifyResults(
    hier::Patch<NDIM>& patch, 
    const tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy, 
    int level_number)
 {
    (void) hierarchy;
-
+   bool test_failed = false;
 #if (NDIM > 1)
-
    if (d_do_refine || d_do_coarsen) {
 
       tbox::plog << "\nEntering EdgeDataTest::verifyResults..." << endl;
@@ -584,7 +578,8 @@ void EdgeDataTest::verifyResults(
                double correct = (*solution)(si());
                for (int d = 0; d < depth; d++) {
                   double result = (*edge_data)(si(),d);
-                  if (!tbox::Utilities::deq(correct, result)) {
+                  if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                     test_failed = true;
                      tbox::perr << "Test FAILED: ...." 
                           << " : edge_data index = " << si() << endl;
                      tbox::perr << "    hier::Variable<NDIM> = " << d_variable_src_name[i]
@@ -608,6 +603,7 @@ void EdgeDataTest::verifyResults(
 
 #endif
 
+   return (!test_failed);
 }
 
 void EdgeDataTest::setLinearData(
@@ -616,7 +612,7 @@ void EdgeDataTest::setLinearData(
    hier::Patch<NDIM>& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
@@ -673,7 +669,7 @@ void EdgeDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
 
    const double* dx = pgeom->getDx();
@@ -715,7 +711,7 @@ void EdgeDataTest::checkPatchInteriorData(
          double value;
          for (int d = 0; d < depth; d++) {
             value = d_Dcoef + d_Acoef*x + d_Bcoef*y + d_Ccoef*z;
-            if (!(tbox::Utilities::deq((*data)(ei(),d), value))) {
+            if (!(tbox::MathUtilities<double>::equalEps((*data)(ei(),d), value))) {
                tbox::perr << "FAILED:  -- patch interior not properly filled" << endl;
             }
          }

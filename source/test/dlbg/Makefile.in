@@ -1,9 +1,9 @@
 ##
-## File:	Makefile.in
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2005 The Regents of the University of California
-## Revision:	$Revision: 296 $
-## Modified:	$Date: 2005-04-14 16:39:17 -0700 (Thu, 14 Apr 2005) $
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description:	makefile for asynchronous Berger-Rigoutsos test
 ##
 
@@ -11,6 +11,7 @@ SAMRAI	      = @top_srcdir@
 SRCDIR        = @srcdir@
 SUBDIR        = source/test/dlbg
 VPATH         = @top_srcdir@/source/test/dlbg
+TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 
 default: check	
@@ -20,7 +21,11 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM) -DTESTING=1
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
-CXX_OBJS      = main.o DLBGTest.o SinusoidalFrontTagger.o MDA_Access_instances.o intToString.o get-input-filename.o
+NUM_TESTS = 2
+
+TEST_NPROCS = @TEST_NPROCS@
+
+CXX_OBJS      = main.o DLBGTest.o SinusoidalFrontTagger.o MDA_Access_instances.o get-input-filename.o
 
 main2d:
 		if test -f stamp-3d; then $(MAKE) clean-check; fi
@@ -40,8 +45,6 @@ main-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS)	\
 		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
 
-TEST_NPROCS = @TEST_NPROCS@ 
-
 check:		
 		$(MAKE) check2d
 		$(MAKE) check3d
@@ -53,6 +56,13 @@ check2d:	main2d
 check3d:	main3d
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 			./main3d front3d.input;
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
 
 clean-check:
 		$(SAMCLEAN)

@@ -1,15 +1,15 @@
 //
-// File:	PIO.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/PIO.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Parallel I/O classes pout, perr, and plog and control class
 //
 
 #include "tbox/PIO.h"
 #include <stdio.h>
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/ParallelBuffer.h"
 
 #ifndef NULL
@@ -20,7 +20,7 @@ namespace SAMRAI {
    namespace tbox {
 
 int       PIO::s_rank       = -1;
-ofstream* PIO::s_filestream = NULL;
+std::ofstream* PIO::s_filestream = NULL;
 
 /*
 *************************************************************************
@@ -34,15 +34,15 @@ static ParallelBuffer pout_buffer;
 static ParallelBuffer perr_buffer;
 static ParallelBuffer plog_buffer;
 
-ostream pout(&pout_buffer);
-ostream perr(&perr_buffer);
-ostream plog(&plog_buffer);
+std::ostream pout(&pout_buffer);
+std::ostream perr(&perr_buffer);
+std::ostream plog(&plog_buffer);
 
 /*
 *************************************************************************
 *									*
 * Initialie the parallel I/O streams.  This routine must be called	*
-* before pout, perr, and plog are used for output but after MPI has	*
+* before pout, perr, and plog are used for output but after SAMRAI_MPI.has	*
 * been initialized.  By default, logging is disabled.			*
 *									*
 *************************************************************************
@@ -50,7 +50,7 @@ ostream plog(&plog_buffer);
 
 void PIO::initialize()
 {
-   s_rank       = MPI::getRank();
+   s_rank       = SAMRAI_MPI::getRank();
    s_filestream = NULL;
    
    /*
@@ -58,8 +58,8 @@ void PIO::initialize()
     */
 
    pout_buffer.setActive(s_rank == 0);
-   pout_buffer.setPrefixString(string());
-   pout_buffer.setOutputStream1(&cout);
+   pout_buffer.setPrefixString(std::string());
+   pout_buffer.setOutputStream1(&std::cout);
    pout_buffer.setOutputStream2(NULL);
 
    /*
@@ -71,7 +71,7 @@ void PIO::initialize()
 
    perr_buffer.setActive(true);
    perr_buffer.setPrefixString(buffer);
-   perr_buffer.setOutputStream1(&cerr);
+   perr_buffer.setOutputStream1(&std::cerr);
    perr_buffer.setOutputStream2(NULL);
 
    /*
@@ -79,7 +79,7 @@ void PIO::initialize()
     */
 
    plog_buffer.setActive(false);
-   plog_buffer.setPrefixString(string());
+   plog_buffer.setPrefixString(std::string());
    plog_buffer.setOutputStream1(NULL);
    plog_buffer.setOutputStream2(NULL);
 }
@@ -95,8 +95,8 @@ void PIO::initialize()
 
 void PIO::finalize()
 {
-   cout.flush();
-   cerr.flush();
+   std::cout.flush();
+   std::cerr.flush();
    shutdownFilestream();
 }
 
@@ -135,7 +135,7 @@ void PIO::shutdownFilestream()
 *************************************************************************
 */
 
-void PIO::logOnlyNodeZero(const string &filename)
+void PIO::logOnlyNodeZero(const std::string &filename)
 {
    /*
     * If the filestream was open, then close it and reset streams
@@ -148,7 +148,7 @@ void PIO::logOnlyNodeZero(const string &filename)
     */
 
    if (s_rank == 0) {
-      s_filestream = new ofstream(filename.c_str());
+      s_filestream = new std::ofstream(filename.c_str());
       if (!(*s_filestream)) {
          delete s_filestream;
          s_filestream = NULL;
@@ -172,7 +172,7 @@ void PIO::logOnlyNodeZero(const string &filename)
 *************************************************************************
 */
 
-void PIO::logAllNodes(const string &filename)
+void PIO::logAllNodes(const std::string &filename)
 {
    /*
     * If the filestream was open, then close it and reset streams
@@ -186,7 +186,7 @@ void PIO::logAllNodes(const string &filename)
 
    char *buffer = new char[filename.length() + 16];
    sprintf(buffer, "%s.%05d", filename.c_str(), s_rank);
-   s_filestream = new ofstream(buffer);
+   s_filestream = new std::ofstream(buffer);
 
    if (!(*s_filestream)) {
       delete s_filestream;

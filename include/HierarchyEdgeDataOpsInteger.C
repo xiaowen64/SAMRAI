@@ -1,9 +1,9 @@
 //
-// File:	HierarchyEdgeDataOpsInteger.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/edge/HierarchyEdgeDataOpsInteger.C $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1776 $
+// Modified:    $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description: Operations for integer edge data on multiple levels.
 //
 
@@ -14,21 +14,13 @@
 #include "PatchDescriptor.h"
 #include "BoxUtilities.h"
 #include "EdgeDataFactory.h"
-#include "tbox/MPI.h"
-#include "tbox/IEEE.h"
-#include "tbox/Utilities.h"
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/MathUtilities.h"
 
 #include <typeinfo>
-using namespace std;
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 namespace SAMRAI {
     namespace math {
@@ -40,7 +32,7 @@ template<int DIM>  HierarchyEdgeDataOpsInteger<DIM>::HierarchyEdgeDataOpsInteger
 : HierarchyDataOpsInteger<DIM>()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
 #endif
    d_hierarchy = hierarchy;
    if ( (coarsest_level < 0) || (finest_level < 0) ) {
@@ -71,7 +63,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::setPatchHierarchy(
    tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
 #endif
    d_hierarchy = hierarchy;
 }
@@ -82,8 +74,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::resetLevels(
 {
    int i;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (coarsest_level >= 0)
           && (finest_level >= coarsest_level)
           && (finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -132,8 +124,8 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::numberOfEntries(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -145,7 +137,7 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::numberOfEntries(
       tbox::Pointer< pdat::EdgeDataFactory<DIM,int> >
       dfact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!dfact.isNull());
+      TBOX_ASSERT(!dfact.isNull());
 #endif
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
@@ -153,7 +145,7 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int nd = 0; nd < DIM; nd++) {
-            assert(npatches == d_nonoverlapping_edge_boxes[nd][ln].getSize());
+            TBOX_ASSERT(npatches == d_nonoverlapping_edge_boxes[nd][ln].getSize());
          }
 #endif
          for (int il = 0; il < npatches; il++) {
@@ -178,13 +170,13 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::numberOfEntries(
             tbox::Pointer< pdat::EdgeData<DIM,int> > d = 
                level->getPatch(ip())->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(!d.isNull());
+            TBOX_ASSERT(!d.isNull());
 #endif
             entries += d_patch_ops.numberOfEntries(d, d->getGhostBox());
          }
       }
 
-      int global_entries = tbox::MPI::sumReduction(entries);
+      int global_entries = tbox::SAMRAI_MPI::sumReduction(entries);
       entries = global_entries;
 
    }
@@ -198,8 +190,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::copyData(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -212,7 +204,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::copyData(
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(dst_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull()); 
+         TBOX_ASSERT(!d.isNull()); 
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -228,16 +220,16 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    tbox::Pointer< pdat::EdgeDataFactory<DIM,int> >
       d1fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id);
-   assert(!d1fact.isNull());
+   TBOX_ASSERT(!d1fact.isNull());
    tbox::Pointer< pdat::EdgeDataFactory<DIM,int> >
       d2fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id);
-   assert(!d2fact.isNull());
-   assert(d1fact->getDefaultDepth() == d2fact->getDefaultDepth());
-   assert(d1fact->getDefaultGhostCellWidth() == d2fact->getDefaultGhostCellWidth());
+   TBOX_ASSERT(!d2fact.isNull());
+   TBOX_ASSERT(d1fact->getDefaultDepth() == d2fact->getDefaultDepth());
+   TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
 #endif
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -254,29 +246,29 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::swapData(
 
 template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::printData(
    const int data_id,
-   ostream& s,
+   std::ostream& s,
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
 
-   s << "Patch descriptor id = " << data_id << endl;
+   s << "Patch descriptor id = " << data_id << std::endl;
    s << "Factory = " << typeid(d_hierarchy->getPatchDescriptor()->
-			      getPatchDataFactory(data_id)).name() << endl;
+			      getPatchDataFactory(data_id)).name() << std::endl;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      s << "Level number = " << ln << endl;
+      s << "Level number = " << ln << std::endl;
       tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(ln);
       for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++) {
          tbox::Pointer< hier::Patch<DIM> > p = level->getPatch(ip());
 
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -291,8 +283,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::setToScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -304,7 +296,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::setToScalar(
 
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -328,8 +320,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::scale(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -342,7 +334,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::scale(
          tbox::Pointer< pdat::EdgeData<DIM,int> > dst = p->getPatchData(dst_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!dst.isNull());
+         TBOX_ASSERT(!dst.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : dst->getGhostBox() );
 
@@ -358,8 +350,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::addScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -372,7 +364,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::addScalar(
          tbox::Pointer< pdat::EdgeData<DIM,int> > dst = p->getPatchData(dst_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!dst.isNull());
+         TBOX_ASSERT(!dst.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : dst->getGhostBox() );
 
@@ -388,8 +380,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::add(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -403,7 +395,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::add(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -419,8 +411,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::subtract(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -434,7 +426,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::subtract(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -450,8 +442,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::multiply(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -465,7 +457,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::multiply(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -481,8 +473,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::divide(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -496,7 +488,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::divide(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -511,8 +503,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::reciprocal(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -525,7 +517,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::reciprocal(
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(dst_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -543,8 +535,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::linearSum(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -558,7 +550,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::linearSum(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -575,8 +567,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::axpy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -590,7 +582,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::axpy(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
          
@@ -607,8 +599,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::axmy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -622,7 +614,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::axmy(
          tbox::Pointer< pdat::EdgeData<DIM,int> > s1 = p->getPatchData(src1_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > s2 = p->getPatchData(src2_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -637,8 +629,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::abs(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -651,7 +643,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::abs(
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(dst_id);
          tbox::Pointer< pdat::EdgeData<DIM,int> > src = p->getPatchData(src_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
@@ -665,13 +657,13 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::min(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
 
-   int minval = tbox::IEEE::getINT_MAX();
+   int minval = tbox::MathUtilities<int>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(ln);
@@ -680,15 +672,16 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::min(
 
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
-         minval = tbox::Utilities::imin( minval, d_patch_ops.min(d, box) );
+         minval = tbox::MathUtilities<int>::Min( minval, 
+                                                 d_patch_ops.min(d, box) );
       }
    }
 
-   int global_min = tbox::MPI::minReduction(minval);
+   int global_min = tbox::SAMRAI_MPI::minReduction(minval);
    return( global_min );
 }
 
@@ -697,13 +690,13 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::max(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
 
-   int maxval = -tbox::IEEE::getINT_MAX();
+   int maxval = -(tbox::MathUtilities<int>::getMax());
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(ln);
@@ -712,15 +705,16 @@ template<int DIM> int HierarchyEdgeDataOpsInteger<DIM>::max(
 
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 
-         maxval = tbox::Utilities::imax( maxval, d_patch_ops.min(d, box) );
+         maxval = tbox::MathUtilities<int>::Max( maxval, 
+                                                 d_patch_ops.min(d, box) );
       }
    }
 
-   int global_max = tbox::MPI::maxReduction(maxval);
+   int global_max = tbox::SAMRAI_MPI::maxReduction(maxval);
    return( global_max );
 }
 
@@ -731,8 +725,8 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::setRandomValues(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_hierarchy.isNull());
-   assert(   (d_coarsest_level >= 0)
+   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(   (d_coarsest_level >= 0)
           && (d_finest_level >= d_coarsest_level)
           && (d_finest_level <= d_hierarchy->getFinestLevelNumber()) );
 #endif
@@ -744,7 +738,7 @@ template<int DIM> void HierarchyEdgeDataOpsInteger<DIM>::setRandomValues(
 
          tbox::Pointer< pdat::EdgeData<DIM,int> > d = p->getPatchData(data_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(!d.isNull());
+         TBOX_ASSERT(!d.isNull());
 #endif
          hier::Box<DIM> box = ( interior_only ? p->getBox() : d->getGhostBox() );
 

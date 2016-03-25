@@ -1,9 +1,9 @@
 //
-// File:        Statistic.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistic.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to record statistics during program execution.
 //
 
@@ -30,8 +30,7 @@
 #include "tbox/List.h"
 #endif
 #ifndef included_String
-#include <string>
-using namespace std;
+#include <std::string>
 #define included_String
 #endif
 
@@ -101,12 +100,12 @@ public:
    /**
     * Return string name identifier for statistic object.
     */
-   string getName() const;
+   std::string getName() const;
 
    /**
     * Return string statistic type identifier for statistic object.
     */
-   string getType() const;
+   std::string getType() const;
 
    /**
     * Return integer instance identifier for statistic object.
@@ -178,7 +177,7 @@ public:
     * Print statistic data to given output stream.  Floating point precision
     * can be specified (default is 12).
     */
-   void printClassData(ostream& stream, int precision = 12) const;
+   virtual void printClassData(std::ostream& stream, int precision = 12) const;
 
    /**
     * Write statistic data members to database. When assertion checking 
@@ -218,8 +217,8 @@ protected:
     * The constructor for the Statistic class sets the name string
     * and the statistic type for a statistic object.
     */
-   Statistic(const string& name,
-                  const string& stat_type,
+   Statistic(const std::string& name,
+                  const std::string& stat_type,
                   int instance_id);
 
    /**
@@ -266,7 +265,7 @@ private:
    /*
     * Name, instance id, and type identifier for this statistic object.
     */
-   string d_object_name;
+   std::string d_object_name;
    int    d_instance_id;
    int    d_stat_type;         // see STATISTIC_RECORD_TYPE above.
 

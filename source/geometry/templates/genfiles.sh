@@ -1,9 +1,9 @@
 ##
-## File:        genfiles.sh
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -37,6 +37,7 @@ done
 #
 
 for t in \
+BlockPatchGeometry BlockGridGeometry SkeletonCoarsen \
 SkeletonPatchGeometry SkeletonGridGeometry SkeletonCoarsen \
 SkeletonRefine CartesianPatchGeometry CartesianGridGeometry \
 CartesianCellFloatLinearRefine CartesianCellComplexLinearRefine \
@@ -67,6 +68,8 @@ do
 ${MT} default.filenames ./tmp geom $t NDIM
 done
 
+${MT} default.filenames ./tmp tbox tbox::Pointer geom::BlockGridGeometry NDIM
+${MT} default.filenames ./tmp tbox tbox::Pointer geom::BlockPatchGeometry NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer geom::CartesianGridGeometry NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer geom::CartesianPatchGeometry NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer geom::SkeletonGridGeometry NDIM

@@ -1,9 +1,9 @@
 //
-// File:        BergerRigoutsos.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/BergerRigoutsos.h $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 296 $
-// Modified:    $Date: 2005-04-14 16:39:17 -0700 (Thu, 14 Apr 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Berger/Rigoutsos tagged cell clustering algorithm.
 //
  
@@ -20,8 +20,8 @@
 #ifndef included_mesh_HistogramBox
 #include "HistogramBox.h"
 #endif
-#ifndef included_tbox_MPI
-#include "tbox/MPI.h"
+#ifndef included_tbox_SAMRAI_MPI
+#include "tbox/SAMRAI_MPI.h"
 #endif
 #ifndef included_tbox_Timer
 #include "tbox/Timer.h"
@@ -79,7 +79,7 @@ public:
     * 
     * If an invalid non-empty string is passed, an unrecoverable error will result.
     */
-   static void setClusteringOption(const string& method = string());
+   static void setClusteringOption(const std::string& method = std::string());
 
    /*!
     * Virtual destructor.
@@ -155,7 +155,7 @@ private:
       const double efficiency_tol,
       const double combine_tol,
       int recurse_level,
-      tbox::MPI::comm comm) const;
+      tbox::SAMRAI_MPI::comm comm) const;
 
    /*
     * This method reduces all-to-all communication costs in a fashion
@@ -226,7 +226,7 @@ private:
    /*
     * Choice of algorithm for tag reductions.  
     */
-   static string s_tag_reduce_method;
+   static std::string s_tag_reduce_method;
    static bool s_tag_reduce_method_initialized;
 
    // The following are not implemented:

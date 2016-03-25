@@ -1,9 +1,9 @@
 //
-// File:        TimeRefinementIntegrator.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/time_refinement/TimeRefinementIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Time integration manager for AMR with local time stepping.
 //
 
@@ -13,19 +13,13 @@
 #include "TimeRefinementIntegrator.h"
 #include <stdlib.h>
 #include <fstream>
-using namespace std;
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
-#include "tbox/IEEE.h"
+
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Timer.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #define DEBUG_TIMES
 //#undef DEBUG_TIMES
@@ -57,7 +51,7 @@ namespace SAMRAI {
 */
 
 template<int DIM> TimeRefinementIntegrator<DIM>::TimeRefinementIntegrator(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
    TimeRefinementLevelStrategy<DIM>* level_integrator,
@@ -65,11 +59,11 @@ template<int DIM> TimeRefinementIntegrator<DIM>::TimeRefinementIntegrator(
    bool register_for_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!hierarchy.isNull());
-   assert(level_integrator != ((TimeRefinementLevelStrategy<DIM>*)NULL));
-   assert(!gridding_algorithm.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(level_integrator != ((TimeRefinementLevelStrategy<DIM>*)NULL));
+   TBOX_ASSERT(!gridding_algorithm.isNull());
 #endif
 
    t_initialize_hier = tbox::TimerManager::getManager()-> 
@@ -96,12 +90,12 @@ template<int DIM> TimeRefinementIntegrator<DIM>::TimeRefinementIntegrator(
     * Set default values for debugging.
     */
 
-   d_start_time = tbox::IEEE::getSignalingNaN();
-   d_end_time = tbox::IEEE::getSignalingNaN();
-   d_integrator_time = tbox::IEEE::getSignalingNaN();
-   d_integrator_step = tbox::IEEE::getINT_MAX();
+   d_start_time = tbox::MathUtilities<double>::getSignalingNaN();
+   d_end_time = tbox::MathUtilities<double>::getSignalingNaN();
+   d_integrator_time = tbox::MathUtilities<double>::getSignalingNaN();
+   d_integrator_step = tbox::MathUtilities<int>::getMax();
    d_grow_dt = 1.0;
-   d_max_integrator_steps = tbox::IEEE::getINT_MAX();
+   d_max_integrator_steps = tbox::MathUtilities<int>::getMax();
 
    const int max_levels = d_gridding_algorithm->getMaxLevels();
 
@@ -118,14 +112,19 @@ template<int DIM> TimeRefinementIntegrator<DIM>::TimeRefinementIntegrator(
    int level_number;
 
    for (level_number=0; level_number < max_levels; level_number++) {
-      d_regrid_interval[level_number] = tbox::IEEE::getINT_MAX();
-      d_level_old_old_time[level_number] = tbox::IEEE::getSignalingNaN();
-      d_level_old_time[level_number] = tbox::IEEE::getSignalingNaN();
-      d_level_sim_time[level_number] = tbox::IEEE::getSignalingNaN();
-      d_dt_max_level[level_number] = tbox::IEEE::getSignalingNaN();
-      d_dt_actual_level[level_number] = tbox::IEEE::getSignalingNaN();
-      d_step_level[level_number] = tbox::IEEE::getINT_MAX();
-      d_max_steps_level[level_number] = tbox::IEEE::getINT_MAX();
+      d_regrid_interval[level_number] = tbox::MathUtilities<int>::getMax();
+      d_level_old_old_time[level_number] = 
+         tbox::MathUtilities<double>::getSignalingNaN();
+      d_level_old_time[level_number] = 
+         tbox::MathUtilities<double>::getSignalingNaN();
+      d_level_sim_time[level_number] = 
+         tbox::MathUtilities<double>::getSignalingNaN();
+      d_dt_max_level[level_number] = 
+         tbox::MathUtilities<double>::getSignalingNaN();
+      d_dt_actual_level[level_number] = 
+         tbox::MathUtilities<double>::getSignalingNaN();
+      d_step_level[level_number] = tbox::MathUtilities<int>::getMax();
+      d_max_steps_level[level_number] = tbox::MathUtilities<int>::getMax();
    }
 
    /*
@@ -290,7 +289,7 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceHierarchy(
    const bool rebalance_coarsest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(dt >= 0.0);
+   TBOX_ASSERT(dt >= 0.0);
 #endif
 
    t_advance_hier->start();
@@ -315,8 +314,8 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceHierarchy(
    } else { 
       advanceRecursivelyForRefinedTimestepping(0, d_level_sim_time[0]+dt);
       d_integrator_time += dt;
-      dt_new = tbox::Utilities::dmin( d_dt_actual_level[0],
-                                     d_end_time-d_integrator_time );
+      dt_new = tbox::MathUtilities<double>::Min( d_dt_actual_level[0],
+                                                 d_end_time-d_integrator_time );
    }
 
    t_advance_hier->stop();
@@ -347,7 +346,7 @@ TimeRefinementIntegrator<DIM>::initializeRefinedTimesteppingLevelData(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -382,8 +381,7 @@ TimeRefinementIntegrator<DIM>::initializeRefinedTimesteppingLevelData(
     */
 
    if ( level_number > 0 ) {
-      dt_level = 
-      tbox::Utilities::dmin( dt_level, 
+      dt_level = tbox::MathUtilities<double>::Min( dt_level, 
                             d_refine_level_integrator->getMaxFinerLevelDt(
                                level_number,
                                d_dt_actual_level[level_number-1],
@@ -475,7 +473,7 @@ TimeRefinementIntegrator<DIM>::initializeSynchronizedTimesteppingLevelData(
    const int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -502,7 +500,7 @@ TimeRefinementIntegrator<DIM>::initializeSynchronizedTimesteppingLevelData(
    if (level_number == 0) {
       d_dt = dt_level;
    } else {
-      d_dt = tbox::Utilities::dmin(d_dt, dt_level);
+      d_dt = tbox::MathUtilities<double>::Min(d_dt, dt_level);
    }
    d_dt_max_level[level_number] = d_dt_actual_level[level_number] = d_dt;
 
@@ -638,9 +636,9 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
    const double end_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
-   assert(end_time >= d_integrator_time);
+   TBOX_ASSERT(end_time >= d_integrator_time);
 #endif
 
    const tbox::Pointer< hier::BasePatchLevel<DIM> > 
@@ -667,7 +665,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
 
       if ( d_last_finest_level < level_number ) {
          d_dt_max_level[level_number] = 
-         tbox::Utilities::dmin( d_dt_actual_level[level_number-1],
+         tbox::MathUtilities<double>::Min( d_dt_actual_level[level_number-1],
                                d_refine_level_integrator->getMaxFinerLevelDt(
                                level_number,
                                d_dt_actual_level[level_number-1],
@@ -676,7 +674,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
 
          if ( d_gridding_algorithm->levelCanBeRefined(level_number) ) {
             d_dt_max_level[level_number] = 
-            tbox::Utilities::dmin( d_dt_max_level[level_number],
+            tbox::MathUtilities<double>::Min( d_dt_max_level[level_number],
                                   time_remaining/
                                   double(d_regrid_interval[level_number]) );
          }
@@ -720,15 +718,15 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
       d_just_regridded = false;
 
 #ifdef DEBUG_TIMES
-      tbox::plog << "\nAdvancing level number = " << level_number << endl;
-      tbox::plog << "step number = " << d_step_level[level_number] << endl;
-      tbox::plog << "max steps = " << d_max_steps_level[level_number] << endl;
-      tbox::plog << "current time = " << d_level_sim_time[level_number] << endl;
-      tbox::plog << "dt used = " << d_dt_actual_level[level_number] << endl;
-      tbox::plog << "new level time = " << new_level_time << endl;
-      tbox::plog << "dt max = " << d_dt_max_level[level_number] << endl;
-      tbox::plog << "end time = " << end_time << endl;
-      tbox::plog << "sync_after_step = " << sync_after_step << endl;
+      tbox::plog << "\nAdvancing level number = " << level_number << std::endl;
+      tbox::plog << "step number = " << d_step_level[level_number] << std::endl;
+      tbox::plog << "max steps = " << d_max_steps_level[level_number] << std::endl;
+      tbox::plog << "current time = " << d_level_sim_time[level_number] << std::endl;
+      tbox::plog << "dt used = " << d_dt_actual_level[level_number] << std::endl;
+      tbox::plog << "new level time = " << new_level_time << std::endl;
+      tbox::plog << "dt max = " << d_dt_max_level[level_number] << std::endl;
+      tbox::plog << "end time = " << end_time << std::endl;
+      tbox::plog << "sync_after_step = " << sync_after_step << std::endl;
 #endif
 
       /*
@@ -782,7 +780,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
 #ifdef DEBUG_TIMES
                tbox::plog << "\nSynchronizing levels " << coarsest_sync_level
                                                  << " to "
-                                                 << finest_level_number << endl;
+                                                 << finest_level_number << std::endl;
 #endif
                d_refine_level_integrator->
                   standardLevelSynchronization(d_patch_hierarchy,
@@ -801,7 +799,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
                  || (level_number == 0)) && !d_just_regridded ) {
 #ifdef DEBUG_TIMES
                tbox::plog << "\nSynchronizing levels " << level_number << " to "
-                                                 << finest_level_number << endl;
+                                                 << finest_level_number << std::endl;
 #endif
                d_refine_level_integrator->
                   standardLevelSynchronization(d_patch_hierarchy,
@@ -848,7 +846,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
               || !coarserLevelRegridsToo(level_number) ) {
 #ifdef DEBUG_TIMES
               tbox::plog << "\nRegridding from level number = " 
-                   << level_number << endl;
+                   << level_number << std::endl;
 #endif
             /*
              * Reset time dependent data.  If the gridding algorithm uses
@@ -913,7 +911,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
                              << "algorithm uses an error coarsen ratio of "
                              << d_gridding_algorithm->getErrorCoarsenRatio()
                              << " which is not supported in this class" 
-                             << endl);
+                             << std::endl);
                }
 
             }
@@ -932,7 +930,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
 #ifdef DEBUG_TIMES
                tbox::plog << "\nSynchronizing levels after regrid : "
                     << level_number << " to "
-                    << d_patch_hierarchy->getFinestLevelNumber() << endl;
+                    << d_patch_hierarchy->getFinestLevelNumber() << std::endl;
 #endif
               
                // "false" argument: const bool initial_time = false;
@@ -960,7 +958,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::advanceRecursivelyForRefin
 #ifdef DEBUG_TIMES
             tbox::plog << "\nSynchronizing levels after regrid : "
                  << level_number << " to "
-                 << d_patch_hierarchy->getFinestLevelNumber() << endl;
+                 << d_patch_hierarchy->getFinestLevelNumber() << std::endl;
 #endif
             // "false" argument: const bool initial_time = false;
             d_refine_level_integrator->
@@ -991,13 +989,13 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceForSynchronizedTi
    const double end_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(end_time >= d_integrator_time);
+   TBOX_ASSERT(end_time >= d_integrator_time);
 #endif
 
    double dt = end_time - d_integrator_time;
 
    int finest_level_number = d_patch_hierarchy->getFinestLevelNumber();
-   double dt_new = tbox::IEEE::getDBL_MAX();
+   double dt_new = tbox::MathUtilities<double>::getMax();
 
    int level_num;
    for (level_num = 0; level_num <= finest_level_number; level_num++) {
@@ -1011,12 +1009,12 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceForSynchronizedTi
       d_level_sim_time[level_num] = d_integrator_time;
 
 #ifdef DEBUG_TIMES
-      tbox::plog << "\nAdvancing level number = " << level_num << endl;
-      tbox::plog << "step number = " << d_step_level[level_num] << endl;
-      tbox::plog << "max steps = " << d_max_steps_level[level_num] << endl;
-      tbox::plog << "current time = " << d_integrator_time << endl;
-      tbox::plog << "dt used = " << dt << endl;
-      tbox::plog << "new level time = " << d_integrator_time + dt << endl;
+      tbox::plog << "\nAdvancing level number = " << level_num << std::endl;
+      tbox::plog << "step number = " << d_step_level[level_num] << std::endl;
+      tbox::plog << "max steps = " << d_max_steps_level[level_num] << std::endl;
+      tbox::plog << "current time = " << d_integrator_time << std::endl;
+      tbox::plog << "dt used = " << dt << std::endl;
+      tbox::plog << "new level time = " << d_integrator_time + dt << std::endl;
 #endif
 
       // "true" argument: bool first_step = true;
@@ -1029,10 +1027,10 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceForSynchronizedTi
                                                  true, 
                                                  false);
 
-      dt_new = tbox::Utilities::dmin(dt_new, dt_next_level);
+      dt_new = tbox::MathUtilities<double>::Min(dt_new, dt_next_level);
    }
 
-   dt_new = tbox::Utilities::dmin(dt_new,d_grow_dt*dt);
+   dt_new = tbox::MathUtilities<double>::Min(dt_new,d_grow_dt*dt);
 
    for (level_num = 0; level_num <= finest_level_number; level_num++) {
       d_dt_max_level[level_num] = d_dt_actual_level[level_num] = dt_new;
@@ -1048,7 +1046,7 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceForSynchronizedTi
 
 #ifdef DEBUG_TIMES
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
-           << " to " << finest_level_number << endl;
+           << " to " << finest_level_number << std::endl;
 #endif
 
       d_refine_level_integrator->standardLevelSynchronization(
@@ -1161,7 +1159,7 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceForSynchronizedTi
                        << "algorithm uses an error coarsen ratio of "
                        << d_gridding_algorithm->getErrorCoarsenRatio()
                        << " which is not supported in this class" 
-                       << endl);
+                       << std::endl);
          }
 
       }
@@ -1181,7 +1179,7 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::advanceForSynchronizedTi
 #ifdef DEBUG_TIMES
          tbox::plog << "\nSynchronizing levels after regrid : "
               << coarse_level_number << " to "
-              << d_patch_hierarchy->getFinestLevelNumber() << endl;
+              << d_patch_hierarchy->getFinestLevelNumber() << std::endl;
 #endif
          const bool initial_time = false;
          d_refine_level_integrator->synchronizeNewLevels(
@@ -1230,10 +1228,10 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::findNextDtAndStepsRemainin
    const double dt_bound) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
-   assert(time_remaining >= 0.0);
-   assert(dt_bound >= 0.0);
+   TBOX_ASSERT(time_remaining >= 0.0);
+   TBOX_ASSERT(dt_bound >= 0.0);
 #endif
 
    /*
@@ -1243,8 +1241,8 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::findNextDtAndStepsRemainin
     */
 
    d_dt_max_level[level_number] = 
-   tbox::Utilities::dmin( dt_bound, 
-                         d_dt_max_level[level_number] * d_grow_dt );
+   tbox::MathUtilities<double>::Min( dt_bound, 
+                                     d_dt_max_level[level_number] * d_grow_dt );
 
    if ( d_step_level[level_number] < d_max_steps_level[level_number] ) {
 
@@ -1261,7 +1259,7 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::findNextDtAndStepsRemainin
       d_dt_max_level[level_number]*double(number_steps_remaining);
 
       if (time_remaining-dt_temp > 
-          sqrt(tbox::IEEE::getDBL_EPSILON())*time_remaining) {
+          sqrt(tbox::MathUtilities<double>::getEpsilon())*time_remaining) {
          number_steps_remaining++;
       }
 
@@ -1278,8 +1276,8 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::findNextDtAndStepsRemainin
            && d_gridding_algorithm->levelCanBeRefined(level_number) ) {
 
          d_max_steps_level[level_number] = 
-         tbox::Utilities::imax( d_max_steps_level[level_number],
-                               d_regrid_interval[level_number] );
+         tbox::MathUtilities<int>::Max( d_max_steps_level[level_number],
+                                        d_regrid_interval[level_number] );
 
          int number_regrids = 
          d_max_steps_level[level_number]/d_regrid_interval[level_number];
@@ -1295,11 +1293,11 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::findNextDtAndStepsRemainin
       if ( d_step_level[level_number] >= d_max_steps_level[level_number] ) {
          TBOX_ERROR(d_object_name << ":  "
                     << "no steps left to divide remaining time ...\n" 
-                    << "level_number = " << level_number << endl
+                    << "level_number = " << level_number << std::endl
                     << "time_remaining = " << time_remaining
                     << "\ndt_bound = " << dt_bound
                     << "\nnumber_steps_remaining = " << number_steps_remaining
-                    << endl);
+                    << std::endl);
       }
 
       /*
@@ -1334,7 +1332,7 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::atRegridPoint(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) && 
+   TBOX_ASSERT( (level_number >= 0) && 
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
 
@@ -1359,7 +1357,7 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::coarserLevelRegridsToo(
    const int level_number) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
    return( (level_number>0) ? atRegridPoint(level_number-1) : false );
@@ -1373,25 +1371,25 @@ template<int DIM> bool TimeRefinementIntegrator<DIM>::coarserLevelRegridsToo(
 *************************************************************************
 */
 
-template<int DIM> void TimeRefinementIntegrator<DIM>::printClassData(ostream& os) const 
+template<int DIM> void TimeRefinementIntegrator<DIM>::printClassData(std::ostream& os) const 
 {
-   os << "\nTimeRefinementIntegrator<DIM>::printClassData..." << endl;
+   os << "\nTimeRefinementIntegrator<DIM>::printClassData..." << std::endl;
    os << "\nTimeRefinementIntegrator<DIM>: this = "
-      << (TimeRefinementIntegrator<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << (TimeRefinementIntegrator<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_integrator_time = " << d_integrator_time << "\n"
       << "d_start_time = " << d_start_time << "\n"
       << "d_end_time = " << d_end_time << "\n"
       << "d_integrator_step = " << d_integrator_step << "\n"
       << "d_max_integrator_steps = " << d_max_integrator_steps << "\n"
-      << "d_grow_dt = " << d_grow_dt << endl;
-   os << "d_just_regridded = " << d_just_regridded << endl;
-   os << "d_last_finest_level = " << d_last_finest_level << endl;
-   os << "d_patch_hierarchy = " << d_patch_hierarchy.getPointer() << endl;
+      << "d_grow_dt = " << d_grow_dt << std::endl;
+   os << "d_just_regridded = " << d_just_regridded << std::endl;
+   os << "d_last_finest_level = " << d_last_finest_level << std::endl;
+   os << "d_patch_hierarchy = " << d_patch_hierarchy.getPointer() << std::endl;
    os << "d_refine_level_integrator = " 
-      << (TimeRefinementLevelStrategy<DIM>*)d_refine_level_integrator << endl;
+      << (TimeRefinementLevelStrategy<DIM>*)d_refine_level_integrator << std::endl;
    os << "d_gridding_algorithm = " 
-      << (mesh::BaseGriddingAlgorithm<DIM>*)d_gridding_algorithm << endl;
+      << (mesh::BaseGriddingAlgorithm<DIM>*)d_gridding_algorithm << std::endl;
 
    const int max_levels = d_gridding_algorithm->getMaxLevels();
    for (int level_number=0; level_number<max_levels; level_number++) {
@@ -1408,28 +1406,28 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::printClassData(ostream& os
 */
 
 template<int DIM> void TimeRefinementIntegrator<DIM>::printDataForLevel(
-   ostream& os, 
+   std::ostream& os, 
    const int level_number) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (level_number >= 0) &&
+   TBOX_ASSERT( (level_number >= 0) &&
            (level_number <= d_patch_hierarchy->getFinestLevelNumber()) );
 #endif
-   os << "\nTimeRefinementIntegrator<DIM>::printDataForLevel..." << endl;
+   os << "\nTimeRefinementIntegrator<DIM>::printDataForLevel..." << std::endl;
    os << "\nd_level_sim_time[" << level_number << "] = " 
-      << d_level_sim_time[level_number] << endl;
+      << d_level_sim_time[level_number] << std::endl;
    os << "\nd_level_old_time[" << level_number << "] = " 
-      << d_level_old_time[level_number] << endl;
+      << d_level_old_time[level_number] << std::endl;
    os << "\nd_level_old_old_time[" << level_number << "] = " 
-      << d_level_old_old_time[level_number] << endl;
+      << d_level_old_old_time[level_number] << std::endl;
    os << "\nd_dt_max_level[" << level_number << "] = " 
-      << d_dt_max_level[level_number] << endl;
+      << d_dt_max_level[level_number] << std::endl;
    os << "\nd_dt_actual_level[" << level_number << "] = " 
-      << d_dt_actual_level[level_number] << endl;
+      << d_dt_actual_level[level_number] << std::endl;
    os << "\nd_step_level[" << level_number << "] = " 
-      << d_step_level[level_number] << endl;
+      << d_step_level[level_number] << std::endl;
    os << "\nd_max_steps_level[" << level_number << "] = " 
-      << d_max_steps_level[level_number] << endl;
+      << d_max_steps_level[level_number] << std::endl;
 }
 
 /*
@@ -1444,7 +1442,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
@@ -1478,7 +1476,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    
    if (is_from_restart) {
@@ -1551,7 +1549,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::getFromInput(
             d_tag_buffer.resizeArray(
                d_gridding_algorithm->getMaxLevels() - 1);
             for (int i = tsize;
-                 i < d_gridding_algorithm->getMaxLevels(); i++) {
+                 i < d_gridding_algorithm->getMaxLevels()-1; i++) {
                d_tag_buffer[i] = d_tag_buffer[tsize-1];
             }
          }

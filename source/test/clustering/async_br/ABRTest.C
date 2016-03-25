@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2002 The Regents of the University of California
-  Revision:	$Revision: 5 $
-  Modified:	$Date: 2004-11-30 08:48:55 -0800 (Tue, 30 Nov 2004) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/ABRTest.C $
+  Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	ABRTest class implementation
 */
 
@@ -126,7 +126,7 @@ bool ABRTest<DIM>::packDerivedDataIntoDoubleBuffer(
   const hier::Patch<DIM> &patch ,
   const hier::Box<DIM> &region ,
   const string &variable_name ,
-  int depth_id)
+  int depth_id) const
 {
   if ( variable_name == "Patch<DIM> level number" ) {
     double pln = patch.getPatchLevelNumber();

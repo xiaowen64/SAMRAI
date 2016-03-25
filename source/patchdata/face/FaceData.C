@@ -1,9 +1,9 @@
 //
-// File:	FaceData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/face/FaceData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated face centered patch data type
 //
 
@@ -20,9 +20,6 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
 #include <stdio.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_FACEDATA_VERSION 1
 
@@ -43,15 +40,15 @@ namespace SAMRAI {
 
 template<int DIM, class TYPE>
 FaceData<DIM,TYPE>::FaceData(const hier::Box<DIM>& box,
-                                     const int depth,
-                                     const hier::IntVector<DIM>& ghosts,
-                                     tbox::Pointer<tbox::Arena> pool)
+                             int depth,
+                             const hier::IntVector<DIM>& ghosts,
+                             tbox::Pointer<tbox::Arena> pool)
 :  hier::PatchData<DIM>(box, ghosts),
    d_depth(depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
@@ -123,7 +120,7 @@ void FaceData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
    FaceData<DIM,TYPE> *t_dst =
       dynamic_cast<FaceData<DIM,TYPE> *>(&dst);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
+   TBOX_ASSERT(t_dst != NULL);
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> box = d_data[d].getBox() * t_dst->d_data[d].getBox();
@@ -144,7 +141,7 @@ void FaceData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
 
 template<int DIM, class TYPE>
 void FaceData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
-                                const hier::BoxOverlap<DIM>& overlap)
+                              const hier::BoxOverlap<DIM>& overlap)
 {
    const FaceData<DIM,TYPE> *t_src =
       dynamic_cast<const FaceData<DIM,TYPE> *>(&src);
@@ -170,7 +167,7 @@ void FaceData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
 
 template<int DIM, class TYPE>
 void FaceData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
-                                 const hier::BoxOverlap<DIM>& overlap) const
+                               const hier::BoxOverlap<DIM>& overlap) const
 {
    FaceData<DIM,TYPE> *t_dst = 
       dynamic_cast<FaceData<DIM,TYPE> *>(&dst);
@@ -179,8 +176,8 @@ void FaceData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
       dynamic_cast<const FaceOverlap<DIM> *>(&overlap);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
@@ -206,8 +203,8 @@ void FaceData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
 
 template<int DIM, class TYPE>
 void FaceData<DIM,TYPE>::copyDepth(int dst_depth,
-				     const FaceData<DIM,TYPE>& src,
-				     int src_depth)
+			           const FaceData<DIM,TYPE>& src,
+				   int src_depth)
 {
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> box = d_data[d].getBox() * src.d_data[d].getBox();
@@ -239,7 +236,7 @@ int FaceData<DIM,TYPE>::getDataStreamSize(
    const FaceOverlap<DIM> *t_overlap =
       dynamic_cast<const FaceOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
@@ -274,7 +271,7 @@ void FaceData<DIM,TYPE>::packStream(tbox::AbstractStream& stream,
    const FaceOverlap<DIM> *t_overlap =
       dynamic_cast<const FaceOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
@@ -300,7 +297,7 @@ void FaceData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
       dynamic_cast<const FaceOverlap<DIM> *>(&overlap);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
 
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
@@ -329,11 +326,11 @@ void FaceData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
 
 template<int DIM, class TYPE>
 size_t FaceData<DIM,TYPE>::getSizeOfData(const hier::Box<DIM>& box,
-                                           const int depth,
-                                           const hier::IntVector<DIM>& ghosts)
+                                         int depth,
+                                         const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    size_t size = 0;
    const hier::Box<DIM> ghost_box = hier::Box<DIM>::grow(box, ghosts);
@@ -353,10 +350,10 @@ size_t FaceData<DIM,TYPE>::getSizeOfData(const hier::Box<DIM>& box,
 */
 
 template<int DIM, class TYPE>
-void FaceData<DIM,TYPE>::fill(const TYPE& t, const int d)
+void FaceData<DIM,TYPE>::fill(const TYPE& t, int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       d_data[i].fill(t, d);
@@ -365,11 +362,11 @@ void FaceData<DIM,TYPE>::fill(const TYPE& t, const int d)
 
 template<int DIM, class TYPE>
 void FaceData<DIM,TYPE>::fill(const TYPE& t,
-                                const hier::Box<DIM>& box,
-                                const int d)
+                              const hier::Box<DIM>& box,
+                              int d)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int i = 0; i < DIM; i++) {
       d_data[i].fill(t, FaceGeometry<DIM>::toFaceBox(box, i), d);
@@ -385,7 +382,8 @@ void FaceData<DIM,TYPE>::fillAll(const TYPE& t)
 }
 
 template<int DIM, class TYPE>
-void FaceData<DIM,TYPE>::fillAll(const TYPE& t, const hier::Box<DIM>& box)
+void FaceData<DIM,TYPE>::fillAll(const TYPE& t, 
+                                 const hier::Box<DIM>& box)
 {
    for (int i = 0; i < DIM; i++) {
       d_data[i].fillAll(t, FaceGeometry<DIM>::toFaceBox(box, i));
@@ -402,46 +400,62 @@ void FaceData<DIM,TYPE>::fillAll(const TYPE& t, const hier::Box<DIM>& box)
 */
 
 template<int DIM, class TYPE>
-void FaceData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int prec) const
+void FaceData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                               std::ostream& os, 
+                               int prec) const
 {
    for (int axis = 0; axis < DIM; axis++) {
-      os << "Array Axis hier::Index = " << axis << endl;
+      os << "Array face normal = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
 }
 
 template<int DIM, class TYPE>
 void FaceData<DIM,TYPE>::print(const hier::Box<DIM>& box,
-                                 const int d,
-                                 ostream& os,
-                                 int prec) const
+                               int d,
+                               std::ostream& os,
+                               int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
 #endif
    for (int axis = 0; axis < DIM; axis++) {
-      os << "Array Axis hier::Index = " << axis << endl;
+      os << "Array face normal = " << axis << std::endl;
       printAxis(axis, box, d, os, prec);
    }
 }
 
 template<int DIM, class TYPE>
-void FaceData<DIM,TYPE>::printAxis(const int axis,
-                                     const hier::Box<DIM>& box,
-                                     ostream& os,
-                                     int prec) const
+void FaceData<DIM,TYPE>::printAxis(int face_normal,
+                                   const hier::Box<DIM>& box,
+                                   std::ostream& os,
+                                   int prec) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
 #endif
-   if (d_depth > 1) {
-      for (int d = 0; d < d_depth; d++) {
-         os << "Array Component hier::Index = " << d << endl;
-         printAxis(axis, box, d, os, prec);
-      }
-   } else {
-       printAxis(axis, box, 0, os, prec);
+   for (int d = 0; d < d_depth; d++) {
+      os << "Array depth = " << d << std::endl;
+      printAxis(face_normal, box, d, os, prec);
    }
+}
+
+template <int DIM, class TYPE>
+void FaceData<DIM,TYPE>::printAxis(int face_normal, 
+                                   const hier::Box<DIM>& box,
+                                   int depth, 
+                                   std::ostream& os,
+                                   int prec) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < DIM));
+#endif
+   os.precision(prec);
+   for (FaceIterator<DIM> i(box, face_normal); i; i++) {
+      os << "array" << i() << " = " 
+         << d_data[face_normal](i(),depth) << std::endl << std::flush;
+   } 
 }
 
 /*
@@ -459,13 +473,13 @@ void FaceData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
   
    int ver = database->getInteger("PDAT_FACEDATA_VERSION");
    if (ver != PDAT_FACEDATA_VERSION) {
       TBOX_ERROR("FaceData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << endl);
+          << " : Restart file version different than class version" << std::endl);
    }
 
    d_depth = database->getInteger("d_depth");
@@ -493,7 +507,7 @@ void FaceData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_FACEDATA_VERSION", PDAT_FACEDATA_VERSION);
@@ -509,25 +523,6 @@ void FaceData<DIM,TYPE>::putSpecializedToDatabase(
    }
 }
 
-/*
- * Print data
- */
-template <int DIM, class TYPE>
-void FaceData<DIM,TYPE>::printAxis(const int axis, const hier::Box<DIM>& box,
-                                     const int d, ostream& os,
-                                     int prec) const
-{
-   NULL_USE(prec);
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
-   assert((axis >= 0) && (axis < DIM));
-#endif
-   os.precision( ((prec < 0) ? 12 : prec) );
-   for (FaceIterator<DIM> i(box, axis); i; i++) {
-      os << "array" << i() << " = " << d_data[axis](i(),d) << endl << flush;
-   } 
-}
 
 
 }

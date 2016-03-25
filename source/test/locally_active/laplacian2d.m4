@@ -1,6 +1,15 @@
 define(NDIM,2)dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
 
+c
+c File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/laplacian2d.m4 $
+c Package:     SAMRAI application
+c Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c Revision:    $LastChangedRevision: 1704 $
+c Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+c Description: Fortran code for locally active tests.
+c
+
 c***********************************************************************
 c***********************************************************************
       subroutine laplacian(

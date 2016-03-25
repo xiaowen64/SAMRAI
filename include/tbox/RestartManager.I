@@ -1,9 +1,9 @@
 //
-// File:	RestartManager.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/RestartManager.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1769 $
+// Modified:	$LastChangedDate: 2007-12-11 17:36:06 -0800 (Tue, 11 Dec 2007) $
 // Description:	An restart manager singleton class 
 //
 
@@ -63,7 +63,7 @@ Pointer<Database> RestartManager::getRootDatabase()
 *************************************************************************
 */
 inline
-void RestartManager::writeRestartFile(const string& root_dir_name)
+void RestartManager::writeRestartFile(const std::string& root_dir_name)
 {
    writeRestartFile(root_dir_name,0);
 }

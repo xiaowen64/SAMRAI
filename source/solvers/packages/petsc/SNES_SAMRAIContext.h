@@ -1,24 +1,41 @@
 //
-// File:        SNES_SAMRAIContext.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/SNES_SAMRAIContext.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 601 $
-// Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1819 $
+// Modified:    $LastChangedDate: 2007-12-20 18:09:28 -0800 (Thu, 20 Dec 2007) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
 #ifndef included_solv_SNES_SAMRAIContext
 #define included_solv_SNES_SAMRAIContext
 
-#ifndef included_SAMRAI_config	
-#include "SAMRAI_config.h"
-#endif
-	
 /*
 ************************************************************************
 *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT PETSC
 ************************************************************************
 */
+
+#ifdef HAVE_PETSC
+#ifndef included_petsc_snes
+#define included_petsc_snes
+#ifdef MPICH_SKIP_MPICXX
+#undef MPICH_SKIP_MPICXX
+#endif
+extern "C" {
+#ifdef PETSC2028
+#include "snes.h"
+#else
+#include "petscsnes.h"
+#endif
+}
+#endif
+#endif
+
+#ifndef included_SAMRAI_config	
+#include "SAMRAI_config.h"
+#endif
+
 #ifdef HAVE_PETSC
 
 #ifndef included_solv_NonlinearSolverStrategy
@@ -34,16 +51,6 @@
 #include "tbox/Serializable.h"
 #endif
 
-#ifndef included_petsc_snes
-#define included_petsc_snes
-extern "C" {
-#ifdef PETSC2028
-#include "snes.h"
-#else
-#include "petscsnes.h"
-#endif
-}
-#endif
 
 namespace SAMRAI {
     namespace solv {
@@ -151,9 +158,15 @@ namespace SAMRAI {
  *    - gmres_orthogonalization_algorithm
  *        string value for algorithm used to incrementally construct the
  *        orthonormal basis of the Krylov subspace used by GMRES.  Valid 
- *        only if GMRES is used as the linear solver.  See the
+ *        only if GMRES is used as the linear solver.  Valid values are:
+ *
+ *             modifiedgramschmidt
+ *             gmres_cgs_refine_ifneeded
+ *             gmres_cgs_refine_always
+ * 
+ *        See the
  *        <A HREF="http://www-unix.mcs.anl.gov/petsc/">PETSc documentation</A>
- *        for valid values.
+ *        for more information.
  *
  *    - uses_explicit_jacobian
  *        boolean value for whether or not the user provides code to 
@@ -212,7 +225,7 @@ public:
     * will result if the name string is empty or the pointer to the
     * user-defined SNES functions object is null. 
     */
-   SNES_SAMRAIContext(const string& object_name,
+   SNES_SAMRAIContext(const std::string& object_name,
                             tbox::Pointer<tbox::Database> input_db,
                             SNESAbstractFunctions* my_functions);
 
@@ -235,7 +248,7 @@ public:
    /*!
     * Return the PETSc linear solver object.
     */
-   SLES getSLESSolver() const;
+//   SLES getSLESSolver() const;
 
    /*!
     * Return the PETSc Krylov solver object.
@@ -300,12 +313,12 @@ public:
    /*!
     *  Get strategy for forcing term.
     */
-   string getForcingTermStrategy() const;
+   std::string getForcingTermStrategy() const;
 
    /*!
     *  Set strategy for forcing term.
     */
-   void setForcingTermStrategy(string& strategy);
+   void setForcingTermStrategy(std::string& strategy);
 
    /*!
     *  Get value of constant forcing term.
@@ -384,12 +397,12 @@ public:
    /*!
     * Get type of linear solver.
     */
-   string getLinearSolverType() const;
+   std::string getLinearSolverType() const;
 
    /*!
     * Set type of linear solver.
     */
-   void setLinearSolverType(string& type);
+   void setLinearSolverType(std::string& type);
 
    /*!
     * Get whether a preconditioner is used.
@@ -444,12 +457,12 @@ public:
    /*!
     * Get orthogonalization method used in GMRES linear solver.
     */
-   string getGMRESOrthogonalizationMethod() const;
+   std::string getGMRESOrthogonalizationMethod() const;
 
    /*!
     * Set orthogonalization method used in GMRES linear solver.
     */
-   void setGMRESOrthogonalizationMethod(string& method);
+   void setGMRESOrthogonalizationMethod(std::string& method);
 
    /*!
     * Get whether a method for explicit Jacobian-vector products is provided.
@@ -464,12 +477,12 @@ public:
    /*!
     * Get method for computing differencing parameter.
     */
-   string getDifferencingParameterMethod() const;
+   std::string getDifferencingParameterMethod() const;
 
    /*!
     * Set method for computing differencing parameter.
     */
-   void setDifferencingParameterMethod(string& method);
+   void setDifferencingParameterMethod(std::string& method);
 
    /*!
     * Get estimate of error in function evaluation.
@@ -514,7 +527,7 @@ public:
    /*!
     * Report reason for termination.
     */
-   void reportCompletionCode(ostream & os = tbox::plog) const;
+   void reportCompletionCode(std::ostream & os = tbox::plog) const;
 
    /*!
     * Write solver parameters to restart database matching object name.
@@ -527,7 +540,7 @@ public:
    /*!
     * Print out all members of integrator instance to given output stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
 
 private:
    /*
@@ -584,7 +597,7 @@ private:
    /*!
     * Internal state parameters:
     */
-   string d_object_name;
+   std::string d_object_name;
    bool d_context_needs_initialization;
 
    /*
@@ -610,7 +623,6 @@ private:
     */
 
    SNES d_SNES_solver;
-   SLES d_SLES_solver;
    KSP  d_krylov_solver;
    Mat  d_jacobian;
    PC   d_preconditioner;
@@ -647,7 +659,7 @@ private:
    double d_relative_tolerance;
    double d_step_tolerance;
 
-   string d_forcing_term_strategy;  // string is for input
+   std::string d_forcing_term_strategy;  // string is for input
    int    d_forcing_term_flag;      // int is for passing choice to PETSc
 
    double d_constant_forcing_term;
@@ -662,17 +674,17 @@ private:
 
    // Linear solver parameters:
 
-   string d_linear_solver_type;
+   std::string d_linear_solver_type;
    double d_linear_solver_absolute_tolerance;
    double d_linear_solver_divergence_tolerance;
    int    d_maximum_linear_iterations;
 
    int    d_maximum_gmres_krylov_dimension;
-   string d_gmres_orthogonalization_algorithm;
+   std::string d_gmres_orthogonalization_algorithm;
  
    // "Matrix-free" parameters:
 
-   string d_differencing_parameter_strategy; 
+   std::string d_differencing_parameter_strategy; 
    double d_function_evaluation_error;
 
    // Output parameters:

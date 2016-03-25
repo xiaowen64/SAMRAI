@@ -1,12 +1,12 @@
 //
-// File:         RefineSchedule.C
+// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineSchedule.C $
 // Package:      SAMRAI data transfer
-// Copyright:    (c) 1997-2005 The Regents of the University of California
-// Revision:     $Revision: 697 $
-// Modified:     $Date: 2005-11-03 12:27:48 -0800 (Thu, 03 Nov 2005) $
+// Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:     $LastChangedRevision: 1776 $
+// Modified:     $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:  Refine schedule for data transfer between AMR levels
 //
- 
+
 #ifndef included_xfer_RefineSchedule_C
 #define included_xfer_RefineSchedule_C
 
@@ -25,11 +25,9 @@
 #include "tbox/InputManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "RefinePatchStrategy.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace xfer {
@@ -49,11 +47,11 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM> const hier::IntVector<DIM> 
+template<int DIM> const hier::IntVector<DIM>
    RefineSchedule<DIM>::s_constant_zero_intvector = hier::IntVector<DIM>(0);
-template<int DIM> const hier::IntVector<DIM> 
+template<int DIM> const hier::IntVector<DIM>
    RefineSchedule<DIM>::s_constant_one_intvector = hier::IntVector<DIM>(1);
-template<int DIM> string
+template<int DIM> std::string
    RefineSchedule<DIM>::s_schedule_generation_method = "BOX_TREE";
 
 /*
@@ -65,7 +63,7 @@ template<int DIM> string
  */
 
 template<int DIM> void RefineSchedule<DIM>::setScheduleGenerationMethod(
-   const string& method)
+   const std::string& method)
 {
    if ( !((method == "ORIG_NSQUARED") ||
           (method == "BOX_GRAPH") ||
@@ -74,7 +72,7 @@ template<int DIM> void RefineSchedule<DIM>::setScheduleGenerationMethod(
                  << "Given method string "
                  << method << " is invalid.\n Options are\n"
                  << "'ORIG_NSQUARED', 'BOX_GRAPH', and 'BOX_TREE'."
-                 << endl);
+                 << std::endl);
    }
 
    s_schedule_generation_method = method;
@@ -83,18 +81,19 @@ template<int DIM> void RefineSchedule<DIM>::setScheduleGenerationMethod(
 /*
 **************************************************************************
 *
-* Create a refine schedule that moves data from the source level into   
-* the destination level on the components represented by the refine      
-* list.  Ony data on the intersection of the two levels will be         
-* copied. It is assumed that the index spaces of the source and          
-* destination levels are "consistent"; i.e., they represent the same     
-* grid resolution.  The levels do not have to be part of the same        
-* AMR patch hierarchy, however.                                          
-* 
+* Create a refine schedule that moves data from the source level into
+* the destination level on the components represented by the refine
+* list.  Ony data on the intersection of the two levels will be
+* copied. It is assumed that the index spaces of the source and
+* destination levels are "consistent"; i.e., they represent the same
+* grid resolution.  The levels do not have to be part of the same
+* AMR patch hierarchy, however.
+*
 **************************************************************************
 */
 
 template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
+   const std::string& fill_pattern,
    tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
    tbox::Pointer< hier::PatchLevel<DIM> > src_level,
    const tbox::Pointer< xfer::RefineClasses<DIM> > refine_classes,
@@ -103,13 +102,13 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
-   assert(!refine_classes.isNull());
-   assert(!transaction_factory.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
-   t_fill_data =tbox::TimerManager::getManager() -> 
+   t_fill_data =tbox::TimerManager::getManager() ->
       getTimer("xfer::RefineSchedule::fillData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
@@ -149,40 +148,41 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
 
    /*
     * Initialize destination level, ghost cell widths,
-    * and domain information data members.  
+    * and domain information data members.
     */
 
    bool recursive_schedule = false;
    initializeDomainAndGhostInformation(recursive_schedule);
 
    /*
-    * Create the fill box and unfilled box arrays and then the 
-    * communication schedule for data transfers between source and 
-    * destination levels.  Note that the fill boxes are initialized here, 
+    * Create the fill box and unfilled box arrays and then the
+    * communication schedule for data transfers between source and
+    * destination levels.  Note that the fill boxes are initialized here,
     * while the unfilled boxes are set in the generateCommunicationSchedule()
     * and contain the regions for each patch in the destination level
     * that will cannot be filled by the schedule.
     */
 
    tbox::Array< xfer::FillBoxSet<DIM> > fill_boxes;
-   allocateDefaultFillBoxes(fill_boxes, 
-			    d_dst_level,
-			    d_boundary_fill_ghost_width);
+   allocateFillBoxes(fill_pattern,
+                     fill_boxes,
+                     d_dst_level,
+                     d_boundary_fill_ghost_width);
 
    tbox::Array< xfer::FillBoxSet<DIM> >
       unfilled_boxes(dst_level->getNumberOfPatches());
 
-   tbox::Pointer<tbox::Timer> t_gen_comm_sched = 
+   tbox::Pointer<tbox::Timer> t_gen_comm_sched =
       tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generate_comm_schedule");
 
    t_gen_comm_sched->start();
-   generateCommunicationSchedule(d_coarse_priority_level_schedule, 
-				 d_fine_priority_level_schedule, 
-				 d_dst_level, 
-				 src_level, 
-				 fill_boxes, 
-				 unfilled_boxes, 
+   generateCommunicationSchedule(d_coarse_priority_level_schedule,
+				 d_fine_priority_level_schedule,
+				 d_dst_level,
+				 src_level,
+				 fill_boxes,
+				 unfilled_boxes,
 				 use_time_interpolation);
    t_gen_comm_sched->stop();
 }
@@ -190,26 +190,27 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
 /*
 **************************************************************************
 *
-* Create a refine schedule that moves data from the source level into   
-* the destination level on the components represented by the refine      
-* list.  If portions of the destination level remain unfilled, then      
-* the algorithm   recursively fills those unfilled portions from coarser 
-* levels in the   AMR hierarchy.  It is assumed that the index spaces of 
-* the source and destination levels are "consistent"; i.e., they         
-* represent the same grid resolution.  Also, the next coarser level      
-* integer argument must be the number of level in the specified          
-* hierarchy representing the next coarser level of mesh resolution to    
-* the destination level.                                                 
-* 
-* IMPORTANT NOTES: The source level may be NULL, in which case the       
-* destination level will be filled only using data interpolated from     
-* coarser levels in the AMR hierarchy.  The hierarchy may be NULL only   
-* if the next coarser level is < 0 (that is, there is no coarser level).  
-* 
+* Create a refine schedule that moves data from the source level into
+* the destination level on the components represented by the refine
+* list.  If portions of the destination level remain unfilled, then
+* the algorithm   recursively fills those unfilled portions from coarser
+* levels in the   AMR hierarchy.  It is assumed that the index spaces of
+* the source and destination levels are "consistent"; i.e., they
+* represent the same grid resolution.  Also, the next coarser level
+* integer argument must be the number of level in the specified
+* hierarchy representing the next coarser level of mesh resolution to
+* the destination level.
+*
+* IMPORTANT NOTES: The source level may be NULL, in which case the
+* destination level will be filled only using data interpolated from
+* coarser levels in the AMR hierarchy.  The hierarchy may be NULL only
+* if the next coarser level is < 0 (that is, there is no coarser level).
+*
 **************************************************************************
 */
 
 template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
+   const std::string &fill_pattern,
    tbox::Pointer< hier::PatchLevel<DIM> > dst_level,
    tbox::Pointer< hier::PatchLevel<DIM> > src_level,
    int next_coarser_level,
@@ -220,13 +221,13 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
-   assert(!refine_classes.isNull());
-   assert(!transaction_factory.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
-   t_fill_data =tbox::TimerManager::getManager() -> 
+   t_fill_data =tbox::TimerManager::getManager() ->
       getTimer("xfer::RefineSchedule::fillData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
@@ -273,25 +274,30 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    initializeDomainAndGhostInformation(recursive_schedule);
 
    /*
-    * Create the fill box arrays and then the communication schedule(s) 
-    * needed to move data from the patch hierarchy to the destination level.  
+    * Create the fill box arrays and then the communication schedule(s)
+    * needed to move data from the patch hierarchy to the destination level.
     */
 
    tbox::Array< xfer::FillBoxSet<DIM> > fill_boxes;
-   allocateDefaultFillBoxes(fill_boxes, 
-			    d_dst_level,
-			    d_boundary_fill_ghost_width);
+   allocateFillBoxes(fill_pattern,
+                     fill_boxes,
+                     d_dst_level,
+                     d_boundary_fill_ghost_width);
 
-   tbox::Pointer<tbox::Timer> t_finish_sched_const = 
+   tbox::Pointer<tbox::Timer> t_finish_sched_const =
       tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish_schedule_const");
+
+   bool skip_first_generate_schedule =
+      (fill_pattern == "FILL_LEVEL_BORDERS_ONLY");
 
    t_finish_sched_const->start();
    finishScheduleConstruction(src_level,
 			      next_coarser_level,
 			      hierarchy,
 			      fill_boxes,
-			      use_time_interpolation);
+                              use_time_interpolation,
+                              skip_first_generate_schedule);
    t_finish_sched_const->stop();
 }
 
@@ -315,14 +321,14 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    xfer::RefinePatchStrategy<DIM>* patch_strategy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
-   assert(!refine_classes.isNull());
-   assert(!transaction_factory.isNull());
-   assert(fill_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(!transaction_factory.isNull());
+   TBOX_ASSERT(fill_boxes.getSize() == dst_level->getNumberOfPatches());
 #endif
 
-   t_fill_data =tbox::TimerManager::getManager() -> 
+   t_fill_data =tbox::TimerManager::getManager() ->
       getTimer("xfer::RefineSchedule::fillData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
@@ -333,7 +339,7 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
 
    /*
     * Initial values; some will change in setup operations.
-    * Note that we do not check refine items here, since this 
+    * Note that we do not check refine items here, since this
     * constructor is private and called recursively (i.e., the
     * items have been checked already).
     */
@@ -378,8 +384,8 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    const int nfill_boxes = fill_boxes.getSize();
    for (int p = 0; p < nfill_boxes; p++) {
       d_max_fill_boxes =
-	    tbox::Utilities::imax(d_max_fill_boxes,
-				 fill_boxes[p].getNumberOfBoxes());
+	    tbox::MathUtilities<int>::Max( d_max_fill_boxes,
+				           fill_boxes[p].getNumberOfBoxes() );
    }
 
    bool use_time_interpolation = true;
@@ -388,7 +394,8 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
 			      next_coarser_level,
 			      hierarchy,
 			      fill_boxes,
-			      use_time_interpolation);
+			      use_time_interpolation,
+                              false);
 
 }
 
@@ -416,7 +423,7 @@ template<int DIM>  RefineSchedule<DIM>::~RefineSchedule()
 
    d_coarse_schedule.setNull();
    d_coarse_level.setNull();
-   
+
    t_fill_data.setNull();
    t_gen_sched_n_squared.setNull();
    t_gen_sched_box_graph.setNull();
@@ -435,7 +442,7 @@ template<int DIM> void RefineSchedule<DIM>::reset(
    const tbox::Pointer< xfer::RefineClasses<DIM> > refine_classes)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!refine_classes.isNull());
+   TBOX_ASSERT(!refine_classes.isNull());
 #endif
    setRefineItems(refine_classes);
    if (!d_coarse_schedule.isNull()) {
@@ -451,7 +458,7 @@ template<int DIM> void RefineSchedule<DIM>::reset(
 **************************************************************************
 */
 
-template<int DIM> const tbox::Pointer< xfer::RefineClasses<DIM> >& 
+template<int DIM> const tbox::Pointer< xfer::RefineClasses<DIM> >&
 RefineSchedule<DIM>::getEquivalenceClasses() const
 {
    return(d_refine_classes);
@@ -481,11 +488,12 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
    int next_coarser_level,
    tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
    const tbox::Array< xfer::FillBoxSet<DIM> >& fill_boxes,
-   bool use_time_interpolation)
+   bool use_time_interpolation,
+   bool skip_generate_schedule)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((next_coarser_level < 0) || !hierarchy.isNull());
-   assert(fill_boxes.getSize() == d_dst_level->getNumberOfPatches());
+   TBOX_ASSERT((next_coarser_level < 0) || !hierarchy.isNull());
+   TBOX_ASSERT(fill_boxes.getSize() == d_dst_level->getNumberOfPatches());
 #endif
 
    d_coarse_priority_level_schedule = new tbox::Schedule();
@@ -504,12 +512,12 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
    const int dst_npatches = d_dst_level->getNumberOfPatches();
    tbox::Array< xfer::FillBoxSet<DIM> > unfilled_boxes(dst_npatches);
 
-   if (!src_level.isNull()) {
+   if ( !src_level.isNull() && !skip_generate_schedule ) {
 
-      tbox::Pointer<tbox::Timer> t_gen_comm_sched = 
+      tbox::Pointer<tbox::Timer> t_gen_comm_sched =
          tbox::TimerManager::getManager()->
          getTimer("xfer::RefineSchedule::generate_comm_schedule");
-      
+
       t_gen_comm_sched->start();
       generateCommunicationSchedule(d_coarse_priority_level_schedule,
 				    d_fine_priority_level_schedule,
@@ -604,14 +612,14 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
 	 TBOX_ERROR("Internal RefineSchedule<DIM> error..."
 		    << "\n In finishScheduleConstruction() -- "
 		    << "\n No coarser levels...could not fill from coarser."
-		    << endl);
+		    << std::endl);
       } else {
          if (hierarchy.isNull()) {
 	    TBOX_ERROR("Internal RefineSchedule<DIM> error..."
                        << "\n In finishScheduleConstruction() -- "
                        << "\n Need to fill from coarser hierarchy level and \n"
-                       << "hierarchy is unavailable." << endl);
-         } 
+                       << "hierarchy is unavailable." << std::endl);
+         }
       }
 
       /*
@@ -678,17 +686,17 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
             if ( do_coarse_shearing &&
                  (d_dst_level->patchTouchesRegularBoundary(fp)) ) {
 
-	       hier::BoxList<DIM> coarse_boxes(coarser_fill_bounding_box); 
+	       hier::BoxList<DIM> coarse_boxes(coarser_fill_bounding_box);
 	       coarse_boxes.intersectBoxes(coarser_shear_domain);
 	       coarse_boxes.simplifyBoxes();
 
 	       (void) hier::BoxUtilities<DIM>::extendBoxesToDomainBoundary(
-					  coarse_boxes, 
-					  coarser_physical_domain, 
+					  coarse_boxes,
+					  coarser_physical_domain,
 					  d_max_scratch_gcw);
 
 	       for (typename hier::BoxList<DIM>::Iterator b(coarse_boxes); b; b++) {
-		  coarse_box_list.appendItem(b()); 
+		  coarse_box_list.appendItem(b());
 		  coarse_to_fine_mapping.appendItem(fp);
 	       }
 
@@ -727,7 +735,7 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
       }
 
       hier::BoxArray<DIM> coarse_box_array(coarse_box_list);
-      
+
       d_coarse_level = new hier::PatchLevel<DIM>(
 	 coarse_box_array,
 	 coarse_processor_mapping,
@@ -777,11 +785,11 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
        * refine schedule constructor.
        */
 
-      d_coarse_schedule = new RefineSchedule<DIM>(d_coarse_level, 
-						   coarser_level_from_hierarchy, 
+      d_coarse_schedule = new RefineSchedule<DIM>(d_coarse_level,
+						   coarser_level_from_hierarchy,
 						   next_coarser_level-1,
-						   hierarchy, 
-						   d_refine_classes, 
+						   hierarchy,
+						   d_refine_classes,
                                                    d_transaction_factory,
 						   coarse_fill_boxes,
 						   d_refine_patch_strategy);
@@ -815,11 +823,11 @@ template<int DIM> void RefineSchedule<DIM>::fillData(
    t_fill_data->start();
 
    /*
-    * Set the refine items and time for all transactions.  These items will 
-    * be shared by all transaction objects in the communication schedule. 
+    * Set the refine items and time for all transactions.  These items will
+    * be shared by all transaction objects in the communication schedule.
     */
 
-   d_transaction_factory->setTransactionTime(fill_time); 
+   d_transaction_factory->setTransactionTime(fill_time);
    d_transaction_factory->setRefineItems(d_refine_items, d_number_refine_items);
 
    /*
@@ -852,8 +860,8 @@ template<int DIM> void RefineSchedule<DIM>::fillData(
    d_dst_level->deallocatePatchData(allocate_vector);
 
    /*
-    * Unset the refine items for all transactions.  These items are 
-    * shared by all transaction objects in the communication schedule. 
+    * Unset the refine items for all transactions.  These items are
+    * shared by all transaction objects in the communication schedule.
     */
 
    d_transaction_factory->unsetRefineItems();
@@ -901,7 +909,7 @@ template<int DIM> void RefineSchedule<DIM>::recursiveFill(
        * Allocate data on the coarser level and keep track of the allocated
        * components so that they may be deallocated later.
        */
-  
+
       hier::ComponentSelector allocate_vector;
       allocateScratchSpace(d_coarse_level, fill_time, allocate_vector);
 
@@ -956,7 +964,7 @@ template<int DIM> void RefineSchedule<DIM>::fillPhysicalBoundaries(
    double fill_time) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    level->setBoundaryBoxes();
@@ -990,7 +998,7 @@ template<int DIM> void RefineSchedule<DIM>::allocateScratchSpace(
    hier::ComponentSelector& allocate_vector) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    allocate_vector.clrAllFlags();
@@ -1003,7 +1011,7 @@ template<int DIM> void RefineSchedule<DIM>::allocateScratchSpace(
 	 allocate_vector.setFlag(scratch_id);
       }
       preprocess_vector.setFlag(scratch_id);
-   } 
+   }
 
    level->allocatePatchData(allocate_vector, fill_time,
       tbox::ArenaManager::getManager()->getScratchAllocator());
@@ -1067,7 +1075,7 @@ template<int DIM> void RefineSchedule<DIM>::allocateDestinationSpace(
    hier::ComponentSelector& allocate_vector) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_dst_level.isNull());
+   TBOX_ASSERT(!d_dst_level.isNull());
 #endif
    allocate_vector.clrAllFlags();
 
@@ -1095,7 +1103,7 @@ template<int DIM> void RefineSchedule<DIM>::copyScratchToDestination(
    tbox::Pointer< hier::PatchLevel<DIM> > level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator p(level); p; p++) {
@@ -1108,7 +1116,7 @@ template<int DIM> void RefineSchedule<DIM>::copyScratchToDestination(
 #ifdef DEBUG_CHECK_ASSERTIONS
 	    const double dst_time = patch->getPatchData(dst_id)->getTime();
 	    const double src_time = patch->getPatchData(src_id)->getTime();
-	    assert(dst_time == src_time);
+	    TBOX_ASSERT(dst_time == src_time);
 #endif
 	    patch->getPatchData(dst_id)->copy(*patch->getPatchData(src_id));
 	 }
@@ -1199,7 +1207,7 @@ template<int DIM> void RefineSchedule<DIM>::refineScratchData() const
 * then there is no need to copy on the interiors for the same patch.    *
 *                                                                       *
 * The resulting transactions will only fill the regions of intersection *
-* between the fill_boxes and destination level boxes.  The remaining    * 
+* between the fill_boxes and destination level boxes.  The remaining    *
 * box regions are returned in unfilled_boxes.                           *
 *                                                                       *
 * This main schedule generation routine which passes control to one     *
@@ -1220,16 +1228,16 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationSchedule(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_priority_schedule.isNull());
-   assert(!fine_priority_schedule.isNull());
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
-   assert(fill_boxes.getSize() == dst_level->getNumberOfPatches());
-   assert(unfilled_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(!coarse_priority_schedule.isNull());
+   TBOX_ASSERT(!fine_priority_schedule.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(fill_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(unfilled_boxes.getSize() == dst_level->getNumberOfPatches());
 #endif
 
    if (s_schedule_generation_method == "ORIG_NSQUARED") {
-   
+
       generateCommunicationScheduleNSquared(coarse_priority_schedule,
 					    fine_priority_schedule,
 					    dst_level,
@@ -1248,7 +1256,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationSchedule(
 					    fill_boxes,
 					    unfilled_boxes,
 					    use_time_interpolation);
-      
+
    } else if (s_schedule_generation_method == "BOX_TREE") {
 
        generateCommunicationScheduleBoxTree(coarse_priority_schedule,
@@ -1262,8 +1270,8 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationSchedule(
    } else {
 
       TBOX_ERROR("Internal RefineSchedule error..."
-		 << "\n unrecognized schedule generation option: " 
-		 << s_schedule_generation_method << endl);
+		 << "\n unrecognized schedule generation option: "
+		 << s_schedule_generation_method << std::endl);
 
    }
 
@@ -1279,7 +1287,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationSchedule(
 * they require filling from coarser levels in a patch hierarchy.  Then, *
 * loop over all of the patches on the source and destination levels.    *
 * check to see whether source or destination is local to this processor.*
-* If not, then skip over schedule construction operations.              * 
+* If not, then skip over schedule construction operations.              *
 *                                                                       *
 *************************************************************************
 */
@@ -1319,7 +1327,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleNSquare
 					  fill_boxes[dp].getBoxList(),
 					  dst_level, dp,
 					  src_level, sp,
-					  use_time_interpolation); 
+					  use_time_interpolation);
 
 	 }  // if either source or destination patch is local
 
@@ -1365,7 +1373,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxGrap
    const hier::ProcessorMapping& dst_mapping = dst_level->getProcessorMapping();
 
    tbox::Pointer< hier::BoxTop<DIM> > box_top = src_level->getBoxTop();
-   
+
    for (int dp = 0; dp < dst_npatches; dp++) {
       unfilled_boxes[dp] = fill_boxes[dp];
       box_top->removeIntersections(unfilled_boxes[dp].getBoxListToChange());
@@ -1379,9 +1387,9 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxGrap
 
    } else {
 
-      hier::IntVector<DIM> growth = 
+      hier::IntVector<DIM> growth =
 	 hier::IntVector<DIM>::max(d_max_scratch_gcw, getMaxDestinationGhosts());
-      int max_gcw = tbox::Utilities::imax(growth.max(),1);
+      int max_gcw = tbox::MathUtilities<int>::Max(growth.max(),1);
       hier::IntVector<DIM> dst_growth(max_gcw);
 
       box_graph = new hier::BoxGraph<DIM>(src_boxes,
@@ -1394,7 +1402,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxGrap
 
    for (int dp = 0; dp < dst_npatches; dp++) {
 
-      tbox::Array<int> src_nabor_indices;  
+      tbox::Array<int> src_nabor_indices;
       if (dst_mapping.isMappingLocal(dp)) {
 	 src_nabor_indices = box_graph->getSrcOverlapIndices(dp);
       } else {
@@ -1418,7 +1426,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxGrap
    } // loop over destination patches
 
    t_gen_sched_box_graph->stop();
- 
+
 }
 
 /*
@@ -1463,8 +1471,8 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxTree
 
    hier::IntVector<DIM> growth =
       hier::IntVector<DIM>::max(d_max_scratch_gcw, getMaxDestinationGhosts());
-   int max_gcw = tbox::Utilities::imax(growth.max(),1);
-   hier::IntVector<DIM> dst_growth(max_gcw); 
+   int max_gcw = tbox::MathUtilities<int>::Max(growth.max(),1);
+   hier::IntVector<DIM> dst_growth(max_gcw);
 
    for (int dp = 0; dp < dst_npatches; dp++) {
 
@@ -1472,7 +1480,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxTree
       hier::Box<DIM> dst_box_plus_ghosts = dst_box;
       dst_box_plus_ghosts.grow(dst_growth);
 
-      tbox::Array<int> src_nabor_indices;  
+      tbox::Array<int> src_nabor_indices;
       if (dst_mapping.isMappingLocal(dp)) {
 	 box_tree->findOverlapIndices(
 	    src_nabor_indices, dst_box_plus_ghosts);
@@ -1501,29 +1509,25 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxTree
 
 }
 
+
+
 /*
 **************************************************************************
-*                                                                        *
-* Allocate the default fill boxes for the specified destination array.   *
-* The fill box for a particular patch involves the box associated with   *
-* that patch grown by the maximum ghost cell width of all of the patch   *
-* data destination components on that patch.  Also, if any               *
-* communications have destination variables quantities that have coarse  *
-* data taking precedence at course-fine boundaries, make sure that the   *
-* box associated with each patch is grown by at least one cell in each   *
-* coordinate direction.                                                  *
-*                                                                        *
+*
+* New fill box methods...
+*
 **************************************************************************
 */
 
-template<int DIM> void RefineSchedule<DIM>::allocateDefaultFillBoxes(
+template<int DIM> void RefineSchedule<DIM>::allocateFillBoxes(
+   const std::string& fill_pattern,
    tbox::Array< xfer::FillBoxSet<DIM> >& fill_boxes,
    tbox::Pointer< hier::PatchLevel<DIM> > level,
    const hier::IntVector<DIM>& fill_ghost_width)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(fill_boxes.getSize() == 0);
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(fill_boxes.getSize() == 0);
 #endif
 
    /*
@@ -1554,18 +1558,88 @@ template<int DIM> void RefineSchedule<DIM>::allocateDefaultFillBoxes(
    const hier::BoxArray<DIM>& boxes = level->getBoxes();
    const int nboxes = boxes.getNumberOfBoxes();
 
-   fill_boxes.resizeArray(nboxes);  
+   fill_boxes.resizeArray(nboxes);
 
-   for (int p = 0; p < nboxes; p++) {
-      fill_boxes[p].
-	 resetFillBoxes(hier::Box<DIM>::grow(boxes(p), gcw));
-
-      d_max_fill_boxes =
-	    tbox::Utilities::imax(d_max_fill_boxes,
-				 fill_boxes[p].getNumberOfBoxes());
+   if ( fill_pattern == "DEFAULT_FILL" ) {
+      /*
+       * The default option fills the patch boxes grown by gcw.
+       */
+      for (int p = 0; p < nboxes; p++) {
+         fill_boxes[p].resetFillBoxes(hier::Box<DIM>::grow(boxes(p), gcw));
+         d_max_fill_boxes =
+            tbox::MathUtilities<int>::Max( d_max_fill_boxes,
+                                           fill_boxes[p].getNumberOfBoxes() );
+      }
    }
 
+   else if ( fill_pattern == "FILL_INTERIORS_ONLY" ) {
+      /*
+       * Fill just the interior.  Disregard gcw.
+       */
+      for (int p = 0; p < nboxes; p++) {
+         fill_boxes[p].resetFillBoxes(boxes(p));
+         d_max_fill_boxes =
+            tbox::MathUtilities<int>::Max( d_max_fill_boxes,
+                                           fill_boxes[p].getNumberOfBoxes() );
+      }
+   }
+
+   else if ( fill_pattern == "FILL_LEVEL_BORDERS_ONLY" ) {
+      /*
+       * To get the level border, grow each patch box and remove
+       * the level from it.
+       */
+      const hier::BoxTree<DIM> &boxtree = *level->getBoxTree();
+      for (int p = 0; p < nboxes; p++) {
+         hier::BoxList<DIM> levelborder( hier::Box<DIM>::grow(boxes(p), gcw) );
+         boxtree.removeIntersections( levelborder );
+         if ( ! levelborder.isEmpty() ) {
+            fill_boxes[p].resetFillBoxes( levelborder );
+            d_max_fill_boxes =
+               tbox::MathUtilities<int>::Max( d_max_fill_boxes,
+                                              fill_boxes[p].getNumberOfBoxes() );
+         }
+      }
+   }
+
+   else if ( fill_pattern == "FILL_LEVEL_BORDERS_AND_INTERIORS" ) {
+      /*
+       * Grow each patch box and remove the level from it, except the
+       * patch box itself.
+       */
+      const hier::BoxTree<DIM> &boxtree = *level->getBoxTree();
+      for (int p = 0; p < nboxes; p++) {
+         hier::Box<DIM> ghostbox = hier::Box<DIM>::grow(boxes(p), gcw);
+         hier::BoxList<DIM> nofill;
+         boxtree.findOverlapBoxes( nofill, ghostbox );
+         for ( typename hier::BoxList<DIM>::Iterator li(nofill); li; li++ ) {
+            if ( *li == boxes(p) ) {
+               // Exclude the patch box itself.
+               nofill.removeItem(li);
+               break;
+            }
+         }
+         hier::BoxList<DIM> tofill( ghostbox );
+         tofill.removeIntersections( nofill );
+         fill_boxes[p].resetFillBoxes( tofill );
+         d_max_fill_boxes =
+            tbox::MathUtilities<int>::Max( d_max_fill_boxes,
+                                           fill_boxes[p].getNumberOfBoxes() );
+      }
+   }
+
+   else {
+      TBOX_ERROR("RefineSchedule<DIM>::allocateFillBoxes\n"
+                 << "Given communication pattern string "
+                 << fill_pattern << " is invalid.\n Valid options are\n"
+                 << "'DEFAULT_FILL', 'FILL_LEVEL_BORDERS_ONLY',\n"
+                 << "'FILL_INTERIORS_ONLY', 'FILL_LEVEL_BORDERS_AND_INTERIORS'\n"
+                 << std::endl);
+   }
+
+   return;
 }
+
 
 /*
 **************************************************************************
@@ -1583,7 +1657,7 @@ template<int DIM> hier::IntVector<DIM> RefineSchedule<DIM>::getMaxDestinationGho
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       const int dst_id = d_refine_items[iri]->d_dst;
-      gcw.max(pd->getPatchDataFactory(dst_id)->getDefaultGhostCellWidth());
+      gcw.max(pd->getPatchDataFactory(dst_id)->getGhostCellWidth());
    }
 
    return(gcw);
@@ -1605,7 +1679,7 @@ template<int DIM> hier::IntVector<DIM> RefineSchedule<DIM>::getMaxScratchGhosts(
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
-      gcw.max(pd->getPatchDataFactory(scratch_id)->getDefaultGhostCellWidth());
+      gcw.max(pd->getPatchDataFactory(scratch_id)->getGhostCellWidth());
    }
 
    return(gcw);
@@ -1638,12 +1712,12 @@ template<int DIM> hier::IntVector<DIM> RefineSchedule<DIM>::getMaxStencilGhosts(
 /*
 *************************************************************************
 *
-* Private utility function to construct the unfilled_boxes list         
-* associated with each destination patch box which specifies those      
-* regions that cannot be filled from the source level (i.e they         
-* require filling from coarser levels in a patch hierarchy).            
+* Private utility function to construct the unfilled_boxes list
+* associated with each destination patch box which specifies those
+* regions that cannot be filled from the source level (i.e they
+* require filling from coarser levels in a patch hierarchy).
 *
-* NOTE: This is the original N^2 implementation in SAMRAI.              
+* NOTE: This is the original N^2 implementation in SAMRAI.
 *
 *************************************************************************
 */
@@ -1655,10 +1729,10 @@ template<int DIM> void RefineSchedule<DIM>::makeUnfilledBoxesNSquared(
    tbox::Pointer< hier::PatchLevel<DIM> > src_level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
-   assert(fill_boxes.getSize() == dst_level->getNumberOfPatches());
-   assert(unfilled_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(fill_boxes.getSize() == dst_level->getNumberOfPatches());
+   TBOX_ASSERT(unfilled_boxes.getSize() == dst_level->getNumberOfPatches());
 #endif
 
    const int dst_npatches = dst_level->getNumberOfPatches();
@@ -1706,9 +1780,9 @@ template<int DIM> void RefineSchedule<DIM>::makeUnfilledBoxesNSquared(
 /*
 *************************************************************************
 *
-* Private utility function that constructs schedule transactions that   
-* move data from source patch on source level to destination patch      
-* on destination level on regions defined by list of fil boxes.         
+* Private utility function that constructs schedule transactions that
+* move data from source patch on source level to destination patch
+* on destination level on regions defined by list of fil boxes.
 *
 *************************************************************************
 */
@@ -1724,10 +1798,10 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
    bool use_time_interpolation)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_priority_schedule.isNull());
-   assert(!fine_priority_schedule.isNull());
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());   
+   TBOX_ASSERT(!coarse_priority_schedule.isNull());
+   TBOX_ASSERT(!fine_priority_schedule.isNull());
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
 #endif
 
    if (d_src_masks.getNumberOfBoxes() < d_max_fill_boxes) {
@@ -1755,7 +1829,7 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
       d_refine_classes->getNumberEquivalenceClasses();
 
    /*
-    * Test all potential intersections between source box and fill 
+    * Test all potential intersections between source box and fill
     * boxes including boxes shifted via periodic boundary conditions.
     * If there are periodic shifts, the source is always shifted
     * relative to the destination.
@@ -1781,7 +1855,7 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
 
       for (int nc = 0; nc < num_equiv_classes; nc++) {
 
-	 const typename xfer::RefineClasses<DIM>::Data& rep_item = 
+	 const typename xfer::RefineClasses<DIM>::Data& rep_item =
 	    d_refine_classes->getClassRepresentative(nc);
 
 	 const int rep_item_dst_id = rep_item.d_scratch;
@@ -1792,7 +1866,7 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
 	 tbox::Pointer< hier::PatchDataFactory<DIM> > dst_pdf =
 	    dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id);
 
-	 const hier::IntVector<DIM>& dst_gcw = dst_pdf->getDefaultGhostCellWidth();
+	 const hier::IntVector<DIM>& dst_gcw = dst_pdf->getGhostCellWidth();
 
          /*
           * Iterate over boxes in fill box list for destination patch.
@@ -1802,10 +1876,10 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
 
 	 int box_num = 0;
 	 for (typename hier::BoxList<DIM>::Iterator b(fill_boxes); b; b++) {
-   
+
 	    const hier::Box<DIM>& fill_box = b();
-   
-            /* 
+
+            /*
              * Get the patch data factories and calculate the
              * overlap.  Note that we restrict the domain of the
              * time interpolation to the intersection of the
@@ -1820,14 +1894,14 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
             dst_fill_box = dst_fill_box * fill_box;
 
             hier::Box<DIM> test_mask(dst_fill_box*shifted);
-            if ( test_mask.empty() && 
-                 (dst_gcw == s_constant_zero_intvector) && 
+            if ( test_mask.empty() &&
+                 (dst_gcw == s_constant_zero_intvector) &&
                  dst_pdf->dataLivesOnPatchBorder() ) {
-               hier::Box<DIM> tmp_dst_fill_box(hier::Box<DIM>::grow(dst_fill_box, 
+               hier::Box<DIM> tmp_dst_fill_box(hier::Box<DIM>::grow(dst_fill_box,
                                                           s_constant_one_intvector));
-               test_mask = tmp_dst_fill_box * shifted; 
+               test_mask = tmp_dst_fill_box * shifted;
             }
-            hier::Box<DIM> src_mask( hier::Box<DIM>::shift( test_mask,-shift) );            
+            hier::Box<DIM> src_mask( hier::Box<DIM>::shift( test_mask,-shift) );
 
 	    tbox::Pointer< hier::BoxOverlap<DIM> > overlap =
 	       dst_pdf->getBoxGeometry(dst_box)
@@ -1841,8 +1915,8 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
 	       TBOX_ERROR("Internal RefineSchedule<DIM> error..."
 			  << "\n Overlap is NULL for "
 			  << "\n src box = " << src_box
-			  << "\n dst box = " << dst_box 
-			  << "\n src mask = " << src_mask << endl);
+			  << "\n dst box = " << dst_box
+			  << "\n src mask = " << src_mask << std::endl);
 	    }
 #endif
 
@@ -1856,14 +1930,14 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
           * Iterate over components in refine description list
           */
 	 bool same_patch_no_shift = (same_patch && zero_shift);
-	 for (typename tbox::List<typename xfer::RefineClasses<DIM>::Data>::Iterator 
+	 for (typename tbox::List<typename xfer::RefineClasses<DIM>::Data>::Iterator
                  l(d_refine_classes->getIterator(nc)); l; l++) {
 	    const int dst_id = l().d_scratch;
 	    const int src_id = l().d_src;
             const int ritem_count = l().d_tag;
 
             /*
-             * If the src and dst patches, levels, and components are the 
+             * If the src and dst patches, levels, and components are the
              * same, and there is no shift, the data exchange is unnecessary.
              */
 	    if ( !same_patch_no_shift || (dst_id != src_id) ) {
@@ -1900,7 +1974,7 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
                                                         src_patch_id,
                                                         ritem_count,
                                                         d_src_masks.getBox(i),
-                                                        do_time_interpolation); 
+                                                        do_time_interpolation);
 
 		     if (l().d_fine_bdry_reps_var) {
 			if (same_patch) {
@@ -1941,11 +2015,11 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
 *************************************************************************
 *
 * Private member function to initialize data members for hierarchy info.
-* 
+*
 *************************************************************************
 */
 
-template<int DIM> void 
+template<int DIM> void
 RefineSchedule<DIM>::initializeDomainAndGhostInformation(
    bool recursive_schedule)
 {
@@ -2002,12 +2076,12 @@ template<int DIM> void RefineSchedule<DIM>::setRefineItems(
 
    d_refine_classes            = refine_classes;
 
-   const int num_refine_classes = 
+   const int num_refine_classes =
       d_refine_classes->getNumberEquivalenceClasses();
 
    int nc;
    for (nc = 0; nc < num_refine_classes; nc++) {
-      for (typename tbox::List<typename xfer::RefineClasses<DIM>::Data>::Iterator 
+      for (typename tbox::List<typename xfer::RefineClasses<DIM>::Data>::Iterator
               l(d_refine_classes->getIterator(nc)); l; l++) {
 	 d_number_refine_items++;
       }
@@ -2018,9 +2092,9 @@ template<int DIM> void RefineSchedule<DIM>::setRefineItems(
 
    int ircount = 0;
    for (nc = 0; nc < num_refine_classes; nc++) {
-      for (typename tbox::List<typename xfer::RefineClasses<DIM>::Data>::Iterator 
+      for (typename tbox::List<typename xfer::RefineClasses<DIM>::Data>::Iterator
               l(d_refine_classes->getIterator(nc)); l; l++) {
-         l().d_tag = ircount; 
+         l().d_tag = ircount;
 	 d_refine_items[ircount] = &(l());
 	 ircount++;
       }
@@ -2031,12 +2105,12 @@ template<int DIM> void RefineSchedule<DIM>::setRefineItems(
 /*
 *************************************************************************
 *                                                                       *
-* Private utility function used during initial schedule set up to       *  
+* Private utility function used during initial schedule set up to       *
 * check whether patch data entries have proper number of ghost cells.   *
 * In particular, each scratch data entry must have at least as many     *
 * ghost cells as the user-defined refine operator stencil width.        *
 * Other checks are performed in the                                     *
-* xfer::RefineClasses<DIM>::checkRefineItem() routine.                       * 
+* xfer::RefineClasses<DIM>::checkRefineItem() routine.                       *
 *                                                                       *
 *************************************************************************
 */
@@ -2062,15 +2136,15 @@ template<int DIM> void RefineSchedule<DIM>::initialCheckRefineClassItems() const
 
 	    const int scratch = ref_item->d_scratch;
 	    const hier::IntVector<DIM>& scratch_gcw(pd->getPatchDataFactory(scratch)->
-					       getDefaultGhostCellWidth());
+					       getGhostCellWidth());
 
 	    if (user_gcw > scratch_gcw) {
 	       TBOX_ERROR("Bad data given to RefineSchedule<DIM>...\n"
-			  << "User supplied interpolation stencil width = " 
-			  << user_gcw 
+			  << "User supplied interpolation stencil width = "
+			  << user_gcw
 			  << "\nis larger than ghost cell width of `Scratch'\n"
-			  << "patch data " << pd->mapIndexToName(scratch) 
-			  << " , which is " << scratch_gcw << endl);
+			  << "patch data " << pd->mapIndexToName(scratch)
+			  << " , which is " << scratch_gcw << std::endl);
 	    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2106,60 +2180,60 @@ template<int DIM> void RefineSchedule<DIM>::clearRefineItems()
 /*
 **************************************************************************
 *
-* Print class data to the specified output stream.                       
+* Print class data to the specified output stream.
 *
 **************************************************************************
 */
 
-template<int DIM> void RefineSchedule<DIM>::printClassData(ostream& stream) const
+template<int DIM> void RefineSchedule<DIM>::printClassData(std::ostream& stream) const
 {
    stream << "RefineSchedule<DIM>::printClassData()\n";
    stream << "--------------------------------------\n";
-   stream << "s_schedule_generation_method = " 
-	  << s_schedule_generation_method << endl;
+   stream << "s_schedule_generation_method = "
+	  << s_schedule_generation_method << std::endl;
 
-   d_refine_classes->printClassData(stream); 
+   d_refine_classes->printClassData(stream);
 
-   stream << "d_dst_level = " << (hier::PatchLevel<DIM>*)d_dst_level << endl;
+   stream << "d_dst_level = " << (hier::PatchLevel<DIM>*)d_dst_level << std::endl;
 
    stream << "d_refine_patch_strategy = "
-          << (xfer::RefinePatchStrategy<DIM>*)d_refine_patch_strategy << endl;
+          << (xfer::RefinePatchStrategy<DIM>*)d_refine_patch_strategy << std::endl;
 
-   stream << "d_max_stencil_gcw = " << d_max_stencil_gcw << endl;
-   stream << "d_max_scratch_gcw = " << d_max_scratch_gcw << endl;
-   stream << "d_boundary_fill_ghost_width = " << d_boundary_fill_ghost_width << endl;
+   stream << "d_max_stencil_gcw = " << d_max_stencil_gcw << std::endl;
+   stream << "d_max_scratch_gcw = " << d_max_scratch_gcw << std::endl;
+   stream << "d_boundary_fill_ghost_width = " << d_boundary_fill_ghost_width << std::endl;
 
-   stream << "d_force_boundary_fill = " << d_force_boundary_fill << endl;
-   stream << "d_domain_is_one_box = " << d_domain_is_one_box << endl;
-   stream << "d_domain_box = " << d_domain_box << endl;
-   stream << "d_num_periodic_directions = " << d_num_periodic_directions << endl;
-   stream << "d_periodic_shift = " << d_periodic_shift << endl;
+   stream << "d_force_boundary_fill = " << d_force_boundary_fill << std::endl;
+   stream << "d_domain_is_one_box = " << d_domain_is_one_box << std::endl;
+   stream << "d_domain_box = " << d_domain_box << std::endl;
+   stream << "d_num_periodic_directions = " << d_num_periodic_directions << std::endl;
+   stream << "d_periodic_shift = " << d_periodic_shift << std::endl;
 
-   stream << "d_coarse_level = " << (hier::PatchLevel<DIM>*)d_coarse_level << endl;
+   stream << "d_coarse_level = " << (hier::PatchLevel<DIM>*)d_coarse_level << std::endl;
 
    stream << "d_coarse_to_fine_mapping size = "
-          << d_coarse_to_fine_mapping.size() << endl;
+          << d_coarse_to_fine_mapping.size() << std::endl;
 
    stream << "d_fine_fill_boxes size = "
-          << d_fine_fill_boxes.size() << endl;
+          << d_fine_fill_boxes.size() << std::endl;
 
    if (!d_coarse_priority_level_schedule.isNull()) {
-      stream << "Printing coarse priority schedule..." << endl;
+      stream << "Printing coarse priority schedule..." << std::endl;
       d_coarse_priority_level_schedule->printClassData(stream);
    } else {
-      stream << "coarse priority schedule is null" << endl;
+      stream << "coarse priority schedule is null" << std::endl;
    }
    if (!d_fine_priority_level_schedule.isNull()) {
-      stream << "Printing fine priority schedule..." << endl;
+      stream << "Printing fine priority schedule..." << std::endl;
       d_fine_priority_level_schedule->printClassData(stream);
    } else {
-      stream << "fine priority schedule is null" << endl;
+      stream << "fine priority schedule is null" << std::endl;
    }
    if (!d_coarse_schedule.isNull()) {
-      stream << "Printing coarse refine schedule..." << endl;
+      stream << "Printing coarse refine schedule..." << std::endl;
       d_coarse_schedule->printClassData(stream);
    } else {
-      stream << "coarse refine schedule is null" << endl;
+      stream << "coarse refine schedule is null" << std::endl;
    }
 }
 

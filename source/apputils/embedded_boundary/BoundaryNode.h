@@ -1,10 +1,10 @@
 //
-// File:        BoundaryNode.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/BoundaryNode.h $
 // Package:     SAMRAI applications
-// Copyright:   (c) 1997-2000 The Regents of the University of California
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 730 $
-// Modified:    $Date: 2005-11-14 13:47:23 -0800 (Mon, 14 Nov 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Boundary node class for embedded boundary implementations
 //
 

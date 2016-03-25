@@ -1,9 +1,9 @@
 // 
-// File:        CommTester.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/CommTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 317 $
-// Modified:    $Date: 2005-04-27 21:26:06 -0700 (Wed, 27 Apr 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -186,7 +186,7 @@ public:
    /**
     * After communication operations are performed, check results.
     */
-   void verifyCommunicationResults() const;
+   bool verifyCommunicationResults() const;
 
    /**
     * Operations needed by mesh::GriddingAlgorithm<NDIM> to construct and
@@ -239,7 +239,7 @@ public:
                            const hier::Box<NDIM>& coarse_box,
                            const hier::IntVector<NDIM>& ratio);
 
-   double getLevelDt(const tbox::Pointer<hier::PatchLevel<NDIM> > level,
+   double getLevelDt(const tbox::Pointer<hier::BasePatchLevel<NDIM> > level,
                      const double dt_time,
                      const bool initial_time)
    {

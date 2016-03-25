@@ -1,9 +1,9 @@
 //
-// File:	PatchDataFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/PatchDataFactory.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 538 $
-// Modified:	$Date: 2005-08-11 16:50:16 -0700 (Thu, 11 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1776 $
+// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
 // Description:	Factory abstract base class for creating patch data objects
 //
 
@@ -81,29 +81,41 @@ namespace SAMRAI {
  * @see hier::PatchDescriptor
  */
 
+template<int DIM> class Patch;
+template<int DIM> class MultiblockDataTranslator;
+
 template<int DIM> class PatchDataFactory : public tbox::DescribedClass
 {
 public:
    /**
     * The default constructor for the patch data factory class.
+    *
+    * @param ghosts ghost cell width for concrete classes created from
+    * the factory.
     */
-   PatchDataFactory();
+   PatchDataFactory(const IntVector<DIM>& ghosts);
 
    /**
-    * Virtual destructor for the patch data factory class.
+    * @brief Virtual destructor for the patch data factory class.
+    *
     */
    virtual ~PatchDataFactory<DIM>();
 
    /**
-    * Abstract virtual function to clone a patch data factory.  This
-    * will return a new instantiation of the abstract factory with the
-    * same properties.  The properties of the cloned factory can then
-    * be changed without modifying the original.
+    * @brief Abstract virtual function to clone a patch data factory.
+
+    * This will return a new instantiation of the abstract factory
+    * with the same properties.  The properties of the cloned factory
+    * can then be changed without modifying the original.
+    *
+    * @param ghosts ghost cell width for concrete classes created from
+    * the factory.
     */
-   virtual tbox::Pointer< PatchDataFactory<DIM> > cloneFactory() = 0;
+   virtual tbox::Pointer< PatchDataFactory<DIM> > cloneFactory(const IntVector<DIM>& ghosts) = 0;
 
    /**
-    * Abstract virtual function to allocate a concrete patch data object.
+    * @brief Abstract virtual function to allocate a concrete patch data object.
+    *
     * The default information about the object (e.g., ghost cell width)
     * is taken from the factory.  If no memory pool is provided, then the
     * allocation routine assumes some default memory pool.
@@ -113,61 +125,86 @@ public:
             tbox::Pointer<tbox::Arena> pool = (tbox::Arena *) NULL) const = 0;
 
    /**
+    * @brief Abstract virtual function to allocate a concrete patch data object.
+    *
+    * Same as the previous the other allocate function, but passes in
+    * a patch instead of a box.
+    */
+   virtual tbox::Pointer< PatchData<DIM> >
+   allocate(const Patch<DIM>& patch,
+            tbox::Pointer<tbox::Arena> pool = (tbox::Arena *) NULL) const = 0;
+
+   /**
+    * @brief 
     * Abstract virtual function to allocate a concrete box geometry
-    * object.  The box geometry object will be used in the calculation
+    * object.  
+    *
+    * The box geometry object will be used in the calculation
     * of box intersections for the computation of data dependencies.
     */
    virtual tbox::Pointer< BoxGeometry<DIM> >
    getBoxGeometry(const Box<DIM>& box) const = 0;
 
    /**
-    * Get the default ghost cell width.  This is the ghost cell width that
-    * will be used in the instantiation of concrete patch data instances.
+    * @brief Get the ghost cell width.  
+    *
+    * This is the ghost cell width that will be used in the
+    * instantiation of concrete patch data instances.  The 
+    * ghost width is specified in the clone method.
     */
-   virtual const IntVector<DIM>& getDefaultGhostCellWidth() const = 0;
+   const IntVector<DIM>& getGhostCellWidth() const;
+
 
    /**
-    * Set the default ghost cell width for concrete classes created from
-    * the factory.
-    */
-   virtual void setDefaultGhostCellWidth(const IntVector<DIM>& ghosts) = 0;
-
-   /**
-    * Abstract virtual function to compute the amount of memory needed to
-    * allocate for object data and to represent the object itself.  This
-    * includes any dynamic storage, such as arrays, needed by the concrete
-    * patch data instance.  Although the patch data subclass may choose not
-    * to allocate memory from the provided memory pool, it must not use more
-    * memory than requested here.
+    * @brief Abstract virtual function to compute the amount of memory needed to
+    * allocate for object data and to represent the object itself.
+    *
+    * This includes any dynamic storage, such as arrays, needed by the
+    * concrete patch data instance.  Although the patch data subclass
+    * may choose not to allocate memory from the provided memory pool,
+    * it must not use more memory than requested here.
     */
    virtual size_t getSizeOfMemory(const Box<DIM>& box) const = 0;
 
    /**
-    * Return true if the fine data values represent the data quantity
+    * @brief Return true if the fine data values represent the data quantity
     * on coarse-fine interfaces if data lives on patch borders; false 
-    * otherwise.  The boolean return value is supplied by the concrete
+    * otherwise.  
+    *
+    * The boolean return value is supplied by the concrete
     * patch data factory subclass.
     */
    virtual bool fineBoundaryRepresentsVariable() const = 0;
 
    /**
-    * Return true if the variable data lives on patch borders; false otherwise.
+    * @brief Return true if the variable data lives on patch borders; false otherwise.
+    *
     * The boolean return value is supplied by the concrete patch data factory subclass.
     */
    virtual bool dataLivesOnPatchBorder() const = 0;
 
    /**
-    * Abstract virtual function that returns whether the current 
-    * PatchDataFactory can be copied to the supplied destination 
-    * PatchDataFactory. Mechanisms to check for valid types are implemented
-    * in the patch data factory subclasses for particular datatypes.
+    * @brief Abstract virtual function that returns whether the
+    * current PatchDataFactory can be copied to the supplied
+    * destination PatchDataFactory.
+    *
+    * Mechanisms to check for valid types are implemented in the patch
+    * data factory subclasses for particular datatypes.
     */
    virtual bool validCopyTo(
       const tbox::Pointer<PatchDataFactory<DIM> >& dst_pdf) const = 0;
 
+   virtual MultiblockDataTranslator<DIM>* getMultiblockDataTranslator();
+
+protected:
+
+   IntVector<DIM> d_ghosts;
+
 private:
    PatchDataFactory(const PatchDataFactory<DIM>&); // not implemented
-   void operator=(const PatchDataFactory<DIM>&);	  // not implemented
+   void operator=(const PatchDataFactory<DIM>&);   // not implemented
+   PatchDataFactory();                             // not implemented, 
+                                                   // must specify ghost width
 
 };
 

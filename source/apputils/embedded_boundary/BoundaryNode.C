@@ -1,10 +1,10 @@
 //
-// File:        BoundaryNode.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/BoundaryNode.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2000 The Regents of the University of California
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Boundary node struct for embedded boundary implementations.
 //
 
@@ -13,17 +13,11 @@
 
 #include "BoundaryNode.h"
 
-using namespace std;
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#define included_assert
-#endif
-
 #include "CartesianPatchGeometry.h"
 #include "EmbeddedBoundaryDefines.h"
-#include "tbox/IEEE.h"
 #include "tbox/IOStream.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 
 #define BOUNDARYNODE_VERSION 1
@@ -213,7 +207,7 @@ template<int DIM> pdat::NodeIndex<DIM>
 BoundaryNode<DIM>::getNearestNeighborNode(const int i) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < d_num_nearest_neighbors);
+   TBOX_ASSERT(i < d_num_nearest_neighbors);
 #endif
    return(d_nearest_neighbors[i]);
 }
@@ -235,7 +229,7 @@ template<int DIM> double
 BoundaryNode<DIM>::getClosestBoundaryPoint(const int i) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM);
+   TBOX_ASSERT(i < DIM);
 #endif
    return(d_closest_boundary_point[i]);
 }
@@ -254,7 +248,7 @@ BoundaryNode<DIM>::getDistanceToBoundary() const
    if (d_distance_to_boundary < 0.) {
       TBOX_ERROR("BoundaryNode::getDistanceToBoundary()"
                  << "\nYou must first set the distance before accessing it."
-                 << "\nCall 'setDistanceToBoundary(patch)'." << endl);      
+                 << "\nCall 'setDistanceToBoundary(patch)'." << std::endl);      
    }      
    return(d_distance_to_boundary);
 }
@@ -265,7 +259,7 @@ BoundaryNode<DIM>::getNormalToBoundary() const
    if (d_distance_to_boundary < 0.) {
       TBOX_ERROR("BoundaryNode::getNormalToBoundary()"
                  << "\nYou must first set the normal before accessing it."
-                 << "\nCall 'setNormalToBoundary(patch)'." << endl);
+                 << "\nCall 'setNormalToBoundary(patch)'." << std::endl);
    }
    return(d_normal_to_boundary);
 }
@@ -280,7 +274,7 @@ BoundaryNode<DIM>::getNormalToBoundary(
                  << "\nYou must first set the normal before accessing it."
                  << "\nEither call 'setNormalToBoundary(patch)' or"
                  << "\nuse the method 'getNormalToBoundary(patch)'."
-                 << endl);
+                 << std::endl);
    }
    return(d_normal_to_boundary[i]);
 }
@@ -333,7 +327,7 @@ BoundaryNode<DIM>::setNumOutsideNeighborNodes(
       if (d_num_outside_neighbors >= DIM*4) {
          TBOX_ERROR("BoundaryNode::calculateBoundaryNodeInfo()"
                     << "\nMore than 2*DIM outside neighbors were found!"
-                    << endl);
+                    << std::endl);
       }
    }
 }
@@ -360,7 +354,7 @@ BoundaryNode<DIM>::setNearestNeighborNode(
       TBOX_ERROR("BoundaryNode: There have already been " 
                  << d_num_nearest_neighbors
                  << "\nregistered with boundary node: "
-                 << d_index << endl);
+                 << d_index << std::endl);
    }
 }
 
@@ -394,7 +388,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
       TBOX_ERROR("BoundaryNode::setNearestNeighborNodes()"
                  << "\nLess than DIM outside neighbors were found."
                  << "\nCannot compute nearest neighbor nodes with fewer"
-                 << "\nthan DIM outside neighbors." << endl);
+                 << "\nthan DIM outside neighbors." << std::endl);
    }
    
 
@@ -425,7 +419,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
       if (num_outside_neighbors >= DIM*4) {
          TBOX_ERROR("BoundaryNode::setNearestNeighborNodes()"
                     << "\nMore than 2*DIM outside neighbors were found!"
-                    << endl);
+                    << std::endl);
       }
    }
 
@@ -433,7 +427,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
       TBOX_ERROR("BoundaryNode::setNearestNeighborNodes()"
                  << "\nThe number of outside neighbors computed does not"
                  << "\ncorrespond with d_num_outside_neighbors.  There"
-                 << "\nis a bug." << endl);
+                 << "\nis a bug." << std::endl);
    }
 
    /*
@@ -458,7 +452,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
             diff_index(i) = d_index(i) - outside_neighbors[n](i);
             dist += (double)diff_index(i) * (double)diff_index(i);
          }
-         if (tbox::Utilities::deq(dist,1.0)) {
+         if (tbox::MathUtilities<double>::equalEps(dist,1.0)) {
             setNearestNeighborNode(outside_neighbors[n]);
          }
          if (d_num_nearest_neighbors == DIM) break;
@@ -485,7 +479,7 @@ BoundaryNode<DIM>::setNearestNeighborNodes(
       if (d_num_nearest_neighbors < DIM) {
          TBOX_ERROR("BoundaryNode::setNearestNeighborNodes()"
                     << "\nDid not find DIM nearest neighbors!"
-                    << endl);
+                    << std::endl);
       }
    }
 }
@@ -510,7 +504,7 @@ BoundaryNode<DIM>::setClosestBoundaryPoint(const double location,
                                            const int i) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(i < DIM);
+   TBOX_ASSERT(i < DIM);
 #endif
    d_closest_boundary_point[i] = location;
 }

@@ -1,9 +1,9 @@
 //
-// File:	LocallyActiveDataFillBoxSet.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataFillBoxSet.C $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 595 $
-// Modified:	$Date: 2005-08-30 20:41:20 -0700 (Tue, 30 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Routines for "smart" boxlist ops in locally-active comm schedules
 //
 
@@ -12,11 +12,8 @@
 
 #include "LocallyActiveDataFillBoxSet.h"
 
-#include "tbox/IEEE.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
+#include "tbox/MathUtilities.h"
 
 namespace SAMRAI {
    namespace xfer {
@@ -95,7 +92,7 @@ LocallyActiveDataFillBoxSet<DIM>::getUnionActiveRefineVarData() const
 {
    if (!d_refine_data) {
       TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::getUnionActiveRefineVarData error... "
-                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << std::endl);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifdef LADFBS_CHECK_UNION
@@ -111,7 +108,7 @@ LocallyActiveDataFillBoxSet<DIM>::getUnionActiveCoarsenVarData() const
 {
    if (d_refine_data) {
       TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::getActiveCoarsenVarData error... "
-                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << std::endl);
    }
    return(d_union_coarsen_var_data);
 }
@@ -179,7 +176,7 @@ void LocallyActiveDataFillBoxSet<DIM>::resetLocallyActiveFillBoxes(
 
    } else {
       TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::resetLocallyActiveFillBoxes error... "
-                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << std::endl);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifdef LADFBS_CHECK_UNION
@@ -209,7 +206,7 @@ void LocallyActiveDataFillBoxSet<DIM>::resetLocallyActiveFillBoxes(
 
    } else {
       TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::resetLocallyActiveFillBoxes error... "
-                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << std::endl);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifdef LADFBS_CHECK_UNION
@@ -240,7 +237,7 @@ void LocallyActiveDataFillBoxSet<DIM>::addLocallyActiveFillBox(
 
    } else {
       TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::addFillBox error... "
-                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::CoarsenClasses<DIM>::Data" << std::endl);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifdef LADFBS_CHECK_UNION
@@ -271,7 +268,7 @@ void LocallyActiveDataFillBoxSet<DIM>::addLocallyActiveFillBox(
 
    } else {
       TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::addLocallyActiveFillBox error... "
-                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << endl);
+                  << "\nobject is setup for xfer::RefineClasses<DIM>::Data" << std::endl);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifdef LADFBS_CHECK_UNION
@@ -409,22 +406,22 @@ void LocallyActiveDataFillBoxSet<DIM>::intersectBoxes(const hier::BoxList<DIM>& 
 }
 
 template<int DIM>
-void LocallyActiveDataFillBoxSet<DIM>::printClassData(ostream& os) const
+void LocallyActiveDataFillBoxSet<DIM>::printClassData(std::ostream& os) const
 {
    for (typename tbox::List< xfer::LocallyActiveDataFillBox<DIM> >::Iterator 
         ladfbi(d_locally_active_boxes); ladfbi; ladfbi++) {
-      os << endl;
+      os << std::endl;
       ladfbi().printClassData(os);
    }
-   os << endl;
-   os << "\nxfer::FillBoxSet<DIM> object data...." << endl;
+   os << std::endl;
+   os << "\nxfer::FillBoxSet<DIM> object data...." << std::endl;
    xfer::FillBoxSet<DIM>::print(os);
 
    if (d_refine_data) {
-      os << "\nd_union_refine_var_data = ..." << endl;
+      os << "\nd_union_refine_var_data = ..." << std::endl;
       printRefineVarListItems(d_union_refine_var_data, os);
    } else {
-      os << "\nd_union_coarsen_var_data = ..." << endl;
+      os << "\nd_union_coarsen_var_data = ..." << std::endl;
       if (d_union_coarsen_var_data.getNumberItems() == 0) {
          os << "  no coarsen var ids in set ";
       } else {
@@ -438,7 +435,7 @@ void LocallyActiveDataFillBoxSet<DIM>::printClassData(ostream& os) const
       }
    }
 
-   os << endl;
+   os << std::endl;
    
 }
 
@@ -469,14 +466,15 @@ void LocallyActiveDataFillBoxSet<DIM>::mergeLists(
    typename tbox::List<const typename xfer::RefineClasses<DIM>::Data*>::Iterator 
       ilb(inlist_b);
 
-   int last_add = tbox::IEEE::getINT_MIN();
+   int last_add = tbox::MathUtilities<int>::getMin();
 
    while (ila && ilb) {
       int value_a = ila()->d_tag;
       int value_b = ilb()->d_tag;
       int value =
-         tbox::Utilities::imax( last_add,
-                                tbox::Utilities::imin(value_a, value_b) );
+         tbox::MathUtilities<int>::Max( last_add,
+                                        tbox::MathUtilities<int>::Min( value_a, 
+                                                                       value_b) );
        
       if (value > last_add) {
          if (value_a < value_b) {
@@ -492,7 +490,7 @@ void LocallyActiveDataFillBoxSet<DIM>::mergeLists(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( !(ila && ilb) );
+   TBOX_ASSERT( !(ila && ilb) );
 #endif
 
    if (!outlist.isEmpty()) {
@@ -525,14 +523,15 @@ void LocallyActiveDataFillBoxSet<DIM>::mergeLists(
    typename tbox::List<const typename xfer::CoarsenClasses<DIM>::Data*>::Iterator 
       ilb(inlist_b);
 
-   int last_add = tbox::IEEE::getINT_MIN();
+   int last_add = tbox::MathUtilities<int>::getMin();
 
    while (ila && ilb) {
       int value_a = ila()->d_tag;
       int value_b = ilb()->d_tag;
       int value =
-         tbox::Utilities::imax( last_add,
-                                tbox::Utilities::imin(value_a, value_b) );
+         tbox::MathUtilities<int>::Max( last_add,
+                                        tbox::MathUtilities<int>::Min(value_a, 
+                                                                      value_b) );
 
       if (value > last_add) {
          if (value_a < value_b) {
@@ -548,7 +547,7 @@ void LocallyActiveDataFillBoxSet<DIM>::mergeLists(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( !(ila && ilb) );
+   TBOX_ASSERT( !(ila && ilb) );
 #endif
 
    if (!outlist.isEmpty()) {
@@ -569,7 +568,7 @@ void LocallyActiveDataFillBoxSet<DIM>::mergeLists(
 }
 
 template<int DIM>
-bool LocallyActiveDataFillBoxSet<DIM>::checkUnion(ostream& os) const
+bool LocallyActiveDataFillBoxSet<DIM>::checkUnion(std::ostream& os) const
 { 
    bool union_match = true;
 
@@ -578,27 +577,27 @@ bool LocallyActiveDataFillBoxSet<DIM>::checkUnion(ostream& os) const
    if (!d_refine_data) {
 
        TBOX_ERROR("LocallyActiveDataFillBoxSet<DIM>::checkUnion() error... " 
-                  << "not set up for refine data." << endl);
+                  << "not set up for refine data." << std::endl);
 
    } else {
 
       typename tbox::List< xfer::LocallyActiveDataFillBox<DIM> >::Iterator
          ladfbi(d_locally_active_boxes);
 
-      os << "\n In checkUnion -- Computing union..." << endl;
+      os << "\n In checkUnion -- Computing union..." << std::endl;
       int fb_count = 0;
       for ( ; ladfbi; ladfbi++) {
-         os << "\n ladfbi = " << fb_count << " : fill box active data = ..." << endl;
+         os << "\n ladfbi = " << fb_count << " : fill box active data = ..." << std::endl;
          printRefineVarListItems(ladfbi().getActiveRefineVarData(), os);
-         os << endl;
+         os << std::endl;
 
          tbox::List<const typename xfer::RefineClasses<DIM>::Data*> tmp_list;
          mergeLists(tmp_list, test_union, ladfbi().getActiveRefineVarData());
          test_union = tmp_list;
 
-         os << "\n test_union active data = ..." << endl;
+         os << "\n test_union active data = ..." << std::endl;
          printRefineVarListItems(test_union, os);
-         os << endl;
+         os << std::endl;
          fb_count++;
       }
 
@@ -623,13 +622,13 @@ bool LocallyActiveDataFillBoxSet<DIM>::checkUnion(ostream& os) const
    }
 
    if (!union_match) {
-      os << "\n\n UNION DOES NOT MATCH!" << endl;
-      os << "   Here is fill box set..." << endl;
+      os << "\n\n UNION DOES NOT MATCH!" << std::endl;
+      os << "   Here is fill box set..." << std::endl;
       printClassData(os);
-      os << "\n   Here is computed union..." << endl;
+      os << "\n   Here is computed union..." << std::endl;
       printRefineVarListItems(test_union, os);
-      os << endl;
-      TBOX_ERROR("UNION DOES NOT MATCH!" << endl);
+      os << std::endl;
+      TBOX_ERROR("UNION DOES NOT MATCH!" << std::endl);
    }
 
    return(union_match);
@@ -638,9 +637,9 @@ bool LocallyActiveDataFillBoxSet<DIM>::checkUnion(ostream& os) const
 template<int DIM>
 void LocallyActiveDataFillBoxSet<DIM>::printRefineVarListItems(
    const tbox::List<const typename xfer::RefineClasses<DIM>::Data*>& inlist,
-   ostream& os) const
+   std::ostream& os) const
 {
-   os << "list size = " << inlist.size() << endl;
+   os << "list size = " << inlist.size() << std::endl;
    if (inlist.size() == 0) {
       os << "  no refine var ids in set ";
    } else {
@@ -653,7 +652,7 @@ void LocallyActiveDataFillBoxSet<DIM>::printRefineVarListItems(
             << lavdi()->d_dst << " , " << lavdi()->d_src << " , " << lavdi()->d_scratch;
       }
    }
-   os << endl;
+   os << std::endl;
 }
 
 }

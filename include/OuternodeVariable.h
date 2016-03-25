@@ -1,10 +1,10 @@
 //
-// File:	OuternodeVariable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outernode/OuternodeVariable.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Variable class for defining outernode centered variables
 //
 
@@ -19,7 +19,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_Variable
@@ -31,38 +30,13 @@ namespace SAMRAI {
 
 /*!
  * @brief Class OuternodeVariable<DIM> is a templated variable class
- * used to define node-centered quantities on patch boundaries.
+ * used to define node-centered data quantities only on patch boundaries.
+ * It is a subclass of hier::Variable and is templated on the type
+ * of the underlying data (e.g., double, int, bool, etc.).
  *
- * It is templated on the type
- * of the underlying data (e.g., double, int, bool, etc.).  Outernode variable
- * data is associated with the nodes of cells.  However, it differs
- * from the NodeVariable<DIM> class in that outernode quantities reside only
- * on the sides residing on the boundary of a patch.  Outernode data is
- * stored in 2*DIM arrays, each of which holds values for sides having the
- * same outward normal vector.
- * Where an outernode falls on more than one side (patch edges and corners),
- * the outernode belongs to the higher dimensional direction.
- * For example, a three-dimensional outernode
- * variable can be used to create node-centered data arrays over a box
- * [l0:u0,l1:u1,l2:u2] that can be dimensioned as:
- * \verbatim
- *
- *    [ l1+1 : u1-1 ,
- *      l2+1 : u2-1 , d ]   ,
- *
- *    [ l0   : u0   ,
- *      l2+1 : u2-1 , d ]   ,
- *
- *    [ l0   : u0   ,
- *      l1   : u1   , d ]   ,
- *
- * \endverbatim
- * for the upper and lower x, y, and z (or 0, 1, 2) face directions,
- * respectively, and where d is the depth index (i.e., number of values at
- * each side index location).  One- and two-dimensional 
- * outernode variables define storage similarly.  For more information on 
- * indexing and manipulating outernode patch data objects, see the classes 
- * OuternodeData<DIM> and OuternodeGeometry<DIM>.
+ * Note that the data layout in the outernode data arrays matches the corresponding 
+ * array sections provided by the node data implementation.  See header file for 
+ * the OuternodeData<DIM> class for a more detailed description of the data layout.
  *
  * @see NodeData<DIM>
  * @see OuternodeData<DIM>
@@ -77,28 +51,28 @@ public:
    /*!
     * @brief Create an outernode variable object having properties
     * specified by the name and depth (i.e., number of data values
-    * at each index location).  The default depth is one.   The ghost 
-    * cell width for all outernode data is currently fixed at zero; 
-    * this may be changed in the future if needed.
+    * at each index location).  The default depth is one.
+    *
+    * Note that The ghost cell width for all outernode data is currently
+    * fixed at zero; this may be changed in the future if needed.
     */
-   OuternodeVariable(const string &name, 
+   OuternodeVariable(const std::string &name,
                      int depth = 1);
-
+ 
    /*!
     * @brief Virtual destructor for outernode variable objects.
     */
    virtual ~OuternodeVariable<DIM,TYPE>();
-
+ 
    /*!
-    * @brief Return a boolean true value indicating that fine patch values 
-    * take precedence on coarse-fine interfaces.
+    * @brief Return a boolean true value indicating that fine patch
+    * values take precedence on coarse-fine interfaces.
     */
    bool fineBoundaryRepresentsVariable() const {return true;}
-
+ 
    /*!
-    * Return true since the node data index space (and hence the outernode 
-    * data index space) extends beyond the interior of patches.  That is, 
-    * outernode data lives on patch borders.
+    * @brief Return true indicating that outernode data
+    * exists on the patch boundary.
     */
    bool dataLivesOnPatchBorder() const {return true;}
 

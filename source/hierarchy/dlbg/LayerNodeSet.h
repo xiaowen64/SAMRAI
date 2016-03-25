@@ -1,8 +1,8 @@
 /*
-  File:        $RCSfile$
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision: 346 $
-  Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerNodeSet.h $
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1769 $
+  Modified:    $LastChangedDate: 2007-12-11 17:36:06 -0800 (Tue, 11 Dec 2007) $
   Description: Set of layer nodes in a distributed box graph.
 */
 
@@ -33,11 +33,17 @@
 #include "tbox/Pointer.h"
 #endif
 
+#ifndef included_tbox_Timer
+#include "tbox/Timer.h"
+#endif
+
+#ifndef included_tbox_TimerManger
+#include "tbox/TimerManager.h"
+#endif
+
 #include <iostream>
 #include <map>
 #include <set>
-
-using namespace std;
 
 namespace SAMRAI {
 namespace hier {
@@ -91,7 +97,7 @@ public:
      expensive searches.  A node can be removed or added without
      changing the indices of existing nodes.
    */
-   typedef set<Node> NodeContainer;
+   typedef std::set<Node> NodeContainer;
 
    /*!
      @brief Default constructor.
@@ -112,7 +118,7 @@ public:
 
      Deallocate internal data.
    */
-   ~LayerNodeSet(void);
+   virtual ~LayerNodeSet(void);
 
 
 
@@ -290,7 +296,7 @@ public:
    void deallocateData();
 
 
-   void printClassData( ostream &os, int detail_depth=0 ) const;
+   virtual void printClassData( std::ostream &os, int detail_depth=0 ) const;
 
 
 
@@ -379,6 +385,12 @@ private :
      We save this because we use it frequently.
    */
    const int d_rank;
+
+   /*!
+     @brief Timer
+   */
+
+   tbox::Pointer<tbox::Timer> t_acquire_nonlocal_nodes;
 
 };
 

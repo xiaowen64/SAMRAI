@@ -1,9 +1,9 @@
 //
-// File:        BergerRigoutsos.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/BergerRigoutsos.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 602 $
-// Modified:    $Date: 2005-09-06 11:51:31 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class for Burger/Rigoutsos tagged cell clustering algorithm.
 //
 
@@ -14,14 +14,14 @@
 #include "Index.h"
 #include "BoxComm.h" 
 #include "tbox/Database.h" 
-#include "tbox/IEEE.h" 
-#include "tbox/MPI.h" 
+#include "tbox/SAMRAI_MPI.h" 
 #include "PatchHierarchy.h"
 #include "BinaryTree.h"
 #include "tbox/InputManager.h"
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 
 namespace SAMRAI {
@@ -44,7 +44,7 @@ tbox::Pointer<tbox::Timer> BergerRigoutsos<DIM>::t_compute;
 template<int DIM>
 tbox::Pointer<tbox::Timer> BergerRigoutsos<DIM>::t_commwait;
 
-template<int DIM> string
+template<int DIM> std::string
    BergerRigoutsos<DIM>::s_tag_reduce_method = "ORIGINAL";
 template<int DIM> bool
    BergerRigoutsos<DIM>::s_tag_reduce_method_initialized = false;
@@ -58,11 +58,11 @@ template<int DIM> bool
  */
 
 template<int DIM> void BergerRigoutsos<DIM>::setClusteringOption(
-   const string& method)
+   const std::string& method)
 {
    if (method.empty()) {
 
-      if (tbox::MPI::getNodes() == 1) {
+      if (tbox::SAMRAI_MPI::getNodes() == 1) {
          s_tag_reduce_method = "ORIGINAL";
       } else {
          s_tag_reduce_method = "BINARY_TREE";
@@ -78,7 +78,7 @@ template<int DIM> void BergerRigoutsos<DIM>::setClusteringOption(
                     << "Given method string "
                     << method << " is invalid.\n Options are\n"
                     << "'ORIGINAL', 'ORIG_FAST_REDUCE', 'COMMUNICATOR', 'BINARY_TREE'."
-                    << endl);
+                    << std::endl);
       }
 
       s_tag_reduce_method = method;
@@ -159,7 +159,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTags(
       findBoxesContainingTagsCommunicators(boxes, level, index, tag_val,
                                            bound_box, min_box, 
                                            efficiency_tol, combine_tol,
-                                           0, tbox::MPI::commWorld);
+                                           0, tbox::SAMRAI_MPI::commWorld);
    }
 
    else if (s_tag_reduce_method == "BINARY_TREE") {
@@ -173,7 +173,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTags(
        * should be impossible to be here!
        */
       TBOX_ERROR("unknown clustering algorithm: " 
-                 << s_tag_reduce_method << endl);
+                 << s_tag_reduce_method << std::endl);
    }
 }
 
@@ -305,7 +305,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
     * "participates" is true if this processor has at least one local
     * patch that intersects with bound_box.
     */
-   const bool part = tree->participates(tbox::MPI::getRank(), bound_box);
+   const bool part = tree->participates(tbox::SAMRAI_MPI::getRank(), bound_box);
    t_compute->stop();
    if ( part ) {
 
@@ -316,7 +316,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
       t_compute->stop();
 
       if ( num_tags == 0 ) {
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             boxes.clearItems();
          }
       }
@@ -334,7 +334,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
           * only root can decide if recursive splitting is necessary,
           * since only root has the complete histogram
           */
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             t_compute->start();
             hist_box.findBoundBoxForTags(tag_bound_box, min_box);
             int num_cells = tag_bound_box.size();
@@ -370,8 +370,8 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
             t_compute->start();
             hier::BoxList<DIM> box_list_rgt;
             hier::BoxList<DIM> box_list_lft;
-            const bool lpart = tree->participates(tbox::MPI::getRank(), box_lft);
-            const bool rpart = tree->participates(tbox::MPI::getRank(), box_rgt);
+            const bool lpart = tree->participates(tbox::SAMRAI_MPI::getRank(), box_lft);
+            const bool rpart = tree->participates(tbox::SAMRAI_MPI::getRank(), box_rgt);
             t_compute->stop();
 
             /*
@@ -404,7 +404,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
              */
 
             t_compute->start();
-            if (tbox::MPI::getRank() == 0) {
+            if (tbox::SAMRAI_MPI::getRank() == 0) {
                if ( ((box_list_lft.getNumberItems() > 1) ||
                      (box_list_rgt.getNumberItems() > 1)) ||
                     ( (double) (box_list_lft.getFirstItem().size()
@@ -414,14 +414,14 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
                   boxes.catenateItems(box_list_lft);
                   boxes.catenateItems(box_list_rgt);
                }
-            } //if (tbox::MPI::getRank() == 0) 
+            } //if (tbox::SAMRAI_MPI::getRank() == 0) 
             t_commwait->stop();
          } //if (need_to_recursively_split)
 
          /*
           * If no good splitting is found, P_0 adds the bounding box to the list.
           */
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             if ( boxes.isEmpty() ) {
                boxes.appendItem(tag_bound_box);
             }
@@ -468,7 +468,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
    const double efficiency_tol, 
    const double combine_tol,
    int recurse_level,
-   tbox::MPI::comm comm) const
+   tbox::SAMRAI_MPI::comm comm) const
 {
    tbox::Pointer< hier::BinaryTree<DIM> > tree = level->getBinaryTree();
 
@@ -481,8 +481,8 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
     * here would duplicate that effort.
     * 
     */
-   tbox::MPI::comm comm_bound_box;
-   tbox::MPI::group group_bound_box;
+   tbox::SAMRAI_MPI::comm comm_bound_box;
+   tbox::SAMRAI_MPI::group group_bound_box;
 
    tree->buildParticipatingCommunicator(bound_box, comm,
                                         group_bound_box,
@@ -492,7 +492,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
     * "tree->participates" is true if this processor has at least
     * one local patch that intersects with bound_box.
     */
-   if ( tree->participates(tbox::MPI::getRank(), bound_box) ) {
+   if ( tree->participates(tbox::SAMRAI_MPI::getRank(), bound_box) ) {
 
       HistogramBox<DIM> hist_box(bound_box);
       hist_box.setCommunicationMode(HistogramBox<DIM>::COMMUNICATOR_MODE);
@@ -501,7 +501,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
 
 
       if ( num_tags == 0) {
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             boxes.clearItems();
          }
       }
@@ -519,7 +519,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
           * only root can decide if recursive splitting is necessary,
           * since only root has the complete histogram
           */
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             hist_box.findBoundBoxForTags(tag_bound_box, min_box);
             int num_cells = tag_bound_box.size();
             double efficiency = ( num_cells == 0 ? 1.e0 :
@@ -536,11 +536,11 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
           * is needed.
           */
 
-         tbox::MPI::comm keep_me = tbox::MPI::getCommunicator();
-         tbox::MPI::setCommunicator(comm_bound_box);
+         tbox::SAMRAI_MPI::comm keep_me = tbox::SAMRAI_MPI::getCommunicator();
+         tbox::SAMRAI_MPI::setCommunicator(comm_bound_box);
          need_to_recursively_split = 
-            tbox::MPI::bcast(need_to_recursively_split, 0);
-         tbox::MPI::setCommunicator(keep_me);
+            tbox::SAMRAI_MPI::bcast(need_to_recursively_split, 0);
+         tbox::SAMRAI_MPI::setCommunicator(keep_me);
 
          if (need_to_recursively_split) {
    
@@ -554,8 +554,8 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
             hier::BoxList<DIM> box_list_rgt;
             hier::BoxList<DIM> box_list_lft;
    
-            tbox::MPI::comm comm_lft_box, comm_rgt_box;
-            tbox::MPI::group group_lft_box, group_rgt_box;
+            tbox::SAMRAI_MPI::comm comm_lft_box, comm_rgt_box;
+            tbox::SAMRAI_MPI::group group_lft_box, group_rgt_box;
 
             /*
              * recursive call to split box_lft
@@ -563,7 +563,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
             tree->buildParticipatingCommunicator(box_lft, comm_bound_box,
                                                  group_lft_box, comm_lft_box);
 
-            if ( tree->participates(tbox::MPI::getRank(), box_lft) ) {
+            if ( tree->participates(tbox::SAMRAI_MPI::getRank(), box_lft) ) {
                findBoxesContainingTagsCommunicators(
                                        box_list_lft, 
                                        level, index, tag_val,
@@ -572,7 +572,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
                                        recurse_level, comm_lft_box);
             }
 
-            if (comm_lft_box != tbox::MPI::commNull) {
+            if (comm_lft_box != tbox::SAMRAI_MPI::commNull) {
 #ifdef HAVE_MPI	      
                MPI_Comm_free(&comm_lft_box);
                MPI_Group_free(&group_lft_box);
@@ -585,7 +585,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
             tree->buildParticipatingCommunicator(box_rgt, comm_bound_box,
                                                  group_rgt_box, comm_rgt_box);
    
-            if ( tree->participates(tbox::MPI::getRank(), box_rgt) ) {
+            if ( tree->participates(tbox::SAMRAI_MPI::getRank(), box_rgt) ) {
                findBoxesContainingTagsCommunicators(
                                        box_list_rgt, 
                                        level, index, tag_val,
@@ -594,7 +594,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
                                        recurse_level, comm_rgt_box);
             }
 
-            if (comm_rgt_box != tbox::MPI::commNull) {
+            if (comm_rgt_box != tbox::SAMRAI_MPI::commNull) {
 #ifdef HAVE_MPI	      
                MPI_Comm_free(&comm_rgt_box);
                MPI_Group_free(&group_rgt_box);
@@ -605,7 +605,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
              * If splitting the bounding box is good,
              * P_0 adds the boxes to the list.
              */
-            if (tbox::MPI::getRank() == 0) {
+            if (tbox::SAMRAI_MPI::getRank() == 0) {
                if ( ((box_list_lft.getNumberItems() > 1) ||
                      (box_list_rgt.getNumberItems() > 1)) ||
                     ( (double) (box_list_lft.getFirstItem().size()
@@ -615,7 +615,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
                   boxes.catenateItems(box_list_lft);
                   boxes.catenateItems(box_list_rgt);
                }
-            } //if (tbox::MPI::getRank() == 0) 
+            } //if (tbox::SAMRAI_MPI::getRank() == 0) 
    
          } //if (need_to_recursively_split)
    
@@ -624,7 +624,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
           * to the list.
           */
    
-         if (tbox::MPI::getRank() == 0) {
+         if (tbox::SAMRAI_MPI::getRank() == 0) {
             if ( boxes.isEmpty() ) {
                boxes.appendItem(tag_bound_box);
             }
@@ -635,7 +635,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
    } //if (participates)
 
 //   if (recurse_level > 0) {
-      if (comm_bound_box != tbox::MPI::commNull) {
+      if (comm_bound_box != tbox::SAMRAI_MPI::commNull) {
 #ifdef HAVE_MPI	      
          MPI_Comm_free(&comm_bound_box);
          MPI_Group_free(&group_bound_box);
@@ -679,7 +679,7 @@ template<int DIM> bool BergerRigoutsos<DIM>::splitTagBoundBox(
    const hier::IntVector<DIM>& min_box) const 
 {
 
-   int cut_pt = -tbox::IEEE::getINT_MAX();
+   int cut_pt = -(tbox::MathUtilities<int>::getMax());
    int tmp_dim = -1; 
    int id = -1;
    hier::IntVector<DIM> num_cells(bound_box.numberCells()); 
@@ -832,8 +832,10 @@ template<int DIM> void BergerRigoutsos<DIM>::cutAtLaplacian(
    if ( (hi - lo + 1) >= 3 ) {
 
       int max_zero = 0;
-      const int infpt_lo = tbox::Utilities::imax(lo + min_size - 1, lo + 1);  
-      const int infpt_hi = tbox::Utilities::imin(hi - min_size, hi - 2);  
+      const int infpt_lo = tbox::MathUtilities<int>::Max(lo + min_size - 1, 
+                                                         lo + 1);  
+      const int infpt_hi = tbox::MathUtilities<int>::Min(hi - min_size, 
+                                                         hi - 2);  
 
       int last_lap = hist_box.histogramElt(id, infpt_lo - 1) 
                      - 2 * hist_box.histogramElt(id, infpt_lo)

@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryShapeSphere.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShapeSphere.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 726 $
-// Modified:    $Date: 2005-11-10 17:19:40 -0800 (Thu, 10 Nov 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Sphere embedded boundary shape
 //              
 // 
@@ -68,7 +68,7 @@ public:
     * @param input_db    the input database which contains radius and 
     *                    center specification.
     */
-   EmbeddedBoundaryShapeSphere(const string& object_name,
+   EmbeddedBoundaryShapeSphere(const std::string& object_name,
                                tbox::Pointer<tbox::Database> input_db);
    
    /*!
@@ -106,7 +106,7 @@ public:
    /*!
     * Dump data to supplied stream.
     */
-   void printClassData(ostream& os) const;
+   virtual void printClassData(std::ostream& os) const;
    
 private:   
 
@@ -117,7 +117,7 @@ private:
     */
    void getFromInput(tbox::Pointer<tbox::Database> db);
 
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Center and radius of the sphere.

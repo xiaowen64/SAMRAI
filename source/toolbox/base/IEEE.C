@@ -1,22 +1,21 @@
 //
-// File:	IEEE.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/IEEE.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	IEEE routines to set up handlers and get signaling NaNs
 //
 
 #include "tbox/IEEE.h"
-#include "tbox/MPI.h"
-#include <float.h>
-#include <math.h>
-#include <limits.h>
+
+#include "tbox/SAMRAI_MPI.h"
+#include "tbox/MathUtilities.h"
 
 /*
  * Floating point exception handling.  
  * 
- * The following lines setup exception handling header files.
+ * The following lines setup exception handling headers.
  */
 #if defined(HAVE_EXCEPTION_HANDLING)
 #include <stdlib.h>
@@ -43,62 +42,27 @@
 namespace SAMRAI {
    namespace tbox {
 
-
-/*
- * Create the function invoked when an exception is tripped. 
- */
-#if defined(HAVE_EXCEPTION_HANDLING)
-static void error_action(int error) 
-{
-   fprintf(stderr, "floating point exception -- program abort!\n");
-   abort();
-   MPI::abort();
-}
-#endif
-
-/*
- *  Settings for the various signaling NaNs on different systems
- */
-
-#if !defined(FLT_SNAN_IS_BROKEN)  
-float  IEEE::s_signaling_nan_float  = FLT_SNAN;
-#elif !defined(FLT_MAX_IS_BROKEN)
-float  IEEE::s_signaling_nan_float  = FLT_MAX;
-#else
-float  IEEE::s_signaling_nan_float  = NAN;
-#endif
-
-#if !defined(DBL_SNAN_IS_BROKEN)
-double  IEEE::s_signaling_nan_double  = DBL_SNAN;
-#elif !defined(DBL_MAX_IS_BROKEN)
-double  IEEE::s_signaling_nan_double  = DBL_MAX;
-#else
-double  IEEE::s_signaling_nan_double  = NAN;
-#endif
-
-int    IEEE::s_int_max = INT_MAX;
-int    IEEE::s_int_min = INT_MIN;
-float  IEEE::s_flt_max = FLT_MAX;
-float  IEEE::s_flt_min = FLT_MIN;
-float  IEEE::s_flt_epsilon = FLT_EPSILON;
-double IEEE::s_dbl_max = DBL_MAX;
-double IEEE::s_dbl_min = DBL_MIN;
-double IEEE::s_dbl_epsilon = DBL_EPSILON;
-   
-
-
 /*
 *************************************************************************
-*									*
 * Set up the IEEE exception handlers so that normal IEEE exceptions	*
 * will cause a program abort.  How this is done varies wildly from	*
 * architecture to architecture. 					*
 *************************************************************************
 */
 
-void IEEE::setupExceptionHandlers()
+/*
+ * Function celled when an exception is tripped. 
+ */
+#if defined(HAVE_EXCEPTION_HANDLING)
+static void error_action(int error) 
 {
+   fprintf(stderr, "floating point exception -- program abort!\n");
+   SAMRAI_MPI::abort();
+}
+#endif
 
+void IEEE::setupFloatingPointExceptionHandlers()
+{
 #if defined(HAVE_EXCEPTION_HANDLING)
    unsigned short fpu_flags = _FPU_DEFAULT;          
    fpu_flags &= ~_FPU_MASK_IM;  /* Execption on Invalid operation */
@@ -112,171 +76,40 @@ void IEEE::setupExceptionHandlers()
 /*
 *************************************************************************
 *									*
-* Initialize float and double values to the signaling nan.              *
-* Initialize int to INT_MAX.                                            *
+* Routines to initialize arrays to signaling NaNs.                      * 
 *									*
 *************************************************************************
 */
 
-void IEEE::setNaN(float &f)
-{  
-   f = s_signaling_nan_float;
-}
-
-void IEEE::setNaN(double &d)
-{  
-   d = s_signaling_nan_double;
-}
-
-/*
-*************************************************************************
-*									*
-* Initialize float and double arrays to signaling NaNs.			*
-* Initialize int array to INT_MAX.                                      *
-*									*
-*************************************************************************
-*/
-
-void IEEE::initializeArrayToSignalingNaN(Array<float>& data)
+void IEEE::initializeArrayToSignalingNaN(Array<float>& array)
 {
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_signaling_nan_float;
-   }
+   MathUtilities<float>::setArrayToSignalingNaN(array);
 }
 
-void IEEE::initializeArrayToSignalingNaN(Array<double>& data)
+void IEEE::initializeArrayToSignalingNaN(Array<double>& array)
 {
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_signaling_nan_double;
-   }
+   MathUtilities<double>::setArrayToSignalingNaN(array);
 }
 
-void IEEE::initializeArrayToINT_MAX(Array<int>& data)
+void IEEE::initializeArrayToSignalingNaN(Array<dcomplex>& array)
 {
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_int_max;
-   }
+   MathUtilities<dcomplex>::setArrayToSignalingNaN(array);
 }
 
-void IEEE::initializeArrayToINT_MIN(Array<int>& data)
+void IEEE::initializeArrayToSignalingNaN(float* array, int n)
 {
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_int_min;
-   }
+   MathUtilities<float>::setArrayToSignalingNaN(array, n);
 }
 
-void IEEE::initializeArrayToFLT_MAX(Array<float>& data)
+void IEEE::initializeArrayToSignalingNaN(double* array, int n)
 {
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_flt_max;
-   }
+   MathUtilities<double>::setArrayToSignalingNaN(array, n);
 }
 
-void IEEE::initializeArrayToFLT_MIN(Array<float>& data)
+void IEEE::initializeArrayToSignalingNaN(dcomplex* array, int n)
 {
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_flt_min;
-   }
+   MathUtilities<dcomplex>::setArrayToSignalingNaN(array, n);
 }
-
-void IEEE::initializeArrayToDBL_MAX(Array<double>& data)
-{
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_dbl_max;
-   }
-}
-
-void IEEE::initializeArrayToDBL_MIN(Array<double>& data)
-{
-   for (int i = 0; i < data.getSize(); i++) {
-      data[i] = s_dbl_min;
-   }
-}
-
-void IEEE::initializeArrayToSignalingNaN(float *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_signaling_nan_float;
-   }
-}
-
-void IEEE::initializeArrayToSignalingNaN(double *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_signaling_nan_double;
-   }
-}
-
-void IEEE::initializeArrayToINT_MAX(int *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_int_max;
-   }
-}
-
-void IEEE::initializeArrayToINT_MIN(int *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_int_min;
-   }
-}
-
-void IEEE::initializeArrayToFLT_MAX(float *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_flt_max;
-   }
-}
-
-void IEEE::initializeArrayToFLT_MIN(float *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_flt_min;
-   }
-}
-
-void IEEE::initializeArrayToDBL_MAX(double *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_dbl_max;
-   }
-}
-
-void IEEE::initializeArrayToDBL_MIN(double *data, const int n)
-{
-   for (int i = 0; i < n; i++) {
-      data[i] = s_dbl_min;
-   }
-}
-
-/*
-*************************************************************************
-*									*
-* Return whether or not the value is a NaN.     	                *
-*									*
-*************************************************************************
-*/
-
-bool IEEE::isNaN(const float &f) 
-{
-   int i = isnan(f);
-   if (i != 0) {
-     return(true);
-   } else {
-     return(false);
-   }
-}
-
-bool IEEE::isNaN(const double &d) 
-{
-   int i = isnan(d);
-   if (i != 0) {
-     return(true);
-   } else {
-     return(false);
-   }
-}
-
 
 }
 }

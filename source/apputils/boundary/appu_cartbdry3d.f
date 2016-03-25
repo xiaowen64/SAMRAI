@@ -1,17 +1,17 @@
 c
-c  File:        appu_cartbdry3d.m4
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: F77 routines for Cartesian 3d boundary conditions
 c
 c
-c  File:        pdat_m4arrdim3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for dimensioning 3d arrays in FORTRAN routines.
 c
 c
@@ -41,11 +41,11 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_cartbdryparams3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 3d boundary constant common blocks
 c
       common/cartbdrylocparams3d/
@@ -322,11 +322,11 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_cartbdryparams3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 3d boundary constant common blocks
 c
       common/cartbdrylocparams3d/
@@ -974,11 +974,11 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_cartbdryparams3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 3d boundary constant common blocks
 c
       common/cartbdrylocparams3d/
@@ -1301,11 +1301,11 @@ c***********************************************************************
      &  X0Y0Z0in, X1Y0Z0in, X0Y1Z0in, X1Y1Z0in,
      &  X0Y0Z1in, X1Y0Z1in, X0Y1Z1in, X1Y1Z1in
 c
-c  File:        appu_cartbdryparams3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 3d boundary constant common blocks
 c
       common/cartbdrylocparams3d/
@@ -1383,11 +1383,11 @@ c***********************************************************************
      &  DIRICHLETin, XDIRICHLETin, YDIRICHLETin, ZDIRICHLETin,
      &  NEUMANNin, XNEUMANNin, YNEUMANNin, ZNEUMANNin
 c
-c  File:        appu_cartbdryparams3d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry3d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 3d boundary constant common blocks
 c
       common/cartbdrylocparams3d/

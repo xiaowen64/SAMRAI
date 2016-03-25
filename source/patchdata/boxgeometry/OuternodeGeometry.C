@@ -1,9 +1,9 @@
 //
-// File:	OuternodeGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OuternodeGeometry.C $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 483 $
-// Modified:	$Date: 2005-07-22 16:00:34 -0700 (Fri, 22 Jul 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for outernode centered objects
 //
 
@@ -16,9 +16,6 @@
 #include "NodeOverlap.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "OuternodeGeometry.I"
@@ -29,7 +26,7 @@ namespace SAMRAI {
 /*
 *************************************************************************
 
-Create a side geometry object given the box and ghost cell width.     
+Create a outernode geometry object given the box and ghost cell width.     
 
 *************************************************************************
 */
@@ -39,7 +36,7 @@ template<int DIM>  OuternodeGeometry<DIM>::OuternodeGeometry(
    const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    d_box    = box;
    d_ghosts = ghosts;
@@ -133,11 +130,9 @@ OuternodeGeometry<DIM>::doOverlap(
    const hier::Box<DIM> dst_node_box = NodeGeometry<DIM>::toNodeBox(dst_box);
    const hier::Box<DIM> src_node_box = NodeGeometry<DIM>::toNodeBox(src_box_shifted);
 
-   const hier::Box<DIM> quick_check = dst_node_box * src_node_box;
-
    // Compute the intersection (if any) for each of the side directions
 
-   if (!quick_check.empty()) {
+   if ( dst_node_box.intersects(src_node_box) ) {
 
       const hier::Box<DIM> msk_node_box = 
          NodeGeometry<DIM>::toNodeBox( hier::Box<DIM>::shift(src_mask, src_offset) );
@@ -164,7 +159,7 @@ OuternodeGeometry<DIM>::doOverlap(
 	 hig_node_box.lower(d) = hig_node_box.upper(d);
 	 dst_boxes.unionBoxes(hig_node_box * msk_node_box * dst_node_box);
 
-	 // Take away the interior of over_write interior is not set
+	 // Take away the interior if over_write interior is not set
 
 	 if (!overwrite_interior) {
 	    dst_boxes.removeIntersections(
@@ -173,9 +168,9 @@ OuternodeGeometry<DIM>::doOverlap(
 
       }  // loop over dim
 
-   }  // if (!quick_check.empty())  
+   }  // src and dst boxes intersect
 
-   // Create the side overlap data object using the boxes and source shift
+   // Create the outernode overlap data object using the boxes and source shift
 
    hier::BoxOverlap<DIM> *overlap = new NodeOverlap<DIM>(dst_boxes, src_offset);
    return(tbox::Pointer< hier::BoxOverlap<DIM> >(overlap));
@@ -214,11 +209,9 @@ OuternodeGeometry<DIM>::doOverlap(
    const hier::Box<DIM> dst_node_box = NodeGeometry<DIM>::toNodeBox(dst_box);
    const hier::Box<DIM> src_node_box = NodeGeometry<DIM>::toNodeBox(src_box_shifted);
 
-   const hier::Box<DIM> quick_check = dst_node_box * src_node_box;
-
    // Compute the intersection (if any) for each of the side directions
 
-   if (!quick_check.empty()) {
+   if ( dst_node_box.intersects(src_node_box) ) { 
 
       const hier::Box<DIM> msk_node_box = 
          NodeGeometry<DIM>::toNodeBox( hier::Box<DIM>::shift(src_mask, src_offset) );
@@ -254,7 +247,7 @@ OuternodeGeometry<DIM>::doOverlap(
 
       }  // loop over dim
 
-   }  // if (!quick_check.empty())  
+   }  // src and dst boxes intersect
 
    // Create the side overlap data object using the boxes and source shift
 
@@ -296,11 +289,9 @@ OuternodeGeometry<DIM>::doOverlap(
    const hier::Box<DIM> dst_node_box = NodeGeometry<DIM>::toNodeBox(dst_box);
    const hier::Box<DIM> src_node_box = NodeGeometry<DIM>::toNodeBox(src_box_shifted);
 
-   const hier::Box<DIM> quick_check = dst_node_box * src_node_box;
-
    // Compute the intersection (if any) for each of the side directions
 
-   if (!quick_check.empty()) {
+   if ( dst_node_box.intersects(src_node_box) ) { 
 
       const hier::Box<DIM> msk_node_box =
          NodeGeometry<DIM>::toNodeBox( hier::Box<DIM>::shift(src_mask, src_offset) );
@@ -352,7 +343,7 @@ OuternodeGeometry<DIM>::doOverlap(
 
       }  // loop over dst dim
 
-   }  // if (!quick_check.empty())  
+   }  // if src and dst boxes intersect
 
    // Create the side overlap data object using the boxes and source shift
 

@@ -1,20 +1,14 @@
 /*
- * File:        AsyncCommGroup.I
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommGroup.I $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2003 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: All-to-one and one-to-all communication using a tree.
  */
 
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -222,7 +216,7 @@ void AsyncCommGroup::setMPITag( const int mpi_tag )
 
 inline
 void AsyncCommGroup::setMPICommunicator(
-   MPI::comm &mpi_communicator )
+   SAMRAI_MPI::comm &mpi_communicator )
 {
    return;
 }

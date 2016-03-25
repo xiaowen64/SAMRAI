@@ -1,3 +1,10 @@
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/schedules/gen-input-files.sh $
+## Package:     SAMRAI tests
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Description: Support script for schedule tests.
+
 # This script generates input files that are used to 
 # test the different options available in 
 # xfer_RefineSchedule.  Here's what it does:

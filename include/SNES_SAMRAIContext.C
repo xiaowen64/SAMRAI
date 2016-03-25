@@ -1,9 +1,9 @@
 //
-// File:        SNES_SAMRAIContext.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1806 $
+// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
@@ -12,23 +12,17 @@
 
 #include "SNES_SAMRAIContext.h"
 
-#ifdef HAVE_PETSC
-
 #include "PETSc_SAMRAIVectorReal.h"
 #include "SAMRAIVectorReal.h"
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
+
+#ifdef HAVE_PETSC
 
 #define SOLV_SNES_SAMRAI_CONTEXT_VERSION (1)
 
 namespace SAMRAI {
-    namespace solv {
+namespace solv {
 
 /*
 *************************************************************************
@@ -39,41 +33,41 @@ namespace SAMRAI {
 *************************************************************************
 */
 template<int DIM> int SNES_SAMRAIContext<DIM>::SNESFuncEval(SNES snes,
-                                           Vec x,
-                                           Vec f,
-                                           void* ctx)
+							    Vec x,
+							    Vec f,
+							    void* ctx)
 {
    NULL_USE(snes);
    ((SNES_SAMRAIContext<DIM>*)ctx)->getSNESFunctions()->
-                                     evaluateNonlinearFunction(x, f);
+      evaluateNonlinearFunction(x, f);
    return(0);
 }
 
 template<int DIM> int SNES_SAMRAIContext<DIM>::SNESJacobianSet(SNES snes,
-                                              Vec x,
-                                              Mat* A,
-                                              Mat* B,
-                                              MatStructure* mstruct,
-                                              void* ctx)
+							       Vec x,
+							       Mat* A,
+							       Mat* B,
+							       MatStructure* mstruct,
+							       void* ctx)
 {
    NULL_USE(snes);
    int retval = 0;
    if ( ((SNES_SAMRAIContext<DIM>*)ctx)->getUsesExplicitJacobian() ) {
       retval =
-         ((SNES_SAMRAIContext<DIM>*)ctx)->getSNESFunctions()->
-                                             evaluateJacobian(x);
+	    ((SNES_SAMRAIContext<DIM>*)ctx)->getSNESFunctions()->
+	 evaluateJacobian(x);
    } else {
       int ierr = MatAssemblyBegin(*A, MAT_FINAL_ASSEMBLY); 
-                                               PETSC_SAMRAI_ERROR(ierr);
+      PETSC_SAMRAI_ERROR(ierr);
       ierr = MatAssemblyEnd(*A, MAT_FINAL_ASSEMBLY);  
-                                               PETSC_SAMRAI_ERROR(ierr);
+      PETSC_SAMRAI_ERROR(ierr);
    }
    return(retval);
 }
 
 template<int DIM> int SNES_SAMRAIContext<DIM>::SNESJacobianTimesVector(Mat M,
-                                                      Vec xin,
-                                                      Vec xout)
+								       Vec xin,
+								       Vec xout)
 {
    void* ctx;
    int ierr = 0;
@@ -81,7 +75,7 @@ template<int DIM> int SNES_SAMRAIContext<DIM>::SNESJacobianTimesVector(Mat M,
 
    ierr = MatShellGetContext(M, &ctx);         PETSC_SAMRAI_ERROR(ierr);
    return(((SNES_SAMRAIContext<DIM>*)ctx)->
-              getSNESFunctions()->jacobianTimesVector(xin, xout));
+	  getSNESFunctions()->jacobianTimesVector(xin, xout));
 }
 
 template<int DIM> int SNES_SAMRAIContext<DIM>::SNESsetupPreconditioner(void* ctx)
@@ -89,17 +83,17 @@ template<int DIM> int SNES_SAMRAIContext<DIM>::SNESsetupPreconditioner(void* ctx
    int ierr = 0;
    Vec current_solution;
    ierr = SNESGetSolution(((SNES_SAMRAIContext<DIM>*)ctx)->getSNESSolver(), 
-                          &current_solution);      PETSC_SAMRAI_ERROR(ierr);
+			  &current_solution);      PETSC_SAMRAI_ERROR(ierr);
    return( ((SNES_SAMRAIContext<DIM>*)ctx)->
-            getSNESFunctions()->setupPreconditioner(current_solution) );
+	   getSNESFunctions()->setupPreconditioner(current_solution) );
 }
 
 template<int DIM> int SNES_SAMRAIContext<DIM>::SNESapplyPreconditioner(void* ctx,
-                                                      Vec r,
-                                                      Vec z)
+								       Vec r,
+								       Vec z)
 {
    return( ((SNES_SAMRAIContext<DIM>*)ctx)->
-            getSNESFunctions()->applyPreconditioner(r, z) );
+	   getSNESFunctions()->applyPreconditioner(r, z) );
 }
 
 /*
@@ -113,27 +107,26 @@ template<int DIM> int SNES_SAMRAIContext<DIM>::SNESapplyPreconditioner(void* ctx
 *************************************************************************
 */
 template<int DIM>  SNES_SAMRAIContext<DIM>::SNES_SAMRAIContext(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    SNESAbstractFunctions* my_functions)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!(my_functions == (SNESAbstractFunctions*)NULL));
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!(my_functions == (SNESAbstractFunctions*)NULL));
 #endif
 
    d_object_name = object_name;
    d_context_needs_initialization = true;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, 
-                                                          this);
+							   this);
 
    /* 
     * Set default state.
     */
 
    d_SNES_solver    = ((SNES)NULL);
-   d_SLES_solver    = ((SLES)NULL);
    d_krylov_solver  = ((KSP)NULL);
    d_jacobian       = ((Mat)NULL);
    d_preconditioner = ((PC)NULL);
@@ -206,12 +199,12 @@ template<int DIM>  SNES_SAMRAIContext<DIM>::~SNES_SAMRAIContext()
 {
    if (d_solution_vector) {
       PETSc_SAMRAIVectorReal<DIM,double>::destroyPETScVector(
-                                               d_solution_vector);
+	 d_solution_vector);
    }
 
    if (d_residual_vector) {
       PETSc_SAMRAIVectorReal<DIM,double>::destroyPETScVector(
-                                               d_residual_vector);
+	 d_residual_vector);
    }  
 
    destroyPetscObjects();
@@ -232,11 +225,6 @@ template<int DIM> SNES SNES_SAMRAIContext<DIM>::getSNESSolver() const
 template<int DIM> SNESAbstractFunctions* SNES_SAMRAIContext<DIM>::getSNESFunctions() const
 {
    return(d_SNES_functions);
-}
-
-template<int DIM> SLES SNES_SAMRAIContext<DIM>::getSLESSolver() const
-{
-   return(d_SLES_solver);
 }
 
 template<int DIM> KSP SNES_SAMRAIContext<DIM>::getKrylovSolver() const
@@ -311,17 +299,17 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::setMaxFunctionEvaluations(int ma
    d_context_needs_initialization = true;
 }
 
-template<int DIM> string SNES_SAMRAIContext<DIM>::getForcingTermStrategy() const
+template<int DIM> std::string SNES_SAMRAIContext<DIM>::getForcingTermStrategy() const
 {
    return(d_forcing_term_strategy);
 }
 
-template<int DIM> void SNES_SAMRAIContext<DIM>::setForcingTermStrategy(string& strategy)
+template<int DIM> void SNES_SAMRAIContext<DIM>::setForcingTermStrategy(std::string& strategy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( strategy == "CONSTANT"  || 
-           strategy == "EWCHOICE1" || 
-           strategy == "EWCHOICE2" );
+   TBOX_ASSERT( strategy == "CONSTANT"  || 
+		strategy == "EWCHOICE1" || 
+		strategy == "EWCHOICE2" );
 #endif
    d_forcing_term_strategy = strategy;
    d_context_needs_initialization = true;
@@ -362,7 +350,7 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::setMaximumForcingTerm(double max
 
 template<int DIM> double SNES_SAMRAIContext<DIM>::getEWChoice2Exponent() const
 {
-  return(d_EW_choice2_alpha);
+   return(d_EW_choice2_alpha);
 }
 
 template<int DIM> void SNES_SAMRAIContext<DIM>::setEWChoice2Exponent(double alpha)
@@ -404,12 +392,12 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::setEWSafeguardThreshold(double t
    d_context_needs_initialization = true;
 }
 
-template<int DIM> string SNES_SAMRAIContext<DIM>::getLinearSolverType() const
+template<int DIM> std::string SNES_SAMRAIContext<DIM>::getLinearSolverType() const
 {
-  return(d_linear_solver_type);
+   return(d_linear_solver_type);
 }
 
-template<int DIM> void SNES_SAMRAIContext<DIM>::setLinearSolverType(string& type)
+template<int DIM> void SNES_SAMRAIContext<DIM>::setLinearSolverType(std::string& type)
 {
    d_linear_solver_type = type;
    d_context_needs_initialization = true;
@@ -439,11 +427,11 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::setLinearSolverAbsoluteTolerance
 
 template<int DIM> double SNES_SAMRAIContext<DIM>::getLinearSolverDivergenceTolerance() const
 {
-  return(d_linear_solver_divergence_tolerance);
+   return(d_linear_solver_divergence_tolerance);
 }
 
 template<int DIM> void SNES_SAMRAIContext<DIM>::setLinearSolverDivergenceTolerance(
-                                  double div_tol)
+   double div_tol)
 {
    d_linear_solver_divergence_tolerance = div_tol;
    d_context_needs_initialization = true;
@@ -471,12 +459,12 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::setMaximumGMRESKrylovDimension(i
    d_context_needs_initialization = true;
 }
 
-template<int DIM> string SNES_SAMRAIContext<DIM>::getGMRESOrthogonalizationMethod() const
+template<int DIM> std::string SNES_SAMRAIContext<DIM>::getGMRESOrthogonalizationMethod() const
 {
    return(d_gmres_orthogonalization_algorithm);
 }
 
-template<int DIM> void SNES_SAMRAIContext<DIM>::setGMRESOrthogonalizationMethod(string& method)
+template<int DIM> void SNES_SAMRAIContext<DIM>::setGMRESOrthogonalizationMethod(std::string& method)
 {
    d_gmres_orthogonalization_algorithm = method;
    d_context_needs_initialization = true;
@@ -493,12 +481,12 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::setUsesExplicitJacobian(bool use
    d_context_needs_initialization = true;
 }
 
-template<int DIM> string SNES_SAMRAIContext<DIM>::getDifferencingParameterMethod() const
+template<int DIM> std::string SNES_SAMRAIContext<DIM>::getDifferencingParameterMethod() const
 {
    return(d_differencing_parameter_strategy);
 }
 
-template<int DIM> void SNES_SAMRAIContext<DIM>::setDifferencingParameterMethod(string& method)
+template<int DIM> void SNES_SAMRAIContext<DIM>::setDifferencingParameterMethod(std::string& method)
 {
    d_differencing_parameter_strategy = method;
    d_context_needs_initialization = true;
@@ -510,7 +498,7 @@ template<int DIM> double SNES_SAMRAIContext<DIM>::getFunctionEvaluationError() c
 }
 
 template<int DIM> void SNES_SAMRAIContext<DIM>::setFunctionEvaluationError(
-                                  double evaluation_error)
+   double evaluation_error)
 {
    d_function_evaluation_error = evaluation_error;
    d_context_needs_initialization = true;
@@ -527,7 +515,7 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::initialize(
    tbox::Pointer< SAMRAIVectorReal<DIM,double> > solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!solution.isNull());
+   TBOX_ASSERT(!solution.isNull());
 #endif
 
    /*
@@ -555,18 +543,18 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::initialize(
 *************************************************************************
 */
 template<int DIM> void SNES_SAMRAIContext<DIM>::resetSolver(const int coarsest_level,
-                                           const int finest_level)
+							    const int finest_level)
 {
    tbox::Pointer< SAMRAIVectorReal<DIM,double> > solution_vector =
-       PETSc_SAMRAIVectorReal<DIM,double>::getSAMRAIVector(
-                                                d_solution_vector);
+      PETSc_SAMRAIVectorReal<DIM,double>::getSAMRAIVector(
+	 d_solution_vector);
    solution_vector->deallocateVectorData();
    solution_vector->resetLevels(coarsest_level, finest_level);
    solution_vector->allocateVectorData();
 
    tbox::Pointer< SAMRAIVectorReal<DIM,double> > residual_vector =
-         PETSc_SAMRAIVectorReal<DIM,double>::getSAMRAIVector(
-                                                  d_residual_vector);
+      PETSc_SAMRAIVectorReal<DIM,double>::getSAMRAIVector(
+	 d_residual_vector);
    residual_vector->deallocateVectorData();
    residual_vector->resetLevels(coarsest_level, finest_level);
    residual_vector->allocateVectorData();
@@ -585,18 +573,35 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::resetSolver(const int coarsest_l
 */
 template<int DIM> int SNES_SAMRAIContext<DIM>::solve()
 {
-    if ( d_context_needs_initialization ) initializePetscObjects();
+   int ierr;
 
-    int ierr = SNESSolve(d_SNES_solver,
-                         d_solution_vector,
-                         &d_nonlinear_iterations);  
-                         PETSC_SAMRAI_ERROR(ierr);
+   if ( d_context_needs_initialization ) initializePetscObjects();
 
-    ierr = SNESGetConvergedReason(d_SNES_solver,
-                                  &d_SNES_completion_code);  
-                                  PETSC_SAMRAI_ERROR(ierr);
+   Vec initial_guess;
 
-    return(((int)d_SNES_completion_code > 0) ? 1 : 0);
+   ierr = VecDuplicate(d_solution_vector, &initial_guess);
+   PETSC_SAMRAI_ERROR(ierr);
+
+   ierr = VecSet( initial_guess, 0.0); 
+   PETSC_SAMRAI_ERROR(ierr);
+   
+   ierr = SNESSolve(d_SNES_solver,
+		    initial_guess,
+		    d_solution_vector); 
+   PETSC_SAMRAI_ERROR(ierr);
+
+   ierr = SNESGetLinearSolveIterations(d_SNES_solver,
+				       &d_nonlinear_iterations);
+   PETSC_SAMRAI_ERROR(ierr);
+
+   ierr = SNESGetConvergedReason(d_SNES_solver,
+				 &d_SNES_completion_code);  
+   PETSC_SAMRAI_ERROR(ierr);
+
+   ierr = VecDestroy(initial_guess);
+   PETSC_SAMRAI_ERROR(ierr);
+
+   return(((int)d_SNES_completion_code > 0) ? 1 : 0);
 }
 
 /*
@@ -621,9 +626,9 @@ template<int DIM> int SNES_SAMRAIContext<DIM>::getNonlinearIterationCount() cons
 template<int DIM> int SNES_SAMRAIContext<DIM>::getTotalLinearIterationCount() const
 {
    int linear_itns;
-   int ierr = SNESGetNumberLinearIterations(d_SNES_solver, 
-                                            &linear_itns); 
-                                            PETSC_SAMRAI_ERROR(ierr);
+   int ierr = SNESGetLinearSolveIterations(d_SNES_solver, 
+					   &linear_itns); 
+   PETSC_SAMRAI_ERROR(ierr);
    return(linear_itns);
 }
 
@@ -636,33 +641,33 @@ template<int DIM> int SNES_SAMRAIContext<DIM>::getTotalLinearIterationCount() co
 *                                                                       *
 *************************************************************************
 */
-template<int DIM> void SNES_SAMRAIContext<DIM>::reportCompletionCode(ostream & os) const
+template<int DIM> void SNES_SAMRAIContext<DIM>::reportCompletionCode(std::ostream & os) const
 {
    switch ((int) d_SNES_completion_code) {
       case SNES_CONVERGED_FNORM_ABS:
-         os << " Fnorm less than specified absolute tolerance.\n";
-         break;
+	 os << " Fnorm less than specified absolute tolerance.\n";
+	 break;
       case SNES_CONVERGED_FNORM_RELATIVE:
-         os << " Fnorm less than specified relative tolerance.\n";
-         break;
+	 os << " Fnorm less than specified relative tolerance.\n";
+	 break;
       case SNES_CONVERGED_PNORM_RELATIVE:
-         os << " Step size less than specified tolerance.\n";
-         break;
+	 os << " Step size less than specified tolerance.\n";
+	 break;
       case SNES_DIVERGED_FUNCTION_COUNT:
-         os << " Maximum function evaluation count exceeded.\n";
-         break;
+	 os << " Maximum function evaluation count exceeded.\n";
+	 break;
       case SNES_DIVERGED_FNORM_NAN:
-         os << " Norm of F is NAN.\n";
-         break;
+	 os << " Norm of F is NAN.\n";
+	 break;
       case SNES_DIVERGED_MAX_IT	:
-         os << " Maximum nonlinear iteration count exceeded.\n";
-         break;
+	 os << " Maximum nonlinear iteration count exceeded.\n";
+	 break;
       case SNES_DIVERGED_LS_FAILURE:
-         os << " Failure in linesearch procedure.\n";
-         break;
+	 os << " Failure in linesearch procedure.\n";
+	 break;
       default:
-         os << " Inappropriate completion code reported.\n";
-         break;
+	 os << " Inappropriate completion code reported.\n";
+	 break;
    }
 }
 
@@ -683,37 +688,43 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::createPetscObjects()
     * and register method for nonlinear residual evaluation.
     */
    ierr = SNESCreate(PETSC_COMM_SELF,
-                     &d_SNES_solver); 
-                     PETSC_SAMRAI_ERROR(ierr);
+		     &d_SNES_solver); 
+   PETSC_SAMRAI_ERROR(ierr);
 
    ierr = SNESSetType(d_SNES_solver, 
-                      SNESLS); 
-                      PETSC_SAMRAI_ERROR(ierr);
+		      SNESLS); 
+   PETSC_SAMRAI_ERROR(ierr);
 
    ierr = SNESSetFunction(d_SNES_solver,
-                          d_residual_vector,
-                          SNES_SAMRAIContext<DIM>::SNESFuncEval,
-                          (void*) this);
-                          PETSC_SAMRAI_ERROR(ierr);
+			  d_residual_vector,
+			  SNES_SAMRAIContext<DIM>::SNESFuncEval,
+			  (void*) this);
+   PETSC_SAMRAI_ERROR(ierr);
    /*
     * Cache the linear solver object, as well as the wrapped Krylov
     * solver and preconditioner.
     */
-   ierr = SNESGetSLES(d_SNES_solver,
-                      &d_SLES_solver);
-                      PETSC_SAMRAI_ERROR(ierr);
+//   ierr = SNESGetSLES(d_SNES_solver,
+//                      &d_SLES_solver);
+//                      PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = SLESGetKSP(d_SLES_solver,
-                     &d_krylov_solver);
-                     PETSC_SAMRAI_ERROR(ierr);
+//   ierr = SLESGetKSP(d_SLES_solver,
+//                     &d_krylov_solver);
+//                     PETSC_SAMRAI_ERROR(ierr);
+
+
+
+   ierr = SNESGetKSP(d_SNES_solver,
+		     &d_krylov_solver);
+   PETSC_SAMRAI_ERROR(ierr);
 
    ierr = KSPSetPreconditionerSide(d_krylov_solver,
-                                   PC_RIGHT);
-                                   PETSC_SAMRAI_ERROR(ierr);
+				   PC_RIGHT);
+   PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = SLESGetPC(d_SLES_solver,
-                    &d_preconditioner);
-                    PETSC_SAMRAI_ERROR(ierr);
+   ierr = KSPGetPC(d_krylov_solver,
+		   &d_preconditioner);
+   PETSC_SAMRAI_ERROR(ierr);
 
 
 }
@@ -735,27 +746,27 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::initializePetscObjects()
     * the Jacobian-free option has been selected.
     */
    ierr = SNESSetTolerances(d_SNES_solver,
-                            d_absolute_tolerance,
-                            d_relative_tolerance,
-                            d_step_tolerance,
-                            d_maximum_nonlinear_iterations,
-                            d_maximum_function_evals);
-                            PETSC_SAMRAI_ERROR(ierr);
+			    d_absolute_tolerance,
+			    d_relative_tolerance,
+			    d_step_tolerance,
+			    d_maximum_nonlinear_iterations,
+			    d_maximum_function_evals);
+   PETSC_SAMRAI_ERROR(ierr);
 
    if (!(d_forcing_term_strategy == "CONSTANT") ) {
 
-      ierr = SNES_KSP_SetConvergenceTestEW(d_SNES_solver);
-                                           PETSC_SAMRAI_ERROR(ierr);
+      ierr = SNESKSPSetUseEW(d_SNES_solver, PETSC_TRUE);
+      PETSC_SAMRAI_ERROR(ierr);
 
-      ierr = SNES_KSP_SetParametersEW(d_SNES_solver,
-                                      d_forcing_term_flag,
-                                      d_initial_forcing_term,
-                                      d_maximum_forcing_term,
-                                      d_EW_choice2_gamma,
-                                      d_EW_choice2_alpha,
-                                      d_EW_safeguard_exponent,
-                                      d_EW_safeguard_disable_threshold);
-                                      PETSC_SAMRAI_ERROR(ierr);
+      ierr = SNESKSPSetParametersEW(d_SNES_solver,
+				    d_forcing_term_flag,
+				    d_initial_forcing_term,
+				    d_maximum_forcing_term,
+				    d_EW_choice2_gamma,
+				    d_EW_choice2_alpha,
+				    d_EW_safeguard_exponent,
+				    d_EW_safeguard_disable_threshold);
+      PETSC_SAMRAI_ERROR(ierr);
    }
 
    /*
@@ -769,52 +780,51 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::initializePetscObjects()
    if (d_uses_explicit_jacobian) {
 
       ierr = MatCreateShell(PETSC_COMM_SELF,
-                            0,   // dummy number of local rows
-                            0,   // dummy number of local columns
-                            PETSC_DETERMINE,
-                            PETSC_DETERMINE,
-                            (void*) this,
-                            &d_jacobian);
-                            PETSC_SAMRAI_ERROR(ierr);
+			    0,   // dummy number of local rows
+			    0,   // dummy number of local columns
+			    PETSC_DETERMINE,
+			    PETSC_DETERMINE,
+			    (void*) this,
+			    &d_jacobian);
+      PETSC_SAMRAI_ERROR(ierr);
     
       ierr = MatShellSetOperation(d_jacobian, 
-                                  MATOP_MULT,
-                                  (void(*)()) SNES_SAMRAIContext<DIM>::
-                                  SNESJacobianTimesVector);
-                                  PETSC_SAMRAI_ERROR(ierr); 
+				  MATOP_MULT,
+				  (void(*)()) SNES_SAMRAIContext<DIM>::
+				  SNESJacobianTimesVector);
+      PETSC_SAMRAI_ERROR(ierr); 
 
    } else {
 
       ierr = MatCreateSNESMF(d_SNES_solver,
-                             d_solution_vector,
-                             &d_jacobian);
-                             PETSC_SAMRAI_ERROR(ierr);
+			     &d_jacobian);
+      PETSC_SAMRAI_ERROR(ierr);
 
-      ierr = MatSNESMFSetType(
-                d_jacobian,
-                (MatSNESMFType)d_differencing_parameter_strategy.c_str() );
+      ierr = MatMFFDSetType(
+	 d_jacobian,
+	 (MatMFFDType)d_differencing_parameter_strategy.c_str() );
 
-      ierr = MatSNESMFSetFunctionError(d_jacobian, 
-                                       d_function_evaluation_error);
+      ierr = MatMFFDSetFunctionError(d_jacobian, 
+				     d_function_evaluation_error);
    }
 
-  /*
-   * Register method for setting up Jacobian; this is the same
-   * for both options.
-   *
-   * N.B.  In principle, the second Mat argument should not 
-   * be the same as the first Mat argument.  However we 
-   * restrict to either no preconditioner, or a shell 
-   * preconditioner; in these circumstances that seems to 
-   * cause no problem, since the shell preconditioner provides 
-   * its own setup method.
-   */
+   /*
+    * Register method for setting up Jacobian; this is the same
+    * for both options.
+    *
+    * N.B.  In principle, the second Mat argument should not 
+    * be the same as the first Mat argument.  However we 
+    * restrict to either no preconditioner, or a shell 
+    * preconditioner; in these circumstances that seems to 
+    * cause no problem, since the shell preconditioner provides 
+    * its own setup method.
+    */
    ierr = SNESSetJacobian(d_SNES_solver,
-                          d_jacobian,
-                          d_jacobian,
-                          SNES_SAMRAIContext<DIM>::SNESJacobianSet,
-                          (void*) this);
-                          PETSC_SAMRAI_ERROR(ierr);
+			  d_jacobian,
+			  d_jacobian,
+			  SNES_SAMRAIContext<DIM>::SNESJacobianSet,
+			  (void*) this);
+   PETSC_SAMRAI_ERROR(ierr);
 
    /*
     * Initialize the Krylov solver object.  This includes setting the
@@ -822,40 +832,46 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::initializePetscObjects()
     * method.
     */
    ierr = KSPSetType(d_krylov_solver,
-                     (KSPType) d_linear_solver_type.c_str());
-                     PETSC_SAMRAI_ERROR(ierr);
+		     (KSPType) d_linear_solver_type.c_str());
+   PETSC_SAMRAI_ERROR(ierr);
 
    if ( d_linear_solver_type == "gmres" ) {
 
       ierr = KSPGMRESSetRestart(
-                d_krylov_solver,
-                d_maximum_gmres_krylov_dimension);
-                PETSC_SAMRAI_ERROR(ierr);
+	 d_krylov_solver,
+	 d_maximum_gmres_krylov_dimension);
+      PETSC_SAMRAI_ERROR(ierr);
 
       if (d_gmres_orthogonalization_algorithm == "modifiedgramschmidt") {
 
-         ierr = KSPGMRESSetOrthogonalization(
-                   d_krylov_solver,
-                   KSPGMRESModifiedGramSchmidtOrthogonalization); 
-                   PETSC_SAMRAI_ERROR(ierr);
+	 ierr = KSPGMRESSetOrthogonalization(
+	    d_krylov_solver,
+	    KSPGMRESModifiedGramSchmidtOrthogonalization); 
+	 PETSC_SAMRAI_ERROR(ierr);
 
-      } else if (d_gmres_orthogonalization_algorithm == "irorthog") {
+      } else if (d_gmres_orthogonalization_algorithm == "gmres_cgs_refine_ifneeded") {
 
-         ierr = KSPGMRESSetOrthogonalization(
-                   d_krylov_solver,
-                   KSPGMRESIROrthogonalization);
-                   PETSC_SAMRAI_ERROR(ierr);
+	 ierr = KSPGMRESSetCGSRefinementType(
+	    d_krylov_solver,
+	    KSP_GMRES_CGS_REFINE_IFNEEDED);
+	 PETSC_SAMRAI_ERROR(ierr);
+      } else if (d_gmres_orthogonalization_algorithm == "gmres_cgs_refine_always") {
+
+	 ierr = KSPGMRESSetCGSRefinementType(
+	    d_krylov_solver,
+	    KSP_GMRES_CGS_REFINE_ALWAYS);
+	 PETSC_SAMRAI_ERROR(ierr);
       }
    }
 
    if ( d_forcing_term_strategy == "CONSTANT" ) {
 
       ierr = KSPSetTolerances(d_krylov_solver,
-                              d_constant_forcing_term,
-                              d_linear_solver_absolute_tolerance,
-                              d_linear_solver_divergence_tolerance,
-                              d_maximum_linear_iterations);
-                              PETSC_SAMRAI_ERROR(ierr);
+			      d_constant_forcing_term,
+			      d_linear_solver_absolute_tolerance,
+			      d_linear_solver_divergence_tolerance,
+			      d_maximum_linear_iterations);
+      PETSC_SAMRAI_ERROR(ierr);
    } 
 
    /*
@@ -865,27 +881,29 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::initializePetscObjects()
     */
    if (d_uses_preconditioner) {
 
-      string pc_type = "shell";
+      std::string pc_type = "shell";
       ierr = PCSetType(d_preconditioner,
-                       (PCType) pc_type.c_str());
-                       PETSC_SAMRAI_ERROR(ierr);
+		       (PCType) pc_type.c_str());
+      PETSC_SAMRAI_ERROR(ierr);
 
       ierr = PCShellSetSetUp(
-                d_preconditioner,
-                SNES_SAMRAIContext<DIM>::SNESsetupPreconditioner);
-                PETSC_SAMRAI_ERROR(ierr);
+	 d_preconditioner,
+	 SNES_SAMRAIContext<DIM>::SNESsetupPreconditioner);
+      PETSC_SAMRAI_ERROR(ierr);
+
+      ierr = PCShellSetContext(d_preconditioner, this);
+      PETSC_SAMRAI_ERROR(ierr);
 
       ierr = PCShellSetApply(d_preconditioner,
-                             SNES_SAMRAIContext<DIM>::SNESapplyPreconditioner,
-                             (void*) this); 
-                             PETSC_SAMRAI_ERROR(ierr); 
+			     SNES_SAMRAIContext<DIM>::SNESapplyPreconditioner); 
+      PETSC_SAMRAI_ERROR(ierr); 
 
    } else {
     
-      string pc_type = "none";
+      std::string pc_type = "none";
       ierr = PCSetType(d_preconditioner,
-                       (PCType) pc_type.c_str());
-                       PETSC_SAMRAI_ERROR(ierr);
+		       (PCType) pc_type.c_str());
+      PETSC_SAMRAI_ERROR(ierr);
 
    }
 
@@ -907,10 +925,10 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::destroyPetscObjects()
    }
 
    if (d_SNES_solver) {
-     SNESDestroy(d_SNES_solver);
-     if (d_SLES_solver) d_SLES_solver = ((SLES)NULL);
-     if (d_preconditioner) d_preconditioner = ((PC)NULL);
-     if (d_krylov_solver) d_krylov_solver = ((KSP)NULL);
+      SNESDestroy(d_SNES_solver);
+//     if (d_SLES_solver) d_SLES_solver = ((SLES)NULL);
+      if (d_preconditioner) d_preconditioner = ((PC)NULL);
+      if (d_krylov_solver) d_krylov_solver = ((KSP)NULL);
    }
 }
 
@@ -925,12 +943,12 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::destroyPetscObjects()
 template<int DIM> void SNES_SAMRAIContext<DIM>::getFromInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    if (db->keyExists("maximum_nonlinear_iterations")) {
       d_maximum_nonlinear_iterations = 
-         db->getInteger("maximum_nonlinear_iterations");
+	 db->getInteger("maximum_nonlinear_iterations");
    }
    if (db->keyExists("maximum_function_evals")) {
       d_maximum_function_evals = db->getInteger("maximum_function_evals");
@@ -955,13 +973,13 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::getFromInput(tbox::Pointer<tbox:
    if (db->keyExists("forcing_term_strategy")) {
       d_forcing_term_strategy = db->getString("forcing_term_strategy");
       if (d_forcing_term_strategy == "EWCHOICE1") {
-         d_forcing_term_flag = 1; 
+	 d_forcing_term_flag = 1; 
       } else if (d_forcing_term_strategy == "EWCHOICE2") {
-         d_forcing_term_flag = 2;
+	 d_forcing_term_flag = 2;
       } else if ( !(d_forcing_term_strategy == "CONSTANT") ) {
-         TBOX_ERROR(d_object_name << ": "
-                   << "Key data `forcing_term_strategy' = "
-                   << d_forcing_term_strategy << " in input not recognized.");
+	 TBOX_ERROR(d_object_name << ": "
+		    << "Key data `forcing_term_strategy' = "
+		    << d_forcing_term_strategy << " in input not recognized.");
       }
    }
 
@@ -985,7 +1003,7 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::getFromInput(tbox::Pointer<tbox:
    }
    if (db->keyExists("EW_safeguard_disable_threshold")) {
       d_EW_safeguard_disable_threshold =
-         db->getDouble("EW_safeguard_disable_threshold");
+	 db->getDouble("EW_safeguard_disable_threshold");
    }
 
    if (db->keyExists("linear_solver_type")) {
@@ -993,33 +1011,33 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::getFromInput(tbox::Pointer<tbox:
    }
    if (db->keyExists("linear_solver_absolute_tolerance")) {
       d_linear_solver_absolute_tolerance =
-         db->getDouble("linear_solver_absolute_tolerance");
+	 db->getDouble("linear_solver_absolute_tolerance");
    }
    if (db->keyExists("linear_solver_divergence_tolerance")) {
       d_linear_solver_divergence_tolerance =
-         db->getDouble("linear_solver_divergence_tolerance");
+	 db->getDouble("linear_solver_divergence_tolerance");
    }
    if (db->keyExists("maximum_linear_iterations")) {
       d_maximum_linear_iterations = 
-         db->getInteger("maximum_linear_iterations");
+	 db->getInteger("maximum_linear_iterations");
    }
 
    if (db->keyExists("maximum_gmres_krylov_dimension")) {
       d_maximum_gmres_krylov_dimension = 
-         db->getInteger("maximum_gmres_krylov_dimension");		
+	 db->getInteger("maximum_gmres_krylov_dimension");		
    }
    if (db->keyExists("gmres_orthogonalization_algorithm")) {
       d_gmres_orthogonalization_algorithm = 
-         db->getString("gmres_orthogonalization_algorithm");
+	 db->getString("gmres_orthogonalization_algorithm");
    }
 
    if (db->keyExists("differencing_parameter_strategy")) {
       d_differencing_parameter_strategy =
-         db->getString("differencing_parameter_strategy");
+	 db->getString("differencing_parameter_strategy");
    }
    if (db->keyExists("function_evaluation_error")) {
       d_function_evaluation_error = 
-         db->getDouble("function_evaluation_error");
+	 db->getDouble("function_evaluation_error");
    }
 
 }
@@ -1043,14 +1061,14 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::getFromRestart()
       db = root_db->getDatabase(d_object_name);
    } else {
       TBOX_ERROR("Restart database corresponding to "
-                 << d_object_name << " not found in restart file");
+		 << d_object_name << " not found in restart file");
    }
 
    int ver = db->getInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_SNES_SAMRAI_CONTEXT_VERSION) {
       TBOX_ERROR(d_object_name << ":  "
-              << "Restart file version different "
-              << "than class version.");
+		 << "Restart file version different "
+		 << "than class version.");
    }
 
    d_uses_preconditioner = db->getBool("d_uses_preconditioner");
@@ -1099,17 +1117,17 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION",
-                  SOLV_SNES_SAMRAI_CONTEXT_VERSION);
+		  SOLV_SNES_SAMRAI_CONTEXT_VERSION);
 
    db->putBool("d_uses_preconditioner", d_uses_preconditioner);
    db->putBool("d_uses_explicit_jacobian", d_uses_explicit_jacobian);
 
    db->putInteger("d_maximum_nonlinear_iterations",
-                  d_maximum_nonlinear_iterations);
+		  d_maximum_nonlinear_iterations);
    db->putInteger("d_maximum_function_evals", d_maximum_function_evals);
 
    db->putDouble("d_absolute_tolerance", d_absolute_tolerance);
@@ -1126,25 +1144,25 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::putToDatabase(
    db->putDouble("d_EW_choice2_gamma", d_EW_choice2_gamma);
    db->putDouble("d_EW_safeguard_exponent", d_EW_safeguard_exponent);
    db->putDouble("d_EW_safeguard_disable_threshold",
-                 d_EW_safeguard_disable_threshold);
+		 d_EW_safeguard_disable_threshold);
 
    db->putString("d_linear_solver_type", d_linear_solver_type);
    db->putDouble("d_linear_solver_absolute_tolerance", 
-                 d_linear_solver_absolute_tolerance);
+		 d_linear_solver_absolute_tolerance);
    db->putDouble("d_linear_solver_divergence_tolerance",
-                 d_linear_solver_divergence_tolerance);
+		 d_linear_solver_divergence_tolerance);
    db->putInteger("d_maximum_linear_iterations", 
-                  d_maximum_linear_iterations);
+		  d_maximum_linear_iterations);
 
    db->putInteger("d_maximum_gmres_krylov_dimension",
-                  d_maximum_gmres_krylov_dimension);
+		  d_maximum_gmres_krylov_dimension);
    db->putString("d_gmres_orthogonalization_algorithm",
-                  d_gmres_orthogonalization_algorithm);
+		 d_gmres_orthogonalization_algorithm);
 
    db->putDouble("d_function_evaluation_error",
-                 d_function_evaluation_error);
+		 d_function_evaluation_error);
    db->putString("d_differencing_parameter_strategy",
-                 d_differencing_parameter_strategy);
+		 d_differencing_parameter_strategy);
 
 }
 
@@ -1156,62 +1174,62 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::putToDatabase(
 *************************************************************************
 */
 
-template<int DIM> void SNES_SAMRAIContext<DIM>::printClassData(ostream& os) const
+template<int DIM> void SNES_SAMRAIContext<DIM>::printClassData(std::ostream& os) const
 {
-   os << "\nSNES_SAMRAIContext<DIM>::printClassData..." << endl;
+   os << "\nSNES_SAMRAIContext<DIM>::printClassData..." << std::endl;
    os << "SNES_SAMRAIContext<DIM>: this = "
-      << (SNES_SAMRAIContext<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << (SNES_SAMRAIContext<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_SNES_functions = " 
-      << (SNESAbstractFunctions*)d_SNES_functions << endl; 
-   os << "d_SNES_solver = " << (SNES)d_SNES_solver << endl; 
-   os << "d_SLES_solver = " << (SLES)d_SLES_solver << endl; 
-   os << "d_krylov_solver = " << (KSP)d_krylov_solver << endl; 
-   os << "d_jacobian = " << (Mat*)&d_jacobian << endl; 
-   os << "d_preconditioner = " << (PC*)&d_preconditioner << endl; 
+      << (SNESAbstractFunctions*)d_SNES_functions << std::endl; 
+   os << "d_SNES_solver = " << (SNES)d_SNES_solver << std::endl; 
+//   os << "d_SLES_solver = " << (SLES)d_SLES_solver << std::endl; 
+   os << "d_krylov_solver = " << (KSP)d_krylov_solver << std::endl; 
+   os << "d_jacobian = " << (Mat*)&d_jacobian << std::endl; 
+   os << "d_preconditioner = " << (PC*)&d_preconditioner << std::endl; 
 
-   os << "d_solution_vector = " << (Vec*)&d_solution_vector << endl; 
-   os << "d_residual_vector = " << (Vec*)&d_residual_vector << endl; 
+   os << "d_solution_vector = " << (Vec*)&d_solution_vector << std::endl; 
+   os << "d_residual_vector = " << (Vec*)&d_residual_vector << std::endl; 
 
-   os << "d_uses_preconditioner = " << d_uses_preconditioner << endl;
-   os << "d_uses_explicit_jacobian = " << d_uses_explicit_jacobian << endl;
+   os << "d_uses_preconditioner = " << d_uses_preconditioner << std::endl;
+   os << "d_uses_explicit_jacobian = " << d_uses_explicit_jacobian << std::endl;
 
    os << "d_maximum_nonlinear_iterations = " 
-      << d_maximum_nonlinear_iterations << endl;
-   os << "d_maximum_function_evals = " << d_maximum_function_evals << endl;
+      << d_maximum_nonlinear_iterations << std::endl;
+   os << "d_maximum_function_evals = " << d_maximum_function_evals << std::endl;
 
-   os << "d_absolute_tolerance = " << d_absolute_tolerance << endl;
-   os << "d_relative_tolerance = " << d_relative_tolerance << endl;
-   os << "d_step_tolerance = " << d_step_tolerance << endl;
+   os << "d_absolute_tolerance = " << d_absolute_tolerance << std::endl;
+   os << "d_relative_tolerance = " << d_relative_tolerance << std::endl;
+   os << "d_step_tolerance = " << d_step_tolerance << std::endl;
 
-   os << "d_forcing_term_strategy = " << d_forcing_term_strategy << endl;
-   os << "d_forcing_term_flag = " << d_forcing_term_flag << endl;
+   os << "d_forcing_term_strategy = " << d_forcing_term_strategy << std::endl;
+   os << "d_forcing_term_flag = " << d_forcing_term_flag << std::endl;
  
-   os << "d_constant_forcing_term = " << d_constant_forcing_term << endl;
-   os << "d_initial_forcing_term = " << d_initial_forcing_term << endl;
-   os << "d_EW_choice2_alpha = " << d_EW_choice2_alpha << endl;
-   os << "d_EW_choice2_gamma = " << d_EW_choice2_gamma << endl;
-   os << "d_EW_safeguard_exponent = " << d_EW_safeguard_exponent << endl;
+   os << "d_constant_forcing_term = " << d_constant_forcing_term << std::endl;
+   os << "d_initial_forcing_term = " << d_initial_forcing_term << std::endl;
+   os << "d_EW_choice2_alpha = " << d_EW_choice2_alpha << std::endl;
+   os << "d_EW_choice2_gamma = " << d_EW_choice2_gamma << std::endl;
+   os << "d_EW_safeguard_exponent = " << d_EW_safeguard_exponent << std::endl;
    os << "d_EW_safeguard_disable_threshold = " 
-      << d_EW_safeguard_disable_threshold << endl;
+      << d_EW_safeguard_disable_threshold << std::endl;
 
-   os << "d_linear_solver_type = " << d_linear_solver_type << endl;
+   os << "d_linear_solver_type = " << d_linear_solver_type << std::endl;
    os << "d_linear_solver_absolute_tolerance = " 
-      << d_linear_solver_absolute_tolerance << endl;
+      << d_linear_solver_absolute_tolerance << std::endl;
    os << "d_linear_solver_divergence_tolerance = " 
-      << d_linear_solver_divergence_tolerance << endl;
+      << d_linear_solver_divergence_tolerance << std::endl;
    os << "d_maximum_linear_iterations = " 
-      << d_maximum_linear_iterations << endl;
+      << d_maximum_linear_iterations << std::endl;
 
    os << "d_maximum_gmres_krylov_dimension = " 
-      << d_maximum_gmres_krylov_dimension << endl;
+      << d_maximum_gmres_krylov_dimension << std::endl;
    os << "d_gmres_orthogonalization_algorithm = " 
-      << d_gmres_orthogonalization_algorithm << endl;
+      << d_gmres_orthogonalization_algorithm << std::endl;
 
    os << "d_differencing_parameter_strategy = " 
-      << d_differencing_parameter_strategy << endl;
+      << d_differencing_parameter_strategy << std::endl;
    os << "d_function_evaluation_error = " 
-      << d_function_evaluation_error << endl;
+      << d_function_evaluation_error << std::endl;
 }
 
 }

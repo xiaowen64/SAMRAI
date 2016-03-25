@@ -1,9 +1,9 @@
 //
-// File:	Geometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/operators/Geometry.C $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for interface between transfer ops and geometry.
 //
 
@@ -29,7 +29,7 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM>  Geometry<DIM>::Geometry(const string &object_name) 
+template<int DIM>  Geometry<DIM>::Geometry(const std::string &object_name) 
 : hier::GridGeometry<DIM>(object_name)
 {
 }
@@ -75,7 +75,7 @@ template<int DIM> void Geometry<DIM>::addTimeInterpolateOperator(
 template<int DIM> tbox::Pointer< CoarsenOperator<DIM> >
 Geometry<DIM>::lookupCoarsenOperator(
    const tbox::Pointer< hier::Variable<DIM> >& var,
-   const string& op_name) const
+   const std::string& op_name) const
 {
    tbox::Pointer< CoarsenOperator<DIM> > coarsen_op = NULL;
    bool found_op = false;
@@ -109,7 +109,7 @@ Geometry<DIM>::lookupCoarsenOperator(
 template<int DIM> tbox::Pointer< RefineOperator<DIM> >
 Geometry<DIM>::lookupRefineOperator(
    const tbox::Pointer< hier::Variable<DIM> >& var,
-   const string& op_name) const
+   const std::string& op_name) const
 {
    tbox::Pointer< RefineOperator<DIM> > refine_op = NULL;
    bool found_op = false;
@@ -143,7 +143,7 @@ Geometry<DIM>::lookupRefineOperator(
 template<int DIM> tbox::Pointer< TimeInterpolateOperator<DIM> >
 Geometry<DIM>::lookupTimeInterpolateOperator(
    const tbox::Pointer< hier::Variable<DIM> >& var,
-   const string& op_name) const
+   const std::string& op_name) const
 {
    tbox::Pointer< TimeInterpolateOperator<DIM> > time_op = NULL;
    bool found_op = false;
@@ -181,32 +181,32 @@ Geometry<DIM>::lookupTimeInterpolateOperator(
 *************************************************************************
 */
 
-template<int DIM> void Geometry<DIM>::printClassData(ostream& os) const
+template<int DIM> void Geometry<DIM>::printClassData(std::ostream& os) const
 {
-   os << "printing Geometry<DIM> data..." << endl;
-   os << "Geometry<DIM>: this = " << (Geometry<DIM>*)this << endl;
+   os << "printing Geometry<DIM> data..." << std::endl;
+   os << "Geometry<DIM>: this = " << (Geometry<DIM>*)this << std::endl;
 
-   os << "Coarsen operator list: " << endl;
+   os << "Coarsen operator list: " << std::endl;
    typename tbox::List< tbox::Pointer< CoarsenOperator<DIM> > >::Iterator
       cop = d_coarsen_operators.listStart();
    while( cop ) {
-      os << (CoarsenOperator<DIM>*) cop() << endl;
+      os << (CoarsenOperator<DIM>*) cop() << std::endl;
       cop++;
    }
 
-   os << "Refine operator list: " << endl;
+   os << "Refine operator list: " << std::endl;
    typename tbox::List< tbox::Pointer< RefineOperator<DIM> > >::Iterator
       rop = d_refine_operators.listStart();
    while( rop ) {
-      os << (RefineOperator<DIM>*) rop() << endl;
+      os << (RefineOperator<DIM>*) rop() << std::endl;
       rop++;
    }
 
-   os << "Time interpolate operator list: " << endl;
+   os << "Time interpolate operator list: " << std::endl;
    typename tbox::List< tbox::Pointer< TimeInterpolateOperator<DIM> > >::Iterator
       top = d_time_operators.listStart();
    while( top ) {
-      os << (TimeInterpolateOperator<DIM>*) top() << endl;
+      os << (TimeInterpolateOperator<DIM>*) top() << std::endl;
       top++;
    }
 

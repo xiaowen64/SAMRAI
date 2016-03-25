@@ -1,9 +1,9 @@
 //
-// File:	Patch.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/Patch.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 407 $
-// Modified:	$Date: 2005-06-01 09:49:54 -0700 (Wed, 01 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Patch container class for patch data objects
 //
 
@@ -12,7 +12,6 @@
 
 #include <typeinfo>
 #include <string>
-using namespace std;
 
 #include "Patch.h"
 
@@ -20,10 +19,6 @@ using namespace std;
 #define included_String
 #include "tbox/Utilities.h"
 #include "PatchDataFactory.h"
-#include "VariableDatabase.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define HIER_PATCH_VERSION (2)
 
@@ -41,16 +36,16 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM>  Patch<DIM>::Patch(const Box<DIM>& box,
-                         tbox::Pointer< PatchDescriptor<DIM> > descriptor)
+template<int DIM>  
+Patch<DIM>::Patch(const Box<DIM>& box,
+                  tbox::Pointer< PatchDescriptor<DIM> > descriptor)
+:
+   d_box(box),
+   d_descriptor(descriptor),
+   d_patch_number(-1),
+   d_patch_level_number(-1),
+   d_patch_in_hierarchy(false)
 {
-   d_box          = box;
-   d_descriptor   = descriptor;
-   d_patch_number = -1;
-   d_patch_level_number = -1;
-   d_patch_in_hierarchy = false;
-   d_touches_regular_boundary = false;
-   d_touches_periodic_boundary = false;
 }
 
 /*
@@ -111,7 +106,7 @@ template<int DIM> void Patch<DIM>::allocatePatchData(const int id,
 {
    const int ncomponents = d_descriptor->getMaxNumberRegisteredComponents();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((id >= 0) && (id < ncomponents));
+   TBOX_ASSERT((id >= 0) && (id < ncomponents));
 #endif
 
    if (ncomponents > d_patch_data.getSize()) {
@@ -119,7 +114,7 @@ template<int DIM> void Patch<DIM>::allocatePatchData(const int id,
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(d_patch_data[id].isNull());
+   TBOX_ASSERT(d_patch_data[id].isNull());
 #endif
 
    if (pool.isNull()) {
@@ -127,7 +122,7 @@ template<int DIM> void Patch<DIM>::allocatePatchData(const int id,
    }
 
    d_patch_data[id] =
-      d_descriptor->getPatchDataFactory(id)->allocate(d_box, pool);
+      d_descriptor->getPatchDataFactory(id)->allocate(*this, pool);
    d_patch_data[id]->setTime(time);
 }
    
@@ -147,10 +142,10 @@ template<int DIM> void Patch<DIM>::allocatePatchData(const ComponentSelector& co
    for (int i = 0; i < ncomponents; i++) {
       if (components.isSet(i)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(d_patch_data[i].isNull());
+         TBOX_ASSERT(d_patch_data[i].isNull());
 #endif
          d_patch_data[i] =
-            d_descriptor->getPatchDataFactory(i)->allocate(d_box, pool);
+            d_descriptor->getPatchDataFactory(i)->allocate(*this, pool);
          d_patch_data[i]->setTime(time);
       }
    }
@@ -167,7 +162,7 @@ template<int DIM> void Patch<DIM>::allocatePatchData(const ComponentSelector& co
 template<int DIM> void Patch<DIM>::deallocatePatchData(const int id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((id >= 0) && (id < d_descriptor->getMaxNumberRegisteredComponents()));
+   TBOX_ASSERT((id >= 0) && (id < d_descriptor->getMaxNumberRegisteredComponents()));
 #endif
    if (id < d_patch_data.getSize()) {
       d_patch_data[id].setNull();
@@ -228,13 +223,13 @@ template<int DIM> void Patch<DIM>::getFromDatabase(
    ComponentSelector component_selector)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("HIER_PATCH_VERSION");
    if (ver != HIER_PATCH_VERSION) {
       TBOX_ERROR("Patch<DIM>::getFromDatabase() error...\n"
-         << "   Restart file version different than class version" << endl);
+         << "   Restart file version different than class version" << std::endl);
    }
 
    d_box = database->getDatabaseBox("d_box");
@@ -245,7 +240,7 @@ template<int DIM> void Patch<DIM>::getFromDatabase(
               << "    patch number " << patch_number 
               << " read from database does not "
               << "match patch number of patch " << d_patch_number
-              << endl);
+              << std::endl);
    }
 
    d_patch_level_number = database->getInteger("d_patch_level_number");
@@ -254,13 +249,13 @@ template<int DIM> void Patch<DIM>::getFromDatabase(
    d_patch_data.resizeArray(d_descriptor->getMaxNumberRegisteredComponents());
 
    int namelist_count = database->getInteger("patch_data_namelist_count");
-   tbox::Array<string> patch_data_namelist;
+   tbox::Array<std::string> patch_data_namelist;
    if ( namelist_count ) {
       patch_data_namelist = database->getStringArray("patch_data_namelist");
    }
 
    for (int i = 0; i < patch_data_namelist.getSize(); i++) {
-      string patch_data_name;
+      std::string patch_data_name;
       int patch_data_index;
       tbox::Pointer<tbox::Database> patch_data_database;
       tbox::Pointer< PatchDataFactory<DIM> > patch_data_factory;
@@ -272,7 +267,7 @@ template<int DIM> void Patch<DIM>::getFromDatabase(
       } else {
          TBOX_ERROR("Patch<DIM>::getFromDatabase() error...\n"
                  << "   patch data" << patch_data_name 
-                 << " not found in database" << endl);
+                 << " not found in database" << std::endl);
       }
 
       patch_data_index = d_descriptor->
@@ -294,7 +289,7 @@ template<int DIM> void Patch<DIM>::getFromDatabase(
    if (component_selector != all_unset) {
       TBOX_WARNING("Patch<DIM>::getFromDatabase() warning...\n"
                 << "   Some requested patch data components not "
-                << "found in database" << endl);
+                << "found in database" << std::endl);
    }
 
 }
@@ -323,7 +318,7 @@ template<int DIM> void Patch<DIM>::putToDatabase(
    const ComponentSelector& patchdata_write_table)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
    int i;
 
@@ -340,9 +335,9 @@ template<int DIM> void Patch<DIM>::putToDatabase(
       }
    }
 
-   string patch_data_name;
+   std::string patch_data_name;
    tbox::Pointer<tbox::Database> patch_data_database;
-   tbox::Array<string> patch_data_namelist(namelist_count);
+   tbox::Array<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
    for (i = 0; i < d_patch_data.getSize(); i++) {
       if ( patchdata_write_table.isSet(i) && checkAllocated(i) ) {
@@ -368,8 +363,8 @@ template<int DIM> void Patch<DIM>::putToDatabase(
 */
 
 
-template<int DIM> int Patch<DIM>::recursivePrint( ostream &os ,
-                                                  const string &border ,
+template<int DIM> int Patch<DIM>::recursivePrint( std::ostream &os ,
+                                                  const std::string &border ,
                                                   unsigned short depth ) const
 {
   os << border
@@ -384,17 +379,17 @@ template<int DIM> int Patch<DIM>::recursivePrint( ostream &os ,
   return 0;
 }
 
-template<int DIM> ostream& operator<<(ostream& s, const Patch<DIM>& patch)
+template<int DIM> std::ostream& operator<<(std::ostream& s, const Patch<DIM>& patch)
 {
-   s << "Patch<DIM>::box = " << patch.d_box << endl << flush;
+   s << "Patch<DIM>::box = " << patch.d_box << std::endl << std::flush;
    s << "Patch<DIM>::patch_number = " << patch.d_patch_number 
-     << endl << flush;
+     << std::endl << std::flush;
    s << "Patch<DIM>::patch_level_number = " << patch.d_patch_level_number 
-     << endl << flush;
+     << std::endl << std::flush;
    s << "Patch<DIM>::patch_in_hierarchy = " << patch.d_patch_in_hierarchy 
-     << endl << flush;
+     << std::endl << std::flush;
    s << "Patch<DIM>::number_components = " << patch.d_patch_data.getSize()
-     << endl << flush;
+     << std::endl << std::flush;
    const int ncomponents = patch.d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       s << "Component(" << i << ")=";

@@ -1,10 +1,10 @@
 //
-// File:	OuteredgeGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OuteredgeGeometry.C $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:	$Name$
-// Revision:	$Revision: 692 $
-// Modified:	$Date: 2005-10-28 13:37:46 -0700 (Fri, 28 Oct 2005) $
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Box geometry information for outeredge centered objects
 //
 
@@ -18,7 +18,7 @@
 #include "EdgeOverlap.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -31,16 +31,17 @@ namespace SAMRAI {
 /*
 *************************************************************************
 *									*
-* Create a edge geometry object given the box and ghost cell width.	*
+* Create an outeredge geometry object given box and ghost cell width.	*
 *									*
 *************************************************************************
 */
 
 template<int DIM> OuteredgeGeometry<DIM>::OuteredgeGeometry(
-   const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts)
+   const hier::Box<DIM>& box, 
+   const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    d_box    = box;
    d_ghosts = ghosts;
@@ -97,6 +98,7 @@ OuteredgeGeometry<DIM>::calculateOverlap(
 }
 
 
+
 /*
 *************************************************************************
 *									*
@@ -120,69 +122,56 @@ OuteredgeGeometry<DIM>::doOverlap(
 
    const hier::Box<DIM> src_box =
       hier::Box<DIM>::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask;
-   const hier::Box<DIM> src_shift =
-      hier::Box<DIM>::shift(src_box, src_offset);
-   const hier::Box<DIM> dst_ghost =
+   const hier::Box<DIM> src_box_shifted = hier::Box<DIM>::shift(src_box, src_offset);
+   const hier::Box<DIM> dst_box =
       hier::Box<DIM>::grow(dst_geometry.getBox(), dst_geometry.getGhosts());
 
    // Compute the intersection (if any) for each of the edge directions
 
-   const hier::Box<DIM> quick_check =
-      hier::Box<DIM>::grow(src_shift, 1) * 
-      hier::Box<DIM>::grow(dst_ghost, 1);
+   bool quick_boxes_intersect = 
+      ( hier::Box<DIM>::grow(src_box_shifted, 1) ).intersects(
+                                                   hier::Box<DIM>::grow(dst_box, 1) );
+   if (quick_boxes_intersect) {
 
-   if (!quick_check.empty()) {
+      for (int axis = 0; axis < DIM; ++axis) {
 
-      // a = axis
-      for (int a = 0; a < DIM; a++) {
+         const hier::Box<DIM> dst_edge_box = 
+            pdat::EdgeGeometry<DIM>::toEdgeBox(dst_box, axis);
+         const hier::Box<DIM> src_edge_box = 
+            pdat::EdgeGeometry<DIM>::toEdgeBox(src_box_shifted, axis);
 
-         const hier::Box<DIM> dst_box = 
-            pdat::EdgeGeometry<DIM>::toEdgeBox(dst_ghost, a);
-         const hier::Box<DIM> src_box = 
-            pdat::EdgeGeometry<DIM>::toEdgeBox(src_shift, a);
-         const hier::Box<DIM> together = dst_box * src_box;
+         bool boxes_intersect = dst_edge_box.intersects(src_edge_box);
 
-         if (!together.empty()) {
+         if (boxes_intersect) {
 
-            // f = face normal
-            for (int f = 0; f < DIM; f++) {
+            for (int face_normal = 0; face_normal < DIM; ++face_normal) {
 
-               hier::Box<DIM> boxlo = src_box;
-               boxlo.lower(f) = src_box.lower(f);
-               boxlo.upper(f) = src_box.lower(f);
-               hier::Box<DIM> boxup = src_box;
-               boxup.lower(f) = src_box.upper(f);
-               boxup.upper(f) = src_box.upper(f);
-               
-               // Data NULL when f = a
-               if (f == a) {
+               if ( face_normal != axis ) {
+ 
+                  for (int side = 0; side < 2; ++side) {
+                     hier::Box<DIM> outeredge_src_box = toOuteredgeBox(src_box_shifted, 
+                                                                       axis, 
+                                                                       face_normal,
+                                                                       side);
+                     dst_boxes[axis].unionBoxes(outeredge_src_box * dst_edge_box);
+                  }
 
-                  boxlo.setEmpty();
-                  boxup.setEmpty();
+               }  // data is not defined when face_normal == axis
 
-               } else {
-
-                  trimBoxes(boxlo, boxup, a, f);
-                  
-                  // Add upper/lower side intersection (if any) to the box list
-                  dst_boxes[a].unionBoxes(boxlo * dst_box);
-                  dst_boxes[a].unionBoxes(boxup * dst_box);
-               }
-            } // loop over f
+            }  // iterate over face normal directions
   
             if (!overwrite_interior) {
-               const hier::Box<DIM> int_edge = 
+               const hier::Box<DIM> interior_edges = 
                   pdat::EdgeGeometry<DIM>::toEdgeBox(dst_geometry.getBox(), 
-                                                     a);
-               dst_boxes[a].removeIntersections(int_edge);
+                                                     axis);
+               dst_boxes[axis].removeIntersections(interior_edges);
             }
 
-         }  // if (!together.empty())
+         }  // if source and destination edge boxes overlap in axis direction
 
-      }  // loop over a
+      }  // iterate over axis directions
 
-   }  // if (!quick_check.empty())
-
+   }  // if quick check passes
 
    // Create the edge overlap data object using the boxes and source shift
    hier::BoxOverlap<DIM> *overlap = 
@@ -214,178 +203,158 @@ OuteredgeGeometry<DIM>::doOverlap(
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box<DIM> src_mask_box =
+   const hier::Box<DIM> src_box =
       hier::Box<DIM>::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask;
-   const hier::Box<DIM> src_shift =
-      hier::Box<DIM>::shift(src_mask_box, src_offset);
-   const hier::Box<DIM> dst_ghost =
+   const hier::Box<DIM> src_box_shifted = hier::Box<DIM>::shift(src_box, src_offset);
+   const hier::Box<DIM> dst_box =
       hier::Box<DIM>::grow(dst_geometry.getBox(), dst_geometry.getGhosts());
 
    // Compute the intersection (if any) for each of the edge directions
 
-   const hier::Box<DIM> quick_check =
-      hier::Box<DIM>::grow(src_shift, 1) * hier::Box<DIM>::grow(dst_ghost, 1);
+   bool quick_boxes_intersect =
+      ( hier::Box<DIM>::grow(src_box_shifted, 1) ).intersects(
+                                                   hier::Box<DIM>::grow(dst_box, 1) );
+   if (quick_boxes_intersect) {
 
-   if (!quick_check.empty()) {
+      for (int axis = 0; axis < DIM; ++axis) {
 
-      // a = axis
-      for (int a = 0; a < DIM; a++) {
+         const hier::Box<DIM> dst_edge_box = 
+            pdat::EdgeGeometry<DIM>::toEdgeBox(dst_box, axis);
+         const hier::Box<DIM> src_edge_box = 
+            pdat::EdgeGeometry<DIM>::toEdgeBox(src_box_shifted, axis);
 
-         const hier::Box<DIM> dst_box = 
-            pdat::EdgeGeometry<DIM>::toEdgeBox(dst_ghost, a);
-         const hier::Box<DIM> src_box = 
-            pdat::EdgeGeometry<DIM>::toEdgeBox(src_shift, a);
-         const hier::Box<DIM> together = dst_box * src_box;
+         bool boxes_intersect = dst_edge_box.intersects(src_edge_box);
 
-         if (!together.empty()) {
+         if (boxes_intersect) {
 
-            // sf = source face normal
-            for (int sf = 0; sf < DIM; sf++) {
+            for (int src_face_normal = 0; src_face_normal < DIM; ++src_face_normal) {
 
-               hier::Box<DIM> src_boxlo = src_box;
-               src_boxlo.upper(sf) = src_box.lower(sf);
-               hier::Box<DIM> src_boxup = src_box;
-               src_boxup.lower(sf) = src_box.upper(sf);
+               if ( src_face_normal != axis ) {
 
-               if (sf == a) {
-                  src_boxlo.setEmpty();
-                  src_boxup.setEmpty();
-               } else {
-                  trimBoxes(src_boxlo, src_boxup, a, sf);                  
-               }
+                  hier::Box<DIM> outeredge_src_box_lo = toOuteredgeBox(src_box_shifted,
+                                                                       axis,
+                                                                       src_face_normal,
+                                                                       0);
+                  hier::Box<DIM> outeredge_src_box_up = toOuteredgeBox(src_box_shifted,
+                                                                       axis,
+                                                                       src_face_normal,
+                                                                       1);
 
-               // df = destination face normal
-               for (int df = 0; df < DIM; df++) {
-                  
-                  hier::Box<DIM> dst_boxlo = dst_box;
-                  dst_boxlo.upper(df) = dst_box.lower(df);
-                  hier::Box<DIM> dst_boxup = dst_box;
-                  dst_boxup.lower(df) = dst_box.upper(df);
-                  
-                  if (df == a) {
-                     dst_boxlo.setEmpty();
-                     dst_boxup.setEmpty();                     
-                  } else {                     
-                     trimBoxes(dst_boxlo, dst_boxup, a, df);
-                  }
-               
-                  // Determine overlap
-                  dst_boxes[a].unionBoxes(src_boxlo*dst_boxlo);
-                  dst_boxes[a].unionBoxes(src_boxup*dst_boxlo);
-                  dst_boxes[a].unionBoxes(src_boxlo*dst_boxup);
-                  dst_boxes[a].unionBoxes(src_boxup*dst_boxup);
+                  for (int dst_face_normal = 0; dst_face_normal < DIM; ++dst_face_normal) {
 
-               } // loop over df
-            } // loop over sf
-         } // !together.empty()
+                     if ( dst_face_normal != axis ) {
+ 
+                        hier::Box<DIM> outeredge_dst_box_lo = toOuteredgeBox(dst_box,
+                                                                             axis,
+                                                                             dst_face_normal,
+                                                                             0);
+                        hier::Box<DIM> outeredge_dst_box_up = toOuteredgeBox(dst_box,
+                                                                             axis,
+                                                                             dst_face_normal,
+                                                                             1);
+
+                        dst_boxes[axis].unionBoxes(outeredge_src_box_lo * outeredge_dst_box_lo);
+                        dst_boxes[axis].unionBoxes(outeredge_src_box_lo * outeredge_dst_box_up);
+                        dst_boxes[axis].unionBoxes(outeredge_src_box_up * outeredge_dst_box_lo);
+                        dst_boxes[axis].unionBoxes(outeredge_src_box_up * outeredge_dst_box_up);
+
+                     }  // dst data undefined when dst_face_normal == axis
+
+                  }  // iterate over dst face normal directions
+
+               }  // src data undefined when src_face_normal == axis
+
+            }  // iterate over src face normal directions
+
+         }  // if source and destination edge boxes overlap in axis direction
 
          if (!overwrite_interior) {
-            const hier::Box<DIM> int_edge = 
-               pdat::EdgeGeometry<DIM>::toEdgeBox(dst_geometry.getBox(), a);
-            dst_boxes[a].removeIntersections(int_edge);
+            const hier::Box<DIM> interior_edges = 
+               pdat::EdgeGeometry<DIM>::toEdgeBox(dst_geometry.getBox(), 
+                                                  axis);
+            dst_boxes[axis].removeIntersections(interior_edges);
          }
 
-      } // loop over a
-   } // !quick_check.isEmpty()
-   
+      }  // iterate over axis directions
+
+   }  // if quick check passes
+
    // Create the edge overlap data object using the boxes and source shift
    hier::BoxOverlap<DIM> *overlap = 
       new pdat::EdgeOverlap<DIM>(dst_boxes, src_offset);
    return(tbox::Pointer<hier::BoxOverlap<DIM> >(overlap));
 }
 
+
 /*
 *************************************************************************
-*									*
-* Trim the databoxes for particular axis,face_nrml directions to avoid  *
-* duplicating data on common edges.					*
-*									*
+*                                                                       *
+* Convert an AMR-index space hier::Box into a edge-index space box      *
+* for an outeredge region.                                              *
+*                                                                       *
 *************************************************************************
 */
 
-template<int DIM> void 
-OuteredgeGeometry<DIM>::trimBoxes(hier::Box<DIM>& boxlo, 
-                                  hier::Box<DIM>& boxup,
-                                  const int axis,
-                                  const int face_nrml)
+template<int DIM>
+hier::Box<DIM> OuteredgeGeometry<DIM>::toOuteredgeBox(
+   const hier::Box<DIM>& box,
+   int axis,
+   int face_normal, 
+   int side)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(axis >= 0 && axis < DIM);
-   assert(face_nrml >= 0 && face_nrml < DIM);
+   TBOX_ASSERT(0 <= axis && axis < DIM); 
+   TBOX_ASSERT(0 <= face_normal && face_normal < DIM); 
+   TBOX_ASSERT(face_normal != axis);
+   TBOX_ASSERT(side == 0 || side == 1);
 #endif
+
+   hier::Box<DIM> oedge_box;
+
    /*
-    * In 1D and 2D, no trimming is necessary.  Simply set empty
-    * boxes when face_nrml = axis.
+    * If data is defined (i.e., face_normal != axis), then
+    *    1) Make an edge box for the given axis.
+    *    2) Trim box as needed to avoid redundant edge indices
+    *       for different face normal directions. 
+    *    3) Restrict box to lower or upper face for given
+    *       face normal direction.
     */
-   if (DIM < 3) {
-      
-      if (face_nrml == axis) {
-         boxlo.setEmpty();
-         boxup.setEmpty();
-      }
-      
-   } else {
-      
-      /*
-       * For 3D boxes, trim boxlo, boxup boxes in the largest non-null 
-       * dimension. i.e.
-       *
-       * if axis = 0, face_nrml = 0 - data is NULL (boxlo = boxhi = empty)
-       * if axis = 0, face_nrml = 1 - trim in Z
-       * if axis = 0, face_nrml = 2 - no trimming
-       *
-       * if axis = 1, face_nrml = 0 - trim in Z
-       * if axis = 1, face_nrml = 1 - data is NULL (boxlo = boxhi = empty)
-       * if axis = 1, face_nrml = 2 - no trimming
-       *
-       * if axis = 2, face_nrml = 0 - trim in Y
-       * if axis = 2, face_nrml = 1 - no trimming
-       * if axis = 2, face_nrml = 2 - data is NULL (boxlo = boxhi = empty)
-       */
 
-      int trim_dir;
-   
-      if (axis == 0) {
-         if (face_nrml == 0) {
-            boxlo.setEmpty();
-            boxup.setEmpty();
-         } else if (face_nrml == 1) {
-            trim_dir = 2;
-            boxlo.lower(trim_dir) += 1;
-            boxlo.upper(trim_dir) -= 1;
-            boxup.lower(trim_dir) += 1;
-            boxup.upper(trim_dir) -= 1;
-         } 
-      }
-   
-      if (axis == 1) {
-         if (face_nrml == 0) {
-            trim_dir = 2;
-            boxlo.lower(trim_dir) += 1;
-            boxlo.upper(trim_dir) -= 1;
-            boxup.lower(trim_dir) += 1;
-            boxup.upper(trim_dir) -= 1;
-         } else if (face_nrml == 1) {
-            boxlo.setEmpty();
-            boxup.setEmpty();
-         } 
+   if ( (face_normal != axis) && !box.empty() ) {
+
+      oedge_box = EdgeGeometry<DIM>::toEdgeBox(box, axis);
+
+      for (int d = 0; d < DIM; ++d) {
+
+         if ( d != axis ) {  // do not trim in axis direction
+
+            for (int dh = d+1; dh < DIM; ++dh) { // trim in higher dimensions 
+
+               if ( dh != axis && dh != face_normal ) {  
+                  // do not trim in axis or face_normal direction 
+
+                  ++oedge_box.lower(dh);
+                  --oedge_box.upper(dh);
+
+               }
+
+            }
+ 
+         }
+
       }
 
-      if (axis == 2) {
-         if (face_nrml == 0) {
-            trim_dir = 1;
-            boxlo.lower(trim_dir) += 1;
-            boxlo.upper(trim_dir) -= 1;
-            boxup.lower(trim_dir) += 1;
-            boxup.upper(trim_dir) -= 1;
-         } else if (face_nrml == 2) {
-            boxlo.setEmpty();
-            boxup.setEmpty();
-         } 
+      if (side == 0 ) {  // lower side in face normal direction
+         oedge_box.upper(face_normal) = oedge_box.lower(face_normal);
+      } else {  // side == 1; upper side in face normal direction
+         oedge_box.lower(face_normal) = oedge_box.upper(face_normal);
       }
-   }   
 
+   }
+
+   return(oedge_box);
 }
+
 
 }
 }

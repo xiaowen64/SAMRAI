@@ -1,8 +1,8 @@
 /*=========================================================================
 
   Program:   Vizamrai
-  Date:      $Date: 2004-11-30 08:48:55 -0800 (Tue, 30 Nov 2004) $
-  Version:   $Revision: 5 $
+  Date:      $LastChangedDate: 2005-12-20 13:26:41 -0800 (Tue, 20 Dec 2005) $
+  Version:   $LastChangedRevision: 816 $
 
   Based on the hedgehog code from VTK with some local modifications.
 

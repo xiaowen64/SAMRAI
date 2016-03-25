@@ -1,9 +1,9 @@
 //
-// File:	SideVariable.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/side/SideVariable.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Variable class for defining side centered variables
 //
 
@@ -18,7 +18,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_IntVector
@@ -31,43 +30,20 @@ using namespace std;
 namespace SAMRAI {
     namespace pdat {
 
-/**
+/*!
  * Class SideVariable<DIM> is a templated variable class used to define
- * side-centered quantities on an AMR mesh.  It is templated on the type
- * of the underlying data (e.g., double, int, bool, etc.).   Side variable
- * data is associated with the sides (or faces) of cells.  Side data is
- * stored in DIM arrays, each of which holds values for sides having the
- * same normal vector.  For example, a three-dimensional side variable
- * can be used to create side-centered data arrays over a box
- * [l0:u0,l1:u1,l2:u2] that can be dimensioned as:
- * \verbatim
-
-     [ l0 : u0+1 ,
-       l1 : u1 ,
-       l2 : u2 , d ]   ,
-
-     [ l0 : u0 ,
-       l1 : u1+1 ,
-       l2 : u2 , d ]   ,
-
-     [ l0 : u0 ,
-       l1 : u1 ,
-       l2 : u2+1 , d ]   ,
-
- * \endverbatim
- * for the x, y, and z (or 0, 1, 2) side directions, respectively, and
- * where d is the depth index (i.e., number of values at each side index
- * location).  One- and two- dimensional side variables define storage 
- * similarly.  For more information on indexing and manipulating side 
- * patch data objects, see the classes SideData<DIM> and SideGeometry<DIM>. 
+ * side-centered quantities on an AMR mesh.   It is a subclass of
+ * hier::Variable and is templated on the type of the underlying data
+ * (e.g., double, int, bool, etc.).  See header file for SideData<DIM> class
+ * for a more detailed description of the data layout.
  *
- * IMPORTANT: The class FaceVariable<DIM> and associated classes define
- * the same storage as this side variable class, except that the indices
- * are permuted in the face data type.
- * 
- * Note that it is possible to create a side variable to allocate and 
- * manage data for cell sides associated with a single coordinate direction
- * only.  See the constructor for more information.
+ * Note that it is possible to create a side data object for managing
+ * data at cell sides associated with a single coordinate direction only.
+ * See the constructor for more information. 
+ *
+ * IMPORTANT: The class FaceVariable<DIM> and associated "face data" classes
+ * define the same storage as this side variable class, except that the
+ * individual array indices are permuted in the face data type.
  *
  * @see pdat::SideData
  * @see pdat::SideDataFactory
@@ -79,34 +55,35 @@ template<int DIM, class TYPE>
 class SideVariable : public hier::Variable<DIM>
 {
 public:
-   /**
-    * Create a side variable object having properties specified by the
-    * name, depth (i.e., number of data values at each index location), 
-    * coarse-fine interface representation, and coordinate direction 
-    * information.  Default arguments are provided for the last three.
-    * The default depth is one.  The fine boundary representation boolean
-    * indicates which values (either coarse or fine) take precedence 
-    * during coarsen and refine operations.  The default state is that 
-    * fine data values take precedence on coarse-fine interfaces.  
-    * The default data allocation scheme is that side data will 
-    * be allocated for all coordinate directions (i.e., -1).  If this is
+   /*!
+    * @brief Create an side-centered variable object with the given name and
+    * depth (i.e., number of data values at each edge index location).
+    * A default depth of one is provided.   The fine boundary representation
+    * boolean argument indicates which values (either coarse or fine) take
+    * precedence at coarse-fine mesh boundaries during coarsen and refine
+    * operations.  The default is that fine data values take precedence
+    * on coarse-fine interfaces.  
+    *
+    * The default data allocation scheme is that side data will
+    * be allocated for all side normal coordinate directions.  If this is
     * desired, then the direction argument may be omitted.   If an integer
-    * direction argument is specified, the only data for that direction
-    * will be maintained and managed for this variable (if not -1). 
+    * direction argument is specified, the only data for the given 
+    * side normal direction will be maintained and managed for this variable.
     */
-   SideVariable(const string &name,
-                      int depth = 1,
-                      bool fine_boundary_represents_var = true,
-                      int direction = -1);
+   SideVariable(const std::string &name,
+                int depth = 1,
+                bool fine_boundary_represents_var = true,
+                int direction = -1);
 
-   /**
-    * Virtual destructor for side variable objects.
+   /*!
+    * @brief Virtual destructor for side variable objects.
     */
    virtual ~SideVariable<DIM,TYPE>();
 
-   /**
-    * Return constant reference to vector describing which coordinate
+   /*!
+    * @brief Return constant reference to vector describing which coordinate
     * directions have data associated with this side variable object.
+    *
     * A vector entry of zero indicates that there is no data array
     * allocated for the corresponding coordinate direction for side data
     * created via this side variable object.  A non-zero value indicates
@@ -115,17 +92,17 @@ public:
     */
    const hier::IntVector<DIM>& getDirectionVector() const;
 
-   /**
-    * Return a boolean value indicating how data for the side variable will be treated
-    * on coarse-fine interfaces.  True (default case set in constructor) indicates
-    * that fine patch values take precedence.  False indicates that values on fine patches
-    * at a coarse-fine interface should be interpolated from coarser level values.
+   /*!
+    * @brief Return boolean indicating which side data values (coarse
+    * or fine) take precedence at coarse-fine mesh interfaces.  The
+    * value is set in the constructor.
     */
-   bool fineBoundaryRepresentsVariable() const {return d_fine_boundary_represents_var;}
+   bool fineBoundaryRepresentsVariable() const
+       {return d_fine_boundary_represents_var;}
 
-   /**
-    * Return true since the side data index space extends beyond the interior of
-    * patches.  That is, side data lives on patch borders.
+   /*!
+    * @brief Return true indicating that side data on a patch interior
+    * exists on the patch boundary.
     */
    bool dataLivesOnPatchBorder() const {return true;}
 

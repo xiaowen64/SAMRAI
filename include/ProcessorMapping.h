@@ -1,9 +1,9 @@
 //
-// File:	ProcessorMapping.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/ProcessorMapping.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	tbox::Array of processor mappings of patches to processors
 //
 
@@ -72,7 +72,7 @@ public:
     * Sets the number of nodes to n.  
     * IMPORTANT NOTE: This method should only be used for
     * testing purposes.  Under normal circumstances, the number of
-    * nodes is set by a call to tbox::MPI::getNodes() and should NOT
+    * nodes is set by a call to tbox::SAMRAI_MPI::getNodes() and should NOT
     * be changed.
     */
    void setNumberNodes(const int n);
@@ -83,7 +83,8 @@ public:
    int getProcessorAssignment(const int i) const;
 
    /**
-    * Set the processor assignment for the specified patch index.
+    * Set the processor assignment (second argument) for the specified 
+    * patch index (first argument).
     */
    void setProcessorAssignment(const int i, const int p);
 

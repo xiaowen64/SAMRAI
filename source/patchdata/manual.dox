@@ -1,9 +1,9 @@
 /*
-  File:        $Id$
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/manual.dox $
   Package:     SAMRAI Doxygen manual
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision$
-  Modified:    $Date$
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1735 $
+  Modified:    $LastChangedDate: 2007-12-05 15:01:59 -0800 (Wed, 05 Dec 2007) $
   Description: Generation of SAMRAI Doxygen source code manual
 */
 
@@ -27,12 +27,16 @@ namespace SAMRAI {
   -# @ref package_patchdata_outernode "outernode data"
   -# @ref package_patchdata_outerside "outerside data"
   -# @ref package_patchdata_side "side-centered data"
-  -# @ref package_patchdata_index "index data (documentation unavailable at this time)"
+  -# @ref package_patchdata_index "index data"
   -# @ref package_patchdata_fortran "macros for indexing arrays in FORTRAN rotuines"
  
   The package also defines a set of coarsen and refine operators that 
   are independent of the mesh configuration:
   -# @ref package_patchdata_operators mesh independent operators
+
+  Additionally there is a set of classes that handle data copying of various
+  patch data types between different blocks within a multiblock domain.
+  -# @ref package_patchdata_multiblock multiblock data translators
 
   All class names in the Patchdata package are in the namespace "pdat".
 */

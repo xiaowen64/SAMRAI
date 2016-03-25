@@ -1,9 +1,9 @@
 //
-// File:	CartesianCellComplexConservativeLinearRefine.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/cartesian/operators/cell/CartesianCellComplexConservativeLinearRefine.C $
 // Package:	SAMRAI geometry
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Conservative linear refine operator for cell-centered 
 //              complex data on a Cartesian mesh.
 //
@@ -16,12 +16,6 @@
 #include "tbox/Complex.h"
 #include<float.h>
 #include<math.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 #include "CartesianPatchGeometry.h"
 #include "Index.h"
 #include "CellData.h"
@@ -84,7 +78,7 @@ template<int DIM> CartesianCellComplexConservativeLinearRefine<DIM>::~CartesianC
 
 template<int DIM> bool CartesianCellComplexConservativeLinearRefine<DIM>::findRefineOperator(
    const tbox::Pointer< hier::Variable<DIM> >& var,
-   const string &op_name) const
+   const std::string &op_name) const
 {
    const tbox::Pointer< pdat::CellVariable<DIM,dcomplex> > cast_var(var);
    if ( !cast_var.isNull() && (op_name == d_name_id) ) {
@@ -94,7 +88,7 @@ template<int DIM> bool CartesianCellComplexConservativeLinearRefine<DIM>::findRe
    }
 }
 
-template<int DIM> const string& 
+template<int DIM> const std::string& 
 CartesianCellComplexConservativeLinearRefine<DIM>::getOperatorName() const
 {
    return(d_name_id);
@@ -124,9 +118,9 @@ template<int DIM> void CartesianCellComplexConservativeLinearRefine<DIM>::refine
    tbox::Pointer< pdat::CellData<DIM,dcomplex> >
       fdata = fine.getPatchData(dst_component);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!cdata.isNull());
-   assert(!fdata.isNull());
-   assert(cdata->getDepth() == fdata->getDepth());
+   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 
    const hier::Box<DIM> cgbox(cdata->getGhostBox());
@@ -206,7 +200,7 @@ template<int DIM> void CartesianCellComplexConservativeLinearRefine<DIM>::refine
 				diff2.getPointer(),slope2.getPointer());
       } else {
 	 TBOX_ERROR("CartesianCellComplexConservativeLinearRefine error...\n"
-		    << "DIM > 3 not supported." << endl);
+		    << "DIM > 3 not supported." << std::endl);
       }
    }
 }

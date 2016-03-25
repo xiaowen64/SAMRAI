@@ -1,9 +1,9 @@
 /*
-  File:        $Id$
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/manual.dox $
   Package:     SAMRAI Doxygen manual
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision$
-  Modified:    $Date$
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1808 $
+  Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
   Description: Generation of SAMRAI Doxygen source code manual
 */
 
@@ -16,20 +16,22 @@ namespace SAMRAI {
   The SAMRAI vector class wraps a collection of patch data components 
   defined over multiple levels in an AMR hierarchy so that the data may 
   be manipulated as though it is a single vector.  Also, included are
-  classes which provide vector kernels to the PETSc and PVodeTrio solver 
+  classes which provide vector kernels to the PETSc and Sundials solver 
   packages.  Currently, vector interfaces are provided for real-valued
-  vectors only (i.e., where the data is either type {\tt double} or 
-  {\tt float}).  If the need for complex-valued vectors arises (e.g., 
+  vectors only (i.e., where the data is either type <TT>double</TT> or 
+  <TT>float</TT>).  If the need for complex-valued vectors arises (e.g., 
   PETSc supports complex vectors), they can be easily added.  Presently, 
-  the PVodeTrio vector interface supports only {\tt double}-valued vectors.
-  The abstract classes that define the interfaces to the PETSc and PVodeTrio
+  the Sundials vector interface supports only <TT>double</TT>-valued vectors.
+  The abstract classes that define the interfaces to the PETSc and Sundials
   packages are includes in the SAMRAI source subdirectories "petsc" and
-  "pvode::trio/vector", respectively.  The classes which perform the 
+  "cvode::trio/vector", respectively.  The classes which perform the 
   actual numerical operations used in the vector kernels are found in 
   the "Mathematical Operations" package.
+
   - SAMRAI::solv::SAMRAIVectorReal
-  - SAMRAI::solv::PETSc::SAMRAIVectorReal
-  - SAMRAI::solv::PVodeTrio::SAMRAIVector
+  - SAMRAI::solv::PETSc_SAMRAIVectorReal
+  - SAMRAI::solv::Sundials_SAMRAIVector
+
 */
 
 }

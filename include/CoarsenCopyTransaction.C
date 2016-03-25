@@ -1,9 +1,9 @@
 //
-// File:	CoarsenCopyTransaction.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenCopyTransaction.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 684 $
-// Modified:	$Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Communication transaction for data copies during data coarsening
 //
  
@@ -14,11 +14,8 @@
 
 #include "Patch.h"
 #include "PatchData.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "CoarsenClasses.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -45,8 +42,8 @@ template<int DIM> void CoarsenCopyTransaction<DIM>::setCoarsenItems(
    int num_coarsen_items)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(coarsen_items != (const typename CoarsenClasses<DIM>::Data**)NULL);
-   assert(num_coarsen_items >= 0);
+   TBOX_ASSERT(coarsen_items != (const typename CoarsenClasses<DIM>::Data**)NULL);
+   TBOX_ASSERT(num_coarsen_items >= 0);
 #endif
    s_coarsen_items = coarsen_items;
    s_num_coarsen_items = num_coarsen_items;
@@ -75,12 +72,12 @@ template<int DIM>  CoarsenCopyTransaction<DIM>::CoarsenCopyTransaction(
    int coarsen_item_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst_level.isNull());
-   assert(!src_level.isNull());
-   assert(!overlap.isNull());
-   assert(dst_patch >= 0 && dst_patch < dst_level->getNumberOfPatches());
-   assert(src_patch >= 0 && src_patch < src_level->getNumberOfPatches());
-   assert(coarsen_item_id >= 0);
+   TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_patch >= 0 && dst_patch < dst_level->getNumberOfPatches());
+   TBOX_ASSERT(src_patch >= 0 && src_patch < src_level->getNumberOfPatches());
+   TBOX_ASSERT(coarsen_item_id >= 0);
    // Note: s_num_coarsen_items cannot be used at this point!
 #endif
 
@@ -109,7 +106,7 @@ template<int DIM>  CoarsenCopyTransaction<DIM>::~CoarsenCopyTransaction()
 template<int DIM> bool CoarsenCopyTransaction<DIM>::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (getSourceProcessor() == tbox::MPI::getRank()) {
+   if (getSourceProcessor() == tbox::SAMRAI_MPI::getRank()) {
       can_estimate = 
          d_src_level->getPatch(d_src_patch)
                     ->getPatchData(s_coarsen_items[d_coarsen_item_id]->
@@ -191,26 +188,26 @@ template<int DIM> void CoarsenCopyTransaction<DIM>::copyLocalData()
 */
 
 template<int DIM> 
-void CoarsenCopyTransaction<DIM>::printClassData(ostream& stream) const
+void CoarsenCopyTransaction<DIM>::printClassData(std::ostream& stream) const
 {
-   stream << "Coarsen Copy Transaction"                            << endl;
+   stream << "Coarsen Copy Transaction"                            << std::endl;
    stream << "   coarsen item array:        " 
-          << (typename CoarsenClasses<DIM>::Data**)s_coarsen_items << endl;
-   stream << "   num coarsen items:      " << s_num_coarsen_items << endl;
-   stream << "   destination patch:      " << d_dst_patch       << endl;
-   stream << "   source patch:           " << d_src_patch       << endl;
-   stream << "   coarsen item id:        " << d_coarsen_item_id << endl;
+          << (typename CoarsenClasses<DIM>::Data**)s_coarsen_items << std::endl;
+   stream << "   num coarsen items:      " << s_num_coarsen_items << std::endl;
+   stream << "   destination patch:      " << d_dst_patch       << std::endl;
+   stream << "   source patch:           " << d_src_patch       << std::endl;
+   stream << "   coarsen item id:        " << d_coarsen_item_id << std::endl;
    stream << "   destination patch data: " 
-          << s_coarsen_items[d_coarsen_item_id]->d_dst          << endl;
+          << s_coarsen_items[d_coarsen_item_id]->d_dst          << std::endl;
    stream << "   source patch data:      " 
-          << s_coarsen_items[d_coarsen_item_id]->d_src          << endl;
-   stream << "   incoming bytes:         " << d_incoming_bytes  << endl;
-   stream << "   outgoing bytes:         " << d_outgoing_bytes  << endl;
+          << s_coarsen_items[d_coarsen_item_id]->d_src          << std::endl;
+   stream << "   incoming bytes:         " << d_incoming_bytes  << std::endl;
+   stream << "   outgoing bytes:         " << d_outgoing_bytes  << std::endl;
    stream << "   destination level:           " 
-          << (hier::PatchLevel<DIM>*)d_src_level                     << endl;
+          << (hier::PatchLevel<DIM>*)d_src_level                     << std::endl;
    stream << "   source level:           " 
-          << (hier::PatchLevel<DIM>*)d_src_level                     << endl;
-   stream << "   overlap:                "                      << endl;
+          << (hier::PatchLevel<DIM>*)d_src_level                     << std::endl;
+   stream << "   overlap:                "                      << std::endl;
    d_overlap->print(stream);
 }
 

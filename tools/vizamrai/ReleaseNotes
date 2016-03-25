@@ -1193,7 +1193,7 @@ Release 1.20
 	file format to "-4".  Here is what changed in 
 	main.C from Euler:
 
-if (tbox_MPI::getRank() == 0) {
+if (tbox_SAMRAI_MPI::getRank() == 0) {
 
 
       // Write viz data as floats
@@ -1262,7 +1262,7 @@ void dumpPatchBoundaries(
 
   int noutput = 0;
 
-  if (tbox_MPI::getRank() == 0) {  
+  if (tbox_SAMRAI_MPI::getRank() == 0) {  
      for (int l3 = 0; l3 < nlevels; l3++) {
 	const BoxArray& boxes = hierarchy->getPatchLevel(l3)->getBoxes();
 	noutput += boxes.getNumberOfBoxes();
@@ -1281,7 +1281,7 @@ void dumpPatchBoundaries(
 	const double* xlo = geometry->getXLower();
 	const double* xup = geometry->getXUpper();
 	
-	if (tbox_MPI::getRank() == 0) {  
+	if (tbox_SAMRAI_MPI::getRank() == 0) {  
 
 	   noutput--;
 
@@ -1319,7 +1319,7 @@ void dumpPatchBoundaries(
 
 	   buffer[buffer_count++] = l5;
 	   MPI_Send(buffer, NDIM*2+1, MPI_DOUBLE, 
-		    0, 0, tbox_MPI::getCommunicator());
+		    0, 0, tbox_SAMRAI_MPI::getCommunicator());
 	}
      }
   }
@@ -1330,7 +1330,7 @@ void dumpPatchBoundaries(
      double buffer[NDIM*2+1];
      noutput--;
      MPI_Recv(buffer, NDIM*2+1, MPI_DOUBLE, MPI_ANY_SOURCE, 0,
-	      tbox_MPI::getCommunicator(), &status);
+	      tbox_SAMRAI_MPI::getCommunicator(), &status);
 
      int j4;
      for (j4 = 0; j4 < NDIM; j4++) {

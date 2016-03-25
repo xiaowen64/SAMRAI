@@ -1,9 +1,9 @@
 //
-// File:	StandardCoarsenTransactionFactory.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/StandardCoarsenTransactionFactory.h $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 684 $
-// Modified:	$Date: 2005-10-21 14:59:38 -0700 (Fri, 21 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1818 $
+// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
 // Description:	Concrete factory for create standard copy transactions 
 //              for coarsen schedules. 
 //
@@ -81,9 +81,9 @@ public:
     * @param dst_level      tbox::Pointer to destination patch level.
     * @param src_level      tbox::Pointer to source patch level.
     * @param overlap        tbox::Pointer to overlap region between patches.
-    * @param dst_patch      Integer index of destination patch in destination
+    * @param dst_patch_id   Integer index of destination patch in destination
     *                       patch level.
-    * @param src_patch      Integer index of source patch in source patch level.
+    * @param src_patch_id   Integer index of source patch in source patch level.
     * @param citem_id       Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     * @param pool           Optional pointer to memory pool from which the

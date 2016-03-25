@@ -1,9 +1,9 @@
 //
-// File:	SkeletonGridGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/skeleton/grid_geom/SkeletonGridGeometry.C $
 // Package:	SAMRAI geometry package
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Simple Skeleton grid geometry for an AMR hierarchy.
 //
 
@@ -14,7 +14,6 @@
 #include <stdlib.h>
 
 #include <fstream>
-using namespace std;
 
 #include "SkeletonPatchGeometry.h"
 #include "BoundaryLookupTable.h"
@@ -60,9 +59,6 @@ using namespace std;
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define GEOM_SKELETON_GRID_GEOMETRY_VERSION (2)
 
@@ -79,15 +75,15 @@ namespace SAMRAI {
 *************************************************************************
 */
 template<int DIM>  SkeletonGridGeometry<DIM>::SkeletonGridGeometry(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    bool register_for_restart)
 :  xfer::Geometry<DIM>(object_name)
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( !object_name.empty() );
-   assert( !input_db.isNull() );
+   TBOX_ASSERT( !object_name.empty() );
+   TBOX_ASSERT( !input_db.isNull() );
 #endif
 
    d_object_name = object_name;
@@ -113,13 +109,13 @@ template<int DIM>  SkeletonGridGeometry<DIM>::SkeletonGridGeometry(
 }
 
 template<int DIM>  SkeletonGridGeometry<DIM>::SkeletonGridGeometry(
-   const string& object_name, 
+   const std::string& object_name, 
    const hier::BoxArray<DIM>& domain,
    bool register_for_restart) 
 :  xfer::Geometry<DIM>(object_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
+   TBOX_ASSERT(!object_name.empty());
 #endif
 
    d_object_name = object_name;
@@ -168,14 +164,14 @@ template<int DIM>  SkeletonGridGeometry<DIM>::~SkeletonGridGeometry()
 
 template<int DIM> tbox::Pointer<hier::GridGeometry<DIM> > 
 SkeletonGridGeometry<DIM>::makeRefinedGridGeometry(
-   const string& fine_geom_name,
+   const std::string& fine_geom_name,
    const hier::IntVector<DIM>& refine_ratio,
    bool register_for_restart) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_geom_name.empty());
-   assert(fine_geom_name != d_object_name);
-   assert(refine_ratio > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(!fine_geom_name.empty());
+   TBOX_ASSERT(fine_geom_name != d_object_name);
+   TBOX_ASSERT(refine_ratio > hier::IntVector<DIM>(0));
 #endif
 
    hier::BoxArray<DIM> fine_domain(this -> getPhysicalDomain());
@@ -185,6 +181,8 @@ SkeletonGridGeometry<DIM>::makeRefinedGridGeometry(
       new geom::SkeletonGridGeometry<DIM>(fine_geom_name,
                                      fine_domain,
                                      register_for_restart);
+
+   fine_geometry->initializePeriodicShift(this->getPeriodicShift());
 
    return(tbox::Pointer<hier::GridGeometry<DIM> >(fine_geometry));
 }
@@ -200,14 +198,14 @@ SkeletonGridGeometry<DIM>::makeRefinedGridGeometry(
 
 template<int DIM> tbox::Pointer<hier::GridGeometry<DIM> > 
 SkeletonGridGeometry<DIM>::makeCoarsenedGridGeometry(
-   const string& coarse_geom_name,
+   const std::string& coarse_geom_name,
    const hier::IntVector<DIM>& coarsen_ratio,
    bool register_for_restart) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!coarse_geom_name.empty());
-   assert(coarse_geom_name != d_object_name);
-   assert(coarsen_ratio > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(!coarse_geom_name.empty());
+   TBOX_ASSERT(coarse_geom_name != d_object_name);
+   TBOX_ASSERT(coarsen_ratio > hier::IntVector<DIM>(0));
 #endif
 
    hier::BoxArray<DIM> coarse_domain(this -> getPhysicalDomain());
@@ -222,14 +220,14 @@ SkeletonGridGeometry<DIM>::makeCoarsenedGridGeometry(
       hier::Box<DIM> testbox = hier::Box<DIM>::refine(coarse_domain.getBox(ib), coarsen_ratio);
       if (testbox != fine_domain.getBox(ib)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         tbox::plog << "SkeletonGridGeometry::makeCoarsenedGridGeometry : Box # " << ib << endl;
-         tbox::plog << "      fine box = " << fine_domain.getBox(ib) << endl;
-         tbox::plog << "      coarse box = " << coarse_domain.getBox(ib) << endl;
-         tbox::plog << "      refined coarse box = " << testbox << endl;
+         tbox::plog << "SkeletonGridGeometry::makeCoarsenedGridGeometry : Box # " << ib << std::endl;
+         tbox::plog << "      fine box = " << fine_domain.getBox(ib) << std::endl;
+         tbox::plog << "      coarse box = " << coarse_domain.getBox(ib) << std::endl;
+         tbox::plog << "      refined coarse box = " << testbox << std::endl;
 #endif
          TBOX_ERROR("geom::SkeletonGridGeometry::makeCoarsenedGridGeometry() error...\n"
                     << "    geometry object with name = " << d_object_name
-                    << "\n    Cannot be coarsened by ratio " << coarsen_ratio << endl);
+                    << "\n    Cannot be coarsened by ratio " << coarsen_ratio << std::endl);
       }
    }
 
@@ -237,6 +235,8 @@ SkeletonGridGeometry<DIM>::makeCoarsenedGridGeometry(
       new geom::SkeletonGridGeometry<DIM>(coarse_geom_name,
                                      coarse_domain,
                                      register_for_restart);
+
+   coarse_geometry->initializePeriodicShift(this->getPeriodicShift());
 
    return(tbox::Pointer<hier::GridGeometry<DIM> >(coarse_geometry));
 }
@@ -314,11 +314,11 @@ template<int DIM> void SkeletonGridGeometry<DIM>::setGeometryDataOnPatch(
     */
    int i;
    for (i = 0; i < DIM; i++) {
-      assert( ratio_to_level_zero(i) != 0 );
+      TBOX_ASSERT( ratio_to_level_zero(i) != 0 );
    }
    if (DIM > 1) {
       for (i = 0; i < DIM; i++) {
-	 assert( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
+	 TBOX_ASSERT( (ratio_to_level_zero(i)*ratio_to_level_zero((i+1)%DIM) > 0)
 		 || (ratio_to_level_zero(i) == 1)
 		 || (ratio_to_level_zero((i+1)%DIM) == 1) );
       }
@@ -347,7 +347,7 @@ template<int DIM> void SkeletonGridGeometry<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    db->putInteger("GEOM_SKELETON_GRID_GEOMETRY_VERSION",
       GEOM_SKELETON_GRID_GEOMETRY_VERSION);
@@ -379,7 +379,7 @@ template<int DIM> void SkeletonGridGeometry<DIM>::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
    
    if (!is_from_restart) {
@@ -405,11 +405,6 @@ template<int DIM> void SkeletonGridGeometry<DIM>::getFromInput(
          }
       }
 
-      /* Complete initialization by invoking setPhysicalDomain */
-      setPhysicalDomain(domain);
-
-      initializePeriodicShift(per_bc);
-
       if (DIM > 3) {
          d_using_original_locations = false;
       } else {
@@ -419,6 +414,12 @@ template<int DIM> void SkeletonGridGeometry<DIM>::getFromInput(
          d_using_original_locations =
             db->getBool("use_original_location_indices");
       }
+
+      setPhysicalDomain(domain);
+
+      initializePeriodicShift(per_bc);
+
+     
    }
 }
 
@@ -471,10 +472,10 @@ template<int DIM> void SkeletonGridGeometry<DIM>::getFromRestart()
 *************************************************************************
 */
 
-template<int DIM> void SkeletonGridGeometry<DIM>::printClassData(ostream& os) const
+template<int DIM> void SkeletonGridGeometry<DIM>::printClassData(std::ostream& os) const
 {
    os << "Printing SkeletonGridGeometry data: this = "
-      << (SkeletonGridGeometry<DIM>*)this << endl;
+      << (SkeletonGridGeometry<DIM>*)this << std::endl;
 
    xfer::Geometry<DIM>::printClassData(os);
 }

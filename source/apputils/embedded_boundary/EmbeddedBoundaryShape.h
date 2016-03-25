@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryShape.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShape.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 726 $
-// Modified:    $Date: 2005-11-10 17:19:40 -0800 (Thu, 10 Nov 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for analytic embedded boundaries
 //              
 // 
@@ -86,7 +86,7 @@ public:
    /*!
     * Dump data to supplied stream.
     */
-   virtual void printClassData(ostream& os) const = 0;
+   virtual void printClassData(std::ostream& os) const = 0;
 
 private:
 

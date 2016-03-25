@@ -23,7 +23,7 @@ dnl * ACTION-IF-NOT-FOUND contains instructions to execute if LIBRARY is
 dnl * not found anywhere.
 dnl **********************************************************************
 
-AC_DEFUN(CASC_ADD_LIB,
+AC_DEFUN([CASC_ADD_LIB],
 [
    # define some macros to hopefully improve readability
    define([m_THESE_LIBS],[$4LIBS])
@@ -82,7 +82,7 @@ dnl * CASC_CHECK_LIB_OLD is an older version of this macro which doesn't
 dnl * seem to work with newer versions of autoconf
 dnl **********************************************************************
 
-AC_DEFUN(CASC_CHECK_LIB,
+AC_DEFUN([CASC_CHECK_LIB],
 [
 dnl AC_MSG_CHECKING([for $2 in -l$1])
 dnl Use a cache variable name containing both the library and function name,
@@ -134,7 +134,7 @@ ifelse([$6], no, unset ac_cv_lib_$ac_lib_var)
 
 
 
-AC_DEFUN(CASC_CHECK_LIB_OLD,
+AC_DEFUN([CASC_CHECK_LIB_OLD],
 [AC_MSG_CHECKING([for -l$1])
 dnl Use a cache variable name containing both the library and function name,
 dnl because the test really is for library $1 defining function $2, not
@@ -193,7 +193,7 @@ dnl * for #includes, and it adds to the variable INCLUDES the first
 dnl * directory in DIRECTORY-LIST from where HEADER-FILE can be included.
 dnl *********************************************************************
 
-AC_DEFUN(CASC_CHECK_HEADER,
+AC_DEFUN([CASC_CHECK_HEADER],
 [
    dnl * loop through the directory list.  The first iteration leaves the
    dnl * casc_dir variable empty to check if the header can be #included
@@ -277,7 +277,7 @@ dnl * all caps, as it becomes part of the name of a variable that is
 dnl * substituted into the Makefile.
 dnl **********************************************************************
 
-AC_DEFUN(CASC_CREATE_PACKAGE_OPTION,
+AC_DEFUN([CASC_CREATE_PACKAGE_OPTION],
 [
    AC_MSG_CHECKING([for $1 directory])
 
@@ -459,12 +459,12 @@ dnl           Documentation above changed to reflect these changes
 dnl           Noah Elliott, October 1998
 
 
-AC_DEFUN(CASC_SMR_ARG_WITHLIB,
+AC_DEFUN([CASC_SMR_ARG_WITHLIB],
 [
    smr_ARG_WITHLIB([$1],[$2],[$3])
 ])dnl
 
-AC_DEFUN(smr_ARG_WITHLIB, [
+AC_DEFUN([smr_ARG_WITHLIB], [
 
 ifelse($2, , smr_lib=[$1], smr_lib=[$2]) 
     
@@ -527,12 +527,12 @@ dnl           name_CFLAGS is now name_INCLUDE
 dnl           Documentation above changed to reflect these changes
 dnl           Noah Elliott, October 1998
 
-AC_DEFUN(CASC_SMR_ARG_WITHINCLUDES,
+AC_DEFUN([CASC_SMR_ARG_WITHINCLUDES],
 [
    smr_ARG_WITHINCLUDES([$1], [$2], [$3])
 ])dnl
 
-AC_DEFUN(smr_ARG_WITHINCLUDES, [
+AC_DEFUN([smr_ARG_WITHINCLUDES], [
 
 AC_ARG_WITH([$1]-include,
 [  --with-$1-include=DIR  set directory for $1 headers],
@@ -584,12 +584,12 @@ dnl Changes:  identifier names and documentation modified to reflect
 dnl           changes to smr_ARG_WITHLIB and smr_ARG_WITHINCLUDES
 dnl           Noah Elliott, October 1998
 
-AC_DEFUN(CASC_SMR_CHECK_LIB,
+AC_DEFUN([CASC_SMR_CHECK_LIB],
 [
    smr_CHECK_LIB([$1], [$2], [$3], [$4], [$5], [$6], [$7])
 ])dnl
 
-AC_DEFUN(smr_CHECK_LIB,
+AC_DEFUN([smr_CHECK_LIB],
 [   
 ifelse($2, , smr_lib=[$1], smr_lib=[$2])
 ifelse($5, , , smr_header=[$5])

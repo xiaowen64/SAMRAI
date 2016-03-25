@@ -1,9 +1,9 @@
 //
-// File:        PETSc_SAMRAIVectorReal.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/PETSc_SAMRAIVectorReal.C $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 179 $
-// Modified:    $Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1732 $
+// Modified:    $LastChangedDate: 2007-12-04 09:01:48 -0800 (Tue, 04 Dec 2007) $
 // Description: "Glue code" between PETSc vector interface and SAMRAI vectors.
 //
 
@@ -20,18 +20,8 @@
 #include "tbox/Utilities.h"
 #include "tbox/IOStream.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "tbox/PIO.h"
-extern "C" {
-#include "vecimpl.h"
-}
-
 
 #ifndef NULL
 #define NULL (0)
@@ -40,6 +30,7 @@ extern "C" {
 #ifdef DEBUG_NO_INLINE
 #include "PETSc_SAMRAIVectorReal.I"
 #endif
+
 namespace SAMRAI {
     namespace solv {
 
@@ -51,37 +42,58 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
-Vec PETSc_SAMRAIVectorReal<DIM,TYPE>::createPETScVector(
-   tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > samrai_vec)
+template <int DIM, class TYPE>
+Vec
+PETSc_SAMRAIVectorReal<DIM,TYPE>::createPETScVector(
+    SAMRAI::tbox::Pointer<SAMRAI::solv::SAMRAIVectorReal<DIM,TYPE> > samrai_vec,
+    MPI_Comm comm)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!samrai_vec.isNull());
+    TBOX_ASSERT(!samrai_vec.isNull());
 #endif
-   bool vector_created_via_duplicate = false;
-   PETSc_SAMRAIVectorReal<DIM,TYPE>* spv = 
-      new PETSc_SAMRAIVectorReal<DIM,TYPE>(samrai_vec, 
-                                            vector_created_via_duplicate);
-   return( spv->getPETScVector() );
-} 
 
-template<int DIM, class TYPE>
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::destroyPETScVector(Vec petsc_vec)
-{
-   if (petsc_vec) {
-       delete ((PETSc_SAMRAIVectorReal<DIM,TYPE>*)(petsc_vec->data));
-   }
+    static const bool vector_created_via_duplicate = false;
+
+    PETSc_SAMRAIVectorReal<DIM,TYPE>* psv = new PETSc_SAMRAIVectorReal<DIM,TYPE>(
+        samrai_vec, vector_created_via_duplicate, comm);
+
+    return psv->getPETScVector();
 }
 
-template<int DIM, class TYPE>
-tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > 
-PETSc_SAMRAIVectorReal<DIM,TYPE>::getSAMRAIVector(Vec petsc_vec)
+template <int DIM, class TYPE>
+void
+PETSc_SAMRAIVectorReal<DIM,TYPE>::destroyPETScVector(
+    Vec petsc_vec)
+{
+    if (petsc_vec != static_cast<Vec>(NULL))
+    {
+        PETSc_SAMRAIVectorReal<DIM,TYPE>* psv = static_cast<PETSc_SAMRAIVectorReal<DIM,TYPE>*>(petsc_vec->data);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+        TBOX_ASSERT(psv != NULL);
+#endif
+
+        delete psv;
+    }
+    return;
+}
+
+template <int DIM, class TYPE>
+SAMRAI::tbox::Pointer<SAMRAI::solv::SAMRAIVectorReal<DIM,TYPE> >
+PETSc_SAMRAIVectorReal<DIM,TYPE>::getSAMRAIVector(
+    Vec petsc_vec)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(petsc_vec == (Vec)NULL));
+    TBOX_ASSERT(petsc_vec != static_cast<Vec>(NULL));
 #endif
-   return( ((PETSc_SAMRAIVectorReal<DIM,TYPE>*)(petsc_vec->data))->
-                                                 getSAMRAIVector() );
+
+    PETSc_SAMRAIVectorReal<DIM,TYPE>* psv = static_cast<PETSc_SAMRAIVectorReal<DIM,TYPE>*>(petsc_vec->data);
+
+#ifdef DEBUG_CHECK_TBOX_ASSERTIONS
+    TBOX_ASSERT(psv != NULL);
+#endif
+
+    return psv->d_samrai_vector;
 }
 
 /*
@@ -92,19 +104,24 @@ PETSc_SAMRAIVectorReal<DIM,TYPE>::getSAMRAIVector(Vec petsc_vec)
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
+template <int DIM, class TYPE>
 PETSc_SAMRAIVectorReal<DIM,TYPE>::PETSc_SAMRAIVectorReal(
-   tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > samrai_vector,
-   bool vector_created_via_duplicate)
-: PETScAbstractVectorReal<TYPE>(vector_created_via_duplicate)
+    SAMRAI::tbox::Pointer<SAMRAI::solv::SAMRAIVectorReal<DIM,TYPE> > samrai_vector,
+    bool vector_created_via_duplicate,
+    MPI_Comm comm)
+    : PETScAbstractVectorReal<TYPE>(vector_created_via_duplicate,comm),
+      d_samrai_vector(samrai_vector),
+      d_vector_created_via_duplicate(vector_created_via_duplicate)
 {
-   d_vector_created_via_duplicate = vector_created_via_duplicate;
-   d_samrai_vector = samrai_vector;
+    // intentionally blank
+   return;
 }
 
-template<int DIM, class TYPE>
+template <int DIM, class TYPE>
 PETSc_SAMRAIVectorReal<DIM,TYPE>::~PETSc_SAMRAIVectorReal()
 {
+   // intentionally blank
+   return;
 }
 
 /*
@@ -119,54 +136,46 @@ template<int DIM, class TYPE>
 PETScAbstractVectorReal<TYPE>* 
 PETSc_SAMRAIVectorReal<DIM,TYPE>::makeNewVector()
 {
+
+   Vec petsc_vec = PETSc_SAMRAIVectorReal<DIM,TYPE>::getPETScVector();
+   MPI_Comm comm;
+   int ierr = PetscObjectGetComm(reinterpret_cast<PetscObject>(petsc_vec),&comm); PETSC_SAMRAI_ERROR(ierr);
+
    tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > sam_vec =
       d_samrai_vector->cloneVector(d_samrai_vector->getName());
    sam_vec->allocateVectorData();
-   bool vector_created_via_duplicate = true;
+   const bool vector_created_via_duplicate = true;
    PETSc_SAMRAIVectorReal<DIM,TYPE>* out_vec =
       new PETSc_SAMRAIVectorReal<DIM,TYPE>(sam_vec,
-                                             vector_created_via_duplicate);
+					   vector_created_via_duplicate, 
+					   comm);
    return( out_vec );
 }
 
 template<int DIM, class TYPE>
 void PETSc_SAMRAIVectorReal<DIM,TYPE>::freeVector()
 {
+
    if (d_vector_created_via_duplicate) {
       d_samrai_vector->freeVectorComponents();
       d_samrai_vector.setNull();
       Vec petsc_vec = this -> getPETScVector(); 
-      if (petsc_vec) { 
-         delete ((PETSc_SAMRAIVectorReal<DIM,TYPE>*)(petsc_vec->data));
-      }
+
+#ifdef DEBUG_CHECK_TBOX_ASSERTIONS
+      TBOX_ASSERT(petsc_vec != static_cast<Vec>(NULL));
+#endif
+      delete ((PETSc_SAMRAIVectorReal<DIM,TYPE>*)(petsc_vec->data));
    }
 }
 
 template<int DIM, class TYPE>
 void PETSc_SAMRAIVectorReal<DIM,TYPE>::viewVector() const
 {
-   ostream& s = d_samrai_vector->getOutputStream();
+   std::ostream& s = d_samrai_vector->getOutputStream();
    s << "\nPrinting PETSc_SAMRAIVectorReal<DIM>..." 
-     << "\nSAMRAI vector structure and data: " << endl;
+     << "\nSAMRAI vector structure and data: " << std::endl;
    d_samrai_vector->print(s);
-   s << "\n" << endl;
-}
-
-template<int DIM, class TYPE>
-void PETSc_SAMRAIVectorReal<DIM,TYPE>::getDataArray(TYPE* array)
-{
-   (void) array;
-   TBOX_ERROR("PETSc_SAMRAIVectorReal<DIM,TYPE>::getDataArray undefined!");
-}
-
-template<int DIM, class TYPE>
-double PETSc_SAMRAIVectorReal<DIM,TYPE>::maxPointwiseDivide(
-   const PETScAbstractVectorReal<TYPE>* y)
-{
-   tbox::Pointer<SAMRAIVectorReal<DIM,TYPE> > y_vector
-      = SPVEC_CAST(y)->getSAMRAIVector();
-   TYPE max = d_samrai_vector->maxPointwiseDivide(y_vector);
-   return max;
+   s << "\n" << std::endl;
 }
 
 }

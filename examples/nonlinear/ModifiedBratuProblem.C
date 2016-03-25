@@ -1,16 +1,16 @@
 //
-// File:        $RCSfile$
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/nonlinear/ModifiedBratuProblem.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1768 $
+// Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 // Description: Class containing numerical routines for modified Bratu problem
 //
 
 #include "ModifiedBratuProblem.h"
 #include "ModifiedBratuFort.h"
 
-#if defined(HAVE_PETSC) && defined(HAVE_KINSOL) && defined(HAVE_HYPRE)
+#if defined(HAVE_PETSC) && defined(HAVE_SUNDIALS) && defined(HAVE_HYPRE)
 
 #include <iostream>
 #include <iomanip>
@@ -55,24 +55,21 @@ using namespace SAMRAI;
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
-#include "tbox/IEEE.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
-#include "PVodeTrio_SAMRAIVector.h"
+#include "Sundials_SAMRAIVector.h"
 #include "PETSc_SAMRAIVectorReal.h"
 
 
 #define MODIFIED_BRATU_PROBLEM (1)
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 // Define for number of ghost cells on solution quantity
 #define NUM_GHOSTS_U       (1)
+
+tbox::Pointer<tbox::Timer> ModifiedBratuProblem::s_copy_timer;
+tbox::Pointer<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
 
 /*
 *************************************************************************
@@ -127,9 +124,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
      d_precond_b_id(-1)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!grid_geometry.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!grid_geometry.isNull());
 #endif
 
    d_object_name = object_name;
@@ -144,11 +141,10 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_current_dt =
    d_new_time =
    d_lambda =
-   d_input_dt =
-   tbox::IEEE::getSignalingNaN();
+   d_input_dt = tbox::MathUtilities<double>::getSignalingNaN();
 
-   d_max_precond_its = tbox::IEEE::getINT_MAX();
-   d_precond_tol = tbox::IEEE::getSignalingNaN();
+   d_max_precond_its = tbox::MathUtilities<int>::getMax();
+   d_precond_tol = tbox::MathUtilities<double>::getSignalingNaN();
 
    getFromInput( input_db,
                  false );
@@ -348,6 +344,13 @@ ModifiedBratuProblem::ModifiedBratuProblem(
                               d_soln_scratch_id, 
                               d_soln_refine_op);
 
+
+
+   s_copy_timer = tbox::TimerManager::getManager() -> 
+      getTimer("apps::usrFcns::evaluateBratuFunction");
+   s_pc_timer = tbox::TimerManager::getManager() 
+      -> getTimer("apps::usrFcns::applyBratuPreconditioner");
+
 }
 
 /*
@@ -360,9 +363,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
 
 ModifiedBratuProblem::~ModifiedBratuProblem()
 {
-   if (d_FAC_solver) {
-      delete d_FAC_solver;
-   }
+   d_FAC_solver.setNull();
+   s_copy_timer.setNull();
+   s_pc_timer.setNull();
 }
 
 /*
@@ -379,7 +382,7 @@ void ModifiedBratuProblem::setupSolutionVector(
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!solution.isNull());
+   TBOX_ASSERT(!solution.isNull());
 #endif
 
    d_solution_vector = solution;
@@ -831,13 +834,13 @@ void ModifiedBratuProblem::initializeLevelData(
    const bool allocate_data )
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0)
            && (level_number <= hierarchy->getFinestLevelNumber()) );
    if ( !(old_level.isNull()) ) {
-      assert( level_number == old_level->getLevelNumber() );
+      TBOX_ASSERT( level_number == old_level->getLevelNumber() );
    }
-   assert(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
 #endif
 
    tbox::Pointer<hier::PatchLevel<NDIM> > level = hierarchy->getPatchLevel(level_number);
@@ -931,12 +934,12 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (coarsest_level >= 0)
            && (coarsest_level <= finest_level)
            && (finest_level <= hierarchy->getFinestLevelNumber()) );
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
-      assert(!(hierarchy->getPatchLevel(ln0)).isNull());
+      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln0)).isNull());
    }
 #endif
    tbox::Pointer< hier::PatchHierarchy<NDIM> > patch_hierarchy = hierarchy;  
@@ -1013,98 +1016,94 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
 */
 
 void ModifiedBratuProblem::evaluateNonlinearFunction(
-   solv::PVodeTrioAbstractVector* soln,
-   solv::PVodeTrioAbstractVector* fval)
+   solv::SundialsAbstractVector* soln,
+   solv::SundialsAbstractVector* fval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(soln == (solv::PVodeTrioAbstractVector*)NULL));
-   assert(!(fval == (solv::PVodeTrioAbstractVector*)NULL));
+   TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector*)NULL));
+   TBOX_ASSERT(!(fval == (solv::SundialsAbstractVector*)NULL));
 #endif
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > x =
-      solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(soln);
+      solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(soln);
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > f =
-      solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(fval);
+      solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(fval);
 
    evaluateBratuFunction(x, f);
 }
 
-int ModifiedBratuProblem::precondSetup(solv::PVodeTrioAbstractVector* soln,
-                                       solv::PVodeTrioAbstractVector* soln_scale,
-                                       solv::PVodeTrioAbstractVector* fval,
-                                       solv::PVodeTrioAbstractVector* fval_scale,
-                                       solv::PVodeTrioAbstractVector* vtemp1,
-                                       solv::PVodeTrioAbstractVector* vtemp2,
-                                       double mach_roundoff,
-                                       int& num_feval)
+int ModifiedBratuProblem::precondSetup(solv::SundialsAbstractVector* soln,
+		    solv::SundialsAbstractVector* soln_scale,
+		    solv::SundialsAbstractVector* fval,
+		    solv::SundialsAbstractVector* fval_scale,
+		    solv::SundialsAbstractVector* vtemp1,
+		    solv::SundialsAbstractVector* vtemp2,
+		    int& num_feval)
 {
    (void) soln_scale;
    (void) fval;
    (void) fval_scale;
    (void) vtemp1;
    (void) vtemp2;
-   (void) mach_roundoff;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(soln == (solv::PVodeTrioAbstractVector*)NULL));
+   TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector*)NULL));
 #endif
 
    num_feval += 0;
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > x =
-      solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(soln);
+      solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(soln);
 
    setupBratuPreconditioner(x); 
 
    return(0);
 }
 
-int ModifiedBratuProblem::precondSolve(solv::PVodeTrioAbstractVector* soln,
-                                       solv::PVodeTrioAbstractVector* soln_scale,
-                                       solv::PVodeTrioAbstractVector* fval,
-                                       solv::PVodeTrioAbstractVector* fval_scale,
-                                       solv::PVodeTrioAbstractVector* rhs,
-                                       solv::PVodeTrioAbstractVector* vtemp,
-                                       double mach_roundoff,
-                                       int& num_feval)
+int ModifiedBratuProblem::precondSolve(solv::SundialsAbstractVector* soln,
+		    solv::SundialsAbstractVector* soln_scale,
+		    solv::SundialsAbstractVector* fval,
+		    solv::SundialsAbstractVector* fval_scale,
+		    solv::SundialsAbstractVector* rhs,
+		    solv::SundialsAbstractVector* vtemp,
+		    int& num_feval)
 {
    (void) soln;
    (void) soln_scale;
    (void) fval;
    (void) fval_scale;
    (void) vtemp;
-   (void) mach_roundoff;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(rhs == (solv::PVodeTrioAbstractVector*)NULL));
+   TBOX_ASSERT(!(rhs == (solv::SundialsAbstractVector*)NULL));
 #endif
 
    num_feval += 0;
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > r =
-      solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(rhs);
+      solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(rhs);
 
    return(applyBratuPreconditioner(r, r));
 }
 
 int
-ModifiedBratuProblem::jacobianTimesVector(solv::PVodeTrioAbstractVector* vector,
-                                          solv::PVodeTrioAbstractVector* product,
+ModifiedBratuProblem::jacobianTimesVector(solv::SundialsAbstractVector* vector,
+                                          solv::SundialsAbstractVector* product,
                                           const bool soln_changed,
-                                          solv::PVodeTrioAbstractVector* soln)
+                                          solv::SundialsAbstractVector* soln)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(vector == (solv::PVodeTrioAbstractVector*)NULL));
-   assert(!(product == (solv::PVodeTrioAbstractVector*)NULL));
-   assert(!(soln == (solv::PVodeTrioAbstractVector*)NULL));
+   TBOX_ASSERT(!(vector == (solv::SundialsAbstractVector*)NULL));
+   TBOX_ASSERT(!(product == (solv::SundialsAbstractVector*)NULL));
+   TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector*)NULL));
 #endif
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > v =
-      solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(vector);
+      solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(vector);
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > Jv =
-      solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(product);
+      solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(product);
 
    if ( soln_changed ) {
       tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > ucur =
-	 solv::PVodeTrio_SAMRAIVector<NDIM>::getSAMRAIVector(soln);
+	 solv::Sundials_SAMRAIVector<NDIM>::getSAMRAIVector(soln);
       evaluateBratuJacobian(ucur);
    }
    return(jacobianTimesVector(v, Jv));
@@ -1123,8 +1122,8 @@ int ModifiedBratuProblem::evaluateNonlinearFunction(
    Vec fcur)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(xcur == NULL));
-   assert(!(fcur == NULL));
+   TBOX_ASSERT(!(xcur == NULL));
+   TBOX_ASSERT(!(fcur == NULL));
 #endif
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > x =
@@ -1141,7 +1140,7 @@ int ModifiedBratuProblem::evaluateJacobian(
    Vec x)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(x == NULL));
+   TBOX_ASSERT(!(x == NULL));
 #endif
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > xvec =
@@ -1157,8 +1156,8 @@ int ModifiedBratuProblem::jacobianTimesVector(
    Vec xout)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(xin != NULL);
-   assert(xout != NULL);
+   TBOX_ASSERT(xin != NULL);
+   TBOX_ASSERT(xout != NULL);
 #endif
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > xinvec =
@@ -1185,8 +1184,8 @@ int ModifiedBratuProblem::applyPreconditioner(
    Vec z)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(r != NULL);
-   assert(z != NULL);
+   TBOX_ASSERT(r != NULL);
+   TBOX_ASSERT(z != NULL);
 #endif
 
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > rhs =
@@ -1225,12 +1224,10 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > f)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!x.isNull());
-   assert(!f.isNull());
+   TBOX_ASSERT(!x.isNull());
+   TBOX_ASSERT(!f.isNull());
 #endif
 
-   static tbox::Pointer<tbox::Timer> copy_timer = 
-      tbox::TimerManager::getManager()->getTimer("apps::usrFcns::evaluateBratuFunction");
    
    tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy = d_solution_vector->getPatchHierarchy();
 
@@ -1257,24 +1254,24 @@ void ModifiedBratuProblem::evaluateBratuFunction(
     * Create a refine algorithm to fill ghost cells of solution variable.
     */
 
-   copy_timer->start(); 
+   s_copy_timer->start(); 
    RefineAlgorithm<NDIM> eval_fill;
    eval_fill.registerRefine(d_soln_scratch_id, 
                             x->getComponentDescriptorIndex(0), 
                             d_soln_scratch_id, 
                             d_soln_refine_op);
-   copy_timer->stop();
+   s_copy_timer->stop();
 
    for (amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         amr_level-- ) {
       tbox::Pointer<hier::PatchLevel<NDIM> > level = hierarchy->getPatchLevel(amr_level);
 
-      copy_timer->start();
+      s_copy_timer->start();
       eval_fill.resetSchedule( d_soln_fill_schedule[amr_level]);
       d_soln_fill_schedule[amr_level]->fillData(d_new_time);
       d_soln_fill.resetSchedule( d_soln_fill_schedule[amr_level] );
-      copy_timer->stop();
+      s_copy_timer->stop();
 
       level->allocatePatchData(d_flux_id);
       if (amr_level > 0) {
@@ -1633,8 +1630,8 @@ ModifiedBratuProblem::jacobianTimesVector(
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > Jv )
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-  assert(!(v    == (tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> >)NULL));
-  assert(!(Jv   == (tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> >)NULL));
+  TBOX_ASSERT(!(v    == (tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> >)NULL));
+  TBOX_ASSERT(!(Jv   == (tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> >)NULL));
 #endif
 
    /*
@@ -1669,16 +1666,13 @@ ModifiedBratuProblem::jacobianTimesVector(
     * Create a refine algorithm needed to fill ghost cells of vector being
     * multiplied.
     */
-   static tbox::Pointer<tbox::Timer> copy_timer = 
-      tbox::TimerManager::getManager()->getTimer("apps::usrFcns::jacobianTimesVector");
-
-   copy_timer->start(); 
+   s_copy_timer->start(); 
    RefineAlgorithm<NDIM> jacv_fill;
    jacv_fill.registerRefine(d_soln_scratch_id,
                             v->getComponentDescriptorIndex(0),
                             d_soln_scratch_id,
                             d_soln_refine_op);
-   copy_timer->stop(); 
+   s_copy_timer->stop(); 
 
    /*
     * Perform Jacobian-vector product by looping over levels in the hierarchy.
@@ -1721,11 +1715,11 @@ ModifiedBratuProblem::jacobianTimesVector(
     * Fill ghost cell locations on this level.
     */
 
-      copy_timer->start(); 
+      s_copy_timer->start(); 
       jacv_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
       d_soln_fill_schedule[amr_level]->fillData(d_new_time);
       d_soln_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
-      copy_timer->stop(); 
+      s_copy_timer->stop(); 
 
    /*
     * Now sweep through patches on a level, evaluating fluxes on faces
@@ -1964,9 +1958,9 @@ ModifiedBratuProblem::jacobianTimesVector(
             patch->getPatchData(d_flux_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-	 assert( vdat->getGhostCellWidth() == hier::IntVector<NDIM>(NUM_GHOSTS_U) );
-	 assert( Jvdat->getGhostCellWidth() == hier::IntVector<NDIM>(0) );
-	 assert( jac_a->getGhostCellWidth() == hier::IntVector<NDIM>(0) );
+	 TBOX_ASSERT( vdat->getGhostCellWidth() == hier::IntVector<NDIM>(NUM_GHOSTS_U) );
+	 TBOX_ASSERT( Jvdat->getGhostCellWidth() == hier::IntVector<NDIM>(0) );
+	 TBOX_ASSERT( jac_a->getGhostCellWidth() == hier::IntVector<NDIM>(0) );
 #endif
 
 #if (NDIM == 1)
@@ -2068,7 +2062,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > x)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!x.isNull());
+   TBOX_ASSERT(!x.isNull());
 #endif
 
    tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy = d_solution_vector->getPatchHierarchy();
@@ -2120,12 +2114,12 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
          tbox::Pointer< pdat::FaceData<NDIM,double> > b = patch->getPatchData(d_precond_b_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-	 assert( !exponential.isNull() );
-	 assert( !source.isNull() );
-	 assert( !u.isNull() );
-	 assert( !diffusion.isNull() );
-	 assert( !a.isNull() );
-	 assert( !b.isNull() );
+	 TBOX_ASSERT( !exponential.isNull() );
+	 TBOX_ASSERT( !source.isNull() );
+	 TBOX_ASSERT( !u.isNull() );
+	 TBOX_ASSERT( !diffusion.isNull() );
+	 TBOX_ASSERT( !a.isNull() );
+	 TBOX_ASSERT( !b.isNull() );
 #endif
 
          /*
@@ -2296,8 +2290,8 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    tbox::Pointer< solv::SAMRAIVectorReal<NDIM,double> > z)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!r.isNull());
-   assert(!z.isNull());
+   TBOX_ASSERT(!r.isNull());
+   TBOX_ASSERT(!z.isNull());
 #endif
 
    int ret_val = 0;
@@ -2331,10 +2325,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    math_ops.setToScalar(d_soln_scratch_id,
                         0.0);
 
-   static tbox::Pointer<tbox::Timer> pc_timer = 
-      tbox::TimerManager::getManager()->
-      getTimer("apps::usrFcns::applyBratuPreconditioner");
-   pc_timer->start(); 
+   s_pc_timer->start(); 
 
    bool converge;
    converge = d_FAC_solver->solveSystem(d_soln_scratch_id,
@@ -2343,7 +2334,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
                                         0, 
                                         hierarchy->getFinestLevelNumber() );
 
-   pc_timer->stop(); 
+   s_pc_timer->stop(); 
 
    /*
     * Create a coarsen algorithm to coarsen soln data on fine patch interiors.
@@ -2614,7 +2605,7 @@ void ModifiedBratuProblem::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    if (db->keyExists("lambda")) {
@@ -2673,7 +2664,7 @@ void ModifiedBratuProblem::getFromInput(
 void ModifiedBratuProblem::putToDatabase(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("MODIFIED_BRATU_PROBLEM", MODIFIED_BRATU_PROBLEM);

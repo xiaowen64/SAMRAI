@@ -1,8 +1,8 @@
 /*
- * File:        $RCSfile: AsyncBergerRigoutsosNode.h,v $
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 346 $
- * Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsosNode.h $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: Asynchronous Berger-Rigoutsos dendogram
  */
 
@@ -131,7 +131,7 @@ public:
    typedef typename hier::LayerEdgeSet<DIM>::Connectivity Connectivity;
 
    //! @brief Shorthand for a sorted, possibly incontiguous, set of integers.
-   typedef set<int> IntSet;
+   typedef std::set<int> IntSet;
 
 
    enum OwnerMode { SINGLE_OWNER = 0 ,
@@ -162,19 +162,19 @@ public:
          const hier::IntVector<DIM> min_box_,
          const double efficiency_tol_,
          const double combine_tol_,
-         const tbox::MPI::comm mpi_communicator_);
+         const tbox::SAMRAI_MPI::comm mpi_communicator_);
 
       /*!
        * @brief Utility function for getting rank
        * from an arbitrary communicator.
        */
 
-      static int getRank( const tbox::MPI::comm &mpi_communicator_ );
+      static int getRank( const tbox::SAMRAI_MPI::comm &mpi_communicator_ );
       /*!
        * @brief Utility function for getting processor count
        * from an arbitrary communicator.
        */
-      static int getProcCount( const tbox::MPI::comm &mpi_communicator_ );
+      static int getProcCount( const tbox::SAMRAI_MPI::comm &mpi_communicator_ );
 
       tbox::JobRelauncher job_relauncher;
 
@@ -223,7 +223,7 @@ public:
        * @brief Outgoing messages to be sent to graph node owners
        * describing new edges found by local process.
        */
-      map<int,vector<int> > edge_messages;
+      std::map<int,std::vector<int> > edge_messages;
 
       //@{
       //@name Parameters from clustering algorithm interface
@@ -265,7 +265,7 @@ public:
        * to a duplicate of MPI_COMM_WORLD if there is interference
        * with other communications using MPI_COMM_WORLD.
        */
-      tbox::MPI::comm mpi_communicator;
+      tbox::SAMRAI_MPI::comm mpi_communicator;
       const int rank;
       const int nproc;
       //! @brief Upperbound of valid tags.
@@ -395,7 +395,7 @@ public:
     * If you require consistent outputs, we suggest you have a scheme
     * for reordering the output boxes.
     */
-   void setAlgorithmAdvanceMode( const string &algo_advance_mode );
+   void setAlgorithmAdvanceMode( const std::string &algo_advance_mode );
 
    /*!
     * @brief Set the method for choosing the owner.
@@ -420,7 +420,7 @@ public:
     * clustering speed, while "SINGLE_OWNER" may give a faster
     * output globalization (since you don't need an all-gather).
     */
-   void setOwnerMode( const string &mode );
+   void setOwnerMode( const std::string &mode );
 
 
    /*!
@@ -484,7 +484,7 @@ public:
    //@{
 
    //! @name Developer's methods for analysis and debugging this class.
-   void printClassData( ostream &os, int detail_level=0 ) const;
+   virtual void printClassData( std::ostream &os, int detail_level=0 ) const;
 
    //! @brief Max number of local nodes for dendogram.
    int getMaxNodes() const;

@@ -1,9 +1,9 @@
 //
-// File:	PatchHierarchy.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchHierarchy.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 647 $
-// Modified:	$Date: 2005-10-03 17:37:15 -0700 (Mon, 03 Oct 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An AMR hierarchy of patch levels
 //
 
@@ -18,7 +18,6 @@
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #ifndef included_hier_BasePatchHierarchy
@@ -91,7 +90,7 @@ public:
     * active.
     */ 
    PatchHierarchy(
-      const string& object_name,
+      const std::string& object_name,
       tbox::Pointer< GridGeometry<DIM> > geometry,
       bool register_for_restart = true);
 
@@ -115,7 +114,7 @@ public:
     * hierarchy.
     */
    tbox::Pointer<hier::PatchHierarchy<DIM> > makeRefinedPatchHierarchy(
-      const string& fine_hierarchy_name,
+      const std::string& fine_hierarchy_name,
       const hier::IntVector<DIM>& refine_ratio,
       bool register_for_restart) const;
 
@@ -133,7 +132,7 @@ public:
     * the new hierarchy.
     */
    tbox::Pointer<hier::PatchHierarchy<DIM> > makeCoarsenedPatchHierarchy(
-      const string& coarse_hierarchy_name,
+      const std::string& coarse_hierarchy_name,
       const hier::IntVector<DIM>& coarsen_ratio,
       bool register_for_restart) const;
 
@@ -149,7 +148,8 @@ public:
       const int l,
       const IntVector<DIM>& ratio_to_coarsest,
       const BoxArray<DIM>& patch_boxes,
-      const ProcessorMapping& mapping);
+      const ProcessorMapping& mapping,
+      const bool defer_boundary_box_creation = false);
 
    /**
     * Remove PatchLevel and adjust number of levels accordingly.
@@ -304,12 +304,12 @@ public:
     *
     * If depth>0, print function will be called for each level in the hierarchy.
     */
-int recursivePrint( ostream &os ,
-                    const string &border=string() ,
+int recursivePrint( std::ostream &os ,
+                    const std::string &border=std::string() ,
                     unsigned short depth=0 );
 
 private:
-   string                                       d_object_name;
+   std::string                                  d_object_name;
    bool                                         d_registered_for_restart;
    int                                          d_number_levels;
    tbox::Array< tbox::Pointer< PatchLevel<DIM> > > d_patch_levels;

@@ -1,9 +1,9 @@
 //
-// File:        Statistic.I
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistic.I $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Class to record statistics during program execution.
 //
 
@@ -27,12 +27,12 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-inline string Statistic::getName() const
+inline std::string Statistic::getName() const
 {
    return(d_object_name);
 }
 
-inline string Statistic::getType() const
+inline std::string Statistic::getType() const
 {
    return( (d_stat_type == PROC_STAT) ? "PROC_STAT" : "PATCH_STAT" );
 }

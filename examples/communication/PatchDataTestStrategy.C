@@ -1,9 +1,9 @@
 //
-// File:        PatchDataTestStrategy.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/PatchDataTestStrategy.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 368 $
-// Modified:    $Date: 2005-05-18 18:01:09 -0700 (Wed, 18 May 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for patch data test operations.
 //
 
@@ -13,12 +13,6 @@
 #include "CellData.h"
 #include "PatchLevel.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 namespace SAMRAI {
 
@@ -64,7 +58,7 @@ PatchDataTestStrategy::~PatchDataTestStrategy()
 void PatchDataTestStrategy::readVariableInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -135,7 +129,7 @@ void PatchDataTestStrategy::readVariableInput(tbox::Pointer<tbox::Database> db)
 void PatchDataTestStrategy::readRefinementInput(tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    tbox::Array<string> box_keys = db->getAllKeys();

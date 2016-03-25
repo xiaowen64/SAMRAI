@@ -1,9 +1,9 @@
 //
-// File:	StatTransaction.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/StatTransaction.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Communication transaction structure for statistic data copies
 //
  
@@ -66,12 +66,12 @@ void StatTransaction::copyLocalData()
    // Nothing to do here!
 }
 
-void StatTransaction::printClassData(ostream& stream) const
+void StatTransaction::printClassData(std::ostream& stream) const
 {
-   stream << "Stat Transaction" << endl;
-   stream << "   source processor:   " << d_src_id      << endl;
-   stream << "   destination processor:   " << d_dst_id      << endl;
-   stream << "   stat name:   " << d_stat->getName() << endl;
+   stream << "Stat Transaction" << std::endl;
+   stream << "   source processor:   " << d_src_id      << std::endl;
+   stream << "   destination processor:   " << d_dst_id      << std::endl;
+   stream << "   stat name:   " << d_stat->getName() << std::endl;
 }
 
 }

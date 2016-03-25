@@ -1,8 +1,8 @@
 /*
- * File:         $RCSfile: AsyncBergerRigoutsosNode.C,v $
- * Copyright:    (c) 1997-2005 The Regents of the University of California
- * Revision:     $Revision: 602 $
- * Modified:     $Date: 2005-09-06 11:51:31 -0700 (Tue, 06 Sep 2005) $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsosNode.C $
+ * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 1704 $
+ * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description:  Node in asynchronous Berger-Rigoutsos dendogram
  */
 
@@ -11,18 +11,15 @@
 
 #include "AsyncBergerRigoutsosNode.h"
 #include "CellData.h"
-#include "tbox/IEEE.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #include <set>
 
 namespace SAMRAI {
 namespace mesh {
-
-using namespace SAMRAI::tbox;
-
 
 /*
 ********************************************************************
@@ -50,7 +47,8 @@ AsyncBergerRigoutsosNode<DIM>::AsyncBergerRigoutsosNode(
    AsyncBergerRigoutsosNode *parent,
    const int child_number )
    : d_pos( parent == NULL ? 1 :
-           ( parent->d_pos > 0 && parent->d_pos < tbox::IEEE::getINT_MAX()/2 ) ?
+           ( parent->d_pos > 0 && 
+             parent->d_pos < tbox::MathUtilities<int>::getMax()/2 ) ?
            2*parent->d_pos+child_number :
            ( child_number==0 ? -1 : -2 ) ),
      d_common(common_params),
@@ -862,7 +860,7 @@ AsyncBergerRigoutsosNode<DIM>::CommonParams::CommonParams(
    const hier::IntVector<DIM> min_box_,
    const double efficiency_tol_,
    const double combine_tol_,
-   const tbox::MPI::comm mpi_communicator_)
+   const tbox::SAMRAI_MPI::comm mpi_communicator_)
    :
      new_node_set(),
      tag_cnect_new(),
@@ -954,7 +952,7 @@ AsyncBergerRigoutsosNode<DIM>::CommonParams::CommonParams(
 
 template<int DIM>
 int AsyncBergerRigoutsosNode<DIM>::CommonParams::getRank(
-   const tbox::MPI::comm &mpi_communicator_ )
+   const tbox::SAMRAI_MPI::comm &mpi_communicator_ )
 {
 #ifdef HAVE_MPI
    int rank = 0;
@@ -970,7 +968,7 @@ int AsyncBergerRigoutsosNode<DIM>::CommonParams::getRank(
 
 template<int DIM>
 int AsyncBergerRigoutsosNode<DIM>::CommonParams::getProcCount(
-   const tbox::MPI::comm &mpi_communicator_ )
+   const tbox::SAMRAI_MPI::comm &mpi_communicator_ )
 {
 #ifdef HAVE_MPI
    int proc_count = 0;
@@ -1635,7 +1633,7 @@ void AsyncBergerRigoutsosNode<DIM>::acceptOrSplitBox()
        */
 
       int cut_lo, cut_hi;
-      int cut_pt = -tbox::IEEE::getINT_MAX();
+      int cut_pt = -(tbox::MathUtilities<int>::getMax());
       int cut_dim = -1; 
       int dim = -1;
       const hier::Index<DIM> box_lo(d_box.lower()); 
@@ -1883,8 +1881,10 @@ void AsyncBergerRigoutsosNode<DIM>::cutAtLaplacian(
    if ( (hi - lo + 1) >= 3 ) {
 
       int max_zero = 0;
-      const int infpt_lo_lim = tbox::Utilities::imax( lo+min_size-1, lo+1 );  
-      const int infpt_hi_lim = tbox::Utilities::imin( hi-min_size, hi-2 );  
+      const int infpt_lo_lim = tbox::MathUtilities<int>::Max( lo+min_size-1, 
+                                                              lo+1 );  
+      const int infpt_hi_lim = tbox::MathUtilities<int>::Min( hi-min_size, 
+                                                              hi-2 );  
 
       int last_lap = d_histogram[dim][infpt_lo_lim-1-d_box.lower()(dim)]
                      - 2 * d_histogram[dim][infpt_lo_lim-d_box.lower()(dim)]
@@ -2069,8 +2069,8 @@ void AsyncBergerRigoutsosNode<DIM>::formChildGroups()
    case SINGLE_OWNER:
       lft_criteria = &d_recv_msg[0];
       rht_criteria = &d_recv_msg[1];
-      lft_criteria[imyself*4] = tbox::IEEE::getINT_MAX();
-      rht_criteria[imyself*4] = tbox::IEEE::getINT_MAX();
+      lft_criteria[imyself*4] = tbox::MathUtilities<int>::getMax();
+      rht_criteria[imyself*4] = tbox::MathUtilities<int>::getMax();
       break;
    case MOST_OVERLAP:
       lft_criteria = &d_recv_msg[0];
@@ -2098,8 +2098,8 @@ void AsyncBergerRigoutsosNode<DIM>::formChildGroups()
    int n_lft=0;
    int n_rht=0;
 
-   int lft_owner_score = tbox::IEEE::getINT_MIN();
-   int rht_owner_score = tbox::IEEE::getINT_MIN();
+   int lft_owner_score = tbox::MathUtilities<int>::getMin();
+   int rht_owner_score = tbox::MathUtilities<int>::getMin();
 
 
    /*
@@ -2207,7 +2207,7 @@ void AsyncBergerRigoutsosNode<DIM>::formChildGroupsUsingLevelBoxes()
    }
    d_lft_child->d_overlap = overlap_counts[d_common->rank];
    if ( d_common->owner_mode == SINGLE_OWNER ) {
-      overlap_counts[d_owner] = tbox::IEEE::getINT_MAX();
+      overlap_counts[d_owner] = tbox::MathUtilities<int>::getMax();
    }
    d_lft_child->d_group.setNull();
    d_lft_child->d_group.resizeArray(d_group.size());
@@ -2257,7 +2257,7 @@ void AsyncBergerRigoutsosNode<DIM>::formChildGroupsUsingLevelBoxes()
    }
    d_rht_child->d_overlap = overlap_counts[d_common->rank];
    if ( d_common->owner_mode == SINGLE_OWNER ) {
-      overlap_counts[d_owner] = tbox::IEEE::getINT_MAX();
+      overlap_counts[d_owner] = tbox::MathUtilities<int>::getMax();
    }
    d_rht_child->d_group.setNull();
    d_rht_child->d_group.resizeArray(d_group.size());
@@ -2357,7 +2357,7 @@ void AsyncBergerRigoutsosNode<DIM>::computeNewGraphEdges()
    }
 
    // Data to send to d_owner regarding new edges found by local process.
-   vector<int> *edge_message = NULL;
+  std::vector<int> *edge_message = NULL;
    if ( d_common->compute_edges > 1 && d_common->rank != d_owner ) {
       /*
        * Will have to send to d_owner the edges found locally for
@@ -2460,25 +2460,25 @@ void AsyncBergerRigoutsosNode<DIM>::shareNewEdgesWithOwners()
 #if defined(HAVE_MPI)
    d_common->t_share_new_edges->start();
    IntSet edge_senders = d_common->edge_senders;
-   map<int,vector<int> > &edge_messages = d_common->edge_messages;
+   std::map<int,std::vector<int> > &edge_messages = d_common->edge_messages;
    Connectivity &new_cnect_tag = d_common->new_cnect_tag;
 
    const int ints_per_node = GraphNode::commBufferSize();
 
    int ierr;
-   tbox::MPI::status mpi_status;
+   tbox::SAMRAI_MPI::status mpi_status;
 
 
    // Nonblocking send of edge data.
    d_common->t_share_new_edges_send->start();
-   tbox::Array<tbox::MPI::request> mpi_request(edge_messages.size());
-   map<int,vector<int> >::iterator send_i;
+   tbox::Array<tbox::SAMRAI_MPI::request> mpi_request(edge_messages.size());
+   std::map<int,std::vector<int> >::iterator send_i;
    int nsend = 0;
    for ( send_i = edge_messages.begin(), nsend = 0;
          send_i != edge_messages.end();
          ++send_i, ++nsend ) {
       const int &owner = (*send_i).first;
-      vector<int> &msg = (*send_i).second;
+      std::vector<int> &msg = (*send_i).second;
       ierr = MPI_Isend( &msg[0],
                         msg.size(),
                         MPI_INT,
@@ -2577,7 +2577,7 @@ void AsyncBergerRigoutsosNode<DIM>::shareNewEdgesWithOwners()
    if ( nsend > 0 ) {
       // Make sure all nonblocking sends completed.
       d_common->t_share_new_edges_send->start();
-      tbox::Array<tbox::MPI::status> mpi_statuses(edge_messages.size());
+      tbox::Array<tbox::SAMRAI_MPI::status> mpi_statuses(edge_messages.size());
       ierr = MPI_Waitall( edge_messages.size(),
                           mpi_request.getPointer(),
                           mpi_statuses.getPointer() );
@@ -2924,7 +2924,7 @@ AsyncBergerRigoutsosNode<DIM>::intToBoxAcceptance( int i ) const
 
 
 template<int DIM>
-void AsyncBergerRigoutsosNode<DIM>::printClassData( ostream &os,
+void AsyncBergerRigoutsosNode<DIM>::printClassData( std::ostream &os,
                                                      int detail_level ) const
 {
    os << "ID              " << d_pos << " owner=" << d_owner << " box=" << d_box
@@ -2945,7 +2945,7 @@ void AsyncBergerRigoutsosNode<DIM>::printClassData( ostream &os,
          ;
       int i;
       for ( i=0; i<d_group.size(); ++i ) { os << ' ' << d_group[i]; }
-      os << endl;
+      os << std::endl;
    }
    return;
 }
@@ -2973,7 +2973,7 @@ void AsyncBergerRigoutsosNode<DIM>::setMaxGhostCellWidth(
 
 
 template<int DIM>
-void AsyncBergerRigoutsosNode<DIM>::setOwnerMode( const string &mode )
+void AsyncBergerRigoutsosNode<DIM>::setOwnerMode( const std::string &mode )
 {
    if ( mode == "SINGLE_OWNER" ) {
      d_common->owner_mode = SINGLE_OWNER;

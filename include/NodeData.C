@@ -1,9 +1,9 @@
 //
-// File:	NodeData.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/node/NodeData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 179 $
-// Modified:	$Date: 2005-01-20 14:50:51 -0800 (Thu, 20 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated node centered patch data type
 //
 
@@ -18,9 +18,6 @@
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #define PDAT_NODEDATA_VERSION 1
 
@@ -41,21 +38,22 @@ namespace SAMRAI {
 
 template<int DIM, class TYPE>
 NodeData<DIM,TYPE>::NodeData(const hier::Box<DIM>& box,
-                                     const int depth,
-                                     const hier::IntVector<DIM>& ghosts,
-                                     tbox::Pointer<tbox::Arena> pool)
+                             int depth,
+                             const hier::IntVector<DIM>& ghosts,
+                             tbox::Pointer<tbox::Arena> pool)
 :  hier::PatchData<DIM>(box, ghosts),
    d_depth(depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
    }
    const hier::Box<DIM> node = NodeGeometry<DIM>::toNodeBox(this -> getGhostBox());
    d_data.initializeArray(node, depth, pool);
+
 }
 
 template<int DIM, class TYPE>
@@ -116,7 +114,7 @@ void NodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
    NodeData<DIM,TYPE> *t_dst =
       dynamic_cast<NodeData<DIM,TYPE> *>(&dst);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
+   TBOX_ASSERT(t_dst != NULL);
 #endif
    const hier::Box<DIM> box = d_data.getBox() * t_dst->d_data.getBox();
    if (!box.empty()) {
@@ -160,8 +158,8 @@ void NodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
    const NodeOverlap<DIM> *t_overlap = 
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_dst != NULL);
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    t_dst->d_data.copy(d_data,
                       t_overlap->getDestinationBoxList(),
@@ -171,16 +169,16 @@ void NodeData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst,
 /*
 *************************************************************************
 *									*
-* Perform a fast copy between two arrays at the                         *
-* specified depths, where their	index spaces overlap.			*
+* Perform a fast copy from a node data object to this node data         *
+* object at the specified depths, where their index spaces overlap.     *
 *									*
 *************************************************************************
 */
 
 template<int DIM, class TYPE>
 void NodeData<DIM,TYPE>::copyDepth(int dst_depth,
-				     const NodeData<DIM,TYPE>& src,
-				     int src_depth)
+			           const NodeData<DIM,TYPE>& src,
+				   int src_depth)
 {
   const hier::Box<DIM> box = d_data.getBox() * src.d_data.getBox();
   if (!box.empty()) {
@@ -210,7 +208,7 @@ int NodeData<DIM,TYPE>::getDataStreamSize(
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    return( d_data.getDataStreamSize(t_overlap->getDestinationBoxList(),
                                     t_overlap->getSourceOffset()) );
@@ -232,7 +230,7 @@ void NodeData<DIM,TYPE>::packStream(tbox::AbstractStream& stream,
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    d_data.packStream(stream,
                      t_overlap->getDestinationBoxList(),
@@ -246,7 +244,7 @@ void NodeData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
    const NodeOverlap<DIM> *t_overlap =
       dynamic_cast<const NodeOverlap<DIM> *>(&overlap);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != NULL);
 #endif
    d_data.unpackStream(stream,
                        t_overlap->getDestinationBoxList(),
@@ -264,11 +262,11 @@ void NodeData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
 
 template<int DIM, class TYPE>
 size_t NodeData<DIM,TYPE>::getSizeOfData(const hier::Box<DIM>& box,
-                                           const int depth,
-                                           const hier::IntVector<DIM>& ghosts)
+                                         int depth,
+                                         const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(depth > 0);
+   TBOX_ASSERT(depth > 0);
 #endif
    const hier::Box<DIM> ghost_box = hier::Box<DIM>::grow(box, ghosts);
    const hier::Box<DIM> node_box = NodeGeometry<DIM>::toNodeBox(ghost_box);
@@ -278,22 +276,34 @@ size_t NodeData<DIM,TYPE>::getSizeOfData(const hier::Box<DIM>& box,
 /*
 *************************************************************************
 *                                                                       *
-* Print node-centered data.  Note:  makes call to specialized print     *
-* routine in NodeDataSpecialized.C                                      *
+* Print node-centered data.                                             *
 *                                                                       *
 *************************************************************************
 */
 
 template<int DIM, class TYPE>
-void NodeData<DIM,TYPE>::print(const hier::Box<DIM>& box, ostream& os, int prec) const
+void NodeData<DIM,TYPE>::print(const hier::Box<DIM>& box, 
+                               std::ostream& os, 
+                               int prec) const
 {
-   if (d_depth > 1) {
-      for (int d = 0; d < d_depth; d++) {
-         os << "Array Component hier::Index = " << d << endl;
-         print(box, d, os, prec);
-      }
-   } else {
-       print(box, 0, os, prec);
+   for (int d = 0; d < d_depth; d++) {
+      os << "Array depth = " << d << std::endl;
+      print(box, d, os, prec);
+   }
+}
+
+template <int DIM, class TYPE>
+void NodeData<DIM,TYPE>::print(const hier::Box<DIM>& box,
+			       int depth,
+			       std::ostream& os,
+			       int prec) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+#endif
+   os.precision(prec);
+   for (NodeIterator<DIM> i(box); i; i++) {
+      os << "array" << i() << " = " << d_data(i(),depth) << std::endl << std::flush; 
    }
 }
 
@@ -312,13 +322,13 @@ void NodeData<DIM,TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    int ver = database->getInteger("PDAT_NODEDATA_VERSION");
    if (ver != PDAT_NODEDATA_VERSION) {
       TBOX_ERROR("NodeData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << endl);
+          << " : Restart file version different than class version" << std::endl);
    }
 
    d_depth = database->getInteger("d_depth");
@@ -342,7 +352,7 @@ void NodeData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!database.isNull());
+   TBOX_ASSERT(!database.isNull());
 #endif
 
    database->putInteger("PDAT_NODEDATA_VERSION", PDAT_NODEDATA_VERSION);
@@ -352,25 +362,6 @@ void NodeData<DIM,TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> array_database;
    array_database = database->putDatabase("d_data");
    (d_data).putToDatabase(array_database);
-}
-
-/*
- * Print data
- */
-template <int DIM, class TYPE>
-void NodeData<DIM,TYPE>::print(const hier::Box<DIM>& box,
-			       const int d,
-			       ostream& os,
-			       int prec) const
-{
-   NULL_USE(prec);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert((d >= 0) && (d < d_depth));
-#endif
-   os.precision( ((prec < 0) ? 12 : prec) );
-   for (NodeIterator<DIM> i(box); i; i++) {
-      os << "array" << i() << " = " << d_data(i(),d) << endl << flush; 
-   }
 }
 
 

@@ -1,6 +1,6 @@
 *****************************************************************************
-  Copyright 1997-2005                                                    
-  The Regents of the University of California.                            
+  Copyright 1997-2007                                                    
+  Lawrence Livermore National Security, LLC.                            
   All rights reserved.                                                    
 *****************************************************************************
 *****************************************************************************
@@ -524,7 +524,7 @@ in the appropriate class header file.
 
 o Set whether exit or abort is called when running a single processor job:
 
-tbox::MPI::setCallAbortInSerialInsteadOfExit(bool);
+tbox::SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(bool);
 
 o Setting algorithm for box intersection operations in communication schedules:
 

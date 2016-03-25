@@ -1,9 +1,9 @@
 //
-// File:	Box.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/Box.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1785 $
+// Modified:	$LastChangedDate: 2007-12-17 15:05:39 -0800 (Mon, 17 Dec 2007) $
 // Description:	Box representing a portion of the AMR index space
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_hier_Index
@@ -277,7 +276,8 @@ public:
 
    /**
     * Refine the index space of a box by specified vector ratio.  Each
-    * component of the box is multiplied by the refinement ratio.
+    * component of the box is multiplied by the refinement ratio,
+    * then @c (ratio-1) is added to the upper corner.
     */
    void refine(const IntVector<DIM>& ratio);
 
@@ -351,14 +351,14 @@ public:
     * lower and upper bounds of the box.
     */
    template <int D> 
-      friend istream& operator >> (istream& s, Box<D>& box);
+      friend std::istream& operator >> (std::istream& s, Box<D>& box);
 
    /**
     * Output the box description in the form [L,U], where L and U are the
     * lower and upper bounds of the box.
     */
    template <int D> 
-      friend ostream& operator << (ostream& s, const Box<D>& box);
+      friend std::ostream& operator << (std::ostream& s, const Box<D>& box);
 
    /**
     * A box iterator iterates over the elements of a box.  This class is

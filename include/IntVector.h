@@ -1,9 +1,9 @@
 //
-// File:	IntVector.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/IntVector.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 543 $
-// Modified:	$Date: 2005-08-16 10:53:12 -0700 (Tue, 16 Aug 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	A N-dimensional integer vector
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -67,7 +66,7 @@ public:
     * Construct a n-dimensional integer vector with the value with
     * values provided by the array.
     */
-   IntVector(const tbox::Array<int> a);
+   IntVector(const tbox::Array<int>& a);
 
    /**
     * Construct an integer vector equal to the argument.
@@ -268,14 +267,14 @@ public:
     * the input is (i0,...,in) for an n-dimensional vector.
     */
     template<int DIMENSION> 
-       friend istream& operator>> (istream& s, IntVector<DIMENSION>& rhs);
+       friend std::istream& operator>> (std::istream& s, IntVector<DIMENSION>& rhs);
 
    /**
     * Write an integer vector into an output stream.  The format for
     * the output is (i0,...,in) for an n-dimensional vector.
     */
     template<int DIMENSION> 
-       friend ostream& operator<< (ostream& s, 
+       friend std::ostream& operator<< (std::ostream& s, 
 				   const IntVector<DIMENSION>& rhs);
 
 private:

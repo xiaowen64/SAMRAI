@@ -1,9 +1,9 @@
 //
-// File:	EdgeGeometry.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/EdgeGeometry.C $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for edge centered objects
 //
 
@@ -15,7 +15,7 @@
 #include "EdgeOverlap.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
+#include "tbox/Utilities.h"
 #endif
 
 #ifdef DEBUG_NO_INLINE
@@ -32,11 +32,13 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM>  EdgeGeometry<DIM>::EdgeGeometry(
-   const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts)
+template<int DIM>  
+EdgeGeometry<DIM>::EdgeGeometry(
+   const hier::Box<DIM>& box, 
+   const hier::IntVector<DIM>& ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ghosts.min() >= 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
 #endif
    d_box    = box;
    d_ghosts = ghosts;
@@ -60,7 +62,8 @@ template<int DIM>  EdgeGeometry<DIM>::~EdgeGeometry()
 *************************************************************************
 */
 
-template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > EdgeGeometry<DIM>::calculateOverlap(
+template<int DIM> 
+tbox::Pointer< hier::BoxOverlap<DIM> > EdgeGeometry<DIM>::calculateOverlap(
    const hier::BoxGeometry<DIM>& dst_geometry,
    const hier::BoxGeometry<DIM>& src_geometry,
    const hier::Box<DIM>& src_mask,
@@ -95,8 +98,15 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > EdgeGeometry<DIM>::calc
 *************************************************************************
 */
 
-template<int DIM> hier::Box<DIM> EdgeGeometry<DIM>::toEdgeBox(const hier::Box<DIM>& box, const int axis)
+template<int DIM> 
+hier::Box<DIM> EdgeGeometry<DIM>::toEdgeBox(
+   const hier::Box<DIM>& box, 
+   int axis)
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(0 <= axis && axis < DIM);
+#endif
+
    hier::Box<DIM> edge_box;
 
    if (!box.empty()) {
@@ -125,7 +135,8 @@ template<int DIM> hier::Box<DIM> EdgeGeometry<DIM>::toEdgeBox(const hier::Box<DI
 *************************************************************************
 */
 
-template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > EdgeGeometry<DIM>::doOverlap(
+template<int DIM> 
+tbox::Pointer< hier::BoxOverlap<DIM> > EdgeGeometry<DIM>::doOverlap(
    const EdgeGeometry<DIM>& dst_geometry,
    const EdgeGeometry<DIM>& src_geometry,
    const hier::Box<DIM>& src_mask,

@@ -1,9 +1,9 @@
 //
-// File:  BoxComm.C
+// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxComm.C $
 // Package:  SAMRAI hierarchy
-// Copyright:  (c) 1997-2005 The Regents of the University of California
-// Revision:  $Revision: 173 $
-// Modified:  $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:  (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:  $LastChangedRevision: 1704 $
+// Modified:  $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Utility class for parallel communication of boxes
 //
 
@@ -12,9 +12,6 @@
 
 #include "BoxComm.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 
 namespace SAMRAI {
@@ -28,9 +25,9 @@ namespace SAMRAI {
  * ************************************************************************
  */
 
-template<int DIM> void BoxComm<DIM>::bcastBox(Box<DIM> &box, const int root, tbox::MPI::comm comm)
+template<int DIM> void BoxComm<DIM>::bcastBox(Box<DIM> &box, const int root, tbox::SAMRAI_MPI::comm comm)
 {
-   if (tbox::MPI::getNodes() > 1) {
+   if (tbox::SAMRAI_MPI::getNodes() > 1) {
       int *buffer = new int[DIM*2];
       for (int i=0; i<DIM; ++i) {
         buffer[i*2] = box.lower(i);
@@ -38,10 +35,10 @@ template<int DIM> void BoxComm<DIM>::bcastBox(Box<DIM> &box, const int root, tbo
       }
 
       int size = DIM*2;
-      tbox::MPI::comm tmp = tbox::MPI::getCommunicator();
-      tbox::MPI::setCommunicator(comm);
-      tbox::MPI::bcast(buffer, size, root);
-      tbox::MPI::setCommunicator(tmp);
+      tbox::SAMRAI_MPI::comm tmp = tbox::SAMRAI_MPI::getCommunicator();
+      tbox::SAMRAI_MPI::setCommunicator(comm);
+      tbox::SAMRAI_MPI::bcast(buffer, size, root);
+      tbox::SAMRAI_MPI::setCommunicator(tmp);
 
       for (int j=0; j<DIM; ++j) {
          box.lower(j) = buffer[j*2];
@@ -78,16 +75,16 @@ template<int DIM> void BoxComm<DIM>::bcastBoxList(BoxList<DIM> &box_list, const 
 
 template<int DIM> void BoxComm<DIM>::bcastBoxArray(BoxArray<DIM> &box_array, const int root)
 {
-   if (tbox::MPI::getNodes() > 1) {
+   if (tbox::SAMRAI_MPI::getNodes() > 1) {
       /*
        * root broadcasts the number of boxes in the list
        */
       int len = 0;
-      if (tbox::MPI::getRank() == root) {
+      if (tbox::SAMRAI_MPI::getRank() == root) {
          len = box_array.getNumberOfBoxes();
       }
 
-      len = tbox::MPI::bcast(len, root);
+      len = tbox::SAMRAI_MPI::bcast(len, root);
 
       box_array.resizeBoxArray(len);
 
@@ -105,7 +102,7 @@ template<int DIM> void BoxComm<DIM>::bcastBoxArray(BoxArray<DIM> &box_array, con
           * root fills the buffer for sending the boxes' coordinates
           * to all other processors.
           */
-         if (tbox::MPI::getRank() == root) {
+         if (tbox::SAMRAI_MPI::getRank() == root) {
 
             for (int b=0; b<len; ++b) {
                int offset  = b*DIM*2;
@@ -120,14 +117,14 @@ template<int DIM> void BoxComm<DIM>::bcastBoxArray(BoxArray<DIM> &box_array, con
           * broadcast box coordinates to all processors
           */
          int buf_len = len*DIM*2;
-         buf_len = tbox::MPI::bcast(buf_len, root);
-         tbox::MPI::bcast(buffer, buf_len, root);
+         buf_len = tbox::SAMRAI_MPI::bcast(buf_len, root);
+         tbox::SAMRAI_MPI::bcast(buffer, buf_len, root);
    
          /*
           * all processors except root (whose data we promised to treat
           * as const) construct box_array.
           */
-         if (tbox::MPI::getRank() != root) {
+         if (tbox::SAMRAI_MPI::getRank() != root) {
             box_array.resizeBoxArray(len);
             int offset  = 0;
             for (int b=0; b<len; ++b) {
@@ -157,7 +154,7 @@ template<int DIM> void BoxComm<DIM>::sendBox(const Box<DIM> &box, const int rcvr
       buffer[i*2] = box.lower(i);
       buffer[i*2+1] = box.upper(i);
    }
-   tbox::MPI::send(buffer, DIM*2, rcvr_id, false);
+   tbox::SAMRAI_MPI::send(buffer, DIM*2, rcvr_id, false);
    delete [] buffer;
 }
 
@@ -213,7 +210,7 @@ template<int DIM> void BoxComm<DIM>::recvBox(Box<DIM> &box, const int sender_id)
    int size = DIM*2;
    int *buffer = new int[size];
       
-   tbox::MPI::recv(buffer, size, sender_id, false);
+   tbox::SAMRAI_MPI::recv(buffer, size, sender_id, false);
    for (int j=0; j<DIM; ++j) {
       box.lower(j) = buffer[j*2];
       box.upper(j) = buffer[j*2+1];
@@ -235,7 +232,7 @@ template<int DIM> void BoxComm<DIM>::exchangeBoxArraysAndWeightArrays(
    tbox::Array<double> &weights_out)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(box_array_in.getNumberOfBoxes() == weights_in.getSize());
+   TBOX_ASSERT(box_array_in.getNumberOfBoxes() == weights_in.getSize());
 #endif
 
    /*
@@ -243,12 +240,12 @@ template<int DIM> void BoxComm<DIM>::exchangeBoxArraysAndWeightArrays(
     * for the output arrays.
     */
    int size_in = box_array_in.getNumberOfBoxes();
-   int size_out = tbox::MPI::sumReduction(size_in);
+   int size_out = tbox::SAMRAI_MPI::sumReduction(size_in);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (size_out <= 0) {
       TBOX_ERROR("BoxComm<DIM>::exchangeBoxArraysAndWeightArrays() error"
-                 << "\n All box arrays have zero length!" << endl);
+                 << "\n All box arrays have zero length!" << std::endl);
    }
 #endif
 
@@ -289,8 +286,8 @@ template<int DIM> void BoxComm<DIM>::exchangeBoxArraysAndWeightArrays(
    /*
     * exchange the data 
     */
-   tbox::MPI::allGather(buf_in_ptr, buf_size_in, buf_out_ptr, buf_size_out);
-   tbox::MPI::allGather(wgts_in_ptr, size_in, wgts_out_ptr, size_out);
+   tbox::SAMRAI_MPI::allGather(buf_in_ptr, buf_size_in, buf_out_ptr, buf_size_out);
+   tbox::SAMRAI_MPI::allGather(wgts_in_ptr, size_in, wgts_out_ptr, size_out);
  
    /*
     * assemble the output array of boxes

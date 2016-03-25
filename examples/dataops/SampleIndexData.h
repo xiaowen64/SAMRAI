@@ -1,9 +1,9 @@
 //
-// File:        SampleIndexData.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/dataops/SampleIndexData.h $
 // Package:     SAMRAI applications
-// Copyright:   (c) 1997-2000 The Regents of the University of California
-// Revision:    $Revision: 65 $
-// Modified:    $Date: 2004-12-14 15:34:27 -0800 (Tue, 14 Dec 2004) $
+// Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Boundary cell struct for embedded boundary implementations
 //
 

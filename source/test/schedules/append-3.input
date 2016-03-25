@@ -1,3 +1,10 @@
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/schedules/append-3.input $
+// Package:     SAMRAI tests
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Description: Input file for parallel clustering test.
+
 GlobalInputs {
    refine_schedule_generation_method = "ORIG_NSQUARED"
    call_abort_in_serial_instead_of_exit = FALSE

@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2005 The Regents of the University of California
-  Revision:	$Revision: 173 $
-  Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/PoissonMultigaussianSolution.C $
+  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	PoissonMultigaussianSolution class implementation
 */
 
@@ -165,6 +165,7 @@ ostream &operator<<( ostream &os, const PoissonMultigaussianSolution &r ) {
 
 void PoissonMultigaussianSolution::setBcCoefs (
   tbox::Pointer<pdat::ArrayData<NDIM,double> > &acoef_data ,
+  tbox::Pointer<pdat::ArrayData<NDIM,double> > &bcoef_data ,
   tbox::Pointer<pdat::ArrayData<NDIM,double> > &gcoef_data ,
   const tbox::Pointer< hier::Variable<NDIM> > &variable ,
   const hier::Patch<NDIM> &patch ,
@@ -208,6 +209,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       j = (*boxit)[1];
       y = xlo[1] + dx[1]*(j-patch_box.lower()[1]+0.5);
       if(acoef_data) (*acoef_data)(*boxit,0) = 1.0;
+      if(bcoef_data) (*bcoef_data)(*boxit,0) = 0.0;
       if(gcoef_data) (*gcoef_data)(*boxit,0) = exactFcn(x,y);
     }
     break;
@@ -218,6 +220,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       j = (*boxit)[1];
       y = xlo[1] + dx[1]*(j-patch_box.lower()[1]+0.5);
       if(acoef_data) (*acoef_data)(*boxit,0) = 1.0;
+      if(bcoef_data) (*bcoef_data)(*boxit,0) = 0.0;
       if(gcoef_data) (*gcoef_data)(*boxit,0) = exactFcn(x,y);
     }
     break;
@@ -228,6 +231,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       i = (*boxit)[0];
       x = xlo[1] + dx[1]*(i-patch_box.lower()[1]+0.5);
       if(acoef_data) (*acoef_data)(*boxit,0) = 1.0;
+      if(bcoef_data) (*bcoef_data)(*boxit,0) = 0.0;
       if(gcoef_data) (*gcoef_data)(*boxit,0) = exactFcn(x,y);
     }
     break;
@@ -238,6 +242,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       i = (*boxit)[0];
       x = xlo[1] + dx[1]*(i-patch_box.lower()[1]+0.5);
       if(acoef_data) (*acoef_data)(*boxit,0) = 1.0;
+      if(bcoef_data) (*bcoef_data)(*boxit,0) = 0.0;
       if(gcoef_data) (*gcoef_data)(*boxit,0) = exactFcn(x,y);
     }
     break;
@@ -248,8 +253,9 @@ void PoissonMultigaussianSolution::setBcCoefs (
 #endif
 
 #if NDIM == 3
-  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > a_array, g_array;
+  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > a_array, b_array, g_array;
   if ( acoef_data ) a_array = arrayData2ArrayAccess( *acoef_data );
+  if ( bcoef_data ) b_array = arrayData2ArrayAccess( *bcoef_data );
   if ( gcoef_data ) g_array = arrayData2ArrayAccess( *gcoef_data );
   int i, j, k, ibeg, iend, jbeg, jend, kbeg, kend;
   double x, y, z;
@@ -265,6 +271,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       for ( j=jbeg; j<=jend; ++j ) {
 	y = xlo[1] + dx[1]*(j-patch_box.lower()[1]+0.5);
 	if(a_array) a_array(i,j,k) = 1.0;
+	if(b_array) b_array(i,j,k) = 0.0;
 	if(g_array) g_array(i,j,k) = exactFcn(x,y,z);
       }
     }
@@ -280,6 +287,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       for ( j=jbeg; j<=jend; ++j ) {
 	y = xlo[1] + dx[1]*(j-patch_box.lower()[1]+0.5);
 	if(a_array) a_array(i,j,k) = 1.0;
+	if(b_array) b_array(i,j,k) = 0.0;
 	if(g_array) g_array(i,j,k) = exactFcn(x,y,z);
       }
     }
@@ -295,6 +303,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       for ( i=ibeg; i<=iend; ++i ) {
 	x = xlo[0] + dx[0]*(i-patch_box.lower()[0]+0.5);
 	if(a_array) a_array(i,j,k) = 1.0;
+	if(b_array) b_array(i,j,k) = 0.0;
 	if(g_array) g_array(i,j,k) = exactFcn(x,y,z);
       }
     }
@@ -310,6 +319,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       for ( i=ibeg; i<=iend; ++i ) {
 	x = xlo[0] + dx[0]*(i-patch_box.lower()[0]+0.5);
 	if(a_array) a_array(i,j,k) = 1.0;
+	if(b_array) b_array(i,j,k) = 0.0;
 	if(g_array) g_array(i,j,k) = exactFcn(x,y,z);
       }
     }
@@ -325,6 +335,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       for ( i=ibeg; i<=iend; ++i ) {
 	x = xlo[0] + dx[0]*(i-patch_box.lower()[0]+0.5);
 	if(a_array) a_array(i,j,k) = 1.0;
+	if(b_array) b_array(i,j,k) = 0.0;
 	if(g_array) g_array(i,j,k) = exactFcn(x,y,z);
       }
     }
@@ -340,6 +351,7 @@ void PoissonMultigaussianSolution::setBcCoefs (
       for ( i=ibeg; i<=iend; ++i ) {
 	x = xlo[0] + dx[0]*(i-patch_box.lower()[0]+0.5);
 	if(a_array) a_array(i,j,k) = 1.0;
+	if(b_array) b_array(i,j,k) = 0.0;
 	if(g_array) g_array(i,j,k) = exactFcn(x,y,z);
       }
     }

@@ -1,9 +1,9 @@
 ##
-## File:        genfiles.sh
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2005 The Regents of the University of California
-## Revision:    $Revision$
-## Modified:    $Date$
+## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 1704 $
+## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -72,8 +72,8 @@ ${MT} default.filenames ./tmp tbox tbox::Array tbox::AsyncCommStage::StagedGroup
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::RelaunchableJob*
 ${MT} default.filenames ./tmp tbox tbox::List tbox::RelaunchableJob*
 
-${MT} default.filenames ./tmp tbox tbox::Array tbox::MPI::request
-${MT} default.filenames ./tmp tbox tbox::Array tbox::MPI::status
+${MT} default.filenames ./tmp tbox tbox::Array tbox::SAMRAI_MPI::request
+${MT} default.filenames ./tmp tbox tbox::Array tbox::SAMRAI_MPI::status
 
 #
 # basic lists for built-in types

@@ -1,10 +1,10 @@
 
 //
-// File:        MethodOfLinesIntegrator.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/method_of_lines/MethodOfLinesIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Basic method-of-lines time integration algorithm
 //
 
@@ -15,22 +15,14 @@
 
 #include <stdlib.h>
 #include <fstream>
-using namespace std;
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #include "Patch.h"
 #include "PatchData.h"
 #include "VariableDatabase.h"
-#include "tbox/IEEE.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 #define ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION (2)
 
@@ -46,15 +38,15 @@ namespace SAMRAI {
 */
 
 template<int DIM> MethodOfLinesIntegrator<DIM>::MethodOfLinesIntegrator(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    MethodOfLinesPatchStrategy<DIM>* patch_strategy,
    bool register_for_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(patch_strategy != ((MethodOfLinesPatchStrategy<DIM>*)NULL));
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(patch_strategy != ((MethodOfLinesPatchStrategy<DIM>*)NULL));
 #endif
 
    d_object_name = object_name;
@@ -151,7 +143,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::initializeIntegrator(
    tbox::Pointer< mesh::GriddingAlgorithm<DIM> > gridding_alg)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!gridding_alg.isNull());
+   TBOX_ASSERT(!gridding_alg.isNull());
 #endif
 
    /*
@@ -180,17 +172,17 @@ template<int DIM> double MethodOfLinesIntegrator<DIM>::getTimestep(
    const double time) const 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy.isNull()));
 #endif
 
-   double dt = tbox::IEEE::getDBL_MAX();
+   double dt = tbox::MathUtilities<double>::getMax();
    const int nlevels = hierarchy->getNumberLevels();
 
    for (int l = 0; l < nlevels; l++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->
                                              getPatchLevel(l);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!(level.isNull()));
+      TBOX_ASSERT(!(level.isNull()));
 #endif
       for (typename hier::PatchLevel<DIM>::Iterator p(level); p; p++) {
 
@@ -203,7 +195,7 @@ template<int DIM> double MethodOfLinesIntegrator<DIM>::getTimestep(
       }
    }
 
-   return(tbox::MPI::minReduction(dt));
+   return(tbox::SAMRAI_MPI::minReduction(dt));
 
 }
 
@@ -236,7 +228,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
    const double dt)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy.isNull()));
 #endif
 
   int ln;
@@ -249,7 +241,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
    for (ln = 0; ln < nlevels; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!(level.isNull()));
+      TBOX_ASSERT(!(level.isNull()));
 #endif
 
       level->setTime(time, d_current_data);
@@ -287,7 +279,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
           */
           tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
-          assert(!(level.isNull()));
+          TBOX_ASSERT(!(level.isNull()));
 #endif
 
           for (typename hier::PatchLevel<DIM>::Iterator p(level); p; p++) {
@@ -373,12 +365,12 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::registerVariable(
    const hier::IntVector<DIM>& ghosts,
    const MOL_VAR_TYPE m_v_type,
    const tbox::Pointer< xfer::Geometry<DIM> >& transfer_geom,
-   const string &coarsen_name,
-   const string &refine_name)
+   const std::string &coarsen_name,
+   const std::string &refine_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(variable.isNull()));
-   assert(!(transfer_geom.isNull()));
+   TBOX_ASSERT(!(variable.isNull()));
+   TBOX_ASSERT(!(transfer_geom.isNull()));
 #endif
    hier::VariableDatabase<DIM>* variable_db = hier::VariableDatabase<DIM>::getDatabase();
 
@@ -516,11 +508,11 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::initializeLevelData(
    const bool allocate_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
-   assert(level_number >= 0);
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(level_number >= 0);
    if ( !(old_level.isNull()) ) {
-     assert( level_number == old_level->getLevelNumber() );
+     TBOX_ASSERT( level_number == old_level->getLevelNumber() );
    }
 #endif
 
@@ -570,8 +562,8 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::resetHierarchyConfiguration
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert( (coarsest_level >= 0)
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT( (coarsest_level >= 0)
            && (coarsest_level <= finest_level)
            && (finest_level <= hierarchy->getFinestLevelNumber()) );
 #endif
@@ -586,7 +578,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::resetHierarchyConfiguration
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!(level.isNull()));
+      TBOX_ASSERT(!(level.isNull()));
 #endif
 
       d_bdry_sched_advance[ln] =
@@ -624,8 +616,8 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::applyGradientDetector(
    const bool uses_richardson_extrapolation_too) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(hierarchy.isNull()));
-   assert(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
 #endif
 
    tbox::Pointer< hier::PatchLevel<DIM> > level =
@@ -675,7 +667,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
@@ -702,7 +694,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!input_db.isNull());
+   TBOX_ASSERT(!input_db.isNull());
 #endif
 
    if (is_from_restart) {
@@ -819,7 +811,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::copyCurrentToScratch(
    const tbox::Pointer< hier::PatchLevel<DIM> > level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator p(level); p; p++) {
@@ -856,7 +848,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::copyScratchToCurrent(
    const tbox::Pointer< hier::PatchLevel<DIM> > level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(level.isNull()));
+   TBOX_ASSERT(!(level.isNull()));
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator p(level); p; p++) {
@@ -889,22 +881,22 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::copyScratchToCurrent(
 *************************************************************************
 */
 
-template<int DIM> void MethodOfLinesIntegrator<DIM>::printClassData(ostream& os) const
+template<int DIM> void MethodOfLinesIntegrator<DIM>::printClassData(std::ostream& os) const
 {
-   os << "\nMethodOfLinesIntegrator<DIM>::printClassData..." << endl;
+   os << "\nMethodOfLinesIntegrator<DIM>::printClassData..." << std::endl;
    os << "\nMethodOfLinesIntegrator<DIM>: this = "
-      << (MethodOfLinesIntegrator<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
-   os << "d_order = " << d_order << endl;
+      << (MethodOfLinesIntegrator<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
+   os << "d_order = " << d_order << std::endl;
 
    for (int j = 0; j < d_order; j++) {
-     os << "d_alpha_1[" << j << "] = " << d_alpha_1[j] << endl;
-     os << "d_alpha_2[" << j << "] = " << d_alpha_2[j] << endl;
-     os << "d_beta[" << j << "] = " << d_beta[j] << endl;
+     os << "d_alpha_1[" << j << "] = " << d_alpha_1[j] << std::endl;
+     os << "d_alpha_2[" << j << "] = " << d_alpha_2[j] << std::endl;
+     os << "d_beta[" << j << "] = " << d_beta[j] << std::endl;
    }
 
    os << "d_patch_strategy = " 
-      << (MethodOfLinesPatchStrategy<DIM>*)d_patch_strategy << endl;
+      << (MethodOfLinesPatchStrategy<DIM>*)d_patch_strategy << std::endl;
 }
 
 }

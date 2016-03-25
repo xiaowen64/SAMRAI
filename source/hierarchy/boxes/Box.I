@@ -1,23 +1,14 @@
 //
-// File:	Box.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/Box.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Box representing a portion of the AMR index space
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
-#ifndef included_tbox_Utilities
-#include "tbox/Utilities.h"
-#endif
-#ifndef included_tbox_IEEE
-#include "tbox/IEEE.h"
+#ifndef included_tbox_MathUtilities
+#include "tbox/MathUtilities.h"
 #endif
 
 #ifndef NULL
@@ -33,7 +24,9 @@ namespace SAMRAI {
 
 
 template<int DIM> inline
-Box<DIM>::Box() : d_lo(tbox::IEEE::getINT_MAX()), d_hi(tbox::IEEE::getINT_MIN())
+Box<DIM>::Box() : 
+d_lo(tbox::MathUtilities<int>::getMax()), 
+d_hi(tbox::MathUtilities<int>::getMin())
 {
 }
 
@@ -141,8 +134,8 @@ bool Box<DIM>::empty() const
 template<int DIM> inline
 void Box<DIM>::setEmpty()
 {
-   d_lo = Index<DIM>(tbox::IEEE::getINT_MAX());
-   d_hi = Index<DIM>(tbox::IEEE::getINT_MIN());
+   d_lo = Index<DIM>(tbox::MathUtilities<int>::getMax());
+   d_hi = Index<DIM>(tbox::MathUtilities<int>::getMin());
 }
 
 template<int DIM> inline 
@@ -239,8 +232,10 @@ template<int DIM> inline
 bool Box<DIM>::intersects(const Box<DIM>& box) const
 {
    for (int i = 0; i < DIM; i++) {
-      if (  tbox::Utilities::imax(d_lo(i), box.d_lo(i))
-          > tbox::Utilities::imin(d_hi(i), box.d_hi(i)) ) return(false);
+      if (  tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) > 
+            tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i)) ) {
+         return(false);
+      }
    }
    return(true);
 }
@@ -266,7 +261,7 @@ template<int DIM> inline
 void Box<DIM>::grow(const int direction, const int ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (direction >= 0) && (direction < DIM) );
+   TBOX_ASSERT( (direction >= 0) && (direction < DIM) );
 #endif
    if (!empty()) {
       d_lo(direction) -= ghosts;
@@ -286,7 +281,7 @@ template<int DIM> inline
 void Box<DIM>::growLower(const int direction, const int ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (direction >= 0) && (direction < DIM) );
+   TBOX_ASSERT( (direction >= 0) && (direction < DIM) );
 #endif
    if (!empty()) {
       d_lo(direction) -= ghosts;
@@ -305,7 +300,7 @@ template<int DIM> inline
 void Box<DIM>::growUpper(const int direction, const int ghosts)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (direction >= 0) && (direction < DIM) );
+   TBOX_ASSERT( (direction >= 0) && (direction < DIM) );
 #endif
    if (!empty()) {
       d_hi(direction) += ghosts;
@@ -323,7 +318,7 @@ template<int DIM> inline
 void Box<DIM>::shift(const int direction, const int offset)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( (direction >= 0) && (direction < DIM) );
+   TBOX_ASSERT( (direction >= 0) && (direction < DIM) );
 #endif
    d_lo(direction) += offset;
    d_hi(direction) += offset;

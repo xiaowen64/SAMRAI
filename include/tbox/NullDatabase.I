@@ -1,9 +1,9 @@
 //
-// File:	NullDatabase.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/NullDatabase.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -42,7 +42,7 @@ NullDatabase::~NullDatabase()
 */
 
 inline
-bool NullDatabase::keyExists(const string& key)
+bool NullDatabase::keyExists(const std::string& key)
 {
    NULL_USE(key);
    return true;
@@ -51,15 +51,15 @@ bool NullDatabase::keyExists(const string& key)
 /*
 *************************************************************************
 *									*
-* Return an empty Array<string>.					*
+* Return an empty Array<std::string>.					*
 *									*
 *************************************************************************
 */
 
 inline
-Array<string> NullDatabase::getAllKeys()
+Array<std::string> NullDatabase::getAllKeys()
 { 
-   Array<string> keys(0);
+   Array<std::string> keys(0);
    return(keys);
 }
 
@@ -72,7 +72,7 @@ Array<string> NullDatabase::getAllKeys()
 */
 
 inline
-int NullDatabase::getArraySize(const string& key)
+int NullDatabase::getArraySize(const std::string& key)
 {
    NULL_USE(key);
    return 0;
@@ -87,21 +87,21 @@ int NullDatabase::getArraySize(const string& key)
 */
 
 inline
-bool NullDatabase::isDatabase(const string& key)
+bool NullDatabase::isDatabase(const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
 inline
-Pointer<Database> NullDatabase::putDatabase(const string& key)
+Pointer<Database> NullDatabase::putDatabase(const std::string& key)
 {
    NULL_USE(key);
    return (this);
 }
 
 inline
-Pointer<Database> NullDatabase::getDatabase(const string& key)
+Pointer<Database> NullDatabase::getDatabase(const std::string& key)
 {
    NULL_USE(key);
    Pointer<Database> new_NullDatabase = new NullDatabase();
@@ -117,14 +117,14 @@ Pointer<Database> NullDatabase::getDatabase(const string& key)
 */
 
 inline
-bool NullDatabase::isBool(const string& key)
+bool NullDatabase::isBool(const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
 inline
-void NullDatabase::putBool(const string& key, const bool& data)
+void NullDatabase::putBool(const std::string& key, const bool& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -132,7 +132,7 @@ void NullDatabase::putBool(const string& key, const bool& data)
 
 inline
 void NullDatabase::putBoolArray(
-   const string& key, const Array<bool>& data)
+   const std::string& key, const Array<bool>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -140,7 +140,7 @@ void NullDatabase::putBoolArray(
 
 inline
 void NullDatabase::putBoolArray(
-   const string& key, const bool* const data, const int nelements)
+   const std::string& key, const bool* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -148,7 +148,7 @@ void NullDatabase::putBoolArray(
 }
 
 inline
-bool NullDatabase::getBool(const string& key)
+bool NullDatabase::getBool(const std::string& key)
 {
    NULL_USE(key);
    return (true);
@@ -156,7 +156,7 @@ bool NullDatabase::getBool(const string& key)
 
 inline
 bool NullDatabase::getBoolWithDefault(
-   const string& key, 
+   const std::string& key, 
    const bool& defaultvalue)
 {
    NULL_USE(key);
@@ -165,7 +165,7 @@ bool NullDatabase::getBoolWithDefault(
 }
 
 inline
-Array<bool> NullDatabase::getBoolArray(const string& key)
+Array<bool> NullDatabase::getBoolArray(const std::string& key)
 {
    NULL_USE(key);
    Array<bool> empty(0);
@@ -174,7 +174,7 @@ Array<bool> NullDatabase::getBoolArray(const string& key)
 
 inline
 void NullDatabase::getBoolArray(
-   const string& key, bool* data, const int nelements)
+   const std::string& key, bool* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -190,14 +190,14 @@ void NullDatabase::getBoolArray(
 */
 
 inline
-bool NullDatabase::isDatabaseBox(const string& key)
+bool NullDatabase::isDatabaseBox(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putDatabaseBox(const string& key, const DatabaseBox& data)
+void NullDatabase::putDatabaseBox(const std::string& key, const DatabaseBox& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -205,7 +205,7 @@ void NullDatabase::putDatabaseBox(const string& key, const DatabaseBox& data)
 
 inline
 void NullDatabase::putDatabaseBoxArray(
-   const string& key, const Array<DatabaseBox>& data)
+   const std::string& key, const Array<DatabaseBox>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -213,7 +213,7 @@ void NullDatabase::putDatabaseBoxArray(
 
 inline
 void NullDatabase::putDatabaseBoxArray(
-   const string& key, const DatabaseBox* const data, const int nelements)
+   const std::string& key, const DatabaseBox* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -221,7 +221,7 @@ void NullDatabase::putDatabaseBoxArray(
 }
 
 inline
-DatabaseBox NullDatabase::getDatabaseBox(const string& key)
+DatabaseBox NullDatabase::getDatabaseBox(const std::string& key)
 {
    NULL_USE(key);
    DatabaseBox box;
@@ -230,7 +230,7 @@ DatabaseBox NullDatabase::getDatabaseBox(const string& key)
 
 inline
 DatabaseBox NullDatabase::getDatabaseBoxWithDefault(
-   const string& key, 
+   const std::string& key, 
    const DatabaseBox& defaultvalue)
 {
    NULL_USE(key);
@@ -241,7 +241,7 @@ DatabaseBox NullDatabase::getDatabaseBoxWithDefault(
 }
 
 inline
-Array<DatabaseBox> NullDatabase::getDatabaseBoxArray(const string& key)
+Array<DatabaseBox> NullDatabase::getDatabaseBoxArray(const std::string& key)
 {
    NULL_USE(key);
 
@@ -251,7 +251,7 @@ Array<DatabaseBox> NullDatabase::getDatabaseBoxArray(const string& key)
 
 inline
 void NullDatabase::getDatabaseBoxArray(
-   const string& key, DatabaseBox* data, const int nelements)
+   const std::string& key, DatabaseBox* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -267,14 +267,14 @@ void NullDatabase::getDatabaseBoxArray(
 */
 
 inline
-bool NullDatabase::isChar(const string& key)
+bool NullDatabase::isChar(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putChar(const string& key, const char& data)
+void NullDatabase::putChar(const std::string& key, const char& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -282,7 +282,7 @@ void NullDatabase::putChar(const string& key, const char& data)
 
 inline
 void NullDatabase::putCharArray(
-   const string& key, const Array<char>& data)
+   const std::string& key, const Array<char>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -290,7 +290,7 @@ void NullDatabase::putCharArray(
 
 inline
 void NullDatabase::putCharArray(
-   const string& key, const char* const data, const int nelements)
+   const std::string& key, const char* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -298,7 +298,7 @@ void NullDatabase::putCharArray(
 }
 
 inline
-char NullDatabase::getChar(const string& key)
+char NullDatabase::getChar(const std::string& key)
 {
    NULL_USE(key);
    return (0);
@@ -306,7 +306,7 @@ char NullDatabase::getChar(const string& key)
 
 inline
 char NullDatabase::getCharWithDefault(
-   const string& key, 
+   const std::string& key, 
    const char& defaultvalue)
 {
    NULL_USE(key);
@@ -315,7 +315,7 @@ char NullDatabase::getCharWithDefault(
 }
 
 inline
-Array<char> NullDatabase::getCharArray(const string& key)
+Array<char> NullDatabase::getCharArray(const std::string& key)
 {
    NULL_USE(key);
 
@@ -325,7 +325,7 @@ Array<char> NullDatabase::getCharArray(const string& key)
 
 inline
 void NullDatabase::getCharArray(
-   const string& key, char* data, const int nelements)
+   const std::string& key, char* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -343,14 +343,14 @@ void NullDatabase::getCharArray(
 */
 
 inline
-bool NullDatabase::isComplex(const string& key)
+bool NullDatabase::isComplex(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putComplex(const string& key, const dcomplex& data)
+void NullDatabase::putComplex(const std::string& key, const dcomplex& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -358,7 +358,7 @@ void NullDatabase::putComplex(const string& key, const dcomplex& data)
 
 inline
 void NullDatabase::putComplexArray(
-   const string& key, const Array<dcomplex>& data)
+   const std::string& key, const Array<dcomplex>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -366,7 +366,7 @@ void NullDatabase::putComplexArray(
 
 inline
 void NullDatabase::putComplexArray(
-   const string& key, const dcomplex* const data, const int nelements)
+   const std::string& key, const dcomplex* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -374,7 +374,7 @@ void NullDatabase::putComplexArray(
 }
 
 inline
-dcomplex NullDatabase::getComplex(const string& key)
+dcomplex NullDatabase::getComplex(const std::string& key)
 {
    NULL_USE(key);
 
@@ -384,7 +384,7 @@ dcomplex NullDatabase::getComplex(const string& key)
 
 inline
 dcomplex NullDatabase::getComplexWithDefault(
-   const string& key, const dcomplex& defaultvalue)
+   const std::string& key, const dcomplex& defaultvalue)
 {
    NULL_USE(key);
    NULL_USE(defaultvalue);
@@ -394,7 +394,7 @@ dcomplex NullDatabase::getComplexWithDefault(
 }
 
 inline
-Array<dcomplex> NullDatabase::getComplexArray(const string& key)
+Array<dcomplex> NullDatabase::getComplexArray(const std::string& key)
 {
    NULL_USE(key);
   
@@ -404,7 +404,7 @@ Array<dcomplex> NullDatabase::getComplexArray(const string& key)
 
 inline
 void NullDatabase::getComplexArray(
-   const string& key, dcomplex* data, const int nelements)
+   const std::string& key, dcomplex* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -421,14 +421,14 @@ void NullDatabase::getComplexArray(
 */
 
 inline
-bool NullDatabase::isDouble(const string& key)
+bool NullDatabase::isDouble(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putDouble(const string& key, const double& data)
+void NullDatabase::putDouble(const std::string& key, const double& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -436,7 +436,7 @@ void NullDatabase::putDouble(const string& key, const double& data)
 
 inline
 void NullDatabase::putDoubleArray(
-   const string& key, const Array<double>& data)
+   const std::string& key, const Array<double>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -444,7 +444,7 @@ void NullDatabase::putDoubleArray(
 
 inline
 void NullDatabase::putDoubleArray(
-   const string& key, const double* const data, const int nelements)
+   const std::string& key, const double* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -452,7 +452,7 @@ void NullDatabase::putDoubleArray(
 }
 
 inline
-double NullDatabase::getDouble(const string& key)
+double NullDatabase::getDouble(const std::string& key)
 {
    NULL_USE(key);
    return (0.0);
@@ -460,7 +460,7 @@ double NullDatabase::getDouble(const string& key)
 
 inline
 double NullDatabase::getDoubleWithDefault(
-   const string& key, 
+   const std::string& key, 
    const double& defaultvalue)
 {
    NULL_USE(key);
@@ -469,7 +469,7 @@ double NullDatabase::getDoubleWithDefault(
 }
 
 inline
-Array<double> NullDatabase::getDoubleArray(const string& key)
+Array<double> NullDatabase::getDoubleArray(const std::string& key)
 {
    NULL_USE(key);
    Array<double> empty(0);
@@ -478,7 +478,7 @@ Array<double> NullDatabase::getDoubleArray(const string& key)
 
 inline
 void NullDatabase::getDoubleArray(
-   const string& key, double* data, const int nelements)
+   const std::string& key, double* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -496,14 +496,14 @@ void NullDatabase::getDoubleArray(
 */
 
 inline
-bool NullDatabase::isFloat(const string& key)
+bool NullDatabase::isFloat(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putFloat(const string& key, const float& data)
+void NullDatabase::putFloat(const std::string& key, const float& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -511,7 +511,7 @@ void NullDatabase::putFloat(const string& key, const float& data)
 
 inline
 void NullDatabase::putFloatArray(
-   const string& key, const Array<float>& data)
+   const std::string& key, const Array<float>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -519,7 +519,7 @@ void NullDatabase::putFloatArray(
 
 inline
 void NullDatabase::putFloatArray(
-   const string& key, const float* const data, const int nelements)
+   const std::string& key, const float* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -527,7 +527,7 @@ void NullDatabase::putFloatArray(
 }
 
 inline
-float NullDatabase::getFloat(const string& key)
+float NullDatabase::getFloat(const std::string& key)
 {
    NULL_USE(key);
    return (0.0);
@@ -535,7 +535,7 @@ float NullDatabase::getFloat(const string& key)
 
 inline
 float NullDatabase::getFloatWithDefault(
-   const string& key, 
+   const std::string& key, 
    const float& defaultvalue)
 {
    NULL_USE(key);
@@ -544,7 +544,7 @@ float NullDatabase::getFloatWithDefault(
 }
 
 inline
-Array<float> NullDatabase::getFloatArray(const string& key)
+Array<float> NullDatabase::getFloatArray(const std::string& key)
 {
    NULL_USE(key); 
 
@@ -554,7 +554,7 @@ Array<float> NullDatabase::getFloatArray(const string& key)
 
 inline
 void NullDatabase::getFloatArray(
-   const string& key, float* data, const int nelements)
+   const std::string& key, float* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -570,14 +570,14 @@ void NullDatabase::getFloatArray(
 */
 
 inline
-bool NullDatabase::isInteger(const string& key)
+bool NullDatabase::isInteger(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putInteger(const string& key, const int& data)
+void NullDatabase::putInteger(const std::string& key, const int& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -585,7 +585,7 @@ void NullDatabase::putInteger(const string& key, const int& data)
 
 inline
 void NullDatabase::putIntegerArray(
-   const string& key, const Array<int>& data)
+   const std::string& key, const Array<int>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -593,7 +593,7 @@ void NullDatabase::putIntegerArray(
 
 inline
 void NullDatabase::putIntegerArray(
-   const string& key, const int* const data, const int nelements)
+   const std::string& key, const int* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -601,7 +601,7 @@ void NullDatabase::putIntegerArray(
 }
 
 inline
-int NullDatabase::getInteger(const string& key)
+int NullDatabase::getInteger(const std::string& key)
 {
    NULL_USE(key);
    return(0);
@@ -609,7 +609,7 @@ int NullDatabase::getInteger(const string& key)
 
 inline
 int NullDatabase::getIntegerWithDefault(
-   const string& key, 
+   const std::string& key, 
    const int& defaultvalue)
 {
    NULL_USE(key);
@@ -618,7 +618,7 @@ int NullDatabase::getIntegerWithDefault(
 }
 
 inline
-Array<int> NullDatabase::getIntegerArray(const string& key)
+Array<int> NullDatabase::getIntegerArray(const std::string& key)
 {
    NULL_USE(key);
    
@@ -628,7 +628,7 @@ Array<int> NullDatabase::getIntegerArray(const string& key)
 
 inline
 void NullDatabase::getIntegerArray(
-   const string& key, 
+   const std::string& key, 
    int* data, 
    const int nelements)
 {
@@ -646,14 +646,14 @@ void NullDatabase::getIntegerArray(
 */
 
 inline
-bool NullDatabase::isString(const string& key)
+bool NullDatabase::isString(const std::string& key)
 {
    NULL_USE(key);
    return (true);
 }
 
 inline
-void NullDatabase::putString(const string& key, const string& data)
+void NullDatabase::putString(const std::string& key, const std::string& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -661,7 +661,7 @@ void NullDatabase::putString(const string& key, const string& data)
 
 inline
 void NullDatabase::putStringArray(
-   const string& key, const Array<string>& data)
+   const std::string& key, const Array<std::string>& data)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -669,7 +669,7 @@ void NullDatabase::putStringArray(
 
 inline
 void NullDatabase::putStringArray(
-   const string& key, const string* const data, const int nelements)
+   const std::string& key, const std::string* const data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -677,35 +677,35 @@ void NullDatabase::putStringArray(
 }
 
 inline
-string NullDatabase::getString(const string& key)
+std::string NullDatabase::getString(const std::string& key)
 {
    NULL_USE(key); 
-   string empty;
+   std::string empty;
    return (empty);
 }
 
 inline
-string NullDatabase::getStringWithDefault(
-   const string& key, 
-   const string& defaultvalue)
+std::string NullDatabase::getStringWithDefault(
+   const std::string& key, 
+   const std::string& defaultvalue)
 {
    NULL_USE(key);
    NULL_USE(defaultvalue);
-   string empty;
+   std::string empty;
    return (empty);
 }
 
 inline
-Array<string> NullDatabase::getStringArray(const string& key)
+Array<std::string> NullDatabase::getStringArray(const std::string& key)
 {
    NULL_USE(key);
-   Array<string> empty(0);
+   Array<std::string> empty(0);
    return (empty);
 }
 
 inline
 void NullDatabase::getStringArray(
-   const string& key, string* data, const int nelements)
+   const std::string& key, std::string* data, const int nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -721,7 +721,7 @@ void NullDatabase::getStringArray(
 */
 
 inline
-void NullDatabase::printClassData(ostream& os)
+void NullDatabase::printClassData(std::ostream& os)
 {
    NULL_USE(os);
 }

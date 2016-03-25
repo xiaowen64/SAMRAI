@@ -457,7 +457,6 @@ INPUT                  = @top_srcdir@/source/mainpage.dox \
                          @top_srcdir@/source/patchdata \
                          @top_srcdir@/source/mathops \
                          @top_srcdir@/source/mesh \
-                         @top_srcdir@/source/multiblock \
                          @top_srcdir@/source/geometry \
                          @top_srcdir@/source/solvers \
                          @top_srcdir@/source/algorithm \
@@ -1028,11 +1027,10 @@ INCLUDE_FILE_PATTERNS  =
 # instead of the = operator.
 
 PREDEFINED             = NDIM=3 \
-                         HAVE_KINSOL \
+                         HAVE_SUNDIALS \
                          HAVE_HYPRE \
                          HAVE_PETSC \
-                         HAVE_HDF5 \
-                         HAVE_PVODE
+                         HAVE_HDF5
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
 # this tag can be used to specify a list of macro names that should be expanded. 

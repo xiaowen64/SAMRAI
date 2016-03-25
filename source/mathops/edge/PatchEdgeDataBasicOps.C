@@ -1,9 +1,9 @@
 //
-// File:	PatchEdgeDataBasicOps.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/edge/PatchEdgeDataBasicOps.C $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Basic templated edge-centered patch data operations.
 //
 
@@ -14,10 +14,7 @@
 #include "PatchEdgeDataBasicOps.h"
 #include "EdgeGeometry.h"
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 namespace SAMRAI {
@@ -73,7 +70,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::scale(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -91,7 +88,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::addScalar(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -109,7 +106,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::add(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -127,7 +124,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::subtract(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -145,7 +142,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::multiply(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -163,7 +160,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::divide(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -180,7 +177,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::reciprocal(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -200,7 +197,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::linearSum(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -220,7 +217,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::axpy(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -240,7 +237,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::axmy(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -259,7 +256,7 @@ void PatchEdgeDataBasicOps<DIM,TYPE>::setRandomValues(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!dst.isNull());
+   TBOX_ASSERT(!dst.isNull());
 #endif
    for (int d = 0; d < DIM; d++) {
       const hier::Box<DIM> edge_box = pdat::EdgeGeometry<DIM>::toEdgeBox(box, d);
@@ -274,7 +271,7 @@ TYPE PatchEdgeDataBasicOps<DIM,TYPE>::min(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
    for (int d = 0; d < DIM; d++) {
@@ -291,7 +288,7 @@ TYPE PatchEdgeDataBasicOps<DIM,TYPE>::max(
    const hier::Box<DIM>& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!data.isNull());
+   TBOX_ASSERT(!data.isNull());
 #endif
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
    for (int d = 0; d < DIM; d++) {

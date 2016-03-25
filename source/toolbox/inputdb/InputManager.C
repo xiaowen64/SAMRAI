@@ -1,16 +1,16 @@
 //
-// File:	InputManager.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/InputManager.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An input manager singleton class that parses input files
 //
 
 #include "tbox/InputManager.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Parser.h"
 #include "tbox/PIO.h"
 #include "tbox/SAMRAIManager.h"
@@ -113,7 +113,7 @@ bool InputManager::inputDatabaseExists()
 */
 
 Pointer<InputDatabase>
-InputManager::parseInputFile(const string& filename)
+InputManager::parseInputFile(const std::string& filename)
 {
    Pointer<InputDatabase> db = new InputDatabase("main");
    this->parseInputFile(filename, db);
@@ -142,15 +142,15 @@ Pointer<Database> InputManager::getInputDatabase()
 */
 
 void InputManager::parseInputFile(
-   const string& filename, Pointer<InputDatabase> db)
+   const std::string& filename, Pointer<InputDatabase> db)
 {
    FILE* fstream = NULL;
-   if (MPI::getRank() == 0) {
+   if (SAMRAI_MPI::getRank() == 0) {
       fstream = fopen(filename.c_str(), "r");
    }
    int worked = (fstream ? 1 : 0);
 #ifdef HAVE_MPI
-   worked = MPI::bcast(worked, 0);
+   worked = SAMRAI_MPI::bcast(worked, 0);
 #endif
    if (!worked) {
       TBOX_ERROR("InputManager:: Could not open input file``" <<
@@ -167,13 +167,13 @@ void InputManager::parseInputFile(
    if (errors > 0) {
       TBOX_WARNING("InputManager: Errors = " << errors
                    << ", Warnings = " << warnings
-                   << "\n when parsing input file = " << filename << endl);
+                   << "\n when parsing input file = " << filename << std::endl);
       db->printClassData(plog);
-      TBOX_ERROR("InputManager exiting..." << endl);
+      TBOX_ERROR("InputManager exiting..." << std::endl);
    }
    if (warnings > 0) {
       TBOX_WARNING("InputManager: Warnings  = " << warnings
-                   << "\n when parsing input file = " << filename << endl);
+                   << "\n when parsing input file = " << filename << std::endl);
    }
 
    /*

@@ -1,20 +1,19 @@
 //
-// File:	RestartManager.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/RestartManager.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1808 $
+// Modified:	$LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
 // Description:	An restart manager singleton class 
 //
 
 #include "tbox/RestartManager.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "tbox/HDFDatabase.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/NullDatabase.h"
 #include "tbox/Parser.h"
 #include "tbox/PIO.h"
@@ -118,7 +117,7 @@ RestartManager::RestartManager()
 */
 
 bool RestartManager::openRestartFile(
-   const string& root_dirname,
+   const std::string& root_dirname,
    const int restore_num,
    const int num_nodes)
 {
@@ -128,23 +127,23 @@ bool RestartManager::openRestartFile(
    char proc_buf[NAME_BUFSIZE];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUFSIZE > (1 + 8 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE > (1 + 8 + 1 + 5 + 1) );
 #endif
    sprintf(restore_buf,"/restore.%05d",restore_num);
    
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
 #endif
    sprintf(nodes_buf,"/nodes.%05d",num_nodes);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUFSIZE > (1 + 4 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE > (1 + 4 + 1 + 5 + 1) );
 #endif
-   int proc_num = MPI::getRank();
+   int proc_num = SAMRAI_MPI::getRank();
    sprintf(proc_buf,"/proc.%05d",proc_num);
 
    /* create full path name of restart file */
-   string restart_filename = root_dirname + restore_buf + nodes_buf + proc_buf; 
+   std::string restart_filename = root_dirname + restore_buf + nodes_buf + proc_buf; 
 
    bool open_successful = true;
 #ifdef HAVE_HDF5
@@ -205,12 +204,12 @@ void RestartManager::closeRestartFile()
 *************************************************************************
 */
 void RestartManager::registerRestartItem(
-   const string& name,
+   const std::string& name,
    Serializable* obj)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
-   assert(obj != ((Serializable*)NULL));
+   TBOX_ASSERT(!name.empty());
+   TBOX_ASSERT(obj != ((Serializable*)NULL));
 #endif
    /*
     * Run through list to see if there is another object registered
@@ -250,10 +249,10 @@ void RestartManager::registerRestartItem(
 *									*
 *************************************************************************
 */
-void RestartManager::unregisterRestartItem(const string& name)
+void RestartManager::unregisterRestartItem(const std::string& name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!name.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
 
    List< RestartManager::RestartItem >::Iterator 
@@ -290,31 +289,31 @@ void RestartManager::clearRestartItems()
 *************************************************************************
 */
 void RestartManager::writeRestartFile(
-   const string& root_dirname, 
+   const std::string& root_dirname, 
    int restore_num)
 {
 #ifdef HAVE_HDF5
 
    /* Create necessary directories and cd proper directory for writing */
-   string restart_dirname = createDirs(root_dirname,restore_num);
+   std::string restart_dirname = createDirs(root_dirname,restore_num);
 
    /* Create full path name of restart file */
 
-   int proc_rank = MPI::getRank();
+   int proc_rank = SAMRAI_MPI::getRank();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUFSIZE > (1 + 4 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE > (1 + 4 + 1 + 5 + 1) );
 #endif
    char restart_filename_buf[NAME_BUFSIZE];
    sprintf(restart_filename_buf, "/proc.%05d", proc_rank);
 
-   string restart_filename = restart_dirname + restart_filename_buf;
+   std::string restart_filename = restart_dirname + restart_filename_buf;
 
    HDFDatabase* new_restartDB = new HDFDatabase(restart_filename);
+
    new_restartDB->mount(restart_filename, "W");
 
-   List<RestartManager::RestartItem>::Iterator 
-                                                     i(d_restart_items_list);
+   List<RestartManager::RestartItem>::Iterator i(d_restart_items_list);
    for ( ; i; i++) {
       Pointer<Database> obj_db = 
          new_restartDB->putDatabase(i().name);
@@ -340,25 +339,25 @@ void RestartManager::writeRestartFile(
 *************************************************************************
 */
 
-string RestartManager::createDirs(
-   const string& root_dirname,
+std::string RestartManager::createDirs(
+   const std::string& root_dirname,
    int restore_num)
 {
    char restore_buf[NAME_BUFSIZE];
    char nodes_buf[NAME_BUFSIZE];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUFSIZE> (1 + 8 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE> (1 + 8 + 1 + 5 + 1) );
 #endif
    sprintf(restore_buf, "/restore.%05d", restore_num);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
+   TBOX_ASSERT( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
 #endif
-   int num_procs = MPI::getNodes();
+   int num_procs = SAMRAI_MPI::getNodes();
    sprintf(nodes_buf,"/nodes.%05d",num_procs);
 
-   string full_dirname = root_dirname + restore_buf + nodes_buf;
+   std::string full_dirname = root_dirname + restore_buf + nodes_buf;
 
    Utilities::recursiveMkdir(full_dirname);
   

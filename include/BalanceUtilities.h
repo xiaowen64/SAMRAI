@@ -1,9 +1,9 @@
 //
-// File:        BalanceUtilities.h
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/BalanceUtilities.h $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 601 $
-// Modified:    $Date: 2005-09-06 11:23:15 -0700 (Tue, 06 Sep 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: utility routines useful for load balancing operations
 //
  
@@ -16,7 +16,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 #ifndef included_hier_Box
 #include "Box.h"
@@ -295,7 +294,7 @@ template<int DIM> struct BalanceUtilities
     */
    static double computeLoadBalanceEfficiency(
       const tbox::Pointer< hier::PatchLevel<DIM> >& level,
-      ostream& os,
+      std::ostream& os,
       int workload_data_id = -1);
 
 private:

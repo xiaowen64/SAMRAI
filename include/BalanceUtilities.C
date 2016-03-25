@@ -1,9 +1,9 @@
 //
-// File:        BalanceUtilities.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/load_balance/BalanceUtilities.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 173 $
-// Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: utility routines useful for load balancing operations
 //
 
@@ -15,16 +15,15 @@
 #include "BoxUtilities.h" 
 #include "VariableDatabase.h"
 #include "CellData.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
+#include "tbox/MathUtilities.h"
 
 namespace SAMRAI {
     namespace mesh {
 
-template<int DIM> math::PatchCellDataNormOpsReal<DIM,double> BalanceUtilities<DIM>::s_norm_ops;
+template<int DIM> 
+math::PatchCellDataNormOpsReal<DIM,double> BalanceUtilities<DIM>::s_norm_ops;
 
 /*
 *************************************************************************
@@ -97,9 +96,9 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveProcAssign(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(wt_index_hi >= wt_index_lo);
-   assert(proc_index_hi >= proc_index_lo);
-   assert( (wt_index_hi - wt_index_lo) >= (proc_index_hi - proc_index_lo) );
+   TBOX_ASSERT(wt_index_hi >= wt_index_lo);
+   TBOX_ASSERT(proc_index_hi >= proc_index_lo);
+   TBOX_ASSERT( (wt_index_hi - wt_index_lo) >= (proc_index_hi - proc_index_lo) );
 #endif 
 
    int i;
@@ -407,7 +406,7 @@ template<int DIM> bool BalanceUtilities<DIM>::privateFindBestCutDimension(
       int cutdim = test_box.longestDimension();
       int numcells = test_box.numberCells(cutdim);
       int cutfact = cut_factor(cutdim);
-      int mincut = tbox::Utilities::imax(min_size(cutdim), cutfact);
+      int mincut = tbox::MathUtilities<int>::Max(min_size(cutdim), cutfact);
 
       int i;
       bool found_cut_point = false;
@@ -442,7 +441,7 @@ template<int DIM> bool BalanceUtilities<DIM>::privateFindBestCutDimension(
          cutdim = test_box.longestDimension();
          numcells = test_box.numberCells(cutdim);
          cutfact = cut_factor(cutdim);
-         mincut = tbox::Utilities::imax(min_size(cutdim), cutfact);
+         mincut = tbox::MathUtilities<int>::Max(min_size(cutdim), cutfact);
 
       }
 
@@ -649,7 +648,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionUniformSi
 
          const int numcells = in_box.numberCells(cut_dim);
          int mincut = 
-            tbox::Utilities::imax(min_size(cut_dim), cut_factor(cut_dim));
+            tbox::MathUtilities<int>::Max(min_size(cut_dim), cut_factor(cut_dim));
 
          /*
           * Search for chop point along chosen dimension.
@@ -780,7 +779,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateRecursiveBisectionNonunifor
 
          const int numcells = in_box.numberCells(cut_dim);
          int mincut =
-            tbox::Utilities::imax(min_size(cut_dim), cut_factor(cut_dim));
+            tbox::MathUtilities<int>::Max(min_size(cut_dim), cut_factor(cut_dim));
 
          /*
           * Search for chop point along chosen dimension.
@@ -911,7 +910,7 @@ template<int DIM> double BalanceUtilities<DIM>::binPack(
    const int nproc)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(nproc > 0);
+   TBOX_ASSERT(nproc > 0);
 #endif
 
    /*
@@ -924,7 +923,7 @@ template<int DIM> double BalanceUtilities<DIM>::binPack(
    double avg_work = 0.0;
    for (int w = 0; w < nboxes; w++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(weights[w] >= 0.0);
+      TBOX_ASSERT(weights[w] >= 0.0);
 #endif
       avg_work += weights[w];
    }
@@ -990,8 +989,8 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
    const int nproc)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(nproc > 0);
-   assert(weights.getSize() == boxes.getNumberOfBoxes());
+   TBOX_ASSERT(nproc > 0);
+   TBOX_ASSERT(weights.getSize() == boxes.getNumberOfBoxes());
 #endif
 
    const int nboxes = boxes.getNumberOfBoxes();
@@ -1076,7 +1075,7 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
    }
 
    for (i = 0; i < nboxes-1; i++) {
-      assert(spatial_keys[i] <= spatial_keys[i+1]);
+      TBOX_ASSERT(spatial_keys[i] <= spatial_keys[i+1]);
    }
 #endif
   
@@ -1085,7 +1084,7 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
    double avg_work = 0.0;
    for (i = 0; i < nboxes; i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(weights[i] >= 0.0);
+      TBOX_ASSERT(weights[i] >= 0.0);
 #endif
       avg_work += weights[i];
    }
@@ -1149,11 +1148,11 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
    const hier::BoxArray<DIM>& physical_domain)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ideal_workload > 0);
-   assert(min_size > hier::IntVector<DIM>(0));
-   assert(cut_factor > hier::IntVector<DIM>(0));
-   assert(bad_interval >= hier::IntVector<DIM>(0));
-   assert(physical_domain.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(ideal_workload > 0);
+   TBOX_ASSERT(min_size > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(cut_factor > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(bad_interval >= hier::IntVector<DIM>(0));
+   TBOX_ASSERT(physical_domain.getNumberOfBoxes() > 0);
 #endif
 
    out_boxes.clearItems();
@@ -1166,7 +1165,7 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionUniform(
 
       hier::Box<DIM> box2chop = ib();
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!box2chop.empty());
+      TBOX_ASSERT(!box2chop.empty());
 #endif
       double boxwork = (double)box2chop.size();
 
@@ -1230,11 +1229,11 @@ template<int DIM> void BalanceUtilities<DIM>::recursiveBisectionNonuniform(
    const hier::BoxArray<DIM>& physical_domain)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(ideal_workload > 0);
-   assert(min_size > hier::IntVector<DIM>(0));
-   assert(cut_factor > hier::IntVector<DIM>(0));
-   assert(bad_interval >= hier::IntVector<DIM>(0));
-   assert(physical_domain.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(ideal_workload > 0);
+   TBOX_ASSERT(min_size > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(cut_factor > hier::IntVector<DIM>(0));
+   TBOX_ASSERT(bad_interval >= hier::IntVector<DIM>(0));
+   TBOX_ASSERT(physical_domain.getNumberOfBoxes() > 0);
 #endif
 
    out_boxes.clearItems();
@@ -1312,9 +1311,9 @@ template<int DIM> void BalanceUtilities<DIM>::computeDomainDependentProcessorLay
 {
    int i;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(num_procs > 0);
+   TBOX_ASSERT(num_procs > 0);
    for (i = 0; i < DIM; i++) {
-      assert(box.numberCells(i) > 0);
+      TBOX_ASSERT(box.numberCells(i) > 0);
    }
 #endif
    
@@ -1392,7 +1391,7 @@ template<int DIM> void BalanceUtilities<DIM>::computeDomainDependentProcessorLay
    if (proc_dist.getProduct() != num_procs) {
       TBOX_WARNING("computeDomainDependentProcessorLayout(): could not \n"
                 << "construct valid processor array - calling \n" 
-                << "computeDomainIndependentProcessorLayout() " << endl);
+                << "computeDomainIndependentProcessorLayout() " << std::endl);
       computeDomainIndependentProcessorLayout(proc_dist, num_procs, box);
    }
 
@@ -1417,9 +1416,9 @@ template<int DIM> void BalanceUtilities<DIM>::computeDomainIndependentProcessorL
    int i;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(num_procs > 0);
+   TBOX_ASSERT(num_procs > 0);
    for (i = 0; i < DIM; i++) {
-      assert(box.numberCells(i) > 0);
+      TBOX_ASSERT(box.numberCells(i) > 0);
    }
 #endif
 
@@ -1487,7 +1486,7 @@ template<int DIM> void BalanceUtilities<DIM>::computeDomainIndependentProcessorL
    if (proc_dist.getProduct() != num_procs) {
       TBOX_ERROR(
          "BalanceUtilities<DIM>::computeDomainIndependentProcessorLayout() error"
-         << "\n  invalid processor array computed" << endl);
+         << "\n  invalid processor array computed" << std::endl);
    }
 
 }
@@ -1506,7 +1505,7 @@ template<int DIM> void BalanceUtilities<DIM>::sortDescendingBoxWorkloads(
    tbox::Array<double>& workload)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(boxes.getNumberOfBoxes() == workload.getSize());
+   TBOX_ASSERT(boxes.getNumberOfBoxes() == workload.getSize());
 #endif
 
    /*
@@ -1557,7 +1556,7 @@ template<int DIM> void BalanceUtilities<DIM>::sortDescendingBoxWorkloads(
     */
 
    for (int n = 0; n < nboxes-1; n++) {
-      assert(workload[n] >= workload[n+1]);
+      TBOX_ASSERT(workload[n] >= workload[n+1]);
    }
 #endif
 }
@@ -1572,18 +1571,18 @@ template<int DIM> void BalanceUtilities<DIM>::sortDescendingBoxWorkloads(
 
 template<int DIM> double BalanceUtilities<DIM>::computeLoadBalanceEfficiency(
    const tbox::Pointer< hier::PatchLevel<DIM> >& level,
-   ostream& os,
+   std::ostream& os,
    int workload_data_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif 
 
    int i;
 
    const hier::ProcessorMapping& mapping = level->getProcessorMapping();
 
-   const int nprocs = tbox::MPI::getNodes();
+   const int nprocs = tbox::SAMRAI_MPI::getNodes();
    tbox::Array<double> work(nprocs);
 
    for (i = 0; i < nprocs; i++) {
@@ -1610,7 +1609,7 @@ template<int DIM> double BalanceUtilities<DIM>::computeLoadBalanceEfficiency(
 
    }
 
-   tbox::MPI::sumReduction(work.getPointer(), nprocs);
+   tbox::SAMRAI_MPI::sumReduction(work.getPointer(), nprocs);
 
    double max_work = 0.0;
    double total_work = 0.0;

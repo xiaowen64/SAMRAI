@@ -1,9 +1,9 @@
 //
-// File:	BoundaryBox.C
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryBox.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	BoundaryBox representing a portion of the physical boundary
 //
 
@@ -13,10 +13,7 @@
 #include "BoundaryBox.h"
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
+#include "tbox/Utilities.h"
 #endif
 
 #include "BoundaryLookupTable.h"
@@ -42,10 +39,10 @@ template<int DIM>  BoundaryBox<DIM>::BoundaryBox(const Box<DIM>& box,
 
    const tbox::Array<int>& location_index_max = blut->getMaxLocationIndices();
 
-   assert ( (bdry_type >= 1) && (bdry_type <= DIM) );
+   TBOX_ASSERT( (bdry_type >= 1) && (bdry_type <= DIM) );
 
-   assert (location_index >= 0);
-   assert (location_index < location_index_max[bdry_type-1]);
+   TBOX_ASSERT(location_index >= 0);
+   TBOX_ASSERT(location_index < location_index_max[bdry_type-1]);
 #endif
 
    d_bdry_type = bdry_type;

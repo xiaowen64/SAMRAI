@@ -1,18 +1,15 @@
 //
 // File:        Hierarchy Sum test
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name$
-// Revision:    $Revision: 575 $
-// Modified:    $Date: 2005-08-19 17:54:08 -0700 (Fri, 19 Aug 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: SAMRAI interface class for hierarchy node and edge sum test
 //
 
 #include "HierSumTest.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include "tbox/Array.h"
 #include "BoundaryBox.h"
@@ -28,6 +25,7 @@
 #include "NodeIndex.h"
 #include "NodeIterator.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 #include "PatchBoundaryNodeSum.h"
 #include "PatchBoundaryEdgeSum.h"
@@ -174,11 +172,11 @@ HierSumTest::~HierSumTest()
  * Set initial node values based on sum of surrounding cell weights
  *
  ************************************************************************/
-void
+int
 HierSumTest::setInitialNodeValues(
    const Pointer<PatchHierarchy<NDIM> > hierarchy) 
 {
-
+   int fail_count = 0;
 
    /*
     * Set node weight on patch interiors = sum(cell weights)
@@ -278,7 +276,7 @@ HierSumTest::setInitialNodeValues(
                   NodeIndex<NDIM> node = ni();
                   for (int d = 0; d < unode->getDepth(); d++) {
                      double node_val =  (*unode)(node,d);
-                     if (tbox::Utilities::deq(node_val, 0.0)) {
+                     if (tbox::MathUtilities<double>::equalEps(node_val, 0.0)) {
                         (*unode)(node,d) = -999.;
                      }
                   }
@@ -300,6 +298,8 @@ HierSumTest::setInitialNodeValues(
          
       } // loop over patches
    } // loop over levels
+
+   return(fail_count);
 }
 
 /*************************************************************************
@@ -307,10 +307,12 @@ HierSumTest::setInitialNodeValues(
  * Set initial edge values based on sum of surrounding cell weights
  *
  ************************************************************************/
-void
+int
 HierSumTest::setInitialEdgeValues(
    const Pointer<PatchLevel<NDIM> > level) 
 {
+   int fail_count = 0;
+
    double correct_val = 1.;
    for (int i = 0; i < NDIM-1; i++) {
       correct_val *= 2.;
@@ -393,6 +395,7 @@ HierSumTest::setInitialEdgeValues(
 #endif
             
             if (fort_all_correct == 0) {
+               fail_count++; 
                tbox::perr << "PatchBdrySum Edge test FAILED:  Errors on Level: " 
                           << level->getLevelNumber()
                           << "\t Patch: " << patch->getPatchNumber()
@@ -420,7 +423,9 @@ HierSumTest::setInitialEdgeValues(
       
    } // loop over patches
 
-   tbox::MPI::barrier();
+   tbox::SAMRAI_MPI::barrier();
+
+   return(fail_count);
    
 }
 
@@ -459,7 +464,7 @@ void
 HierSumTest::doOuternodeSum() 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!d_node_sum_util.isNull());
+   TBOX_ASSERT(!d_node_sum_util.isNull());
 #endif
    
    bool fill_hanging_nodes = true;
@@ -499,8 +504,8 @@ void
 HierSumTest::doOuteredgeSum(const int level_num) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(level_num < d_edge_sum_util.getSize());
-   assert(!d_edge_sum_util[level_num].isNull());
+   TBOX_ASSERT(level_num < d_edge_sum_util.getSize());
+   TBOX_ASSERT(!d_edge_sum_util[level_num].isNull());
 #endif
 
    d_edge_sum_util[level_num]->computeSum();
@@ -514,9 +519,11 @@ HierSumTest::doOuteredgeSum(const int level_num)
  *
  ************************************************************************/
 
-void HierSumTest::checkNodeResult(
+int HierSumTest::checkNodeResult(
    const Pointer<PatchHierarchy<NDIM> > hierarchy)
 {
+
+   int fail_count = 0;
 
    /*
     * After the communication the sum on every node of every level should be
@@ -582,6 +589,7 @@ void HierSumTest::checkNodeResult(
          } // loop over complement boxes
 
          if (!all_correct) {
+            fail_count++;
             tbox::perr << "PatchBdrySum Node test FAILED:  Errors on Level: " 
                        << level->getLevelNumber()
                        << "\t Patch: " << patch->getPatchNumber()
@@ -616,6 +624,8 @@ void HierSumTest::checkNodeResult(
       } // loop over patches
       
    } // loop over levels
+
+   return(fail_count);
    
 }
 
@@ -626,9 +636,11 @@ void HierSumTest::checkNodeResult(
  *
  ************************************************************************/
 
-void HierSumTest::checkEdgeResult(
+int HierSumTest::checkEdgeResult(
    const Pointer<PatchLevel<NDIM> > level)
 {
+
+   int fail_count = 0;
 
    /*
     * After the communication the sum on every edge of every level should be
@@ -682,6 +694,7 @@ void HierSumTest::checkEdgeResult(
 
 
          if (fort_all_correct == 0) {
+            fail_count++;
             tbox::perr << "PatchBdrySum Edge test FAILED:  Errors on Level: " 
                        << level->getLevelNumber()
                        << "\t Patch: " << patch->getPatchNumber()
@@ -717,6 +730,8 @@ void HierSumTest::checkEdgeResult(
 #endif
       
    } // loop over patches
+
+   return(fail_count);
 
 }
 
@@ -969,7 +984,7 @@ HierSumTest::setBoundaryConditions(
    Pointer< CellData<NDIM,double> > ucell = patch.getPatchData(cell_data_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!ucell.isNull());
+   TBOX_ASSERT(!ucell.isNull());
 #endif
    IntVector<NDIM> ghost_cells = ucell->getGhostCellWidth();
    const Box<NDIM> pbox(patch.getBox());
@@ -1162,7 +1177,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
    Pointer< CellData<NDIM,double> > ucell = cpatch.getPatchData(cell_data_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!ucell.isNull());
+   TBOX_ASSERT(!ucell.isNull());
 #endif
    IntVector<NDIM> ghost_cells = ucell->getGhostCellWidth();
 
@@ -1207,7 +1222,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
          for (d = 0; d < ucell->getDepth(); d++) {
             interior_value = (*ucell)(interior,d);
          
-            if (tbox::Utilities::deq(interior_value, 0.0)) {
+            if (tbox::MathUtilities<double>::equalEps(interior_value, 0.0)) {
                (*ucell)(boundary_cell,d) = 0.0;
             }
          }
@@ -1290,7 +1305,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
          for (d = 0; d < ucell->getDepth(); d++) {
             interior_value = (*ucell)(interior,d);
             
-            if (tbox::Utilities::deq(interior_value, 0.0)) {
+            if (tbox::MathUtilities<double>::equalEps(interior_value, 0.0)) {
                (*ucell)(boundary_cell,d) = 0.0;
             }
          }

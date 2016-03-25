@@ -1,9 +1,9 @@
 //
-// File:	InputDatabase.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/inputdb/InputDatabase.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 431 $
-// Modified:	$Date: 2005-06-10 16:51:19 -0700 (Fri, 10 Jun 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -17,20 +17,20 @@ namespace SAMRAI {
 
 
 inline
-InputDatabase::InputDatabase(const string& name)
+InputDatabase::InputDatabase(const std::string& name)
 {
    d_database_name = name;
 }
 
 inline
-string
+std::string
 InputDatabase::getName() const
 {
    return(d_database_name);
 }
 
 inline
-bool InputDatabase::keyAccessed(const string& key)
+bool InputDatabase::keyAccessed(const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return(keydata ? keydata->d_accessed : false);

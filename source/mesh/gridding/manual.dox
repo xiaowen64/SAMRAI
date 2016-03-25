@@ -1,9 +1,9 @@
 /*
-  File:        $Id$
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/manual.dox $
   Package:     SAMRAI Doxygen manual
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision$
-  Modified:    $Date$
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1735 $
+  Modified:    $LastChangedDate: 2007-12-05 15:01:59 -0800 (Wed, 05 Dec 2007) $
   Description: Generation of SAMRAI Doxygen source code manual
 */
 
@@ -31,7 +31,6 @@ namespace SAMRAI {
   - SAMRAI::mesh::TagAndInitializeStrategy
   - SAMRAI::mesh::StandardTagAndInitialize
   - SAMRAI::mesh::StandardTagAndInitStrategy
-  - SAMRAI::mesh::RegridBoxIOUtility
 */
 
 }

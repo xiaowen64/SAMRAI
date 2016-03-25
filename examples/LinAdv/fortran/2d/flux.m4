@@ -1,4 +1,4 @@
-define(NDIM,2)dn
+define(NDIM,2)dnl
 define(NEQU,1)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl

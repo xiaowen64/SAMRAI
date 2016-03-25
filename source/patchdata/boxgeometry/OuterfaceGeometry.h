@@ -1,9 +1,9 @@
 //
-// File:	OuterfaceGeometry.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/boxgeometry/OuterfaceGeometry.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	hier::Box geometry information for outerface centered objects
 //
 
@@ -34,32 +34,15 @@ namespace SAMRAI {
 
 template<int DIM> class FaceGeometry;
 
-/**
- * Class OuterfaceGeometry<DIM> manages the mapping between the AMR index 
- * space and the outerface-centered geometry index space.  It is a 
- * subclass of hier::BoxGeometry<DIM> and it computes intersections between two 
- * outerface-centered box geometries or between an outerface geometry and 
- * a face box geometry.  Outerface data differs from face data in that, given 
- * a box, an outerface data object represents face-centered data living only 
- * on the boundary of the box.  However, for the faces over which outerface
- * data is defined, the outerface geometry index space is the same as the face
- * geometry index space.  For example, given a three-dimensional box 
- * [l0:u0,l1:u1,l2:u2], the indices for a three-dimensional outerface data  
- * object run as follows:
- * 
-
-
- * - \b X faces (lower and upper) [l1:u1,l2:u2]
- * - \b Y faces (lower and upper) [l2:u2,l0:u0]
- * - \b Z faces (lower and upper) [l0:u0,l1:u1]
- * 
-
-
- * Recall that face data is defined so that the faces associated with a
- * given coordinate direction are those whose normal vector lies in that
- * direction.  Also, face data indices are permuted so that the leading
- * dimension of each array corresponds to the direction of the faces. 
- * Outerface data matches these conventions.
+/*!
+ * Class OuterfaceGeometry<DIM> manages the mapping between the AMR index
+ * and the outerface geometry index space.  It is a subclass of
+ * hier::BoxGeometry<DIM> and it computes intersections between outerface
+ * box geometries and face or outerface box geometries for communication
+ * operations.
+ *
+ * See header file for OuterfaceData<DIM> class for a more detailed
+ * description of the data layout.
  *
  * @see hier::BoxGeometry
  * @see pdat::FaceGeometry
@@ -69,22 +52,21 @@ template<int DIM> class FaceGeometry;
 template<int DIM> class OuterfaceGeometry : public hier::BoxGeometry<DIM>
 {
 public:
-   /**
-    * Construct the outerface geometry object given the box and ghost
-    * cell width.
+   /*!
+    * @brief Construct an outerface geometry object given an AMR index
+    * space box and ghost cell width.
     */
-   OuterfaceGeometry(const hier::Box<DIM>& box, const hier::IntVector<DIM>& ghosts);
-
-   /**
-    * The virtual destructor does nothing interesting.
+   OuterfaceGeometry(const hier::Box<DIM>& box,
+                     const hier::IntVector<DIM>& ghosts);
+ 
+   /*!
+    * @brief The virtual destructor does nothing interesting.
     */
    virtual ~OuterfaceGeometry<DIM>();
-
-   /**
-    * Compute the overlap in index space between the source outerface
-    * geometry object (or a face geometry object) and the destination
-    * object (this).  Refer to the box geometry class for a detailed
-    * description of calculateOverlap().
+ 
+   /*!
+    * @brief Compute the overlap in face-centered index space on the
+    * boundaries of the source box geometry and the destination box geometry.
     */
    virtual tbox::Pointer< hier::BoxOverlap<DIM> > calculateOverlap(
       const hier::BoxGeometry<DIM>& dst_geometry,
@@ -94,13 +76,13 @@ public:
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
 
-   /**
-    * Return the box extents for this outerface box geometry object.
+   /*!
+    * @brief Return the box for this outerface box geometry object.
     */
    const hier::Box<DIM>& getBox() const;
-
-   /**
-    * Return the ghost cell width for this outerface box geometry object.
+ 
+   /*!
+    * @brief Return the ghost cell width for this outerface box geometry object.
     */
    const hier::IntVector<DIM>& getGhosts() const;
 

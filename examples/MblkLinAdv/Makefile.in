@@ -1,0 +1,72 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI applications
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 1704 $
+## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Description:	makefile for linear advection sample application
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = examples/MblkLinAdv
+OBJECT        = ../..
+
+
+default:      main3d
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=0
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o MblkHyperbolicLevelIntegrator.o \
+                MblkHyperbolicPatchStrategy.o Pointer-MblkHyperbolicLevelIntegrator.o \
+                SkeletonCellDoubleConservativeLinearRefine.o Pointer-SkeletonCellDoubleConservativeLinearRefine.o \
+                SkeletonCellDoubleWeightedAverage.o Pointer-SkeletonCellDoubleWeightedAverage.o \
+                SkeletonOutersideDoubleWeightedAverage.o Pointer-SkeletonOutersideDoubleWeightedAverage.o
+
+C2D_OBJS      = SkeletonBoundaryUtilities2.o
+C3D_OBJS      = SkeletonBoundaryUtilities3.o
+
+F2D_OBJS      = upfluxsum.o skelbdry.o
+F3D_OBJS      = $(F2D_OBJS)
+
+main2d:
+		if test -f stamp-3d; then $(MAKE) clean ; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(C2D_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) $(C2D_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:
+		if test -f stamp-2d; then $(MAKE) clean ; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(C3D_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) $(C3D_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+clean:
+		$(SAMCLEAN)
+		$(RM) *.f main main2d main3d
+
+redo:
+		$(RM) main2d main3d
+
+include Makefile.depend
+
+FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
+M4DIRS        = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+
+skelbdry.o:	$(FORTRAN)/skelbdry.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/skelbdry.m4 > skelbdry.f
+		$(F77) $(FFLAGS) -c skelbdry.f -o $@
+
+upfluxsum.o:	$(FORTRAN)/upfluxsum.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/upfluxsum.m4 > upfluxsum.f
+		$(F77) $(FFLAGS) -c upfluxsum.f -o $@
+

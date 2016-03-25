@@ -1,0 +1,22 @@
+/*
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/geometry/cartesian/patch_geom/manual.dox $
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1375 $
+  Modified:    $LastChangedDate: 2007-01-08 14:34:51 -0800 (Mon, 08 Jan 2007) $
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace geom {
+
+/*!
+  @page package_geometry_multiblock_patch_geom Multiblock Patch Geometry
+
+  The block patch geometry class provides a patch geometry for 
+  use by the BlockGridGeometry in multiblock domains.
+  - SAMRAI::geom::BlockPatchGeometry
+*/
+
+}
+}

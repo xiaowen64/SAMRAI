@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -18,6 +18,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -84,6 +85,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -120,19 +122,28 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/HierarchyDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -201,7 +212,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -219,10 +231,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -233,13 +243,14 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	cell_cplxtest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h cell_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -248,6 +259,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -327,16 +339,25 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C $(INCLUDE_SAM)/Index.C	\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -399,6 +420,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -465,6 +487,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -501,19 +524,28 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/HierarchyDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -582,7 +614,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -600,10 +633,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -614,13 +645,14 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	cell_hiertest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h cell_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -629,6 +661,7 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -708,16 +741,25 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C $(INCLUDE_SAM)/Index.C	\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -779,6 +821,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/ArrayDataIterator.h				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
+	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
@@ -844,6 +888,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -877,18 +922,28 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/GridGeometry.I $(INCLUDE_SAM)/GridGeometry.h	\
 	$(INCLUDE_SAM)/Index.I $(INCLUDE_SAM)/Index.h			\
 	$(INCLUDE_SAM)/IntVector.I $(INCLUDE_SAM)/IntVector.h		\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/MBUtilities.h					\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -934,8 +989,11 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/PatchDescriptor.I				\
 	$(INCLUDE_SAM)/PatchDescriptor.h $(INCLUDE_SAM)/PatchFactory.I	\
 	$(INCLUDE_SAM)/PatchFactory.h $(INCLUDE_SAM)/PatchGeometry.I	\
-	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/PatchLevel.I	\
-	$(INCLUDE_SAM)/PatchLevel.h $(INCLUDE_SAM)/ProcessorMapping.I	\
+	$(INCLUDE_SAM)/PatchGeometry.h $(INCLUDE_SAM)/PatchHierarchy.I	\
+	$(INCLUDE_SAM)/PatchHierarchy.h $(INCLUDE_SAM)/PatchLevel.I	\
+	$(INCLUDE_SAM)/PatchLevel.h $(INCLUDE_SAM)/PatchLevelFactory.I	\
+	$(INCLUDE_SAM)/PatchLevelFactory.h				\
+	$(INCLUDE_SAM)/ProcessorMapping.I				\
 	$(INCLUDE_SAM)/ProcessorMapping.h				\
 	$(INCLUDE_SAM)/RefineOperator.h					\
 	$(INCLUDE_SAM)/SideComplexConstantRefine.h			\
@@ -952,7 +1010,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -970,10 +1029,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -984,13 +1041,14 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	cell_patchtest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h cell_patchtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
@@ -998,7 +1056,9 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
@@ -1072,16 +1132,25 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
 	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/Geometry.C		\
 	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -1113,7 +1182,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/PatchCellDataOpsReal.C $(INCLUDE_SAM)/PatchData.C\
 	$(INCLUDE_SAM)/PatchDataFactory.C				\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
-	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
+	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchHierarchy.C	\
+	$(INCLUDE_SAM)/PatchLevel.C $(INCLUDE_SAM)/PatchLevelFactory.C	\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/SideComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/SideComplexLinearTimeInterpolateOp.C		\
@@ -1141,6 +1211,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -1208,6 +1279,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -1244,19 +1316,28 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -1327,7 +1408,8 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -1345,10 +1427,8 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -1359,13 +1439,14 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	edge_cplxtest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h edge_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
@@ -1374,6 +1455,7 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -1454,16 +1536,25 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -1527,6 +1618,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -1594,6 +1686,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -1630,19 +1723,28 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -1713,7 +1815,8 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -1731,10 +1834,8 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -1745,13 +1846,14 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	edge_hiertest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h edge_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
@@ -1760,6 +1862,7 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -1840,16 +1943,25 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -1913,6 +2025,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -1980,6 +2093,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -2016,19 +2130,28 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -2099,7 +2222,8 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -2117,10 +2241,8 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2131,13 +2253,14 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	face_cplxtest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h face_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
@@ -2146,6 +2269,7 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -2226,16 +2350,25 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -2299,6 +2432,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -2366,6 +2500,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -2402,19 +2537,28 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -2485,7 +2629,8 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -2503,10 +2648,8 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2517,13 +2660,14 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	face_hiertest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h face_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
@@ -2532,6 +2676,7 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -2612,16 +2757,25 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyFaceDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -2685,6 +2839,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -2752,6 +2907,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -2788,19 +2944,28 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -2870,7 +3035,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -2888,10 +3054,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2902,13 +3066,14 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	node_cplxtest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h node_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
@@ -2917,6 +3082,7 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -2997,16 +3163,25 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -3069,6 +3244,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -3136,6 +3312,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -3172,19 +3349,28 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -3254,7 +3440,8 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -3272,10 +3459,8 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -3286,13 +3471,14 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	node_hiertest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h node_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
@@ -3301,6 +3487,7 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -3381,16 +3568,25 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchyNodeDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -3453,6 +3649,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -3520,6 +3717,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -3556,19 +3754,28 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/HierarchySideDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -3638,7 +3845,8 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -3656,10 +3864,8 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -3670,13 +3876,14 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	side_cplxtest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h side_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
@@ -3685,6 +3892,7 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -3765,16 +3973,25 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchySideDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\
@@ -3837,6 +4054,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.h			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.h				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.h			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -3904,6 +4122,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/CellVariable.h $(INCLUDE_SAM)/CoarsenOperator.h	\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
+	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.h			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/EdgeData.I $(INCLUDE_SAM)/EdgeData.h		\
@@ -3940,19 +4159,28 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/HierarchySideDataOpsComplex.h			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsReal.h $(INCLUDE_SAM)/Index.I\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.h			\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.h				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.h			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.h			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.h				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.h			\
+	$(INCLUDE_SAM)/NodeComplexInjection.h				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeData.I $(INCLUDE_SAM)/NodeData.h		\
 	$(INCLUDE_SAM)/NodeDataFactory.I				\
 	$(INCLUDE_SAM)/NodeDataFactory.h				\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.h				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.h		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeFloatInjection.h				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.h		\
 	$(INCLUDE_SAM)/NodeGeometry.I $(INCLUDE_SAM)/NodeGeometry.h	\
 	$(INCLUDE_SAM)/NodeIndex.I $(INCLUDE_SAM)/NodeIndex.h		\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.h			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.h				\
 	$(INCLUDE_SAM)/NodeIterator.I $(INCLUDE_SAM)/NodeIterator.h	\
 	$(INCLUDE_SAM)/NodeOverlap.I $(INCLUDE_SAM)/NodeOverlap.h	\
 	$(INCLUDE_SAM)/NodeVariable.h $(INCLUDE_SAM)/OuteredgeData.I	\
@@ -4022,7 +4250,8 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.h			\
 	$(INCLUDE_SAM)/SideIterator.I $(INCLUDE_SAM)/SideIterator.h	\
 	$(INCLUDE_SAM)/SideOverlap.I $(INCLUDE_SAM)/SideOverlap.h	\
-	$(INCLUDE_SAM)/SideVariable.h					\
+	$(INCLUDE_SAM)/SideVariable.h $(INCLUDE_SAM)/SumOperation.I	\
+	$(INCLUDE_SAM)/SumOperation.h					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.h			\
 	$(INCLUDE_SAM)/Variable.I $(INCLUDE_SAM)/Variable.h		\
 	$(INCLUDE_SAM)/VariableContext.I				\
@@ -4040,10 +4269,8 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IEEE.I	\
-	$(INCLUDE_SAM)/tbox/IEEE.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/MPI.I $(INCLUDE_SAM)/tbox/MPI.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -4054,13 +4281,14 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.I				\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.I $(INCLUDE_SAM)/tbox/Utilities.h	\
-	side_hiertest.C
+	$(INCLUDE_SAM)/tbox/Utilities.h side_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
@@ -4069,6 +4297,7 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
+	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -4149,16 +4378,25 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchySideDataOpsComplex.C			\
 	$(INCLUDE_SAM)/HierarchySideDataOpsReal.C $(INCLUDE_SAM)/Index.C\
-	$(INCLUDE_SAM)/IntVector.C					\
-	$(INCLUDE_SAM)/NodeComplexConstantAverage.C			\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
+	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
+	$(INCLUDE_SAM)/MultiblockPatchHierarchy.C			\
+	$(INCLUDE_SAM)/MultiblockPatchLevel.C				\
+	$(INCLUDE_SAM)/MultiblockSideDataTranslator.C			\
+	$(INCLUDE_SAM)/NodeComplexInjection.C				\
 	$(INCLUDE_SAM)/NodeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeDataFactory.C	\
-	$(INCLUDE_SAM)/NodeDoubleConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeDoubleInjection.C				\
 	$(INCLUDE_SAM)/NodeDoubleLinearTimeInterpolateOp.C		\
-	$(INCLUDE_SAM)/NodeFloatConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeFloatInjection.C				\
 	$(INCLUDE_SAM)/NodeFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIntegerConstantAverage.C			\
+	$(INCLUDE_SAM)/NodeIntegerInjection.C				\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeDataFactory.C				\

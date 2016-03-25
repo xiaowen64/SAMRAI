@@ -1,17 +1,17 @@
 c
-c  File:        appu_cartbdry2d.m4
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry2d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: F77 routines for Cartesian 2d boundary conditions
 c
 c
-c  File:        pdat_m4arrdim2d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry2d.f $
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for dimensioning 2d arrays in FORTRAN routines.
 c
 c
@@ -38,11 +38,11 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_cartbdryparams2d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry2d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 2d boundary constant common blocks
 c
       common/cartbdrylocparams2d/
@@ -222,11 +222,11 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_cartbdryparams2d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry2d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 2d boundary constant common blocks
 c
       common/cartbdrylocparams2d/
@@ -407,11 +407,11 @@ c***********************************************************************
      &  XLEFTin, XRIGHTin, YLEFTin, YRIGHTin,
      &  X0Y0in, X1Y0in, X0Y1in, X1Y1in
 c
-c  File:        appu_cartbdryparams2d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry2d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 2d boundary constant common blocks
 c
       common/cartbdrylocparams2d/
@@ -461,11 +461,11 @@ c***********************************************************************
      &  DIRICHLETin, XDIRICHLETin, YDIRICHLETin,
      &  NEUMANNin, XNEUMANNin, YNEUMANNin
 c
-c  File:        appu_cartbdryparams2d.i
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/boundary/appu_cartbdry2d.f $
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2005 The Regents of the University of California
-c  Revision:    
-c  Modified:    
+c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1768 $
+c  Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
 c  Description: m4 include file for 2d boundary constant common blocks
 c
       common/cartbdrylocparams2d/

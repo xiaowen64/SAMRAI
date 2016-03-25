@@ -1,9 +1,9 @@
 //
-// File:	Database.h
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/database/Database.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	An abstract base class for the SAMRAI database objects
 //
 
@@ -17,7 +17,6 @@
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
-using namespace std;
 #endif
 
 #ifndef included_tbox_Array
@@ -37,7 +36,6 @@ using namespace std;
 #endif
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 
@@ -90,12 +88,12 @@ public:
     *
     * @param key Key name to lookup.
     */
-   virtual bool keyExists(const string& key) = 0;
+   virtual bool keyExists(const std::string& key) = 0;
 
    /**
     * Return all keys in the database.
     */
-   virtual Array<string> getAllKeys() = 0;
+   virtual Array<std::string> getAllKeys() = 0;
 
    /**
     * Return the size of the array associated with the key.  If the key
@@ -103,7 +101,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual int getArraySize(const string& key) = 0;
+   virtual int getArraySize(const std::string& key) = 0;
 
    /**
     * Return whether the specified key represents a database entry.  If
@@ -111,7 +109,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isDatabase(const string& key) = 0;
+   virtual bool isDatabase(const std::string& key) = 0;
 
    /**
     * Create a new database with the specified key name.  If the key already
@@ -120,7 +118,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Pointer<Database> putDatabase(const string& key) = 0;
+   virtual Pointer<Database> putDatabase(const std::string& key) = 0;
 
    /**
     * Get the database with the specified key name.  If the specified
@@ -129,7 +127,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Pointer<Database> getDatabase(const string& key) = 0;
+   virtual Pointer<Database> getDatabase(const std::string& key) = 0;
 
    /**
     * Return whether the specified key represents a boolean entry.  If
@@ -137,7 +135,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isBool(const string& key) = 0;
+   virtual bool isBool(const std::string& key) = 0;
 
    /**
     * Create a boolean scalar entry in the database with the specified
@@ -147,7 +145,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putBool(const string& key, const bool& data) = 0;
+   virtual void putBool(const std::string& key, const bool& data) = 0;
 
    /**
     * Create a boolean array entry in the database with the specified
@@ -158,7 +156,7 @@ public:
     * @param data Array with data to put into database.
     */
    virtual void putBoolArray(
-      const string& key, const Array<bool>& data) = 0;
+      const std::string& key, const Array<bool>& data) = 0;
 
    /**
     * Create a boolean array entry in the database with the specified
@@ -170,7 +168,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putBoolArray(
-      const string& key, const bool* const data, const int nelements) = 0;
+      const std::string& key, const bool* const data, const int nelements) = 0;
 
    /**
     * Get a boolean entry in the database with the specified key name.
@@ -180,7 +178,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool getBool(const string& key) = 0;
+   virtual bool getBool(const std::string& key) = 0;
 
    /**
     * Get a boolean entry in the database with the specified key name.
@@ -189,7 +187,7 @@ public:
     * then an error message is printed and the program exits.
     */
    virtual bool getBoolWithDefault(
-      const string& key, const bool& defaultvalue) = 0;
+      const std::string& key, const bool& defaultvalue) = 0;
 
    /**
     * Get a boolean entry from the database with the specified key
@@ -199,7 +197,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<bool> getBoolArray(const string& key) = 0;
+   virtual Array<bool> getBoolArray(const std::string& key) = 0;
 
    /**
     * Get a boolean entry from the database with the specified key
@@ -213,7 +211,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getBoolArray(
-      const string& key, bool* data, const int nelements) = 0;
+      const std::string& key, bool* data, const int nelements) = 0;
 
    /**
     * Return whether the specified key represents a box entry.  If
@@ -221,7 +219,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isDatabaseBox(const string& key) = 0;
+   virtual bool isDatabaseBox(const std::string& key) = 0;
 
    /**
     * Create a box scalar entry in the database with the specified
@@ -231,7 +229,7 @@ public:
     * @param key  Key name in database.
     * @param data Data to put into database.
     */
-   virtual void putDatabaseBox(const string& key, const DatabaseBox& data) = 0;
+   virtual void putDatabaseBox(const std::string& key, const DatabaseBox& data) = 0;
 
    /**
     * Create a box array entry in the database with the specified
@@ -242,7 +240,7 @@ public:
     * @param data Array with data to put into database.
     */
    virtual void putDatabaseBoxArray(
-      const string& key, const Array<DatabaseBox>& data) = 0;
+      const std::string& key, const Array<DatabaseBox>& data) = 0;
 
    /**
     * Create a box array entry in the database with the specified
@@ -254,7 +252,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putDatabaseBoxArray(
-      const string& key, const DatabaseBox* const data, const int nelements) = 0;
+      const std::string& key, const DatabaseBox* const data, const int nelements) = 0;
 
    /**
     * Get a box entry in the database with the specified key name.
@@ -264,7 +262,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual DatabaseBox getDatabaseBox(const string& key) = 0;
+   virtual DatabaseBox getDatabaseBox(const std::string& key) = 0;
 
    /**
     * Get a box entry in the database with the specified key name.
@@ -276,7 +274,7 @@ public:
     * @param defaultvalue Default value to return if not found.
     */
    virtual DatabaseBox getDatabaseBoxWithDefault(
-      const string& key, const DatabaseBox& defaultvalue) = 0;
+      const std::string& key, const DatabaseBox& defaultvalue) = 0;
 
    /**
     * Get a box entry from the database with the specified key
@@ -286,7 +284,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<DatabaseBox> getDatabaseBoxArray(const string& key) = 0;
+   virtual Array<DatabaseBox> getDatabaseBoxArray(const std::string& key) = 0;
 
    /**
     * Get a box entry from the database with the specified key
@@ -300,7 +298,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getDatabaseBoxArray(
-      const string& key, DatabaseBox* data, const int nelements) = 0;
+      const std::string& key, DatabaseBox* data, const int nelements) = 0;
 
    /**
     * Return whether the specified key represents a character entry.  If
@@ -308,7 +306,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isChar(const string& key) = 0;
+   virtual bool isChar(const std::string& key) = 0;
 
    /**
     * Create a character scalar entry in the database with the specified
@@ -318,7 +316,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putChar(const string& key, const char& data) = 0;
+   virtual void putChar(const std::string& key, const char& data) = 0;
 
    /**
     * Create a character array entry in the database with the specified
@@ -331,7 +329,7 @@ public:
     * @param data Array with data to put into database.
     */
    virtual void putCharArray(
-      const string& key, const Array<char>& data) = 0;
+      const std::string& key, const Array<char>& data) = 0;
 
    /**
     * Create a character array entry in the database with the specified
@@ -343,7 +341,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putCharArray(
-      const string& key, const char* const data, const int nelements) = 0;
+      const std::string& key, const char* const data, const int nelements) = 0;
 
    /**
     * Get a character entry in the database with the specified key name.
@@ -353,7 +351,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual char getChar(const string& key) = 0;
+   virtual char getChar(const std::string& key) = 0;
 
    /**
     * Get a character entry in the database with the specified key name.
@@ -365,7 +363,7 @@ public:
     * @param defaultvalue Default value to return if not found.
     */
    virtual char getCharWithDefault(
-      const string& key, const char& defaultvalue) = 0;
+      const std::string& key, const char& defaultvalue) = 0;
 
    /**
     * Get a character entry from the database with the specified key
@@ -375,7 +373,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<char> getCharArray(const string& key) = 0;
+   virtual Array<char> getCharArray(const std::string& key) = 0;
 
    /**
     * Get a character entry from the database with the specified key
@@ -389,7 +387,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getCharArray(
-      const string& key, char* data, const int nelements) = 0;
+      const std::string& key, char* data, const int nelements) = 0;
 
    /**
     * Return whether the specified key represents a complex entry.  If
@@ -397,7 +395,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isComplex(const string& key) = 0;
+   virtual bool isComplex(const std::string& key) = 0;
 
    /**
     * Create a complex scalar entry in the database with the specified
@@ -407,7 +405,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putComplex(const string& key, const dcomplex& data) = 0;
+   virtual void putComplex(const std::string& key, const dcomplex& data) = 0;
 
    /**
     * Create a complex array entry in the database with the specified
@@ -418,7 +416,7 @@ public:
     * @param data Array with data to put into database.
     */
    virtual void putComplexArray(
-      const string& key, const Array<dcomplex>& data) = 0;
+      const std::string& key, const Array<dcomplex>& data) = 0;
 
    /**
     * Create a complex array entry in the database with the specified
@@ -430,7 +428,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putComplexArray(
-      const string& key, const dcomplex* const data, const int nelements) = 0;
+      const std::string& key, const dcomplex* const data, const int nelements) = 0;
 
    /**
     * Get a complex entry in the database with the specified key name.
@@ -440,7 +438,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual dcomplex getComplex(const string& key) = 0;
+   virtual dcomplex getComplex(const std::string& key) = 0;
 
    /**
     * Get a complex entry in the database with the specified key name.
@@ -452,7 +450,7 @@ public:
     * @param defaultvalue Default value to return if not found.
     */
    virtual dcomplex getComplexWithDefault(
-      const string& key, const dcomplex& defaultvalue) = 0;
+      const std::string& key, const dcomplex& defaultvalue) = 0;
 
    /**
     * Get a complex entry from the database with the specified key
@@ -462,7 +460,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<dcomplex> getComplexArray(const string& key) = 0;
+   virtual Array<dcomplex> getComplexArray(const std::string& key) = 0;
 
    /**
     * Get a complex entry from the database with the specified key
@@ -476,7 +474,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getComplexArray(
-      const string& key, dcomplex* data, const int nelements) = 0;
+      const std::string& key, dcomplex* data, const int nelements) = 0;
 
    /**
     * Return whether the specified key represents a double entry.  If
@@ -484,7 +482,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isDouble(const string& key) = 0;
+   virtual bool isDouble(const std::string& key) = 0;
 
    /**
     * Create a double scalar entry in the database with the specified
@@ -494,7 +492,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putDouble(const string& key, const double& data) = 0;
+   virtual void putDouble(const std::string& key, const double& data) = 0;
 
    /**
     * Create a double array entry in the database with the specified
@@ -505,7 +503,7 @@ public:
     * @param data Array with data to put into database.
     */
    virtual void putDoubleArray(
-      const string& key, const Array<double>& data) = 0;
+      const std::string& key, const Array<double>& data) = 0;
 
    /**
     * Create a double array entry in the database with the specified
@@ -517,7 +515,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putDoubleArray(
-      const string& key, const double* const data, const int nelements) = 0;
+      const std::string& key, const double* const data, const int nelements) = 0;
 
    /**
     * Get a double entry in the database with the specified key name.
@@ -527,7 +525,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual double getDouble(const string& key) = 0;
+   virtual double getDouble(const std::string& key) = 0;
 
    /**
     * Get a double entry in the database with the specified key name.
@@ -539,7 +537,7 @@ public:
     * @param defaultvalue Default value to return if not found.
     */
    virtual double getDoubleWithDefault(
-      const string& key, const double& defaultvalue) = 0;
+      const std::string& key, const double& defaultvalue) = 0;
 
    /**
     * Get a double entry from the database with the specified key
@@ -549,7 +547,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<double> getDoubleArray(const string& key) = 0;
+   virtual Array<double> getDoubleArray(const std::string& key) = 0;
 
    /**
     * Get a double entry from the database with the specified key
@@ -563,7 +561,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getDoubleArray(
-      const string& key, double* data, const int nelements) = 0;
+      const std::string& key, double* data, const int nelements) = 0;
 
    /**
     * Return whether the specified key represents a float entry.  If
@@ -571,7 +569,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isFloat(const string& key) = 0;
+   virtual bool isFloat(const std::string& key) = 0;
 
    /**
     * Create a float scalar entry in the database with the specified
@@ -581,7 +579,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putFloat(const string& key, const float& data) = 0;
+   virtual void putFloat(const std::string& key, const float& data) = 0;
 
    /**
     * Create a float array entry in the database with the specified
@@ -591,7 +589,7 @@ public:
     * @param key  Key name in database.
     * @param data Array with data to put into database.
     */
-   virtual void putFloatArray(const string& key, 
+   virtual void putFloatArray(const std::string& key, 
                               const Array<float>& data) = 0;
 
    /**
@@ -604,7 +602,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putFloatArray(
-      const string& key, const float* const data, const int nelements) = 0;
+      const std::string& key, const float* const data, const int nelements) = 0;
 
    /**
     * Get a float entry in the database with the specified key name.
@@ -614,7 +612,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual float getFloat(const string& key) = 0;
+   virtual float getFloat(const std::string& key) = 0;
 
    /**
     * Get a float entry in the database with the specified key name.
@@ -626,7 +624,7 @@ public:
     * @param defaultvalue Default value to return if not found.
     */
    virtual float getFloatWithDefault(
-      const string& key, const float& defaultvalue) = 0;
+      const std::string& key, const float& defaultvalue) = 0;
 
    /**
     * Get a float entry from the database with the specified key
@@ -636,7 +634,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<float> getFloatArray(const string& key) = 0;
+   virtual Array<float> getFloatArray(const std::string& key) = 0;
 
    /**
     * Get a float entry from the database with the specified key
@@ -650,7 +648,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getFloatArray(
-      const string& key, float* data, const int nelements) = 0;
+      const std::string& key, float* data, const int nelements) = 0;
 
    /**
     * Return whether the specified key represents an integer entry.  If
@@ -658,7 +656,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual bool isInteger(const string& key) = 0;
+   virtual bool isInteger(const std::string& key) = 0;
 
    /**
     * Create an integer scalar entry in the database with the specified
@@ -668,7 +666,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putInteger(const string& key, const int& data) = 0;
+   virtual void putInteger(const std::string& key, const int& data) = 0;
 
    /**
     * Create an integer array entry in the database with the specified
@@ -678,7 +676,7 @@ public:
     * @param key  Key name in database.
     * @param data Array with data to put into database.
     */
-   virtual void putIntegerArray(const string& key, 
+   virtual void putIntegerArray(const std::string& key, 
                                 const Array<int>& data) = 0;
 
    /**
@@ -691,7 +689,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putIntegerArray(
-      const string& key, const int* const data, const int nelements) = 0;
+      const std::string& key, const int* const data, const int nelements) = 0;
 
    /**
     * Get an integer entry in the database with the specified key name.
@@ -701,7 +699,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual int getInteger(const string& key) = 0;
+   virtual int getInteger(const std::string& key) = 0;
 
    /**
     * Get an integer entry in the database with the specified key name.
@@ -713,7 +711,7 @@ public:
     * @param defaultvalue Default value to return if not found.
     */
    virtual int getIntegerWithDefault(
-      const string& key, const int& defaultvalue) = 0;
+      const std::string& key, const int& defaultvalue) = 0;
 
    /**
     * Get an integer entry from the database with the specified key
@@ -723,7 +721,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<int> getIntegerArray(const string& key) = 0;
+   virtual Array<int> getIntegerArray(const std::string& key) = 0;
 
    /**
     * Get an integer entry from the database with the specified key
@@ -737,15 +735,15 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getIntegerArray(
-      const string& key, int* data, const int nelements) = 0;
+      const std::string& key, int* data, const int nelements) = 0;
 
    /**
-    * Return whether the specified key represents a string entry.  If
+    * Return whether the specified key represents a std::string entry.  If
     * the key does not exist, then false is returned.
     *
     * @param key Key name in database.
     */
-   virtual bool isString(const string& key) = 0;
+   virtual bool isString(const std::string& key) = 0;
 
    /**
     * Create a string scalar entry in the database with the specified
@@ -755,7 +753,7 @@ public:
     * @param key Key name in database.
     * @param data Value to put into database.
     */
-   virtual void putString(const string& key, const string& data) = 0;
+   virtual void putString(const std::string& key, const std::string& data) = 0;
 
    /**
     * Create a string array entry in the database with the specified
@@ -765,8 +763,8 @@ public:
     * @param key  Key name in database.
     * @param data Array with data to put into database.
     */
-   virtual void putStringArray(const string& key, 
-                               const Array<string>& data) = 0;
+   virtual void putStringArray(const std::string& key, 
+                               const Array<std::string>& data) = 0;
 
    /**
     * Create a string array entry in the database with the specified
@@ -778,7 +776,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void putStringArray(
-      const string& key, const string* const data, const int nelements) = 0;
+      const std::string& key, const std::string* const data, const int nelements) = 0;
 
    /**
     * Get a string entry in the database with the specified key name.
@@ -788,7 +786,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual string getString(const string& key) = 0;
+   virtual std::string getString(const std::string& key) = 0;
 
    /**
     * Get a string entry in the database with the specified key name.
@@ -799,8 +797,8 @@ public:
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
     */
-   virtual string getStringWithDefault(
-      const string& key, const string& defaultvalue) = 0;
+   virtual std::string getStringWithDefault(
+      const std::string& key, const std::string& defaultvalue) = 0;
 
    /**
     * Get a string entry from the database with the specified key
@@ -810,7 +808,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Array<string> getStringArray(const string& key) = 0;
+   virtual Array<std::string> getStringArray(const std::string& key) = 0;
 
    /**
     * Get a string entry from the database with the specified key
@@ -824,7 +822,7 @@ public:
     * @param nelements Number of elements to write from array.
     */
    virtual void getStringArray(
-      const string& key, string* data, const int nelements) = 0;
+      const std::string& key, std::string* data, const int nelements) = 0;
 
    /**
     * Get a bool entry in the database with the specified key name.
@@ -835,7 +833,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Returns scalar that was read.
     */
-   void getScalar(const string& key, bool& scalar);
+   void getScalar(const std::string& key, bool& scalar);
 
    /**
     * Get a bool entry from the database with the specified key
@@ -846,7 +844,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Value to put into database.
     */
-   void putScalar(const string& key, const bool scalar);
+   void putScalar(const std::string& key, const bool scalar);
 
 
    /**
@@ -858,7 +856,7 @@ public:
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
-   void getArray(const string& key, Array<bool>& array);
+   void getArray(const std::string& key, Array<bool>& array);
 
    /**
     * Create an bool array entry in the database with the specified
@@ -868,7 +866,7 @@ public:
     * @param key    Key name in database.
     * @param array  Array to put into database.
     */
-   void putArray(const string& key, const Array<bool> array);
+   void putArray(const std::string& key, const Array<bool> array);
 
    /**
     * Get a char entry in the database with the specified key name.
@@ -879,7 +877,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Returns scalar that was read.
     */
-   void getScalar(const string& key, char& scalar);
+   void getScalar(const std::string& key, char& scalar);
 
    /**
     * Get a char entry from the database with the specified key
@@ -890,7 +888,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Value to put into database.
     */
-   void putScalar(const string& key, const char scalar);
+   void putScalar(const std::string& key, const char scalar);
 
 
    /**
@@ -902,7 +900,7 @@ public:
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
-   void getArray(const string& key, Array<char>& array);
+   void getArray(const std::string& key, Array<char>& array);
 
    /**
     * Create an char array entry in the database with the specified
@@ -912,7 +910,7 @@ public:
     * @param key    Key name in database.
     * @param array  Array to put into database.
     */
-   void putArray(const string& key, const Array<char> array);
+   void putArray(const std::string& key, const Array<char> array);
 
 
    /**
@@ -924,7 +922,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Returns scalar that was read.
     */
-   void getScalar(const string& key, dcomplex& scalar);
+   void getScalar(const std::string& key, dcomplex& scalar);
 
    /**
     * Get a complex entry from the database with the specified key
@@ -935,7 +933,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Value to put into database.
     */
-   void putScalar(const string& key, const dcomplex scalar);
+   void putScalar(const std::string& key, const dcomplex scalar);
 
 
    /**
@@ -947,7 +945,7 @@ public:
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
-   void getArray(const string& key, Array<dcomplex>& array);
+   void getArray(const std::string& key, Array<dcomplex>& array);
 
    /**
     * Create an complex array entry in the database with the specified
@@ -957,7 +955,7 @@ public:
     * @param key    Key name in database.
     * @param array  Array to put into database.
     */
-   void putArray(const string& key, const Array<dcomplex> array);
+   void putArray(const std::string& key, const Array<dcomplex> array);
 
 
    /**
@@ -969,7 +967,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Returns scalar that was read.
     */
-   void getScalar(const string& key, float& scalar);
+   void getScalar(const std::string& key, float& scalar);
 
    /**
     * Get a float entry from the database with the specified key
@@ -980,7 +978,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Value to put into database.
     */
-   void putScalar(const string& key, const float scalar);
+   void putScalar(const std::string& key, const float scalar);
 
 
    /**
@@ -992,7 +990,7 @@ public:
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
-   void getArray(const string& key, Array<float>& array);
+   void getArray(const std::string& key, Array<float>& array);
 
    /**
     * Create an float array entry in the database with the specified
@@ -1002,7 +1000,7 @@ public:
     * @param key    Key name in database.
     * @param array  Array to put into database.
     */
-   void putArray(const string& key, const Array<float> array);
+   void putArray(const std::string& key, const Array<float> array);
 
 
    /**
@@ -1014,7 +1012,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Returns scalar that was read.
     */
-   void getScalar(const string& key, double& scalar);
+   void getScalar(const std::string& key, double& scalar);
 
    /**
     * Get a double entry from the database with the specified key
@@ -1025,7 +1023,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Value to put into database.
     */
-   void putScalar(const string& key, const double scalar);
+   void putScalar(const std::string& key, const double scalar);
 
 
    /**
@@ -1037,7 +1035,7 @@ public:
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
-   void getArray(const string& key, Array<double>& array);
+   void getArray(const std::string& key, Array<double>& array);
 
    /**
     * Create an double array entry in the database with the specified
@@ -1047,7 +1045,7 @@ public:
     * @param key    Key name in database.
     * @param array  Array to put into database.
     */
-   void putArray(const string& key, const Array<double> array);
+   void putArray(const std::string& key, const Array<double> array);
 
    /**
     * Get a integer entry in the database with the specified key name.
@@ -1058,7 +1056,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Returns scalar that was read.
     */
-   void getScalar(const string& key, int& scalar);
+   void getScalar(const std::string& key, int& scalar);
 
    /**
     * Get a integer entry from the database with the specified key
@@ -1069,7 +1067,7 @@ public:
     * @param key    Key name in database.
     * @param scalar Value to put into database.
     */
-   void putScalar(const string& key, const int scalar);
+   void putScalar(const std::string& key, const int scalar);
 
 
    /**
@@ -1081,7 +1079,7 @@ public:
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
-   void getArray(const string& key, Array<int>& array);
+   void getArray(const std::string& key, Array<int>& array);
 
    /**
     * Create an integer array entry in the database with the specified
@@ -1091,7 +1089,7 @@ public:
     * @param key    Key name in database.
     * @param array  Array to put into database.
     */
-   void putArray(const string& key, const Array<int> array);
+   void putArray(const std::string& key, const Array<int> array);
 
 
    /**
@@ -1100,7 +1098,7 @@ public:
     * 
     * @param os Output stream.
     */
-   virtual void printClassData(ostream& os = pout) = 0;
+   virtual void printClassData(std::ostream& os = pout) = 0;
 
 };
 

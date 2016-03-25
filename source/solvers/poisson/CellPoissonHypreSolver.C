@@ -2,11 +2,11 @@
 #define included_solv_CellPoissonHypreSolver_C
 
 /*
- * File:        CellPoissonHypreSolver.C
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonHypreSolver.C $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 719 $
- * Modified:    $Date: 2005-11-10 11:45:11 -0800 (Thu, 10 Nov 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1786 $
+ * Modified:    $LastChangedDate: 2007-12-17 19:58:43 -0800 (Mon, 17 Dec 2007) $
  * Description: Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -29,19 +29,14 @@
 #include "SideVariable.h"
 #include "OuterfaceData.h"
 #include "OutersideData.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "CellPoissonHypreSolver.I"
@@ -85,20 +80,15 @@ extern "C" {
      double *diag ,
      const double *offdiagi ,
      const double *offdiagj ,
-     const int *pifirst ,
-     const int *pilast ,
-     const int *pjfirst ,
-     const int *pjlast ,
+     const int *pifirst , const int *pilast ,
+     const int *pjfirst , const int *pjlast ,
      const double *acoef ,
-     const int *aifirst ,
-     const int *ailast ,
-     const int *ajfirst ,
-     const int *ajlast ,
+     const double *bcoef ,
+     const int *aifirst , const int *ailast ,
+     const int *ajfirst , const int *ajlast ,
      const double *Ak0 ,
-     const int *kifirst ,
-     const int *kilast ,
-     const int *kjfirst ,
-     const int *kjlast ,
+     const int *kifirst , const int *kilast ,
+     const int *kjfirst , const int *kjlast ,
      const int *lower, const int *upper ,
      const int *location ,
      const double *h );
@@ -193,6 +183,7 @@ extern "C" {
      const int *pkfirst ,
      const int *pklast ,
      const double *acoef ,
+     const double *bcoef ,
      const int *aifirst ,
      const int *ailast ,
      const int *ajfirst ,
@@ -279,7 +270,7 @@ CellPoissonHypreSolver<DIM>::s_Ak0_var;
 */
 
 template<int DIM>  CellPoissonHypreSolver<DIM>::CellPoissonHypreSolver(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> database )
 : d_object_name(object_name) ,
   d_hierarchy(NULL) ,
@@ -448,7 +439,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::deallocateSolverState()
 template<int DIM> void CellPoissonHypreSolver<DIM>::allocateHypreData()
 {
 #ifdef HAVE_MPI
-   MPI_Comm communicator = tbox::MPI::getCommunicator();
+   MPI_Comm communicator = tbox::SAMRAI_MPI::getCommunicator();
 #else
    MPI_Comm communicator;
 #endif
@@ -771,8 +762,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
    tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(d_ln);
    const hier::IntVector<DIM> no_ghosts(0);
    typename hier::PatchLevel<DIM>::Iterator p(level);
-   typename hier::PatchLevel<DIM>::Iterator pi;
-   for ( pi.initialize(*level); pi; pi++ ) {
+   for (typename hier::PatchLevel<DIM>::Iterator pi(*level); pi; pi++ ) {
 
       hier::Patch<DIM> &patch = *level->getPatch(*pi);
 
@@ -904,8 +894,11 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                acoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
             tbox::Pointer<pdat::ArrayData<DIM,double> >
+               bcoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
+            tbox::Pointer<pdat::ArrayData<DIM,double> >
                gcoef_data = NULL;
             d_physical_bc_coef_strategy->setBcCoefs( acoef_data,
+                                                     bcoef_data,
                                                      gcoef_data,
                                                      d_physical_bc_variable,
                                                      patch,
@@ -918,6 +911,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                                    off_diagonal,
                                    patch_box,
                                    *acoef_data,
+                                   *bcoef_data,
                                    bccoef_box,
                                    Ak0_data,
                                    trimmed_boundary_box,
@@ -958,12 +952,15 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                acoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
             tbox::Pointer<pdat::ArrayData<DIM,double> >
+               bcoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
+            tbox::Pointer<pdat::ArrayData<DIM,double> >
                gcoef_data = NULL;
             /*
 	      Reset invalid ghost data id to help detect use in setBcCoefs.
-             */
+            */
             d_cf_bc_coef.setGhostDataId( -1 );
             d_cf_bc_coef.setBcCoefs( acoef_data,
+                                     bcoef_data,
                                      gcoef_data,
                                      d_coarsefine_bc_variable,
                                      patch,
@@ -976,6 +973,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                                    off_diagonal,
                                    patch_box,
                                    *acoef_data,
+                                   *bcoef_data,
                                    bccoef_box,
                                    Ak0_data,
                                    trimmed_boundary_box,
@@ -1105,8 +1103,11 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::add_gAk0_toRhs(
       tbox::Pointer<pdat::ArrayData<DIM,double> >
          acoef_data = NULL;
       tbox::Pointer<pdat::ArrayData<DIM,double> >
+         bcoef_data = NULL;
+      tbox::Pointer<pdat::ArrayData<DIM,double> >
          gcoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
       robin_bc_coef->setBcCoefs( acoef_data,
+                                 bcoef_data,
                                  gcoef_data,
                                  d_physical_bc_variable,
                                  patch,
@@ -1178,7 +1179,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setupHypreSolver()
 #endif
 
 #ifdef HAVE_MPI
-   MPI_Comm communicator = tbox::MPI::getCommunicator();
+   MPI_Comm communicator = tbox::SAMRAI_MPI::getCommunicator();
 #else
    MPI_Comm communicator;
 #endif
@@ -1261,10 +1262,10 @@ template<int DIM> int CellPoissonHypreSolver<DIM>::solveSystem( const int u ,
 
    tbox::Pointer< hier::PatchLevel<DIM> > level = d_hierarchy->getPatchLevel(d_ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(u >= 0);
-   assert(u < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
-   assert(f >= 0);
-   assert(f < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
+   TBOX_ASSERT(u >= 0);
+   TBOX_ASSERT(u < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
+   TBOX_ASSERT(f >= 0);
+   TBOX_ASSERT(f < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
 #endif
 
 
@@ -1306,7 +1307,7 @@ template<int DIM> int CellPoissonHypreSolver<DIM>::solveSystem( const int u ,
        */
       tbox::Pointer<pdat::CellData<DIM,double> > u_data_ = patch->getPatchData(u);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert( !u_data_.isNull() );
+      TBOX_ASSERT( !u_data_.isNull() );
 #endif
       pdat::CellData<DIM,double> &u_data = *u_data_;
       pdat::CellData<DIM,double> rhs_data(box,1,no_ghosts);
@@ -1473,7 +1474,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::computeDiagonalEntries(
 			  &c, &d );
    } else {
       TBOX_ERROR("CellPoissonHypreSolver error...\n"
-		       << "DIM > 3 not supported." << endl);
+		       << "DIM > 3 not supported." << std::endl);
    }
 
    return;
@@ -1507,7 +1508,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::computeDiagonalEntries(
 			&c, &d );
    } else {
       TBOX_ERROR("CellPoissonHypreSolver error...\n"
-		 << "DIM > 3 not supported." << endl);
+		 << "DIM > 3 not supported." << std::endl);
    }
 
    return;
@@ -1521,6 +1522,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::adjustBoundaryEntries(
    const pdat::SideData<DIM,double> &off_diagonal,
    const hier::Box<DIM> &patch_box,
    const pdat::ArrayData<DIM,double> &acoef_data,
+   const pdat::ArrayData<DIM,double> &bcoef_data,
    const hier::Box<DIM> bccoef_box,
    pdat::ArrayData<DIM,double> &Ak0_data,
    const hier::BoundaryBox<DIM> &trimmed_boundary_box,
@@ -1539,6 +1541,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::adjustBoundaryEntries(
 		  &patch_lo[0], &patch_up[0] ,
 		  &patch_lo[1], &patch_up[1] ,
 		  acoef_data.getPointer() ,
+		  bcoef_data.getPointer() ,
 		  &bccoef_box.lower()[0] ,
 		  &bccoef_box.upper()[0] ,
 		  &bccoef_box.lower()[1] ,
@@ -1559,6 +1562,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::adjustBoundaryEntries(
 		  &patch_lo[1], &patch_up[1] ,
 		  &patch_lo[2], &patch_up[2] ,
 		  acoef_data.getPointer() ,
+		  bcoef_data.getPointer() ,
 		  &bccoef_box.lower()[0] ,
 		  &bccoef_box.upper()[0] ,
 		  &bccoef_box.lower()[1] ,
@@ -1576,7 +1580,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::adjustBoundaryEntries(
 		  &location_index, h );
    } else {
       TBOX_ERROR("CellPoissonHypreSolver error...\n"
-		 << "DIM > 3 not supported." << endl);
+		 << "DIM > 3 not supported." << std::endl);
    }
 }
 
@@ -1595,7 +1599,7 @@ template<int DIM> hier::BoundaryBox<DIM> CellPoissonHypreSolver<DIM>::trimBounda
    const hier::Patch<DIM> &patch ) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert( boundary_box.getBoundaryType() == 1 );
+   TBOX_ASSERT( boundary_box.getBoundaryType() == 1 );
 #endif
    const hier::Box<DIM> &bbox = boundary_box.getBox();
    const hier::Box<DIM> &pbox = patch.getBox();
@@ -1618,9 +1622,9 @@ template<int DIM> hier::BoundaryBox<DIM> CellPoissonHypreSolver<DIM>::trimBounda
       }
       else {
          // On min side, use max between boundary and patch boxes.
-         newlo(d) = tbox::Utilities::imax( blo(d) , plo(d) );
+         newlo(d) = tbox::MathUtilities<int>::Max( blo(d) , plo(d) );
          // On max side, use min between boundary and patch boxes.
-         newup(d) = tbox::Utilities::imin( bup(d) , pup(d) );
+         newup(d) = tbox::MathUtilities<int>::Min( bup(d) , pup(d) );
       }
    }
    const hier::Box<DIM> newbox(newlo,newup);

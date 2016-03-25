@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2005 The Regents of the University of California
-  Revision:	$Revision: 195 $
-  Modified:	$Date: 2005-02-04 13:59:41 -0800 (Fri, 04 Feb 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/AdaptivePoisson.C $
+  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	AdaptivePoisson class implementation
 */
 
@@ -19,6 +19,7 @@
 #include "tbox/ConstPointer.h"
 #include "tbox/Array.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "tbox/Database.h"
 #include "tbox/InputDatabase.h"
 
@@ -423,7 +424,7 @@ void AdaptivePoisson::initializeLevelData (
       = grid_geometry.
       lookupRefineOperator( tbox::Pointer< hier::Variable<NDIM> >(&d_scalar,false),
 			    "CONSERVATIVE_LINEAR_REFINE" );
-    assert( accurate_refine_op );
+    TBOX_ASSERT( accurate_refine_op );
     refiner.registerRefine( d_scalar_persistent ,
 			    d_scalar_persistent ,
 			    d_scalar_persistent ,
@@ -590,8 +591,8 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       Set the finest level to plot (optional).
     */
    int finest_plot_level =
-     tbox::Utilities::imin( d_finest_plot_level,
-			   d_hierarchy->getFinestLevelNumber() );
+     tbox::MathUtilities<int>::Min( d_finest_plot_level,
+			            d_hierarchy->getFinestLevelNumber() );
    viz_writer.setFinestLevelToPlot( finest_plot_level );
    /*
      Register variables with plotter.
@@ -658,8 +659,8 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       Set the finest level to plot (optional).
     */
    int finest_plot_level =
-     tbox::Utilities::imin( d_finest_plot_level,
-			   d_hierarchy->getFinestLevelNumber() );
+     tbox::MathUtilities<int>::Min( d_finest_plot_level,
+			            d_hierarchy->getFinestLevelNumber() );
    visit_writer.setFinestLevelToPlot( finest_plot_level );
    /*
      Register variables with plotter.
@@ -683,7 +684,7 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
   const hier::Patch<NDIM> &patch ,
   const hier::Box<NDIM> &region ,
   const string &variable_name ,
-  int depth_id)
+  int depth_id) const
 {
 
   // begin debug code
@@ -765,13 +766,17 @@ void AdaptivePoisson::computeAdaptionEstimate(
   double estimate, est0, est1, est2, est3, est4, est5;
   for ( j=lower[1]; j<=upper[1]; ++j ) {
     for ( i=lower[0]; i<=upper[0]; ++i ) {
-      est0 = tbox::Utilities::dabs( co(i+1,j) + co(i-1,j) - 2*co(i,j) );
-      est1 = tbox::Utilities::dabs( co(i,j+1) + co(i,j-1) - 2*co(i,j) );
-      est2 = 0.5*tbox::Utilities::dabs( co(i+1,j+1) + co(i-1,j-1) - 2*co(i,j) );
-      est3 = 0.5*tbox::Utilities::dabs( co(i+1,j-1) + co(i-1,j+1) - 2*co(i,j) );
-      est4 = tbox::Utilities::dmax(est0,est1);
-      est5 = tbox::Utilities::dmax(est2,est3);
-      estimate = tbox::Utilities::dmax(est4,est5);
+      est0 = 
+         tbox::MathUtilities<double>::Abs( co(i+1,j) + co(i-1,j) - 2*co(i,j) );
+      est1 = 
+         tbox::MathUtilities<double>::Abs( co(i,j+1) + co(i,j-1) - 2*co(i,j) );
+      est2 = 0.5 *
+         tbox::MathUtilities<double>::Abs( co(i+1,j+1) + co(i-1,j-1) - 2*co(i,j) );
+      est3 = 0.5 * 
+         tbox::MathUtilities<double>::Abs( co(i+1,j-1) + co(i-1,j+1) - 2*co(i,j) );
+      est4 = tbox::MathUtilities<double>::Max(est0, est1);
+      est5 = tbox::MathUtilities<double>::Max(est2, est3);
+      estimate = tbox::MathUtilities<double>::Max(est4, est5);
       es(i,j) = estimate;
     }
   }
@@ -785,23 +790,23 @@ void AdaptivePoisson::computeAdaptionEstimate(
   for ( k=lower[2]; k<=upper[2]; ++k ) {
     for ( j=lower[1]; j<=upper[1]; ++j ) {
       for ( i=lower[0]; i<=upper[0]; ++i ) {
-	est0 = tbox::Utilities::dabs( co(i+1,j,k) + co(i-1,j,k) - 2*co(i,j,k) );
-	est1 = tbox::Utilities::dabs( co(i,j+1,k) + co(i,j-1,k) - 2*co(i,j,k) );
-	est2 = tbox::Utilities::dabs( co(i,j,k+1) + co(i,j,k-1) - 2*co(i,j,k) );
-	est3 = 0.5*tbox::Utilities::dabs( co(i,j+1,k+1) + co(i,j-1,k-1) - 2*co(i,j,k) );
-	est4 = 0.5*tbox::Utilities::dabs( co(i,j+1,k-1) + co(i,j-1,k+1) - 2*co(i,j,k) );
-	est5 = 0.5*tbox::Utilities::dabs( co(i+1,j,k+1) + co(i-1,j,k-1) - 2*co(i,j,k) );
-	est6 = 0.5*tbox::Utilities::dabs( co(i+1,j,k-1) + co(i-1,j,k+1) - 2*co(i,j,k) );
-	est7 = 0.5*tbox::Utilities::dabs( co(i+1,j+1,k) + co(i-1,j-1,k) - 2*co(i,j,k) );
-	est8 = 0.5*tbox::Utilities::dabs( co(i+1,j-1,k) + co(i-1,j+1,k) - 2*co(i,j,k) );
-	esta = tbox::Utilities::dmax(est0,est1);
-	estb = tbox::Utilities::dmax(est2,est3);
-	estc = tbox::Utilities::dmax(est4,est5);
-	estd = tbox::Utilities::dmax(est6,est7);
-	este = tbox::Utilities::dmax(esta,estb);
-	estf = tbox::Utilities::dmax(estc,estd);
-	estg = tbox::Utilities::dmax(este,estf);
-	estimate = tbox::Utilities::dmax(estg,est8);
+	est0 = tbox::MathUtilities<double>::Abs( co(i+1,j,k) + co(i-1,j,k) - 2*co(i,j,k) );
+	est1 = tbox::MathUtilities<double>::Abs( co(i,j+1,k) + co(i,j-1,k) - 2*co(i,j,k) );
+	est2 = tbox::MathUtilities<double>::Abs( co(i,j,k+1) + co(i,j,k-1) - 2*co(i,j,k) );
+	est3 = 0.5*tbox::MathUtilities<double>::Abs( co(i,j+1,k+1) + co(i,j-1,k-1) - 2*co(i,j,k) );
+	est4 = 0.5*tbox::MathUtilities<double>::Abs( co(i,j+1,k-1) + co(i,j-1,k+1) - 2*co(i,j,k) );
+	est5 = 0.5*tbox::MathUtilities<double>::Abs( co(i+1,j,k+1) + co(i-1,j,k-1) - 2*co(i,j,k) );
+	est6 = 0.5*tbox::MathUtilities<double>::Abs( co(i+1,j,k-1) + co(i-1,j,k+1) - 2*co(i,j,k) );
+	est7 = 0.5*tbox::MathUtilities<double>::Abs( co(i+1,j+1,k) + co(i-1,j-1,k) - 2*co(i,j,k) );
+	est8 = 0.5*tbox::MathUtilities<double>::Abs( co(i+1,j-1,k) + co(i-1,j+1,k) - 2*co(i,j,k) );
+	esta = tbox::MathUtilities<double>::Max(est0, est1);
+	estb = tbox::MathUtilities<double>::Max(est2, est3);
+	estc = tbox::MathUtilities<double>::Max(est4, est5);
+	estd = tbox::MathUtilities<double>::Max(est6, est7);
+	este = tbox::MathUtilities<double>::Max(esta, estb);
+	estf = tbox::MathUtilities<double>::Max(estc, estd);
+	estg = tbox::MathUtilities<double>::Max(este, estf);
+	estimate = tbox::MathUtilities<double>::Max(estg, est8);
 	es(i,j,k) = estimate;
       }
     }
@@ -882,7 +887,7 @@ int AdaptivePoisson::computeError(
 	      because they are on coarse grids covered by finer grids.
 	    */
 	    if ( wt(i,j) > 0 ) {
-	      diff = tbox::Utilities::dabs( co(i,j) - ex(i,j) );
+	      diff = tbox::MathUtilities<double>::Abs( co(i,j) - ex(i,j) );
 	      if ( levellin < diff ) levellin = diff;
 	      levell2n += wt(i,j)*diff*diff;
 	      levelwts += wt(i,j);
@@ -899,7 +904,7 @@ int AdaptivePoisson::computeError(
 		because they are on coarse grids covered by finer grids.
 	      */
 	      if ( wt(i,j,k) > 0 ) {
-		diff = tbox::Utilities::dabs( co(i,j,k) - ex(i,j,k) );
+		diff = tbox::MathUtilities<double>::Abs( co(i,j,k) - ex(i,j,k) );
 		if ( levellin < diff ) levellin = diff;
 		levell2n += wt(i,j,k)*diff*diff;
 		levelwts += wt(i,j,k);
@@ -913,14 +918,14 @@ int AdaptivePoisson::computeError(
 
   } // end level loop
 
-  if ( tbox::MPI::getNodes() > 1 ) {
+  if ( tbox::SAMRAI_MPI::getNodes() > 1 ) {
     /*
       Communicate global data if in parallel.
       We temporarily combine l2norms and wtsum so we can sumReduction
       in one shot, saving some parallel overhead.
     */
-    tbox::MPI::sumReduction( wtsums.getPointer(), 2*nlevels );
-    tbox::MPI::maxReduction( linorms.getPointer(), nlevels );
+    tbox::SAMRAI_MPI::sumReduction( wtsums.getPointer(), 2*nlevels );
+    tbox::SAMRAI_MPI::maxReduction( linorms.getPointer(), nlevels );
   }
 
   for ( ln=0; ln<nlevels; ++ln ) {
@@ -1087,7 +1092,7 @@ int AdaptivePoisson::solvePoisson(
       = grid_geometry.
       lookupRefineOperator( tbox::Pointer< hier::Variable<NDIM> >(&d_scalar,false),
 			    "LINEAR_REFINE" );
-    assert( accurate_refine_op );
+    TBOX_ASSERT( accurate_refine_op );
     refiner.registerRefine( d_scalar_persistent ,
 			    d_scalar_persistent ,
 			    d_scalar_persistent ,

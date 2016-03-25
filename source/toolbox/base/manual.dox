@@ -1,9 +1,9 @@
 /*
-  File:        $Id$
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/manual.dox $
   Package:     SAMRAI Doxygen manual
-  Copyright:   (c) 1997-2005 The Regents of the University of California
-  Revision:    $Revision$
-  Modified:    $Date$
+  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 1735 $
+  Modified:    $LastChangedDate: 2007-12-05 15:01:59 -0800 (Wed, 05 Dec 2007) $
   Description: Generation of SAMRAI Doxygen source code manual
 */
 
@@ -14,11 +14,16 @@ namespace SAMRAI {
   @page package_toolbox_base Base Toolbox Classes
 
   These classes provide miscellaneous low-level functionality for
-  the SAMRAI framework.  These include complex, boolean, string type support,
+  the SAMRAI framework.  These include complex, boolean,
   a simple list class, IEEE floating point operation management, and 
   parallel I/O support for generating log files and error reporting.
 
-  - SAMRAI::tbox::Complex
+  Historical Note: Some of these classes unnecessarily duplicate STL
+  classes.  These were created before STL was widely available.  It is
+  a goal of SAMRAI to eventually remove the unneeded classes to improve
+  interoperability with other packages.
+
+  - @ref toolbox_complex "dcomplex"
   - SAMRAI::tbox::IEEE
   - SAMRAI::tbox::List
   - SAMRAI::tbox::MathUtilities
@@ -26,7 +31,6 @@ namespace SAMRAI {
   - SAMRAI::tbox::ParallelBuffer
   - SAMRAI::tbox::SAMRAIManager
   - SAMRAI::tbox::ShutdownRegistry
-  - SAMRAI::tbox::String
   - SAMRAI::tbox::Tracer
   - SAMRAI::tbox::Utilities
 */

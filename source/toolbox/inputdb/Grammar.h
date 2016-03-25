@@ -102,7 +102,7 @@
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 89 "Grammar.y"
+
 typedef union YYSTYPE {
   char          u_char;
   double        u_double;
@@ -111,14 +111,14 @@ typedef union YYSTYPE {
   string*       u_keyword;
   string*       u_string;
 } YYSTYPE;
-/* Line 1268 of yacc.c.  */
-#line 116 "Grammar.tab.h"
+/* Line 1275 of yacc.c.  */
+
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
 
-extern YYSTYPE yylval;
+extern YYSTYPE SAMRAI_yylval;
 
 
 

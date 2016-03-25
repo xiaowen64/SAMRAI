@@ -1,11 +1,11 @@
 //
-// File:        EmbeddedBoundaryShape.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryShape.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $Revision: 605 $
-// Modified:    $Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Base class for analytic embedded Boundaries
 //              
 // 
@@ -17,9 +17,6 @@
 
 #include "tbox/Utilities.h"
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 namespace SAMRAI {
    namespace appu {
@@ -53,7 +50,7 @@ EmbeddedBoundaryShape<DIM>::isInside(const double* xyz) const
    (void) xyz;
    TBOX_ERROR("EmbeddedBoundaryShape::isInside(): "
                 << "\nNo implementation provided for this shape."
-                << endl);
+                << std::endl);
    return(false);
 }
 
@@ -71,7 +68,7 @@ EmbeddedBoundaryShape<DIM>::isInside(const int* nx,
 
    TBOX_ERROR("EmbeddedBoundaryShape::isInside(): "
                 << "\nNo implementation provided for this shape. "
-                << endl);
+                << std::endl);
 }
         
 }

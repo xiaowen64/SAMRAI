@@ -1,9 +1,9 @@
 //
-// File:        HyperbolicLevelIntegratorX.C.sed
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 284 $
-// Modified:    $Date: 2005-04-01 09:46:03 -0800 (Fri, 01 Apr 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -17,13 +17,6 @@
 #include <stdlib.h>
 #include <fstream>
 #include <string>
-using namespace std;
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#include <assert.h>
-#define included_assert
-#endif
-#endif
 #include "CellData.h"
 #include "PatchData.h"
 #include "PatchDataFactory.h"
@@ -39,13 +32,13 @@ using namespace std;
 #include "SideDataFactory.h"
 #include "SideVariable.h"
 #include "tbox/ArenaManager.h"
-#include "tbox/IEEE.h"
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Timer.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "CoarsenSchedule.h"
 
 //#define RECORD_STATS
@@ -152,16 +145,16 @@ namespace SAMRAI {
 */
 
 template<int DIM> HyperbolicLevelIntegrator<DIM>::HyperbolicLevelIntegrator(
-   const string& object_name,
+   const std::string& object_name,
    tbox::Pointer<tbox::Database> input_db,
    HyperbolicPatchStrategy<DIM>* patch_strategy,
    bool register_for_restart,
    bool use_time_refinement)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(patch_strategy != ((HyperbolicPatchStrategy<DIM>*)NULL));
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(patch_strategy != ((HyperbolicPatchStrategy<DIM>*)NULL));
 #endif
 
    d_object_name = object_name;
@@ -190,8 +183,8 @@ template<int DIM> HyperbolicLevelIntegrator<DIM>::HyperbolicLevelIntegrator(
    d_use_ghosts_for_dt = false;
    d_distinguish_mpi_reduction_costs = false;
 
-   d_cfl = tbox::IEEE::getSignalingNaN();
-   d_cfl_init = tbox::IEEE::getSignalingNaN();
+   d_cfl = tbox::MathUtilities<double>::getSignalingNaN();
+   d_cfl_init = tbox::MathUtilities<double>::getSignalingNaN();
 
    /*
     * Communication algorithms.
@@ -317,13 +310,13 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::initializeLevelData(
    const bool allocate_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0) 
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0) 
            && (level_number <= hierarchy->getFinestLevelNumber()) );
    if ( !(old_level.isNull()) ) {
-      assert( level_number == old_level->getLevelNumber() );
+      TBOX_ASSERT( level_number == old_level->getLevelNumber() );
    }
-   assert(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
 #endif
  
    t_initialize_level_data->start();
@@ -434,12 +427,12 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::resetHierarchyConfigurati
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (coarsest_level >= 0)
            && (coarsest_level <= finest_level) 
            && (finest_level <= hierarchy->getFinestLevelNumber()) );
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
-      assert(!(hierarchy->getPatchLevel(ln0)).isNull());
+      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln0)).isNull());
    }
 #endif
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
@@ -490,10 +483,10 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::applyGradientDetector(
    const bool uses_richardson_extrapolation_too)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0)
         && (level_number <= hierarchy->getFinestLevelNumber()) );
-   assert(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
 #endif
 
    t_apply_gradient_detector->start();
@@ -564,11 +557,11 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::coarsenDataForRichardsonE
    const bool before_advance)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (level_number >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (level_number >= 0)
         && (level_number <= hierarchy->getFinestLevelNumber()) );
-   assert(!(hierarchy->getPatchLevel(level_number)).isNull());
-   assert(!coarse_level.isNull());
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(!coarse_level.isNull());
 #endif
    t_coarsen_rich_extrap->start();
 
@@ -634,7 +627,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::applyRichardsonExtrapolat
    const bool uses_gradient_detector_too)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
    /*
     * Compare solutions computed on level (stored in NEW context) and on
@@ -682,7 +675,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::initializeLevelIntegrator
    tbox::Pointer< mesh::GriddingAlgorithm<DIM> > gridding_alg = base_gridding_alg;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!gridding_alg.isNull());
+   TBOX_ASSERT(!gridding_alg.isNull());
 #endif
   
    d_number_time_data_levels = 2;
@@ -691,7 +684,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::initializeLevelIntegrator
         (gridding_alg->getErrorCoarsenRatio() > 3) ) {
       TBOX_ERROR("HyperbolicLevelIntegrator<DIM>::initializeLevelIntegrator "
          << "error...\n" << "   object name = " << d_object_name
-         << "   gridding algorithm has bad error coarsen ratio" << endl); 
+         << "   gridding algorithm has bad error coarsen ratio" << std::endl); 
    }
 
    if ( (gridding_alg->errorEstimationUsesTimeIntegration()) &&
@@ -726,14 +719,16 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
 {
    tbox::Pointer< hier::PatchLevel<DIM> > patch_level = level;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!patch_level.isNull());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!patch_level.isNull());
 #endif
    t_get_level_dt->start(); 
 
-   double dt = tbox::IEEE::getDBL_MAX();
+   double dt = tbox::MathUtilities<double>::getMax();
 
    if (!d_use_ghosts_for_dt) {
+
+      tbox::plog << "!use ghosts for dt" << std::endl;
 
       d_patch_strategy->setDataContext(d_current);
       for (typename hier::PatchLevel<DIM>::Iterator p(patch_level); p; p++) {
@@ -747,7 +742,14 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
                                               initial_time,
                                               dt_time);
 
-         dt = tbox::Utilities::dmin( dt, patch_dt);
+         dt = tbox::MathUtilities<double>::Min( dt, patch_dt);
+         tbox::plog.precision(12);
+         tbox::plog << "Level " << patch_level->getLevelNumber()
+                    << " Patch " << p()
+                    << " box " << patch->getBox()
+                    << " has patch_dt " << patch_dt
+                    << " dt " << dt
+                    << std::endl;
 
          patch->deallocatePatchData(d_temp_var_scratch_data);
       }
@@ -755,6 +757,8 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
       d_patch_strategy->clearDataContext();
 
    } else {
+
+      tbox::plog << "use ghosts for dt" << std::endl;
 
       patch_level->allocatePatchData(d_saved_var_scratch_data, dt_time);
 
@@ -775,7 +779,14 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
                                               initial_time,
                                               dt_time);
 
-         dt = tbox::Utilities::dmin( dt, patch_dt);
+         dt = tbox::MathUtilities<double>::Min( dt, patch_dt);
+         tbox::plog.precision(12);
+         tbox::plog << "Level " << patch_level->getLevelNumber()
+                    << " Patch " << ip()
+                    << " box " << patch->getBox()
+                    << " has patch_dt " << patch_dt
+                    << " dt " << dt
+                    << std::endl;
 
          patch->deallocatePatchData(d_temp_var_scratch_data);
       }
@@ -798,7 +809,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
    t_get_level_dt_sync->start();
 
    if (d_distinguish_mpi_reduction_costs) {
-      tbox::MPI::barrier();
+      tbox::SAMRAI_MPI::barrier();
       t_get_level_dt_sync->stop();
       t_mpi_reductions->start();
    }
@@ -807,8 +818,8 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
     * The level time increment is a global min over all patches.
     */
 
-   double global_dt = tbox::MPI::minReduction(dt)
-                      * tbox::Utilities::dmin(d_cfl_init, d_cfl);
+   double global_dt = tbox::SAMRAI_MPI::minReduction(dt) * 
+                      tbox::MathUtilities<double>::Min(d_cfl_init, d_cfl);
 
    if (d_distinguish_mpi_reduction_costs) {
       t_mpi_reductions->stop();
@@ -840,7 +851,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getMaxFinerLevelDt(
    NULL_USE(finer_level_number);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int id = 0; id < DIM; id++) {
-      assert(ratio(id) > 0);
+      TBOX_ASSERT(ratio(id) > 0);
    }
 #endif
    return( coarse_dt / double( ratio.max() ) );
@@ -934,9 +945,9 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
    tbox::Pointer< hier::PatchLevel<DIM> > patch_level = level;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!patch_level.isNull());
-   assert(!hierarchy.isNull());
-   assert(current_time <= new_time);
+   TBOX_ASSERT(!patch_level.isNull());
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(current_time <= new_time);
 #endif
 
 #ifdef RECORD_STATS
@@ -1150,7 +1161,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
     * (c) Then, we loop over patches and compute the dt on each patch.
     */
 
-   double dt_next = tbox::IEEE::getDBL_MAX();
+   double dt_next = tbox::MathUtilities<double>::getMax();
 
    if (!regrid_advance) {
   
@@ -1169,7 +1180,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
              if ( d_bdry_sched_advance_new[level_number].isNull() ) {
                 TBOX_ERROR(d_object_name << ":  "
                            << "Attempt to fill new ghost data for timestep"
-                           << "computation, but schedule not defined." << endl);
+                           << "computation, but schedule not defined." << std::endl);
              }
 
              d_patch_strategy->setDataContext(d_scratch);
@@ -1195,7 +1206,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
                                                       new_time);
           t_patch_num_kernel->stop();
 
-          dt_next = tbox::Utilities::dmin( dt_next, patch_dt );
+          dt_next = tbox::MathUtilities<double>::Min( dt_next, patch_dt );
 
           patch->deallocatePatchData(d_temp_var_scratch_data);
 
@@ -1216,12 +1227,12 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
    t_advance_level_sync->start();
 
    if (d_distinguish_mpi_reduction_costs) {
-      tbox::MPI::barrier();
+      tbox::SAMRAI_MPI::barrier();
       t_advance_level_sync->stop();
       t_mpi_reductions->start();
    }
 
-   double next_dt = tbox::MPI::minReduction(dt_next) * d_cfl;
+   double next_dt = tbox::SAMRAI_MPI::minReduction(dt_next) * d_cfl;
 
    if (d_distinguish_mpi_reduction_costs) {
       t_mpi_reductions->stop();
@@ -1264,16 +1275,16 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::standardLevelSynchronizat
    const tbox::Array<double>& old_times) 
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (coarsest_level >= 0)
            && (coarsest_level < finest_level)
            && (finest_level <= hierarchy->getFinestLevelNumber()) );
-   assert(old_times.getSize() >= finest_level);
+   TBOX_ASSERT(old_times.getSize() >= finest_level);
    for (int ln = coarsest_level; ln < finest_level; ln++) {
-      assert(!(hierarchy->getPatchLevel(ln)).isNull());
-      assert(sync_time >= old_times[ln]);
+      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln)).isNull());
+      TBOX_ASSERT(sync_time >= old_times[ln]);
    }
-   assert(!(hierarchy->getPatchLevel(finest_level)).isNull());
+   TBOX_ASSERT(!(hierarchy->getPatchLevel(finest_level)).isNull());
 #endif
    t_std_level_sync->start();
 
@@ -1281,7 +1292,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::standardLevelSynchronizat
       const int coarse_ln = fine_ln - 1;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(sync_time >= old_times[coarse_ln]);
+      TBOX_ASSERT(sync_time >= old_times[coarse_ln]);
 #endif
 
       tbox::Pointer< hier::PatchLevel<DIM> >
@@ -1340,12 +1351,12 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::synchronizeNewLevels(
    const bool initial_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!hierarchy.isNull());
-   assert( (coarsest_level >= 0)
+   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT( (coarsest_level >= 0)
            && (coarsest_level < finest_level)
            && (finest_level <= hierarchy->getFinestLevelNumber()) );
    for (int ln = coarsest_level; ln <= finest_level; ln++) {
-      assert(!(hierarchy->getPatchLevel(ln)).isNull());
+      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln)).isNull());
    }
 #endif
 
@@ -1428,9 +1439,9 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::synchronizeLevelWithCoars
    const double coarse_sim_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!fine_level.isNull());
-   assert(!coarse_level.isNull());
-   assert(coarse_level->getLevelNumber() == (fine_level->getLevelNumber()-1));
+   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(!coarse_level.isNull());
+   TBOX_ASSERT(coarse_level->getLevelNumber() == (fine_level->getLevelNumber()-1));
 #endif
 
    tbox::Pointer<tbox::Timer> t_coarsen_fluxsum_create = 
@@ -1533,7 +1544,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::resetTimeDependentData(
    tbox::Pointer< hier::PatchLevel<DIM> > patch_level = level;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!patch_level.isNull());
+   TBOX_ASSERT(!patch_level.isNull());
 #endif
 
    hier::VariableDatabase<DIM>* variable_db = hier::VariableDatabase<DIM>::getDatabase();
@@ -1612,7 +1623,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::resetDataToPreadvanceStat
    const tbox::Pointer< hier::BasePatchLevel<DIM> > level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    /*
@@ -1698,12 +1709,12 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::registerVariable(
    const hier::IntVector<DIM> ghosts, 
    const HYP_VAR_TYPE h_v_type, 
    const tbox::Pointer< xfer::Geometry<DIM> > transfer_geom,
-   const string& coarsen_name,
-   const string& refine_name)
+   const std::string& coarsen_name,
+   const std::string& refine_name)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!var.isNull());
-   assert(!transfer_geom.isNull());
+   TBOX_ASSERT(!var.isNull());
+   TBOX_ASSERT(!transfer_geom.isNull());
 #endif
 
    hier::VariableDatabase<DIM>* variable_db = hier::VariableDatabase<DIM>::getDatabase();
@@ -1922,7 +1933,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::registerVariable(
             if (d_flux_side_registered) {
                TBOX_ERROR(d_object_name << ":  "
                        << "Attempt to register FaceVariable when "
-                       << "SideVariable already registered." << endl);
+                       << "SideVariable already registered." << std::endl);
             }
 
             d_flux_is_face = true;
@@ -1931,14 +1942,14 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::registerVariable(
             if (d_flux_face_registered) {
                TBOX_ERROR(d_object_name << ":  "
                        << "Attempt to register SideVariable when "
-                       << "FaceVariable already registered." << endl);
+                       << "FaceVariable already registered." << std::endl);
             }
  
             d_flux_is_face = false;
 
          } else {
             TBOX_ERROR(d_object_name << ":  "
-                    << "Flux is neither face- or side-centered." << endl);
+                    << "Flux is neither face- or side-centered." << std::endl);
          }
 
          d_flux_variables.appendItem(var); 
@@ -1949,9 +1960,9 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::registerVariable(
 
          d_flux_var_data.setFlag(scr_id);
 
-         string var_name = var->getName();
-         string fs_suffix = "_fluxsum";
-         string fsum_name = var_name;
+         std::string var_name = var->getName();
+         std::string fs_suffix = "_fluxsum";
+         std::string fsum_name = var_name;
          fsum_name += fs_suffix;
 
          tbox::Pointer< hier::Variable<DIM> > fluxsum;
@@ -2000,7 +2011,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::registerVariable(
       default: {
 
          TBOX_ERROR(d_object_name << ":  "
-                    << "unknown HYP_VAR_TYPE = " << h_v_type << endl);
+                    << "unknown HYP_VAR_TYPE = " << h_v_type << std::endl);
 
       }
 
@@ -2030,8 +2041,8 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::preprocessFluxData(
 {
    NULL_USE(last_step);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(cur_time <= new_time);
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(cur_time <= new_time);
 #endif
 
    hier::VariableDatabase<DIM>* variable_db = hier::VariableDatabase<DIM>::getDatabase();
@@ -2075,7 +2086,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::preprocessFluxData(
 
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-                  assert( !(fsum_data.isNull()) );
+                  TBOX_ASSERT( !(fsum_data.isNull()) );
 #endif
                   fsum_data->fillAll(0.0);
                } else {
@@ -2083,7 +2094,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::preprocessFluxData(
                      patch->getPatchData(fsum_id);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-                  assert( !(fsum_data.isNull()) );
+                  TBOX_ASSERT( !(fsum_data.isNull()) );
 #endif
                   fsum_data->fillAll(0.0);
                }
@@ -2130,7 +2141,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::postprocessFluxData(
 {
    NULL_USE(last_step);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
+   TBOX_ASSERT(!level.isNull());
 #endif
 
    if (regrid_advance && first_step) {
@@ -2171,8 +2182,8 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::postprocessFluxData(
                ffsum_data = fsum_data;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-               assert( !(fflux_data.isNull()) && !(ffsum_data.isNull()) );
-               assert( fflux_data->getDepth() == ffsum_data->getDepth() );
+               TBOX_ASSERT( !(fflux_data.isNull()) && !(ffsum_data.isNull()) );
+               TBOX_ASSERT( fflux_data->getDepth() == ffsum_data->getDepth() );
 #endif
                ddepth = fflux_data->getDepth();
                flux_ghosts = fflux_data->getGhostCellWidth();
@@ -2181,8 +2192,8 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::postprocessFluxData(
                sfsum_data = fsum_data;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-               assert( !(sflux_data.isNull()) && !(sfsum_data.isNull()) );
-               assert( sflux_data->getDepth() == sfsum_data->getDepth() );
+               TBOX_ASSERT( !(sflux_data.isNull()) && !(sfsum_data.isNull()) );
+               TBOX_ASSERT( sflux_data->getDepth() == sfsum_data->getDepth() );
 #endif
                ddepth = sflux_data->getDepth();
                flux_ghosts = sflux_data->getGhostCellWidth();
@@ -2312,9 +2323,9 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::copyTimeDependentData(
    const tbox::Pointer<hier::VariableContext> dst_context)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!level.isNull());
-   assert(!src_context.isNull());
-   assert(!src_context.isNull());
+   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(!src_context.isNull());
+   TBOX_ASSERT(!src_context.isNull());
 #endif
 
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++) {
@@ -2344,20 +2355,20 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::copyTimeDependentData(
 *************************************************************************
 */
 
-template<int DIM> void HyperbolicLevelIntegrator<DIM>::printClassData(ostream& os) const
+template<int DIM> void HyperbolicLevelIntegrator<DIM>::printClassData(std::ostream& os) const
 {
-   os << "\nHyperbolicLevelIntegrator<DIM>::printClassData..." << endl;
+   os << "\nHyperbolicLevelIntegrator<DIM>::printClassData..." << std::endl;
    os << "HyperbolicLevelIntegrator<DIM>: this = "
-      << (HyperbolicLevelIntegrator<DIM>*)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << (HyperbolicLevelIntegrator<DIM>*)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_cfl = " << d_cfl << "\n"
-      << "d_cfl_init = " << d_cfl_init << endl;
+      << "d_cfl_init = " << d_cfl_init << std::endl;
    os << "d_lag_dt_computation = " << d_lag_dt_computation << "\n"
       << "d_use_ghosts_for_dt = " 
-      << d_use_ghosts_for_dt << endl;
+      << d_use_ghosts_for_dt << std::endl;
    os << "d_patch_strategy = "
-      << (HyperbolicPatchStrategy<DIM>*)d_patch_strategy << endl;
-   os << "NOTE: Not printing variable arrays, ComponentSelectors, communication schedules, etc." << endl;
+      << (HyperbolicPatchStrategy<DIM>*)d_patch_strategy << std::endl;
+   os << "NOTE: Not printing variable arrays, ComponentSelectors, communication schedules, etc." << std::endl;
 }
 
 /*
@@ -2373,7 +2384,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION",
@@ -2402,7 +2413,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    if (db->keyExists("cfl")) {
@@ -2442,7 +2453,7 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::getFromInput(
                                      d_use_ghosts_for_dt);
          TBOX_WARNING(d_object_name << ":  "
                    << "Key data `use_ghosts_to_compute_dt' not found in input."
-                   << "  Using default value " << d_use_ghosts_for_dt << endl);
+                   << "  Using default value " << d_use_ghosts_for_dt << std::endl);
       }
    }
 
@@ -2477,14 +2488,14 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::getFromRestart()
       db = root_db->getDatabase(d_object_name);
    } else {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file" << endl);
+         << d_object_name << " not found in restart file" << std::endl);
    }
 
    int ver = db->getInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION");
    if (ver != ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION) {
       TBOX_ERROR(d_object_name << ":  "
               << "Restart file version different "
-              << "than class version." << endl);
+              << "than class version." << std::endl);
    }
 
    d_cfl = db->getDouble("d_cfl");

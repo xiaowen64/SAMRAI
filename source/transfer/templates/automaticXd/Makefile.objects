@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -15,7 +15,7 @@ libdefault:	CoarsenAlgorithm-NDIM${NDIM}.o CoarsenClasses-NDIM${NDIM}.o	\
 	CoarsenOperator-NDIM${NDIM}.o CoarsenPatchStrategy-NDIM${NDIM}.o\
 	CoarsenSchedule-NDIM${NDIM}.o					\
 	CoarsenTransactionFactory-NDIM${NDIM}.o FillBoxSet-NDIM${NDIM}.o\
-	FillBoxSet-NDIM${NDIM}.o Geometry-NDIM${NDIM}.o			\
+	Geometry-NDIM${NDIM}.o						\
 	LocallyActiveDataCoarsenAlgorithm-NDIM${NDIM}.o			\
 	LocallyActiveDataCoarsenPatchStrategy-NDIM${NDIM}.o		\
 	LocallyActiveDataCoarsenSchedule-NDIM${NDIM}.o			\
@@ -26,6 +26,12 @@ libdefault:	CoarsenAlgorithm-NDIM${NDIM}.o CoarsenClasses-NDIM${NDIM}.o	\
 	LocallyActiveDataRefinePatchStrategy-NDIM${NDIM}.o		\
 	LocallyActiveDataRefineSchedule-NDIM${NDIM}.o			\
 	LocallyActiveDataRefineTransactionFactory-NDIM${NDIM}.o		\
+	MultiblockCoarsenAlgorithm-NDIM${NDIM}.o			\
+	MultiblockCoarsenPatchStrategy-NDIM${NDIM}.o			\
+	MultiblockCoarsenSchedule-NDIM${NDIM}.o				\
+	MultiblockRefineAlgorithm-NDIM${NDIM}.o				\
+	MultiblockRefinePatchStrategy-NDIM${NDIM}.o			\
+	MultiblockRefineSchedule-NDIM${NDIM}.o				\
 	RefineAlgorithm-NDIM${NDIM}.o RefineClasses-NDIM${NDIM}.o	\
 	RefineCopyTransaction-NDIM${NDIM}.o RefineOperator-NDIM${NDIM}.o\
 	RefinePatchStrategy-NDIM${NDIM}.o RefineSchedule-NDIM${NDIM}.o	\
@@ -37,8 +43,10 @@ libdefault:	CoarsenAlgorithm-NDIM${NDIM}.o CoarsenClasses-NDIM${NDIM}.o	\
 	StandardRefineTransactionFactory-NDIM${NDIM}.o			\
 	TimeInterpolateOperator-NDIM${NDIM}.o				\
 	tbox__List-xfer__CoarsenClasses_NDIM___Data${NDIM}.o		\
+	tbox__List-xfer__MultiblockRefineSchedule_NDIM___SingularityPatch${NDIM}.o\
 	tbox__List-xfer__RefineClasses_NDIM___Data${NDIM}.o		\
 	tbox__Array-tbox__List-xfer__CoarsenClasses_NDIM___Data${NDIM}.o\
+	tbox__Array-tbox__List-xfer__MultiblockRefineSchedule_NDIM___SingularityPatch${NDIM}.o\
 	tbox__Array-tbox__List-xfer__RefineClasses_NDIM___Data${NDIM}.o	\
 	tbox__Array-xfer__FillBoxSet-NDIM${NDIM}.o			\
 	tbox__Array-xfer__LocallyActiveDataFillBoxSet-NDIM${NDIM}.o	\
@@ -55,6 +63,10 @@ libdefault:	CoarsenAlgorithm-NDIM${NDIM}.o CoarsenClasses-NDIM${NDIM}.o	\
 	tbox__Pointer-xfer__LocallyActiveDataRefineAlgorithm-NDIM${NDIM}.o\
 	tbox__Pointer-xfer__LocallyActiveDataRefineSchedule-NDIM${NDIM}.o\
 	tbox__Pointer-xfer__LocallyActiveDataRefineTransactionFactory-NDIM${NDIM}.o\
+	tbox__Pointer-xfer__MultiblockCoarsenAlgorithm-NDIM${NDIM}.o	\
+	tbox__Pointer-xfer__MultiblockCoarsenSchedule-NDIM${NDIM}.o	\
+	tbox__Pointer-xfer__MultiblockRefineAlgorithm-NDIM${NDIM}.o	\
+	tbox__Pointer-xfer__MultiblockRefineSchedule-NDIM${NDIM}.o	\
 	tbox__Pointer-xfer__RefineAlgorithm-NDIM${NDIM}.o		\
 	tbox__Pointer-xfer__RefineClasses-NDIM${NDIM}.o			\
 	tbox__Pointer-xfer__RefineOperator-NDIM${NDIM}.o		\
@@ -69,6 +81,7 @@ libdefault:	CoarsenAlgorithm-NDIM${NDIM}.o CoarsenClasses-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Pointer-xfer__CoarsenSchedule-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Pointer-xfer__LocallyActiveDataCoarsenSchedule-NDIM${NDIM}.o\
 	tbox__Array-tbox__Pointer-xfer__LocallyActiveDataRefineSchedule-NDIM${NDIM}.o\
+	tbox__Array-tbox__Pointer-xfer__MultiblockRefineSchedule-NDIM${NDIM}.o\
 	tbox__Array-tbox__Pointer-xfer__RefineSchedule-NDIM${NDIM}.o	\
 	tbox__List-tbox__Pointer-xfer__CoarsenOperator-NDIM${NDIM}.o	\
 	tbox__List-tbox__Pointer-xfer__LocallyActiveDataRefineSchedule-NDIM${NDIM}.o\
@@ -76,6 +89,7 @@ libdefault:	CoarsenAlgorithm-NDIM${NDIM}.o CoarsenClasses-NDIM${NDIM}.o	\
 	tbox__List-tbox__Pointer-xfer__RefineSchedule-NDIM${NDIM}.o	\
 	tbox__List-tbox__Pointer-xfer__TimeInterpolateOperator-NDIM${NDIM}.o\
 	tbox__Array-tbox__Array-tbox__Pointer-xfer__LocallyActiveDataRefineSchedule-NDIM${NDIM}.o\
+	tbox__Array-tbox__Array-tbox__Pointer-xfer__MultiblockRefineSchedule-NDIM${NDIM}.o\
 	tbox__Array-tbox__Array-tbox__Pointer-xfer__RefineSchedule-NDIM${NDIM}.o\
 	tbox__Array-tbox__Array-tbox__Array-tbox__Pointer-xfer__RefineSchedule-NDIM${NDIM}.o
 

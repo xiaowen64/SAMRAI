@@ -1,9 +1,9 @@
 /*
- * File:        AsyncCommGroup.C
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommGroup.C $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 453 $
- * Modified:    $Date: 2005-06-16 10:19:28 -0700 (Thu, 16 Jun 2005) $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1704 $
+ * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
  * Description: All-to-one and one-to-all communication using a tree.
  */
 
@@ -17,6 +17,7 @@
 #include "tbox/ShutdownRegistry.h"
 #include "tbox/Timer.h"
 #include "tbox/TimerManager.h"
+#include "tbox/MathUtilities.h"
 #include STL_SSTREAM_HEADER_FILE
 
 #ifdef OSTRINGSTREAM_TYPE_IS_BROKEN
@@ -151,9 +152,9 @@ bool AsyncCommGroup::checkOperation()
 */
 void AsyncCommGroup::waitOperation()
 {
-   MPI::request * const req = getRequestPointer();
-   MPI::status *mpi_stat = d_next_task_op == none ?
-      (MPI::status*)NULL : new MPI::status[d_nchild];
+   SAMRAI_MPI::request * const req = getRequestPointer();
+   SAMRAI_MPI::status *mpi_stat = d_next_task_op == none ?
+      (SAMRAI_MPI::status*)NULL : new SAMRAI_MPI::status[d_nchild];
 
    while ( d_next_task_op != none ) {
 
@@ -225,7 +226,7 @@ bool AsyncCommGroup::checkBcast()
                  <<"mpi_communicator = " << d_mpi_communicator
                  << "mpi_tag = " << d_mpi_tag);
    }
-   MPI::request * const req = getRequestPointer();
+   SAMRAI_MPI::request * const req = getRequestPointer();
    int ic;
    int flag = 0;
 
@@ -483,7 +484,7 @@ bool AsyncCommGroup::checkGather()
                  <<"mpi_tag = " << d_mpi_tag << '\n');
    }
 
-   MPI::request * const req = getRequestPointer();
+   SAMRAI_MPI::request * const req = getRequestPointer();
    int per_proc_msg_size = (1+d_external_size);
 
    int i;
@@ -739,8 +740,8 @@ bool AsyncCommGroup::beginReduce()
     */
    const int oldest_pos = toOldest(toPosition(d_idx));
    int limit_pos = toYoungest(toPosition(d_idx)) + 1;
-   limit_pos = Utilities::imin(limit_pos,d_group_size);
-   const int n_children = limit_pos > oldest_pos ? limit_pos - oldest_pos : 0;
+   limit_pos = tbox::MathUtilities<int>::Min(limit_pos, d_group_size);
+   const int n_children = (limit_pos > oldest_pos ? limit_pos - oldest_pos : 0);
 
    d_internal_buf.setNull();
    d_internal_buf.resizeArray( msg_size *
@@ -781,7 +782,7 @@ bool AsyncCommGroup::checkReduce()
                  <<"mpi_tag = " << d_mpi_tag << '\n');
    }
 
-   MPI::request * const req = getRequestPointer();
+   SAMRAI_MPI::request * const req = getRequestPointer();
    int msg_size = d_external_size;
 
    int ic;
@@ -995,7 +996,7 @@ void AsyncCommGroup::setGroupAndRootIndex( const Array<int> &group,
                  <<"mpi_tag = " << d_mpi_tag << '\n');
    }
 
-   const int rank = MPI::getRank();
+   const int rank = SAMRAI_MPI::getRank();
 
    // Set the index for local and root processes.
    d_group_size = group.size();
@@ -1114,10 +1115,10 @@ void AsyncCommGroup::computeDependentData( const Array<int> &group )
 
 
 
-MPI::request *AsyncCommGroup::getRequestPointer() const
+SAMRAI_MPI::request *AsyncCommGroup::getRequestPointer() const
 {
    if ( d_internal_requests == NULL ) {
-      d_internal_requests = new MPI::request [d_nchild];
+      d_internal_requests = new SAMRAI_MPI::request [d_nchild];
    }
    return d_internal_requests;
 }
@@ -1139,7 +1140,7 @@ void AsyncCommGroup::checkMPIParams()
 
 void AsyncCommGroup::logCurrentState( ostream &co ) const
 {
-   MPI::request * const req = getRequestPointer();
+   SAMRAI_MPI::request * const req = getRequestPointer();
    co << "State=" << 10*d_base_op + d_next_task_op
       << "  tag=" << d_mpi_tag
       << "  communicator=" << d_mpi_communicator
@@ -1285,7 +1286,7 @@ void AsyncCommGroup::setGroupAndRootIndex( const Array<int> &group,
 
 
 
-MPI::request *AsyncCommGroup::getRequestPointer() const
+SAMRAI_MPI::request *AsyncCommGroup::getRequestPointer() const
 {
    return NULL;
 }

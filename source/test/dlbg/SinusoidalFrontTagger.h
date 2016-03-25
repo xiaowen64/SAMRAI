@@ -1,8 +1,8 @@
 /*
-  File:		$RCSfile$
-  Copyright:	(c) 1997-2000 The Regents of the University of California
-  Revision:	$Revision: 296 $
-  Modified:	$Date: 2005-04-14 16:39:17 -0700 (Thu, 14 Apr 2005) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/SinusoidalFrontTagger.h $
+  Copyright:	(c) 1997-2000 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1704 $
+  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
   Description:	SinusoidalFrontTagger class declaration
 */
 
@@ -29,6 +29,7 @@
 #include "NodeData.h"
 
 
+using namespace std;
 using namespace SAMRAI;
 
 
@@ -113,7 +114,7 @@ public:
 				       const hier::Patch<DIM> &patch,
 				       const hier::Box<DIM> &region,
 				       const string &variable_name,
-				       int depth_index);
+				       int depth_index) const;
 
 
 public:

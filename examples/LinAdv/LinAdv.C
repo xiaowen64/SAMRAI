@@ -1,15 +1,12 @@
 //
-// File:        LinAdv.C
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/LinAdv/LinAdv.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2005 The Regents of the University of California
-// Revision:    $Revision: 396 $
-// Modified:    $Date: 2005-05-24 13:02:06 -0700 (Tue, 24 May 2005) $
+// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1704 $
+// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description: Numerical routines for single patch in linear advection ex.
 //
 #include "LinAdv.h" 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #include <iostream>
 #include <iomanip>
@@ -45,12 +42,12 @@ using namespace std;
 #include "FaceData.h"
 #include "FaceIndex.h"
 #include "FaceVariable.h"
-#include "tbox/IEEE.h"
 #include "Index.h"
 #include "LoadBalancer.h"
 #include "tbox/PIO.h"
 #include "tbox/RestartManager.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 #include "VariableDatabase.h"
 
 //integer constants for boundary conditions
@@ -124,9 +121,9 @@ LinAdv::LinAdv(
    tbox::Pointer<geom::CartesianGridGeometry<NDIM> > grid_geom)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!object_name.empty());
-   assert(!input_db.isNull());
-   assert(!grid_geom.isNull());
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(!grid_geom.isNull());
 #endif
 
    d_object_name = object_name;
@@ -148,7 +145,7 @@ LinAdv::LinAdv(
    d_godunov_order = 1;
    d_corner_transport = "CORNER_TRANSPORT_1";
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
    d_nghosts = hier::IntVector<NDIM>(CELLG);
    d_fluxghosts = hier::IntVector<NDIM>(FLUXG);
@@ -156,15 +153,15 @@ LinAdv::LinAdv(
    /*
     * Defaults for problem type and initial data.
     */
-   d_data_problem_int = tbox::IEEE::getINT_MAX();
+   d_data_problem_int = tbox::MathUtilities<int>::getMax();
 
    int k;
 
    // SPHERE problem...
-   d_radius = tbox::IEEE::getSignalingNaN();
-   tbox::IEEE::initializeArrayToSignalingNaN(d_center, NDIM);
-   d_uval_inside = tbox::IEEE::getSignalingNaN();
-   d_uval_outside = tbox::IEEE::getSignalingNaN();
+   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, NDIM);
+   d_uval_inside = tbox::MathUtilities<double>::getSignalingNaN();
+   d_uval_outside = tbox::MathUtilities<double>::getSignalingNaN();
 
    d_number_of_intervals = 0;
    d_front_position.resizeArray(0);
@@ -194,7 +191,7 @@ LinAdv::LinAdv(
    }
 
    d_bdry_edge_uval.resizeArray(NUM_2D_EDGES);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_edge_uval);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_uval);
 #endif
 #if (NDIM == 3)
    d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
@@ -218,7 +215,7 @@ LinAdv::LinAdv(
    }
 
    d_bdry_face_uval.resizeArray(NUM_3D_FACES);
-   tbox::IEEE::initializeArrayToSignalingNaN(d_bdry_face_uval);
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_uval);
 #endif
 
    /*
@@ -358,8 +355,8 @@ void LinAdv::registerModelVariables(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(integrator != (algs::HyperbolicLevelIntegrator<NDIM>*)NULL);
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(integrator != (algs::HyperbolicLevelIntegrator<NDIM>*)NULL);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    integrator->registerVariable(d_uval, d_nghosts,
@@ -470,7 +467,7 @@ void LinAdv::initializeDataOnPatch(hier::Patch<NDIM>& patch,
          patch.getPatchData(d_uval, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!uval.isNull());
+      TBOX_ASSERT(!uval.isNull());
 #endif
       hier::IntVector<NDIM> ghost_cells = uval->getGhostCellWidth();
 
@@ -596,7 +593,7 @@ double LinAdv::computeStableDtOnPatch(
       patch.getPatchData(d_uval, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!uval.isNull());
+      TBOX_ASSERT(!uval.isNull());
 #endif 
    hier::IntVector<NDIM> ghost_cells = uval->getGhostCellWidth();
 
@@ -652,7 +649,7 @@ void LinAdv::computeFluxesOnPatch(hier::Patch<NDIM>& patch,
 #if (NDIM < 3)
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
@@ -673,10 +670,10 @@ void LinAdv::computeFluxesOnPatch(hier::Patch<NDIM>& patch,
     * context matches the ghosts defined in this class...
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!uval.isNull());
-   assert(!flux.isNull());
-   assert(uval->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif 
 
    /*
@@ -711,7 +708,7 @@ void LinAdv::computeFluxesOnPatch(hier::Patch<NDIM>& patch,
        */
       int Mcells = 0;
       for (int k=0;k<NDIM;k++) {
-         Mcells = tbox::Utilities::imax(Mcells, pbox.numberCells(k));
+         Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
 // Face-centered temporary arrays
@@ -832,7 +829,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(hier::Patch<NDIM>& patch,
                                                  const double dt)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
@@ -848,10 +845,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!uval.isNull());
-   assert(!flux.isNull());
-   assert(uval->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
 
@@ -889,7 +886,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(hier::Patch<NDIM>& patch,
         */
        int Mcells = 0;
       for (int k=0;k<NDIM;k++) {
-         Mcells = tbox::Utilities::imax(Mcells, pbox.numberCells(k));
+         Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
       // Face-centered temporary arrays
@@ -1128,7 +1125,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(hier::Patch<NDIM>& patch,
                                                  const double dt)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(CELLG == FACEG);
+   TBOX_ASSERT(CELLG == FACEG);
 #endif
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
@@ -1144,10 +1141,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!uval.isNull());
-   assert(!flux.isNull());
-   assert(uval->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
    /*
@@ -1206,7 +1203,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(hier::Patch<NDIM>& patch,
        */
       int Mcells = 0;
       for (int k=0;k<NDIM;k++) {
-         Mcells = tbox::Utilities::imax(Mcells, pbox.numberCells(k));
+         Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
       // Face-centered temporary arrays
@@ -1373,10 +1370,10 @@ void LinAdv::conservativeDifferenceOnPatch(hier::Patch<NDIM>& patch,
       patch.getPatchData(d_flux, getDataContext()); 
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!uval.isNull());
-   assert(!flux.isNull());
-   assert(uval->getGhostCellWidth() == d_nghosts);
-   assert(flux->getGhostCellWidth() == d_fluxghosts);
+   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
 
 #if (NDIM==1)
@@ -1507,11 +1504,11 @@ void LinAdv::setPhysicalBoundaryConditions(
       patch.getPatchData(d_uval, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!uval.isNull());
+   TBOX_ASSERT(!uval.isNull());
 #endif
    hier::IntVector<NDIM> ghost_cells = uval->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
 #endif
 
 #if (NDIM == 2) 
@@ -1676,8 +1673,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
          if (time_allowed) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-            assert(!coarsened_fine_var.isNull());
-            assert(!advanced_coarse_var.isNull());
+            TBOX_ASSERT(!coarsened_fine_var.isNull());
+            TBOX_ASSERT(!advanced_coarse_var.isNull());
 #endif
             /*
              * We tag wherever the global error > specified tolerance
@@ -1732,7 +1729,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
                  */
                 diff = (*advanced_coarse_var)(ic(),0) - 
                        (*coarsened_fine_var)(ic(),0);
-                error = tbox::Utilities::fabs(diff) * rnminus1 * steps;
+                error = 
+                   tbox::MathUtilities<double>::Abs(diff) * rnminus1 * steps;
 
                 /*
                  * Tag cell if error > prescribed threshold. Since we are
@@ -1848,7 +1846,7 @@ void LinAdv::tagGradientDetectorCells(hier::Patch<NDIM>& patch,
       tbox::Pointer< pdat::CellData<NDIM, double > > var = 
          patch.getPatchData(d_uval, getDataContext());;  
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(!var.isNull());
+      TBOX_ASSERT(!var.isNull());
 #endif   
       hier::IntVector<NDIM> vghost = var->getGhostCellWidth();
       hier::IntVector<NDIM> tagghost = tags->getGhostCellWidth();
@@ -1893,7 +1891,8 @@ void LinAdv::tagGradientDetectorCells(hier::Patch<NDIM>& patch,
                      locden *= 0.75;
                   }
                }
-               if (tbox::Utilities::fabs((*var)(ic())-dev) > locden) {
+               if (tbox::MathUtilities<double>::Abs((*var)(ic())-dev) > locden)
+               {
                   (*temp_tags)(ic(),0) = refine_tag_val; 
                }
             }
@@ -2019,7 +2018,7 @@ void LinAdv::registerVizamraiDataWriter(
    tbox::Pointer<appu::CartesianVizamraiDataWriter<NDIM> > viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(viz_writer.isNull()));
+   TBOX_ASSERT(!(viz_writer.isNull()));
 #endif
    d_vizamrai_writer = viz_writer;
 }
@@ -2038,7 +2037,7 @@ void LinAdv::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter<NDIM> > viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!(viz_writer.isNull()));
+   TBOX_ASSERT(!(viz_writer.isNull()));
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2230,7 +2229,7 @@ void LinAdv::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    /*
@@ -2344,7 +2343,7 @@ void LinAdv::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_dev_time_max.resizeArray(1);
-                  d_dev_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_dev_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -2373,7 +2372,7 @@ void LinAdv::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_grad_time_max.resizeArray(1);
-                  d_grad_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_grad_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -2411,7 +2410,7 @@ void LinAdv::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_shock_time_max.resizeArray(1);
-                  d_shock_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_shock_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -2440,7 +2439,7 @@ void LinAdv::getFromInput(
                   error_db->getDoubleArray("time_max");
                } else {
                   d_rich_time_max.resizeArray(1);
-                  d_rich_time_max[0] = tbox::IEEE::getDBL_MAX();
+                  d_rich_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")){
@@ -2565,8 +2564,8 @@ void LinAdv::getFromInput(
           }
 
           d_number_of_intervals = 
-             tbox::Utilities::imin(d_front_position.getSize()+1,
-                                  init_data_keys.getSize()-1);
+             tbox::MathUtilities<int>::Min( d_front_position.getSize()+1,
+                                            init_data_keys.getSize()-1);
 
           d_front_position.resizeArray(d_front_position.getSize()+1);
           d_front_position[d_front_position.getSize()-1] = 
@@ -2681,7 +2680,7 @@ void LinAdv::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
+   TBOX_ASSERT(!db.isNull());
 #endif
 
    db->putInteger("LINADV_VERSION",LINADV_VERSION);
@@ -2876,8 +2875,8 @@ void LinAdv::readDirichletBoundaryDataEntry(tbox::Pointer<tbox::Database> db,
                                            int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
 #endif
 #if (NDIM == 2)
    readStateDataEntry(db,
@@ -2899,10 +2898,10 @@ void LinAdv::readStateDataEntry(tbox::Pointer<tbox::Database> db,
                                tbox::Array<double>& uval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!db.isNull());
-   assert(!db_name.empty());
-   assert(array_indx >= 0);
-   assert(uval.getSize() > array_indx);
+   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(!db_name.empty());
+   TBOX_ASSERT(array_indx >= 0);
+   TBOX_ASSERT(uval.getSize() > array_indx);
 #endif
 
    if (db->keyExists("uval")) {
@@ -2930,11 +2929,11 @@ void LinAdv::checkBoundaryData(int btype,
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
 #if (NDIM == 2) 
-   assert(btype == EDGE2D_BDRY_TYPE || 
+   TBOX_ASSERT(btype == EDGE2D_BDRY_TYPE || 
           btype == NODE2D_BDRY_TYPE);
 #endif
 #if (NDIM == 3)
-   assert(btype == FACE3D_BDRY_TYPE ||
+   TBOX_ASSERT(btype == FACE3D_BDRY_TYPE ||
           btype == EDGE3D_BDRY_TYPE ||
           btype == NODE3D_BDRY_TYPE);
 #endif
@@ -2949,7 +2948,7 @@ void LinAdv::checkBoundaryData(int btype,
    for (int i = 0; i < bdry_boxes.getSize(); i++ ) {
       hier::BoundaryBox<NDIM> bbox = bdry_boxes[i];
 #ifdef DEBUG_CHECK_ASSERTIONS
-      assert(bbox.getBoundaryType() == btype);
+      TBOX_ASSERT(bbox.getBoundaryType() == btype);
 #endif
       int bloc = bbox.getLocationIndex();
 
@@ -2957,13 +2956,13 @@ void LinAdv::checkBoundaryData(int btype,
 #if (NDIM == 2)
       if (btype == EDGE2D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_2D_EDGES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = bloc;
       } else { // btype == NODE2D_BDRY_TYPE
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_2D_NODES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = d_node_bdry_edge[bloc];
@@ -2972,19 +2971,19 @@ void LinAdv::checkBoundaryData(int btype,
 #if (NDIM == 3)
       if (btype == FACE3D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_FACES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = bloc;
       } else if (btype == EDGE3D_BDRY_TYPE) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_EDGES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = d_edge_bdry_face[bloc];
       } else { // btype == NODE3D_BDRY_TYPE
 #ifdef DEBUG_CHECK_ASSERTIONS
-         assert(scalar_bconds.getSize() == NUM_3D_NODES);
+         TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
 #endif
          bscalarcase = scalar_bconds[bloc];
          refbdryloc = d_node_bdry_face[bloc];

@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -18,6 +18,7 @@ libdefault:	HyperbolicLevelIntegrator-NDIM${NDIM}.o				\
 	LocallyActiveDataOuternodeSumTransactionFactory-NDIM${NDIM}.o	\
 	LocallyActiveDataPatchBoundaryEdgeSum-NDIM${NDIM}.o		\
 	LocallyActiveDataPatchBoundaryNodeSum-NDIM${NDIM}.o		\
+	MblkPatchBoundaryNodeSum-NDIM${NDIM}.o				\
 	MethodOfLinesIntegrator-NDIM${NDIM}.o				\
 	MethodOfLinesPatchStrategy-NDIM${NDIM}.o			\
 	OuteredgeSumTransaction-NDIM${NDIM}.o				\
@@ -31,6 +32,7 @@ libdefault:	HyperbolicLevelIntegrator-NDIM${NDIM}.o				\
 	tbox__Pointer-algs__HyperbolicLevelIntegrator-NDIM${NDIM}.o	\
 	tbox__Pointer-algs__LocallyActiveDataPatchBoundaryEdgeSum-NDIM${NDIM}.o\
 	tbox__Pointer-algs__LocallyActiveDataPatchBoundaryNodeSum-NDIM${NDIM}.o\
+	tbox__Pointer-algs__MblkPatchBoundaryNodeSum-NDIM${NDIM}.o	\
 	tbox__Pointer-algs__MethodOfLinesIntegrator-NDIM${NDIM}.o	\
 	tbox__Pointer-algs__PatchBoundaryEdgeSum-NDIM${NDIM}.o		\
 	tbox__Pointer-algs__PatchBoundaryNodeSum-NDIM${NDIM}.o		\

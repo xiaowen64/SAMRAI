@@ -1,8 +1,8 @@
 /*
- * File:        $RCSfile$
- * Copyright:   (c) 1997-2005 The Regents of the University of California
- * Revision:    $Revision: 346 $
- * Modified:    $Date: 2005-05-09 12:43:12 -0700 (Mon, 09 May 2005) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerEdgeSet.C $
+ * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1732 $
+ * Modified:    $LastChangedDate: 2007-12-04 09:01:48 -0800 (Tue, 04 Dec 2007) $
  * Description: Set of edges in distributed box graph.
  */
 
@@ -12,14 +12,11 @@
 #include "LayerEdgeSet.h"
 #include "BoxTree.h"
 
-#include "tbox/MPI.h"
+#include "tbox/SAMRAI_MPI.h"
 
 #include IOSTREAM_HEADER_FILE
 #include IOMANIP_HEADER_FILE
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include <assert.h>
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "LayerEdgeSet.I"
@@ -44,8 +41,8 @@ LayerEdgeSet<DIM>::LayerEdgeSet()
      d_parallel_state(DISTRIBUTED),
      d_partner(NULL),
      d_partner_is_managed(false),
-     d_rank(tbox::MPI::getRank()),
-     d_nprocs(tbox::MPI::getNodes())
+     d_rank(tbox::SAMRAI_MPI::getRank()),
+     d_nprocs(tbox::SAMRAI_MPI::getNodes())
 {
    TBOX_ASSERT( d_cnect != NULL );
    return;
@@ -525,6 +522,7 @@ void LayerEdgeSet<DIM>::findEdges_rbbt( const LayerNodeSet<DIM> &head,
       }
    }
 
+   delete [] index_to_node;
 
    return;
 }
@@ -842,7 +840,7 @@ void LayerEdgeSet<DIM>::bridge( const LayerEdgeSet &edge_to_head,
    // bridge_discoverEdges( first_leg, secnd_leg, mesg_to_owners );
    // bridge_shareEdges( mesg_to_owners );
 
-   map< int, CommunicationStruct > mesg_to_owners;
+   std::map< int, CommunicationStruct > mesg_to_owners;
 
    if ( d_parallel_state != GLOBALIZED ) {
 
@@ -857,14 +855,14 @@ void LayerEdgeSet<DIM>::bridge( const LayerEdgeSet &edge_to_head,
        *
        * This is not done in serial mode because no communication is needed.
        */
-      set<int> owner_set;
+      std::set<int> owner_set;
       getNabrOwnerSet( edge_to_head.getConnectivity(), owner_set );
       getNabrOwnerSet( edge_to_head.d_partner->getConnectivity(), owner_set );
       if ( &edge_to_base != &edge_to_head ) {
          getNabrOwnerSet( edge_to_base.getConnectivity(), owner_set );
          getNabrOwnerSet( edge_to_base.d_partner->getConnectivity(), owner_set );
       }
-      set<int>::iterator i_owner;
+      std::set<int>::iterator i_owner;
       for ( i_owner=owner_set.begin(); i_owner!=owner_set.end(); ++i_owner ) {
          if ( *i_owner != d_rank ) {
             mesg_to_owners[*i_owner];
@@ -896,7 +894,7 @@ template<int DIM>
 void LayerEdgeSet<DIM>::bridge_discoverEdges(
    const LayerEdgeSet &edge_to_head,
    const LayerEdgeSet &edge_to_base,
-   map<LocalIndex, CommunicationStruct > &mesg_to_owners,
+   std::map<LocalIndex, CommunicationStruct > &mesg_to_owners,
    const bool ignore_self_overlap )
 {
    const NodeContainer &nodes = getNodeContainer();
@@ -909,7 +907,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
        * For assurance (debugging), put the message source, destination
        * and (yet unknown) size at the beginning of the messages.
        */
-      typename map<LocalIndex,CommunicationStruct>::iterator i_mesg;
+      typename std::map<LocalIndex,CommunicationStruct>::iterator i_mesg;
       for ( i_mesg=mesg_to_owners.begin();
             i_mesg!=mesg_to_owners.end();
             ++i_mesg ) {
@@ -994,7 +992,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
     * processes that need the info.  A dummy communication struct
     * is used in serial mode, where no message passing is needed.
     */
-   vector<int> dummy_mesg;
+   std::vector<int> dummy_mesg;
    tbox::Array<int> tmp_buffer(2+Node::commBufferSize());
 
    /*
@@ -1055,7 +1053,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
             i_base!=nabr_to_base.end(); ++i_base ) {
 
          const Node &base_node = *i_base;
-         vector<int> &mesg_to_base_owner =
+         std::vector<int> &mesg_to_base_owner =
             d_parallel_state == GLOBALIZED || base_node.getOwnerRank() == d_rank ?
             dummy_mesg : mesg_to_owners[base_node.getOwnerRank()].send_mesg;
 
@@ -1077,7 +1075,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
 
             const Node &head_node = *i_head;
 
-            vector<int> &mesg_to_head_owner =
+            std::vector<int> &mesg_to_head_owner =
                d_parallel_state == GLOBALIZED || head_node.getOwnerRank() == d_rank ?
                dummy_mesg : mesg_to_owners[head_node.getOwnerRank()].send_mesg;
             /*
@@ -1163,7 +1161,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
        * For assurance (debugging), put the message
        * size near the beginning of the messages.
        */
-      typename map<LocalIndex,CommunicationStruct>::iterator i_mesg;
+      typename std::map<LocalIndex,CommunicationStruct>::iterator i_mesg;
       for ( i_mesg=mesg_to_owners.begin();
             i_mesg!=mesg_to_owners.end();
             ++i_mesg ) {
@@ -1180,7 +1178,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
 
 template<int DIM>
 void LayerEdgeSet<DIM>::bridge_shareEdges(
-   map<LocalIndex,CommunicationStruct> &mesg_to_owners )
+  std:: map<LocalIndex,CommunicationStruct> &mesg_to_owners )
 {
 
    // Nothing to do for serial run.
@@ -1198,7 +1196,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
     * Reveive incoming data-sharing messages, unpacking them as
     * they arrive.
     */
-   typename map<LocalIndex,CommunicationStruct>::iterator i_mesg_to_owner;
+   typename std::map<LocalIndex,CommunicationStruct>::iterator i_mesg_to_owner;
    for ( i_mesg_to_owner=mesg_to_owners.begin();
          i_mesg_to_owner!=mesg_to_owners.end();
          ++i_mesg_to_owner ) {
@@ -1212,7 +1210,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
                     MPI_INT,
                     owner,
                     SIZE_EXCHANGE_TAG,
-                    tbox::MPI::commWorld,
+                    tbox::SAMRAI_MPI::commWorld,
                     &comm_struct.recv_rqst );
          comm_struct.send_size = comm_struct.send_mesg.size();
          MPI_Isend( &comm_struct.send_size,
@@ -1220,10 +1218,10 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
                     MPI_INT,
                     owner,
                     SIZE_EXCHANGE_TAG,
-                    tbox::MPI::commWorld,
+                    tbox::SAMRAI_MPI::commWorld,
                     &comm_struct.send_rqst );
          MPI_Request_free( &comm_struct.send_rqst );
-         tbox::plog << "shareEdges proc " << d_rank << " sends " << comm_struct.send_size << " to proc " << owner << endl;
+         tbox::plog << "shareEdges proc " << d_rank << " sends " << comm_struct.send_size << " to proc " << owner << std::endl;
          if ( comm_struct.send_size > 0 ) {
             comm_struct.send_done = false;
             MPI_Isend( &comm_struct.send_mesg[0],
@@ -1231,7 +1229,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
                        MPI_INT,
                        owner,
                        EDGE_EXCHANGE_TAG,
-                       tbox::MPI::commWorld,
+                       tbox::SAMRAI_MPI::commWorld,
                        &comm_struct.send_rqst );
          }
          else {
@@ -1242,9 +1240,11 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
          comm_struct.send_done = comm_struct.recv_done = true;
       }
    }
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT( mesg_to_owners.find(d_rank) == mesg_to_owners.end() );
+#endif
    int n_outstanding_mesg = mesg_to_owners.size();
    i_mesg_to_owner=mesg_to_owners.begin();
-   if ( (*i_mesg_to_owner).first == d_rank ) ++i_mesg_to_owner;
    while ( n_outstanding_mesg > 0 ) {
       const int owner = (*i_mesg_to_owner).first;
       CommunicationStruct &comm_struct = (*i_mesg_to_owner).second;
@@ -1254,7 +1254,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
       }
       if ( !comm_struct.recv_done ) {
          int flag;
-         tbox::MPI::status status;
+         tbox::SAMRAI_MPI::status status;
          MPI_Test( &comm_struct.recv_rqst, &flag, &status );
          if ( flag && status.MPI_TAG == SIZE_EXCHANGE_TAG ) {
             // tbox::plog << "shareEdges proc " << d_rank << " expects " << comm_struct.recv_size << " from proc " << owner << endl;
@@ -1279,7 +1279,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
                           MPI_INT,
                           owner,
                           EDGE_EXCHANGE_TAG,
-                          tbox::MPI::commWorld,
+                          tbox::SAMRAI_MPI::commWorld,
                           &comm_struct.recv_rqst );
             }
          }
@@ -1295,8 +1295,8 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
              */
             --n_outstanding_mesg;
             comm_struct.recv_done = true;
-            const vector<int> &recv_mesg = comm_struct.recv_mesg;
-            vector<int>::const_iterator i_recv_mesg = recv_mesg.begin();
+            const std::vector<int> &recv_mesg = comm_struct.recv_mesg;
+            std::vector<int>::const_iterator i_recv_mesg = recv_mesg.begin();
 #if defined(DEBUG_SEND_EDGE_EXTRA_DATA) || defined(DEBUG_CHECK_ASSERTIONS)
             {
                /*
@@ -1311,7 +1311,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
                TBOX_ASSERT( tmp_sze == comm_struct.recv_size );
             }
 #endif
-            tbox::plog << "shareEdges proc " << d_rank << " recvs " << comm_struct.recv_size << " from proc " << owner << endl;
+            tbox::plog << "shareEdges proc " << d_rank << " recvs " << comm_struct.recv_size << " from proc " << owner << std::endl;
             for ( ;
                   i_recv_mesg!=recv_mesg.end();
                   i_recv_mesg+=(2+node_com_buffer_size) ) {
@@ -1341,9 +1341,11 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
     * Free the send requests and as assurance,
     * check that they are completed without errors.
     */
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT( mesg_to_owners.find(d_rank) == mesg_to_owners.end() );
+#endif
    n_outstanding_mesg = mesg_to_owners.size();
    i_mesg_to_owner=mesg_to_owners.begin();
-   if ( (*i_mesg_to_owner).first == d_rank ) ++i_mesg_to_owner;
    while ( n_outstanding_mesg > 0 ) {
       CommunicationStruct &comm_struct = (*i_mesg_to_owner).second;
       ++i_mesg_to_owner;
@@ -1352,7 +1354,7 @@ void LayerEdgeSet<DIM>::bridge_shareEdges(
       }
       if ( !comm_struct.send_done ) {
          int flag;
-         tbox::MPI::status status;
+         tbox::SAMRAI_MPI::status status;
          MPI_Test( &comm_struct.send_rqst, &flag, &status );
          if ( flag ) {
             --n_outstanding_mesg;
@@ -1566,7 +1568,7 @@ void LayerEdgeSet<DIM>::initialize(
 */
 template<int DIM>
 void LayerEdgeSet<DIM>::getNabrOwnerSet( const Connectivity &cnect,
-                                           set<int> &owners ) const
+                                           std::set<int> &owners ) const
 {
    typename Connectivity::const_iterator i_node;
    for ( i_node=cnect.begin(); i_node!=cnect.end(); ++i_node ) {
@@ -1589,7 +1591,7 @@ void LayerEdgeSet<DIM>::getNabrOwnerSet( const Connectivity &cnect,
 ***********************************************************************
 */
 template<int DIM>
-void LayerEdgeSet<DIM>::printClassData( ostream &co, int detail_depth ) const
+void LayerEdgeSet<DIM>::printClassData( std::ostream &co, int detail_depth ) const
 {
    const Connectivity &cnect = getConnectivity();
    const NodeContainer &nodes = getNodeContainer();
@@ -1638,7 +1640,7 @@ void LayerEdgeSet<DIM>::printClassData( ostream &co, int detail_depth ) const
 ***********************************************************************
 */
 template<int DIM>
-void LayerEdgeSet<DIM>::printEdgeStats( ostream &co ) const
+void LayerEdgeSet<DIM>::printEdgeStats( std::ostream &co ) const
 {
    const NodeContainer &nodes = getNodeContainer();
    const Connectivity &cnect = getConnectivity();
@@ -1672,13 +1674,13 @@ void LayerEdgeSet<DIM>::printEdgeStats( ostream &co ) const
    avg_nnabr = tot_nnabr == 0 ? 0.0 : double(tot_nnabr)/nodes.size();
 
    co << "N nabrs (l,h,t,a): "
-      << setw(10) << min_nnabr
-      << setw(10) << max_nnabr
-      << setw(10) << tot_nnabr
-      << setw(10) << avg_nnabr << '\n'
+      << std::setw(10) << min_nnabr
+      << std::setw(10) << max_nnabr
+      << std::setw(10) << tot_nnabr
+      << std::setw(10) << avg_nnabr << '\n'
       ;
 
-   set<int> semilocal_owners;
+   std::set<int> semilocal_owners;
    getNabrOwnerSet( getConnectivity(), semilocal_owners );
    co << "N of semilocal owners: " << semilocal_owners.size() << '\n';
    
@@ -1820,11 +1822,11 @@ void LayerEdgeSet<DIM>::checkConnectivity( const LayerNodeSet<DIM> &head ) const
             tbox::pout << "Neighbors for " << tnode << " (" << rnode << "):\n";
             tbox::pout << "true:\n";
             for ( ni=tnabrs.begin(); ni!=tnabrs.end(); ++ni ) {
-               tbox::pout << *ni << endl;
+               tbox::pout << *ni << std::endl;
             }
             tbox::pout << "rebuilt:\n";
             for ( ni=rnabrs.begin(); ni!=rnabrs.end(); ++ni ) {
-               tbox::pout << *ni << endl;
+               tbox::pout << *ni << std::endl;
             }
             TBOX_ERROR("Wrong edge data for node "
                        << (*i_tnode).getLocalIndex() << "\n");

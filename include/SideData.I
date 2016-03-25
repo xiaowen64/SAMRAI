@@ -1,18 +1,12 @@
 //
-// File:	SideData.I
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/side/SideData.I $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2005 The Regents of the University of California
-// Revision:	$Revision: 173 $
-// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1704 $
+// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
 // Description:	Templated side centered patch data type
 //
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef included_assert
-#define included_assert
-#include <assert.h>
-#endif
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -33,72 +27,72 @@ int SideData<DIM,TYPE>::getDepth() const
 }
 
 template<int DIM, class TYPE> inline
-TYPE *SideData<DIM,TYPE>::getPointer(const int axis, const int d)
+TYPE* SideData<DIM,TYPE>::getPointer(int side_normal, int depth)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert(d_directions(axis));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT(d_directions(side_normal));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis].getPointer(d));
+   return(d_data[side_normal].getPointer(depth));
 }
 
 template<int DIM, class TYPE> inline
-const TYPE *SideData<DIM,TYPE>::getPointer(const int axis, const int d) const
+const TYPE* SideData<DIM,TYPE>::getPointer(int side_normal, int depth) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert(d_directions(axis));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT(d_directions(side_normal));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis].getPointer(d));
+   return(d_data[side_normal].getPointer(depth));
 }
 
 template<int DIM, class TYPE> inline
-TYPE& SideData<DIM,TYPE>::operator()(const SideIndex<DIM>& i, const int d)
+TYPE& SideData<DIM,TYPE>::operator()(const SideIndex<DIM>& i, int depth)
 {
    const int axis = i.getAxis();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert(d_directions(axis));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT(d_directions(axis));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis](i,d));
+   return(d_data[axis](i,depth));
 }
 
 template<int DIM, class TYPE> inline
 const TYPE&
-SideData<DIM,TYPE>::operator()(const SideIndex<DIM>& i, const int d) const
+SideData<DIM,TYPE>::operator()(const SideIndex<DIM>& i, int depth) const
 {
    const int axis = i.getAxis();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert(d_directions(axis));
-   assert((d >= 0) && (d < d_depth));
+   TBOX_ASSERT((axis >= 0) && (axis < DIM));
+   TBOX_ASSERT(d_directions(axis));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 #endif
-   return(d_data[axis](i,d));
+   return(d_data[axis](i,depth));
 }
 
 template<int DIM, class TYPE> inline
 ArrayData<DIM,TYPE>&
-SideData<DIM,TYPE>::getArrayData(const int axis)
+SideData<DIM,TYPE>::getArrayData(int side_normal)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert(d_directions(axis));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT(d_directions(side_normal));
 #endif
-   return(d_data[axis]);
+   return(d_data[side_normal]);
 }
 
 template<int DIM, class TYPE> inline
 const ArrayData<DIM,TYPE>&
-SideData<DIM,TYPE>::getArrayData(const int axis) const
+SideData<DIM,TYPE>::getArrayData(int side_normal) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   assert((axis >= 0) && (axis < DIM));
-   assert(d_directions(axis));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < DIM));
+   TBOX_ASSERT(d_directions(side_normal));
 #endif
-   return(d_data[axis]);
+   return(d_data[side_normal]);
 }
 
 template<int DIM, class TYPE> inline 
