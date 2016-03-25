@@ -101,9 +101,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the residual tolerance for stopping.  <a href="#4f51f7a64ea6fb0af0c99cadee5041aa"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to get data on last solve.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#abecb1aaa69de54f7a15390986efb638">getNumberIterations</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#7faa66f88e870ef56c8fac6daaf8329f">getNumberOfIterations</a> () const</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return FAC iteration count from last (or current if there is one) FAC iteration process.  <a href="#abecb1aaa69de54f7a15390986efb638"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return FAC iteration count from last (or current if there is one) FAC iteration process.  <a href="#7faa66f88e870ef56c8fac6daaf8329f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#2641f83101f18896173248951be6eca8">getConvergenceFactors</a> (double &amp;avg_factor, double &amp;final_factor) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get average convergance rate and convergence rate of the last (or current if there is one) FAC solve.  <a href="#2641f83101f18896173248951be6eca8"></a><br></td></tr>
@@ -125,7 +125,7 @@ Typical use of this class is:<ol type=1>
 <li>Construct a CellPoissonFACSolver&lt;DIM&gt; object, providing it the hierarchy and range of levels participating in the solve.</li><li>Set the parameters C and D using the functions named <code>setC</code>... and <code>setD</code>... By default, D=1 and C=0 everywhere.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#db00f7e223f0a76fc14da82bfd1e4c43">setBoundaries()</a> to state the types boundary conditions, along with supplemental data for setting those boundary conditions.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#5ec5748569a7b696063d9988c0e485ee">initializeSolverState()</a> to set up information internal to the solver. This is step is not required but will save setup costs if you are making multiple solves. This commits the object to the current hierarchy state and the specific <em>types</em> of boundary conditions you selected, It does NOT commit to the specific <em>values</em> of the boundary condition. A hierarchy change (through adaption or other means) invalidates the state, thus you must reinitialize or <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#033abc256279a7a82a1072dc7237b729">deallocateSolverState()</a> the state before another solve.</li><li>Solve the equation with <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#ac843ba28e389a800fc42e80861c13bb">solveSystem()</a>. You provide the patch data indices for the solution u and the right hand side f. u must have at least one ghost cell and where a Dirichlet boundary condition applies, those cells must be set to the value on the boundary. If only Neumann boundary conditions are used, the ghost cell values do not matter.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#033abc256279a7a82a1072dc7237b729">deallocateSolverState()</a> to free up internal resources, if <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#5ec5748569a7b696063d9988c0e485ee">initializeSolverState()</a> was called before the solve.</li></ol>
 <p>
 After the solve, information on the solve can be obtained by calling one of these functions:<ul>
-<li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#abecb1aaa69de54f7a15390986efb638">getNumberIterations()</a> gives the number of FAC cycles used.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#2641f83101f18896173248951be6eca8">getConvergenceFactors()</a> gives the average and final convergence factors for the solve.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#8a0ff0aeaf5192494a57f1c219bcf1ca">getResidualNorm()</a> gives the final residual</li></ul>
+<li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#7faa66f88e870ef56c8fac6daaf8329f">getNumberOfIterations()</a> gives the number of FAC cycles used.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#2641f83101f18896173248951be6eca8">getConvergenceFactors()</a> gives the average and final convergence factors for the solve.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#8a0ff0aeaf5192494a57f1c219bcf1ca">getResidualNorm()</a> gives the final residual</li></ul>
 <p>
 Finer solver controls can be set using the functions in this class.<p>
 Object of this class can be set using input databases. The following parameters can be set. Each is shown with its default value in the case where hypre is used. <div class="fragment"><pre class="fragment">
@@ -867,14 +867,14 @@ Remove all hierarchy-dependent data set by initializeSolverState. It is safe to 
 
 </div>
 </div><p>
-<a class="anchor" name="abecb1aaa69de54f7a15390986efb638"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getNumberIterations" ref="abecb1aaa69de54f7a15390986efb638" args="() const" -->
+<a class="anchor" name="7faa66f88e870ef56c8fac6daaf8329f"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getNumberOfIterations" ref="7faa66f88e870ef56c8fac6daaf8329f" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html">SAMRAI::solv::CellPoissonFACSolver</a>&lt; DIM &gt;::getNumberIterations           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html">SAMRAI::solv::CellPoissonFACSolver</a>&lt; DIM &gt;::getNumberOfIterations           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -955,7 +955,7 @@ The latest computed norm is the one returned.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="CellPoissonFACSolver_8h.html">CellPoissonFACSolver.h</a><li>source/solvers/poisson/<a class="el" href="CellPoissonFACSolver_8C.html">CellPoissonFACSolver.C</a><li>source/solvers/poisson/<a class="el" href="CellPoissonFACSolver_8I.html">CellPoissonFACSolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:33 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:44 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

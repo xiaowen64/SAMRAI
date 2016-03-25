@@ -58,6 +58,10 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html#c47b5ee63467b1f8933ba2a26d7b0953">operator()</a> (const int i) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html#c7f6077fa47f9ea0769e7f24d32a0bd7">operator[]</a> (const int i)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html#3f72f1431a72b93f7b56abf1fc920a82">operator[]</a> (const int i) const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">BoxArray</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html#eefd504278917d499e48b343bdd51d21">BoxArray_from_Array</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &gt; array)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html#fde0e789889311105356e698a259640c">set_BoxArray_from_Array</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &gt; array)</td></tr>
@@ -415,7 +419,9 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return a reference to the i-th box. No bounds checking. 
+Return a reference to the i-th box.<p>
+When assertion checking is active non-recoverable exception results when array bounds are violated.<p>
+DEPRECATED: The operator[] method should be used instead of this one. 
 </div>
 </div><p>
 <a class="anchor" name="c47b5ee63467b1f8933ba2a26d7b0953"></a><!-- doxytag: member="SAMRAI::hier::BoxArray::operator()" ref="c47b5ee63467b1f8933ba2a26d7b0953" args="(const int i) const " -->
@@ -437,7 +443,55 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return a const reference to the i-th box. No bounds checking. 
+Return a const reference to the i-th box.<p>
+When assertion checking is active non-recoverable exception results when array bounds are violated.<p>
+DEPRECATED: The operator[] method should be used instead of this one. 
+</div>
+</div><p>
+<a class="anchor" name="c7f6077fa47f9ea0769e7f24d32a0bd7"></a><!-- doxytag: member="SAMRAI::hier::BoxArray::operator[]" ref="c7f6077fa47f9ea0769e7f24d32a0bd7" args="(const int i)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">SAMRAI::hier::BoxArray</a>&lt; DIM &gt;::operator[]           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>i</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Non-const array subscripting. Return a reference the box at array index ``i'' (between 0 and N-1, where N is the number of elements in the array.<p>
+When assertion checking is active non-recoverable exception results when array bounds are violated. 
+</div>
+</div><p>
+<a class="anchor" name="3f72f1431a72b93f7b56abf1fc920a82"></a><!-- doxytag: member="SAMRAI::hier::BoxArray::operator[]" ref="3f72f1431a72b93f7b56abf1fc920a82" args="(const int i) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">SAMRAI::hier::BoxArray</a>&lt; DIM &gt;::operator[]           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>i</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Const array subscripting. Return a const reference to the box at array index ``i'' (between 0 and N-1, where N is the number of elements in the array.<p>
+When assertion checking is active non-recoverable exception results when array bounds are violated. 
 </div>
 </div><p>
 <a class="anchor" name="eefd504278917d499e48b343bdd51d21"></a><!-- doxytag: member="SAMRAI::hier::BoxArray::BoxArray_from_Array" ref="eefd504278917d499e48b343bdd51d21" args="(tbox::Array&lt; tbox::DatabaseBox &gt; array)" -->
@@ -683,7 +737,7 @@ Print all boxes in this array to specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/boxes/<a class="el" href="BoxArray_8h.html">BoxArray.h</a><li>source/hierarchy/boxes/<a class="el" href="BoxArray_8C.html">BoxArray.C</a><li>source/hierarchy/boxes/<a class="el" href="BoxArray_8I.html">BoxArray.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:06 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:15 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -30,9 +30,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#6dfe449298bf646edd9f34e76418bf76">~CoarsenClasses</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#cb3f12bae8a59facdaf51fb0144f9cad">getNumberEquivalenceClasses</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#92c0486668eeb9ab44fe9cd9deff07ee">getNumberOfEquivalenceClasses</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#e7d6a3f807e1ca79826210c6b20c3c31">getNumberItemsInEquivalenceClass</a> (int equiv_class_id) const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#c4887082d38f264396fc520aaf3b88be">getNumberOfItemsInEquivalenceClass</a> (int equiv_class_id) const</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a>&lt; DIM <br>
 &gt;::<a class="el" href="structSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">Data</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#51f02fedf9ab657b0ecb06ba6a284ccf">getClassRepresentative</a> (int equiv_class_id) const</td></tr>
@@ -105,14 +105,14 @@ The virtual destructor destroys the coarsen data items owned by this object (and
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="cb3f12bae8a59facdaf51fb0144f9cad"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::getNumberEquivalenceClasses" ref="cb3f12bae8a59facdaf51fb0144f9cad" args="() const" -->
+<a class="anchor" name="92c0486668eeb9ab44fe9cd9deff07ee"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::getNumberOfEquivalenceClasses" ref="92c0486668eeb9ab44fe9cd9deff07ee" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">SAMRAI::xfer::CoarsenClasses</a>&lt; DIM &gt;::getNumberEquivalenceClasses           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">SAMRAI::xfer::CoarsenClasses</a>&lt; DIM &gt;::getNumberOfEquivalenceClasses           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -126,14 +126,14 @@ template&lt;int DIM&gt; </div>
 Return number of equivalence classes maintained by this object (i.e., the number of lists of coarsen data items). 
 </div>
 </div><p>
-<a class="anchor" name="e7d6a3f807e1ca79826210c6b20c3c31"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::getNumberItemsInEquivalenceClass" ref="e7d6a3f807e1ca79826210c6b20c3c31" args="(int equiv_class_id) const" -->
+<a class="anchor" name="c4887082d38f264396fc520aaf3b88be"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::getNumberOfItemsInEquivalenceClass" ref="c4887082d38f264396fc520aaf3b88be" args="(int equiv_class_id) const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">SAMRAI::xfer::CoarsenClasses</a>&lt; DIM &gt;::getNumberItemsInEquivalenceClass           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">SAMRAI::xfer::CoarsenClasses</a>&lt; DIM &gt;::getNumberOfItemsInEquivalenceClass           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>equiv_class_id</em>          </td>
@@ -189,7 +189,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return an iterator for the coarsen data list corresponding to the equivalence class with the given integer identifier. The number of equivalence classes can be determined via the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#cb3f12bae8a59facdaf51fb0144f9cad">getNumberEquivalenceClasses()</a> member function. Valid integer arguments are 0,...,<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#cb3f12bae8a59facdaf51fb0144f9cad">getNumberEquivalenceClasses()</a>-1. When assertion checking is active, the id will be checked for validity.<p>
+Return an iterator for the coarsen data list corresponding to the equivalence class with the given integer identifier. The number of equivalence classes can be determined via the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#92c0486668eeb9ab44fe9cd9deff07ee">getNumberOfEquivalenceClasses()</a> member function. Valid integer arguments are 0,...,<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#92c0486668eeb9ab44fe9cd9deff07ee">getNumberOfEquivalenceClasses()</a>-1. When assertion checking is active, the id will be checked for validity.<p>
 Note that the list should not be modified through this iterator. When assertion checking is active, the id will be checked for validity. 
 </div>
 </div><p>
@@ -344,7 +344,7 @@ Print single equivalence class item to the specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/transfer/datamovers/standard/<a class="el" href="CoarsenClasses_8h.html">CoarsenClasses.h</a><li>source/transfer/datamovers/standard/<a class="el" href="CoarsenClasses_8C.html">CoarsenClasses.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:44 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:56 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -104,7 +104,7 @@ The embedded boundary may be constructed from a set of analytic shapes supplied 
 Note: The cart_grid_geometry argument is optional and may be supplied later using the "setGridGeometry()" method. However, it must be set before the "buildEmbeddedBoundaryOnLevel()" is called. The nghosts argument is also optional and is set to zero by default.<p>
 2. Build the embedded boundary on the levels of the hierarchy:<p>
 <div class="fragment"><pre class="fragment">
- *    Pointer&lt;PatchLevel&lt;NDIM&gt; &gt; level = hierarchy-&gt;getPatchLevel(ln);
+ *    Pointer&lt;PatchLevel&lt;DIM&gt; &gt; level = hierarchy-&gt;getPatchLevel(ln);
  *    eb_geom-&gt;buildEmbeddedBoundaryOnLevel(level);
  *    </pre></div><p>
 Note: It is also possible to pass in a hierarchy and an old level as arguments. If supplied, this information can be used to accelerate construction of the boundary on the supplied level.<p>
@@ -118,13 +118,13 @@ Note: It is also possible to pass in a hierarchy and an old level as arguments. 
  *    int vol_frac_index = eb_geom-&gt;getCellVolumeDataId();  
  *    int cut_cell_index = eb_geom-&gt;getIndexCutCellDataId();
  *
- *    tbox::Pointer&lt;CellData&lt;NDIM,int&gt; &gt; cell_flag_data = 
+ *    tbox::Pointer&lt;CellData&lt;DIM,int&gt; &gt; cell_flag_data = 
  *        patch-&gt;getPatchData(cell_flag_index); 
- *    tbox::Pointer&lt;NodeData&lt;NDIM,int&gt; &gt; node_flag_data = 
+ *    tbox::Pointer&lt;NodeData&lt;DIM,int&gt; &gt; node_flag_data = 
  *        patch-&gt;getPatchData(node_flag_index); 
- *    tbox::Pointer&lt;CellData&lt;NDIM,double&gt; &gt; vol_frac_data = 
+ *    tbox::Pointer&lt;CellData&lt;DIM,double&gt; &gt; vol_frac_data = 
  *        patch-&gt;getPatchData(vol_frac_index); 
- *    tbox::Pointer&lt;IndexData&lt;NDIM,CutCell&gt; &gt; cut_cell_data = 
+ *    tbox::Pointer&lt;IndexData&lt;DIM,CutCell&gt; &gt; cut_cell_data = 
  *        patch-&gt;getPatchData(cut_cell_index); 
  *    </pre></div><p>
 Input parameters specify the list of shapes to be used to construct the boundary, the desired accuracy of the volume and area fraction computation, and information about whether write constructed embedded boundary information to file, or read from file.<p>
@@ -815,7 +815,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#d90b74ae
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/apputils/embedded_boundary/<a class="el" href="EmbeddedBoundaryGeometry_8h.html">EmbeddedBoundaryGeometry.h</a><li>source/apputils/embedded_boundary/<a class="el" href="EmbeddedBoundaryGeometry_8C.html">EmbeddedBoundaryGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:00 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:10 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

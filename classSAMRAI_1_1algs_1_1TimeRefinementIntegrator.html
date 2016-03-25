@@ -35,7 +35,7 @@ Inheritance diagram for SAMRAI::algs::TimeRefinementIntegrator&lt; DIM &gt;:<p><
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#4e86f2d8c8e9f443c7dbedda624cf56e">~TimeRefinementIntegrator</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#b97d106377bd3823c0445aef19650360">initializeHierarchy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#1cc43c819ca6648d4ba095c737418200">initializeHierarchy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">hier::BoxArray</a>&lt; DIM &gt; &amp;override_boxes=0, const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;override_mapping=0)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#9c8e33d455fa8b9f133c60e07d592cb6">advanceHierarchy</a> (const double dt, const bool rebalance_coarsest=false)</td></tr>
 
@@ -211,7 +211,7 @@ The destructor for TimeRefinementIntegrator&lt;DIM&gt; unregisters the integrato
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b97d106377bd3823c0445aef19650360"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::initializeHierarchy" ref="b97d106377bd3823c0445aef19650360" args="()" -->
+<a class="anchor" name="1cc43c819ca6648d4ba095c737418200"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::initializeHierarchy" ref="1cc43c819ca6648d4ba095c737418200" args="(const hier::BoxArray&lt; DIM &gt; &amp;override_boxes=0, const hier::ProcessorMapping &amp;override_mapping=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -220,9 +220,19 @@ template&lt;int DIM&gt; </div>
         <tr>
           <td class="memname">double <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">SAMRAI::algs::TimeRefinementIntegrator</a>&lt; DIM &gt;::initializeHierarchy           </td>
           <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">hier::BoxArray</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>override_boxes</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>override_mapping</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -231,7 +241,15 @@ template&lt;int DIM&gt; </div>
 <p>
 Set AMR patch hierarchy configuration and data at start of simulation. If the run is begun from a restart file, the hierarchy and data are read from the hierarchy database. Otherwise, the hierarchy and data are initialized by the gridding algorithm data member. In this case, the coarsest level is constructed and initialized. Then, error estimation is performed to determine if and where it should be refined. Successively finer levels are created and initialized until the maximum allowable number of levels is achieved or no further refinement is needed. The double return value is the time increment for the first data advance step on the coarsest hierarchy level (i.e., level 0).<p>
 This function assumes that the hierarchy exists, but that it contains no patch levels, when it is called. On return from this function, the initial hierarchy configuration and simulation data is set properly for the <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#9c8e33d455fa8b9f133c60e07d592cb6">advanceHierarchy()</a> function to be called. In particular, on each level constructed only the data needed for initialization exists.<p>
-When assertion checking is active, the hierachy database pointer must be non-null. 
+When assertion checking is active, the hierachy database pointer must be non-null.<p>
+The two optional arguments are only to be used for a special case where the user wishes to manually specify a box decomposition and load balance for the coarsest level of the hierarchy. The BoxArray argument must be a decomposition of the the coarsest level, and must exactly fill the index space of the physical domain of the hierarchy. The ProcessorMapping must be constructed to map each box in the BoxArray to a processor. The size of the mapping must be equal to the length of the box array, or an assertion failure will result.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>override_boxes</em>&nbsp;</td><td>box array representing a decomposition of level zero of the hierarchy </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>override_mapping</em>&nbsp;</td><td>processor mapping that maps each box in the above array to a processor. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="9c8e33d455fa8b9f133c60e07d592cb6"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::advanceHierarchy" ref="9c8e33d455fa8b9f133c60e07d592cb6" args="(const double dt, const bool rebalance_coarsest=false)" -->
@@ -755,7 +773,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#d90b74ae
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/algorithm/time_refinement/<a class="el" href="TimeRefinementIntegrator_8h.html">TimeRefinementIntegrator.h</a><li>source/algorithm/time_refinement/<a class="el" href="TimeRefinementIntegrator_8C.html">TimeRefinementIntegrator.C</a><li>source/algorithm/time_refinement/<a class="el" href="TimeRefinementIntegrator_8I.html">TimeRefinementIntegrator.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:00 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:09 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

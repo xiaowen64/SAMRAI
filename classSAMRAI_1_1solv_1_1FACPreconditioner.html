@@ -69,9 +69,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enable or disable logging.  <a href="#fbab015aed5d18462028716930b6b9be"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to get data on last solve.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#87e5a96f09f3cd606e9498b548583110">getNumberIterations</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#446e9cf1abe1d603764cb2fddcd44370">getNumberOfIterations</a> () const</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return FAC iteration count from last (or current if there is one) FAC iteration process.  <a href="#87e5a96f09f3cd606e9498b548583110"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return FAC iteration count from last (or current if there is one) FAC iteration process.  <a href="#446e9cf1abe1d603764cb2fddcd44370"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#fa5849ad643ebb5323ae1efedc44d3aa">getConvergenceFactors</a> (double &amp;avg_factor, double &amp;final_factor) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get convergance rates of the last (or current if there is one) FAC solve.  <a href="#fa5849ad643ebb5323ae1efedc44d3aa"></a><br></td></tr>
@@ -96,7 +96,7 @@ Implements the FAC iterative solution procedure for a linear system of equations
 <p>
 The solution is found by applying an FAC algorithm to the composite grid represented in the hierarchy. After each FAC cycle the norm of the residual will be computed over all levels involved. The FAC iteration will stop when either the maximum number of iterations is reached, or the residual norm on all levels is below the given tolerance.<p>
 The user must perform the following steps to use the FAC solver:<ol type=1>
-<li>Create a FACPreconditioner&lt;DIM&gt;, providing a valid concrete FACOperatorStrategy&lt;DIM&gt; object.</li><li>Set the stopping criteria using the setStoppingParameters() function.</li><li>Set the number of smooting sweeps using the setSmoothingSweeps() function. This is optional; if not used, the default is one sweep in each case.</li><li>Enable logging to record the FAC residual norms during the FAC itertion using the setFACLogFlag() function. This is optional; the default is to turn logging off. When loggin is turned on, the default mode is to send this information to the application log file (i.e., plog).</li><li>Invoke the FAC iteration process by calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#e6cd7471f9b86e58d39142fdf30cf9df">solveSystem()</a>, providing the vectors u and f, defined on a patch hierarchy containing the desired range of levels.</li><li>After solving, get solver statistics by viewing the log information and calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#87e5a96f09f3cd606e9498b548583110">getNumberIterations()</a>, <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#86db8d7923928bc9f8bb3992418684a7">getResidualNorm()</a> functions if desired. </li></ol>
+<li>Create a FACPreconditioner&lt;DIM&gt;, providing a valid concrete FACOperatorStrategy&lt;DIM&gt; object.</li><li>Set the stopping criteria using the setStoppingParameters() function.</li><li>Set the number of smooting sweeps using the setSmoothingSweeps() function. This is optional; if not used, the default is one sweep in each case.</li><li>Enable logging to record the FAC residual norms during the FAC itertion using the setFACLogFlag() function. This is optional; the default is to turn logging off. When loggin is turned on, the default mode is to send this information to the application log file (i.e., plog).</li><li>Invoke the FAC iteration process by calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#e6cd7471f9b86e58d39142fdf30cf9df">solveSystem()</a>, providing the vectors u and f, defined on a patch hierarchy containing the desired range of levels.</li><li>After solving, get solver statistics by viewing the log information and calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#446e9cf1abe1d603764cb2fddcd44370">getNumberOfIterations()</a>, <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#86db8d7923928bc9f8bb3992418684a7">getResidualNorm()</a> functions if desired. </li></ol>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -197,7 +197,7 @@ template&lt;int DIM&gt; </div>
 <p>
 Solve linear system Au=f using the FAC algorithm. 
 <p>
-The return value is true if the solver converged and false otherwise. The problem-specific portions of the FAC procedure, including the definitions of A are provided by the FACOperatorStrategy&lt;DIM&gt; object passed to the constructor. More information about the iteration can be found by calling the functions <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#87e5a96f09f3cd606e9498b548583110">getNumberIterations()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#86db8d7923928bc9f8bb3992418684a7">getResidualNorm()</a> and by looking at the log information.<p>
+The return value is true if the solver converged and false otherwise. The problem-specific portions of the FAC procedure, including the definitions of A are provided by the FACOperatorStrategy&lt;DIM&gt; object passed to the constructor. More information about the iteration can be found by calling the functions <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#446e9cf1abe1d603764cb2fddcd44370">getNumberOfIterations()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#86db8d7923928bc9f8bb3992418684a7">getResidualNorm()</a> and by looking at the log information.<p>
 Before calling this function, the form of the solution and right-hand-side quantities should be set properly by the user on all patch interiors on the range of levels covered by the FAC iteration. All data in these vectors (that will be used by the <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> implementation) should be allocated. Thus, the user is responsible for managing the storage for the solution and right-hand-side.<p>
 Conditions on arguments:<ul>
 <li>vectors solution and rhs must have same hierarchy</li><li>vectors solution and rhs must have same variables (except that solution can--and should--have enough ghost cells for computation).</li></ul>
@@ -500,14 +500,14 @@ Set streams to NULL to turn off output.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="87e5a96f09f3cd606e9498b548583110"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::getNumberIterations" ref="87e5a96f09f3cd606e9498b548583110" args="() const" -->
+<a class="anchor" name="446e9cf1abe1d603764cb2fddcd44370"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::getNumberOfIterations" ref="446e9cf1abe1d603764cb2fddcd44370" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html">SAMRAI::solv::FACPreconditioner</a>&lt; DIM &gt;::getNumberIterations           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html">SAMRAI::solv::FACPreconditioner</a>&lt; DIM &gt;::getNumberOfIterations           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -682,7 +682,7 @@ Print data members for debugging.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/FAC/<a class="el" href="FACPreconditioner_8h.html">FACPreconditioner.h</a><li>source/solvers/FAC/<a class="el" href="FACPreconditioner_8C.html">FACPreconditioner.C</a><li>source/solvers/FAC/<a class="el" href="FACPreconditioner_8I.html">FACPreconditioner.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:32 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:43 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

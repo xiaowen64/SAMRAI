@@ -277,7 +277,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Pure virtual function to perform user-defined preprocess data refine operations. This member function is called after standard refine operations (expressed using concrete subclasses of the RefineOperator&lt;DIM&gt; base class). The postprocess function must refine data from the scratch components of the coarse patch into the scratch components of the fine patch on the specified fine box region. Recall that the scratch components are specified in calls to the registerRefine() function in the RefineAlgorithm&lt;DIM&gt; class.<p>
+Pure virtual function to perform user-defined postprocess data refine operations. This member function is called after standard refine operations (expressed using concrete subclasses of the RefineOperator&lt;DIM&gt; base class). The postprocess function must refine data from the scratch components of the coarse patch into the scratch components of the fine patch on the specified fine box region. Recall that the scratch components are specified in calls to the registerRefine() function in the RefineAlgorithm&lt;DIM&gt; class.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing destination data. </td></tr>
@@ -403,7 +403,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelp
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/transfer/datamovers/standard/<a class="el" href="RefinePatchStrategy_8h.html">RefinePatchStrategy.h</a><li>source/transfer/datamovers/standard/<a class="el" href="RefinePatchStrategy_8C.html">RefinePatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:45 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:57 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

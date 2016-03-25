@@ -34,7 +34,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns an array of boxes that includes entries for each box that touches a periodic boundary.  <a href="#c63df50851da38601625d4392caae7e1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxGraphUtilities.html#43ff4cf76bebc41c18a61351ed3625a2">countPeriodicBoxes</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &gt; &gt; &amp;shifts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the sum of shifts[j].getNumberItems().  <a href="#43ff4cf76bebc41c18a61351ed3625a2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the sum of shifts[j].getNumberOfItems().  <a href="#43ff4cf76bebc41c18a61351ed3625a2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxGraphUtilities.html#eb3320811ec1b8749b8fcd85acc039c1">qsortIntCompare</a> (const void *v, const void *w)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compare function for use with qsort when sorting integers in ascending order.  <a href="#eb3320811ec1b8749b8fcd85acc039c1"></a><br></td></tr>
@@ -185,7 +185,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Returns the sum of shifts[j].getNumberItems(). 
+Returns the sum of shifts[j].getNumberOfItems(). 
 <p>
 This function is called by <a class="el" href="structSAMRAI_1_1hier_1_1BoxGraphUtilities.html#9b4cf921ea6341321f29668af2a923fa">makeBoxesPlusPeriodicBoxes()</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -236,7 +236,7 @@ Sample usage:<p>
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/hierarchy/boxes/<a class="el" href="BoxGraphUtilities_8h.html">BoxGraphUtilities.h</a><li>source/hierarchy/boxes/<a class="el" href="BoxGraphUtilities_8C.html">BoxGraphUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:06 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:15 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

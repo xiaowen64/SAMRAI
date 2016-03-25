@@ -49,7 +49,7 @@ Inheritance diagram for SAMRAI::pdat::CellOverlap&lt; DIM &gt;:<p><center><img s
 <h3>template&lt;int DIM&gt;<br>
  class SAMRAI::pdat::CellOverlap&lt; DIM &gt;</h3>
 
-Class CellOverlap&lt;DIM&gt; represents the intersection between two cell centered geometry boxes. It is a subclass of hier::BoxOverlap&lt;DIM&gt; and records the portions of index space that needs to be copied between two objects with cell centered geometry.<p>
+Class CellOverlap&lt;DIM&gt; represents the intersection between two cell centered geometry boxes. It is a subclass of hier::BoxOverlap&lt;DIM&gt; and records the portions of index space that needs to be copied between two objects with cell centered geometry. Note that <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">CellOverlap</a> does NOT compute the overlap of the arguments. It stores the arguments as given and assumes that they already represent an overlap previously computed.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">pdat::CellOverlap</a> </dd></dl>
 
@@ -201,7 +201,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#e0
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/patchdata/boxgeometry/<a class="el" href="CellOverlap_8h.html">CellOverlap.h</a><li>source/patchdata/boxgeometry/<a class="el" href="CellOverlap_8C.html">CellOverlap.C</a><li>source/patchdata/boxgeometry/<a class="el" href="CellOverlap_8I.html">CellOverlap.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:19 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:30 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

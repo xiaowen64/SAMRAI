@@ -6,8 +6,9 @@ rect $classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html 186,151 508,175
 rect $classSAMRAI_1_1tbox_1_1AbstractStream.html 244,199 450,223
 rect $classSAMRAI_1_1tbox_1_1Arena.html 272,247 422,271
 rect $classSAMRAI_1_1tbox_1_1Database.html 262,295 432,319
-rect $classSAMRAI_1_1tbox_1_1Schedule.html 263,343 431,367
-rect $classSAMRAI_1_1tbox_1_1Serializable.html 256,391 438,415
-rect $classSAMRAI_1_1tbox_1_1Statistic.html 267,439 427,463
-rect $classSAMRAI_1_1tbox_1_1Timer.html 274,487 420,511
-rect $classSAMRAI_1_1tbox_1_1Transaction.html 256,535 438,559
+rect $classSAMRAI_1_1tbox_1_1DatabaseFactory.html 240,343 454,367
+rect $classSAMRAI_1_1tbox_1_1Schedule.html 263,391 431,415
+rect $classSAMRAI_1_1tbox_1_1Serializable.html 256,439 438,463
+rect $classSAMRAI_1_1tbox_1_1Statistic.html 267,487 427,511
+rect $classSAMRAI_1_1tbox_1_1Timer.html 274,535 420,559
+rect $classSAMRAI_1_1tbox_1_1Transaction.html 256,583 438,607

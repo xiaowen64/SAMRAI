@@ -56,7 +56,7 @@ Inheritance diagram for SAMRAI::hier::PatchHierarchy&lt; DIM &gt;:<p><center><im
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#90684d70e7b5eff9e4a7409197f752d5">finerLevelExists</a> (const int l) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#d24c0b1a912802671407b5788a16bac4">getNumberLevels</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3f4e483ce9234a1453dd246c90774cc6">getNumberOfLevels</a> () const</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#07ce0904769d057825965c20a6db7648">getFinestLevelNumber</a> () const</td></tr>
 
@@ -75,7 +75,7 @@ Inheritance diagram for SAMRAI::hier::PatchHierarchy&lt; DIM &gt;:<p><center><im
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#56a368bb541d7679948b3f71562e9eda">getFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> component_selector, const int max_levels=-1)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#281fd87662d0c1e534736c93f876b579">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border=std::string(), unsigned short <a class="el" href="algs__nodeouternodeops3d_8f.html#43c6cefba47e6b5e3fd8b0eb724c2a53">depth</a>=0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#281fd87662d0c1e534736c93f876b579">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border=std::string(), unsigned short <a class="el" href="algs__nodeouternodeops3d_8f.html#9caca90cc65f72a7168924922fa5d34e">depth</a>=0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print a patch hierarchy to varying details.  <a href="#281fd87662d0c1e534736c93f876b579"></a><br></td></tr>
 </table>
@@ -385,14 +385,14 @@ Returns true if the array of patch levels contains a patch level finer than the 
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html#be489f4e6707fe2fd0ef234f5a86cc14">SAMRAI::hier::BasePatchHierarchy&lt; DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="d24c0b1a912802671407b5788a16bac4"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getNumberLevels" ref="d24c0b1a912802671407b5788a16bac4" args="() const" -->
+<a class="anchor" name="3f4e483ce9234a1453dd246c90774cc6"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getNumberOfLevels" ref="3f4e483ce9234a1453dd246c90774cc6" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">SAMRAI::hier::PatchHierarchy</a>&lt; DIM &gt;::getNumberLevels           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">SAMRAI::hier::PatchHierarchy</a>&lt; DIM &gt;::getNumberOfLevels           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -405,7 +405,7 @@ template&lt;int DIM&gt; </div>
 <p>
 Return the number of levels that currently exist in the hierarchy. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html#afcc8e43b44064020b59051d8b0438f2">SAMRAI::hier::BasePatchHierarchy&lt; DIM &gt;</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html#948d850190a385272d8b9cce76750334">SAMRAI::hier::BasePatchHierarchy&lt; DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="07ce0904769d057825965c20a6db7648"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getFinestLevelNumber" ref="07ce0904769d057825965c20a6db7648" args="() const" -->
@@ -682,7 +682,7 @@ If depth&gt;0, print function will be called for each level in the hierarchy.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/patches/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a><li>source/hierarchy/patches/<a class="el" href="PatchHierarchy_8C.html">PatchHierarchy.C</a><li>source/hierarchy/patches/<a class="el" href="PatchHierarchy_8I.html">PatchHierarchy.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:08 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:18 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

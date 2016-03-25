@@ -244,8 +244,8 @@ template&lt;int DIM&gt; </div>
 <p>
 Stretch box outward by the given ghost cell width. 
 <p>
-The number of direction extended is the same as the codimension of the boundary.<p>
-Note that the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> is defined to be one cell wide. The output is the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>, stretched to cover the given ghost cell width. This means that if gcw is one, the output is identical to the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>. If the gcw is zero in any direction, the output will shrink to nothing in that direction.<p>
+The number of direction affected is the same as the codimension of the boundary.<p>
+Note that the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> is defined to be one cell wide. The output of this method is the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>, stretched to cover the given ghost cell width. This means that if gcw is one, the output is identical to the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>. If the gcw is zero in any direction, the output will shrink to nothing in that direction.<p>
 Return the stretched box. 
 </div>
 </div><p>
@@ -313,6 +313,7 @@ template&lt;int DIM&gt; </div>
 <p>
 Shift box inward by the given distance. 
 <p>
+A positive distance shifts inward while a negative distance shifts outward.<p>
 The number of direction shifted is the same as the codimension of the boundary.<p>
 Return the shifted box. 
 </div>
@@ -401,7 +402,7 @@ This is a utility function for working with the surface indices coresponding to 
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/patches/<a class="el" href="BoundaryBoxUtils_8h.html">BoundaryBoxUtils.h</a><li>source/hierarchy/patches/<a class="el" href="BoundaryBoxUtils_8C.html">BoundaryBoxUtils.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:07 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:17 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

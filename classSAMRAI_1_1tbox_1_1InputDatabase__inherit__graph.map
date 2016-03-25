@@ -1,3 +1,4 @@
 base referer
-rect $classSAMRAI_1_1tbox_1_1Database.html 21,83 192,107
-rect $classtbox_1_1DescribedClass.html 49,8 164,32
+rect $classSAMRAI_1_1tbox_1_1MemoryDatabase.html 7,157 225,181
+rect $classSAMRAI_1_1tbox_1_1Database.html 31,83 201,107
+rect $classtbox_1_1DescribedClass.html 59,8 173,32

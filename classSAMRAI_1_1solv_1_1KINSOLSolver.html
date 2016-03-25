@@ -28,9 +28,9 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#849165c608758eedcefd81dc6b3e5540">KINSOLSolver</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLAbstractFunctions.html">KINSOLAbstractFunctions</a> *my_functions, const int uses_preconditioner, const int uses_jac_times_vector)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#428221b7719d876fdcd0cc4ee679ddc3">~KINSOLSolver</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#428221b7719d876fdcd0cc4ee679ddc3">~KINSOLSolver</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#f76eab316d8e3657cfee44e5c09f5dc3">initialize</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *solution)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#f5ca03fb124e7fa7ca7cbe640cced348">initialize</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *solution, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *uscale=NULL, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *fscale=NULL)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#50b81c9a3ab1c83b860c7e839dc25d18">solve</a> ()</td></tr>
 
@@ -44,10 +44,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLAbstractFunctions.html">KINSOLAbstractFunctions</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#4fe5604b2115f92dde147646bcb44cc0">getKINSOLFunctions</a> () const</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#e9c6cf3f5e53ec5cdd20ed7614d73115">setSolutionScaleVector</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *uscale)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#c539a5727d9cb492303419d9ca564be1">setResidualScaleVector</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *fscale)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#463d35adaf5c922ecb3e72cb86953f6a">setConstraintVector</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *constraints)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#4f62ac406cfac076d612b2d572187875">setResidualStoppingTolerance</a> (const double tol)</td></tr>
@@ -58,7 +54,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#a96506e93b740b6fc49c73a0bb66eb7d">setGlobalStrategy</a> (const int global)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#1cbec47fcf98cdce5eb715b8f6980f8f">setMaxNewtonStep</a> (const int maxstep)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#a7f0455ac24ac0fb7d64b298fd5a6d1f">setMaxNewtonStep</a> (const double maxstep)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#f83030017ad34f53130ebbf5c9ffba88">setNonlinearStepTolerance</a> (const double tol)</td></tr>
 
@@ -153,7 +149,7 @@ KINSOL was developed in the Center for Applied Scientific Computing (CASC) at La
 
 <p>
 Constructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html">KINSOLSolver</a> sets default KINSOL parameters and initializes the solver package with user-supplied functions. Solver parameters may be changed later using member functions described below. The integer flags indicate whether user-supplied preconditioner and Jacobian-vector product function should be used. Zero indicates no user function; otherwise, user function will be used by the nonlinear solver.<p>
-Important note: The solution vector is not passed into the constructor. Before the solver can be used, the <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#f76eab316d8e3657cfee44e5c09f5dc3">initialize()</a> function must be called.<p>
+Important note: The solution vector is not passed into the constructor. Before the solver can be used, the <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#f5ca03fb124e7fa7ca7cbe640cced348">initialize()</a> function must be called.<p>
 When assertion checking is active, an unrecoverable assertion will result if pointer to functions is null or string is empty. 
 </div>
 </div><p>
@@ -166,7 +162,7 @@ When assertion checking is active, an unrecoverable assertion will result if poi
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -177,7 +173,7 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.h
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="f76eab316d8e3657cfee44e5c09f5dc3"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::initialize" ref="f76eab316d8e3657cfee44e5c09f5dc3" args="(SundialsAbstractVector *solution)" -->
+<a class="anchor" name="f5ca03fb124e7fa7ca7cbe640cced348"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::initialize" ref="f5ca03fb124e7fa7ca7cbe640cced348" args="(SundialsAbstractVector *solution, SundialsAbstractVector *uscale=NULL, SundialsAbstractVector *fscale=NULL)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -185,9 +181,24 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.h
           <td class="memname">void SAMRAI::solv::KINSOLSolver::initialize           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
-          <td class="paramname"> <em>solution</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramname"> <em>solution</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
+          <td class="paramname"> <em>uscale</em> = <code>NULL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
+          <td class="paramname"> <em>fscale</em> = <code>NULL</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -195,7 +206,9 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.h
 
 <p>
 Initialize solver with solution vector. The solution vector is required to initialize the memory record used internally within KINSOL. This routine must be called before the solver can be used.<p>
-When assertion checking is active, an unrecoverable assertion will result if vector pointer is null or solution vector has already been set. 
+When assertion checking is active, an unrecoverable assertion will result if vector pointer is null.<p>
+Optionally set the scaling vectors used by KINSOL to scale either nonlinear solution vector or nonlinear residual vector. The elements of the scaling vectors must be positive. In either case, the scaling vector should be defined so that the vector formed by taking the element-wise product of the solution/residual vector and scaling vector has all elements roughly the same magnitude when the solution vector IS/IS NOT NEAR a root of the nonlinear function.<p>
+See KINSOL documentation for more information. 
 </div>
 </div><p>
 <a class="anchor" name="50b81c9a3ab1c83b860c7e839dc25d18"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::solve" ref="50b81c9a3ab1c83b860c7e839dc25d18" args="()" -->
@@ -351,47 +364,6 @@ Flags use "TRUE"/"FALSE" values defined in KINSOL. See KINSOL documentation for 
 Return pointer to object that provides user-defined functions for KINSOL. 
 </div>
 </div><p>
-<a class="anchor" name="e9c6cf3f5e53ec5cdd20ed7614d73115"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setSolutionScaleVector" ref="e9c6cf3f5e53ec5cdd20ed7614d73115" args="(SundialsAbstractVector *uscale)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::KINSOLSolver::setSolutionScaleVector           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
-          <td class="paramname"> <em>uscale</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set vector used by KINSOL to scale either nonlinear solution vector or nonlinear residual vector. The elements of the scaling vectors must be positive. In either case, the scaling vector should be defined so that the vector formed by taking the element-wise product of the solution/residual vector and scaling vector has all elements roughly the same magnitude when the solution vector IS/IS NOT NEAR a root of the nonlinear function.<p>
-See KINSOL documentation for more information. 
-</div>
-</div><p>
-<a class="anchor" name="c539a5727d9cb492303419d9ca564be1"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setResidualScaleVector" ref="c539a5727d9cb492303419d9ca564be1" args="(SundialsAbstractVector *fscale)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::KINSOLSolver::setResidualScaleVector           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
-          <td class="paramname"> <em>fscale</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="463d35adaf5c922ecb3e72cb86953f6a"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setConstraintVector" ref="463d35adaf5c922ecb3e72cb86953f6a" args="(SundialsAbstractVector *constraints)" -->
 <div class="memitem">
 <div class="memproto">
@@ -506,14 +478,14 @@ See KINSOL documentation for more information.
 
 </div>
 </div><p>
-<a class="anchor" name="1cbec47fcf98cdce5eb715b8f6980f8f"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setMaxNewtonStep" ref="1cbec47fcf98cdce5eb715b8f6980f8f" args="(const int maxstep)" -->
+<a class="anchor" name="a7f0455ac24ac0fb7d64b298fd5a6d1f"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setMaxNewtonStep" ref="a7f0455ac24ac0fb7d64b298fd5a6d1f" args="(const double maxstep)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::solv::KINSOLSolver::setMaxNewtonStep           </td>
           <td>(</td>
-          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramtype">const double&nbsp;</td>
           <td class="paramname"> <em>maxstep</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -994,7 +966,7 @@ Print out all data members for this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/packages/sundials/kinsol/<a class="el" href="KINSOLSolver_8h.html">KINSOLSolver.h</a><li>source/solvers/packages/sundials/kinsol/<a class="el" href="KINSOLSolver_8C.html">KINSOLSolver.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:32 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:43 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

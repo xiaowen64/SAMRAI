@@ -25,6 +25,12 @@
 <p>
 <a href="classSAMRAI_1_1hier_1_1BoundaryBox-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d7111">BoundaryDirection</a> { <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d7111d7c5bcea8780bc5828a33c98b4a8e728">LOWER</a> =  -1, 
+<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d711170c72729a17033e4c6c5e813c5a9e382">MIDDLE</a> =  0, 
+<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d71117788955e5fd8d772b100bdbd08fdd4e5">UPPER</a> =  1
+ }</td></tr>
+
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1a456c6eedcbcf402c5b43e406995da6">BoundaryBox</a> ()</td></tr>
 
@@ -46,6 +52,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#08c0ba0beca5bcb2c68cfacbabd8cdaa">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt; &amp;boundary_box)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d7111">BoundaryDirection</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#47a1bee2f0b1355157e73f5cab424653">getBoundaryDirection</a> (const int dir) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get which side of a patch the boundary box is on.  <a href="#47a1bee2f0b1355157e73f5cab424653"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;int DIM&gt;<br>
@@ -57,6 +66,34 @@ Class BoundaryBox&lt;DIM&gt; is a class that is used to facilitate the filling o
 <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html">hier::BoundaryLookupTable</a> </dd></dl>
 
 <p>
+<hr><h2>Member Enumeration Documentation</h2>
+<a class="anchor" name="1c13b75042a7d02d64f72db22f5d7111"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::BoundaryDirection" ref="1c13b75042a7d02d64f72db22f5d7111" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d7111">SAMRAI::hier::BoundaryBox::BoundaryDirection</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Enumerated type BoundaryDirection is used to indicate where a boundary box is located relative to a patch in a particular coordinate direction. <dl compact><dt><b>Enumerator: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="1c13b75042a7d02d64f72db22f5d7111d7c5bcea8780bc5828a33c98b4a8e728"></a><!-- doxytag: member="LOWER" ref="1c13b75042a7d02d64f72db22f5d7111d7c5bcea8780bc5828a33c98b4a8e728" args="" -->LOWER</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="1c13b75042a7d02d64f72db22f5d711170c72729a17033e4c6c5e813c5a9e382"></a><!-- doxytag: member="MIDDLE" ref="1c13b75042a7d02d64f72db22f5d711170c72729a17033e4c6c5e813c5a9e382" args="" -->MIDDLE</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="1c13b75042a7d02d64f72db22f5d71117788955e5fd8d772b100bdbd08fdd4e5"></a><!-- doxytag: member="UPPER" ref="1c13b75042a7d02d64f72db22f5d71117788955e5fd8d772b100bdbd08fdd4e5" args="" -->UPPER</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dl>
+
+</div>
+</div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="1a456c6eedcbcf402c5b43e406995da6"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::BoundaryBox" ref="1a456c6eedcbcf402c5b43e406995da6" args="()" -->
 <div class="memitem">
@@ -367,9 +404,40 @@ template&lt;int DIM&gt; </div>
 The assignment operator copies all data components. 
 </div>
 </div><p>
+<a class="anchor" name="47a1bee2f0b1355157e73f5cab424653"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBoundaryDirection" ref="47a1bee2f0b1355157e73f5cab424653" args="(const int dir) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&lt; DIM &gt;::<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#1c13b75042a7d02d64f72db22f5d7111">BoundaryDirection</a> <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">SAMRAI::hier::BoundaryBox</a>&lt; DIM &gt;::getBoundaryDirection           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>dir</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+get which side of a patch the boundary box is on. 
+<p>
+Returns BoundaryDirection value indicating whether the boundary box is on the upper or lower side of the patch in the given coordinate direction, or in the middle (neither upper nor lower).<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boundary direction value LOWER, MIDDLE, or UPPER </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dir</em>&nbsp;</td><td>Coordinate direction on which to query </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/patches/<a class="el" href="BoundaryBox_8h.html">BoundaryBox.h</a><li>source/hierarchy/patches/<a class="el" href="BoundaryBox_8C.html">BoundaryBox.C</a><li>source/hierarchy/patches/<a class="el" href="BoundaryBox_8I.html">BoundaryBox.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:07 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:17 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

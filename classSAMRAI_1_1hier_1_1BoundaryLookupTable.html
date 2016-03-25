@@ -41,6 +41,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#7885b220d56557f7c335a386c3052f46">mapLocationIndex</a> (int loc) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map boundary box location index between the original numbering and new scheme. In particular, for codimension 2 in 3 spatial dimensions, the value of the argument is mapped from the original numbering scheme to the new scheme, or vice versa.  <a href="#7885b220d56557f7c335a386c3052f46"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt;<br>
+ DIM &gt; &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#f25ca4dcbb40146b4ad3cccf7271b0ea">getBoundaryDirections</a> (int codim) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get array of boundary direction IntVectors.  <a href="#f25ca4dcbb40146b4ad3cccf7271b0ea"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html">BoundaryLookupTable</a>&lt;<br>
  DIM &gt; *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#c7173d474e0985be5f6e163a936e906d">getLookupTable</a> ()</td></tr>
@@ -382,9 +386,41 @@ Map boundary box location index between the original numbering and new scheme. I
 
 </div>
 </div><p>
+<a class="anchor" name="f25ca4dcbb40146b4ad3cccf7271b0ea"></a><!-- doxytag: member="SAMRAI::hier::BoundaryLookupTable::getBoundaryDirections" ref="f25ca4dcbb40146b4ad3cccf7271b0ea" args="(int codim) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &gt; &amp; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html">SAMRAI::hier::BoundaryLookupTable</a>&lt; DIM &gt;::getBoundaryDirections           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>codim</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get array of boundary direction IntVectors. 
+<p>
+For any codimension, there is a particular number of valid boundary locations. This function returns an array of IntVectors that provide information about where each boundary location lies in relation to a patch. The array's length is the number of valid locations for the given codimension, and the array is indexed by the location id's that are set up by this <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html">BoundaryLookupTable</a> class.<p>
+For a particular location, each element of the <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> tells whether the location is on the lower or upper side, or neither, of the patch in a specific coordinate direction. -1 indicates lower, 0 indicates neither, and 1 indicates upper.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Array of IntVectors, one element for each valid location </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>codim</em>&nbsp;</td><td>codimension </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/patches/<a class="el" href="BoundaryLookupTable_8h.html">BoundaryLookupTable.h</a><li>source/hierarchy/patches/<a class="el" href="BoundaryLookupTable_8C.html">BoundaryLookupTable.C</a><li>source/hierarchy/patches/<a class="el" href="BoundaryLookupTable_8I.html">BoundaryLookupTable.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:07 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:17 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

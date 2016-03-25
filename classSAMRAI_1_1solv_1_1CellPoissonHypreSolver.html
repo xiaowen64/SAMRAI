@@ -43,10 +43,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> &amp;spec)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the matrix coefficients.  <a href="#32d2bc62b5f3ed4552978b695868c207"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#d0f3bdc54da8de470446e898b656312b">setSolnIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#43c6cefba47e6b5e3fd8b0eb724c2a53">depth</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#d0f3bdc54da8de470446e898b656312b">setSolnIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#9caca90cc65f72a7168924922fa5d34e">depth</a>)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the solution data involved in the solve.  <a href="#d0f3bdc54da8de470446e898b656312b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#f1c22954bdc5e25295d1cb9c419c0ded">setRhsIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#43c6cefba47e6b5e3fd8b0eb724c2a53">depth</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#f1c22954bdc5e25295d1cb9c419c0ded">setRhsIdDepth</a> (const int <a class="el" href="algs__nodeouternodeops3d_8f.html#9caca90cc65f72a7168924922fa5d34e">depth</a>)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the rhs data involved in the solve.  <a href="#f1c22954bdc5e25295d1cb9c419c0ded"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#abfcc94f0bc7adb34a0791596deb9d42">setStoppingCriteria</a> (const int max_iterations=10, const double relative_residual_tol=1.0e-6)</td></tr>
@@ -55,9 +55,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#a53969a2db464dd5166ebc9285abac39">solveSystem</a> (const int u, const int f, bool homogeneous_bc=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve the linear system Au=f.  <a href="#a53969a2db464dd5166ebc9285abac39"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#0f68ef1a64f47650e297efde9e36723b">getNumberIterations</a> () const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8d26157a8f8ac67e9bcb8d44fedb16fb">getNumberOfIterations</a> () const</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of iterations taken by the solver to converge.  <a href="#0f68ef1a64f47650e297efde9e36723b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of iterations taken by the solver to converge.  <a href="#8d26157a8f8ac67e9bcb8d44fedb16fb"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#2106e98a2e8bb79cf33b93f98cda3245">setNumPreRelaxSteps</a> (const int steps)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of pre-relax steps used by the Hypre solve.  <a href="#2106e98a2e8bb79cf33b93f98cda3245"></a><br></td></tr>
@@ -377,7 +377,7 @@ template&lt;int DIM&gt; </div>
 Solve the linear system Au=f. 
 <p>
 The solution u and the right hand side f are specified via patch indices on the patch hierarchy.<p>
-Member functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#0f68ef1a64f47650e297efde9e36723b">getNumberIterations()</a> return the iterations from the solver. Note that the matrix coefficients and boundary condition object must have been set up before this function is called. As long as the matrix coefficients do not change, this routine may be called repeatedly to solve any number of linear systems (with the right-hand side varying). If the boundary conditions or matrix coefficients are changed then function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients()</a> must be called again.<p>
+Member functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8d26157a8f8ac67e9bcb8d44fedb16fb">getNumberOfIterations()</a> return the iterations from the solver. Note that the matrix coefficients and boundary condition object must have been set up before this function is called. As long as the matrix coefficients do not change, this routine may be called repeatedly to solve any number of linear systems (with the right-hand side varying). If the boundary conditions or matrix coefficients are changed then function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients()</a> must be called again.<p>
 When computing the matrix coefficients in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients()</a>, the inhomogeneous portion of the boundary condition (constant terms, independent of u and thus having no effect on the matrix) are saved and added to the source term, f, before performing the matrix solve. In some situations, it may be useful to not add the inhomogeneous portion to f. The flag argument <code>homoegneous_bc</code> is used for this. (This is a sort of optimization, to avoid having to re-call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#32d2bc62b5f3ed4552978b695868c207">setMatrixCoefficients()</a> to change the inhomogeneous portion.)<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -390,14 +390,14 @@ When computing the matrix coefficients in <a class="el" href="classSAMRAI_1_1sol
 
 </div>
 </div><p>
-<a class="anchor" name="0f68ef1a64f47650e297efde9e36723b"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getNumberIterations" ref="0f68ef1a64f47650e297efde9e36723b" args="() const" -->
+<a class="anchor" name="8d26157a8f8ac67e9bcb8d44fedb16fb"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getNumberOfIterations" ref="8d26157a8f8ac67e9bcb8d44fedb16fb" args="() const" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">SAMRAI::solv::CellPoissonHypreSolver</a>&lt; DIM &gt;::getNumberIterations           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">SAMRAI::solv::CellPoissonHypreSolver</a>&lt; DIM &gt;::getNumberOfIterations           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -592,7 +592,7 @@ The Robin boundary condition object is used when setting the matrix coefficient 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>physical_bc_coef_strategy</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> a concrete implementation of the Robin bc strategy. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> pointer to be passed to <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#b970730dd1046577178c5da2b46a0925">RobinBcCoefStrategy&lt;DIM&gt;::setBcCoefs()</a>, but otherwise unused by this class. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> pointer to be passed to <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#3d5e08c01faa94097d308d458cf42513">RobinBcCoefStrategy&lt;DIM&gt;::setBcCoefs()</a>, but otherwise unused by this class. </td></tr>
   </table>
 </dl>
 
@@ -629,7 +629,7 @@ If this method is not called, or the flag is set false, no printing will occur.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8h.html">CellPoissonHypreSolver.h</a><li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8C.html">CellPoissonHypreSolver.C</a><li>source/solvers/poisson/<a class="el" href="CellPoissonHypreSolver_8I.html">CellPoissonHypreSolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:33 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:44 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

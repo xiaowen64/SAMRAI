@@ -39,7 +39,7 @@ Inheritance diagram for SAMRAI::mesh::GriddingAlgorithm&lt; DIM &gt;:<p><center>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#fe9603996d26be5b228f1e68693c3c25">~GriddingAlgorithm</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#def3a00f47df15a5de5d75dea16db05a">makeCoarsestLevel</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html">hier::BasePatchHierarchy</a>&lt; DIM &gt; &gt; hierarchy, const double level_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#c6ac68fc94d09e89645bb976b41dbc70">makeCoarsestLevel</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html">hier::BasePatchHierarchy</a>&lt; DIM &gt; &gt; hierarchy, const double level_time, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">hier::BoxArray</a>&lt; DIM &gt; &amp;override_boxes=0, const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;override_mapping=0)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0731d3541c79f65abe798e9e5b70767b">makeFinerLevel</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BasePatchHierarchy.html">hier::BasePatchHierarchy</a>&lt; DIM &gt; &gt; hierarchy, const double level_time, const bool initial_time, const int tag_buffer, const double regrid_start_time=0.)</td></tr>
 
@@ -86,7 +86,7 @@ Inheritance diagram for SAMRAI::mesh::GriddingAlgorithm&lt; DIM &gt;:<p><center>
 Class GriddingAlgorithm&lt;DIM&gt; manages gridding operations in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Specifically, it provides AMR patch hierarchy generation and regridding routines that may be used with a variety of AMR solution algorithms and application-specific numerical routines. 
 <p>
 The three main functions provided by this class are:<ul>
-<li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#def3a00f47df15a5de5d75dea16db05a">makeCoarsestLevel()</a></b> This routine constructs or repartitions the coarsest hierarchy level (level 0).</li></ul>
+<li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#c6ac68fc94d09e89645bb976b41dbc70">makeCoarsestLevel()</a></b> This routine constructs or repartitions the coarsest hierarchy level (level 0).</li></ul>
 <p>
 <ul>
 <li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0731d3541c79f65abe798e9e5b70767b">makeFinerLevel()</a></b> This routine will attempt to add a new finest level to the hierarchy if the maximum number of levels allows it and cells on the current finest level are selected for refinement.</li></ul>
@@ -105,7 +105,7 @@ Required input keys and data types:<p>
 <li><b>largest_patch_size</b> An array of integer vectors (each has length = DIM) that specify the dimensions of largest patch allowed on each level in the hierarchy. The index of the vector in the array corresponds to the number of the level to which it applies. If more values are given than the maximum number of levels, extra entries will be ignored. If fewer values are given, then the last element in the array will be used on each level without a specified input value. For example, if only a single value is specified, then that value will be used on all levels. See sample input below for more information.</li></ul>
 <p>
 <ul>
-<li><b>ratio_to_coarser</b> Set of max_levels - 1 integer vectors, each of which indicates the ratio of the index space of a patch level to that of the next coarser level. The input for each level must correspond to the format ``level_n = vector'', where n is the level number and each vector must have length DIM. See sample input below.</li></ul>
+<li><b>ratio_to_coarser</b> Set of max_levels - 1 integer vectors, each of which indicates the ratio of the index space of a patch level to that of the next coarser level. The input for each level must correspond to the format ``level_n = vector'', where n is the level number and each vector must have length DIM. If more values are given than max_levels - 1 , extra entries will be ignored. If fewer values are given, then the last element in the array will be used for finer levels.</li></ul>
 <p>
 Optional input keys, data types, and defaults:<p>
 <ul>
@@ -260,7 +260,7 @@ Virtual destructor for GriddingAlgorithm&lt;DIM&gt;.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="def3a00f47df15a5de5d75dea16db05a"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel" ref="def3a00f47df15a5de5d75dea16db05a" args="(tbox::Pointer&lt; hier::BasePatchHierarchy&lt; DIM &gt; &gt; hierarchy, const double level_time)" -->
+<a class="anchor" name="c6ac68fc94d09e89645bb976b41dbc70"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel" ref="c6ac68fc94d09e89645bb976b41dbc70" args="(tbox::Pointer&lt; hier::BasePatchHierarchy&lt; DIM &gt; &gt; hierarchy, const double level_time, const hier::BoxArray&lt; DIM &gt; &amp;override_boxes=0, const hier::ProcessorMapping &amp;override_mapping=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -276,7 +276,19 @@ template&lt;int DIM&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>level_time</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>level_time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">hier::BoxArray</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>override_boxes</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>override_mapping</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -290,9 +302,19 @@ template&lt;int DIM&gt; </div>
 <p>
 This routine will attempt to construct the coarsest level in an AMR patch hierarchy (i.e., level 0). If level 0 does not already exist, then the domain specification is checked against the constraints of the grid generation procedures. The level gridding strategy data member defines these constraints. Recall that the domain specification is maintained by the grid geometry object associated with the hierarchy. Generally, an unrecoverable exception will result if the constraints are not satisfied.<p>
 If level 0 already exists in the hierarchy, then the routine will generate a new level by re-applying the load balancing procedure to the existing level. Data will be moved from the old level to the new level and the pre-existing level 0 will be discarded. Note that this routine is different than the routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0731d3541c79f65abe798e9e5b70767b">makeFinerLevel()</a> below, which is used to construct levels 1 and finer. In particular, this routine does not select cells for refinement, whereas the other routine does.<p>
-Important note: If assertion checking is turned on, then an unrecoverable assertion will result if either the patch hierarchy or its grid geometry is NULL. 
+Important note: If assertion checking is turned on, then an unrecoverable assertion will result if either the patch hierarchy or its grid geometry is NULL.<p>
+The two optional arguments are only to be used for a special case where the user wishes to manually specify a box decomposition and load balance for the coarsest level of the hierarchy. The BoxArray argument must be a decomposition of the the coarsest level, and must exactly fill the index space of the physical domain of the hierarchy. The ProcessorMapping must be constructed to map each box in the BoxArray to a processor. The size of the mapping must be equal to the length of the box array, or an assertion failure will result.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The hierarchy on which coarse level is constructed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_time</em>&nbsp;</td><td>Simulation time when level is constructed </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>override_boxes</em>&nbsp;</td><td>box array representing a decomposition of level zero of the hierarchy </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>override_mapping</em>&nbsp;</td><td>processor mapping that maps each box in the above array to a processor. </td></tr>
+  </table>
+</dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BaseGriddingAlgorithm.html#47310ff7abdd3eb3dc433894b16e6ca5">SAMRAI::mesh::BaseGriddingAlgorithm&lt; DIM &gt;</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BaseGriddingAlgorithm.html#38ea13b0d56ed4e0a80f37eb92957eff">SAMRAI::mesh::BaseGriddingAlgorithm&lt; DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="0731d3541c79f65abe798e9e5b70767b"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::makeFinerLevel" ref="0731d3541c79f65abe798e9e5b70767b" args="(tbox::Pointer&lt; hier::BasePatchHierarchy&lt; DIM &gt; &gt; hierarchy, const double level_time, const bool initial_time, const int tag_buffer, const double regrid_start_time=0.)" -->
@@ -341,7 +363,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-This routine attempts to create a new level in an AMR patch hierarchy finer than the finest level currently residing in the hierarchy. It will select cells for refinement on the finest level and construct a new finest level, if necessary. If no cells are selected for refinement, no new level will be added to the hierarchy. The boolean argument initial_time indicates whether the routine is called at the initial simulation time. If true, this routine is used to build individual levels during the construction of the AMR hierarchy at the initial simulation time. If false, the routine is being used to add new levels to the hierarchy at some later point. In either case, the time value is the current simulation time. Note that this routine cannot be used to construct the coarsest level in the hierarchy (i.e., level 0). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#def3a00f47df15a5de5d75dea16db05a">makeCoarsestLevel()</a> above must be used for that purpose.<p>
+This routine attempts to create a new level in an AMR patch hierarchy finer than the finest level currently residing in the hierarchy. It will select cells for refinement on the finest level and construct a new finest level, if necessary. If no cells are selected for refinement, no new level will be added to the hierarchy. The boolean argument initial_time indicates whether the routine is called at the initial simulation time. If true, this routine is used to build individual levels during the construction of the AMR hierarchy at the initial simulation time. If false, the routine is being used to add new levels to the hierarchy at some later point. In either case, the time value is the current simulation time. Note that this routine cannot be used to construct the coarsest level in the hierarchy (i.e., level 0). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#c6ac68fc94d09e89645bb976b41dbc70">makeCoarsestLevel()</a> above must be used for that purpose.<p>
 The tag buffer indicates the number of cells by which cells selected for refinement will be buffered before new finer level boxes are constructed. The buffer is important to keep phenomena of interest on refined regions of the mesh until adaptive regridding occurs next. Thus, the buffer size should take into account how the simulation may evolve before regridding occurs (<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#34cb3de4879ab966bef34a9678efd968">e.g</a>., number of timesteps taken).<p>
 Important note: If assertion checking is activated, several checks are applied to the functions arguments. If any check is violated, an unrecoverable assertion will result. In particular, the hierarchy pointer must be non-NULL and the given level number must match that of the finest level currently residing in the hierarchy. Also, the the tag buffer must be positive. 
 <p>
@@ -400,7 +422,7 @@ template&lt;int DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-This routine attempts to reconfigure the patches on each level in an AMR patch hierarchy which is finer than the specified level. The given level number is that of the coarsest level on which cells will be will be selected for refinement. In other words, that level is the finest level that will not be subject to a change in its patch configuration during the regridding process. Generally, this routine should be used to alter a pre-existing AMR patch hierarchy based on the need to adapt the computational mesh around some phenomenon of interest. The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0731d3541c79f65abe798e9e5b70767b">makeFinerLevel()</a> above should be used to construct an initial hierarchy configuration or to add more than one new level into the hierarchy. Also, this routine will not reconfigure the patches on level 0 (i.e., the coarsest in any hierarchy). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#def3a00f47df15a5de5d75dea16db05a">makeCoarsestLevel()</a> above is provided for that purpose.<p>
+This routine attempts to reconfigure the patches on each level in an AMR patch hierarchy which is finer than the specified level. The given level number is that of the coarsest level on which cells will be will be selected for refinement. In other words, that level is the finest level that will not be subject to a change in its patch configuration during the regridding process. Generally, this routine should be used to alter a pre-existing AMR patch hierarchy based on the need to adapt the computational mesh around some phenomenon of interest. The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0731d3541c79f65abe798e9e5b70767b">makeFinerLevel()</a> above should be used to construct an initial hierarchy configuration or to add more than one new level into the hierarchy. Also, this routine will not reconfigure the patches on level 0 (i.e., the coarsest in any hierarchy). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#c6ac68fc94d09e89645bb976b41dbc70">makeCoarsestLevel()</a> above is provided for that purpose.<p>
 Note that the current algorithm permits at most one new finest level to be added to the hierarchy with each invocation of the regridding process. This constraint, though seemingly restrictive makes the process of maintaining properly nested levels much easier.<p>
 The tag buffer array indicates the number of cells by which cells selected for refinement on a level will be buffered before new finer level boxes are constructed. The buffer is important to keep phenomena of interest on refined regions of the mesh until adaptive regridding occurs next. Thus, the buffer size should take into account how the simulation may evolve before regridding occurs (<a class="el" href="solv__cartesianrobinbchelper3d_8f.html#34cb3de4879ab966bef34a9678efd968">e.g</a>., number of timesteps taken on each level).<p>
 The boolean argument is used for regridding in time-dependent problems. When true, it indicates that the specified level is the coarsest level to synchronize at the current regrid time before this regridding method is called. This is a pretty idiosyncratic argument but allows some flexibility in the way memory is managed during time-dependent regridding operations.<p>
@@ -735,7 +757,7 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BaseGriddingAlgorithm.html
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mesh/gridding/<a class="el" href="GriddingAlgorithm_8h.html">GriddingAlgorithm.h</a><li>source/mesh/gridding/<a class="el" href="GriddingAlgorithm_8C.html">GriddingAlgorithm.C</a><li>source/mesh/gridding/<a class="el" href="GriddingAlgorithm_8I.html">GriddingAlgorithm.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:18 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:29 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -116,7 +116,8 @@ Inheritance diagram for SAMRAI::tbox::StatisticRestartDatabase:<p><center><img s
 <div class="memdoc">
 
 <p>
-This method serializes the object by writing data to the specified database. 
+This method serializes the object by writing data to the specified database.<p>
+NOTE: The asymetry (not having a "getFromDatabase") is from the historical method for doing <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> restart. The constructor for a <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a> class should get the database to restore state from by making a getRootDatabase call to the <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a>. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#d90b74ae3fd7af9a7bb9cbf7f3ebc08a">SAMRAI::tbox::Serializable</a>.
 </div>
@@ -158,7 +159,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#d90b74ae
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/toolbox/timers/<a class="el" href="Statistician_8h.html">Statistician.h</a><li>source/toolbox/timers/<a class="el" href="Statistician_8C.html">Statistician.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jan 24 08:14:43 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 5 16:03:55 2008 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

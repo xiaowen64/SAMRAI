@@ -1,5 +1,6 @@
 base referer
 rect $classSAMRAI_1_1tbox_1_1HDFDatabase.html 7,157 204,181
-rect $classSAMRAI_1_1tbox_1_1InputDatabase.html 228,157 428,181
-rect $classSAMRAI_1_1tbox_1_1NullDatabase.html 452,157 644,181
-rect $classtbox_1_1DescribedClass.html 271,8 386,32
+rect $classSAMRAI_1_1tbox_1_1MemoryDatabase.html 228,157 447,181
+rect $classSAMRAI_1_1tbox_1_1NullDatabase.html 471,157 663,181
+rect $classtbox_1_1DescribedClass.html 280,8 395,32
+rect $classSAMRAI_1_1tbox_1_1InputDatabase.html 237,232 437,256
