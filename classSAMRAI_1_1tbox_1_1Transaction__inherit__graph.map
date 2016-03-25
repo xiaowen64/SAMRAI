@@ -1,8 +1,0 @@
-base referer
-rect $classSAMRAI_1_1algs_1_1OuteredgeSumTransaction.html 400,7 717,31
-rect $classSAMRAI_1_1algs_1_1OuternodeSumTransaction.html 400,55 717,79
-rect $classSAMRAI_1_1tbox_1_1StatTransaction.html 456,103 661,127
-rect $classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html 405,151 712,175
-rect $classSAMRAI_1_1xfer_1_1RefineCopyTransaction.html 411,199 707,223
-rect $classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html 412,247 705,271
-rect $classtbox_1_1DescribedClass.html 7,127 121,151
