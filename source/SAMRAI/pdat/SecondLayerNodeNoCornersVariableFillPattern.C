@@ -7,10 +7,6 @@
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_pdat_SecondLayerNodeNoCornersVariableFillPattern_C
-#define included_pdat_SecondLayerNodeNoCornersVariableFillPattern_C
-
 #include "SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -79,26 +75,21 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
    hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_patch_box));
    hier::Box src_node_mask(NodeGeometry::toNodeBox(src_mask));
 
-   bool corner_overlap = ((dst_node_box * src_node_mask).size() == 1)
-      ? true : false;
+   hier::BoxContainer stencil_boxes;
+   computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   if (!corner_overlap) {
-      hier::BoxContainer stencil_boxes;
-      computeStencilBoxes(stencil_boxes, dst_patch_box);
+   const NodeGeometry* t_dst =
+      CPP_CAST<const NodeGeometry *>(&dst_geometry);
+   const NodeGeometry* t_src =
+      CPP_CAST<const NodeGeometry *>(&src_geometry);
 
-      const NodeGeometry* t_dst =
-         CPP_CAST<const NodeGeometry *>(&dst_geometry);
-      const NodeGeometry* t_src =
-         CPP_CAST<const NodeGeometry *>(&src_geometry);
+   TBOX_ASSERT(t_dst);
+   TBOX_ASSERT(t_src);
 
-      TBOX_ASSERT(t_dst);
-      TBOX_ASSERT(t_src);
+   t_dst->computeDestinationBoxes(dst_boxes, *t_src, src_mask, fill_box,
+      false, transformation);
 
-      t_dst->computeDestinationBoxes(dst_boxes, *t_src, src_mask, fill_box,
-         false, transformation);
-
-      dst_boxes.intersectBoxes(stencil_boxes);
-   }
+   dst_boxes.intersectBoxes(stencil_boxes);
 
    return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
@@ -175,6 +166,7 @@ SecondLayerNodeNoCornersVariableFillPattern::computeStencilBoxes(
 boost::shared_ptr<hier::BoxOverlap>
 SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
+   const hier::BoxContainer& node_fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
@@ -200,6 +192,7 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.intersectBoxes(NodeGeometry::toNodeBox(data_box));
 
    overlap_boxes.intersectBoxes(stencil_boxes);
+   overlap_boxes.intersectBoxes(node_fill_boxes);
 
    overlap_boxes.coalesce();
 
@@ -210,4 +203,3 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
-
-#ifndef included_solv_SNES_SAMRAIContext_C
-#define included_solv_SNES_SAMRAIContext_C
-
 #include "SAMRAI/solv/SNES_SAMRAIContext.h"
 
 #include "SAMRAI/solv/PETSc_SAMRAIVectorReal.h"
@@ -928,5 +924,4 @@ SNES_SAMRAIContext::printClassData(
 }
 }
 
-#endif
 #endif

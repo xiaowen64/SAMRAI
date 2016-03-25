@@ -7,10 +7,6 @@
  * Description:   Interface to user-defined operations used in FAC solve.
  *
  ************************************************************************/
-
-#ifndef included_solv_FACOperatorStrategy_C
-#define included_solv_FACOperatorStrategy_C
-
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 
 namespace SAMRAI {
@@ -31,4 +27,3 @@ FACOperatorStrategy::deallocateOperatorState()
 
 }
 }
-#endif

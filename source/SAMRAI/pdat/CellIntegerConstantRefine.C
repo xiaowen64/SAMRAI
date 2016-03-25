@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellIntegerConstantRefine_C
-#define included_pdat_CellIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -123,11 +119,11 @@ CellIntegerConstantRefine::refine(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<CellData<int> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellData<int>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<CellData<int> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellData<int>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -188,4 +184,3 @@ CellIntegerConstantRefine::refine(
 
 }
 }
-#endif

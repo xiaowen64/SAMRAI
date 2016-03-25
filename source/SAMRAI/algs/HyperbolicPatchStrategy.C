@@ -7,10 +7,6 @@
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
-
-#ifndef included_algs_HyperbolicPatchStrategy_C
-#define included_algs_HyperbolicPatchStrategy_C
-
 #include "SAMRAI/algs/HyperbolicPatchStrategy.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -128,4 +124,3 @@ HyperbolicPatchStrategy::postprocessAdvanceLevelState(
 
 }
 }
-#endif

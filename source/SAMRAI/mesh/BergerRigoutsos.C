@@ -7,9 +7,6 @@
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
-#ifndef included_mesh_BergerRigoutsos_C
-#define included_mesh_BergerRigoutsos_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
@@ -26,6 +23,9 @@
 namespace SAMRAI {
 namespace mesh {
 
+const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsos");
+std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
+char BergerRigoutsos::s_ignore_external_timer_prefix('n');
 
 /*
  ************************************************************************
@@ -43,8 +43,6 @@ BergerRigoutsos::BergerRigoutsos(
    d_tag_data_index(-1),
    d_tag_val(1),
    d_min_box(dim),
-   d_efficiency_tol(0.80),
-   d_combine_tol(0.80),
    d_tag_to_new_width(dim, 1),
 
    d_tag_level(),
@@ -63,6 +61,8 @@ BergerRigoutsos::BergerRigoutsos(
    d_compute_relationships(2),
    d_sort_output_nodes(false),
    d_build_zero_width_connector(false),
+   d_efficiency_tolerance(1, 0.8),
+   d_combine_efficiency(1, 0.8),
    d_relaunch_queue(),
    d_comm_stage(),
    d_min_box_size_from_cutting(dim, 0),
@@ -108,7 +108,7 @@ BergerRigoutsos::BergerRigoutsos(
 
 BergerRigoutsos::~BergerRigoutsos()
 {
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
@@ -123,6 +123,14 @@ BergerRigoutsos::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
+
+      s_ignore_external_timer_prefix =
+         input_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                      'n');
+      if (!(s_ignore_external_timer_prefix == 'n' ||
+            s_ignore_external_timer_prefix == 'y')) {
+         INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+      }
 
       if (input_db->isInteger("max_box_size")) {
          input_db->getIntegerArray("max_box_size",
@@ -168,6 +176,42 @@ BergerRigoutsos::getFromInput(
       d_sort_output_nodes =
          input_db->getBoolWithDefault("sort_output_nodes", false);
 
+      /*
+       * Read input for efficiency tolerance.
+       */
+
+      if (input_db->keyExists("efficiency_tolerance")) {
+         d_efficiency_tolerance =
+            input_db->getDoubleVector("efficiency_tolerance");
+
+         int efficiency_tolerance_size =
+            static_cast<int>(d_efficiency_tolerance.size());
+         for (int ln = 0; ln < efficiency_tolerance_size; ++ln) {
+            if (!((d_efficiency_tolerance[ln] > 0.0e0) &&
+                  (d_efficiency_tolerance[ln] < 1.0e0))) {
+               INPUT_RANGE_ERROR("efficiency_tolerance");
+            }
+         }
+      }
+
+      /*
+       * Read input for combine efficiency.
+       */
+
+      if (input_db->keyExists("combine_efficiency")) {
+         d_combine_efficiency =
+            input_db->getDoubleVector("combine_efficiency");
+
+         int combine_efficiency_size =
+            static_cast<int>(d_combine_efficiency.size());
+         for (int ln = 0; ln < combine_efficiency_size; ++ln) {
+            if (!((d_combine_efficiency[ln] > 0.0e0) &&
+                  (d_combine_efficiency[ln] < 1.0e0))) {
+               INPUT_RANGE_ERROR("combine_efficiency");
+            }
+         }
+      }
+
       std::string tmp_str;
 
       tmp_str =
@@ -209,8 +253,6 @@ BergerRigoutsos::findBoxesContainingTags(
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
    const hier::IntVector& min_box,
-   const double efficiency_tol,
-   const double combine_tol,
    const hier::IntVector& tag_to_new_width)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
@@ -272,8 +314,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_tag_data_index = tag_data_index;
    d_tag_val = tag_val;
    d_min_box = min_box;
-   d_efficiency_tol = efficiency_tol;
-   d_combine_tol = combine_tol;
+   d_level_number = tag_level->getLevelNumber();
 
    d_tag_to_new_width = d_build_zero_width_connector ?
       hier::IntVector::getZero(tag_to_new_width.getDim()) : tag_to_new_width;
@@ -887,7 +928,7 @@ BergerRigoutsos::useDuplicateMPI(
       TBOX_ASSERT( d_mpi.getCommunicator() == MPI_COMM_NULL );
    }
 
-   if (mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (mpi_object.getCommunicator() != MPI_COMM_NULL) {
       d_mpi.dupCommunicator(mpi_object);
    }
 
@@ -975,7 +1016,7 @@ BergerRigoutsos::setupMPIDependentData()
             &flag);
       }
       if (tag_upper_bound_ptr == 0) {
-         tbox::SAMRAI_MPI mpi1(tbox::SAMRAI_MPI::commWorld);
+         tbox::SAMRAI_MPI mpi1(MPI_COMM_WORLD);
          mpi1.Attr_get(
             MPI_TAG_UB,
             &tag_upper_bound_ptr,
@@ -1038,7 +1079,7 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
        d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
@@ -1075,14 +1116,21 @@ void
 BergerRigoutsos::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix == 'y') {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
 
    if (ti != s_static_timers.end()) {
       d_object_timers = &(ti->second);
    } else {
 
-      d_object_timers = &s_static_timers[timer_prefix];
+      d_object_timers = &s_static_timers[timer_prefix_used];
 
       tbox::TimerManager *tm = tbox::TimerManager::getManager();
 
@@ -1090,46 +1138,46 @@ BergerRigoutsos::setTimerPrefix(
          getTimer("mesh::BergerRigoutsos::findBoxesContainingTags()");
 
       d_object_timers->t_cluster = tm->
-         getTimer(timer_prefix + "::cluster");
+         getTimer(timer_prefix_used + "::cluster");
       d_object_timers->t_cluster_and_compute_relationships = tm->
-         getTimer(timer_prefix + "::clusterAndComputeRelationships()");
+         getTimer(timer_prefix_used + "::clusterAndComputeRelationships()");
       d_object_timers->t_continue_algorithm = tm->
-         getTimer(timer_prefix + "::continueAlgorithm()");
+         getTimer(timer_prefix_used + "::continueAlgorithm()");
 
       d_object_timers->t_compute = tm->
-         getTimer(timer_prefix + "::compute");
+         getTimer(timer_prefix_used + "::compute");
       d_object_timers->t_comm_wait = tm->
-         getTimer(timer_prefix + "::Comm_wait");
+         getTimer(timer_prefix_used + "::Comm_wait");
       d_object_timers->t_MPI_wait = tm->
-         getTimer(timer_prefix + "::MPI_wait");
+         getTimer(timer_prefix_used + "::MPI_wait");
 
       d_object_timers->t_compute_new_neighborhood_sets = tm->
-         getTimer(timer_prefix + "::computeNewNeighborhoodSets()");
+         getTimer(timer_prefix_used + "::computeNewNeighborhoodSets()");
       d_object_timers->t_share_new_relationships = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()");
       d_object_timers->t_share_new_relationships_send = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_send");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()_send");
       d_object_timers->t_share_new_relationships_recv = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_recv");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()_recv");
       d_object_timers->t_share_new_relationships_unpack = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_unpack");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()_unpack");
 
       d_object_timers->t_local_histogram = tm->
-         getTimer(timer_prefix + "::makeLocalTagHistogram()");
+         getTimer(timer_prefix_used + "::makeLocalTagHistogram()");
       d_object_timers->t_local_tasks = tm->
-         getTimer(timer_prefix + "::continueAlgorithm()_local_tasks");
+         getTimer(timer_prefix_used + "::continueAlgorithm()_local_tasks");
 
       // Multi-stage timers
       d_object_timers->t_reduce_histogram = tm->
-         getTimer(timer_prefix + "::reduce_histogram");
+         getTimer(timer_prefix_used + "::reduce_histogram");
       d_object_timers->t_bcast_acceptability = tm->
-         getTimer(timer_prefix + "::bcast_acceptability");
+         getTimer(timer_prefix_used + "::bcast_acceptability");
       d_object_timers->t_gather_grouping_criteria = tm->
-         getTimer(timer_prefix + "::gather_grouping_criteria");
+         getTimer(timer_prefix_used + "::gather_grouping_criteria");
       d_object_timers->t_bcast_child_groups = tm->
-         getTimer(timer_prefix + "::bcast_child_groups");
+         getTimer(timer_prefix_used + "::bcast_child_groups");
       d_object_timers->t_bcast_to_dropouts = tm->
-         getTimer(timer_prefix + "::bcast_to_dropouts");
+         getTimer(timer_prefix_used + "::bcast_to_dropouts");
 
       // Pre- and post-processing timers.
       d_object_timers->t_barrier_before = tm->
@@ -1150,4 +1198,3 @@ BergerRigoutsos::setTimerPrefix(
 
 }
 }
-#endif

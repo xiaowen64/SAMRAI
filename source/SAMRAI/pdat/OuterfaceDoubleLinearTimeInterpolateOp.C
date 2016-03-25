@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for double outerface patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceDoubleLinearTimeInterpolateOp_C
-#define included_pdat_OuterfaceDoubleLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/pdat/OuterfaceData.h"
@@ -257,4 +253,3 @@ OuterfaceDoubleLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

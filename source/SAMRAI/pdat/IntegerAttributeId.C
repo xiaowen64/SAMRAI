@@ -6,9 +6,6 @@
 * Copyright:     (c) 1997 - 2011 Lawrence Livermore National Security, LLC
 * Description:   pdat
 **********************************************************************/
-#ifndef included_pdat_IntegerAttributeId_C
-#define included_pdat_IntegerAttributeId_C
-
 #include "SAMRAI/pdat/IntegerAttributeId.h"
 
 namespace SAMRAI {
@@ -49,4 +46,3 @@ IntegerAttributeId::~IntegerAttributeId()
 
 }
 }
-#endif

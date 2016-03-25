@@ -16,6 +16,8 @@
 Main {
    dim = 3
 
+   base_name = "test.3d.1blk"
+
    log_file_name    = "newtest.log"
    log_all_nodes    = TRUE
 
@@ -171,7 +173,8 @@ MblkLinAdv {
 TimerManager {
    timer_list               = "apps::*::*",
                               "algs::*::*",
-                              "mesh::*::*"
+                              "mesh::*::*",
+                              "appu::main::all"
 //   print_exclusive      = TRUE
    print_summed           = TRUE
    print_max              = TRUE
@@ -204,12 +207,16 @@ PatchHierarchy {
    }
 }
 
-GriddingAlgorithm{
-   sequentialize_patch_indices = TRUE
 
+BergerRigoutsos {
    efficiency_tolerance    = 0.85e0   // min % of tag cells in new patch level
    combine_efficiency      = 0.95e0   // chop box if sum of volumes of smaller
                                       // boxes < efficiency * vol of large box
+}
+
+
+GriddingAlgorithm{
+   sequentialize_patch_indices = TRUE
 }
 
 

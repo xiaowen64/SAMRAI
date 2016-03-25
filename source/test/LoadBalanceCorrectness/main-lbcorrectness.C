@@ -195,8 +195,6 @@ int main(
    SAMRAIManager::startup();
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   const int rank = mpi.getRank();
-
    /*
     * Process command line arguments.  For each run, the input
     * filename must be specified.  Usage is:
@@ -406,9 +404,6 @@ int main(
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
          createBoxGenerator( input_db, box_generator_type, dim );
 
-      double efficiency_tol = main_db->getDoubleWithDefault("efficiency_tol", 0.7);
-      double combine_tol = main_db->getDoubleWithDefault("combine_tol", 0.7);
-
       /*
        * Create hierarchy.
        */
@@ -485,8 +480,15 @@ int main(
 
       const std::string baseline_dirname = main_db->getStringWithDefault("baseline_dirname",
             "test_inputs");
-      const std::string baseline_filename = baseline_dirname + "/" + base_name + ".baselinedb."
+      std::string baseline_filename = baseline_dirname;
+
+#if defined(__xlC__)
+      baseline_filename = baseline_filename + "/xlC/" + base_name + ".baselinedb."
          + tbox::Utilities::processorToString(mpi.getRank());
+#else
+      baseline_filename = baseline_filename + "/" + base_name + ".baselinedb."
+         + tbox::Utilities::processorToString(mpi.getRank());
+#endif
       tbox::HDFDatabase basline_db(baseline_filename);
 
       /*
@@ -515,15 +517,25 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-
-
+      bool do_test = true;
+#ifndef HAVE_PTSCOTCH
+      /*
+       * Skip GraphLoadBalancer test if PT-Scotch is not available.
+       */ 
+      if (load_balancer_type == "TilePartitioner") {
+         std::string graphstr = "graph";
+         if (base_name.find(graphstr) != std::string::npos) { 
+            do_test = false;
+         }
+      }
+#endif
       /*
        * Step 1: Build L0.
        */
       tbox::pout << "\n==================== Generating L0 ====================" << std::endl;
 
 
-      {
+      if (do_test) {
 
          hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
 
@@ -677,8 +689,6 @@ int main(
          hierarchy->makeNewPatchLevel(0, L0);
       }
 
-      const hier::BoxLevel &L0 = *hierarchy->getPatchLevel(0)->getBoxLevel();
-
 
 
       hier::Connector * L1_to_L0;
@@ -687,7 +697,10 @@ int main(
 
 
 
-      if ( max_levels > 1 ) {
+      if ( do_test && max_levels > 1 ) {
+
+         const hier::BoxLevel &L0 = *hierarchy->getPatchLevel(0)->getBoxLevel();
+
          /*
           * Step 2: Build L1.
           */
@@ -727,8 +740,6 @@ int main(
             1 /* tag_val */,
             hier::BoxContainer(L0.getGlobalBoundingBox(0)),
             min_size,
-            exact_tagging ? 1.0 : efficiency_tol,
-            exact_tagging ? 1.0 : combine_tol,
             required_connector_width);
          L0_to_L1->assertOverlapCorrectness();
          L1_to_L0 = &L0_to_L1->getTranspose();
@@ -879,7 +890,7 @@ int main(
       boost::shared_ptr<hier::Connector> L1_to_L2;
       boost::shared_ptr<hier::Connector> L2_to_L2;
 
-      if ( max_levels > 2 ) {
+      if ( do_test && max_levels > 2 ) {
          /*
           * Step 3: Build L2.
           */
@@ -921,8 +932,6 @@ int main(
             1 /* tag_val */,
             hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
-            exact_tagging ? 1.0 : efficiency_tol,
-            exact_tagging ? 1.0 : combine_tol,
             required_connector_width);
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );
@@ -1084,7 +1093,7 @@ int main(
 
       bool write_visit =
          main_db->getBoolWithDefault("write_visit", false);
-      if ( write_visit ) {
+      if ( do_test && write_visit ) {
 #ifdef HAVE_HDF5
 
          if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
@@ -1138,15 +1147,7 @@ int main(
     */
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
-
-   if (error_count == 0) {
-      SAMRAI_MPI::finalize();
-   } else {
-      std::cout << "Process " << std::setw(5) << rank << " aborting."
-                << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
+   SAMRAI_MPI::finalize();
 
    return error_count;
 }
@@ -1555,7 +1556,7 @@ void enforceNesting(
 
    const hier::BoxLevel &L0 = L1_to_L0.getHead();
 
-   const int cell_count = L1.getGlobalNumberOfCells();
+   const long int cell_count = L1.getGlobalNumberOfCells();
 
    /*
     * Make L1 nest inside L0 by nesting_width.

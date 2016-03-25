@@ -8,9 +8,6 @@
  *                box graph.
  *
  ************************************************************************/
-#ifndef included_hier_Connector_C
-#define included_hier_Connector_C
-
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -67,7 +64,7 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
@@ -94,7 +91,7 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
@@ -182,7 +179,7 @@ Connector::~Connector()
  ***********************************************************************
  ***********************************************************************
  */
-const Connector&
+Connector&
 Connector::operator = (
    const Connector& rhs)
 {
@@ -1412,7 +1409,9 @@ Connector::checkTransposeCorrectness(
    }
 
    int global_err_count = static_cast<int>(err_count);
-   getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   if ( getMPI().getSize() > 1 ) {
+      getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   }
 
    return static_cast<size_t>(global_err_count);
 }
@@ -1722,7 +1721,6 @@ Connector::assertOverlapCorrectness(
       rank_of_max = recv.rank;
    }
    if (max_error_count > 0) {
-      std::string dbgbord;
       TBOX_ERROR(
          "Connector::assertOverlapCorrectness found missing and/or extra overlaps."
          << "Error in connector, " << local_error_count
@@ -2162,6 +2160,4 @@ Connector::findOverlaps_rbbt(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

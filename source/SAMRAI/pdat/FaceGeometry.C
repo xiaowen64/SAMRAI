@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceGeometry_C
-#define included_pdat_FaceGeometry_C
-
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/pdat/FaceIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -126,7 +122,7 @@ FaceGeometry::toFaceBox(
 /*
  *************************************************************************
  *
- * Compute the boxes that will be used to contstruct an overlap object
+ * Compute the boxes that will be used to construct an overlap object
  *
  *************************************************************************
  */
@@ -655,4 +651,3 @@ FaceGeometry::end(
 
 }
 }
-#endif

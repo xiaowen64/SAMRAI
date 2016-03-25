@@ -7,10 +7,6 @@
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
-
-#ifndef included_hier_IntVector_C
-#define included_hier_IntVector_C
-
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -181,9 +177,6 @@ IntVector::initializeCallback()
 {
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
-   }
-
-   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }
@@ -199,5 +192,3 @@ IntVector::finalizeCallback()
 
 }
 }
-
-#endif

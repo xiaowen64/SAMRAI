@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeGeometry_C
-#define included_pdat_EdgeGeometry_C
-
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeIterator.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
@@ -93,7 +89,7 @@ EdgeGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the boxes that will be used to contstruct an overlap object
+ * Compute the boxes that will be used to construct an overlap object
  *
  *************************************************************************
  */
@@ -643,4 +639,3 @@ EdgeGeometry::end(
 
 }
 }
-#endif

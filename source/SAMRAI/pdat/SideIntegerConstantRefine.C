@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideIntegerConstantRefine_C
-#define included_pdat_SideIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/SideIntegerConstantRefine.h"
 
 #include <float.h>
@@ -128,11 +124,11 @@ SideIntegerConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<SideData<int> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<SideData<int>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<SideData<int> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<SideData<int>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&fine_overlap);
 
@@ -260,4 +256,3 @@ SideIntegerConstantRefine::refine(
 
 }
 }
-#endif

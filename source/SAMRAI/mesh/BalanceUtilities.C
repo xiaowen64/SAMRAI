@@ -7,10 +7,6 @@
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
-
-#ifndef included_mesh_BalanceUtilities_C
-#define included_mesh_BalanceUtilities_C
-
 #include "SAMRAI/mesh/BalanceUtilities.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -942,8 +938,8 @@ BalanceUtilities::computeNonUniformWorkload(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*patch, box);
 
    const boost::shared_ptr<pdat::CellData<double> > work_data(
-      patch->getPatchData(wrk_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch->getPatchData(wrk_indx)));
 
    TBOX_ASSERT(work_data);
 
@@ -1718,8 +1714,8 @@ BalanceUtilities::computeLoadBalanceEfficiency(
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > weight(
-            patch->getPatchData(workload_data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(workload_data_id)));
 
          TBOX_ASSERT(weight);
 
@@ -1969,6 +1965,4 @@ BalanceUtilities::qsortRankAndLoadCompareAscending(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

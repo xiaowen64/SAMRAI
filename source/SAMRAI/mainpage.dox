@@ -23,7 +23,7 @@
   to samrai@llnl.gov.
 
   The SAMRAI framework source code is partitioned into a number of software 
-  ``packages".  Each package contains a collection of classes that are 
+  "packages".  Each package contains a collection of classes that are 
   logically-related with respect to the role they play in structured 
   AMR applications.  Organizing the SAMRAI library in this fashion aids in 
   understanding the overall software design and helps to maintain the integrity 

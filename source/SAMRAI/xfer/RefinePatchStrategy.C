@@ -7,10 +7,6 @@
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefinePatchStrategy_C
-#define included_xfer_RefinePatchStrategy_C
-
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
@@ -61,4 +57,3 @@ RefinePatchStrategy::getMaxRefineOpStencilWidth(
 
 }
 }
-#endif

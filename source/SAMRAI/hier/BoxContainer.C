@@ -7,10 +7,6 @@
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxContainer_C
-#define included_hier_BoxContainer_C
-
 #include "SAMRAI/hier/BoxContainer.h"
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
@@ -190,7 +186,7 @@ bool
 BoxContainer::operator == (
    const BoxContainer& rhs) const
 {
-   bool isEqual = (d_ordered && rhs.d_ordered); 
+   bool isEqual = (d_ordered == rhs.d_ordered); 
    if (isEqual) {
       isEqual = size() == rhs.size();
    }
@@ -1960,6 +1956,11 @@ BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
    }
 }
 
+BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator():
+   d_ordered(false)
+{
+}
+
 BoxContainer::BoxContainerConstIterator::~BoxContainerConstIterator()
 {
 }
@@ -1973,6 +1974,4 @@ BoxContainer::BoxContainerConstIterator::~BoxContainerConstIterator()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -74,6 +74,8 @@ BergerRigoutsos {
   DEV_owner_mode = "MOST_OVERLAP"
   // DEV_owner_mode = "SINGLE_OWNER"
   max_box_size = 40, 40
+  efficiency_tolerance = 0.70
+  combine_efficiency = 0.95
 }
 
 // Refer to mesh::TreeLoadBalancer for input.
@@ -116,8 +118,6 @@ GriddingAlgorithm {
    enforce_proper_nesting = TRUE
    DEV_extend_to_domain_boundary = FALSE
    // DEV_load_balance = FALSE
-   efficiency_tolerance = 0.70
-   combine_efficiency = 0.95
    check_nonrefined_tags = "IGNORE"
    sequentialize_patch_indices = TRUE
 }

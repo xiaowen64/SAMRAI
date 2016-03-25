@@ -31,6 +31,7 @@ namespace tbox {
  ***********************************************************************
  */
 CommGraphWriter::CommGraphWriter()
+   : d_root_rank(0)
 {
 }
 
@@ -52,14 +53,12 @@ CommGraphWriter::~CommGraphWriter()
  */
 size_t CommGraphWriter::addRecord(
    const SAMRAI_MPI &mpi,
-   int root_rank,
    size_t number_of_edges,
    size_t number_of_node_values )
 {
    d_records.resize( 1 + d_records.size() );
    Record &record = d_records.back();
    record.d_mpi = mpi;
-   record.d_root_rank = root_rank;
    record.d_edges.resize(number_of_edges);
    record.d_node_values.resize(number_of_node_values);
    return (d_records.size() - 1);
@@ -122,7 +121,7 @@ void CommGraphWriter::writeGraphToTextStream(
    std::ostream &os ) const
 {
    /*
-    * Gather graph data on root_rank and write out.
+    * Gather graph data on d_root_rank and write out.
     */
    TBOX_ASSERT( record_number < d_records.size() );
 
@@ -139,7 +138,7 @@ void CommGraphWriter::writeGraphToTextStream(
       ostr << edge.d_value << edge.d_dir << edge.d_other_node;
    }
 
-   std::vector<char> tmpbuf( record.d_mpi.getRank() == record.d_root_rank ?
+   std::vector<char> tmpbuf( record.d_mpi.getRank() == d_root_rank ?
       ostr.getCurrentSize()*record.d_mpi.getSize() : 0 );
 
    if ( ostr.getCurrentSize() > 0 ) {
@@ -147,16 +146,16 @@ void CommGraphWriter::writeGraphToTextStream(
          (void*)ostr.getBufferStart(),
          int(ostr.getCurrentSize()),
          MPI_CHAR,
-         (record.d_mpi.getRank() == record.d_root_rank ? &tmpbuf[0] : NULL),
-         int(record.d_mpi.getRank() == record.d_root_rank ? ostr.getCurrentSize() : 0),
+         (record.d_mpi.getRank() == d_root_rank ? &tmpbuf[0] : NULL),
+         int(record.d_mpi.getRank() == d_root_rank ? ostr.getCurrentSize() : 0),
          MPI_CHAR,
-         record.d_root_rank );
+         d_root_rank );
    }
 
    os.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
    os.precision(8);
 
-   if ( record.d_mpi.getRank() == record.d_root_rank ) {
+   if ( record.d_mpi.getRank() == d_root_rank ) {
 
       os << "\nCommGraphWriter begin record number " << record_number << '\n';
       os << "# proc" << '\t' << "dir" << '\t' << "remote" << '\t' << "value" << '\t' << "label\n";

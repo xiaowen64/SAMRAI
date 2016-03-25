@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for node-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeComplexLinearTimeInterpolateOp_C
-#define included_pdat_NodeComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/NodeComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -182,4 +178,3 @@ NodeComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchGeometry_C
-#define included_hier_PatchGeometry_C
-
 #include "SAMRAI/hier/PatchGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
@@ -153,10 +149,11 @@ PatchGeometry::setCodimensionBoundaries(
    TBOX_ASSERT(codim <= d_dim.getValue());
    TBOX_ASSERT(codim > 0);
 
-   d_patch_boundaries[codim - 1].resize(bdry_boxes.size(), BoundaryBox(d_dim));
+   d_patch_boundaries[codim - 1].clear();
+   d_patch_boundaries[codim - 1].reserve(bdry_boxes.size());
 
    for (int b = 0; b < static_cast<int>(bdry_boxes.size()); b++) {
-      d_patch_boundaries[codim - 1][b] = bdry_boxes[b];
+      d_patch_boundaries[codim - 1].push_back(bdry_boxes[b]);
    }
 }
 
@@ -215,6 +212,4 @@ PatchGeometry::TwoDimBool::TwoDimBool(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

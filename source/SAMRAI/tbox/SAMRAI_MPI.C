@@ -50,12 +50,12 @@ int MPICHX_PARALLELSOCKETS_PARAMETERS;
 namespace SAMRAI {
 namespace tbox {
 
-SAMRAI_MPI::Comm SAMRAI_MPI::commWorld = MPI_COMM_NULL;
-SAMRAI_MPI::Comm SAMRAI_MPI::commNull = MPI_COMM_NULL;
+const SAMRAI_MPI::Comm SAMRAI_MPI::commWorld = MPI_COMM_WORLD;
+const SAMRAI_MPI::Comm SAMRAI_MPI::commNull = MPI_COMM_NULL;
 
 bool SAMRAI_MPI::s_mpi_is_initialized = false;
 bool SAMRAI_MPI::s_we_started_mpi(false);
-SAMRAI_MPI SAMRAI_MPI::s_samrai_world(SAMRAI_MPI::commNull);
+SAMRAI_MPI SAMRAI_MPI::s_samrai_world(MPI_COMM_NULL);
 
 bool SAMRAI_MPI::s_call_abort_in_serial_instead_of_exit = false;
 bool SAMRAI_MPI::s_call_abort_in_parallel_instead_of_mpiabort = false;
@@ -140,17 +140,17 @@ SAMRAI_MPI::init(
    s_mpi_is_initialized = true;
    s_we_started_mpi = true;
 
-   MPI_Comm_dup(MPI_COMM_WORLD, &s_samrai_world.d_comm);
-   MPI_Comm_rank(s_samrai_world.d_comm, &s_samrai_world.d_rank);
-   MPI_Comm_size(s_samrai_world.d_comm, &s_samrai_world.d_size);
+   Comm dup_comm;
+   MPI_Comm_dup(MPI_COMM_WORLD, &dup_comm);
+   s_samrai_world.setCommunicator(dup_comm);
 
 #else
    NULL_USE(argc);
    NULL_USE(argv);
+   s_samrai_world.d_comm = MPI_COMM_WORLD;
+   s_samrai_world.d_size = 1;
+   s_samrai_world.d_rank = 0;
 #endif
-
-   commWorld = MPI_COMM_WORLD;
-   commNull = MPI_COMM_NULL;
 
    if (getenv("SAMRAI_ABORT_ON_ERROR")) {
       SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(true);
@@ -177,14 +177,12 @@ SAMRAI_MPI::init(
 
    s_mpi_is_initialized = true;
    s_we_started_mpi = false;
-   MPI_Comm_dup(comm, &s_samrai_world.d_comm);
-   MPI_Comm_rank(s_samrai_world.d_comm, &s_samrai_world.d_rank);
-   MPI_Comm_size(s_samrai_world.d_comm, &s_samrai_world.d_size);
+
+   Comm dup_comm;
+   MPI_Comm_dup(comm, &dup_comm);
+   s_samrai_world.setCommunicator(dup_comm);
 
 #endif
-
-   commWorld = MPI_COMM_WORLD;
-   commNull = MPI_COMM_NULL;
 
    if (getenv("SAMRAI_ABORT_ON_ERROR")) {
       SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(true);
@@ -202,9 +200,6 @@ SAMRAI_MPI::initMPIDisabled()
 {
    s_mpi_is_initialized = false;
    s_we_started_mpi = false;
-
-   commWorld = MPI_COMM_WORLD;
-   commNull = MPI_COMM_NULL;
 
    s_samrai_world.d_comm = MPI_COMM_WORLD;
    s_samrai_world.d_size = 1;
@@ -227,9 +222,10 @@ void
 SAMRAI_MPI::finalize()
 {
 #ifdef HAVE_MPI
-   // check if mpi is initialized before calling Comm_free
    if (s_mpi_is_initialized) {
       MPI_Comm_free(&s_samrai_world.d_comm);
+   } else {
+      s_samrai_world.d_comm = MPI_COMM_NULL;
    }
 
    if (s_we_started_mpi) {
@@ -251,6 +247,54 @@ SAMRAI_MPI::finalize()
  *
  *****************************************************************************
  */
+
+/*
+ *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Comm_rank(
+   Comm comm,
+   int* rank)
+{
+#ifndef HAVE_MPI
+   NULL_USE(comm);
+#endif
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Comm_rank is a no-op without run-time MPI!");
+   }
+   int rval = MPI_SUCCESS;
+#ifdef HAVE_MPI
+   rval = MPI_Comm_rank(comm, rank);
+#else
+   *rank = 0;
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Comm_size(
+   Comm comm,
+   int* size)
+{
+#ifndef HAVE_MPI
+   NULL_USE(comm);
+#endif
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Comm_size is a no-op without run-time MPI!");
+   }
+   int rval = MPI_SUCCESS;
+#ifdef HAVE_MPI
+   return MPI_Comm_size(comm, size);
+#else
+   *size = 1;
+#endif
+   return rval;
+}
 
 /*
  *****************************************************************************
@@ -1417,6 +1461,8 @@ SAMRAI_MPI::dupCommunicator(
    TBOX_ASSERT(d_size == r.d_size);
 #else
    NULL_USE(r);
+   d_rank = 0;
+   d_size = 1;
 #endif
 }
 

@@ -41,9 +41,6 @@ Main {
 
    autoscale_base_nprocs = 1
 
-   efficiency_tol = 0.80
-   combine_tol = 0.80
-
    mesh_generator_name = "SinusoidalFrontGenerator"
 
    SinusoidalFrontGenerator {
@@ -61,6 +58,8 @@ Main {
 BergerRigoutsos {
    DEV_inflection_cut_threshold_ar = 4
    sort_output_nodes = TRUE
+   efficiency_tolerance = 0.80
+   combine_efficiency = 0.80
    DEV_log_node_history = FALSE
    DEV_log_cluster_summary = FALSE
    DEV_log_cluster = FALSE
@@ -107,7 +106,7 @@ TimerManager {
    print_summed           = TRUE
    print_max              = TRUE
    print_threshold        = 0.
-   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*"
+   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*", "appu::main::all"
 }
 
 

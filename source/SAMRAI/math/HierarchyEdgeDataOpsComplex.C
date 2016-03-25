@@ -7,10 +7,6 @@
  * Description:   Operations for complex edge data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyEdgeDataOpsComplex_C
-#define included_math_HierarchyEdgeDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyEdgeDataOpsComplex.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -138,11 +134,11 @@ HierarchyEdgeDataOpsComplex::copyData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s);
@@ -161,12 +157,12 @@ HierarchyEdgeDataOpsComplex::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > d1fact(
-      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > d2fact(
-      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -214,8 +210,8 @@ HierarchyEdgeDataOpsComplex::printData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -245,8 +241,8 @@ HierarchyEdgeDataOpsComplex::setToScalar(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -285,11 +281,11 @@ HierarchyEdgeDataOpsComplex::scale(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > dst(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -321,11 +317,11 @@ HierarchyEdgeDataOpsComplex::addScalar(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > dst(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -357,14 +353,14 @@ HierarchyEdgeDataOpsComplex::add(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -397,14 +393,14 @@ HierarchyEdgeDataOpsComplex::subtract(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -437,14 +433,14 @@ HierarchyEdgeDataOpsComplex::multiply(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -477,14 +473,14 @@ HierarchyEdgeDataOpsComplex::divide(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -516,11 +512,11 @@ HierarchyEdgeDataOpsComplex::reciprocal(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(src);
@@ -554,14 +550,14 @@ HierarchyEdgeDataOpsComplex::linearSum(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -595,14 +591,14 @@ HierarchyEdgeDataOpsComplex::axpy(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -636,14 +632,14 @@ HierarchyEdgeDataOpsComplex::axmy(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -675,11 +671,11 @@ HierarchyEdgeDataOpsComplex::abs(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<double> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(src);
@@ -711,8 +707,8 @@ HierarchyEdgeDataOpsComplex::setRandomValues(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -749,8 +745,8 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
    if (interior_only) {
 
      boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > dfact(
-        d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-        BOOST_CAST_TAG);
+        BOOST_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+           d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
@@ -786,8 +782,8 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-               (*ip)->getPatchData(data_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+                  (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
 
@@ -829,11 +825,11 @@ HierarchyEdgeDataOpsComplex::sumControlVolumes(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            p->getPatchData(vol_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               p->getPatchData(vol_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(cv);
@@ -873,8 +869,8 @@ HierarchyEdgeDataOpsComplex::L1Norm(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d);
@@ -935,11 +931,11 @@ HierarchyEdgeDataOpsComplex::weightedL2Norm(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > w(
-            p->getPatchData(wgt_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(wgt_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d);
@@ -1020,8 +1016,8 @@ HierarchyEdgeDataOpsComplex::maxNorm(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d);
@@ -1071,11 +1067,11 @@ HierarchyEdgeDataOpsComplex::dot(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d1(
-            p->getPatchData(data1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data1_id)));
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d2(
-            p->getPatchData(data2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data2_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d1);
@@ -1136,11 +1132,11 @@ HierarchyEdgeDataOpsComplex::integral(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > data(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<pdat::EdgeData<double> > vol(
-            p->getPatchData(vol_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
@@ -1172,4 +1168,3 @@ HierarchyEdgeDataOpsComplex::integral(
 
 }
 }
-#endif

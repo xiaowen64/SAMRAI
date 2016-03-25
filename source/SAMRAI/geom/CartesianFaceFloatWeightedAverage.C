@@ -3,15 +3,11 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for face-centered float data on
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianFaceFloatWeightedAverage_C
-#define included_geom_CartesianFaceFloatWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianFaceFloatWeightedAverage.h"
 
 #include <float.h>
@@ -163,11 +159,11 @@ CartesianFaceFloatWeightedAverage::coarsen(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::FaceData<float> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<float>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<pdat::FaceData<float> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<float>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -178,11 +174,11 @@ CartesianFaceFloatWeightedAverage::coarsen(
    const hier::Index cihi = cdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
 
    TBOX_ASSERT(fgeom);
    TBOX_ASSERT(cgeom);
@@ -315,4 +311,3 @@ CartesianFaceFloatWeightedAverage::coarsen(
 
 }
 }
-#endif

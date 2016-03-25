@@ -338,8 +338,8 @@ void OutersideDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
@@ -404,8 +404,8 @@ void OutersideDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
@@ -501,8 +501,8 @@ bool OutersideDataTest::verifyResults(
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
-            patch.getPatchData(d_variables_dst[i], getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables_dst[i], getDataContext())));
          TBOX_ASSERT(side_data);
          int depth = side_data->getDepth();
          hier::Box dbox = side_data->getGhostBox();

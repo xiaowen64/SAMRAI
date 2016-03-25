@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex node-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchNodeDataNormOpsComplex_C
-#define included_math_PatchNodeDataNormOpsComplex_C
-
 #include "SAMRAI/math/PatchNodeDataNormOpsComplex.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 
@@ -183,4 +179,3 @@ PatchNodeDataNormOpsComplex::dot(
 
 }
 }
-#endif

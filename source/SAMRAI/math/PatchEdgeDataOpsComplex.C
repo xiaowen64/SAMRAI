@@ -7,10 +7,6 @@
  * Description:   Operations for complex edge-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchEdgeDataOpsComplex_C
-#define included_math_PatchEdgeDataOpsComplex_C
-
 #include "SAMRAI/math/PatchEdgeDataOpsComplex.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 
@@ -42,11 +38,11 @@ PatchEdgeDataOpsComplex::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::EdgeData<dcomplex> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::EdgeData<dcomplex> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -89,4 +85,3 @@ PatchEdgeDataOpsComplex::copyData(
 
 }
 }
-#endif

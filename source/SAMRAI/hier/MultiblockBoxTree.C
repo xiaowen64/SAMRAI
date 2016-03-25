@@ -7,10 +7,6 @@
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
-
-#ifndef included_hier_MultiblockBoxTree_C
-#define included_hier_MultiblockBoxTree_C
-
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -272,6 +268,4 @@ MultiblockBoxTree::findOverlapBoxes(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

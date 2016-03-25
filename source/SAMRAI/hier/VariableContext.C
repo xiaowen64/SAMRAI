@@ -7,10 +7,6 @@
  * Description:   Simple integer id and namestring variable context
  *
  ************************************************************************/
-
-#ifndef included_hier_VariableContext_C
-#define included_hier_VariableContext_C
-
 #include "SAMRAI/hier/VariableContext.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -46,5 +42,3 @@ VariableContext::~VariableContext()
 
 }
 }
-
-#endif

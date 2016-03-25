@@ -256,8 +256,8 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               patch->getPatchGeometry(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+                  patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double face_vol = dx[0];
@@ -265,8 +265,8 @@ int main(
               face_vol *= dx[i];
             }
             boost::shared_ptr<pdat::FaceData<double> > data(
-               patch->getPatchData(fwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim);
@@ -1131,8 +1131,8 @@ complexDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::FaceData<dcomplex> > fvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
          TBOX_ASSERT(fvdata);
          pdat::FaceIterator fend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
          for (pdat::FaceIterator f(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
@@ -1170,8 +1170,8 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::FaceData<double> > fvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(fvdata);
 

@@ -83,11 +83,8 @@ int main(
        * to avoid possible interference with other communications
        * by SAMRAI library.
        */
-      tbox::SAMRAI_MPI::Comm isolated_communicator(MPI_COMM_NULL);
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         tbox::SAMRAI_MPI::getSAMRAIWorld().Comm_dup(&isolated_communicator);
-      }
-      tbox::SAMRAI_MPI isolated_mpi(isolated_communicator);
+      tbox::SAMRAI_MPI isolated_mpi(MPI_COMM_NULL);
+      isolated_mpi.dupCommunicator(SAMRAI_MPI::getSAMRAIWorld());
       plog << "Process " << std::setw(5) << rank
            << " duplicated Communicator." << std::endl;
 
@@ -619,10 +616,6 @@ int main(
 
       TimerManager::getManager()->print(plog);
 
-#if defined(HAVE_MPI)
-      MPI_Comm_free(&isolated_communicator);
-#endif
-
    }
 
    if (fail_count == 0) {
@@ -631,15 +624,7 @@ int main(
 
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
+   SAMRAI_MPI::finalize();
 
-   if (fail_count == 0) {
-      SAMRAI_MPI::finalize();
-   } else {
-      plog << "Process " << std::setw(5) << rank << " aborting." << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
-
-   plog << "Process " << std::setw(5) << rank << " exiting." << std::endl;
    return fail_count;
 }

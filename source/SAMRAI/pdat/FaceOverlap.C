@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceOverlap_C
-#define included_pdat_FaceOverlap_C
-
 #include "SAMRAI/pdat/FaceOverlap.h"
 
 #include "SAMRAI/pdat/FaceGeometry.h"
@@ -114,4 +110,3 @@ FaceOverlap::getTransformation() const
 
 }
 }
-#endif

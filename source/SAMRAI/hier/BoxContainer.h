@@ -276,8 +276,8 @@ public:
       }
 
    private:
-      /*
-       * Default constructor just to be clear that there is none.
+      /*!
+       * @brief Default constructor is defined but accessible only by friends.
        */
       BoxContainerConstIterator();
 

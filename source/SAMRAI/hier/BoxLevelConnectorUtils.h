@@ -40,6 +40,11 @@ public:
    BoxLevelConnectorUtils();
 
    /*!
+    * @brief Destructor.
+    */
+   ~BoxLevelConnectorUtils();
+
+   /*!
     * @brief Set whether to run expensive sanity checks on input parameters.
     *
     * Mainly for debugging.
@@ -304,6 +309,29 @@ public:
       d_object_timers->t_compute_internal_parts->stop();
    }
 
+   /*!
+    * @brief Compute parts of a level that do not intersect with another
+    *        level
+    *
+    * Given the Connector input_to_takeaway, this method computes the parts
+    * of the base level 'input' that do not intersect the head level
+    * 'takeaway'.  The results are stored in the BoxLevel 'remainder',
+    * with the input_to_remainder Connector storing the overlap
+    * relationships between 'input' and 'remainder'.
+    *
+    * @param[out] remainder  The non-intersecting parts of input level
+    * @param[out] input_to_remainder  Overlap connector with width zero
+    * @param[in] input_to_takeaway    Overlap connector, may have any width 
+    *
+    * @pre  input_to_takeaway is a complete overlap connector
+    * @post input_to_remainder.isLocal()
+    */
+   void
+   computeNonIntersectingParts(
+      boost::shared_ptr<BoxLevel>& remainder,
+      boost::shared_ptr<Connector>& input_to_remainder,
+      const Connector& input_to_takeaway) const;
+
    //@}
 
    /*!
@@ -498,6 +526,15 @@ public:
    setTimerPrefix(
       const std::string& timer_prefix);
 
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "BoxLevelConnectorUtils";
+   }
+
 private:
    /*!
     * @brief Delegated work of computeInternalParts and computeExternalParts.
@@ -520,6 +557,20 @@ private:
    qsortBoxCompare(
       const void* v,
       const void* w);
+
+   /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
+    * @brief Set up things for the entire class.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   initializeCallback();
 
 
    //@{
@@ -554,6 +605,8 @@ private:
     */
    static std::map<std::string, TimerStruct> s_static_timers;
 
+   static char s_ignore_external_timer_prefix;
+
    /*!
     * @brief Structure of timers in s_static_timers, matching this
     * object's timer prefix.
@@ -574,6 +627,8 @@ private:
 
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
+ 
+   static tbox::StartupShutdownManager::Handler s_initialize_handler;
 
 };
 

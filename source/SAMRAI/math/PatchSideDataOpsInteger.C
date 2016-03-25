@@ -7,10 +7,6 @@
  * Description:   Operations for integer side-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchSideDataOpsInteger_C
-#define included_math_PatchSideDataOpsInteger_C
-
 #include "SAMRAI/math/PatchSideDataOpsInteger.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
@@ -71,11 +67,11 @@ void PatchSideDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::SideData<int> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::SideData<int> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -143,4 +139,3 @@ PatchSideDataOpsInteger::abs(
 
 }
 }
-#endif

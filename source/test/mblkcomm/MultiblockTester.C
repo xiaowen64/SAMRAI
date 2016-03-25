@@ -309,9 +309,10 @@ bool MultiblockTester::verifyCommunicationResults() const
       for (hier::PatchLevel::iterator mi(level->begin());
            mi != level->end(); ++mi) {
 
-         success = d_data_test_strategy->verifyResults(
+         bool level_success = d_data_test_strategy->verifyResults(
                **mi, d_patch_hierarchy, ln,
                mi->getBox().getBlockId());
+         success = level_success && success;
       }
 
    }
@@ -522,7 +523,8 @@ void MultiblockTester::setupHierarchy(
    TBOX_ASSERT(main_input_db);
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-      new mesh::BergerRigoutsos(d_dim));
+      new mesh::BergerRigoutsos(d_dim,
+                                main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(d_dim,

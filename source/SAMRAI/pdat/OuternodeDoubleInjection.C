@@ -8,10 +8,6 @@
  *                double data on a mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuternodeDoubleInjection_C
-#define included_pdat_OuternodeDoubleInjection_C
-
 #include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 
 #include "SAMRAI/pdat/OuternodeData.h"
@@ -128,11 +124,11 @@ OuternodeDoubleInjection::coarsen(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<OuternodeData<double> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OuternodeData<double>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<OuternodeData<double> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OuternodeData<double>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -239,5 +235,3 @@ OuternodeDoubleInjection::coarsen(
 
 }
 }
-
-#endif

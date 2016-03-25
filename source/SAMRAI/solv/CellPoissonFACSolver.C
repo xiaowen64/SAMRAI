@@ -7,9 +7,6 @@
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
-#ifndef included_solv_CellPoissonFACSolver_C
-#define included_solv_CellPoissonFACSolver_C
-
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -29,8 +26,8 @@ namespace solv {
  */
 
 bool CellPoissonFACSolver::s_initialized = 0;
-int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL];
-int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL];
+int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL] = {0};
+int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = {0};
 
 /*
  *************************************************************************
@@ -415,8 +412,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << u << "\n");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         variable,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_uv->addComponent(variable, u, s_weight_id[d_dim.getValue() - 1]);
@@ -434,8 +430,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << f << "\n");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         variable,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_fv->addComponent(variable, f, s_weight_id[d_dim.getValue() - 1]);
@@ -455,4 +450,3 @@ CellPoissonFACSolver::initializeStatics()
 
 }
 }
-#endif

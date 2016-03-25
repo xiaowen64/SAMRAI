@@ -7,10 +7,6 @@
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
-
-#ifndef included_geom_GridGeometry_C
-#define included_geom_GridGeometry_C
-
 #include "SAMRAI/geom/GridGeometry.h"
 
 #include "SAMRAI/pdat/NodeComplexInjection.h"
@@ -399,6 +395,4 @@ GridGeometry::buildOperators()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -320,7 +320,7 @@ public:
    /*!
     * @brief Get the global number of cells
     */
-   int
+   long int
    getGlobalNumberOfCells() const
    {
       return d_box_level->getGlobalNumberOfCells();
@@ -1385,17 +1385,16 @@ private:
    bool d_boundary_boxes_created;
 
    /*!
-    * @brief Has shutdown handler been initialized.
-    *
-    * This should be checked and set in every ctor.
-    */
-   static bool s_initialized;
-
-   /*!
     * @brief Initialize static state
     */
    static bool
    initialize();
+
+   static boost::shared_ptr<tbox::Timer> t_level_constructor;
+   static boost::shared_ptr<tbox::Timer> t_constructor_setup;
+   static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
+   static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
+   static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

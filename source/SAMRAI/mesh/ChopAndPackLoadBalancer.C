@@ -7,10 +7,6 @@
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
-
-#ifndef included_mesh_ChopAndPackLoadBalancer_C
-#define included_mesh_ChopAndPackLoadBalancer_C
-
 #define ChopAndPackLoadBalancer_MARKLOADFORPOSTPROCESSING
 
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
@@ -170,9 +166,9 @@ ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int level_number)
 {
    boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+         hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
+         getPatchDataFactory(data_id)));
    TBOX_ASSERT(datafact);
 
    if (level_number >= 0) {
@@ -1326,4 +1322,3 @@ ChopAndPackLoadBalancer::finalizeCallback()
 
 }
 }
-#endif

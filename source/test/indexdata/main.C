@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/pdat/CellData.C"
-#include "SAMRAI/pdat/CellGeometry.C"
 #include "SAMRAI/pdat/IndexData.h"
 #include "SAMRAI/pdat/IndexData.C"
 #include "SAMRAI/pdat/IndexDataFactory.h"

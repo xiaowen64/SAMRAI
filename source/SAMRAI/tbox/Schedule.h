@@ -244,9 +244,9 @@ public:
     * @param [in] flag
     */
    void setDeterministicUnpackOrderingFlag( bool flag )
-      {
-         d_unpack_in_deterministic_order = flag;
-      }
+   {
+      d_unpack_in_deterministic_order = flag;
+   }
 
    /*!
     * @brief Setup names of timers.
@@ -276,6 +276,15 @@ public:
    allocatedCommunicationObjects()
    {
       return d_coms != 0;
+   }
+
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "Schedule";
    }
 
 private:
@@ -318,15 +327,10 @@ private:
    }
 
    /*!
-    * Free static timers.
-    *
-    * Only called by StartupShutdownManager.
+    * @brief Read input data from input database and initialize class members.
     */
-   static void
-   finalizeCallback()
-   {
-      s_static_timers.clear();
-   }
+   void
+   getFromInput();
 
    /*
     * @brief Transactions in this schedule.
@@ -418,7 +422,6 @@ private:
       boost::shared_ptr<Timer> t_post_sends;
       boost::shared_ptr<Timer> t_process_incoming_messages;
       boost::shared_ptr<Timer> t_MPI_wait;
-      boost::shared_ptr<Timer> t_pack_stream;
       boost::shared_ptr<Timer> t_unpack_stream;
       boost::shared_ptr<Timer> t_local_copies;
    };
@@ -430,6 +433,8 @@ private:
     * @brief Static container of timers that have been looked up.
     */
    static std::map<std::string, TimerStruct> s_static_timers;
+
+   static char s_ignore_external_timer_prefix;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this

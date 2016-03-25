@@ -7,10 +7,6 @@
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenSchedule_C
-#define included_xfer_CoarsenSchedule_C
-
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -344,11 +340,11 @@ CoarsenSchedule::generateTemporaryLevel()
 
    const hier::IntVector min_gcw = getMaxGhostsToGrow();
    const hier::IntVector transpose_width =
-      Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->getRefinementRatio(),
+      hier::Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->getRefinementRatio(),
                                         d_fine_level->getBoxLevel()->getRefinementRatio(),
                                         min_gcw);
 
-   const Connector& coarse_to_fine =
+   const hier::Connector& coarse_to_fine =
       d_crse_level->findConnectorWithTranspose(*d_fine_level,
             transpose_width,
             min_gcw,
@@ -366,7 +362,7 @@ CoarsenSchedule::generateTemporaryLevel()
     * like the fine level patches.  The Connectors between coarse and
     * temp are very similar to those between coarse and fine.
     */
-   d_coarse_to_temp.reset(new Connector(coarse_to_fine));
+   d_coarse_to_temp.reset(new hier::Connector(coarse_to_fine));
    d_coarse_to_temp->setBase(*d_crse_level->getBoxLevel());
    d_coarse_to_temp->setHead(*d_temp_crse_level->getBoxLevel());
    d_coarse_to_temp->setWidth(coarse_to_fine.getConnectorWidth(), true);
@@ -379,7 +375,8 @@ CoarsenSchedule::generateTemporaryLevel()
     * neighborhoods.  Then initialize it with the proper base/head/width
     * keeping the neighborhoods that we just set.
     */
-   Connector* temp_to_coarse = new Connector(coarse_to_fine.getTranspose());
+   hier::Connector* temp_to_coarse =
+      new hier::Connector(coarse_to_fine.getTranspose());
    temp_to_coarse->setBase(*d_temp_crse_level->getBoxLevel());
    temp_to_coarse->setHead(coarse_to_fine.getBase());
    temp_to_coarse->setWidth(coarse_to_fine.getConnectorWidth(), true);
@@ -593,15 +590,15 @@ CoarsenSchedule::generateScheduleDLBG()
    /*
     * Construct receiving transactions for local dst boxes.
     */
-   const BoxLevel& coarse_box_level = *d_crse_level->getBoxLevel();
-   for (Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp->begin();
+   const hier::BoxLevel& coarse_box_level = *d_crse_level->getBoxLevel();
+   for (hier::Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp->begin();
         ei != d_coarse_to_temp->end(); ++ei) {
 
       const hier::BoxId& dst_gid = *ei;
       const hier::Box& dst_box =
          *coarse_box_level.getBoxStrict(dst_gid);
 
-      for (Connector::ConstNeighborIterator ni = d_coarse_to_temp->begin(ei);
+      for (hier::Connector::ConstNeighborIterator ni = d_coarse_to_temp->begin(ei);
            ni != d_coarse_to_temp->end(ei); ++ni) {
          const hier::Box& src_box = *ni;
 
@@ -636,13 +633,13 @@ CoarsenSchedule::generateScheduleDLBG()
 void
 CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
    FullNeighborhoodSet& full_inverted_edges,
-   const Connector& src_to_dst) const
+   const hier::Connector& src_to_dst) const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
-   const BoxLevel& src_box_level = src_to_dst.getBase();
+   const hier::BoxLevel& src_box_level = src_to_dst.getBase();
    const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
    const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
 
@@ -651,11 +648,11 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
     */
    hier::Box shifted_box(dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
-   for (Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
+   for (hier::Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
         ci != src_to_dst.end();
         ++ci) {
       const hier::Box& box = *src_box_level.getBoxStrict(*ci);
-      for (Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
+      for (hier::Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
            na != src_to_dst.end(ci); ++na) {
          const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
@@ -1256,5 +1253,3 @@ CoarsenSchedule::finalizeCallback()
 
 }
 }
-
-#endif

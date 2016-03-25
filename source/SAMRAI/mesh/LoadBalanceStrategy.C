@@ -7,10 +7,6 @@
  * Description:   Strategy interface for box load balancing routines.
  *
  ************************************************************************/
-
-#ifndef included_mesh_LoadBalanceStrategy_C
-#define included_mesh_LoadBalanceStrategy_C
-
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 
 #include <cstdlib>
@@ -75,6 +71,4 @@ LoadBalanceStrategy::markLoadForPostprocessing(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

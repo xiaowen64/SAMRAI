@@ -8,10 +8,6 @@
  *                double data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianEdgeDoubleConservativeLinearRefine_C
-#define included_geom_CartesianEdgeDoubleConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianEdgeDoubleConservativeLinearRefine.h"
 #include <float.h>
 #include <math.h>
@@ -144,11 +140,11 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
    boost::shared_ptr<pdat::EdgeData<double> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<pdat::EdgeData<double> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const pdat::EdgeOverlap* t_overlap =
       CPP_CAST<const pdat::EdgeOverlap *>(&fine_overlap);
@@ -167,11 +163,11 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    const hier::Index fihi = fdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
@@ -319,4 +315,3 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
 
 }
 }
-#endif

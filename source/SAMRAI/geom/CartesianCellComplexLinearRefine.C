@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianCellComplexLinearRefine_C
-#define included_geom_CartesianCellComplexLinearRefine_C
-
 #include "SAMRAI/geom/CartesianCellComplexLinearRefine.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -133,11 +129,11 @@ CartesianCellComplexLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
    boost::shared_ptr<pdat::CellData<dcomplex> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<pdat::CellData<dcomplex> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -151,11 +147,11 @@ CartesianCellComplexLinearRefine::refine(
    const hier::Index fihi = fdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
@@ -214,4 +210,3 @@ CartesianCellComplexLinearRefine::refine(
 
 }
 }
-#endif

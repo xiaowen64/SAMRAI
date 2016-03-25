@@ -7,10 +7,6 @@
  * Description:   Generic utilities for boundary box calculus.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoundaryBoxUtils_C
-#define included_hier_BoundaryBoxUtils_C
-
 #include "SAMRAI/hier/BoundaryBoxUtils.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -247,5 +243,3 @@ BoundaryBoxUtils::trimBoundaryBox(
 
 }
 }
-
-#endif

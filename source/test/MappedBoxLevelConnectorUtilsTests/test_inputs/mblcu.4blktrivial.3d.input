@@ -44,11 +44,6 @@ GridGeometry {
 
    Singularity0 {
       blocks = 0,1,2,3
-
-      sing_box_0 = [(15,10,0),(15,10,7)]
-      sing_box_1 = [(-1,10,0),(-1,10,7)]
-      sing_box_2 = [(15,-1,0),(15,-1,7)]
-      sing_box_3 = [(-1,-1,0),(-1,-1,7)]
    }
 
    BlockNeighbors0 {

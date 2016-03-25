@@ -22,6 +22,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
+#include "SAMRAI/hier/UncoveredBoxIterator.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -916,6 +917,28 @@ public:
    }
 
    /*!
+    * @brief Log metadata statistics.
+    *
+    * This is for diagnostic purposes, to be used by developers.  Log
+    * the statistics for a given level in the hierarchy and Connectors
+    * from it.
+    *
+    * @param note Note to be written out.
+    * @param ln Level number to log
+    * @param cycle
+    * @param level_time
+    * @param log_fine_connector
+    * @param log_coarse_connector
+    */
+   void logMetadataStatistics(
+      const char *note,
+      int ln,
+      int cycle,
+      double level_time,
+      bool log_fine_connector,
+      bool log_coarse_connector) const;
+
+   /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
     * it contains to the restart database.
     *
@@ -1003,6 +1026,24 @@ public:
       return d_object_name;
    }
 
+   /*!
+    * @brief Returns an iterator to the first uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   beginUncovered()
+   {
+      return UncoveredBoxIterator(this, true);
+   }
+
+   /*!
+    * @brief Returns an iterator to the last uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   endUncovered()
+   {
+      return UncoveredBoxIterator(this, false);
+   }
+
 private:
    /*
     * Static integer constant describing class's version number.
@@ -1057,19 +1098,6 @@ private:
     */
    void
    getFromRestart();
-
-   /*!
-    * @brief Set up things for the entire class.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   initializeCallback()
-   {
-      /*
-       * No-op.  This class doesn't
-       */
-   }
 
    /*!
     * @brief Free static timers.
@@ -1250,8 +1278,7 @@ private:
    /*!
     * @brief Shutdown handler for clearing out static registry.
     */
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_finalize_handler;
 
    //@}
 

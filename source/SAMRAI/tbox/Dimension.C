@@ -7,10 +7,6 @@
  * Description:   Dimension class for abstracting dimension
  *
  ************************************************************************/
-
-#ifndef included_tbox_Dimension_C
-#define included_tbox_Dimension_C
-
 #include "SAMRAI/tbox/Dimension.h"
 
 namespace SAMRAI {
@@ -38,5 +34,3 @@ operator << (
 
 }
 }
-
-#endif

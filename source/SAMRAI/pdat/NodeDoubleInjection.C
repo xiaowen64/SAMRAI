@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeDoubleInjection_C
-#define included_pdat_NodeDoubleInjection_C
-
 #include "SAMRAI/pdat/NodeDoubleInjection.h"
 
 #include <float.h>
@@ -93,11 +89,11 @@ NodeDoubleInjection::coarsen(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<NodeData<double> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<double>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<NodeData<double> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<double>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -149,4 +145,3 @@ NodeDoubleInjection::coarsen(
 
 }
 }
-#endif

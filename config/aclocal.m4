@@ -1,7 +1,7 @@
-# generated automatically by aclocal 1.9.6 -*- Autoconf -*-
+# generated automatically by aclocal 1.10 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-# 2005  Free Software Foundation, Inc.
+# 2005, 2006  Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -4113,12 +4113,12 @@ AC_DEFUN_ONCE([SAMRAI_MISC],[
 
 AC_ARG_ENABLE([box_counting],
 [AS_HELP_STRING([--enable-box_counting],
-   [Turns on Box and MappedBox telemetry.])],
+   [Turns on Box and telemetry.])],
    [
       if test "x$enableval" = "xyes"; then
-         CPPFLAGS_EXTRA="-DBOX_TELEMETRY $CPPFLAGS_EXTRA"
+         AC_DEFINE(BOX_TELEMETRY,1,Enable Box counting)
       elif test "x$enableval" = "x"; then
-         CPPFLAGS_EXTRA="-DBOX_TELEMETRY $CPPFLAGS_EXTRA"
+         AC_DEFINE(BOX_TELEMETRY,1,Enable Box counting)
       fi
    ],)
 ]

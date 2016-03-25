@@ -190,6 +190,8 @@ int main(
 {
 #ifndef HAVE_MPI
    // This test doesn't make sense without MPI because it cannot avoid MPI interfaces.
+   NULL_USE(argc);
+   std::cout << "PASSED: " << argv[0] << std::endl;
    return 0;
 #else
 
@@ -258,7 +260,6 @@ int main(
    tbox::SAMRAI_MPI samrai_mpi(SAMRAI_MPI::getSAMRAIWorld());
    tbox::SAMRAI_MPI world_mpi(MPI_COMM_WORLD);
 
-   const int rank = samrai_mpi.getRank();
    int fail_count = 0;
 
    /*
@@ -443,11 +444,11 @@ int main(
                  << test_err_count << " errs, total of " << total_err_count << "\n";
 
             if ( test_err_count != 0 ) {
-               perr << "Test FaILED.\n";
+               perr << "Test FAILED.\n";
             }
 
 
-            comm_graph_writer.addRecord(samrai_mpi, int(0), size_t(1+rank_tree->getDegree()), size_t(1));
+            comm_graph_writer.addRecord(samrai_mpi, size_t(1+rank_tree->getDegree()), size_t(1));
 
             for ( unsigned int cn=0; cn<rank_tree->getDegree(); ++cn ) {
                comm_graph_writer.setEdgeInCurrentRecord(
@@ -514,16 +515,8 @@ int main(
     */
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
-
-   if (fail_count == 0) {
-      SAMRAI_MPI::finalize();
-      MPI_Finalize();
-   } else {
-      std::cout << "Process " << std::setw(5) << rank << " aborting."
-                << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
+   SAMRAI_MPI::finalize();
+   MPI_Finalize();
 
    return fail_count;
 #endif
@@ -1244,6 +1237,7 @@ void destroyAsyncComms(
  */
 SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
 {
+#ifdef HAVE_MPI
    int old_rank, old_size;
    MPI_Comm_rank(old_comm, &old_rank);
    MPI_Comm_size(old_comm, &old_size);
@@ -1268,6 +1262,10 @@ SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
    SAMRAI_MPI::Comm new_comm;
    MPI_Comm_create( old_comm, new_group, &new_comm );
    return new_comm;
+#else
+   NULL_USE(old_comm);
+   return SAMRAI_MPI::Comm();
+#endif
 }
 
 
@@ -1279,6 +1277,7 @@ SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
  */
 SAMRAI_MPI::Comm getSmallerMPI( const SAMRAI_MPI::Comm &old_comm )
 {
+#ifdef HAVE_MPI
    int old_rank, old_size;
    MPI_Comm_rank(old_comm, &old_rank);
    MPI_Comm_size(old_comm, &old_size);
@@ -1308,4 +1307,8 @@ SAMRAI_MPI::Comm getSmallerMPI( const SAMRAI_MPI::Comm &old_comm )
    SAMRAI_MPI::Comm new_comm;
    MPI_Comm_create( old_comm, new_group, &new_comm );
    return (old_rank == 1 ? MPI_COMM_NULL : new_comm);
+#else
+   NULL_USE(old_comm);
+   return SAMRAI_MPI::Comm();
+#endif
 }

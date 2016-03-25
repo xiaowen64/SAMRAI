@@ -7,10 +7,6 @@
  * Description:   Operations for integer node-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchNodeDataOpsInteger_C
-#define included_math_PatchNodeDataOpsInteger_C
-
 #include "SAMRAI/math/PatchNodeDataOpsInteger.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 
@@ -42,11 +38,11 @@ PatchNodeDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::NodeData<int> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::NodeData<int> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -73,4 +69,3 @@ PatchNodeDataOpsInteger::printData(
 
 }
 }
-#endif

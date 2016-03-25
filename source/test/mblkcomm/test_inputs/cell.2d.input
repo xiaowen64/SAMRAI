@@ -88,10 +88,6 @@ BlockGridGeometry {
 
    Singularity0 {
       blocks = 0,1,2
-
-      sing_box_0 = [(21,14),(21,14)]
-      sing_box_1 = [(-1,14),(-1,14)]
-      sing_box_2 = [(21,-1),(21,-1)]
    }
  
    BlockNeighbors0 {
@@ -142,14 +138,15 @@ PatchHierarchy {
    }
 }
 
-
-// Refer to mesh::GriddingAlgorithm for input
-GriddingAlgorithm {
-
+// Refer to mesh::BergerRigoutsos for input
+BergerRigoutsos {
    efficiency_tolerance     = 0.70e0   // min % of tag cells in new patch level
    combine_efficiency       = 0.85e0   // chop box if sum of volumes of smaller
                                        // boxes < efficiency * vol of large box
+}
 
+// Refer to mesh::GriddingAlgorithm for input
+GriddingAlgorithm {
    sequentialize_patch_indices = TRUE
 }
 

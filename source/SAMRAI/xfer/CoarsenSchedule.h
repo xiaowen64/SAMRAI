@@ -226,12 +226,6 @@ private:
    static void
    finalizeCallback();
 
-   //! @brief Shorthand typedef.
-   typedef hier::LocalId LocalId;
-   //! @brief Shorthand typedef.
-   typedef hier::BoxLevel BoxLevel;
-   //! @brief Shorthand typedef.
-   typedef hier::Connector Connector;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
 
@@ -375,7 +369,7 @@ private:
    void
    restructureNeighborhoodSetsByDstNodes(
       FullNeighborhoodSet& full_inverted_edges,
-      const Connector& src_to_dst) const;
+      const hier::Connector& src_to_dst) const;
 
    /*!
     * @brief Utility function to set up local copies of coarsen items.
@@ -455,7 +449,7 @@ private:
     * @brief Connector from coarse box_level to temporary
     * (coarsened fine) box_level.
     */
-   boost::shared_ptr<Connector> d_coarse_to_temp;
+   boost::shared_ptr<hier::Connector> d_coarse_to_temp;
 
    /*!
     * @brief Object supporting interface to user-defined spatial data
@@ -515,7 +509,6 @@ private:
    static boost::shared_ptr<tbox::Timer> t_coarsen_data;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_dlbg;
-   static boost::shared_ptr<tbox::Timer> t_invert_edges;
    static boost::shared_ptr<tbox::Timer> t_coarse_data_fill;
 
    //*}

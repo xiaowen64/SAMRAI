@@ -49,9 +49,6 @@ Main {
 
    load_balance = TRUE, TRUE
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
@@ -75,6 +72,8 @@ BergerRigoutsos {
    DEV_inflection_cut_threshold_ar = 4
    DEV_min_box_size_from_cutting = 5, 5, 5
    sort_output_nodes = TRUE
+   efficiency_tolerance = 0.85
+   combine_efficiency = 0.85
    DEV_log_node_history = FALSE
    DEV_log_cluster_summary = TRUE
    DEV_log_cluster = FALSE
@@ -148,7 +147,7 @@ TimerManager {
    print_summed           = TRUE
    print_max              = TRUE
    print_threshold        = 0.
-   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*"
+   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*", "appu::main::all"
 }
 
 

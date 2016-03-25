@@ -774,7 +774,7 @@ public:
     */
    void
    finalize(
-      bool gather_individual_stats_on_proc_0 = true);
+      bool gather_individual_stats_on_proc_0 = false);
 
    /**
     * Print data to given output stream for local statistics managed

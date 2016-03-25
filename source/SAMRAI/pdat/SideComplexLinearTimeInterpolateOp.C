@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for side-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideComplexLinearTimeInterpolateOp_C
-#define included_pdat_SideComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -273,4 +269,3 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

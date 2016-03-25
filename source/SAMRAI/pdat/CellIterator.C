@@ -7,10 +7,6 @@
  * Description:   Iterator for cell centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellIterator_C
-#define included_pdat_CellIterator_C
-
 #include "SAMRAI/pdat/CellIterator.h"
 
 namespace SAMRAI {
@@ -73,4 +69,3 @@ CellIterator::operator ++ (
 
 }
 }
-#endif

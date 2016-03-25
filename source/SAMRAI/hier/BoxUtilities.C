@@ -7,10 +7,6 @@
  * Description:   Routines for processing boxes within a domain of index space.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxUtilities_C
-#define included_hier_BoxUtilities_C
-
 #include "SAMRAI/hier/BoxUtilities.h"
 
 #include "SAMRAI/hier/BoxContainer.h" 
@@ -1788,5 +1784,3 @@ BoxUtilities::makeNonOverlappingBoxContainers(
 
 }
 }
-
-#endif

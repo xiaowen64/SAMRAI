@@ -57,14 +57,6 @@ public:
     * @param[in] bound_boxes Collection of Boxes describing the bounding box
     * of each block in the tag level.
     * @param[in] min_box Smallest box size resulting from clustering.
-    * @param[in] efficiency_tol See description for efficiency_tol input
-    * parameter in GriddingAlgorithm.  Although this arg in defined in this
-    * abstract class interface it only applies to the BergerRigoutsos
-    * clustering algorithm.
-    * @param[in] combine_tol See description for combine_tol input parameter
-    * in GriddingAlgorithm.  Although this arg in defined in this abstract
-    * class interface it only applies to the BergerRigoutsos clustering
-    * algorithm.
     * @param[in] tag_to_new_width Width of tag_to_new Connector.
     */
    virtual void
@@ -76,8 +68,6 @@ public:
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
       const hier::IntVector& min_box,
-      const double efficiency_tol,
-      const double combine_tol,
       const hier::IntVector& tag_to_new_width) = 0;
 
 private:

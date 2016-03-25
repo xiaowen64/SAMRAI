@@ -744,8 +744,8 @@ void MblkLinAdv::initializeDataOnPatch(
    d_mblk_geometry->getDx(level_number, dx);
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(xyz);
 
    double xlo[SAMRAI::MAX_DIM_VAL];
@@ -764,8 +764,8 @@ void MblkLinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       boost::shared_ptr<pdat::CellData<double> > uval(
-         patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_uval, getDataContext())));
 
       TBOX_ASSERT(uval);
 
@@ -878,8 +878,8 @@ void MblkLinAdv::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
-         patch.getPatchData(d_workload_data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
@@ -920,8 +920,8 @@ double MblkLinAdv::computeStableDtOnPatch(
    d_mblk_geometry->getDx(level_number, dx);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
 
@@ -995,11 +995,11 @@ void MblkLinAdv::computeFluxesOnPatch(
       const hier::Index ilast = patch.getBox().upper();
 
       boost::shared_ptr<pdat::CellData<double> > uval(
-         patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_uval, getDataContext())));
       boost::shared_ptr<pdat::FaceData<double> > flux(
-         patch.getPatchData(d_flux, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+            patch.getPatchData(d_flux, getDataContext())));
 
       /*
        * Verify that the integrator providing the context correctly
@@ -1172,11 +1172,11 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::FaceData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
@@ -1474,11 +1474,11 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::FaceData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
@@ -1711,11 +1711,11 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::FaceData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-         BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
@@ -1761,8 +1761,8 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
@@ -1972,8 +1972,8 @@ void MblkLinAdv::tagGradientDetectorCells(
    d_mblk_geometry->getDx(level_number, dx);
 
    boost::shared_ptr<pdat::CellData<int> > tags(
-      patch.getPatchData(tag_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
 
    hier::Box pbox(patch.getBox());
@@ -2007,8 +2007,8 @@ void MblkLinAdv::tagGradientDetectorCells(
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > var(
-         patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_uval, getDataContext())));
       TBOX_ASSERT(var);
 
       hier::IntVector vghost(var->getGhostCellWidth());
@@ -3218,16 +3218,6 @@ void MblkLinAdv::checkBoundaryData(
                bscalarcase,
                d_bdry_face_uval[refbdryloc]);
       }
-#if (TESTING == 1)
-      if (num_bad_values > 0) {
-         tbox::perr << "\nMblkLinAdv Boundary Test FAILED: \n"
-                    << "     " << num_bad_values
-                    << " bad UVAL values found for\n"
-                    << "     boundary type " << btype << " at location "
-                    << bloc << endl;
-      }
-#endif
-
    }
 
 }

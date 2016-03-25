@@ -7,10 +7,6 @@
  * Description:   Implicit time integration manager class for nonlinear problems.
  *
  ************************************************************************/
-
-#ifndef included_algs_ImplicitIntegrator_C
-#define included_algs_ImplicitIntegrator_C
-
 #include "SAMRAI/algs/ImplicitIntegrator.h"
 
 #include <stdio.h>
@@ -429,4 +425,3 @@ ImplicitIntegrator::printClassData(
 
 }
 }
-#endif

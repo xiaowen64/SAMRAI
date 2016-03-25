@@ -607,8 +607,8 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       patch.getPatchGeometry());
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
-      patch.getPatchData(data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 
    string bdry_type_str;

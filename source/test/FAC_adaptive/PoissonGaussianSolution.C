@@ -122,8 +122,8 @@ void PoissonGaussianSolution::setGridData(
    pdat::CellData<double>& source_data)
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
    const double* h = patch_geom->getDx();
@@ -182,8 +182,8 @@ void PoissonGaussianSolution::setBcCoefs(
    NULL_USE(fill_time);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.

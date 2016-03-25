@@ -7,10 +7,6 @@
  * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchBoundaries_C
-#define included_hier_PatchBoundaries_C
-
 #include "SAMRAI/hier/PatchBoundaries.h"
 
 namespace SAMRAI {
@@ -49,5 +45,3 @@ PatchBoundaries::PatchBoundaries(
 
 } // SAMRAI namespace
 } // hier namespace
-
-#endif

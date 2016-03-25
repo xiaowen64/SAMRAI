@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideGeometry_C
-#define included_pdat_SideGeometry_C
-
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -115,7 +111,7 @@ SideGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the boxes that will be used to contstruct an overlap object
+ * Compute the boxes that will be used to construct an overlap object
  *
  *************************************************************************
  */
@@ -662,4 +658,3 @@ SideGeometry::end(
 
 }
 }
-#endif

@@ -16,8 +16,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 6
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_MINOR 7
+#define SAMRAI_VERSION_PATCHLEVEL 2
 ])
 AH_BOTTOM([
 
@@ -150,6 +150,12 @@ AC_ARG_ENABLE([bgl],
       [Identify this platform as one of the bgl family (default is disable)])],
    [enable_bgl=$enableval],
    [enable_bgl=no]
+   )
+AC_ARG_ENABLE([threading],
+   [AS_HELP_STRING([--enable-threading],
+      [build with threading on (default is disabled)])],
+   ,
+   [enable_threading="no"]
    )
 AC_ARG_WITH([CC],
    [AS_HELP_STRING([--with-CC=ARG],[manually set C compiler to ARG])]
@@ -515,6 +521,30 @@ case $CXX_ID in
     *)
       ;;
 esac
+
+dnl
+dnl Add necessary compiler flag for threading.
+dnl
+if test "$enable_threading" = "yes"; then
+   case $CXX_ID in
+      gnu)
+         CXX_FLAGS="$CXX_FLAGS -fopenmp"
+         ;;
+      xlc)
+         CXX_FLAGS="$CXX_FLAGS -qsmp=omp"
+         ;;
+      intel)
+         CXX_FLAGS="$CXX_FLAGS -openmp"
+         ;;
+      *)
+         AC_MSG_WARN([
+Use CFLAGS and CXXFLAGS to specify compiler
+threading directive for this compiler.
+]);
+         ;;
+   esac
+   AC_DEFINE(HAVE_OPENMP,1,OPENMP is available)
+fi
 
 dnl
 dnl The standard requires that implementation be present when compiling a template.
@@ -1158,6 +1188,54 @@ fi
 CASC_AC_LOG_VAR(
 [boost_INCLUDES INC_PATH boost_LIBS LIB_PATH LIB_NAME])dnl
 
+# Defines ptscotch_PREFIX ptscotch_INCLUDES and ptscotch_LIBS.
+AC_ARG_WITH(ptscotch,
+[ --with-ptscotch[=PATH]  Use PT-SCOTCH and specify where PT-SCOTCH is installed.],
+, with_ptscotch=no)
+
+case "$with_ptscotch" in
+  no)
+    : Do nothing
+  ;;
+  yes)
+    # PT-SCOTCH install path was not specified.
+    # Look in a couple of standard locations to probe if
+    # PT-SCOTCH header files are there.
+    AC_MSG_CHECKING([for PT-SCOTCH installation])
+    for dir in /usr /usr/local; do
+      if test -f ${dir}/ptscotch/include/ptscotch.h; then
+        ptscotch_PREFIX=${dir}
+        break
+      fi
+    done
+    AC_MSG_RESULT([$ptscotch_PREFIX])
+  ;;
+  *)
+    # PT-SCOTCH install path was specified.
+    AC_MSG_CHECKING([for PT-SCOTCH installation])
+
+    if test -f ${with_ptscotch}/include/ptscotch.h; then
+        ptscotch_PREFIX=$with_ptscotch
+        ptscotch_INCLUDES="-I${ptscotch_PREFIX}/include"
+        ptscotch_LIBS="-L${ptscotch_PREFIX}/lib -lptscotch -lptscotcherr -lscotch -lscotcherr"
+        AC_MSG_RESULT([$ptscotch_PREFIX])
+    else
+        AC_MSG_RESULT([$ptscotch_PREFIX])
+        AC_MSG_ERROR([PT-SCOTCH not found in $with_ptscotch])
+    fi
+  ;;
+esac
+if test "${ptscotch_PREFIX+set}" = set; then
+   SAMRAI_SPLIT_LIBS_STRING(ptscotch_LIBS,ptscotch_LIB_PATH,ptscotch_LIB_NAME)
+   LIB_PATH="$ptscotch_LIB_PATH $LIB_PATH"
+   LIB_NAME="$ptscotch_LIB_NAME $LIB_NAME"
+   INC_PATH="$ptscotch_INCLUDES $INC_PATH"
+   AC_DEFINE([HAVE_PTSCOTCH],[1],[PTSCOTCH headers are available to use])
+fi
+CASC_AC_LOG_VAR(
+[ptscotch_INCLUDES INC_PATH ptscotch_LIBS LIB_PATH LIB_NAME])dnl
+
+
 dnl
 dnl Thread Building Blocks support
 dnl
@@ -1531,6 +1609,8 @@ AC_SUBST(SRCDIR_COMPILE_PREFIX)
 AC_SUBST(INC_PATH)
 AC_SUBST(LIB_PATH)
 AC_SUBST(LIB_NAME)
+AC_SUBST(ac_pwd)
+AC_SUBST(btng_rpath_beginning)
 
 dnl Define a macro that links files from the compile tree to the source tree.
 dnl The links have the same name as the the target.  Nothing is done if 

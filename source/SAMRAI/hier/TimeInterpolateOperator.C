@@ -7,10 +7,6 @@
  * Description:   Abstract base class for time interpolation operators.
  *
  ************************************************************************/
-
-#ifndef included_hier_TimeInterpolateOperator_C
-#define included_hier_TimeInterpolateOperator_C
-
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 
 namespace SAMRAI {
@@ -28,4 +24,3 @@ TimeInterpolateOperator::~TimeInterpolateOperator()
 
 }
 }
-#endif

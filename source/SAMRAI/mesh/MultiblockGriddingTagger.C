@@ -7,10 +7,6 @@
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
-
-#ifndef included_mesh_MultiblockGriddingTagger_C
-#define included_mesh_MultiblockGriddingTagger_C
-
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 
 #include "SAMRAI/hier/Connector.h"
@@ -74,8 +70,7 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
          << std::endl);
    } else {
       boost::shared_ptr<pdat::CellVariable<int> > t_check_var(
-         check_var,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<int>, hier::Variable>(check_var));
       TBOX_ASSERT(t_check_var);
    }
 
@@ -93,8 +88,8 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    const tbox::Dimension &dim = patch.getDim();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
-      patch.getPatchData(d_buf_tag_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
 
@@ -143,8 +138,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
-      patch.getPatchData(d_buf_tag_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
 
@@ -207,8 +202,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                                                encon_patch->getBox().getBlockId());
 
                boost::shared_ptr<pdat::CellData<int> > sing_data(
-                  encon_patch->getPatchData(d_buf_tag_indx),
-                  BOOST_CAST_TAG);
+                  BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+                     encon_patch->getPatchData(d_buf_tag_indx)));
 
                TBOX_ASSERT(sing_data);
 
@@ -266,6 +261,4 @@ MultiblockGriddingTagger::postprocessRefine(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

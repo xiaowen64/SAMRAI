@@ -7,10 +7,6 @@
  * Description:   Operations for integer face data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyFaceDataOpsInteger_C
-#define included_math_HierarchyFaceDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchyFaceDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -138,8 +134,8 @@ HierarchyFaceDataOpsInteger::numberOfEntries(
    if (interior_only) {
 
       boost::shared_ptr<pdat::FaceDataFactory<int> > dfact(
-         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::FaceDataFactory<int>, hier::PatchDataFactory>(
+            d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
@@ -174,8 +170,8 @@ HierarchyFaceDataOpsInteger::numberOfEntries(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::FaceData<int> > d(
-               (*ip)->getPatchData(data_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+                  (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
 
@@ -213,11 +209,11 @@ HierarchyFaceDataOpsInteger::copyData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s);
@@ -236,12 +232,12 @@ HierarchyFaceDataOpsInteger::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::FaceDataFactory<int> > d1fact(
-      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceDataFactory<int>, hier::PatchDataFactory>(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::FaceDataFactory<int> > d2fact(
-      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceDataFactory<int>, hier::PatchDataFactory>(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -289,8 +285,8 @@ HierarchyFaceDataOpsInteger::printData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -320,8 +316,8 @@ HierarchyFaceDataOpsInteger::setToScalar(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -360,11 +356,11 @@ HierarchyFaceDataOpsInteger::scale(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > dst(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -396,11 +392,11 @@ HierarchyFaceDataOpsInteger::addScalar(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > dst(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -432,14 +428,14 @@ HierarchyFaceDataOpsInteger::add(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -472,14 +468,14 @@ HierarchyFaceDataOpsInteger::subtract(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -512,14 +508,14 @@ HierarchyFaceDataOpsInteger::multiply(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -552,14 +548,14 @@ HierarchyFaceDataOpsInteger::divide(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -591,11 +587,11 @@ HierarchyFaceDataOpsInteger::reciprocal(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(src);
@@ -629,14 +625,14 @@ HierarchyFaceDataOpsInteger::linearSum(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -670,14 +666,14 @@ HierarchyFaceDataOpsInteger::axpy(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -711,14 +707,14 @@ HierarchyFaceDataOpsInteger::axmy(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::FaceData<int> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -750,11 +746,11 @@ HierarchyFaceDataOpsInteger::abs(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::FaceData<int> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(src);
@@ -788,8 +784,8 @@ HierarchyFaceDataOpsInteger::min(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -829,8 +825,8 @@ HierarchyFaceDataOpsInteger::max(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -868,8 +864,8 @@ HierarchyFaceDataOpsInteger::setRandomValues(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<int> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -882,4 +878,3 @@ HierarchyFaceDataOpsInteger::setRandomValues(
 
 }
 }
-#endif

@@ -29,6 +29,21 @@ namespace pdat {
  * It is used to calculate overlaps according to a pattern which limits the
  * overlaps to the first layer of boundary edges, that is the edges that
  * lie on the patch boundary.
+ *
+ * In this diagram of a 2x2 patch with a ghost width of one, + are
+ * patch nodes, * are ghost nodes.  i markes the i edges that will be
+ * filled using this pattern, and j marks the j edges that will be
+ * filled.
+ *
+ * *...*...*...*...*
+ * |   |   |   |   |
+ * *...+-i-+-i-+...*
+ * |   j   |   j   |
+ * *...+---+---+...*
+ * |   j   |   j   |
+ * *...+-i-+-i-+...*
+ * |   |   |   |   |
+ * *...*...*...*...*
  */
 
 class FirstLayerEdgeVariableFillPattern:
@@ -110,6 +125,7 @@ public:
    boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
+      const hier::BoxContainer& node_fill_boxes,
       const hier::Box& patch_box,
       const hier::Box& data_box,
       const hier::PatchDataFactory& pdf) const;

@@ -41,6 +41,8 @@ BergerRigoutsos {
    DEV_log_node_history = FALSE
    sort_output_nodes = TRUE
    max_box_size = 100, 100, 100
+   combine_efficiency = 0.85
+   efficiency_tolerance = 0.85
    DEV_log_cluster_summary = TRUE
    DEV_log_cluster = FALSE
    DEV_barrier_before = TRUE
@@ -88,7 +90,8 @@ TimerManager {
                             "tbox::AsyncCommStage::*",
                             "tbox::JobRelauncher::*",
                             "tbox::Schedule::*",
-                            "xfer::*::*"
+                            "xfer::*::*",
+                            "appu::main::all"
 }
 
 PatchHierarchy {
@@ -121,9 +124,6 @@ PatchHierarchy {
 }
 
 GriddingAlgorithm {
-
-   combine_efficiency = 0.85
-   efficiency_tolerance = 0.85
    // DEV_load_balance = FALSE
    sequentialize_patch_indices = TRUE
    DEV_barrier_and_time = TRUE

@@ -7,10 +7,6 @@
  * Description:   Block identifier in multiblock domain.
  *
  ************************************************************************/
-
-#ifndef included_hier_BlockId_C
-#define included_hier_BlockId_C
-
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
@@ -64,4 +60,3 @@ BlockId::~BlockId()
 
 }
 }
-#endif

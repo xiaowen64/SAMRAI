@@ -7,10 +7,6 @@
  * Description:   Operations for integer edge-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchEdgeDataOpsInteger_C
-#define included_math_PatchEdgeDataOpsInteger_C
-
 #include "SAMRAI/math/PatchEdgeDataOpsInteger.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 
@@ -68,11 +64,11 @@ PatchEdgeDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::EdgeData<int> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeData<int>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::EdgeData<int> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::EdgeData<int>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -132,4 +128,3 @@ PatchEdgeDataOpsInteger::abs(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxTree_C
-#define included_hier_BoxTree_C
-
 #include "SAMRAI/hier/BoxTree.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -32,7 +28,6 @@ namespace SAMRAI {
 namespace hier {
 
 boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
-boost::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
 unsigned int BoxTree::s_num_build[SAMRAI::MAX_DIM_VAL] =
 { 0 };
 unsigned int BoxTree::s_num_generate[SAMRAI::MAX_DIM_VAL]
@@ -451,7 +446,6 @@ BoxTree::findOverlapBoxes(
    if (!recursive_call) {
       ++s_num_search[d_dim.getValue() - 1];
       num_found_box = static_cast<int>(overlap_boxes.size());
-      t_search[d_dim.getValue() - 1]->start();
    }
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
@@ -481,7 +475,6 @@ BoxTree::findOverlapBoxes(
    }
 
    if (!recursive_call) {
-      t_search[d_dim.getValue() - 1]->stop();
       num_found_box = static_cast<int>(overlap_boxes.size())
          - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
@@ -506,7 +499,6 @@ BoxTree::findOverlapBoxes(
    if (!recursive_call) {
       ++s_num_search[d_dim.getValue() - 1];
       num_found_box = static_cast<int>(overlap_boxes.size());
-      t_search[d_dim.getValue() - 1]->start();
    }
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
@@ -547,7 +539,6 @@ BoxTree::findOverlapBoxes(
 
 
    if (!recursive_call) {
-      t_search[d_dim.getValue() - 1]->stop();
       num_found_box = static_cast<int>(overlap_boxes.size()) - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
          tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
@@ -567,8 +558,6 @@ BoxTree::initializeCallback()
       const std::string dim_str(tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
-      t_search[i] = tbox::TimerManager::getManager()->
-         getTimer(std::string("hier::BoxTree::search[") + dim_str + "]");
    }
 }
 
@@ -583,7 +572,6 @@ BoxTree::finalizeCallback()
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       t_build_tree[i].reset();
-      t_search[i].reset();
    }
 }
 
@@ -824,6 +812,4 @@ BoxTree::printStatistics(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

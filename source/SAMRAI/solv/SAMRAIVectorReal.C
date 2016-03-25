@@ -46,7 +46,7 @@ namespace solv {
  */
 
 template<class TYPE>
-int SAMRAIVectorReal<TYPE>::s_instance_counter[SAMRAI::MAX_DIM_VAL];
+int SAMRAIVectorReal<TYPE>::s_instance_counter[SAMRAI::MAX_DIM_VAL] = {0};
 
 template<class TYPE>
 boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > SAMRAIVectorReal<TYPE>::

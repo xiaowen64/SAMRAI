@@ -7,10 +7,6 @@
  * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineTimeTransaction_C
-#define included_xfer_RefineTimeTransaction_C
-
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
 
 #include "SAMRAI/hier/IntVector.h"
@@ -43,7 +39,7 @@ namespace xfer {
 
 double RefineTimeTransaction::s_time = 0.0;
 
-const RefineClasses::Data **
+const RefineClasses::Data *const*
 RefineTimeTransaction::s_refine_items = 0;
 int RefineTimeTransaction::s_num_refine_items = 0;
 
@@ -316,6 +312,4 @@ RefineTimeTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

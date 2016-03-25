@@ -16,11 +16,11 @@
 Main{
    dim = 3
 
-   base_name = "3d.petsc"
+   base_name = "petsc.3d"
 
 // visualization dump parameters 
    viz_dump_interval     = 1          // zero to turn off
-   viz_dump_dirname      = "3d.petsc.visit"
+   viz_dump_dirname      = "petsc.3d.visit"
    visit_number_procs_per_file = 1
 
 // regrid parameters
@@ -71,9 +71,12 @@ PatchHierarchy {
    }
 }
 
-GriddingAlgorithm {
+BergerRigoutsos {
    combine_efficiency = 0.75
    efficiency_tolerance = 0.75
+}
+
+GriddingAlgorithm {
 }
 
 StandardTagAndInitialize{

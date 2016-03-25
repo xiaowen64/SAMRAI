@@ -7,10 +7,6 @@
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
-
-#ifndef included_hier_Box_C
-#define included_hier_Box_C
-
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -409,12 +405,10 @@ Box::index(
       remainder -= index[d] * stride;
 
       /* Compute the global index */
-      index[getDim().getValue()] += lower(d);
+      index[d] += lower(d);
    }
 
-   Index idx(index);
-
-   return idx;
+   return Index(index);
 }
 
 bool
@@ -1134,5 +1128,3 @@ BoxIterator::~BoxIterator()
 
 }
 }
-
-#endif

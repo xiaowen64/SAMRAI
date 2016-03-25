@@ -53,7 +53,7 @@ public:
     */
    virtual void
    setRefineItems(
-      const RefineClasses::Data ** refine_items,
+      const RefineClasses::Data *const* refine_items,
       int num_refine_items);
 
    /*!
@@ -134,7 +134,7 @@ private:
    operator = (
       const StandardRefineTransactionFactory&);
 
-   const RefineClasses::Data** d_refine_items;
+   const RefineClasses::Data*const* d_refine_items;
    int d_num_refine_items;
 
 };

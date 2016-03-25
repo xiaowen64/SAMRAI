@@ -249,6 +249,9 @@ int main(
        * section of the input file.
        */
       tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
 
       /*
        * Create major algorithm and data objects which comprise application.
@@ -386,7 +389,8 @@ int main(
             input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-         new mesh::BergerRigoutsos(dim));
+         new mesh::BergerRigoutsos(dim,
+         input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
@@ -617,6 +621,16 @@ int main(
          visit_data_writer.reset();
       }
 
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
+
 #endif
 
 #ifdef TESTING
@@ -627,7 +641,6 @@ int main(
        */
       tbox::pout << "\nPASSED:  nonlinear" << endl;
 #endif
-
    }
 
    tbox::SAMRAIManager::shutdown();

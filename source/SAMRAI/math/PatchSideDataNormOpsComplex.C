@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex side-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchSideDataNormOpsComplex_C
-#define included_math_PatchSideDataNormOpsComplex_C
-
 #include "SAMRAI/math/PatchSideDataNormOpsComplex.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -380,4 +376,3 @@ PatchSideDataNormOpsComplex::integral(
 
 }
 }
-#endif

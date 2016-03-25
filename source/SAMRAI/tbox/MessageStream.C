@@ -7,10 +7,6 @@
  * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
-
-#ifndef included_tbox_MessageStream_C
-#define included_tbox_MessageStream_C
-
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -95,5 +91,3 @@ MessageStream::printClassData(
 
 }
 }
-
-#endif

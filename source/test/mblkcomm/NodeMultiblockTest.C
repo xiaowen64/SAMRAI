@@ -119,8 +119,8 @@ void NodeMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            patch.getPatchData(d_variables[i], getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
 
          hier::Box dbox = node_data->getGhostBox();
@@ -173,8 +173,8 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
       /*
@@ -311,8 +311,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
       hier::Box sing_fill_box(node_data->getGhostBox() * fill_box);
@@ -398,8 +398,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   boost::shared_ptr<pdat::NodeData<double> > sing_data(
-                     encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+                        encon_patch->getPatchData(
+                           d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
 
                   pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
@@ -527,8 +528,8 @@ bool NodeMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
       int depth = node_data->getDepth();
 

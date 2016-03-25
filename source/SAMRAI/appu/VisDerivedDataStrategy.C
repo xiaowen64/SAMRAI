@@ -7,10 +7,6 @@
  * Description:   Interface for writing user-defined data to VisIt
  *
  ************************************************************************/
-
-#ifndef included_appu_VisDerivedDataStrategy_C
-#define included_appu_VisDerivedDataStrategy_C
-
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -51,5 +47,3 @@ VisDerivedDataStrategy::packMixedDerivedDataIntoDoubleBuffer(
 
 }
 }
-
-#endif

@@ -579,7 +579,7 @@ public:
     * Species are subcomponents of a material. For example, a simulation
     * with 4 materials (e.g. "copper", "gold", "liquid" and "gas") may have
     * one of the materials (e.g. "gas") that is composed of multiple
-    * species (e.g. "nitrogen" and helium"). Each species is associated
+    * species (e.g. "nitrogen" and "helium"). Each species is associated
     * with a particular material, so it is necessary that the
     * "registerMaterialNames()" method is called before this method.
     *

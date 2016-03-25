@@ -1059,8 +1059,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_compute_composite_residual;
    boost::shared_ptr<tbox::Timer> t_compute_residual_norm;
 
-   static tbox::StartupShutdownManager::Handler
-      s_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_finalize_handler;
 };
 
 }

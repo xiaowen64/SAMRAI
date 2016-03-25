@@ -7,10 +7,6 @@
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineSchedule_C
-#define included_xfer_RefineSchedule_C
-
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
@@ -47,9 +43,6 @@
 
 namespace SAMRAI {
 namespace xfer {
-
-static const std::string logbord;
-static const std::string errbord("E-> ");
 
 bool RefineSchedule::s_extra_debug = false;
 bool RefineSchedule::s_barrier_and_time = false;
@@ -103,7 +96,6 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
-   d_number_refine_items(0),
    d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
@@ -281,7 +273,6 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
-   d_number_refine_items(0),
    d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
@@ -495,7 +486,6 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
    const RefineSchedule *top_refine_schedule):
-   d_number_refine_items(0),
    d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
@@ -775,6 +765,7 @@ RefineSchedule::finishScheduleConstruction(
       *dst_to_unfilled,
       hierarchy);
 
+
    t_get_global_box_count->barrierAndStart();
 
    const bool need_to_fill =
@@ -808,6 +799,9 @@ RefineSchedule::finishScheduleConstruction(
    if (need_to_fill) {
 
       t_finish_sched_const_recurse->start();
+
+      makeNodeCenteredUnfilledBoxLevel(*d_unfilled_box_level,
+                                       *dst_to_unfilled);
 
       /*
        * If there are no coarser levels in the hierarchy or the
@@ -1156,6 +1150,116 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
 
    t_shear->stop();
 }
+
+/*
+ **************************************************************************
+ * Make the node-centered unfilled box level.
+ **************************************************************************
+ */
+
+void
+RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
+   const hier::BoxLevel& unfilled_box_level,
+   const hier::Connector& dst_to_unfilled)
+{
+   const tbox::Dimension& dim = unfilled_box_level.getDim();
+
+   d_unfilled_node_box_level.reset(new hier::BoxLevel(
+         unfilled_box_level.getRefinementRatio(),
+         unfilled_box_level.getGridGeometry(),
+         unfilled_box_level.getMPI()));
+
+   d_unfilled_to_unfilled_node.reset(new hier::Connector(
+         unfilled_box_level,
+         *d_unfilled_node_box_level,
+         hier::IntVector::getZero(unfilled_box_level.getDim())));
+
+   const hier::BoxLevel& dst_box_level = dst_to_unfilled.getBase();
+
+   hier::Connector const* dst_to_src;
+   if (d_src_level) {
+      dst_to_src = d_dst_to_src;
+   } else {
+      dst_to_src = 0;
+   }
+
+   hier::LocalId last_unfilled_node_local_id(-1);
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
+      dst_to_unfilled.getBase().getGridGeometry());
+
+   for (hier::Connector::ConstNeighborhoodIterator cf = dst_to_unfilled.begin();
+        cf != dst_to_unfilled.end(); ++cf) {
+
+      const hier::BoxId& dst_box_id(*cf);
+      const hier::Box& dst_box = *dst_box_level.getBox(dst_box_id);
+      const hier::BlockId& dst_block = dst_box.getBlockId();
+      hier::Box dst_node_box(dst_box);
+      dst_node_box.upper() += hier::IntVector::getOne(dim);
+
+      for (hier::Connector::ConstNeighborIterator ni = dst_to_unfilled.begin(cf);
+           ni != dst_to_unfilled.end(cf); ++ni) {
+
+         const hier::Box& unfilled_box = *ni;
+
+         hier::BoxContainer unfilled_node_boxes(unfilled_box);
+         unfilled_node_boxes.begin()->upper() += hier::IntVector::getOne(dim);
+
+         if (d_src_level && dst_to_src->hasNeighborSet(dst_box_id)) {
+
+            hier::Connector::ConstNeighborhoodIterator dst_src_itr =
+               dst_to_src->findLocal(dst_box_id);
+
+            for (hier::Connector::ConstNeighborIterator ds =
+                 dst_to_src->begin(dst_src_itr);
+                 ds != dst_to_src->end(dst_src_itr); ++ds) {
+
+               const hier::Box& src_box = *ds;
+               const hier::BlockId& src_block = src_box.getBlockId();
+               hier::Box src_node_box(src_box);
+               if (src_block == dst_block) {
+                  src_node_box.upper() += hier::IntVector::getOne(dim);
+               } else if (grid_geometry->areNeighbors(src_block, dst_block)) {
+                  grid_geometry->transformBox(
+                     src_node_box,
+                     d_dst_level->getRatioToLevelZero(),
+                     dst_block,
+                     src_block);
+                  src_node_box.upper() += hier::IntVector::getOne(dim);
+               }
+               if (!(src_node_box*dst_node_box).empty()) {
+                  unfilled_node_boxes.removeIntersections(src_node_box);
+               }
+            }
+         } 
+
+         unfilled_node_boxes.coalesce();
+
+         hier::Connector::NeighborhoodIterator unfilled_itr =
+            d_unfilled_to_unfilled_node->
+               makeEmptyLocalNeighborhood(unfilled_box.getBoxId());
+
+         for (hier::BoxContainer::iterator ui = unfilled_node_boxes.begin();
+              ui != unfilled_node_boxes.end(); ++ui) {
+
+            hier::Box unfilled_nodal(*ui,
+                                     ++last_unfilled_node_local_id,
+                                     dst_box.getOwnerRank());
+            TBOX_ASSERT(unfilled_nodal.getBlockId() == dst_block);
+
+            d_unfilled_node_box_level->addBoxWithoutUpdate(unfilled_nodal);
+
+            d_unfilled_to_unfilled_node->insertLocalNeighbor(
+               unfilled_nodal,
+               unfilled_itr);
+         }
+ 
+      }
+   }
+
+   d_unfilled_node_box_level->finalize();
+
+}
+
 
 /*
  **************************************************************************
@@ -1772,7 +1876,8 @@ RefineSchedule::fillData(
     */
 
    d_transaction_factory->setTransactionTime(fill_time);
-   d_transaction_factory->setRefineItems(d_refine_items, d_number_refine_items);
+   d_transaction_factory->setRefineItems(&d_refine_items[0],
+                                         static_cast<int>(d_refine_items.size()));
 
    /*
     * Check whether scratch data needs to be allocated on the destination
@@ -2150,7 +2255,7 @@ RefineSchedule::allocateScratchSpace(
 
    hier::ComponentSelector preprocess_vector;
 
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
       if (!level->checkAllocated(scratch_id)) {
          allocate_vector.setFlag(scratch_id);
@@ -2186,7 +2291,7 @@ RefineSchedule::copyScratchToDestination() const
         p != d_dst_level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch(*p);
 
-      for (int iri = 0; iri < d_number_refine_items; iri++) {
+      for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
          const int src_id = d_refine_items[iri]->d_scratch;
          const int dst_id = d_refine_items[iri]->d_dst;
          if (src_id != dst_id) {
@@ -2216,7 +2321,7 @@ RefineSchedule::refineScratchData(
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const hier::Connector& coarse_to_fine,
    const hier::Connector& coarse_to_unfilled,
-   const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
+   const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
    overlaps) const
 {
    t_refine_scratch_data->start();
@@ -2224,7 +2329,7 @@ RefineSchedule::refineScratchData(
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
    overlap_iter(overlaps.begin());
 
    /*
@@ -2273,12 +2378,13 @@ RefineSchedule::refineScratchData(
             ratio);
       }
 
-      for (int iri = 0; iri < d_number_refine_items; iri++) {
+      for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
          const RefineClasses::Data * const ref_item = d_refine_items[iri];
+         // This if-block can be factored out and put into RefineClasses::Data.
          if (ref_item->d_oprefine) {
 
-            boost::shared_ptr<hier::BoxOverlap> refine_overlap(
-               (*overlap_iter)[ref_item->d_class_index]);
+            boost::shared_ptr<hier::BoxOverlap> refine_overlap =
+               (*overlap_iter)[ref_item->d_class_index];
 
             const int scratch_id = ref_item->d_scratch;
 
@@ -2311,7 +2417,7 @@ RefineSchedule::refineScratchData(
  */
 void
 RefineSchedule::computeRefineOverlaps(
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const hier::Connector& coarse_to_fine,
@@ -2327,6 +2433,9 @@ RefineSchedule::computeRefineOverlaps(
 
    const int num_equiv_classes =
       d_refine_classes->getNumberOfEquivalenceClasses();
+
+   TBOX_ASSERT( overlaps.empty() );
+   overlaps.reserve(coarse_level->getLocalNumberOfPatches());
 
    /*
     * Loop over all the coarse patches and find the corresponding
@@ -2365,6 +2474,11 @@ RefineSchedule::computeRefineOverlaps(
          unfilled_nabrs);
       hier::BoxContainer fill_boxes(unfilled_nabr);
 
+      const hier::BoxId& unfilled_id = unfilled_nabr.getBoxId();
+
+      hier::BoxContainer node_fill_boxes;
+      d_unfilled_to_unfilled_node->getNeighborBoxes(unfilled_id, node_fill_boxes);
+
       /*
        * The refine overlap will cover only  the fine fill box regions.
        * of index space.  Note that we restrict the interpolation range
@@ -2375,8 +2489,9 @@ RefineSchedule::computeRefineOverlaps(
        * cell widths since the fill boxes are generated using the
        * maximum ghost cell width.
        */
-      std::vector<boost::shared_ptr<hier::BoxOverlap> > refine_overlaps(
-         num_equiv_classes);
+      overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
+      std::vector<boost::shared_ptr<hier::BoxOverlap> > &refine_overlaps(overlaps.back());
+      refine_overlaps.resize(num_equiv_classes);
       for (int ne = 0; ne < num_equiv_classes; ne++) {
 
          const RefineClasses::Data& rep_item =
@@ -2396,6 +2511,7 @@ RefineSchedule::computeRefineOverlaps(
                refine_overlaps[ne] =
                   rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
                      fill_boxes,
+                     node_fill_boxes,
                      fine_patch->getBox(),
                      scratch_space,
                      *fine_pdf);
@@ -2404,13 +2520,13 @@ RefineSchedule::computeRefineOverlaps(
                refine_overlaps[ne] =
                   bg_fill_pattern->computeFillBoxesOverlap(
                      fill_boxes,
+                     node_fill_boxes,
                      fine_patch->getBox(),
                      scratch_space,
                      *fine_pdf);
             }
          }
       }
-      overlaps.push_back(refine_overlaps);
    }
 }
 
@@ -2692,7 +2808,8 @@ RefineSchedule::generateCommunicationSchedule(
        */
       if (!unfilled_boxes_for_dst.isEmpty()) {
 
-         unfilled_boxes_for_dst.coalesce(); 
+         unfilled_boxes_for_dst.coalesce();
+
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_box_id);
          for (hier::BoxContainer::iterator bi = unfilled_boxes_for_dst.begin();
@@ -3043,7 +3160,7 @@ RefineSchedule::setDefaultFillBoxLevel(
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
    bool need_nontrivial_ghosts = false;
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
       if (!(d_refine_items[iri]->d_fine_bdry_reps_var)) {
          need_nontrivial_ghosts = true;
       }
@@ -3386,28 +3503,29 @@ RefineSchedule::communicateFillBoxes(
 
    const tbox::Dimension& dim(d_dst_level->getDim());
 
+   int rank = dst_to_fill.getBase().getMPI().getRank();
+
    std::set<int> src_owners;
    d_dst_to_src->getLocalOwners(src_owners);
-   src_owners.erase(dst_to_fill.getBase().getMPI().getRank());
+   src_owners.erase(rank);
 
    std::set<int> dst_owners;
    src_to_dst.getLocalOwners(dst_owners);
-   dst_owners.erase(dst_to_fill.getBase().getMPI().getRank());
+   dst_owners.erase(rank);
 
    std::map<int, std::vector<int> > send_mesgs;
    std::map<int, std::vector<int> > recv_mesgs;
 
+   int num_incoming_comms = static_cast<int>(dst_owners.size());
+   int num_comms = static_cast<int>(src_owners.size()) + num_incoming_comms;
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* comms =
-      new tbox::AsyncCommPeer<int>[src_owners.size() + dst_owners.size()];
+   tbox::AsyncCommPeer<int>* comms = new tbox::AsyncCommPeer<int>[num_comms];
 
    int mesg_number = 0;
 
    /*
     * Post receives for fill boxes from dst owners.
     */
-
-   // TODO: should use cyclic ordering for efficiency.
    for (std::set<int>::const_iterator di = dst_owners.begin();
         di != dst_owners.end(); ++di) {
       comms[mesg_number].initialize(&comm_stage);
@@ -3424,7 +3542,6 @@ RefineSchedule::communicateFillBoxes(
 
    /*
     * Pack fill boxes and send messages to src owners.
-    * TODO: should use cyclic ordering for efficiency.
     */
    // Pack messages.
    std::vector<int> tmp_mesg;
@@ -3475,8 +3592,11 @@ RefineSchedule::communicateFillBoxes(
       }
    }
    // Send messages.
-   for (std::set<int>::const_iterator si = src_owners.begin();
-        si != src_owners.end(); ++si) {
+   std::set<int>::const_iterator si = src_owners.lower_bound(rank+1);
+   for (; mesg_number < num_comms; ++mesg_number) {
+      if (si == src_owners.end()) {
+         si = src_owners.begin();
+      }
       comms[mesg_number].initialize(&comm_stage);
       comms[mesg_number].setPeerRank(*si);
       // Reuse communicator.  Assuming it has no outstanding messages!
@@ -3487,7 +3607,7 @@ RefineSchedule::communicateFillBoxes(
       if (comms[mesg_number].isDone()) {
          comms[mesg_number].pushToCompletionQueue();
       }
-      ++mesg_number;
+      ++si;
    }
 
    /*
@@ -3540,7 +3660,7 @@ RefineSchedule::getDataOnPatchBorderFlag() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
       const int dst_id = d_refine_items[iri]->d_dst;
       const hier::PatchDataFactory &pdf = *pd->getPatchDataFactory(dst_id);
       if ( pdf.dataLivesOnPatchBorder() ) {
@@ -3571,7 +3691,7 @@ RefineSchedule::getMinConnectorWidth() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
 
       const int dst_id = d_refine_items[iri]->d_dst;
       const hier::PatchDataFactory &dst_pdf = *pd->getPatchDataFactory(dst_id);
@@ -3614,7 +3734,7 @@ RefineSchedule::getMaxDestinationGhosts() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
       const int dst_id = d_refine_items[iri]->d_dst;
       gcw.max(pd->getPatchDataFactory(dst_id)->getGhostCellWidth());
    }
@@ -3640,7 +3760,7 @@ RefineSchedule::getMaxScratchGhosts() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
       gcw.max(pd->getPatchDataFactory(scratch_id)->getGhostCellWidth());
    }
@@ -3666,7 +3786,7 @@ RefineSchedule::getMaxStencilGhosts() const
       gcw = d_refine_patch_strategy->getRefineOpStencilWidth(dim);
    }
 
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
+   for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
       if (d_refine_items[iri]->d_oprefine) {
          gcw.max(d_refine_items[iri]->d_oprefine->getStencilWidth(dim));
       }
@@ -3990,14 +4110,16 @@ RefineSchedule::constructScheduleTransactions(
             src_mask = test_mask;
             transformation.inverseTransform(src_mask);
 
-            overlap =
-               rep_item.d_var_fill_pattern->calculateOverlap(
-                  *dst_pdf->getBoxGeometry(unshifted_dst_box),
-                  *src_pdf->getBoxGeometry(unshifted_src_box),
-                  dst_box,
-                  src_mask,
-                  fill_box,
-                  true, transformation);
+            if (!src_mask.empty()) { 
+               overlap =
+                  rep_item.d_var_fill_pattern->calculateOverlap(
+                     *dst_pdf->getBoxGeometry(unshifted_dst_box),
+                     *src_pdf->getBoxGeometry(unshifted_src_box),
+                     dst_box,
+                     src_mask,
+                     fill_box,
+                     true, transformation);
+            } 
          } else {
 
             /*
@@ -4026,18 +4148,20 @@ RefineSchedule::constructScheduleTransactions(
             transformation.inverseTransform(transformed_fill_box);
             transformation.inverseTransform(transformed_dst_box);
 
-            overlap =
-               rep_item.d_var_fill_pattern->calculateOverlap(
-                  *dst_pdf->getBoxGeometry(transaction_dst_box),
-                  *src_pdf->getBoxGeometry(unshifted_src_box),
-                  transformed_dst_box,
-                  src_mask,
-                  transformed_fill_box,
-                  true, hier::Transformation(hier::IntVector::getZero(dim)));
+            if (!src_mask.empty()) {
+               overlap =
+                  rep_item.d_var_fill_pattern->calculateOverlap(
+                     *dst_pdf->getBoxGeometry(transaction_dst_box),
+                     *src_pdf->getBoxGeometry(unshifted_src_box),
+                     transformed_dst_box,
+                     src_mask,
+                     transformed_fill_box,
+                     true, hier::Transformation(hier::IntVector::getZero(dim)));
+            }
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (!overlap) {
+         if (!overlap && !src_mask.empty()) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n Overlap is NULL for "
                << "\n src box = " << src_box
@@ -4094,12 +4218,7 @@ RefineSchedule::constructScheduleTransactions(
                 * whether we use time interpolation.
                 */
 
-               /*
-                * If we only perform the following block only for
-                * non-null d_overlap[i], why not just loop through
-                * box_num instead of num_fill_boxes?
-                */
-               if (!d_overlaps[i]->isOverlapEmpty()) {
+               if (d_overlaps[i] && !d_overlaps[i]->isOverlapEmpty()) {
 
                   boost::shared_ptr<tbox::Transaction> transaction;
 
@@ -4227,15 +4346,14 @@ RefineSchedule::setRefineItems(
 
    d_refine_classes = refine_classes;
 
-   d_number_refine_items = d_refine_classes->getNumberOfRefineItems();
+   TBOX_ASSERT( d_refine_items.empty() );
+   d_refine_items.insert( d_refine_items.end(),
+                          d_refine_classes->getNumberOfRefineItems(),
+                          static_cast<const SAMRAI::xfer::RefineClasses::Data*>(0) );
 
-   d_refine_items = new const RefineClasses::Data *[d_number_refine_items];
-
-   int ircount = 0;
-   for (int nd = 0; nd < d_number_refine_items; nd++) {
-      d_refine_classes->getRefineItem(nd).d_tag = ircount;
-      d_refine_items[ircount] = &(d_refine_classes->getRefineItem(nd));
-      ircount++;
+   for (int nd = 0; nd < static_cast<int>(d_refine_items.size()); nd++) {
+      d_refine_classes->getRefineItem(nd).d_tag = nd;
+      d_refine_items[nd] = &(d_refine_classes->getRefineItem(nd));
    }
 
 }
@@ -4271,7 +4389,7 @@ RefineSchedule::initialCheckRefineClassItems() const
 
    if (user_gcw > constant_zero_intvector) {
 
-      for (int iri = 0; iri < d_number_refine_items; iri++) {
+      for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
 
          const RefineClasses::Data * const ref_item = d_refine_items[iri];
 
@@ -4313,13 +4431,11 @@ RefineSchedule::initialCheckRefineClassItems() const
 void
 RefineSchedule::clearRefineItems()
 {
-   if (d_refine_items) {
-      for (int iri = 0; iri < d_number_refine_items; iri++) {
+   if (!d_refine_items.empty()) {
+      for (size_t iri = 0; iri < d_refine_items.size(); iri++) {
          d_refine_items[iri] = 0;
       }
-      delete[] d_refine_items;
-      d_refine_items = 0;
-      d_number_refine_items = 0;
+      d_refine_items.clear();
    }
 }
 
@@ -4459,6 +4575,4 @@ RefineSchedule::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

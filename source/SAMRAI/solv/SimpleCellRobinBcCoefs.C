@@ -7,9 +7,6 @@
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
-#ifndef included_solv_SimpleCellRobinBcCoefs_C
-#define included_solv_SimpleCellRobinBcCoefs_C
-
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -296,8 +293,8 @@ SimpleCellRobinBcCoefs::setBcCoefs(
       if (gcoef_data) {
 
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
 
@@ -415,8 +412,8 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       if (gcoef_data) {
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
 
@@ -538,8 +535,8 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
 
@@ -559,11 +556,11 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          boost::shared_ptr<pdat::CellData<double> > cell_data(
-            patch.getPatchData(dirichlet_data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(dirichlet_data_id)));
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry,
+               hier::PatchGeometry>(patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);
@@ -616,11 +613,11 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          boost::shared_ptr<pdat::CellData<double> > cell_data(
-            patch.getPatchData(dirichlet_data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(dirichlet_data_id)));
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);
@@ -685,6 +682,4 @@ SimpleCellRobinBcCoefs::makeSideBoundaryBox(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

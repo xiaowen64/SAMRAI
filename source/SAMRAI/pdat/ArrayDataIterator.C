@@ -7,10 +7,6 @@
  * Description:   Iterator for array patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_ArrayDataIterator_C
-#define included_pdat_ArrayDataIterator_C
-
 #include "SAMRAI/pdat/ArrayDataIterator.h"
 
 namespace SAMRAI {
@@ -75,5 +71,3 @@ ArrayDataIterator::operator ++ (
 
 }
 }
-
-#endif

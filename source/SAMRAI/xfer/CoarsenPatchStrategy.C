@@ -7,10 +7,6 @@
  * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenPatchStrategy_C
-#define included_xfer_CoarsenPatchStrategy_C
-
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 
 namespace SAMRAI {
@@ -50,4 +46,3 @@ CoarsenPatchStrategy::getMaxCoarsenOpStencilWidth(
 
 }
 }
-#endif

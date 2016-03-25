@@ -28,7 +28,7 @@
 # 6. After adding a case, run this script without arguments to make
 #    sure the help message correctly lists your new addition.
 # 7. Try to list the configure options for each entry in the following order:
-#       C++ compiler       
+#       C++ compiler
 #       C compiler
 #       FORTRAN compiler
 #       compiler options
@@ -56,67 +56,13 @@ case $1 in
 #-----------------------------------------------------------------------------
 # LC machines
 #-----------------------------------------------------------------------------
-atlas_mpiicpc) # Atlas, using Intel MPI wrappers
-cat <<-EOF
-	--with-CXX=/usr/local/bin/mpiicpc-12.0.191
-	--with-CC=/usr/local/bin/mpiicc-12.0.191
-	--with-F77=/usr/local/bin/mpiifort-12.0.191
-	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib
-	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
-	--with-zlib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
-	--without-sundials
-	--without-petsc
-	--without-x
-	--enable-rpath=-Wl,-R
-EOF
-# Maintained by Brian Gunney
-;;
 
-atlas_mpipath) 
-# Atlas, using Pathscale MPI wrappers
-cat <<-EOF
-	--with-CXX=/usr/local/bin/mpipathCC
-	--with-CC=/usr/local/bin/mpipathcc
-	--with-F77=/usr/local/bin/mpipathf90
-	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_pathcc
-	--with-hdf5=/usr/local/tools/hdf5-pathscale-serial-1.8.1
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
-	--without-hypre
-	--without-sundials
-	--without-petsc
-	--without-x
-	--enable-rpath=-Wl,-R
-EOF
-# Maintained by Steven Smith
-;;
-
-
-atlas_mpipg) 
-# Atlas, using PGI MPI wrappers
-cat <<-EOF
-	--with-CXX=/usr/local/bin/mpipgCC
-	--with-CC=/usr/local/bin/mpipgcc
-	--with-F77=/usr/local/bin/mpipgf77
-	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib_pgcc
-	--with-hdf5=/usr/local/tools/hdf5-gnu-serial-1.8.1
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
-	--without-hypre
-	--without-sundials
-	--without-petsc
-	--without-x
-	--enable-rpath=-Wl,-R
-EOF
-# Maintained by Steven Smith
-;;
-
-dawn_mpixlcxx) # Dawn, using mpixlcxx
+bgq_mpixlcxx) # BG/Q, using mpixlcxx
 cat <<-EOF
 	--with-CXX=mpixlcxx
 	--with-CC=mpixlc
 	--with-F77=mpif77
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.1/parallel
+	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
 	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
 	--with-hypre=no
 	--without-sundials
@@ -127,57 +73,37 @@ EOF
 # Maintained by Brian Gunney
 ;;
 
-
-ubgl_mpcc) # BGL, using mpCC (may be outdated)
+seq_mpixlcxx) # Sequoia, using mpixlcxx
 cat <<-EOF
-	--with-CXX=mpCC
-	--with-CC=mpcc
-	--with-F77=mpxlf
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.1/parallel
+	--with-CXX=mpixlcxx
+	--with-CC=mpixlc
+	--with-F77=mpif77
+	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
 	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
 	--without-x
 	--enable-rpath=no
-	--enable-bgl
 EOF
-# Maintained by Brian Gunney
+#
 ;;
 
-ubgl_mpxlc) # uBGL, using mpxlC
+seq_thread_mpixlcxx) # Sequoia, threaded using mpixlcxx
 cat <<-EOF
-	--with-CXX=/usr/local/tools/compilers/ibm/mpxlC-9.0.0.3a
-	--with-CC=mpxlc
-	--with-F77=mpxlf
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.1/parallel
+	--with-CXX=mpixlcxx_r
+	--with-CC=mpixlc_r
+	--with-F77=mpif77
+	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
 	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
 	--without-x
 	--enable-rpath=no
-	--enable-bgl
+	--enable-threading
 EOF
-# Maintained by Brian Gunney and Susan Hazlett
-;;
-
-zeus_mpiicpc) # Zeus, Intel compilers with LLNL mpiicpc front ends
-cat <<-EOF
-	--with-CXX=/usr/local/bin/mpiicpc-12.0.191
-	--with-CC=/usr/local/bin/mpiicc-12.0.191
-	--with-F77=/usr/local/bin/mpiifort-12.0.191
-	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib
-	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
-	--with-zlib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
-	--without-sundials
-	--without-petsc
-	--without-x
-	--enable-rpath=-Wl,-R
-EOF
-# Maintained by Brian Gunney
+#
 ;;
 
 chaos5_mpiicc) # CHAOS5, Intel compilers with LLNL mpiicpc front ends
@@ -189,13 +115,13 @@ cat <<-EOF
 	--without-x
 	--without-sundials
 	--disable-shared
-	--disable-rpath
+	--enable-rpath=-Wl,-R
 	--with-zlib
-	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.8
-	--without-silo
+	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.5
+	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib
 	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
-	--without-tbb 
+	--without-tbb
 EOF
 # Maintained by Noah Elliott
 ;;
@@ -219,9 +145,9 @@ EOF
 # CASC machines
 #-----------------------------------------------------------------------------
 
-cygwin) 
+cygwin)
 # Cygwin compile
-cat <<-EOF 
+cat <<-EOF
 	--with-CXX=mpicxx
 	--with-CC=mpicc
 	--with-F77=mpif77
@@ -231,9 +157,9 @@ EOF
 # Maintained by Steven Smith
 ;;
 
-cygwin_ccache) 
+cygwin_ccache)
 # Cygwin compile
-cat <<-EOF 
+cat <<-EOF
 	--with-CXX="ccache mpicxx"
 	--with-CC="ccache mpicc"
 	--with-F77=mpif77
@@ -264,12 +190,12 @@ cat <<-EOF
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
 EOF
-# 
+#
 ;;
 
-# TODO Need to add in other support libraries in order to get complete 
+# TODO Need to add in other support libraries in order to get complete
 # coverage
-casc_rh5_insure) # CASC RedHat 5, Insure++ with default GNU compilers, 
+casc_rh5_insure) # CASC RedHat 5, Insure++ with default GNU compilers,
 cat <<-EOF
 	--with-CXX="/usr/apps/insure++/7.1.7/bin/insure /usr/bin/g++"
 	--with-CC="/usr/apps/insure++/7.1.7/bin/insure /usr/bin/gcc"
@@ -290,7 +216,7 @@ cat <<-EOF
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
 EOF
-# 
+#
 ;;
 
 casc_rh5_icc_x64) # CASC RedHat 5, Intel v12.0 compilers, x86_64
@@ -390,16 +316,16 @@ EOF
 # Misc other machines
 #-----------------------------------------------------------------------------
 
-macosx_gnu) 
+macosx_gnu)
 # Apple Mac OS/X, gnu 4.2 compilers from DawrwinPorts
 cat <<-EOF
 	--with-CXX=g++-mp-4.3
 	--with-CC=gcc-mp-4.3
 	--with-F77=gfortran-mp-4.3
-	--with-hdf5=/opt/local 
-	--with-mpi-include=/usr/include 
-	--with-mpi-lib-dirs=/usr/lib 
-	--with-mpi-libs="mpi" 
+	--with-hdf5=/opt/local
+	--with-mpi-include=/usr/include
+	--with-mpi-lib-dirs=/usr/lib
+	--with-mpi-libs="mpi"
 	--with-parallel-run-bin=/usr/bin/mpirun
 EOF
 # Maintained by Steven Smith
@@ -460,5 +386,5 @@ esac
 shift
 echo "$@"
 
-# 
+#
 

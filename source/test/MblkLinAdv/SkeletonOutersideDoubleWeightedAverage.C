@@ -116,11 +116,11 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<pdat::OutersideData<double> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<pdat::OutersideData<double> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());

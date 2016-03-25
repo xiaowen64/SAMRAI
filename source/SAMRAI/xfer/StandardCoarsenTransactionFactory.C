@@ -8,10 +8,6 @@
  *                for coarsen schedules.
  *
  ************************************************************************/
-
-#ifndef included_xfer_StandardCoarsenTransactionFactory_C
-#define included_xfer_StandardCoarsenTransactionFactory_C
-
 #include "SAMRAI/xfer/StandardCoarsenTransactionFactory.h"
 
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
@@ -97,4 +93,3 @@ StandardCoarsenTransactionFactory::allocate(
 
 }
 }
-#endif

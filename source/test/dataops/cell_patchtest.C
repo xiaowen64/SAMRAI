@@ -538,8 +538,8 @@ int main(
       }
 
       boost::shared_ptr<pdat::CellData<double> > weight(
-         tpatch->getPatchData(cwgt_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            tpatch->getPatchData(cwgt_id)));
       TBOX_ASSERT(weight);
       weight->fillAll(cell_vol);
 
@@ -549,14 +549,14 @@ int main(
 
       // Get pointers to patch data objects
       boost::shared_ptr<pdat::CellData<double> > cddata0(
-         tpatch->getPatchData(cdvindx[0]),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            tpatch->getPatchData(cdvindx[0])));
       boost::shared_ptr<pdat::CellData<double> > cddata1(
-         tpatch->getPatchData(cdvindx[1]),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            tpatch->getPatchData(cdvindx[1])));
       boost::shared_ptr<pdat::CellData<double> > cddata2(
-         tpatch->getPatchData(cdvindx[2]),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            tpatch->getPatchData(cdvindx[2])));
 
       TBOX_ASSERT(cddata0);
       TBOX_ASSERT(cddata1);
@@ -622,8 +622,8 @@ int main(
       double val_inbox = 1.0;
       double val_not_inbox = 3.0;
       boost::shared_ptr<pdat::CellData<double> > cvdata(
-         tpatch->getPatchData(cdvindx[0]),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            tpatch->getPatchData(cdvindx[0])));
 
       TBOX_ASSERT(cvdata);
 
@@ -1256,8 +1256,8 @@ doubleDataSameAsValue(
    bool test_passed = true;
 
    boost::shared_ptr<pdat::CellData<double> > cvdata(
-      patch->getPatchData(desc_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch->getPatchData(desc_id)));
 
    TBOX_ASSERT(cvdata);
 

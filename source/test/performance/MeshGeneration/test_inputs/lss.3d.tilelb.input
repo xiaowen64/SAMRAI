@@ -36,9 +36,6 @@ Main {
 
    load_balance = TRUE, TRUE, TRUE
 
-   efficiency_tol = 0.75
-   combine_tol = 0.75
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
@@ -62,6 +59,8 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  efficiency_tolerance = 0.75
+  combine_efficiency = 0.75
   DEV_min_box_size_from_cutting = 4, 4, 4
   DEV_build_zero_width_connector = TRUE
   DEV_cluster_locally = FALSE

@@ -446,7 +446,7 @@ bool CommTester::verifyCommunicationResults() const
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
-         tests_pass &=
+         tests_pass = tests_pass &&
             d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
       }
    }
@@ -638,7 +638,8 @@ void CommTester::setupHierarchy(
          main_input_db->getDatabase("PatchHierarchy")));
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-      new mesh::BergerRigoutsos(d_dim));
+      new mesh::BergerRigoutsos(d_dim,
+                                main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(

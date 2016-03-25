@@ -7,9 +7,6 @@
  * Description:   Set of boxes in a box_level of a distributed box graph.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevel_C
-#define included_hier_BoxLevel_C
-
 #include "SAMRAI/hier/BoxLevel.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -132,7 +129,7 @@ BoxLevel::BoxLevel(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_ratio(ratio),
 
    d_local_number_of_cells(0),
@@ -416,7 +413,7 @@ BoxLevel::clear()
    }
    if (isInitialized()) {
       clearForBoxChanges();
-      d_mpi = tbox::SAMRAI_MPI(tbox::SAMRAI_MPI::commNull);
+      d_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL);
       d_boxes.clear();
       d_global_boxes.clear();
       d_ratio(0) = 0;
@@ -474,7 +471,7 @@ BoxLevel::swap(
       Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
-      tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
+      tbox::SAMRAI_MPI tmpmpi(MPI_COMM_NULL);
       boost::shared_ptr<const BaseGridGeometry> tmpgridgeom(
          level_a.getGridGeometry());
 
@@ -494,9 +491,9 @@ BoxLevel::swap(
       level_a.d_local_number_of_cells = level_b.d_local_number_of_cells;
       level_b.d_local_number_of_cells = tmpint;
 
-      tmpint = level_a.d_global_number_of_cells;
+      long int tmplongint = level_a.d_global_number_of_cells;
       level_a.d_global_number_of_cells = level_b.d_global_number_of_cells;
-      level_b.d_global_number_of_cells = tmpint;
+      level_b.d_global_number_of_cells = tmplongint;
 
       tmpint = static_cast<int>(level_a.d_local_number_of_boxes);
       level_a.d_local_number_of_boxes = level_b.d_local_number_of_boxes;
@@ -594,7 +591,7 @@ BoxLevel::cacheGlobalReducedData() const
       }
    } else {
       if (d_mpi.getSize() > 1) {
-         int tmpa[2], tmpb[2];
+         long int tmpa[2], tmpb[2];
          tmpa[0] = getLocalNumberOfBoxes();
          tmpa[1] = getLocalNumberOfCells();
 
@@ -604,9 +601,9 @@ BoxLevel::cacheGlobalReducedData() const
          d_mpi.Allreduce(tmpa,
             tmpb,                        // Better to use MPI_IN_PLACE, but not some MPI's do not support.
             2,
-            MPI_INT,
+            MPI_LONG,
             MPI_SUM);
-         d_global_number_of_boxes = tmpb[0];
+         d_global_number_of_boxes = (int)tmpb[0];
          d_global_number_of_cells = tmpb[1];
       } else {
          d_global_number_of_boxes = getLocalNumberOfBoxes();
@@ -1655,6 +1652,4 @@ BoxLevel::recursivePrint(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

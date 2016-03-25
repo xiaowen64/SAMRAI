@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for edge-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeComplexLinearTimeInterpolateOp_C
-#define included_pdat_EdgeComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/EdgeComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -253,4 +249,3 @@ EdgeComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

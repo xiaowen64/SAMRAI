@@ -7,10 +7,6 @@
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
-
-#ifndef included_algs_PatchBoundaryNodeSum_C
-#define included_algs_PatchBoundaryNodeSum_C
-
 #include "SAMRAI/algs/PatchBoundaryNodeSum.h"
 
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -222,8 +218,8 @@ PatchBoundaryNodeSum::registerSum(
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<pdat::NodeDataFactory<double> > node_factory(
-      var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
+         var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id)));
 
    TBOX_ASSERT(node_factory);
 
@@ -734,11 +730,11 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          for (int i = 0; i < node_data_id_size; i++) {
 
             boost::shared_ptr<pdat::NodeData<double> > node_data(
-               fpatch->getPatchData(node_data_id[i]),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+                  fpatch->getPatchData(node_data_id[i])));
             boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-               cfpatch->getPatchData(onode_data_id[i]),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+                  cfpatch->getPatchData(onode_data_id[i])));
 
             TBOX_ASSERT(node_data);
             TBOX_ASSERT(onode_data);
@@ -1108,11 +1104,11 @@ PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
       int node_data_id_size = static_cast<int>(node_data_id.size());
       for (int i = 0; i < node_data_id_size; i++) {
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            patch->getPatchData(node_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch->getPatchData(node_data_id[i])));
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            patch->getPatchData(onode_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+               patch->getPatchData(onode_data_id[i])));
 
          TBOX_ASSERT(node_data);
          TBOX_ASSERT(onode_data);
@@ -1139,11 +1135,11 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
       int node_data_id_size = static_cast<int>(node_data_id.size());
       for (int i = 0; i < node_data_id_size; i++) {
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            patch->getPatchData(onode_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+               patch->getPatchData(onode_data_id[i])));
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            patch->getPatchData(node_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch->getPatchData(node_data_id[i])));
 
          TBOX_ASSERT(node_data);
          TBOX_ASSERT(onode_data);
@@ -1156,5 +1152,3 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
 
 }
 }
-
-#endif

@@ -7,10 +7,6 @@
  * Description:   Factory for creating outernode sum transaction objects
  *
  ************************************************************************/
-
-#ifndef included_algs_OuternodeSumTransactionFactory_C
-#define included_algs_OuternodeSumTransactionFactory_C
-
 #include "SAMRAI/algs/OuternodeSumTransactionFactory.h"
 
 #include "SAMRAI/pdat/OuternodeData.h"
@@ -46,7 +42,7 @@ OuternodeSumTransactionFactory::~OuternodeSumTransactionFactory()
  */
 
 void OuternodeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data** refine_items,
+   const xfer::RefineClasses::Data*const* refine_items,
    int num_refine_items)
 {
    OuternodeSumTransaction::setRefineItems(refine_items,
@@ -151,8 +147,8 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
             boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-               patch->getPatchData(n),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+                  patch->getPatchData(n)));
             TBOX_ASSERT(onode_data);
             onode_data->fillAll(0.0);
          }
@@ -163,4 +159,3 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
 
 }
 }
-#endif

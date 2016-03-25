@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for complex outerface data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceComplexLinearTimeInterpolateOp_C
-#define included_pdat_OuterfaceComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/OuterfaceComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -260,4 +256,3 @@ OuterfaceComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

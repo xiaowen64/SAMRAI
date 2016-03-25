@@ -50,7 +50,7 @@ public:
     */
    void
    setRefineItems(
-      const xfer::RefineClasses::Data ** refine_items,
+      const xfer::RefineClasses::Data *const* refine_items,
       int num_refine_items);
 
    /*!
@@ -152,7 +152,7 @@ private:
    operator = (
       const OuteredgeSumTransactionFactory&);
 
-   const xfer::RefineClasses::Data** d_refine_items;
+   const xfer::RefineClasses::Data*const* d_refine_items;
    int d_number_refine_items;
 
 };

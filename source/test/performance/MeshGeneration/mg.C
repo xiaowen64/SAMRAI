@@ -155,7 +155,7 @@ size_t num_records_written = 0;
 /*
 ********************************************************************************
 *
-* Performance testing for load balancers.
+* Performance testing for mesh generation operations.
 *
 * 1. Build "level 0" from the domain description (input parameter
 * "domain_boxes").  L0 is for doing the test, not for checking load
@@ -185,8 +185,6 @@ int main(
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-
-   const int rank = mpi.getRank();
 
    /*
     * Process command line arguments.  For each run, the input
@@ -227,9 +225,10 @@ int main(
       /*
        * Set up the timer manager.
        */
-      if (input_db->isDatabase("TimerManager")) {
-         TimerManager::createManager(input_db->getDatabase("TimerManager"));
-      }
+      TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
 
       /*
        * Retrieve "Main" section from input database.
@@ -252,26 +251,26 @@ int main(
        * Modify basename for this particular run.
        * Add the number of processes and the case name.
        */
+      std::string base_name_ext = base_name;
       if (!case_name.empty()) {
-         base_name = base_name + '-' + case_name;
+         base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
-            5);
+      base_name_ext = base_name_ext + '-' +
+           tbox::Utilities::processorToString(mpi.getSize());
       tbox::plog << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
-                 << base_name << "'\n";
+                 << base_name_ext << "'\n";
 
       if (!case_name.empty()) {
          tbox::plog << "Added case name (" << case_name << ") and nprocs ("
                     << mpi.getSize() << ") to base name -> '"
-                    << base_name << "'\n";
+                    << base_name_ext << "'\n";
       }
 
       /*
        * Start logging.
        */
-      const std::string log_file_name = base_name + ".log";
+      const std::string log_file_name = base_name_ext + ".log";
       bool log_all_nodes = false;
       log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
             log_all_nodes);
@@ -388,9 +387,6 @@ int main(
 
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
          createBoxGenerator( input_db, box_generator_type, dim );
-
-      double efficiency_tol = main_db->getDoubleWithDefault("efficiency_tol", 0.7);
-      double combine_tol = main_db->getDoubleWithDefault("combine_tol", 0.7);
 
       /*
        * Create hierarchy.
@@ -617,8 +613,6 @@ int main(
             1 /* tag_val */,
             hier::BoxContainer(L0->getGlobalBoundingBox(0)),
             min_size,
-            exact_tagging ? 1.0 : efficiency_tol,
-            exact_tagging ? 1.0 : combine_tol,
             required_connector_width);
 
          outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
@@ -750,8 +744,6 @@ int main(
             1 /* tag_val */,
             hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
-            exact_tagging ? 1.0 : efficiency_tol,
-            exact_tagging ? 1.0 : combine_tol,
             required_connector_width);
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );
@@ -863,7 +855,7 @@ int main(
              * Write the plot file.
              */
             DerivedVisOwnerData owner_writer;
-            const std::string visit_filename = base_name + ".visit";
+            const std::string visit_filename = base_name_ext + ".visit";
             appu::VisItDataWriter visit_data_writer(dim,
                                                     "VisIt Writer",
                                                     visit_filename);
@@ -877,6 +869,16 @@ int main(
                       << "but VisIt dumps are not supported due to\n"
                       << "not having configured with HDF5.\n");
 #endif
+      }
+
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         std::string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
       }
 
    }
@@ -908,15 +910,7 @@ int main(
     */
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
-
-   if (error_count == 0) {
-      SAMRAI_MPI::finalize();
-   } else {
-      std::cout << "Process " << std::setw(5) << rank << " aborting."
-                << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
+   SAMRAI_MPI::finalize();
 
    return error_count;
 }
@@ -1321,7 +1315,7 @@ void enforceNesting(
 
    const hier::BoxLevel &L0 = L0_to_L1.getBase();
 
-   const int cell_count = L1.getGlobalNumberOfCells();
+   const long int cell_count = L1.getGlobalNumberOfCells();
 
    /*
     * Make L1 nest inside L0 by nesting_width.

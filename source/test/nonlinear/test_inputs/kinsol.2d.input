@@ -83,11 +83,14 @@ PatchHierarchy {
    sequentialize_patch_indices = TRUE
 }
 
-// Refer to mesh::GriddingAlgorithm for input
-GriddingAlgorithm{
-
+// Refer to mesh::BergerRigoutsos for input
+BergerRigoutsos {
    combine_efficiency = 0.75
    efficiency_tolerance = 0.75
+}
+
+// Refer to mesh::GriddingAlgorithm for input
+GriddingAlgorithm{
 }
 
 // Refer to mesh::StandardTagAndInitialize for input

@@ -216,6 +216,8 @@ BergerRigoutsos {
    DEV_log_node_history = FALSE
    sort_output_nodes = TRUE
    max_box_size = 100, 100, 100
+   combine_efficiency = 0.80
+   efficiency_tolerance = 0.80
    DEV_log_cluster_summary = TRUE
    DEV_log_cluster = FALSE
    DEV_barrier_before = TRUE
@@ -275,7 +277,8 @@ TimerManager {
                             "tbox::AsyncCommStage::*",
                             "tbox::JobRelauncher::*",
                             "tbox::Schedule::*",
-                            "xfer::*::*"
+                            "xfer::*::*",
+                            "appu::main::all"
 }
 
 //See hier::PatchHierarchy for input
@@ -310,9 +313,6 @@ PatchHierarchy {
 
 //See mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
-
-   combine_efficiency = 0.80
-   efficiency_tolerance = 0.80
    sequentialize_patch_indices = FALSE
    DEV_barrier_and_time = TRUE
    DEV_log_metadata_statistics = TRUE

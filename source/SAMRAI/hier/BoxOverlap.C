@@ -7,10 +7,6 @@
  * Description:   Base class that describes intersections between AMR boxes
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxOverlap_C
-#define included_hier_BoxOverlap_C
-
 #include "SAMRAI/hier/BoxOverlap.h"
 
 namespace SAMRAI {
@@ -33,4 +29,3 @@ BoxOverlap::print(
 
 }
 }
-#endif

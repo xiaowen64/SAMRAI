@@ -7,10 +7,6 @@
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
-
-#ifndef included_algs_TimeRefinementIntegrator_C
-#define included_algs_TimeRefinementIntegrator_C
-
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -1799,4 +1795,3 @@ TimeRefinementIntegrator::finalizeCallback()
 
 }
 }
-#endif

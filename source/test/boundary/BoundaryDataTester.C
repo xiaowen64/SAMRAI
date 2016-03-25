@@ -90,8 +90,8 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
    for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
 
       boost::shared_ptr<pdat::CellData<double> > cvdata(
-         patch.getPatchData(d_variables[iv], d_variable_context),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[iv], d_variable_context)));
       TBOX_ASSERT(cvdata);
 
       tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << endl;
@@ -192,8 +192,8 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
-            patch->getPatchData(d_variables[iv], d_variable_context),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_variables[iv], d_variable_context)));
 
          TBOX_ASSERT(cvdata);
          cvdata->getArrayData().undefineData();
@@ -207,8 +207,8 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
-            patch->getPatchData(d_variables[iv], d_variable_context),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_variables[iv], d_variable_context)));
 
          TBOX_ASSERT(cvdata);
          for (int id = 0; id < cvdata->getDepth(); id++) {
@@ -679,8 +679,8 @@ void BoundaryDataTester::checkBoundaryData(
 #endif
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
@@ -692,8 +692,8 @@ void BoundaryDataTester::checkBoundaryData(
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
-            patch.getPatchData(d_variables[iv], d_variable_context),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables[iv], d_variable_context)));
          TBOX_ASSERT(cvdata);
 
          int depth = d_variable_depth[iv];

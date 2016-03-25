@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideOverlap_C
-#define included_pdat_SideOverlap_C
-
 #include "SAMRAI/pdat/SideOverlap.h"
 
 #include "SAMRAI/pdat/SideGeometry.h"
@@ -100,4 +96,3 @@ SideOverlap::getTransformation() const
 
 }
 }
-#endif

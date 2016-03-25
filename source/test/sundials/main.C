@@ -244,7 +244,8 @@ int main(
             input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-         new mesh::BergerRigoutsos(dim));
+         new mesh::BergerRigoutsos(dim,
+         input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
@@ -362,8 +363,8 @@ int main(
                const boost::shared_ptr<hier::Patch>& patch = *p;
 
                boost::shared_ptr<CellData<double> > y_data(
-                  y_init->getComponentPatchData(0, *patch),
-                  BOOST_CAST_TAG);
+                  BOOST_CAST<CellData<double>, hier::PatchData>(
+                     y_init->getComponentPatchData(0, *patch)));
                TBOX_ASSERT(y_data);
                y_data->print(y_data->getBox());
             }
@@ -443,8 +444,8 @@ int main(
                   const boost::shared_ptr<hier::Patch>& patch = *p;
 
                   boost::shared_ptr<CellData<double> > y_data(
-                     y_result->getComponentPatchData(0, *patch),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<CellData<double>, hier::PatchData>(
+                        y_result->getComponentPatchData(0, *patch)));
                   TBOX_ASSERT(y_data);
                   y_data->print(y_data->getBox());
                }

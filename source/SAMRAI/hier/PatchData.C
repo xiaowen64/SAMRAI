@@ -7,10 +7,6 @@
  * Description:   Abstract base class for patch data objects
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchData_C
-#define included_hier_PatchData_C
-
 #include "SAMRAI/hier/PatchData.h"
 
 namespace SAMRAI {
@@ -89,4 +85,3 @@ PatchData::putToRestart(
 
 }
 }
-#endif

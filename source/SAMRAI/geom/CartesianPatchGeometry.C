@@ -7,10 +7,6 @@
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianPatchGeometry_C
-#define included_geom_CartesianPatchGeometry_C
-
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -96,4 +92,3 @@ CartesianPatchGeometry::printClassData(
 
 }
 }
-#endif

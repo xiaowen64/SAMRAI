@@ -46,10 +46,6 @@ Main {
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE, TRUE
 
-   // Clustering efficiencies similar to those of GriddingAlgorithm.
-   efficiency_tol = 0.75
-   combine_tol = 0.75
-
    // Mesh generator: SphericalShellGenerator, SinusoidalFrontGenerator, or ShrunkenLevelGenerator.
    mesh_generator_name = "SphericalShellGenerator"
 
@@ -78,6 +74,8 @@ TileClustering {
 // Used if box_generator_type is BergerRigoutsos.  Refer to mesh::BergerRigoutsos for input.
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  efficiency_tolerance = 0.75
+  combine_efficiency = 0.75
   DEV_min_box_size_from_cutting = 4, 4, 4
   DEV_build_zero_width_connector = TRUE
   DEV_cluster_locally = FALSE

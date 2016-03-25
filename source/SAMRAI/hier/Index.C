@@ -7,10 +7,6 @@
  * Description:   Interface for the AMR Index object
  *
  ************************************************************************/
-
-#ifndef included_hier_Index_C
-#define included_hier_Index_C
-
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -134,5 +130,3 @@ Index::finalizeCallback()
 
 }
 }
-
-#endif

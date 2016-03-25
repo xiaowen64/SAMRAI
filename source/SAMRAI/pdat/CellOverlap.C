@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellOverlap_C
-#define included_pdat_CellOverlap_C
-
 #include "SAMRAI/pdat/CellOverlap.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -83,4 +79,3 @@ CellOverlap::print(
 
 }
 }
-#endif

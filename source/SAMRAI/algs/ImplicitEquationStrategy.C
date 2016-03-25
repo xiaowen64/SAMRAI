@@ -7,10 +7,6 @@
  * Description:   Interface between implicit integrator and equations to solve.
  *
  ************************************************************************/
-
-#ifndef included_algs_ImplicitEquationStrategy_C
-#define included_algs_ImplicitEquationStrategy_C
-
 #include "SAMRAI/algs/ImplicitEquationStrategy.h"
 
 namespace SAMRAI {
@@ -26,4 +22,3 @@ ImplicitEquationStrategy::~ImplicitEquationStrategy()
 
 }
 }
-#endif

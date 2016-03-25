@@ -495,7 +495,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
       const hier::Connector& coarse_to_unfilled,
-      const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
+      const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
       overlaps) const;
 
    /*!
@@ -504,7 +504,7 @@ private:
     */
    void
    computeRefineOverlaps(
-      std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
@@ -703,6 +703,24 @@ private:
       hier::BoxLevel& unfilled,
       hier::Connector& dst_to_unfilled,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+
+   /*!
+    * @brief make an unfilled box level consisting of node-centered boxes
+    *
+    * When this is called, there already exists a cell-centered unfilled
+    * box level, which is the first argument passed in here.
+    * This method creates a node-centered unfilled box level, consisting of
+    * the boxes in the cell-centered unfilled level converted to a node
+    * centering, with any nodes that can be filled by this schedule's source
+    * level removed.
+    *
+    * @param[in] unfilled_box_level  Cell-centered unfilled level
+    * @param[in] dst_to_unfiled      Connector from destination to unfilled
+    */
+   void
+   makeNodeCenteredUnfilledBoxLevel( 
+      const hier::BoxLevel& unfilled_box_level,
+      const hier::Connector& dst_to_unfilled);
 
    /*!
     * @brief Set up a coarse interpolation BoxLevel and related data.
@@ -908,8 +926,8 @@ private:
     * Structures that store refine data items.
     */
    boost::shared_ptr<RefineClasses> d_refine_classes;
-   int d_number_refine_items;
-   const RefineClasses::Data** d_refine_items;
+
+   std::vector<const RefineClasses::Data*> d_refine_items;
 
    /*!
     * @brief boost::shared_ptr to the destination patch level.
@@ -1082,6 +1100,7 @@ private:
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
    boost::shared_ptr<hier::BoxLevel> d_unfilled_box_level;
+   boost::shared_ptr<hier::BoxLevel> d_unfilled_node_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
@@ -1094,14 +1113,14 @@ private:
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_refine_overlaps;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData() for
     * unfilled boxes at enhanced connectivity
     */
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
    /*!
@@ -1113,6 +1132,8 @@ private:
     * @brief Connector from d_encon_level to d_coarse_interp_encon_level.
     */
    boost::shared_ptr<hier::Connector> d_encon_to_coarse_interp_encon;
+
+   boost::shared_ptr<hier::Connector> d_unfilled_to_unfilled_node;
 
    /*!
     * @brief Connector d_coarse_interp_level to d_unfilled_box_level.

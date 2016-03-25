@@ -68,7 +68,7 @@ public:
     */
    virtual void
    setRefineItems(
-      const RefineClasses::Data ** refine_items,
+      const RefineClasses::Data *const* refine_items,
       int num_refine_items) = 0;
 
    /*!

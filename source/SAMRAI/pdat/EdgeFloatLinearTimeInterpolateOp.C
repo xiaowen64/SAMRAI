@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for edge-centered float patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeFloatLinearTimeInterpolateOp_C
-#define included_pdat_EdgeFloatLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/hier/Box.h"
@@ -252,4 +248,3 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

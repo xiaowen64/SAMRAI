@@ -8,10 +8,6 @@
  *                for refine schedules.
  *
  ************************************************************************/
-
-#ifndef included_xfer_StandardRefineTransactionFactory_C
-#define included_xfer_StandardRefineTransactionFactory_C
-
 #include "SAMRAI/xfer/StandardRefineTransactionFactory.h"
 
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
@@ -48,7 +44,7 @@ StandardRefineTransactionFactory::~StandardRefineTransactionFactory()
 
 void
 StandardRefineTransactionFactory::setRefineItems(
-   const RefineClasses::Data** refine_items,
+   const RefineClasses::Data*const* refine_items,
    int num_refine_items)
 {
    RefineCopyTransaction::setRefineItems(refine_items, num_refine_items);
@@ -135,4 +131,3 @@ StandardRefineTransactionFactory::preprocessScratchSpace(
 
 }
 }
-#endif

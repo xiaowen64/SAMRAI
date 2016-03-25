@@ -47,14 +47,16 @@ protected:
       int& operation_mpi_tag,
       bool print_steps) const;
 
-   //! @brief Send discovery to one processor during privateBridge/Modify.
+   /*!
+    * @brief Pack referenced neighbors discovered during privateBridge/Modify
+    * into message for one processor.
+    */
    void
-   sendDiscoveryToOneProcess(
+   packReferencedNeighbors(
       std::vector<int>& send_mesg,
-      const int idx_offset_to_ref,
-      BoxContainer& referenced_new_head_nabrs,
-      BoxContainer& referenced_new_base_nabrs,
-      tbox::AsyncCommPeer<int>& outgoing_comm,
+      int idx_offset_to_ref,
+      const BoxContainer& referenced_new_head_nabrs,
+      const BoxContainer& referenced_new_base_nabrs,
       const tbox::Dimension& dim,
       bool print_steps) const;
 
@@ -65,7 +67,7 @@ protected:
    receiveAndUnpack(
       Connector& new_base_to_new_head,
       Connector* new_head_to_new_base,
-      std::set<int>& incoming_ranks,
+      const std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
       const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,

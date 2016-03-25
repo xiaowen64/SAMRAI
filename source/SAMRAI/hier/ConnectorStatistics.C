@@ -7,9 +7,6 @@
  * Description:   Statistical characteristics of a Connector.
  *
  ************************************************************************/
-#ifndef included_hier_ConnectorStatistics_C
-#define included_hier_ConnectorStatistics_C
-
 #include "SAMRAI/hier/ConnectorStatistics.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -160,6 +157,12 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
          }
          else if ( coarsen_head ) {
             neighbor.coarsen(connector.getRatio());
+         }
+         if ( neighbor.getBlockId() != base_box.getBlockId() ) {
+            base.getGridGeometry()->transformBox( neighbor,
+                                                  base.getRefinementRatio(),
+                                                  base_box.getBlockId(),
+                                                  neighbor.getBlockId() );
          }
          neighbor *= base_box;
          const int size = neighbor.size();
@@ -332,6 +335,4 @@ ConnectorStatistics::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

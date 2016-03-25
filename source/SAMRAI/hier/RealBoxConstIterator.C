@@ -7,9 +7,6 @@
  * Description:   Iterator over real Boxes in a BoxContainer.
  *
  ************************************************************************/
-#ifndef included_hier_RealBoxConstIterator_C
-#define included_hier_RealBoxConstIterator_C
-
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
 namespace SAMRAI {
@@ -68,4 +65,3 @@ RealBoxConstIterator::operator ++ (
 
 }
 }
-#endif

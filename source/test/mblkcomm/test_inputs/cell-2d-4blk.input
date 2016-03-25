@@ -90,18 +90,10 @@ BlockGridGeometry {
 
    Singularity0 {
       blocks = 0,1,2
-
-      sing_box_0 = [(-1,20),(-1,20)]
-      sing_box_1 = [(20,-1),(20,-1)]
-      sing_box_2 = [(-1,-1),(-1,-1)]
    }
 
    Singularity1 {
       blocks = 0,2,3
-
-      sing_box_0 = [(15,20),(15,20)]
-      sing_box_2 = [(15,-1),(15,-1)]
-      sing_box_3 = [(-1,-1),(-1,-1)]
    }
  
    BlockNeighbors0 {
@@ -145,7 +137,7 @@ BlockGridGeometry {
       block_b = 3
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 15,0
+      point_in_a_space = 14,0
       point_in_b_space = -1,0
    }
 
@@ -167,14 +159,13 @@ PatchHierarchy {
    }
 }
 
-
-
-
-GriddingAlgorithm {
-
+BergerRigoutsos {
    efficiency_tolerance     = 0.70e0   // min % of tag cells in new patch level
    combine_efficiency       = 0.85e0   // chop box if sum of volumes of smaller
                                        // boxes < efficiency * vol of large box
+}
+
+GriddingAlgorithm {
 }
 
 TreeLoadBalancer {

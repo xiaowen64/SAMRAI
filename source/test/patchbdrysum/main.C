@@ -232,7 +232,8 @@ int main(
        * "wave_eqn_model" problem class to define the user-specific operations.
        */
       boost::shared_ptr<BergerRigoutsos> box_generator(
-         new BergerRigoutsos(dim));
+         new BergerRigoutsos(dim,
+         input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<TreeLoadBalancer> load_balancer(
          new TreeLoadBalancer(dim,

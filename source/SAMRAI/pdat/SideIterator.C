@@ -7,10 +7,6 @@
  * Description:   Iterator for side centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideIterator_C
-#define included_pdat_SideIterator_C
-
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
@@ -75,4 +71,3 @@ SideIterator::operator ++ (
 
 }
 }
-#endif

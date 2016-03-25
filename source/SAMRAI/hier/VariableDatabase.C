@@ -7,10 +7,6 @@
  * Description:   Manager class for variables used in a SAMRAI application.
  *
  ************************************************************************/
-
-#ifndef included_hier_VariableDatabase_C
-#define included_hier_VariableDatabase_C
-
 #include "SAMRAI/hier/VariableDatabase.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -22,12 +18,11 @@
 namespace SAMRAI {
 namespace hier {
 
-VariableDatabase *
-VariableDatabase::s_variable_database_instance = 0;
+VariableDatabase * VariableDatabase::s_variable_database_instance(0);
 
-int VariableDatabase::s_context_array_alloc_size = 10;
-int VariableDatabase::s_variable_array_alloc_size = 100;
-int VariableDatabase::s_descriptor_array_alloc_size = 200;
+const int VariableDatabase::s_context_array_alloc_size(10);
+const int VariableDatabase::s_variable_array_alloc_size(100);
+const int VariableDatabase::s_descriptor_array_alloc_size(200);
 
 tbox::StartupShutdownManager::Handler
 VariableDatabase::s_shutdown_handler(
@@ -1193,4 +1188,3 @@ VariableDatabase::registerVariableAndContext_Private(
 
 }
 }
-#endif

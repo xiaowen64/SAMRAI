@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex data arrays.
  *
  ************************************************************************/
-
-#ifndef included_math_ArrayDataNormOpsComplex_C
-#define included_math_ArrayDataNormOpsComplex_C
-
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -1107,4 +1103,3 @@ ArrayDataNormOpsComplex::maxNorm(
 
 }
 }
-#endif

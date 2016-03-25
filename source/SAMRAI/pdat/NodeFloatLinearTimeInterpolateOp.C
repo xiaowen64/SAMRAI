@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for node-centered float patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeFloatLinearTimeInterpolateOp_C
-#define included_pdat_NodeFloatLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/NodeFloatLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/hier/Box.h"
@@ -181,4 +177,3 @@ NodeFloatLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

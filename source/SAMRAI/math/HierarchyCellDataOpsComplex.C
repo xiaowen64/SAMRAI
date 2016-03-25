@@ -7,10 +7,6 @@
  * Description:   Operations for complex cell data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyCellDataOpsComplex_C
-#define included_math_HierarchyCellDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyCellDataOpsComplex.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
@@ -113,11 +109,11 @@ HierarchyCellDataOpsComplex::copyData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s);
@@ -136,12 +132,12 @@ HierarchyCellDataOpsComplex::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::CellDataFactory<dcomplex> > d1fact(
-      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellDataFactory<dcomplex>, hier::PatchDataFactory>(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::CellDataFactory<dcomplex> > d2fact(
-      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellDataFactory<dcomplex>, hier::PatchDataFactory>(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -189,8 +185,8 @@ HierarchyCellDataOpsComplex::printData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -220,8 +216,8 @@ HierarchyCellDataOpsComplex::setToScalar(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -260,11 +256,11 @@ HierarchyCellDataOpsComplex::scale(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > dst(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -296,11 +292,11 @@ HierarchyCellDataOpsComplex::addScalar(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > dst(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -332,14 +328,14 @@ HierarchyCellDataOpsComplex::add(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -372,14 +368,14 @@ HierarchyCellDataOpsComplex::subtract(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -412,14 +408,14 @@ HierarchyCellDataOpsComplex::multiply(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -452,14 +448,14 @@ HierarchyCellDataOpsComplex::divide(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -491,11 +487,11 @@ HierarchyCellDataOpsComplex::reciprocal(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(src);
@@ -529,14 +525,14 @@ HierarchyCellDataOpsComplex::linearSum(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -570,14 +566,14 @@ HierarchyCellDataOpsComplex::axpy(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -611,14 +607,14 @@ HierarchyCellDataOpsComplex::axmy(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s1(
-            p->getPatchData(src1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > s2(
-            p->getPatchData(src2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(s1);
@@ -650,11 +646,11 @@ HierarchyCellDataOpsComplex::abs(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<double> > d(
-            p->getPatchData(dst_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               p->getPatchData(dst_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > src(
-            p->getPatchData(src_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(src);
@@ -686,8 +682,8 @@ HierarchyCellDataOpsComplex::setRandomValues(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -728,8 +724,8 @@ HierarchyCellDataOpsComplex::numberOfEntries(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -771,11 +767,11 @@ HierarchyCellDataOpsComplex::sumControlVolumes(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<pdat::CellData<double> > cv(
-            p->getPatchData(vol_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               p->getPatchData(vol_id)));
 
          TBOX_ASSERT(d);
          TBOX_ASSERT(cv);
@@ -815,8 +811,8 @@ HierarchyCellDataOpsComplex::L1Norm(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d);
@@ -877,11 +873,11 @@ HierarchyCellDataOpsComplex::weightedL2Norm(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > w(
-            p->getPatchData(wgt_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(wgt_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d);
@@ -962,8 +958,8 @@ HierarchyCellDataOpsComplex::maxNorm(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d);
@@ -1013,11 +1009,11 @@ HierarchyCellDataOpsComplex::dot(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > d1(
-            p->getPatchData(data1_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data1_id)));
          boost::shared_ptr<pdat::CellData<dcomplex> > d2(
-            p->getPatchData(data2_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data2_id)));
          boost::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(d1);
@@ -1078,11 +1074,11 @@ HierarchyCellDataOpsComplex::integral(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<dcomplex> > data(
-            p->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               p->getPatchData(data_id)));
          boost::shared_ptr<pdat::CellData<double> > vol(
-            p->getPatchData(vol_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
@@ -1114,4 +1110,3 @@ HierarchyCellDataOpsComplex::integral(
 
 }
 }
-#endif

@@ -15,6 +15,8 @@ Main {
    // Dimension of problem.  Vectors in this problem should have compatible length.
    dim = 2
 
+   base_name = "test.2d.1blk"
+
    // log file name
    log_file_name    = "newtest.log"
 
@@ -134,12 +136,21 @@ MblkLinAdv {
 TimerManager {
    timer_list               = "apps::*::*",
                               "algs::*::*",
-                              "mesh::*::*"
+                              "mesh::*::*",
+                              "appu::main::all"
 //   print_exclusive      = TRUE
    print_summed           = TRUE
    print_max              = TRUE
 //   print_timer_overhead   = TRUE
    print_threshold        = 0.0
+}
+
+
+// Refer to input documentation for mesh::BergerRigoutsos class.
+BergerRigoutsos {
+   efficiency_tolerance    = 0.85e0   // min % of tag cells in new patch level
+   combine_efficiency      = 0.95e0   // chop box if sum of volumes of smaller
+                                      // boxes < efficiency * vol of large box
 }
 
 
@@ -173,10 +184,6 @@ PatchHierarchy {
 // Refer to input documentation for mesh::GriddingAlgorithm class.
 GriddingAlgorithm{
    sequentialize_patch_indices = TRUE
-
-   efficiency_tolerance    = 0.85e0   // min % of tag cells in new patch level
-   combine_efficiency      = 0.95e0   // chop box if sum of volumes of smaller
-                                      // boxes < efficiency * vol of large box
 }
 
 

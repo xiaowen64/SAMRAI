@@ -8,10 +8,6 @@
  *                (basic hyperbolic systems)
  *
  ************************************************************************/
-
-#ifndef included_algs_HyperbolicLevelIntegrator_C
-#define included_algs_HyperbolicLevelIntegrator_C
-
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 
 #include "SAMRAI/pdat/CellData.h"
@@ -1984,8 +1980,8 @@ HyperbolicLevelIntegrator::registerVariable(
 
          if (d_flux_is_face) {
             boost::shared_ptr<pdat::FaceDataFactory<double> > fdf(
-               var->getPatchDataFactory(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::FaceDataFactory<double>,
+                          hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
             fluxsum.reset(new pdat::OuterfaceVariable<double>(
                   dim,
@@ -1994,8 +1990,8 @@ HyperbolicLevelIntegrator::registerVariable(
             d_flux_face_registered = true;
          } else {
             boost::shared_ptr<pdat::SideDataFactory<double> > sdf(
-               var->getPatchDataFactory(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::SideDataFactory<double>,
+                          hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
             fluxsum.reset(new pdat::OutersideVariable<double>(
                   dim,
@@ -2110,15 +2106,15 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
                if (d_flux_is_face) {
                   boost::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
-                     patch->getPatchData(fsum_id),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                        patch->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
                   boost::shared_ptr<pdat::OutersideData<double> > fsum_data(
-                     patch->getPatchData(fsum_id),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                        patch->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
@@ -2427,17 +2423,12 @@ HyperbolicLevelIntegrator::recordStatistics(
             getStatistic(std::string("HLI_TimeL") + lnstr, "PROC_STAT");
       }
 
-      double level_gridcells = 0.;
-      double level_local_patches = 0.;
-      for (hier::PatchLevel::iterator ip(patch_level.begin());
-           ip != patch_level.end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
-         level_gridcells += patch->getBox().size();
-         level_local_patches += 1.0;
-      }
-
-      s_boxes_stat[ln]->recordProcStat(level_local_patches);
-      s_cells_stat[ln]->recordProcStat(level_gridcells);
+      double level_local_boxes =
+         static_cast<double>(patch_level.getBoxLevel()->getLocalNumberOfBoxes());
+      double level_local_cells =
+         static_cast<double>(patch_level.getBoxLevel()->getLocalNumberOfCells());
+      s_boxes_stat[ln]->recordProcStat(level_local_boxes);
+      s_cells_stat[ln]->recordProcStat(level_local_cells);
       s_timestamp_stat[ln]->recordProcStat(current_time);
 
    }
@@ -2811,5 +2802,3 @@ HyperbolicLevelIntegrator::finalizeCallback()
 
 }
 }
-
-#endif

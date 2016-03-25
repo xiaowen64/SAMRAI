@@ -7,10 +7,6 @@
  * Description:   Box geometry information for outeredge centered objects
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuteredgeGeometry_C
-#define included_pdat_OuteredgeGeometry_C
-
 #include "SAMRAI/pdat/OuteredgeGeometry.h"
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
@@ -452,4 +448,3 @@ OuteredgeGeometry::setUpOverlap(
 
 }
 }
-#endif

@@ -7,9 +7,6 @@
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
-#ifndef included_mesh_TileClustering_C
-#define included_mesh_TileClustering_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/mesh/TileClustering.h"
@@ -35,12 +32,13 @@ TileClustering::TileClustering(
    d_box_size(hier::IntVector(d_dim, 8)),
    d_coalesce_boxes(true),
    d_log_cluster_summary(false),
+   d_log_cluster(false),
    d_barrier_and_time(false),
    d_print_steps(false)
 {
    getFromInput(input_db);
    setTimers();
-   d_oca.setTimerPrefix("hier::TileClustering");
+   d_oca.setTimerPrefix("mesh::TileClustering");
 }
 
 TileClustering::~TileClustering()
@@ -96,12 +94,8 @@ TileClustering::findBoxesContainingTags(
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
    const hier::IntVector& min_box,
-   const double efficiency_tol,
-   const double combine_tol,
    const hier::IntVector& max_gcw)
 {
-   NULL_USE(efficiency_tol);
-   NULL_USE(combine_tol);
    NULL_USE(min_box);
    NULL_USE(max_gcw);
 
@@ -144,7 +138,7 @@ TileClustering::findBoxesContainingTags(
 
    t_cluster->start();
 
-   tag_box_level.getBoxes().makeTree();
+   tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
 
    // Generate new_box_level and Connectors
    for ( hier::PatchLevel::iterator pi=tag_level->begin();
@@ -187,23 +181,18 @@ TileClustering::findBoxesContainingTags(
                hier::Box tmp_new_box(cindex, cindex, coarsened_box.getBlockId());
                tmp_new_box.refine(d_box_size);
 
-               hier::BoxContainer tmp_new_boxes(tmp_new_box);
-               tmp_new_boxes.intersectBoxes(tag_box_level.getBoxes());
-               tmp_new_boxes.coalesce();
+               hier::Box new_box( tmp_new_box * patch_box,
+                                  new_box_level->getLastLocalId()+1,
+                                  new_box_level->getMPI().getRank() );
 
-               for ( hier::BoxContainer::const_iterator bi=tmp_new_boxes.begin();
-                     bi!=tmp_new_boxes.end(); ++bi ) {
-                  hier::Box new_box( *bi,
-                                     new_box_level->getLastLocalId()+1,
-                                     new_box_level->getMPI().getRank() );
+               TBOX_ASSERT(!new_box.empty());
 
-                  new_box_level->addBoxWithoutUpdate(new_box);
-                  hier::BoxContainer::const_iterator new_box_iter =
-                     new_box_level->getBoxStrict(new_box);
+               new_box_level->addBoxWithoutUpdate(new_box);
+               hier::BoxContainer::const_iterator new_box_iter =
+                  new_box_level->getBoxStrict(new_box);
 
-                  new_to_tag->insertLocalNeighbor( patch_box, new_box_iter->getBoxId() );
-                  tag_to_new->insertLocalNeighbor( *new_box_iter, patch_box.getBoxId() );
-               }
+               new_to_tag->insertLocalNeighbor( patch_box, new_box_iter->getBoxId() );
+               tag_to_new->insertLocalNeighbor( *new_box_iter, patch_box.getBoxId() );
 
             }
 
@@ -225,10 +214,25 @@ TileClustering::findBoxesContainingTags(
       /*
        * Try to coalesce the boxes in new_box_level.
        */
-      hier::BoxContainer new_boxes(new_box_level->getBoxes());
-      new_boxes.unorder();
-      new_boxes.coalesce();
+      hier::BoxContainer new_boxes;
+      if (!new_box_level->getBoxes().isEmpty()) {
 
+         hier::LocalId local_id(0);
+
+         int nblocks = new_box_level->getGridGeometry()->getNumberBlocks();
+
+         for (int b = 0; b < nblocks; ++b) {
+            hier::BlockId block_id(b);
+
+            hier::BoxContainer block_boxes(new_box_level->getBoxes(), block_id);
+
+            if (!block_boxes.isEmpty()) {
+               block_boxes.unorder();
+               block_boxes.coalesce();
+               new_boxes.spliceBack(block_boxes);
+            }
+         }
+      }
       if ( d_print_steps ) {
          tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
                     << " new boxes into " << new_boxes.size() << "\n";
@@ -266,7 +270,9 @@ TileClustering::findBoxesContainingTags(
             new_box_level->addBox(*bi);
 
             hier::BoxContainer tmp_overlap_boxes;
-            tag_boxes.findOverlapBoxes(tmp_overlap_boxes, *bi);
+            tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                       *bi,
+                                       tag_box_level.getRefinementRatio() );
 
             new_to_tag->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
          }
@@ -280,7 +286,9 @@ TileClustering::findBoxesContainingTags(
                bi!=tag_boxes.end(); ++bi ) {
 
             hier::BoxContainer tmp_overlap_boxes;
-            new_boxes.findOverlapBoxes(tmp_overlap_boxes, *bi);
+            new_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                       *bi,
+                                       tag_box_level.getRefinementRatio() );
 
             tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
          }
@@ -420,4 +428,3 @@ TileClustering::setTimers()
 
 }
 }
-#endif

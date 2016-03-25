@@ -7,10 +7,6 @@
  * Description:   Norm operations for integer data arrays.
  *
  ************************************************************************/
-
-#ifndef included_math_ArrayDataNormOpsInteger_C
-#define included_math_ArrayDataNormOpsInteger_C
-
 #include "SAMRAI/math/ArrayDataNormOpsInteger.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -133,4 +129,3 @@ ArrayDataNormOpsInteger::abs(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineClasses_C
-#define included_xfer_RefineClasses_C
-
 #include <typeinfo>
 
 #include "SAMRAI/xfer/RefineClasses.h"
@@ -34,10 +30,9 @@ int RefineClasses::s_default_refine_item_array_size = 20;
  *************************************************************************
  */
 
-RefineClasses::RefineClasses():
-   d_num_refine_items(0)
+RefineClasses::RefineClasses()
 {
-   d_refine_classes_data_items.resize(s_default_refine_item_array_size);
+   d_refine_classes_data_items.reserve(s_default_refine_item_array_size);
 }
 
 /*
@@ -83,17 +78,8 @@ RefineClasses::insertEquivalenceClassItem(
 
       data.d_class_index = eq_index;
 
-      if (d_num_refine_items >=
-          static_cast<int>(d_refine_classes_data_items.size())) {
-         d_refine_classes_data_items.resize(
-            d_num_refine_items + s_default_refine_item_array_size);
-      }
-
-      d_refine_classes_data_items[d_num_refine_items] = data;
-
-      d_equivalence_class_indices[eq_index].push_back(d_num_refine_items);
-
-      d_num_refine_items++;
+      d_equivalence_class_indices[eq_index].push_back(static_cast<int>(d_refine_classes_data_items.size()));
+      d_refine_classes_data_items.push_back(data);
 
    }
 
@@ -544,4 +530,3 @@ RefineClasses::getEquivalenceClassIndex(
 
 }
 }
-#endif

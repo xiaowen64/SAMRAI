@@ -7,10 +7,6 @@
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_pdat_FirstLayerCellNoCornersVariableFillPattern_C
-#define included_pdat_FirstLayerCellNoCornersVariableFillPattern_C
-
 #include "SAMRAI/pdat/FirstLayerCellNoCornersVariableFillPattern.h"
 
 #include "SAMRAI/pdat/CellGeometry.h"
@@ -151,11 +147,13 @@ FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
 boost::shared_ptr<hier::BoxOverlap>
 FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
+   const hier::BoxContainer& node_fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
 {
    NULL_USE(pdf);
+   NULL_USE(node_fill_boxes);
 
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
@@ -171,4 +169,3 @@ FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

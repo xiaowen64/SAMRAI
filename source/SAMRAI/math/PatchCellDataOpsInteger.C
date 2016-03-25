@@ -7,10 +7,6 @@
  * Description:   Operations for integer cell-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchCellDataOpsInteger_C
-#define included_math_PatchCellDataOpsInteger_C
-
 #include "SAMRAI/math/PatchCellDataOpsInteger.h"
 
 namespace SAMRAI {
@@ -41,11 +37,11 @@ PatchCellDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::CellData<int> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::CellData<int> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -58,4 +54,3 @@ PatchCellDataOpsInteger::swapData(
 
 }
 }
-#endif

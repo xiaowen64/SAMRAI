@@ -334,7 +334,6 @@ private:
     * Timers are static to keep the objects light-weight.
     */
    static boost::shared_ptr<tbox::Timer> t_build_tree[SAMRAI::MAX_DIM_VAL];
-   static boost::shared_ptr<tbox::Timer> t_search[SAMRAI::MAX_DIM_VAL];
 
    static unsigned int s_num_build[SAMRAI::MAX_DIM_VAL];
    static unsigned int s_num_generate[SAMRAI::MAX_DIM_VAL];

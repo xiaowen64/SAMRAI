@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceFloatConstantRefine_C
-#define included_pdat_OuterfaceFloatConstantRefine_C
-
 #include "SAMRAI/pdat/OuterfaceFloatConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -136,11 +132,11 @@ OuterfaceFloatConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<OuterfaceData<float> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OuterfaceData<float>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<OuterfaceData<float> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OuterfaceData<float>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&fine_overlap);
 
@@ -267,4 +263,3 @@ OuterfaceFloatConstantRefine::refine(
 
 }
 }
-#endif

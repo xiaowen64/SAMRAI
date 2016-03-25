@@ -7,10 +7,6 @@
  * Description:   Abstract factory class for creating patch classes
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchFactory_C
-#define included_hier_PatchFactory_C
-
 #include "SAMRAI/hier/PatchFactory.h"
 
 #include "boost/make_shared.hpp"
@@ -36,4 +32,3 @@ PatchFactory::allocate(
 
 }
 }
-#endif

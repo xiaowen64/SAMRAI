@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceIndex_C
-#define included_pdat_FaceIndex_C
-
 #include "SAMRAI/pdat/FaceIndex.h"
 
 namespace SAMRAI {
@@ -60,4 +56,3 @@ FaceIndex::toCell(
 
 }
 }
-#endif

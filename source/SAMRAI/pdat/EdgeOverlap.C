@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeOverlap_C
-#define included_pdat_EdgeOverlap_C
-
 #include "SAMRAI/pdat/EdgeOverlap.h"
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
@@ -95,4 +91,3 @@ EdgeOverlap::getTransformation() const
 
 }
 }
-#endif
