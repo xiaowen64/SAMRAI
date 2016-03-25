@@ -233,9 +233,11 @@ Note that the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">Bound
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td>The stretched box. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghost_cell_width</em>&nbsp;</td><td>Ghost width to stretch the box. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghost_cell_width</em>&nbsp;</td><td>Ghost width to stretch the box.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getDim() == box.getDim() <p>
+ghost_cell_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -271,9 +273,10 @@ The output box is the box held by the <a class="el" href="classSAMRAI_1_1hier_1_
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td>The extended box </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>extension</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> telling how many cells to extend the box in each coordinate direction. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>extension</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> telling how many cells to extend the box in each coordinate direction.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getDim() == box.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -319,14 +322,16 @@ The normal direction is defined only for surface boundaries (codimension 1). A -
 <p>
 Trim a boundary box so that it does not stick out past a limiting box in direction transverse to the boundary normal. 
 <p>
-This method affects the only box dimensions parallel to the boundary. For methods affecting other box dimensions, see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#67a13b2bb4289b85bcfdc437327da9e5">stretchBoxToGhostWidth()</a>.<p>
+This method affects the only box directions parallel to the boundary. For methods affecting other box directions, see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#67a13b2bb4289b85bcfdc437327da9e5">stretchBoxToGhostWidth()</a>.<p>
 The boundary type of the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> that was given to the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html">BoundaryBoxUtils</a> constructor must be less than dim.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>limit_box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to not stick out past</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>New trimmed boundary box. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>New trimmed boundary box.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getDim() == limit_box.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getBoundaryType() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getDim().getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -351,13 +356,14 @@ Return box describing the index space of the outer surface of a boundary box.
 Define a box describing the indices of the surface of the the input boundary box. A surface is a face in 3D and an edge in 2D. These surfaces lie on the boundary itself.<p>
 The input boundary_box must be of type 1 (see <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#e58456c3439e6e73941212bdc3820460">hier::BoundaryBox::getBoundaryType()</a>).<p>
 This is a utility function for working with the surface indices corresponding to a boundary box.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>a box to define the side indices corresponding to the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>a box to define the side indices corresponding to the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a></dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#f1fc4623d4177025e6bf8de0e8baa57a">getBoundaryBox()</a>.getBoundaryType() == 1 </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoundaryBoxUtils_8h.html">BoundaryBoxUtils.h</a><li>source/SAMRAI/hier/<a class="el" href="BoundaryBoxUtils_8C.html">BoundaryBoxUtils.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

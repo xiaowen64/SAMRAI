@@ -46,6 +46,12 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance all pending communications to operations.  <a href="#aeea8b213992f84eec70a01945765c75"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a907a7913e1fcb2130d684b1e734ff70">numberOfCompletedMembers</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#96c5acb2532668ed358f447753722fef">firstCompletedMember</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the first completed <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.  <a href="#96c5acb2532668ed358f447753722fef"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#6b0be95c111898b4d49ae194ea57b165">getMember</a> (size_t i) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the ith managed <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.  <a href="#6b0be95c111898b4d49ae194ea57b165"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">popCompletionQueue</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#92679b23ff957b5da5987856ed40b5e2">clearCompletionQueue</a> ()</td></tr>
@@ -57,6 +63,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#8095fd717fe4c99045dffb7183d9237a">numberOfMembers</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of Members on this stage.  <a href="#8095fd717fe4c99045dffb7183d9237a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#4954ff0c2c122f6733da2b959fe3e6dc">numManagedMembers</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the number of staged and destaged Members.  <a href="#4954ff0c2c122f6733da2b959fe3e6dc"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#17534cde813894a8cc42e76da3392148">hasPendingRequests</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return whether the stage has any pending communication requests.  <a href="#17534cde813894a8cc42e76da3392148"></a><br></td></tr>
@@ -224,6 +233,55 @@ The completed Members are accessible through <a class="el" href="classSAMRAI_1_1
 
 </div>
 </div><p>
+<a class="anchor" name="96c5acb2532668ed358f447753722fef"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::firstCompletedMember" ref="96c5acb2532668ed358f447753722fef" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>* SAMRAI::tbox::AsyncCommStage::firstCompletedMember           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns the first completed <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6b0be95c111898b4d49ae194ea57b165"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::getMember" ref="6b0be95c111898b4d49ae194ea57b165" args="(size_t i) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>* SAMRAI::tbox::AsyncCommStage::getMember           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>i</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns the ith managed <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#4954ff0c2c122f6733da2b959fe3e6dc">numManagedMembers()</a> </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="621692278fc45d0f8636aa7950f9511a"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::popCompletionQueue" ref="621692278fc45d0f8636aa7950f9511a" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -305,6 +363,27 @@ If not set, or NULL is given, none will be used.
 
 <p>
 Get the number of Members on this stage. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4954ff0c2c122f6733da2b959fe3e6dc"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::numManagedMembers" ref="4954ff0c2c122f6733da2b959fe3e6dc" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::numManagedMembers           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns the number of staged and destaged Members. 
 <p>
 
 </div>
@@ -392,7 +471,7 @@ Return the number of pending <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8h.html">AsyncCommStage.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8C.html">AsyncCommStage.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -32,7 +32,7 @@
 <a href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#bfdd7c8bf839dd3eef9de00f5dc35d98">HyperbolicPatchStrategy</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#86df02a0729978d9263a7dcb37c1634c">HyperbolicPatchStrategy</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#6dee35e53e3f2a906eae433ab747dd42">~HyperbolicPatchStrategy</a> ()</td></tr>
 
@@ -58,29 +58,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#31f097ee69de5a175f4b34d31c469bf8">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#63c4c0520b3c8eee51d337c2f6d337c0">getRefineOpStencilWidth</a> () const </td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#1c416232cfbb5e1ef07d860cff23f5fc">preprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#a48e4adfa76b1e3a672abef8a27c53f8">postprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#a48e4adfa76b1e3a672abef8a27c53f8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#d9f2e566fe1cd9c77c65eaf2d396a0c2">getCoarsenOpStencilWidth</a> () const </td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#3480ca32124e2c7bb9964946b29db3b3">preprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c049b88562fdf98350513952fb604176">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#c049b88562fdf98350513952fb604176"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c4fb45ce3991d0e96eaf2599ebe4e812">getDataContext</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#40c4149ef116540dd41c86d7403642f8">setDataContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#bd85a561841ad406095e47db1d6d7e64">clearDataContext</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#e438e481350988a0026dad9aa8bec517">getDim</a> () const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#e438e481350988a0026dad9aa8bec517"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> is an abstract base class defining the interface between an <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> object and operations applied to a single patch in a structured AMR hierarchy. The operations include patch initialization, dt calculation, flux computation, conservative differencing, and error estimation. This class is derived from the <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> and <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a> abstract base classes. These base classes provide the interface for user-defined interlevel data refining and coarsening operations and the specification of physical boundary conditions. The functions <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#31f097ee69de5a175f4b34d31c469bf8">setPhysicalBoundaryConditions()</a>, and pre/postprocessRefine() are overloaded from the class <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>. The operations pre/postprocessCoarsen() are overloaded from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a>. The pre/postprocessCoarsen/Refine() operations are given empty implementations here so that the user does not need to proovide them if the operations are not needed.<p>
@@ -91,15 +74,14 @@ It is important to recognize that for the concrete patch strategy subclass and t
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="bfdd7c8bf839dd3eef9de00f5dc35d98"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::HyperbolicPatchStrategy" ref="bfdd7c8bf839dd3eef9de00f5dc35d98" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="86df02a0729978d9263a7dcb37c1634c"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::HyperbolicPatchStrategy" ref="86df02a0729978d9263a7dcb37c1634c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::algs::HyperbolicPatchStrategy::HyperbolicPatchStrategy           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -611,254 +593,6 @@ Set user-defined boundary conditions at the physical domain boundary.
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#428a5d166ab97a9ce9c8344685817b26">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="63c4c0520b3c8eee51d337c2f6d337c0"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getRefineOpStencilWidth" ref="63c4c0520b3c8eee51d337c2f6d337c0" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::algs::HyperbolicPatchStrategy::getRefineOpStencilWidth           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return maximum stencil width needed for user-defined data interpolation operations. Default is to return zero, assuming no user-defined operations provided.<p>
-Note that this function is not pure virtual. It is given a dummy implementation here so that users may ignore it when inheriting from this class. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#ac3c39692c90393a6748ea7a4f52facd">SAMRAI::xfer::RefinePatchStrategy</a>.
-</div>
-</div><p>
-<a class="anchor" name="1c416232cfbb5e1ef07d860cff23f5fc"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::preprocessRefine" ref="1c416232cfbb5e1ef07d860cff23f5fc" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::preprocessRefine           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fine</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarse</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fine_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>ratio</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Pre- and post-processing routines for implementing user-defined spatial interpolation routines applied to variables. The interpolation routines are used in the hyperbolic AMR algorithm for filling patch ghost cells before advancing data on a level and after regridding a level to fill portions of the new level from some coarser level. These routines are called automatically from within patch boundary filling schedules; thus, some concrete function matching these signatures must be provided in the user's patch routines. However, the routines only need to perform some operations when "USER_DEFINED_REFINE" is given as the interpolation method for some variable when the patch routines register variables with the hyperbolic level integration algorithm, typically. If the user does not provide operations that refine such variables in either of these routines, then they will not be refined.<p>
-The order in which these operations are used in each patch boundary filling schedule is:<p>
-<ul>
-<li><b></b>(1) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#1c416232cfbb5e1ef07d860cff23f5fc">preprocessRefine()</a> routine.}</li><li><b></b>(2) {Refine all variables with standard interpolation operators.}</li><li><b></b>(3) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#a48e4adfa76b1e3a672abef8a27c53f8">postprocessRefine()</a> routine.}</li></ul>
-<p>
-Note that these functions are not pure virtual. They are given dummy implementations here so that users may ignore them when inheriting from this class. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5d1588459650fb4ff5f7c5dd66ece46">SAMRAI::xfer::RefinePatchStrategy</a>.
-</div>
-</div><p>
-<a class="anchor" name="a48e4adfa76b1e3a672abef8a27c53f8"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::postprocessRefine" ref="a48e4adfa76b1e3a672abef8a27c53f8" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::postprocessRefine           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fine</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarse</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fine_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>ratio</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Perform user-defined patch data refinement operations. 
-<p>
-This member function is called after standard refine operations (expressed using concrete subclasses of the RefineOperator base class). The preprocess function must refine data from the scratch components on the coarse patch into the scratch components of the fine patch on the specified fine box region. Recall that the scratch components are specified in calls to the registerRefine() function in the RefineAlgorithm class.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing destination data. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch containing source data. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_box</em>&nbsp;</td><td>Box region on fine patch into which data is refined. *</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
-  </table>
-</dl>
-
-<p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">SAMRAI::xfer::RefinePatchStrategy</a>.
-</div>
-</div><p>
-<a class="anchor" name="d9f2e566fe1cd9c77c65eaf2d396a0c2"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getCoarsenOpStencilWidth" ref="d9f2e566fe1cd9c77c65eaf2d396a0c2" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::algs::HyperbolicPatchStrategy::getCoarsenOpStencilWidth           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return maximum stencil width needed for user-defined data coarsen operations. Default is to return zero, assuming no user-defined operations provided.<p>
-Note that this function is not pure virtual. It is given a dummy implementation here so that users may ignore it when inheriting from this class. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#50c94be067e77211d1c3b5c1e6c3b082">SAMRAI::xfer::CoarsenPatchStrategy</a>.
-</div>
-</div><p>
-<a class="anchor" name="3480ca32124e2c7bb9964946b29db3b3"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::preprocessCoarsen" ref="3480ca32124e2c7bb9964946b29db3b3" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::preprocessCoarsen           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarse</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fine</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarse_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>ratio</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Pre- and post-processing routines for implementing user-defined spatial coarsening routines applied to variables. The coarsening routines are used in the hyperbolic AMR algorithm synchronizing coarse and fine levels when they have been integrated to the same point. These routines are called automatically from within the data synchronization coarsen schedules; thus, some concrete function matching these signatures must be provided in the user's patch routines. However, the routines only need to perform some operations when "USER_DEFINED_COARSEN" is given as the coarsening method for some variable when the patch routines register variables with the hyperbolic level integration algorithm, typically. If the user does not provide operations that coarsen such variables in either of these routines, then they will not be coarsened.<p>
-The order in which these operations are used in each coarsening schedule is:<p>
-<ul>
-<li><b></b>(1) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#3480ca32124e2c7bb9964946b29db3b3">preprocessCoarsen()</a> routine.}</li><li><b></b>(2) {Coarsen all variables with standard coarsening operators.}</li><li><b></b>(3) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c049b88562fdf98350513952fb604176">postprocessCoarsen()</a> routine.}</li></ul>
-<p>
-Note that these functions are not pure virtual. They are given dummy implementations here so that users may ignore them when inheriting from this class. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#0814ce9491959240638a20bd848a2350">SAMRAI::xfer::CoarsenPatchStrategy</a>.
-</div>
-</div><p>
-<a class="anchor" name="c049b88562fdf98350513952fb604176"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::postprocessCoarsen" ref="c049b88562fdf98350513952fb604176" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::postprocessCoarsen           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarse</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fine</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarse_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>ratio</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Perform user-defined patch data coarsening operations. 
-<p>
-This member function is called after standard coarsening operations (expressed using concrete subclasses of the CoarsenOperator base class). The postprocess function should move data from the source components on the fine patch into the source components on the coarse patch in the specified coarse box region. Recall that the source components are specified in calls to the registerCoarsen() function in the CoarsenAlgorithm class.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
-  </table>
-</dl>
-
-<p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#a2d42bd7e5e5b39581df0d5a15059a33">SAMRAI::xfer::CoarsenPatchStrategy</a>.
-</div>
-</div><p>
 <a class="anchor" name="c4fb45ce3991d0e96eaf2599ebe4e812"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getDataContext" ref="c4fb45ce3991d0e96eaf2599ebe4e812" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -917,32 +651,9 @@ The hyperbolic integrator controls the context for the data to be used in the nu
 The <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#bd85a561841ad406095e47db1d6d7e64">clearDataContext()</a> routine resets the data context to be null. 
 </div>
 </div><p>
-<a class="anchor" name="e438e481350988a0026dad9aa8bec517"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getDim" ref="e438e481350988a0026dad9aa8bec517" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::algs::HyperbolicPatchStrategy::getDim           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return the dimension of this object. 
-<p>
-
-<p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#9124cea2ea7dc4a41eee08ce5c9c89a7">SAMRAI::xfer::CoarsenPatchStrategy</a>.
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="HyperbolicPatchStrategy_8h.html">HyperbolicPatchStrategy.h</a><li>source/SAMRAI/algs/<a class="el" href="HyperbolicPatchStrategy_8C.html">HyperbolicPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

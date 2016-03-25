@@ -141,7 +141,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_6.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_7.png">, for any <img class="formulaInl" alt="$i$" src="form_8.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. Otherwise return 0. If the control volume is NULL, all values in the index set are used. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_6.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_7.png">, for any <img class="formulaInl" alt="$i$" src="form_8.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. Otherwise return 0. If the control volume is NULL, all values in the index set are used.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data1 &amp;&amp; data2 <p>
+(data1-&gt;getDim() == data2-&gt;getDim()) &amp;&amp; (data1-&gt;getDim() == box.getDim()) <p>
+!cvol || (data1-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3a6da5d8a6b37fa3d7b7925fa7f2210a"></a><!-- doxytag: member="SAMRAI::math::PatchCellDataMiscellaneousOpsReal::compareToScalar" ref="3a6da5d8a6b37fa3d7b7925fa7f2210a" args="(const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;src, const TYPE &amp;alpha, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt;()) const " -->
@@ -190,7 +194,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_10.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_11.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If the control volume is NULL, all values in the index set are considered. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_10.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_11.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If the control volume is NULL, all values in the index set are considered.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) <p>
+!cvol || (dst-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ffa3dae3655b15fe00b71d82f1bae54d"></a><!-- doxytag: member="SAMRAI::math::PatchCellDataMiscellaneousOpsReal::testReciprocal" ref="ffa3dae3655b15fe00b71d82f1bae54d" args="(const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;src, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt;()) const " -->
@@ -233,7 +241,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_13.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_14.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> anywhere, 0 is the return value. Otherwise 1 is returned. If the control volume all values in the index set are considered. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_13.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_14.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> anywhere, 0 is the return value. Otherwise 1 is returned. If the control volume all values in the index set are considered.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) <p>
+!cvol || (dst-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="fa313ccb4c3a126e418fe77165207ae1"></a><!-- doxytag: member="SAMRAI::math::PatchCellDataMiscellaneousOpsReal::maxPointwiseDivide" ref="fa313ccb4c3a126e418fe77165207ae1" args="(const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;numer, const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;denom, const hier::Box &amp;box) const " -->
@@ -274,7 +286,10 @@ Compute max of "conditional" quotients of two arrays.
 <p>
 Return the maximum of pointwise "conditional" quotients of the numerator and denominator.<p>
 The "conditional" quotient is defined as |numerator/denominator| where the denominator is nonzero. Otherwise, it is defined as |numerator|.<p>
-<b>Note:</b> This method is currently intended to support the PETSc-2.1.6 vector wrapper only. Please do not use it! 
+<b>Note:</b> This method is currently intended to support the PETSc-2.1.6 vector wrapper only. Please do not use it!<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>numer &amp;&amp; denom <p>
+(numer-&gt;getDim() == denom-&gt;getDim()) &amp;&amp; (numer-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7cf6ac9c7443ce02e42b7649621e4059"></a><!-- doxytag: member="SAMRAI::math::PatchCellDataMiscellaneousOpsReal::minPointwiseDivide" ref="7cf6ac9c7443ce02e42b7649621e4059" args="(const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;numer, const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;denom, const hier::Box &amp;box) const " -->
@@ -315,12 +330,15 @@ Compute min of quotients of two arrays.
 <p>
 Return the minimum of pointwise quotients of the numerator and denominator.<p>
 The quotient is defined as (numerator/denominator) where the denominator is nonzero. When the denominator is zero, the entry is skipped. If the denominator is always zero, the value of tbox::IEEE::getFLT_MAX() is returned (see <a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html">SAMRAI::tbox::IEEE</a>).<p>
-<b>Note:</b> This method is currently intended to support the SUNDIALS vector wrapper only. Please do not use it! 
+<b>Note:</b> This method is currently intended to support the SUNDIALS vector wrapper only. Please do not use it!<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>numer &amp;&amp; denom <p>
+(numer-&gt;getDim() == denom-&gt;getDim()) &amp;&amp; (numer-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchCellDataMiscellaneousOpsReal_8h.html">PatchCellDataMiscellaneousOpsReal.h</a><li>source/SAMRAI/math/<a class="el" href="PatchCellDataMiscellaneousOpsReal_8C.html">PatchCellDataMiscellaneousOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

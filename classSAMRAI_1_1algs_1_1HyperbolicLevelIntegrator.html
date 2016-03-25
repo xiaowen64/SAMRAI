@@ -54,7 +54,7 @@
  }</td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e6b24678a411b0379cd2b3a8847ee07a">HyperbolicLevelIntegrator</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> *patch_strategy, bool register_for_restart=true, bool use_time_refinement=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#09ac7fc9039ca144f30365174bf90941">HyperbolicLevelIntegrator</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> *patch_strategy, bool use_time_refinement=true)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#5fadd040b4f9c84bf087d6370587ef14">~HyperbolicLevelIntegrator</a> ()</td></tr>
 
@@ -90,7 +90,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#ab6ddbc74f8d314d2b337b07d55cc5d3">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3fd3a76f4ade3ee00e19cb3cbb4a3d19">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3f71ffc840b717f5a4b1e472052f1bca">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#b82cec33facb2e10c02ee9c1d89e0184">getCurrentContext</a> () const </td></tr>
 
@@ -109,7 +109,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e1c22b581e40675a0a117625b94216ff">getObjectName</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4e3f2b0e3a052779db72df2783b00aee">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db, bool is_from_restart)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#2810d9a257b2db94b137b9c20930619d">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, bool is_from_restart)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#45c4587705db88fdfd7b99be974ee0fd">getFromRestart</a> ()</td></tr>
 
@@ -126,34 +126,40 @@
 Class <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> provides routines needed to integrate a system of hyperbolic conservation laws on a structured AMR patch hierarchy using local time refinement. The routines include initializing a level, advance a level, and synchronize levels in a time-dependent AMR application. The AMR timestepping algorithm that cycles through the patch levels and calls these routines is provided by the <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">TimeRefinementIntegrator</a> class. Together, that hierarchy integration class and this single level integration class produce the common AMR algorithm due to Berger, Colella and Oliger (see e.g., Berger and Colella, J. Comp. Phys. (82)1:64-84, 1989). The operations performed on single patches on each level are implemented in the user-defined, problem-specific class derived from the abstract base class <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a>.<p>
 It is important to note that the variable contexts used by the concrete patch strategy subclass must be consistent with those defined in this class which manages the data for the variables.<p>
 This class is derived from the abstract base class <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a>, which defines routines needed by the time refinement integrator. There is an argument in the constructor that determines whether this class will be used by the time refinement integrator for refined timestepping or synchronized timestepping. The routines overloaded in <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> are: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8e5e72e2dd271d10414bd09f9ebfe430">initializeLevelIntegrator()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e9b75492d96b5093e1dc8cee0f785f6c">getLevelDt()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#6bbc66a488be69a0733b39c1ff547af0">getMaxFinerLevelDt()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3b435202a1447097c172ad489c0b11ac">advanceLevel()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#248d34687e92f86b57655d32c3276371">standardLevelSynchronization()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4be82c1079e0ff71fa9fc9e85f14f2eb">synchronizeNewLevels()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#480a54f62456a05df563a354eb09c74e">resetTimeDependentData()</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8490505359d50fe85ec79cb3f21d7b84">resetDataToPreadvanceState()</a>. This class is also derived from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a>, which defines routines needed by the gridding algorithm classes. The routines overloaded in <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> are: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#17df2f5fea9350f8caccea9151f89fa7">initializeLevelData()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#63f028cae8941fb217f61f346aa9ba35">resetHierarchyConfiguration()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#1cf5e972f7913a3917b16435bb109f7d">applyGradientDetector()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#55704d04ba3db16e592fc8bca800b4e3">applyRichardsonExtrapolation()</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#887481dfdc2307a7ee8e76ac95e7232f">coarsenDataForRichardsonExtrapolation()</a>.<p>
-An object of this class requires numerous parameters to be read from input. Also, data must be written to and read from files for restart. The input and restart data are summarized as follows.<p>
-Required input keys and data types: NONE<p>
-Optional input keys, data types, and defaults:<p>
-<ul>
-<li><b>cfl</b> double value for the CFL factor used for timestep selection (dt used = CFL * max dt). If no input value is given, a default value of 0.9 is used.</li></ul>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>cfl</b> the CFL factor used for timestep selection (dt used = CFL * max dt)</li></ul>
 <p>
 <ul>
-<li><b>cfl_init</b> double value for CFL factor used for initial timestep. If no input value is given, a default value of 0.9 is used.</li></ul>
+<li><b>cfl_init</b> the CFL factor used for initial timestep</li></ul>
 <p>
 <ul>
-<li><b>lag_dt_computation</b> boolean value indicating whether dt is based on current solution or solution from previous step (possible optimization in communication for characteristic analysis). If no input value is given, a default value of TRUE is used.</li></ul>
+<li><b>lag_dt_computation</b> indicates whether dt is based on current solution or solution from previous step (possible optimization in communication for characteristic analysis)</li></ul>
 <p>
 <ul>
-<li><b>use_ghosts_to_compute_dt</b> boolean value indicating whether ghost data must be filled before timestep is computed on each patch (possible communication optimization). if no input value is given, a default value of TRUE is used.</li></ul>
+<li><b>use_ghosts_to_compute_dt</b> indicates whether ghost data must be filled before timestep is computed on each patch (possible communication optimization)</li></ul>
 <p>
-<ul>
-<li><b>distinguish_mpi_reduction_costs</b> boolean specifying whether to separate reduction costs in tbox::MPI from costs of load imbalances. By specifying it true, a barrier is put in place before the reduction call, so an extra operation is incurred. For this reason, it is defaulted FALSE.</li></ul>
+Note that when continuing from restart, the input parameters in the input database override all values read in from the restart database.<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>cfl </td><td>double </td><td>none </td><td>any double </td><td>req </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>cfl_init </td><td>double </td><td>none </td><td>any double </td><td>req </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>lag_dt_computation </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>use_ghosts_to_compute_dt </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+</table>
 <p>
-Note that when continuing from restart, the input values in the input file override all values read in from the restart database.<p>
 A sample input file entry might look like:<p>
-<div class="fragment"><pre class="fragment"> *
- *    cfl = 0.9
- *    cfl_init = 0.9
- *    lag_dt_computation = FALSE
- *    use_ghosts_to_compute_dt = TRUE
- *    distinguish_mpi_reduction_costs = TRUE
- *
- * </pre></div><p>
+<div class="fragment"><pre class="fragment">    cfl = 0.9
+    cfl_init = 0.9
+    lag_dt_computation = FALSE
+    use_ghosts_to_compute_dt = TRUE
+</pre></div><p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">algs::TimeRefinementIntegrator</a> <p>
 <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">algs::HyperbolicPatchStrategy</a> </dd></dl>
@@ -193,7 +199,7 @@ Enumerated type for the different ways in which variable storage can be manipula
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="e6b24678a411b0379cd2b3a8847ee07a"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::HyperbolicLevelIntegrator" ref="e6b24678a411b0379cd2b3a8847ee07a" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, HyperbolicPatchStrategy *patch_strategy, bool register_for_restart=true, bool use_time_refinement=true)" -->
+<a class="anchor" name="09ac7fc9039ca144f30365174bf90941"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::HyperbolicLevelIntegrator" ref="09ac7fc9039ca144f30365174bf90941" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, HyperbolicPatchStrategy *patch_strategy, bool use_time_refinement=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -219,12 +225,6 @@ Enumerated type for the different ways in which variable storage can be manipula
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em> = <code>true</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>use_time_refinement</em> = <code>true</code></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -237,8 +237,10 @@ Enumerated type for the different ways in which variable storage can be manipula
 <div class="memdoc">
 
 <p>
-Constructor for <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> initializes integration parameters to default values and constructs standard communication algorithms. Other data members are read in from the specified input database or the restart database corresponding to the specified object_name. The constructor also registers this object for restart using the specified object name when the boolean argument is true. Whether object will write its state to restart files during program execution is determined by this argument. Note that it has a default state of true. This class is used by the time refinement integrator for refined timestepping when the use_time_refinement argument is true, and for synchronized timestepping when the boolean is false.<p>
-When assertion checking is active, passing in any null pointer or an empty string will result in an unrecoverable assertion. 
+Constructor for <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> initializes integration parameters to default values and constructs standard communication algorithms. Other data members are read in from the specified input database or the restart database corresponding to the specified object_name. This class is used by the time refinement integrator for refined timestepping when the use_time_refinement argument is true, and for synchronized timestepping when the boolean is false.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+patch_strategy != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5fadd040b4f9c84bf087d6370587ef14"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::~HyperbolicLevelIntegrator" ref="5fadd040b4f9c84bf087d6370587ef14" args="()" -->
@@ -257,7 +259,7 @@ When assertion checking is active, passing in any null pointer or an empty strin
 <div class="memdoc">
 
 <p>
-The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> unregisters the integrator object with the restart manager when so registered. 
+The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> unregisters the integrator object with the restart manager. 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -280,7 +282,8 @@ The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelInt
 <p>
 Initialize level integrator by by setting the number of time levels of data needed based on specifications of the gridding algorithm.<p>
 This routine also invokes variable registration in the patch strategy.<p>
-Assertion checking will throw unrecoverable assertions if either pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>gridding_alg_strategy is actually a boost::dynamic_pointer_cast&lt;mesh::GriddingAlgorithm&gt; </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#6a0593d3236283f41c3df265a897b2b4">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
@@ -318,7 +321,8 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 
 <p>
 Determine time increment to advance data on level and return that value. The double dt_time argument is the simulation time when the routine is called. The initial_time boolean is true if this routine is called during hierarchy initialization (i.e., at the initial simulation time). Otherwise, it is false. The recompute_dt option specifies whether to compute the timestep using the current level data or to return the value stored by the time integrator. The default true setting means the timestep will be computed if no value is supplied.<p>
-When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>level </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#26e5a13a6a362ec056f7dcab1d234392">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -356,7 +360,8 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 
 <p>
 Return the maximum allowable time increment for the level with the specified level number based on the time increment for the next coarser level and the mesh refinement ratio between the two levels. For the common explicit integration methods for hyperbolic conservation laws (constrained by a CFL limit), the fine time increment is typically the coarse increment divided by the refinement ratio.<p>
-When assertion checking is active, an unrecoverable assertion will result if the ratio vector is not acceptable (i.e., all values &gt; 0). 
+<dl compact><dt><b>Precondition:</b></dt><dd>each component of ratio_to_coarser is &gt; 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#74e3d16e1b61f1ed51249d44b30fb818">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
@@ -434,7 +439,11 @@ In the second case, the values of the boolean flags are:<p>
 <ul>
 <li><b>first_step</b> (when regridding during time integration sequence) = true when the level is not coarsest level to synchronize immediately before the regridding process; else, false. (when generating initial hierarchy construction) = true, even though there may be multiple advance steps.</li><li><b>last_step</b> = true when the advance is the last in the Richardson extrapolation step sequence; else false.</li><li><b>regrid_advance</b> = true.</li></ul>
 <p>
-When assertion checking is active, an unrecoverable assertion will result if either the level or hierarchy pointer is null, or the new time is not greater than the given time. 
+<dl compact><dt><b>Precondition:</b></dt><dd>level <p>
+hierarchy <p>
+current_time &lt;= new_time <p>
+level-&gt;getDim() == hierarchy-&gt;getDim() </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#588799fb49e303c9090cd375eec52213">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -484,7 +493,12 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 
 <p>
 Synchronize data between given patch levels in patch hierarchy according to the standard hyperbolic AMR flux correction algorithm. This routine synchronizes data between two levels at a time from the level with index finest_level down to the level with index coarsest_level. The array of old time values are used in the re-integration of the time-dependent data.<p>
-When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, the level numbers do not properly match existing levels in the hierarchy (either coarsest_level &gt; finest_level or some level is null), or all of the old time values are less than the value of sync_time. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (coarsest_level &lt; finest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+old_times.getSize() &gt;= finest_level <p>
+for each i in [coarsest_level, finest_level) hierarchy-&gt;getPatchLevel(i) &amp;&amp; sync_time &gt;= old_times[i] <p>
+hierarchy-&gt;getPatchLevel(finest_level) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#082f1db97866f9369be09af29fed69ba">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
@@ -533,7 +547,13 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 <div class="memdoc">
 
 <p>
-This overloaded version of standardLevelSynchronization implements a routine used for synchronized timestepping. Only a single value for the old time is needed, since all levels would have the same old time. 
+This overloaded version of standardLevelSynchronization implements a routine used for synchronized timestepping. Only a single value for the old time is needed, since all levels would have the same old time.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (coarsest_level &lt; finest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+for each i in [coarsest_level, finest_level) hierarchy-&gt;getPatchLevel(i) <p>
+sync_time &gt;= old_time <p>
+hierarchy-&gt;getPatchLevel(finest_level) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4be82c1079e0ff71fa9fc9e85f14f2eb"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeNewLevels" ref="4be82c1079e0ff71fa9fc9e85f14f2eb" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)" -->
@@ -582,7 +602,10 @@ This overloaded version of standardLevelSynchronization implements a routine use
 <p>
 Coarsen current solution data from finest hierarchy level specified down through the coarsest hierarchy level specified, if initial_time is true. In this case, the hierarchy is being constructed at the initial simulation time, After data is coarsened, the application- specific initialization routine is called to set data before that solution is further coarsened to the next coarser level in the hierarchy. This operation makes the solution consistent between coarser levels and finer levels that did not exist when the coarse levels where created and initialized originally.<p>
 When initial_time is false, this routine does nothing since the standard hyperbolic AMR algorithm for conservation laws requires no data synchronization after regridding beyond interpolation of data from coarser levels in the hierarchy in some conservative fashion.<p>
-When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, the level numbers do not properly match existing levels in the hierarchy (either coarsest_level &gt; finest_level or some level is null). 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (coarsest_level &lt; finest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+for each i in [coarsest_level, finest_level] hierarchy-&gt;getPatchLevel(i) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#b7b667458e9879e28cffe41a10048de3">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
@@ -620,7 +643,8 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 
 <p>
 Resets time-dependent data storage and update time for patch level.<p>
-When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>level </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#faf83467054094bebf574b27f6a7abc0">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -643,7 +667,8 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 
 <p>
 Deallocate all new simulation data on the given level. This may be necessary during regridding, or setting up levels initially.<p>
-When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>level </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#5933790b5142258ae5db3353637c48bc">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -707,7 +732,11 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 Initialize data on a new level after it is inserted into an AMR patch hierarchy by the gridding algorithm. The level number indicates that of the new level. The old_level pointer corresponds to the level that resided in the hierarchy before the level with the specified number was introduced. If the pointer is null, there was no level in the hierarchy prior to the call and the level data is set based on the user routines and the simulation time. Otherwise, the specified level replaces the old level and the new level receives data from the old level appropriately before it is destroyed.<p>
 Typically, when data is set, it is interpolated from coarser levels in the hierarchy. If the data is to be set, the level number must match that of the old level, if non-null. If the old level is non-null, then data is copied from the old level to the new level on regions of intersection between those levels before interpolation occurs. Then, user-supplied patch routines are called to further initialize the data if needed. The boolean argument initial_time is passed into the user's routines.<p>
 The boolean argument initial_time indicates whether the level is being introduced for the first time (i.e., at initialization time), or after some regrid process during the calculation beyond the initial hierarchy construction. This information is provided since the initialization of the data on a patch may be different in each of those circumstances. The can_be_refined boolean argument indicates whether the level is the finest level allowed in the hierarchy. This may or may not affect the data initialization process depending on the problem.<p>
-When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, the level number does not match any level in the hierarchy, or the old level number does not match the level number (if the old level pointer is non-null). 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(level_number &gt;= 0) &amp;&amp; (level_number &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+!old_level || (level_number == old_level-&gt;getLevelNumber()) <p>
+hierarchy-&gt;getPatchLevel(level_number)) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#43aab4033b5be85ecee18f52c8e4980c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -745,7 +774,10 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy
 
 <p>
 Reset cached communication schedules after the hierarchy has changed (due to regidding, for example) and the data has been initialized on the new levels. The intent is that the cost of data movement on the hierarchy will be amortized across multiple communication cycles, if possible. The level numbers indicate the range of levels in the hierarchy that have changed. However, this routine updates communication schedules every level finer than and including that indexed by the coarsest level number given.<p>
-When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, any pointer to a level in the hierarchy that is coarser than the finest level is null, or the given level numbers not specified properly; e.g., coarsest_level &gt; finest_level. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (coarsest_level &lt;= finest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+for all i &lt;= finest_level hierarchy-&gt;getPatchLevel(i) is non-NULL </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#fe20d86963726d6aa8fa80cf0417c27c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -801,7 +833,10 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy
 
 <p>
 Set integer tags to "one" in cells where refinement of the given level should occur according to some user-supplied gradient criteria. The double time argument is the regrid time. The integer "tag_index" argument is the patch descriptor index of the cell-centered integer tag array on each patch in the hierarchy. The boolean argument initial_time indicates whether the level is being subject to refinement at the initial simulation time. If it is false, then the error estimation process is being invoked at some later time after the AMR hierarchy was initially constructed. The boolean argument uses_richardson_extrapolation_too is true when Richardson extrapolation error estimation is used in addition to the gradient detector, and false otherwise. This argument helps the user to manage multiple regridding criteria. This information is passed along to the user's patch tagging routines since the application of the gradient detector may be different in each case.<p>
-When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null or the level number does not match any existing level in the hierarchy. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(level_number &gt;= 0) &amp;&amp; (level_number &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+hierarchy-&gt;getPatchLevel(level_number) </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#9d335c20033ca83646f72980d5d7715b">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -866,7 +901,8 @@ Set integer tags to "one" where refinement onf the given level should occur acco
 The integer "tag_index" argument is the patch descriptor index of the cell-centered integer tag array on each patch in the hierarchy.<p>
 The boolean argument initial_time indicates whether the level is being subject to refinement at the initial simulation time. If it is false, then the error estimation process is being invoked at some later time after the AMR hierarchy was initially constructed. Typically, this information is passed to the user's patch tagging routines since the application of the Richardson extrapolation process may be different in each case.<p>
 The boolean uses_gradient_detector_too is true when a gradient detector procedure is used in addition to Richardson extrapolation, and false otherwise. This argument helps the user to manage multiple regridding criteria.<p>
-When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>level </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#4b10f6d805a1293a1e5151c8f5ec11bd">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -916,7 +952,12 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 
 <p>
 Coarsen solution data from level to coarse_level for Richardson extrapolation. Note that this routine will be called twice during the Richardson extrapolation error estimation process. The before_advance boolean argument indicates whether data is set on the coarse level by coarsening the "old" time level solution (i.e., before it has been advanced) or by coarsening the "new" solution on the fine level (i.e., after it has been advanced).<p>
-When assertion checking is active, an unrecoverable assertion will result if either level pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(level_number &gt;= 0) &amp;&amp; (level_number &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+(hierarchy-&gt;getPatchLevel(level_number) <p>
+coarse_level <p>
+hierarchy-&gt;getDim() == coarse_level-&gt;getDim() </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#50a405d10f8076640d9aa52b2c8d8282">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -972,7 +1013,10 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 
 <p>
 Register a variable with the hyperbolic integration algorithm. The variable type must be one of the options defined by the enumerated type defined above. Typically, this routine is called from the hyperbolic patch model when the variable registration process is invoked by calling the function <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8e5e72e2dd271d10414bd09f9ebfe430">initializeLevelIntegrator()</a> above. In fact, that function should be called before this routine is called.<p>
-When assertion checking is active, an unrecoverable assertion will result if the variable pointer or geometry pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>var <p>
+transfer_geom <p>
+ghosts.getDim() == var-&gt;getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ab6ddbc74f8d314d2b337b07d55cc5d3"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::printClassData" ref="ab6ddbc74f8d314d2b337b07d55cc5d3" args="(std::ostream &amp;os) const " -->
@@ -992,18 +1036,18 @@ When assertion checking is active, an unrecoverable assertion will result if the
 <div class="memdoc">
 
 <p>
-Print class data representation for hyperbolic level integrator object. This is done automatically, when an unrecoverable run-time assertion is thrown within some member function of this class. 
+Print class data representation for hyperbolic level integrator object. 
 </div>
 </div><p>
-<a class="anchor" name="3fd3a76f4ade3ee00e19cb3cbb4a3d19"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::putToDatabase" ref="3fd3a76f4ade3ee00e19cb3cbb4a3d19" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
+<a class="anchor" name="3f71ffc840b717f5a4b1e472052f1bca"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::putToRestart" ref="3f71ffc840b717f5a4b1e472052f1bca" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::putToDatabase           </td>
+          <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -1012,8 +1056,9 @@ Print class data representation for hyperbolic level integrator object. This is 
 <div class="memdoc">
 
 <p>
-Write out object state to the given database.<p>
-When assertion checking is active, database point must be non-null. 
+Write out object state to the given restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b82cec33facb2e10c02ee9c1d89e0184"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getCurrentContext" ref="b82cec33facb2e10c02ee9c1d89e0184" args="() const " -->
@@ -1172,7 +1217,7 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 Returns the object name. 
 </div>
 </div><p>
-<a class="anchor" name="4e3f2b0e3a052779db72df2783b00aee"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput" ref="4e3f2b0e3a052779db72df2783b00aee" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db, bool is_from_restart)" -->
+<a class="anchor" name="2810d9a257b2db94b137b9c20930619d"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput" ref="2810d9a257b2db94b137b9c20930619d" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, bool is_from_restart)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1180,7 +1225,7 @@ Returns the object name.
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>, </td>
+          <td class="paramname"> <em>input_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1198,8 +1243,9 @@ Returns the object name.
 <div class="memdoc">
 
 <p>
-Read input values, indicated above, from given database. The boolean argument is_from_restart should be set to true if the simulation is beginning from restart. Otherwise it should be set to false.<p>
-When assertion checking is active, the database pointer must be non-null. 
+Read values, indicated above, from given input database. The boolean argument is_from_restart should be set to true if the simulation is beginning from restart. Otherwise it should be set to false.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>is_from_restart || input_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="45c4587705db88fdfd7b99be974ee0fd"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getFromRestart" ref="45c4587705db88fdfd7b99be974ee0fd" args="()" -->
@@ -1396,12 +1442,17 @@ Unrecoverable Errors:<p>
 
 <p>
 Apply the standard AMR hyperbolic flux synchronization process preserve conservation properties in the solution between the fine level and the coarse level. The sync_time argument indicates the time at which the solution on the two levels is being synchronized. The variable coarse_sim_time indicates the previous simulation time on the coarse level (recall the conservative difference will be repeated on the coarse level during the synchronization process). After the synchronization, the flux and flux integral data storage is reset on the levels.<p>
-When assertion checking is turned on, an unrecoverable assertion will result if either level pointer is null, the levels are not consecutive in the AMR hierarchy, or the coarse sim time is not less than the sync time. 
+<dl compact><dt><b>Precondition:</b></dt><dd>fine_level <p>
+coarse_level <p>
+coarse_level-&gt;getLevelNumber() == (fine_level-&gt;getLevelNumber()-1)) <p>
+fine_level-&gt;getDim() == coarse_level-&gt;getDim() <p>
+sync_time &gt; coarse_sim_time </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="HyperbolicLevelIntegrator_8h.html">HyperbolicLevelIntegrator.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

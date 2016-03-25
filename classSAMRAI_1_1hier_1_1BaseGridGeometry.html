@@ -39,12 +39,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">PatchGeometry::TwoDimBool</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#14acfeaed7d331297c1f879c71ae644a">TwoDimBool</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#35cd515be4ee6bfe603b8cdec06b1464">BaseGridGeometry</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9b1c455f12f34672d03885dbeda55048">BaseGridGeometry</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, bool allow_multiblock=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new BaseBaseGridGeometry object and initialize from input.  <a href="#35cd515be4ee6bfe603b8cdec06b1464"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d49970825dc0debed093fbbceeb70575">BaseGridGeometry</a> (const std::string &amp;object_name, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain, bool register_for_restart=true)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new BaseBaseGridGeometry object and initialize from input.  <a href="#9b1c455f12f34672d03885dbeda55048"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#2117b6f0afdbc35b5b54ecd7bf693deb">BaseGridGeometry</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on arguments.  <a href="#d49970825dc0debed093fbbceeb70575"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on arguments.  <a href="#2117b6f0afdbc35b5b54ecd7bf693deb"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#f96276df45bd273d263846ac75153eb3">~BaseGridGeometry</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#f96276df45bd273d263846ac75153eb3"></a><br></td></tr>
@@ -56,9 +56,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#6932f1d3bf5c5ce59a7f91e071c7d211">computePhysicalDomain</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> describing the index space for a given block of the physical domain.  <a href="#6932f1d3bf5c5ce59a7f91e071c7d211"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a462ae387f6ef942d371a0359d0be94f">computePhysicalDomain</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain_mapped_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#3ac5b53b97b485a15be101cc95f183d7">computePhysicalDomain</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> describing the complete physical domain for all blocks.  <a href="#a462ae387f6ef942d371a0359d0be94f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> describing the complete physical domain for all blocks.  <a href="#3ac5b53b97b485a15be101cc95f183d7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9ee6435412fdc2572615fc55e07d9d6f">computePhysicalDomain</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> describing the complete physical domain for all blocks.  <a href="#9ee6435412fdc2572615fc55e07d9d6f"></a><br></td></tr>
@@ -86,17 +86,17 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#410f93e181c781786d902277532cf351">getNumberBlocks</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of blocks in the geometry.  <a href="#410f93e181c781786d902277532cf351"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">getMaxTransferOpStencilWidth</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#7b8b56570f463e7cd88a243d751288f0">getMaxTransferOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the max stencil width of all transfer operators.  <a href="#bad878e7a8dd90861bd19b6c7ac198ee"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the max stencil width of all transfer operators.  <a href="#7b8b56570f463e7cd88a243d751288f0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ccf7ace38b22a958f66941d748aab3b7">makeRefinedGridGeometry</a> (const std::string &amp;fine_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refine_ratio, bool register_for_restart) const =0</td></tr>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#fcb98de0b510953afe7e829d2a06acc6">makeRefinedGridGeometry</a> (const std::string &amp;fine_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refine_ratio) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a pointer to a refined version of this grid geometry object.  <a href="#ccf7ace38b22a958f66941d748aab3b7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a pointer to a refined version of this grid geometry object.  <a href="#fcb98de0b510953afe7e829d2a06acc6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#048aca9d37885baf9e7489270de89f26">makeCoarsenedGridGeometry</a> (const std::string &amp;coarse_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;coarsen_ratio, bool register_for_restart) const =0</td></tr>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#67099209bd687aa1a9dcfd142df7181c">makeCoarsenedGridGeometry</a> (const std::string &amp;coarse_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;coarsen_ratio) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a pointer to a coarsened version of this grid geometry object.  <a href="#048aca9d37885baf9e7489270de89f26"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a pointer to a coarsened version of this grid geometry object.  <a href="#67099209bd687aa1a9dcfd142df7181c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#b8146fe8b657e09cdae15f1248645dc3">setGeometryDataOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_regular_bdry, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_periodic_bdry) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute and set grid data for patch.  <a href="#b8146fe8b657e09cdae15f1248645dc3"></a><br></td></tr>
@@ -129,7 +129,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for time interpolation operator.  <a href="#fccbd39f0e8c57508bdb2f6976e78c1c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ac64916a7f532b4ce453a4bb1834363f">setMinTransferOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_value)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">getMaxTransferOpStencilWidth()</a>.  <a href="#ac64916a7f532b4ce453a4bb1834363f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#7b8b56570f463e7cd88a243d751288f0">getMaxTransferOpStencilWidth()</a>.  <a href="#ac64916a7f532b4ce453a4bb1834363f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of this object.  <a href="#d1cd6acb940509147e68fbccecfa17e1"></a><br></td></tr>
@@ -177,7 +177,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell if the given BlockIds represent neighboring blocks.  <a href="#4a2248c37f06d095605136961bd921fb"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#1908f436f2e3bec8b6c0c24b3fcb8cd9">Transformation::RotationIdentifier</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#f59d7b6cae7099dd672401ef205e70e2">getRotationIdentifier</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;dst, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;src) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the rotation identifier to rotate from src to dst.  <a href="#f59d7b6cae7099dd672401ef205e70e2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the rotation identifier to rotate from src to dst.\.  <a href="#f59d7b6cae7099dd672401ef205e70e2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#498734a89e55cf67f04f049b211fec53">getOffset</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;dst, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;src) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the offset to shift from src to dst after rotation.  <a href="#498734a89e55cf67f04f049b211fec53"></a><br></td></tr>
@@ -187,9 +187,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#14ec0f454f6d8d1f875448b4cb08abed">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print object data to the specified output stream.  <a href="#14ec0f454f6d8d1f875448b4cb08abed"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#de6fe16e73de6bcbddfaa19789a136cc">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#035469b88795d642505a71be9d66054c">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object to the database.  <a href="#de6fe16e73de6bcbddfaa19789a136cc"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object to the restart database.  <a href="#035469b88795d642505a71be9d66054c"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions for computing boundary boxes</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#46b47795189122122a7deb78a3474803">findPatchesTouchingBoundaries</a> (std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;touches_regular_boundary, std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;touches_periodic_boundary, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;level) const </td></tr>
 
@@ -197,22 +197,16 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#76cf2c2406e90af6a79bac20c30da510">computeBoxTouchingBoundaries</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_regular_bdry, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_periodic_bdry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refinement_ratio, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;refined_periodic_domain_tree) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Version of findPatchTouchingBoundaries for a single box.  <a href="#76cf2c2406e90af6a79bac20c30da510"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#50722adcb14c0b5302d8692d6005fdca">setGeometryOnPatches</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero, std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;touches_regular_bdry, std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;touches_periodic_bdry, bool defer_boundary_box_creation)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#e1e874fd0becc69a777d817a66ab9ff6">setGeometryOnPatches</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio_to_level_zero, const std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;touches_regular_bdry, const std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;touches_periodic_bdry, const bool defer_boundary_box_creation)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets geometry data for patches on a level.  <a href="#50722adcb14c0b5302d8692d6005fdca"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets geometry data for patches on a level.  <a href="#e1e874fd0becc69a777d817a66ab9ff6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#6db28bab3d6e740550d26da4ed938635">setBoundaryBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;level)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct and set the boundary boxes for each patch.  <a href="#6db28bab3d6e740550d26da4ed938635"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#4b6c7ced33f88227bfd2ba395e2135c4">BaseGridGeometry</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> &gt; &amp;op_reg)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#142a4ebb136aed4415de565a64887bc7">BaseGridGeometry</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> &gt; &amp;op_reg)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object in its default state.  <a href="#4b6c7ced33f88227bfd2ba395e2135c4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#f171a2273da6f13c309a0fdcc0200dad">BaseGridGeometry</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object in its default state.  <a href="#f171a2273da6f13c309a0fdcc0200dad"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bcc4124df5a3521df7a3fb1832caa58d">BaseGridGeometry</a> (const std::string &amp;object_name, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> &gt; &amp;op_reg, bool register_for_restart)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on arguments.  <a href="#bcc4124df5a3521df7a3fb1832caa58d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on arguments.  <a href="#142a4ebb136aed4415de565a64887bc7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#5d4bd1956876a6b9a771426a876e69f8">readBlockDataFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read multiblock metadata input from the input database.  <a href="#5d4bd1956876a6b9a771426a876e69f8"></a><br></td></tr>
@@ -234,26 +228,6 @@ Class <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGrid
 <p>
 A <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object may be used as a base class to derive child classes that manage particular grid types (e.g., Cartesian, cylindrical, etc.).<p>
 The grid geometry class is responsible for maintaining information about the index space describing the physical domain and computing this information for patches in an AMR hierarchy.<p>
-Required input file keys and data types (only required when using first constructor which takes an input database):<p>
-<ul>
-<li><b>num_blocks</b> Integer value specifying the number of blocks in the multiblock mesh configuration.</li></ul>
-<p>
-<ul>
-<li><b>domain_boxes_</b> For each block, an array of boxes representing the index space for the entire domain within a block (on the coarsest mesh level; i.e., level zero). The key must have an integer value as a suffix (domain_boxes_0, domain_boxes_1, etc.), and there must be an entry for every block from 0 to num_blocks-1.</li></ul>
-<p>
-Optional input file keys and data types (for first constructor which takes an input database):<p>
-<ul>
-<li><b>periodic_dimension</b> An array of integer values (expected number of values is equal to the spatial dimension of the mesh) representing the directions in which the physical domain is periodic. A non-zero value indicates that the direction is periodic. A zero value indicates that the direction is not periodic. If no values are specified, then the array is initialized to all zeros (no periodic directions). This key should only be used when the number of blocks is 1 (a single block mesh), as periodic boundaries are not supported for multiblock meshes.</li></ul>
-<p>
-<ul>
-<li><b>BlockNeighbors</b> </li></ul>
-<p>
-For multiblock grids, a BlockNeighbors entry must be given for every pair of blocks that touch each other in any way. The key for this entry must include a unique trailing integer, and the integers for the full set of BlockNeighbors keys must be a continuous sequence beginning with 0.<p>
-<ul>
-<li><b>Singularity</b> </li></ul>
-<p>
-When there is a reduced or enhanced connectivity singularity, this key must be used to identify which blocks touch the singularity and the position of the singularity in relation to each block's index space. Like BlockNeighbors, each entry must have a trailing integer beginning with 0.<p>
-A description of the input format for BlockNeighbors* and Singularity is included in the Multiblock.pdf document in the docs/userdocs directory of the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> distribution.<p>
 <dl compact><dt><b>Additional Functionality</b></dt><dd>Operations performed by this class include determining which patches are adjacent to the physical domain boundary and computing boundary boxes for patches which describe how the patch touches the domain boundary (useful for filling ghost cell data for physical boundary conditions).</dd></dl>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> </dd></dl>
 
@@ -275,7 +249,7 @@ A description of the input format for BlockNeighbors* and Singularity is include
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="35cd515be4ee6bfe603b8cdec06b1464"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="35cd515be4ee6bfe603b8cdec06b1464" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, bool register_for_restart=true)" -->
+<a class="anchor" name="9b1c455f12f34672d03885dbeda55048"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="9b1c455f12f34672d03885dbeda55048" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, bool allow_multiblock=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -301,7 +275,7 @@ A description of the input format for BlockNeighbors* and Singularity is include
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>allow_multiblock</em> = <code>true</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -315,21 +289,22 @@ A description of the input format for BlockNeighbors* and Singularity is include
 <p>
 Construct a new BaseBaseGridGeometry object and initialize from input. 
 <p>
-This constructor for <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> initializes data members based on parameters read from the specified input database. The constructor also registers this object for restart using the specified object name, when the boolean argument is true. Whether the object will write its state to restart files during program execution is determined by this argument.<p>
+This constructor for <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> initializes data members based on parameters read from the specified input database.<p>
 This constructor is intended for use when directly constructing a <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> without using a derived child class. The object will contain all index space grid information for a mesh, but nothing about the physical coordinates of the mesh.<p>
-<dl compact><dt><b>Note:</b></dt><dd><b>Errors:</b> passing in a null database pointer or an empty string will result in an unrecoverable assertion.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td>Flag indicating whether this instance should be registered for restart. <b>Default:</b> true </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>allow_multiblock</em>&nbsp;</td><td>set to false if called by inherently single block derived class such as CartesianGridGeometry</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+input_db </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d49970825dc0debed093fbbceeb70575"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="d49970825dc0debed093fbbceeb70575" args="(const std::string &amp;object_name, const BoxContainer &amp;domain, bool register_for_restart=true)" -->
+<a class="anchor" name="2117b6f0afdbc35b5b54ecd7bf693deb"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="2117b6f0afdbc35b5b54ecd7bf693deb" args="(const std::string &amp;object_name, BoxContainer &amp;domain)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -342,14 +317,8 @@ This constructor is intended for use when directly constructing a <a class="el" 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>domain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>domain</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -363,14 +332,15 @@ This constructor is intended for use when directly constructing a <a class="el" 
 <p>
 Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on arguments. 
 <p>
-This constructor creates a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on the arguments, rather than relying on input or restart data. The constructor also registers this object for restart using the specified object name, when the boolean argument is true. Whether the object will write its state to restart files during program execution is determined by this argument.<p>
+This constructor creates a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object based on the arguments, rather than relying on input or restart data.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain</em>&nbsp;</td><td>Each element of the array describes the index space for a block. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td>Flag indicating whether this instance should be registered for restart. <b>Default:</b> true </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain</em>&nbsp;</td><td>Each element of the array describes the index space for a block.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+!domain.isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -395,90 +365,7 @@ Virtual destructor.
 
 </div>
 </div><p>
-<a class="anchor" name="4b6c7ced33f88227bfd2ba395e2135c4"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="4b6c7ced33f88227bfd2ba395e2135c4" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; TransferOperatorRegistry &gt; &amp;op_reg)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI::hier::BaseGridGeometry::BaseGridGeometry           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>object_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_reg</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object in its default state. 
-<p>
-This constructor is intended to be called from a child class derived from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a>. It will not register for restart nor read any input data, as it is expected that the child class will handle those operations.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_reg</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="f171a2273da6f13c309a0fdcc0200dad"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="f171a2273da6f13c309a0fdcc0200dad" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI::hier::BaseGridGeometry::BaseGridGeometry           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>object_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object in its default state. 
-<p>
-This constructor is intended to be called from a child class derived from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a>. It will not register for restart nor read any input data, as it is expected that the child class will handle those operations.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="bcc4124df5a3521df7a3fb1832caa58d"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="bcc4124df5a3521df7a3fb1832caa58d" args="(const std::string &amp;object_name, const BoxContainer &amp;domain, const boost::shared_ptr&lt; TransferOperatorRegistry &gt; &amp;op_reg, bool register_for_restart)" -->
+<a class="anchor" name="142a4ebb136aed4415de565a64887bc7"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::BaseGridGeometry" ref="142a4ebb136aed4415de565a64887bc7" args="(const std::string &amp;object_name, BoxContainer &amp;domain, const boost::shared_ptr&lt; TransferOperatorRegistry &gt; &amp;op_reg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -491,20 +378,14 @@ This constructor is intended to be called from a child class derived from <a cla
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>domain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_reg</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>op_reg</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -523,9 +404,10 @@ Construct a new <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain</em>&nbsp;</td><td>Each element of the array describes the index space for a block. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_reg</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td>Flag indicating whether this instance should be registered for restart. <b>Default:</b> true </td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+!domain.isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -633,7 +515,7 @@ Version of findPatchTouchingBoundaries for a single box.
 
 </div>
 </div><p>
-<a class="anchor" name="50722adcb14c0b5302d8692d6005fdca"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::setGeometryOnPatches" ref="50722adcb14c0b5302d8692d6005fdca" args="(PatchLevel &amp;level, const IntVector &amp;ratio_to_level_zero, std::map&lt; BoxId, TwoDimBool &gt; &amp;touches_regular_bdry, std::map&lt; BoxId, TwoDimBool &gt; &amp;touches_periodic_bdry, bool defer_boundary_box_creation)" -->
+<a class="anchor" name="e1e874fd0becc69a777d817a66ab9ff6"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::setGeometryOnPatches" ref="e1e874fd0becc69a777d817a66ab9ff6" args="(PatchLevel &amp;level, const IntVector &amp;ratio_to_level_zero, const std::map&lt; BoxId, TwoDimBool &gt; &amp;touches_regular_bdry, const std::map&lt; BoxId, TwoDimBool &gt; &amp;touches_periodic_bdry, const bool defer_boundary_box_creation)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -652,19 +534,19 @@ Version of findPatchTouchingBoundaries for a single box.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>touches_regular_bdry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>touches_periodic_bdry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramtype">const bool&nbsp;</td>
           <td class="paramname"> <em>defer_boundary_box_creation</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -682,13 +564,15 @@ Sets geometry data for patches on a level.
 Using the boundary information previously computed, this method will pass the information to the concrete implementation of the geometry class, and construct boundary boxes if required.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>containing the patches to be checked. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>containing the patches to be checked. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to the coarsest level. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_regular_bdry</em>&nbsp;</td><td>Array storing which patches touch non-periodic boundaries. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_periodic_bdry</em>&nbsp;</td><td>Array storing which patches touch periodic boundaries. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>defer_boundary_box_creation</em>&nbsp;</td><td>Flag to indicate if boundary boxes should be created </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>defer_boundary_box_creation</em>&nbsp;</td><td>Flag to indicate if boundary boxes should be created</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == level.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim()) <p>
+ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -714,9 +598,10 @@ Construct and set the boundary boxes for each patch.
 Construct the boundary boxes for every patch in the level. Once constructed, the boundary boxes are set on each patch's <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">PatchGeometry</a> object.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>The level for which boundary boxes are constructed. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>The level for which boundary boxes are constructed.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == level.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -763,6 +648,7 @@ If any entry of the ratio vector is negative, the index space is coarsened with 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -844,10 +730,11 @@ Unlike the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxCont
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="a462ae387f6ef942d371a0359d0be94f"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::computePhysicalDomain" ref="a462ae387f6ef942d371a0359d0be94f" args="(BoxContainer &amp;domain_mapped_boxes, const IntVector &amp;ratio_to_level_zero) const " -->
+<a class="anchor" name="3ac5b53b97b485a15be101cc95f183d7"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::computePhysicalDomain" ref="3ac5b53b97b485a15be101cc95f183d7" args="(BoxContainer &amp;domain_boxes, const IntVector &amp;ratio_to_level_zero) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -855,7 +742,7 @@ Unlike the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxCont
           <td class="memname">void SAMRAI::hier::BaseGridGeometry::computePhysicalDomain           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>domain_mapped_boxes</em>, </td>
+          <td class="paramname"> <em>domain_boxes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -879,10 +766,11 @@ The domain description includes periodic images, if any exist.<p>
 If any entry of the ratio vector is negative, the index space is coarsened with respect to the physical domain description. Otherwise, the index space is refined.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>domain_mapped_boxes</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> containing all Boxes describing the physical domain </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to the coarsest level </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>domain_boxes</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> containing all Boxes describing the physical domain </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to the coarsest level</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -919,9 +807,10 @@ If any entry of the ratio vector is negative, the index space is coarsened with 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>box_level</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> containing all Boxes describing the physical domain </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to the coarsest level </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to the coarsest level</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -961,6 +850,8 @@ The extents of the input domain boxes are used, but their LocalId's are disregar
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>number_blocks</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!domain.isEmpty() <p>
+for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().getBlockValue() &lt; number_blocks) </dd></dl>
 
 </div>
 </div><p>
@@ -1083,6 +974,7 @@ Initialize the periodic shift on the coarsest level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>directions</em>&nbsp;</td><td>an array indicating periodic directions(1) or all others (0).</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == directions.getDim()</dd></dl>
 <dl compact><dt><b>Note:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> argument should be set to 1 for periodic directions and 0 for all other directions. The shift will be calculated to the number of cells in the periodic direction and zero in all other directions. </dd></dl>
 
 </div>
@@ -1112,7 +1004,8 @@ The returned <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVecto
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to the coarsest level.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>The periodic shift in each direction for a domain represented by a refinement of the reference physical domain. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The periodic shift in each direction for a domain represented by a refinement of the reference physical domain.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -1137,14 +1030,15 @@ Get the number of blocks in the geometry.
 
 </div>
 </div><p>
-<a class="anchor" name="bad878e7a8dd90861bd19b6c7ac198ee"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::getMaxTransferOpStencilWidth" ref="bad878e7a8dd90861bd19b6c7ac198ee" args="()" -->
+<a class="anchor" name="7b8b56570f463e7cd88a243d751288f0"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::getMaxTransferOpStencilWidth" ref="7b8b56570f463e7cd88a243d751288f0" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> SAMRAI::hier::BaseGridGeometry::getMaxTransferOpStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
         </tr>
@@ -1160,7 +1054,7 @@ The max stencil width is required by the DLBG to determine when two nearby boxes
 
 </div>
 </div><p>
-<a class="anchor" name="ccf7ace38b22a958f66941d748aab3b7"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::makeRefinedGridGeometry" ref="ccf7ace38b22a958f66941d748aab3b7" args="(const std::string &amp;fine_geom_name, const IntVector &amp;refine_ratio, bool register_for_restart) const =0" -->
+<a class="anchor" name="fcb98de0b510953afe7e829d2a06acc6"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::makeRefinedGridGeometry" ref="fcb98de0b510953afe7e829d2a06acc6" args="(const std::string &amp;fine_geom_name, const IntVector &amp;refine_ratio) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1174,13 +1068,7 @@ The max stencil width is required by the DLBG to determine when two nearby boxes
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>refine_ratio</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>refine_ratio</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1198,17 +1086,16 @@ Virtual method -- should be overridden in specialized grid geometry classes<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_geom_name</em>&nbsp;</td><td>std::string name of the geometry object </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refine_ratio</em>&nbsp;</td><td>the refinement ratio. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td>Flag to indicate whether to register for restart.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refine_ratio</em>&nbsp;</td><td>the refinement ratio.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>The pointer to the grid geometry object. </dd></dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4a40cfec296568f78bbe857e471dc13b">SAMRAI::geom::CartesianGridGeometry</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#045479174b2dcdf8390f78005781af05">SAMRAI::geom::GridGeometry</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#befdd115d3de5647160416021a8fe164">SAMRAI::geom::CartesianGridGeometry</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#5540efe7bfeeec0c38d2d961aba4b804">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="048aca9d37885baf9e7489270de89f26"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::makeCoarsenedGridGeometry" ref="048aca9d37885baf9e7489270de89f26" args="(const std::string &amp;coarse_geom_name, const IntVector &amp;coarsen_ratio, bool register_for_restart) const =0" -->
+<a class="anchor" name="67099209bd687aa1a9dcfd142df7181c"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::makeCoarsenedGridGeometry" ref="67099209bd687aa1a9dcfd142df7181c" args="(const std::string &amp;coarse_geom_name, const IntVector &amp;coarsen_ratio) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1222,13 +1109,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarsen_ratio</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>coarsen_ratio</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1246,14 +1127,13 @@ Virtual method -- should be overridden in specialized grid geometry classes<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_geom_name</em>&nbsp;</td><td>std::string name of the geometry object </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_ratio</em>&nbsp;</td><td>the coasening ratio </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td>Flag to indicate whether to register for restart.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_ratio</em>&nbsp;</td><td>the coasening ratio</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>The pointer to a coarsened version of this grid geometry object. </dd></dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#1050e4c6a487ffc1621473c4c133cf0f">SAMRAI::geom::CartesianGridGeometry</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#59763e118347bd76ce406e2663ab359c">SAMRAI::geom::GridGeometry</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#72d798df7f5e370ad3be201348bbf368">SAMRAI::geom::CartesianGridGeometry</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#f1c74ce658371e224efe58bd8f202ec3">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
 <a class="anchor" name="b8146fe8b657e09cdae15f1248645dc3"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::setGeometryDataOnPatch" ref="b8146fe8b657e09cdae15f1248645dc3" args="(Patch &amp;patch, const IntVector &amp;ratio_to_level_zero, const TwoDimBool &amp;touches_regular_bdry, const TwoDimBool &amp;touches_periodic_bdry) const " -->
@@ -1302,9 +1182,10 @@ Virtual method -- should be overridden in specialized grid geometry classes<p>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>patch</em>&nbsp;</td><td>The patch on which to set grid data and the new concrete patch geometry object. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to coarsest level </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_regular_bdry</em>&nbsp;</td><td>Array storing which patches touch non-periodic boundaries. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_periodic_bdry</em>&nbsp;</td><td>Array storing which patches touch periodic boundaries. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_periodic_bdry</em>&nbsp;</td><td>Array storing which patches touch periodic boundaries.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == patch.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio_to_level_zero.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == touches_regular_bdry.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == touches_periodic_bdry.getDim()) </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#85122a9d54d3f375585ffd3c41e908ed">SAMRAI::geom::CartesianGridGeometry</a>.
@@ -1365,9 +1246,9 @@ Compute boundary boxes for each patch in patch level.
 Boundary boxes for each patch in a patch level will be computed and assign to boundary box arrays. These arrays are assumed to be of length <div class="fragment"><pre class="fragment">    DIM * num_patches
 </pre></div>.<p>
 The DIM arrays of boundary boxes for each patch will be stored in groups of DIM. For example in 3D, with <code>n</code> patches on the level, the array of boundary box arrays will be ordered as follows:<p>
-<div class="fragment"><pre class="fragment"> (patch 0 face array, patch 0 edge array, patch 0 mapped_box array,
-  patch 1 face array, patch 1 edge array, patch 1 mapped_box array, . . . ,
-  patch n-1 face array, patch n-1 edge array, patch n-1 mapped_box array)
+<div class="fragment"><pre class="fragment"> (patch 0 face array, patch 0 edge array, patch 0 box array,
+  patch 1 face array, patch 1 edge array, patch 1 box array, . . . ,
+  patch n-1 face array, patch n-1 edge array, patch n-1 box array)
 </pre></div><p>
 <dl compact><dt><b>Note:</b></dt><dd>The optional argument <code>do_all_patches</code> defaults to false: the boundary box computation is executed only on patches that touch a non-periodic boundary. When this routine is called during patch level construction to describe a physical boundary, it is known that only patches that touch a non-periodic boundary will have non-empty sets of boundary boxes, so for efficiency's sake the boundary box box computation is supressed for all other patches.</dd></dl>
 When this routine is called to create boundary boxes that describe a coarse-fine boundary, the computation must occur for every patch, so <code>do_all_patches</code> must be set to true.<p>
@@ -1378,9 +1259,11 @@ When this routine is called to create boundary boxes that describe a coarse-fine
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_shift</em>&nbsp;</td><td>periodic shift for the level (see <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#df41d6e9482ead190a7e26fc006f31d9">getPeriodicShift()</a>) </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghost_width</em>&nbsp;</td><td>ghost width to compute geometry for the domain </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain</em>&nbsp;</td><td>Physical domain (in index space of level) for computing boundary boxes. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>do_all_patches</em>&nbsp;</td><td>Flag to indicate boundary box computation on all patches, even those known to not touch a boundary </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>do_all_patches</em>&nbsp;</td><td>Flag to indicate boundary box computation on all patches, even those known to not touch a boundary</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == level.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == periodic_shift.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ghost_width.getDim()) <p>
+ghost_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(ghost_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1430,7 +1313,7 @@ When this routine is called to create boundary boxes that describe a coarse-fine
 <p>
 Compute boundary boxes for patch. 
 <p>
-Decompose patch boundary region into pieces depending on spatial dimensions. Boxes are extended along the boundary to the edge of the ghost mapped_box_level if necessary.<p>
+Decompose patch boundary region into pieces depending on spatial directions. Boxes are extended along the boundary to the edge of the ghost box_level if necessary.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>patch_boundaries</em>&nbsp;</td><td>output boundaries </td></tr>
@@ -1440,6 +1323,7 @@ Decompose patch boundary region into pieces depending on spatial dimensions. Box
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_shift</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == box.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ghosts.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == periodic_shift.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1465,10 +1349,12 @@ Adjust boundary data of a level to be consistent with the multiblock nature of t
 In a multiblock problem, the PatchLevels contain patches that were constructed independent of any knowledge of the multiblock nature of the complete domain. Thus the patches will contain boundary data that recognizes no difference between a physical domain boundary and a block boundary. Calling this method will adjust the boundary data on all patches in the given level such that the true boundaries of the domain are represented.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>patch_level</em>&nbsp;</td><td>Level where boundaries need to be adjusted. TODO: Incorporate into regular boundary box computation once <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> is multiblock-aware. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>patch_level</em>&nbsp;</td><td>Level where boundaries need to be adjusted.</td></tr>
   </table>
 </dl>
-
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == patch_level.getDim() <p>
+patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#410f93e181c781786d902277532cf351">getNumberBlocks()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#410f93e181c781786d902277532cf351">getNumberBlocks()</a></dd></dl>
+TODO: Incorporate into regular boundary box computation once <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> is multiblock-aware. 
 </div>
 </div><p>
 <a class="anchor" name="9e78c8cfd017cc73b1de9f416bd70dc1"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::addCoarsenOperator" ref="9e78c8cfd017cc73b1de9f416bd70dc1" args="(const char *var_type_name, const boost::shared_ptr&lt; CoarsenOperator &gt; &amp;coarsen_op)" -->
@@ -1713,9 +1599,9 @@ Search list for the time interpolation operator matching the request for the giv
 <div class="memdoc">
 
 <p>
-Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">getMaxTransferOpStencilWidth()</a>. 
+Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#7b8b56570f463e7cd88a243d751288f0">getMaxTransferOpStencilWidth()</a>. 
 <p>
-This method allows users to specify a minimum value returned by <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">getMaxTransferOpStencilWidth()</a>. The default minimum is zero. This value can be used as a substitute for data that is not yet registered with the Geometry and therefore cannot be reflected in <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">getMaxTransferOpStencilWidth()</a>.<p>
+This method allows users to specify a minimum value returned by <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#7b8b56570f463e7cd88a243d751288f0">getMaxTransferOpStencilWidth()</a>. The default minimum is zero. This value can be used as a substitute for data that is not yet registered with the Geometry and therefore cannot be reflected in <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#7b8b56570f463e7cd88a243d751288f0">getMaxTransferOpStencilWidth()</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_value</em>&nbsp;</td><td>The minimum value to set. </td></tr>
@@ -1820,9 +1706,10 @@ Register a relationship between two neighboring blocks of a multiblock domain.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_b</em>&nbsp;</td><td>The other block </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rotation_b_to_a</em>&nbsp;</td><td>The rotation that aligns block b's index space with block a's </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_b_to_a</em>&nbsp;</td><td>The post-rotation shift to move b into its correct location within a's index space </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>neighbor_type</em>&nbsp;</td><td>The type (codimension) of the neighbor relationship </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>neighbor_type</em>&nbsp;</td><td>The type (codimension) of the neighbor relationship</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> = shift_b_to_a.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -1904,7 +1791,7 @@ Return the number of block singularities in the block configuration.
 <p>
 Return a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> that describes all of the singularities touched by the block indicated by block_id. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>For every singularity point the block touches, the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> will contain a single-cell box that lies just outside the block domain, touching the block only at the singularity point. For line singularities, the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> will contain boxes of width 1 in all dimensions except one, lying outside the block's coarse-level domain and touching the domain only along the line of singularity.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>For every singularity point the block touches, the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> will contain a single-cell box that lies just outside the block domain, touching the block only at the singularity point. For line singularities, the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> will contain boxes of width 1 in all directions except one, lying outside the block's coarse-level domain and touching the domain only along the line of singularity.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
@@ -2017,6 +1904,7 @@ Modify a box by rotating and shifting from the index space of the transformed_bl
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_block</em>&nbsp;</td><td>Integer identifier of the block whose index space is represented in the boxes at input</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == box.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d1cd6acb940509147e68fbccecfa17e1">getDim()</a> == ratio.getDim())</dd></dl>
 <dl compact><dt><b>Returns:</b></dt><dd>Whether the box has been transformed. True if there is a relationship between input_block and output_block. False if there is no such relationship. </dd></dl>
 
 </div>
@@ -2202,6 +2090,12 @@ A block is the neighbor of another block if the two blocks abut in any way, whet
 <p>
 Tell if the given BlockIds represent neighboring blocks. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>block_a</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>block_b</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -2233,6 +2127,12 @@ Tell if the given BlockIds represent neighboring blocks.
 <p>
 Tell if the given BlockIds represent neighboring blocks. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>block_a</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>block_b</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -2262,8 +2162,15 @@ Tell if the given BlockIds represent neighboring blocks.
 <div class="memdoc">
 
 <p>
-Get the rotation identifier to rotate from src to dst. 
+Get the rotation identifier to rotate from src to dst.\. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dst</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>areNeighbors(dst, src) </dd></dl>
 
 </div>
 </div><p>
@@ -2295,6 +2202,13 @@ Get the rotation identifier to rotate from src to dst.
 <p>
 Get the offset to shift from src to dst after rotation. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dst</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>areNeighbors(dst, src) </dd></dl>
 
 </div>
 </div><p>
@@ -2348,15 +2262,15 @@ Print object data to the specified output stream.
 Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#6b2ff51d7f095807d59eac0d488337a5">SAMRAI::geom::CartesianGridGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="de6fe16e73de6bcbddfaa19789a136cc"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::putToDatabase" ref="de6fe16e73de6bcbddfaa19789a136cc" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
+<a class="anchor" name="035469b88795d642505a71be9d66054c"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::putToRestart" ref="035469b88795d642505a71be9d66054c" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BaseGridGeometry::putToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BaseGridGeometry::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -2365,17 +2279,17 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometr
 <div class="memdoc">
 
 <p>
-Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object to the database. 
+Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> object to the restart database. 
 <p>
-When assertion checking is active, db cannot be a null database pointer.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>db</em>&nbsp;</td><td>The database to write to write/serialize. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td>The restart database to write/serialize to.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4cf8cfba217abcaf02d58634ee4ea1e8">SAMRAI::geom::CartesianGridGeometry</a>.
+Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#b50ad278641b64b3383fe1dbfe9c25b3">SAMRAI::geom::CartesianGridGeometry</a>.
 </div>
 </div><p>
 <a class="anchor" name="5d4bd1956876a6b9a771426a876e69f8"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::readBlockDataFromInput" ref="5d4bd1956876a6b9a771426a876e69f8" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db)" -->
@@ -2402,6 +2316,7 @@ Read multiblock metadata input from the input database.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>input_db </dd></dl>
 
 </div>
 </div><p>
@@ -2420,7 +2335,7 @@ Read multiblock metadata input from the input database.
 <p>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4a5f08314352ac69175668e73ec90cb0">SAMRAI::geom::CartesianGridGeometry</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#4a5f08314352ac69175668e73ec90cb0">SAMRAI::geom::GridGeometry</a>.
+Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#4a5f08314352ac69175668e73ec90cb0">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
@@ -2456,7 +2371,7 @@ The holder of all the transfer operators.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BaseGridGeometry_8h.html">BaseGridGeometry.h</a><li>source/SAMRAI/hier/<a class="el" href="BaseGridGeometry_8C.html">BaseGridGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

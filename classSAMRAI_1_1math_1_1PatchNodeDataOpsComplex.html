@@ -124,7 +124,10 @@ Empty constructor and destructor.
 <div class="memdoc">
 
 <p>
-Copy dst data to src data over given box. 
+Copy dst data to src data over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="004135a2b613dcb85575aa02878d9c2c"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsComplex::swapData" ref="004135a2b613dcb85575aa02878d9c2c" args="(const boost::shared_ptr&lt; hier::Patch &gt; &amp;patch, const int data1_id, const int data2_id) const " -->
@@ -159,7 +162,14 @@ Copy dst data to src data over given box.
 <div class="memdoc">
 
 <p>
-Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box. 
+Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>patch <p>
+patch-&gt;getPatchData(data1_id) is actually a boost::shared_ptr&lt;pdat::NodeData&lt;dcomplex&gt; &gt; <p>
+patch-&gt;getPatchData(data2_id) is actually a boost::shared_ptr&lt;pdat::NodeData&lt;dcomplex&gt; &gt; <p>
+patch-&gt;getPatchData(data1_id)-&gt;getDepth() == patch-&gt;getPatchData(data2_id)-&gt;getDepth() <p>
+patch-&gt;getPatchData(data1_id)-&gt;getBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getBox()) <p>
+patch-&gt;getPatchData(data1_id)-&gt;getGhostBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getGhostBox()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="9d72bb94f85c5099608d17b8dccf9184"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsComplex::printData" ref="9d72bb94f85c5099608d17b8dccf9184" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, std::ostream &amp;s=tbox::plog) const " -->
@@ -194,7 +204,10 @@ Swap pointers for patch data objects. Objects are checked for consistency of dep
 <div class="memdoc">
 
 <p>
-Print data entries over given box to given output stream. 
+Print data entries over given box to given output stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a7b9dfc84a835a7d14be79dacc845035"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsComplex::setToScalar" ref="a7b9dfc84a835a7d14be79dacc845035" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; dcomplex &gt; &gt; &amp;dst, const dcomplex &amp;alpha, const hier::Box &amp;box) const " -->
@@ -229,12 +242,15 @@ Print data entries over given box to given output stream.
 <div class="memdoc">
 
 <p>
-Initialize data to given scalar over given box. 
+Initialize data to given scalar over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst <p>
+dst-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataOpsComplex_8h.html">PatchNodeDataOpsComplex.h</a><li>source/SAMRAI/math/<a class="el" href="PatchNodeDataOpsComplex_8C.html">PatchNodeDataOpsComplex.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -30,10 +30,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#6c66734af8e45953bf2abe423b5090ca">Dimension</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;dimension)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#5b5a17dbd197dd5fbcaf580a52caf281">isValid</a> () const </td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#11148dac7fd9a7894eb12a88dde6f041">isInitialized</a> () const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#7dadd879b521f698a6969584b8d32d16">operator==</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;rhs) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#a656bbb84774e0a46b2e17315e536a8d">operator!=</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;rhs) const </td></tr>
@@ -49,24 +45,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned short&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#addf5aeeb2e6fd83ec27ae127abc5f53">getValue</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static unsigned short&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#2eef00f78a3ad5766acd476a681c04ed">getMaxDimValue</a> ()</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#ab4ad83f78097401e06d6f953555ee24">getMaxDimension</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acba22b89da4fa98f35b4ea217e1264f">getInvalidDimension</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static unsigned short&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#25bd79ff998fbe789c8378ea7180f2e1">getInvalidDimValue</a> ()</td></tr>
-
-<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned short&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#b79dbe8e413615cffb8835edcddb21da">MAXIMUM_DIMENSION_VALUE</a></td></tr>
-
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#d733a42c3b297f8564b889396b408fb1">pdat::ArrayData</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#ba174edfb3d9024e7ebab27949053b77">hier::IntVector</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#620332ee1874a541803b1dfc72111574">DatabaseBox</a></td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#0781e7c00bffd58554c3e334adfb2743">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;rhs)</td></tr>
 
 </table>
@@ -95,7 +76,8 @@ A class is used rather than a simple short or integer to provide enhanced type s
 <p>
 Constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a>, object is built using the specified dimension<p>
 Note that the constructor is "explicit" thus making automatic type conversions from integers impossible. This is intentionally to avoid unintended conversions.<p>
-When dimensional assertion checking is active an assert is thrown when dim &lt; 1 or dim &gt; <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#ab4ad83f78097401e06d6f953555ee24">getMaxDimension()</a> value specified when the library is configured (defaults to 3). dim also cannot be the <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acba22b89da4fa98f35b4ea217e1264f">getInvalidDimension()</a> (the largest unsigned short value). 
+<dl compact><dt><b>Precondition:</b></dt><dd>(dim &gt; 0) &amp;&amp; (dim &lt;= SAMRAI::MAX_DIM_VAL) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6c66734af8e45953bf2abe423b5090ca"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::Dimension" ref="6c66734af8e45953bf2abe423b5090ca" args="(const Dimension &amp;dimension)" -->
@@ -119,45 +101,6 @@ Construct a dimension equal to the argument.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="5b5a17dbd197dd5fbcaf580a52caf281"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::isValid" ref="5b5a17dbd197dd5fbcaf580a52caf281" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::tbox::Dimension::isValid           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Returns true if <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> is valid.<p>
-A valid <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> != 0; != <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acba22b89da4fa98f35b4ea217e1264f">getInvalidDimension()</a>, and &lt;= <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#ab4ad83f78097401e06d6f953555ee24">getMaxDimension()</a>. 
-</div>
-</div><p>
-<a class="anchor" name="11148dac7fd9a7894eb12a88dde6f041"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::isInitialized" ref="11148dac7fd9a7894eb12a88dde6f041" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::tbox::Dimension::isInitialized           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Returns true if <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> is initialized (not set to <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acba22b89da4fa98f35b4ea217e1264f">getInvalidDimension()</a>). 
-</div>
-</div><p>
 <a class="anchor" name="7dadd879b521f698a6969584b8d32d16"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::operator==" ref="7dadd879b521f698a6969584b8d32d16" args="(const Dimension &amp;rhs) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -298,25 +241,6 @@ Returns the dimension of the <a class="el" href="classSAMRAI_1_1tbox_1_1Dimensio
 The method is provided to allow sizing of arrays based on the dimension and for iteration. In general this should not be used for comparisons, the <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> comparison operations are better suited for that purpose. 
 </div>
 </div><p>
-<a class="anchor" name="2eef00f78a3ad5766acd476a681c04ed"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::getMaxDimValue" ref="2eef00f78a3ad5766acd476a681c04ed" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static unsigned short SAMRAI::tbox::Dimension::getMaxDimValue           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="ab4ad83f78097401e06d6f953555ee24"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::getMaxDimension" ref="ab4ad83f78097401e06d6f953555ee24" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -337,91 +261,7 @@ Returns the maximum dimension for the currently compiled library as a <a class="
 When the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library is compiled a maximum dimension allowed is specified (the default is 3). This method is typically used to allocate arrays. 
 </div>
 </div><p>
-<a class="anchor" name="acba22b89da4fa98f35b4ea217e1264f"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::getInvalidDimension" ref="acba22b89da4fa98f35b4ea217e1264f" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a>&amp; SAMRAI::tbox::Dimension::getInvalidDimension           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-An invalid dimension value as a <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> object. 
-</div>
-</div><p>
-<a class="anchor" name="25bd79ff998fbe789c8378ea7180f2e1"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::getInvalidDimValue" ref="25bd79ff998fbe789c8378ea7180f2e1" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static unsigned short SAMRAI::tbox::Dimension::getInvalidDimValue           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-An invalid dimension value as an unsigned short.<p>
-Currently this value is numeric_limits&lt;unsigned short&gt;::max() but use this symbol as it is more readable. 
-</div>
-</div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" name="d733a42c3b297f8564b889396b408fb1"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::pdat::ArrayData" ref="d733a42c3b297f8564b889396b408fb1" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a><code> [friend]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="ba174edfb3d9024e7ebab27949053b77"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::hier::IntVector" ref="ba174edfb3d9024e7ebab27949053b77" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a><code> [friend]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="620332ee1874a541803b1dfc72111574"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::DatabaseBox" ref="620332ee1874a541803b1dfc72111574" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a><code> [friend]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="0781e7c00bffd58554c3e334adfb2743"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::operator&lt;&lt;" ref="0781e7c00bffd58554c3e334adfb2743" args="(std::ostream &amp;s, const Dimension &amp;rhs)" -->
 <div class="memitem">
 <div class="memproto">
@@ -451,30 +291,9 @@ Currently this value is numeric_limits&lt;unsigned short&gt;::max() but use this
 Output operator for debugging and error messages. 
 </div>
 </div><p>
-<hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="b79dbe8e413615cffb8835edcddb21da"></a><!-- doxytag: member="SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE" ref="b79dbe8e413615cffb8835edcddb21da" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const unsigned short <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#b79dbe8e413615cffb8835edcddb21da">SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-<b>Initial value:</b><div class="fragment"><pre class="fragment">
-      SAMRAI_MAXIMUM_DIMENSION
-</pre></div>Returns the maximum dimension for the currently compiled library as an unsigned short.<p>
-When the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library is compiled a maximum dimension allowed is specified (the default is 3). This method is typically used to allocate arrays.<p>
-double array[<a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#b79dbe8e413615cffb8835edcddb21da">tbox::Dimension::MAXIMUM_DIMENSION_VALUE</a>];<p>
-The value must be &gt;= 1 and &lt; numeric_limits&lt;unsigned short&gt;::max() 
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Dimension_8h.html">Dimension.h</a><li>source/SAMRAI/tbox/<a class="el" href="Dimension_8C.html">Dimension.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

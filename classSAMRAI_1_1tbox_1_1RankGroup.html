@@ -126,7 +126,10 @@ This constructor constructs a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGro
 <div class="memdoc">
 
 <p>
-This constructor creates a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a> consisting of all ranks from min to max, inclusive. min must be &gt;= 0 and max must be less than the total number of available processors. 
+This constructor creates a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a> consisting of all ranks from min to max, inclusive. min must be &gt;= 0 and max must be less than the total number of available processors.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>min &gt;= 0 <p>
+min &lt;= max </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2589c7ea01524af5941972492e1aed9e"></a><!-- doxytag: member="SAMRAI::tbox::RankGroup::RankGroup" ref="2589c7ea01524af5941972492e1aed9e" args="(const Array&lt; int &gt; &amp;rank_group, const SAMRAI_MPI &amp;samrai_mpi=SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()))" -->
@@ -156,7 +159,8 @@ This constructor creates a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.
 
 <p>
 This constructor creates a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a> consisting of ranks corresponding to the integers in the array. Each member of the array must be &gt;= 0, less than the total number of available processors, and unique within the array. Due to the use of an array for storage, RankGroups created with this constructor should be expected to be less efficient than those created with the above min/max constructor.<p>
-An assertion failure will result if the array is empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!rank_group.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4322bc1d1789adc3eac89abda453a1bc"></a><!-- doxytag: member="SAMRAI::tbox::RankGroup::~RankGroup" ref="4322bc1d1789adc3eac89abda453a1bc" args="()" -->
@@ -303,12 +307,14 @@ Given an integer identifier from the set [0,N-1], N being the size of the <a cla
 <div class="memdoc">
 
 <p>
-This is the inverse function of getMappedRank. Given a rank that is contained in the <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a>, return a unique integer identifier in the set [0,N-1], N being the size of the rank group, according to a 1-to-1 mapping. 
+This is the inverse function of getMappedRank. Given a rank that is contained in the <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a>, return a unique integer identifier in the set [0,N-1], N being the size of the rank group, according to a 1-to-1 mapping.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>rank &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="RankGroup_8h.html">RankGroup.h</a><li>source/SAMRAI/tbox/<a class="el" href="RankGroup_8C.html">RankGroup.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

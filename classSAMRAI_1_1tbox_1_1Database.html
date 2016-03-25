@@ -697,9 +697,10 @@ Get a database in the database with the specified key name. If the specified key
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 </div>
 </div><p>
@@ -761,9 +762,10 @@ Create a boolean scalar entry in the database with the specified key name. If th
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#9f2c0f187791524365d25c03fb4117e1">SAMRAI::tbox::MemoryDatabase</a>.
@@ -799,9 +801,11 @@ Create a boolean array entry in the database with the specified key name. If the
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#dc5560a0888500867f62741bb982c9ed">SAMRAI::tbox::MemoryDatabase</a>.
@@ -872,9 +876,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#a92d9
 Get a boolean entry in the database with the specified key name. If the specified key does not exist in the database or is not a boolean scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#bf2fffe86848467da218c3c609d5247e">SAMRAI::tbox::MemoryDatabase</a>.
@@ -906,7 +911,9 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#
 <div class="memdoc">
 
 <p>
-Get a boolean entry in the database with the specified key name. If the specified key does not exist in the database, then the default value is returned. If the key exists but is not a boolean scalar, then an error message is printed and the program exits. 
+Get a boolean entry in the database with the specified key name. If the specified key does not exist in the database, then the default value is returned. If the key exists but is not a boolean scalar, then an error message is printed and the program exits.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#8d13c786987f76ea1adb68a6f4ea6062">SAMRAI::tbox::MemoryDatabase</a>.
 </div>
@@ -976,9 +983,10 @@ Get a boolean entry from the database with the specified key name. If the specif
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#09e95aa5ca0748d42729f02e7fe571e4">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1042,9 +1050,10 @@ Create a box scalar entry in the database with the specified key name. If the ke
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#e27eecc2953e08c0d87dfaa90858925d">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1080,9 +1089,11 @@ Create a box array entry in the database with the specified key name. If the key
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#f2113cbc8fc1e81adbe903f320aedf94">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1153,9 +1164,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#d7997
 Get a box entry in the database with the specified key name. If the specified key does not exist in the database or is not a box scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#a8e6087b4295f640194e472722720100">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1191,9 +1203,10 @@ Get a box entry in the database with the specified key name. If the specified ke
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#df028a2e8d1e6d1a1b2ec0733ef4f42c">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1264,9 +1277,10 @@ Get a box entry from the database with the specified key name. If the specified 
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#fb25e1657464d41ed2c43dd477afe74c">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1330,9 +1344,10 @@ Create a character scalar entry in the database with the specified key name. If 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#cd7d9ce0a06758a3e60994fe3ff98362">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1369,9 +1384,11 @@ Create a character array entry in the database with the specified key name. If t
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#18b83a955059c5f0e275f5e4934eb4b9">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1442,9 +1459,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#366cc
 Get a character entry in the database with the specified key name. If the specified key does not exist in the database or is not an character scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#a7c180b5d2ab7a1d73c718ca38119649">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1480,9 +1498,10 @@ Get a character entry in the database with the specified key name. If the specif
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#7bba6e72a61307d11d015ba7a125ed4b">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1553,9 +1572,10 @@ Get a character entry from the database with the specified key name. If the spec
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#9427b7f8fb4e49d7da5713a4071e16f1">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1619,9 +1639,10 @@ Create a complex scalar entry in the database with the specified key name. If th
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#82199a93e1ec4c7ec9fcee808a107369">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1657,9 +1678,11 @@ Create a complex array entry in the database with the specified key name. If the
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#c1c671457bdd4ef531fbbcd7dff2d81b">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1730,9 +1753,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#230aa
 Get a complex entry in the database with the specified key name. If the specified key does not exist in the database or is not a complex scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#b841b6a5dc73d676f7ddd08617e3e722">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1768,9 +1792,10 @@ Get a complex entry in the database with the specified key name. If the specifie
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#cd363b4bc7e6c78b54ae7c6a4f1284e0">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1841,9 +1866,10 @@ Get a complex entry from the database with the specified key name. If the specif
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#83dbfd1a30ce650abffe194fcc316131">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1907,9 +1933,10 @@ Create a double scalar entry in the database with the specified key name. If the
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#0621edd8a4000937122c151328470d6c">SAMRAI::tbox::MemoryDatabase</a>.
@@ -1945,9 +1972,11 @@ Create a double array entry in the database with the specified key name. If the 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#14858ed0e17032dbe7d253364ae22430">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2018,9 +2047,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#e9488
 Get a double entry in the database with the specified key name. If the specified key does not exist in the database or is not a double scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#2d5efd8872c5174a449fd59fbbd8331b">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2056,9 +2086,10 @@ Get a double entry in the database with the specified key name. If the specified
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#675b133a19d20ffd18071e46c91fa78d">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2129,9 +2160,10 @@ Get a double entry from the database with the specified key name. If the specifi
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#dcc5b204dba7db20a0704589473f20c8">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2195,9 +2227,10 @@ Create a float scalar entry in the database with the specified key name. If the 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#7e7afe22693846cd01debc82bf8c9b7a">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2233,9 +2266,11 @@ Create a float array entry in the database with the specified key name. If the k
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#5c3e19f9beda0826971f2139266cda12">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2306,9 +2341,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#4ae48
 Get a float entry in the database with the specified key name. If the specified key does not exist in the database or is not a float scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#b63685a53c50b52cda52af2e164ff0a9">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2344,9 +2380,10 @@ Get a float entry in the database with the specified key name. If the specified 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#80903dce88ed6ef39237056a86ec1643">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2417,9 +2454,10 @@ Get a float entry from the database with the specified key name. If the specifie
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#d2e4dae4b176fca39b8bf790f9b0be27">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2483,9 +2521,10 @@ Create an integer scalar entry in the database with the specified key name. If t
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#66b8bdcaf18e9a94917e48504e44a0cb">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2521,9 +2560,11 @@ Create an integer array entry in the database with the specified key name. If th
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#c26000bc7a416c868c13e3aee24240ac">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2594,9 +2635,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#b41cd
 Get an integer entry in the database with the specified key name. If the specified key does not exist in the database or is not an integer scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#fe1778163d33194225a2d354784ed5fa">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2632,9 +2674,10 @@ Get an integer entry in the database with the specified key name. If the specifi
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#7ce105e99f6528ee7a235299521e2f81">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2705,9 +2748,10 @@ Get an integer entry from the database with the specified key name. If the speci
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#c5ffc48c41aa8ab0f4522a10860ebdd1">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2771,9 +2815,10 @@ Create a string scalar entry in the database with the specified key name. If the
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Value to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#da1baa9cd03dbacc4377f74c303675ff">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2809,9 +2854,11 @@ Create a string array entry in the database with the specified key name. If the 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data.getSize() &gt; 0 </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#1a79cb49c7ad198de0c54f6d12265272">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2882,9 +2929,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#d74c8
 Get a string entry in the database with the specified key name. If the specified key does not exist in the database or is not an string scalar, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#83fa2d4e7cbbe12ad8339a3f8fe3e1b6">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2920,9 +2968,10 @@ Get a string entry in the database with the specified key name. If the specified
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>defaultvalue</em>&nbsp;</td><td>Default value to return if not found.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#7ec14cd90f966c8baf56cdd77be0febb">SAMRAI::tbox::MemoryDatabase</a>.
@@ -2993,9 +3042,10 @@ Get a string entry from the database with the specified key name. If the specifi
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> with data to put into database. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nelements</em>&nbsp;</td><td>Number of elements to write from array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#10ded6527fc54c28e5a54a10f0dd9151">SAMRAI::tbox::MemoryDatabase</a>.
@@ -3958,7 +4008,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Create an vector entry in the database with the specified key name. If the key already exists in the database, then the old key record is deleted and the new one is silently created in its place.<p>
+Create a vector entry in the database with the specified key name. If the key already exists in the database, then the old key record is deleted and the new one is silently created in its place.<p>
 TYPE must implement the Database::Serializable interface.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -4022,7 +4072,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#5914a
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Database_8h.html">Database.h</a><li>source/SAMRAI/tbox/<a class="el" href="Database_8C.html">Database.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

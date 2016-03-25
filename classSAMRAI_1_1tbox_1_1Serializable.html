@@ -47,15 +47,15 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#d21f01adf351615793ce8104161c6cc1">~Serializable</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#5ed1f54228ad961855a8398801da99f3">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;database) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#bf3042038b6725c7652e3c4e4120283a">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;restart_db) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Serializes the object by writing necessary state to the specified database.  <a href="#5ed1f54228ad961855a8398801da99f3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Serializes the object by writing necessary state to the specified restart database.  <a href="#bf3042038b6725c7652e3c4e4120283a"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a> is an abstract base class to provide database serialization for objects. 
 <p>
-Objects needing to serialize their data to a database implement the function putToDatabase(boost::shared_ptr&lt;tbox::Database&gt;) specifying how to put its data members into the database instance.<p>
-<dl compact><dt><b>Note:</b></dt><dd>The interface asymmetric in that is no corresponding "getFromDatabase" function. This stems from SAMRAI's historical restart procedure and object creation is object initialization pattern. Thus restarting is done in the constructors for classes implementing <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a> not by an additional method. The database used to restore state from is obtained via a getRootDatabase() call to the <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a>. </dd></dl>
+Objects needing to serialize their data to a database implement the function putToRestart(boost::shared_ptr&lt;tbox::Database&gt;) specifying how to put its data members into the database instance.<p>
+<dl compact><dt><b>Note:</b></dt><dd>The interface asymmetric in that is no corresponding "getFromRestart" function. This stems from SAMRAI's historical restart procedure and object creation is object initialization pattern. Thus restarting is done in the constructors for classes implementing <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a> not by an additional method. The database used to restore state from is obtained via a getRootDatabase() call to the <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a>. </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -98,15 +98,15 @@ Virtual destructor
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="5ed1f54228ad961855a8398801da99f3"></a><!-- doxytag: member="SAMRAI::tbox::Serializable::putToDatabase" ref="5ed1f54228ad961855a8398801da99f3" args="(const boost::shared_ptr&lt; Database &gt; &amp;database) const =0" -->
+<a class="anchor" name="bf3042038b6725c7652e3c4e4120283a"></a><!-- doxytag: member="SAMRAI::tbox::Serializable::putToRestart" ref="bf3042038b6725c7652e3c4e4120283a" args="(const boost::shared_ptr&lt; Database &gt; &amp;restart_db) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SAMRAI::tbox::Serializable::putToDatabase           </td>
+          <td class="memname">virtual void SAMRAI::tbox::Serializable::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [pure virtual]</code></td>
         </tr>
@@ -115,16 +115,16 @@ Virtual destructor
 <div class="memdoc">
 
 <p>
-Serializes the object by writing necessary state to the specified database. 
+Serializes the object by writing necessary state to the specified restart database. 
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#687f44072ec3b75673f7f438820221c8">SAMRAI::tbox::StatisticRestartDatabase</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#fcd1b905ec106b6e0eea6d31738cbc79">SAMRAI::tbox::StatisticRestartDatabase</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Serializable_8h.html">Serializable.h</a><li>source/SAMRAI/tbox/<a class="el" href="Serializable_8C.html">Serializable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

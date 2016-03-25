@@ -68,9 +68,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#29d8a797f4e89d07895fb1e1c1f13ea3">computeMaxWallclock</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#3ea94740beab17f858ceee92d6fbd430">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#320897e7d5fc5837e81f57a142e4000b">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#cd19a831f7c6874d6a826aa797b33f2b">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#768ee7704fd71f997543257fea23fd8a">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;restart_db)</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#755ecb2ce66235a74a5bbd5064e675d1">Timer</a> (const std::string &amp;name)</td></tr>
@@ -171,7 +171,8 @@ Return string name for timer.
 
 <p>
 Start the timer if active.<p>
-It is an error to start a timer that is already started. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!isActive() || !isRunning() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a3a7ee819aace7cbcf33ed7641758922"></a><!-- doxytag: member="SAMRAI::tbox::Timer::stop" ref="a3a7ee819aace7cbcf33ed7641758922" args="()" -->
@@ -191,7 +192,8 @@ It is an error to start a timer that is already started.
 
 <p>
 Stop the timer if active.<p>
-It is an error to stop a timer that is already stopped. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!isActive() || <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#bc37f8b2246fcd2dce3f4f1dc91dcc15">isRunning()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2caa73b9a1d248080f2a0fd60199aa51"></a><!-- doxytag: member="SAMRAI::tbox::Timer::barrierAndStart" ref="2caa73b9a1d248080f2a0fd60199aa51" args="()" -->
@@ -517,15 +519,15 @@ Compute load balance efficiency based on wallclock (non-exclusive) time.
 Compute max wallclock time based on total (non-exclusive) time. 
 </div>
 </div><p>
-<a class="anchor" name="3ea94740beab17f858ceee92d6fbd430"></a><!-- doxytag: member="SAMRAI::tbox::Timer::putUnregisteredToDatabase" ref="3ea94740beab17f858ceee92d6fbd430" args="(const boost::shared_ptr&lt; Database &gt; &amp;db) const " -->
+<a class="anchor" name="320897e7d5fc5837e81f57a142e4000b"></a><!-- doxytag: member="SAMRAI::tbox::Timer::putToRestart" ref="320897e7d5fc5837e81f57a142e4000b" args="(const boost::shared_ptr&lt; Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::tbox::Timer::putUnregisteredToDatabase           </td>
+          <td class="memname">void SAMRAI::tbox::Timer::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -534,10 +536,12 @@ Compute max wallclock time based on total (non-exclusive) time.
 <div class="memdoc">
 
 <p>
-Write timer data members to database. 
+Write timer data members to restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="cd19a831f7c6874d6a826aa797b33f2b"></a><!-- doxytag: member="SAMRAI::tbox::Timer::getFromRestart" ref="cd19a831f7c6874d6a826aa797b33f2b" args="(const boost::shared_ptr&lt; Database &gt; &amp;db)" -->
+<a class="anchor" name="768ee7704fd71f997543257fea23fd8a"></a><!-- doxytag: member="SAMRAI::tbox::Timer::getFromRestart" ref="768ee7704fd71f997543257fea23fd8a" args="(const boost::shared_ptr&lt; Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -545,7 +549,7 @@ Write timer data members to database.
           <td class="memname">void SAMRAI::tbox::Timer::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -554,7 +558,9 @@ Write timer data members to database.
 <div class="memdoc">
 
 <p>
-Read restarted times from restart database. When assertion checking is on, the database pointer must be non-null. 
+Read restarted times from restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="71021d75e2e03d7709d977bb0aab01c5"></a><!-- doxytag: member="SAMRAI::tbox::Timer::setActive" ref="71021d75e2e03d7709d977bb0aab01c5" args="(bool is_active)" -->
@@ -635,7 +641,7 @@ Return if the timer is running concurrently with this one.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Timer_8h.html">Timer.h</a><li>source/SAMRAI/tbox/<a class="el" href="Timer_8C.html">Timer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

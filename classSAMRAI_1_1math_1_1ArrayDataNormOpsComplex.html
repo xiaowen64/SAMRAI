@@ -58,7 +58,7 @@
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataNormOpsComplex.html">ArrayDataNormOpsComplex</a> provides a set of common norm operations that may be applied to arrays of complex data values maintained as pdat::ArrayData&lt;DIM&gt; objects. The intent of this class is to provide a single implementation of these operations as they are needed by objects that perform these operations on the standard array-based patch data types (i.e., cell-centered, face-centered, node-centered). Each of the norm operations is implemented in two different ways. The choice of operation is based on whether control volume information is to be used to weight the contribution of each data entry to the norm calculation. The use of control volumes is important when these operations are used in vector kernels where the data resides over multiple levels in an AMR hierarchy. Note also that each operation will be performed on the intersection of the box in the function argument list and the boxes associated with all pdat::ArrayData&lt;DIM&gt; objects.<p>
+Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataNormOpsComplex.html">ArrayDataNormOpsComplex</a> provides a set of common norm operations that may be applied to arrays of complex data values maintained as pdat::ArrayData&lt;TYPE&gt; objects. The intent of this class is to provide a single implementation of these operations as they are needed by objects that perform these operations on the standard array-based patch data types (i.e., cell-centered, face-centered, node-centered). Each of the norm operations is implemented in two different ways. The choice of operation is based on whether control volume information is to be used to weight the contribution of each data entry to the norm calculation. The use of control volumes is important when these operations are used in vector kernels where the data resides over multiple levels in an AMR hierarchy. Note also that each operation will be performed on the intersection of the box in the function argument list and the boxes associated with all pdat::ArrayData&lt;TYPE&gt; objects.<p>
 Note that a similar set of norm operations is implemented for real array data (double and float) in the class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataNormOpsReal.html">ArrayDataNormOpsReal</a>.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a> </dd></dl>
 
@@ -135,7 +135,10 @@ Empty constructor and destructor.
 <div class="memdoc">
 
 <p>
-Set destination component to norm of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \sqrt{ {real(s_i)}^2 + {imag(s_i)}^2 }$" src="form_15.png">. 
+Set destination component to norm of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \sqrt{ {real(s_i)}^2 + {imag(s_i)}^2 }$" src="form_15.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="842a32787f607b855f66e4d03dfca8c4"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::sumControlVolumes" ref="842a32787f607b855f66e4d03dfca8c4" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -170,7 +173,9 @@ Set destination component to norm of source component. That is, each destination
 <div class="memdoc">
 
 <p>
-Return sum of entries in control volume array. 
+Return sum of entries in control volume array.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == cvol.getDim()) &amp;&amp; (data.getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="631d63e379a177c361448f54824f516c"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::L1NormWithControlVolume" ref="631d63e379a177c361448f54824f516c" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -205,7 +210,9 @@ Return sum of entries in control volume array.
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} cvol_i )$" src="form_17.png">. 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} cvol_i )$" src="form_17.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == cvol.getDim()) &amp;&amp; (data.getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ba46043e6db8683e7a7b098df229265d"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::L1Norm" ref="ba46043e6db8683e7a7b098df229265d" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -234,7 +241,9 @@ Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of t
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_18.png">. 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_18.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="735a50b0f4c5f85e88b02565950aba41"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::L2NormWithControlVolume" ref="735a50b0f4c5f85e88b02565950aba41" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -269,7 +278,9 @@ Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of t
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$" src="form_20.png">. 
+Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$" src="form_20.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == cvol.getDim()) &amp;&amp; (data.getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="d9c38c1eac1d854be13961a7348f64f4"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::L2Norm" ref="d9c38c1eac1d854be13961a7348f64f4" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -298,7 +309,9 @@ Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of t
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$" src="form_21.png">. 
+Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$" src="form_21.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data.getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2aa6dcd9cdd27b9b5e2b1756c3b9d589"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::weightedL2NormWithControlVolume" ref="2aa6dcd9cdd27b9b5e2b1756c3b9d589" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; dcomplex &gt; &amp;wgt, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -339,7 +352,10 @@ Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of t
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == wgt.getDim()) &amp;&amp; (data.getDim() == cvol.getDim()) &amp;&amp; (data.getDim() == box.getDim()) <p>
+data.getDepth() == wgt.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="37bb734dd12d18ec1d0336b66f6087d5"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::weightedL2Norm" ref="37bb734dd12d18ec1d0336b66f6087d5" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; dcomplex &gt; &amp;wgt, const hier::Box &amp;box) const " -->
@@ -374,7 +390,10 @@ Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_23.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_23.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == wgt.getDim()) &amp;&amp; (data.getDim() == box.getDim()) <p>
+data.getDepth() == wgt.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="62b0bba2177c3b411d6077a21d6714aa"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::maxNormWithControlVolume" ref="62b0bba2177c3b411d6077a21d6714aa" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -409,7 +428,9 @@ Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == cvol.getDim()) &amp;&amp; (data.getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="881dc4c975e406761db809c48eb02ffe"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::maxNorm" ref="881dc4c975e406761db809c48eb02ffe" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -438,7 +459,9 @@ Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the d
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">. 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data.getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="16ab684e1a85838e598d5f2251057d54"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::dotWithControlVolume" ref="16ab684e1a85838e598d5f2251057d54" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data1, const pdat::ArrayData&lt; dcomplex &gt; &amp;data2, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -479,7 +502,10 @@ Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the d
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">. 
+Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data1.getDim() == data2.getDim()) &amp;&amp; (data1.getDim() == cvol.getDim()) &amp;&amp; (data1.getDim() == box.getDim()) <p>
+data1.getDepth() == data2.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c168ac88115c27a4e8039caec60d1dc8"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::dot" ref="c168ac88115c27a4e8039caec60d1dc8" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data1, const pdat::ArrayData&lt; dcomplex &gt; &amp;data2, const hier::Box &amp;box) const " -->
@@ -514,7 +540,10 @@ Return the dot product of the two data arrays using the control volume to weight
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} )$" src="form_27.png">. 
+Return the dot product of the two data arrays. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} )$" src="form_27.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data1.getDim() == data2.getDim()) &amp;&amp; (data1.getDim() == box.getDim()) <p>
+data1.getDepth() == data2.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="388793edcf5ac25fa0ebbb1a30914013"></a><!-- doxytag: member="SAMRAI::math::ArrayDataNormOpsComplex::integral" ref="388793edcf5ac25fa0ebbb1a30914013" args="(const pdat::ArrayData&lt; dcomplex &gt; &amp;data, const pdat::ArrayData&lt; double &gt; &amp;vol, const hier::Box &amp;box) const " -->
@@ -549,12 +578,14 @@ Return the dot product of the two data arrays. That is, the return value is the 
 <div class="memdoc">
 
 <p>
-Return the integral of the function based on the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">. 
+Return the integral of the function based on the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(data.getDim() == vol.getDim()) &amp;&amp; (data.getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="ArrayDataNormOpsComplex_8h.html">ArrayDataNormOpsComplex.h</a><li>source/SAMRAI/math/<a class="el" href="ArrayDataNormOpsComplex_8C.html">ArrayDataNormOpsComplex.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

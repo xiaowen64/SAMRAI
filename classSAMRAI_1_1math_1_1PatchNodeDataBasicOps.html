@@ -67,7 +67,7 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::math::PatchNodeDataBasicOps&lt; TYPE &gt;</h3>
 
-Class <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataBasicOps.html">PatchNodeDataBasicOps</a> provides access to a collection of basic numerical operations that may be applied to numerical node- centered patch data. These operations include simple arithmetic operations as well as minand max, etc. The primary intent of this class is to provide the interface to these standard operations for an PatchNodeDataOps&lt;DIM&gt; object which provides access to a complete set of operations that may be used to manipulate node-centered patch data objects. Each member function accepts a box argument indicating the region of index space on which the operation should be performed. The operation will be performed on the intersection of this box and those boxes corresponding to the patch data objects involved.<p>
+Class <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataBasicOps.html">PatchNodeDataBasicOps</a> provides access to a collection of basic numerical operations that may be applied to numerical node- centered patch data. These operations include simple arithmetic operations as well as minand max, etc. This class provides a single implementation of these operations that may be used to manipulate any node-centered patch data object. Each member function accepts a box argument indicating the region of index space on which the operation should be performed. The operation will be performed on the intersection of this box and those boxes corresponding to the patch data objects involved.<p>
 These operations typically apply only to the numerical standard built-in types, such as double, float, and int, and the complex type (which may or may not be a built-in type depending on the C++ compiler). Thus, this templated class should only be used to instantiate objects with those types as the template parameter. None of the operations are implemented for any other type.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1ArrayDataBasicOps.html">math::ArrayDataBasicOps</a> </dd></dl>
 
@@ -156,7 +156,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src, elementwise. 
+Set dst = alpha * src, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="dd91552f765400c9d1af1b378d5fd744"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::addScalar" ref="dd91552f765400c9d1af1b378d5fd744" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src, const TYPE &amp;alpha, const hier::Box &amp;box) const " -->
@@ -199,7 +202,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src + alpha, elementwise. 
+Set dst = src + alpha, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6c31c5305230a16cb0da326994d39a3e"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::add" ref="6c31c5305230a16cb0da326994d39a3e" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -242,7 +248,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 + src2, elementwise. 
+Set dst = src1 + src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="d591ba3d2e370261e53c0ba6626bc809"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::subtract" ref="d591ba3d2e370261e53c0ba6626bc809" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -285,7 +294,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 - src2, elementwise. 
+Set dst = src1 - src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="9a6379af5065aed18df75390b1dab564"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::multiply" ref="9a6379af5065aed18df75390b1dab564" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -328,7 +340,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 * src2, elementwise. 
+Set dst = src1 * src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4e813b0eafa6a74a0f0860e2ad114ebb"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::divide" ref="4e813b0eafa6a74a0f0860e2ad114ebb" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -371,7 +386,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 / src2, elementwise. No check for division by zero. 
+Set dst = src1 / src2, elementwise. No check for division by zero.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="0c4f1e363daf977a87ff119d2b9b30d9"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::reciprocal" ref="0c4f1e363daf977a87ff119d2b9b30d9" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -408,7 +426,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = 1 / src, elementwise. No check for division by zero. 
+Set dst = 1 / src, elementwise. No check for division by zero.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5b26ee9e98de0b608fedf8646e60d63a"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::linearSum" ref="5b26ee9e98de0b608fedf8646e60d63a" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const TYPE &amp;alpha, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const TYPE &amp;beta, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -463,7 +484,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src1 + beta * src2, elementwise. 
+Set dst = alpha * src1 + beta * src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="043d7840b9a3428fa2fb73490d0af34d"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::axpy" ref="043d7840b9a3428fa2fb73490d0af34d" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const TYPE &amp;alpha, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -512,7 +536,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src1 + src2, elementwise. 
+Set dst = alpha * src1 + src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f90ded2523f734374433a5b6f96b4d30"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::axmy" ref="f90ded2523f734374433a5b6f96b4d30" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const TYPE &amp;alpha, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -561,7 +588,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src1 - src2, elementwise. 
+Set dst = alpha * src1 - src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src1 &amp;&amp; src2 <p>
+(dst-&gt;getDim() == src1-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == src2-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="bde2b33f9fdbf6263f6639d9f93f3263"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::min" ref="bde2b33f9fdbf6263f6639d9f93f3263" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -592,7 +622,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the minimum patch data component entry When the data is complex, the result is the data element with the smallest norm. 
+Return the minimum patch data component entry When the data is complex, the result is the data element with the smallest norm.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="55a13cf1ae6db3ea48beaa6d7a0ac917"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::max" ref="55a13cf1ae6db3ea48beaa6d7a0ac917" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -623,7 +656,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the maximum patch data component entry When the data is complex, the result is the data element with the largest norm. 
+Return the maximum patch data component entry When the data is complex, the result is the data element with the largest norm.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="da42637df489d1017c14507129041c10"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataBasicOps::setRandomValues" ref="da42637df489d1017c14507129041c10" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const TYPE &amp;width, const TYPE &amp;low, const hier::Box &amp;box) const " -->
@@ -666,12 +702,15 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set patch data to random values. See the operations in the <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataBasicOps.html">ArrayDataBasicOps</a> class for details on the generation of the random values for each data type. 
+Set patch data to random values. See the operations in the <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataBasicOps.html">ArrayDataBasicOps</a> class for details on the generation of the random values for each data type.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst <p>
+dst-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataBasicOps_8h.html">PatchNodeDataBasicOps.h</a><li>source/SAMRAI/math/<a class="el" href="PatchNodeDataBasicOps_8C.html">PatchNodeDataBasicOps.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

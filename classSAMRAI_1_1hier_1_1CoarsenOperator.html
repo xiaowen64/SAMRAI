@@ -51,20 +51,18 @@
 <a href="classSAMRAI_1_1hier_1_1CoarsenOperator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#5c902ec0720d3281ff0565dfdcb7687f">CoarsenOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#5a685f76300d8a27832e88cb1358b98e">CoarsenOperator</a> (const std::string &amp;name)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the object with a name to allow the <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> class to look up the object using a string.  <a href="#5c902ec0720d3281ff0565dfdcb7687f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the object with a name to allow the <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> class to look up the object using a string.  <a href="#5a685f76300d8a27832e88cb1358b98e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#a1655c42ab67eecebac70a9b3f539726">~CoarsenOperator</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#3fbae4eafde135a9c367207e0bdd203c">getOperatorName</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c35826baea5e71b75c1691f10940128a">getOperatorPriority</a> () const =0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#549c9a8090f27cff92d4742507c98aa3">getStencilWidth</a> () const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#92b956782ff2a3755240a7d0df93894e">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const =0</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#29396bcc3a492149287a09ba3ccd5cf1">coarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;fine, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio) const =0</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#4c24f58430fa7eec707d197ca0421475">getDim</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#dd34063d8a6f6033fcf6ef6d979206de">getMaxCoarsenOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
@@ -72,36 +70,27 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the max stencil width of all coarsen operators.  <a href="#dd34063d8a6f6033fcf6ef6d979206de"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class CoarsenOperator&lt;DIM&gt; is an abstract base class for each spatial coarsening operator used in the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> framework. This class defines the interface between numerical coarsening routines and the rest of the framework. Each concrete coarsening operator subclass must provide four operations:<p>
+Class <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> is an abstract base class for each spatial coarsening operator used in the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> framework. This class defines the interface between numerical coarsening routines and the rest of the framework. Each concrete coarsening operator subclass must provide four operations:<p>
 <ul>
 <li><b></b>(1) {an implementation of the coarsening operation appropriate for its corresponding patch data type.}</li><li><b></b>(2) {a function that determines whether or not the operator matches an arbitrary request for a coarsening operator.}</li><li><b></b>(3) {a function that returns the stencil width of the operator (i.e., the number of ghost cells needed by the operator).}</li><li><b></b>(4) {a function that returns an integer stating the priority of the operator with respect to other coarsening operators.}</li></ul>
 <p>
-To add a new coarsening operator (either for a new patch data type or for a new time coarsening routine on an existing type), define the operator by inheriting from this abstract base class. The operator subclass must implement the coarsening operation in the <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#29396bcc3a492149287a09ba3ccd5cf1">coarsen()</a> function. The stencil width and operator priority must be returned from the <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#549c9a8090f27cff92d4742507c98aa3">getStencilWidth()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c35826baea5e71b75c1691f10940128a">getOperatorPriority()</a> functions, respectively. Then, the new operator must be added to the operator list for the appropriate transfer geometry object using the Geometry&lt;DIM&gt;::addCarsenOperator() function.<p>
+To add a new coarsening operator (either for a new patch data type or for a new time coarsening routine on an existing type), define the operator by inheriting from this abstract base class. The operator subclass must implement the coarsening operation in the <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#29396bcc3a492149287a09ba3ccd5cf1">coarsen()</a> function. The stencil width and operator priority must be returned from the <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#92b956782ff2a3755240a7d0df93894e">getStencilWidth()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c35826baea5e71b75c1691f10940128a">getOperatorPriority()</a> functions, respectively. Then, the new operator must be added to the operator list for the appropriate transfer geometry object using the BaseGridGeometry::addCarsenOperator() function.<p>
 Since spatial coarsening operators usually depend on patch data centering and data type as well as the mesh coordinate system, they are defined in the <em>geometry</em> package.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="5c902ec0720d3281ff0565dfdcb7687f"></a><!-- doxytag: member="SAMRAI::hier::CoarsenOperator::CoarsenOperator" ref="5c902ec0720d3281ff0565dfdcb7687f" args="(const tbox::Dimension &amp;dim, const std::string &amp;name)" -->
+<a class="anchor" name="5a685f76300d8a27832e88cb1358b98e"></a><!-- doxytag: member="SAMRAI::hier::CoarsenOperator::CoarsenOperator" ref="5a685f76300d8a27832e88cb1358b98e" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::hier::CoarsenOperator::CoarsenOperator           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td class="paramname"> <em>name</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -173,14 +162,15 @@ Return the priority of this operator relative to other coarsening operators. The
 Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#bba465ec458058be1022e79a0aec6ba7">SAMRAI::pdat::NodeComplexInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDoubleInjection.html#bea1e6e594071c90ea52aa07c38a8f0c">SAMRAI::pdat::NodeDoubleInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeFloatInjection.html#b3ed9d9366f894801b23f45afb26c00f">SAMRAI::pdat::NodeFloatInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeIntegerInjection.html#e5538b9fcb800628c2058bb393e18dbf">SAMRAI::pdat::NodeIntegerInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDoubleConstantCoarsen.html#dc42510407477b8f84d475683a6ff482">SAMRAI::pdat::OuternodeDoubleConstantCoarsen</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexWeightedAverage.html#4a2933c92401415725c9f371cf23872a">SAMRAI::geom::CartesianCellComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellDoubleWeightedAverage.html#3ae169673e7abc8ed6ccbd8900cd890e">SAMRAI::geom::CartesianCellDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellFloatWeightedAverage.html#12aa150c3a5d87d7e27ab89e2a8e02ab">SAMRAI::geom::CartesianCellFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#baf183391e844e273cc47632ebb94c96">SAMRAI::geom::CartesianEdgeComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeDoubleWeightedAverage.html#2b01ffc769a3c22d21dfccd84c6de21d">SAMRAI::geom::CartesianEdgeDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeFloatWeightedAverage.html#d3b7f9f837dd8f8f6a74be0db307d157">SAMRAI::geom::CartesianEdgeFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceComplexWeightedAverage.html#822d782506c4c7b7187fde32a3f75b43">SAMRAI::geom::CartesianFaceComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleWeightedAverage.html#43b0fe67f46140e29162ad6d186ae9fc">SAMRAI::geom::CartesianFaceDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceFloatWeightedAverage.html#a18a40ca926264ef0e58f116f56fa266">SAMRAI::geom::CartesianFaceFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceComplexWeightedAverage.html#4ec868e2bc038771c828cc7e53af9c81">SAMRAI::geom::CartesianOuterfaceComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceDoubleWeightedAverage.html#836de8e2d1947e8ba4ec1c788aaab107">SAMRAI::geom::CartesianOuterfaceDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#ad85242894189c1d21368f61ca920fc9">SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOutersideDoubleWeightedAverage.html#1dbafcbf797528effe07eb445494ad00">SAMRAI::geom::CartesianOutersideDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideComplexWeightedAverage.html#9188e7c127037efd958dda4711d71ae4">SAMRAI::geom::CartesianSideComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideDoubleWeightedAverage.html#55427c80c951d91c704116c8b55c6609">SAMRAI::geom::CartesianSideDoubleWeightedAverage</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideFloatWeightedAverage.html#757a9e01ef64bc988e3105622279aa3d">SAMRAI::geom::CartesianSideFloatWeightedAverage</a>.
 </div>
 </div><p>
-<a class="anchor" name="549c9a8090f27cff92d4742507c98aa3"></a><!-- doxytag: member="SAMRAI::hier::CoarsenOperator::getStencilWidth" ref="549c9a8090f27cff92d4742507c98aa3" args="() const =0" -->
+<a class="anchor" name="92b956782ff2a3755240a7d0df93894e"></a><!-- doxytag: member="SAMRAI::hier::CoarsenOperator::getStencilWidth" ref="92b956782ff2a3755240a7d0df93894e" args="(const tbox::Dimension &amp;dim) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> SAMRAI::hier::CoarsenOperator::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [pure virtual]</code></td>
         </tr>
@@ -189,9 +179,9 @@ Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.h
 <div class="memdoc">
 
 <p>
-Return the stencil width associated with the coarsening operator. The <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> transfer routines guarantee that the source patch will contain sufficient ghost cell data surrounding the interior to satisfy the stencil width requirements for each coarsening operator. 
+Return the stencil width associated with the coarsening operator. The <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> transfer routines guarantee that the source patch will contain sufficient ghost cell data surrounding the interior to satisfy the stencil width requirements for each coarsening operator. If your implementation doesn't work with the given dimension, return zero. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#2507faf8c39902faeb1a95dac3df567e">SAMRAI::pdat::NodeComplexInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDoubleInjection.html#ed1dd3478e430557a3609c04137b494a">SAMRAI::pdat::NodeDoubleInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeFloatInjection.html#609f2681784c5e9ebedef34defbc969c">SAMRAI::pdat::NodeFloatInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeIntegerInjection.html#1f19b9c28dc2ddcc7e28ff709d26f568">SAMRAI::pdat::NodeIntegerInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDoubleConstantCoarsen.html#63f71bc664653209ee142ec5aed4cbe4">SAMRAI::pdat::OuternodeDoubleConstantCoarsen</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexWeightedAverage.html#2a6cd8be6a0a7ba96bbd6a45c70a2d26">SAMRAI::geom::CartesianCellComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellDoubleWeightedAverage.html#27e52b4e83893797c715bfc14ed2676e">SAMRAI::geom::CartesianCellDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellFloatWeightedAverage.html#8db4c363172f941a5bdd18d91db034e8">SAMRAI::geom::CartesianCellFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#03897fcddb9fcc7ac7deb9f2522b68ac">SAMRAI::geom::CartesianEdgeComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeDoubleWeightedAverage.html#32eec847742bef7006b390822f063b2e">SAMRAI::geom::CartesianEdgeDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeFloatWeightedAverage.html#95fd792f20b3bea3b8788f5679208375">SAMRAI::geom::CartesianEdgeFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceComplexWeightedAverage.html#3ab1132884fa972b00122c13e7fb6e0e">SAMRAI::geom::CartesianFaceComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleWeightedAverage.html#55a43174077e509a39d38154632b920c">SAMRAI::geom::CartesianFaceDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceFloatWeightedAverage.html#7a8620d9cd6637f05a6986379d8a02b7">SAMRAI::geom::CartesianFaceFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceComplexWeightedAverage.html#062f8bfb064901ac3a1c42fc400a2594">SAMRAI::geom::CartesianOuterfaceComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceDoubleWeightedAverage.html#d63534e76abfda75ea232ceaf3408df9">SAMRAI::geom::CartesianOuterfaceDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#d0cd6dbe7d8277b032ba9e9d48b94527">SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOutersideDoubleWeightedAverage.html#dcf8b3e475010670c4a314d169563b4d">SAMRAI::geom::CartesianOutersideDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideComplexWeightedAverage.html#93502b619f5c6362c0dc8813077b91ca">SAMRAI::geom::CartesianSideComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideDoubleWeightedAverage.html#866285d5bfd14e0e5f4a67fc4298f1f6">SAMRAI::geom::CartesianSideDoubleWeightedAverage</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideFloatWeightedAverage.html#349e24aa27e01baba7a3c2ea12ebb02c">SAMRAI::geom::CartesianSideFloatWeightedAverage</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#0ca41617f03e286a701f2921916ec313">SAMRAI::pdat::NodeComplexInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDoubleInjection.html#55470bd03569e958685b791e01647e66">SAMRAI::pdat::NodeDoubleInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeFloatInjection.html#e8aec6741942415de3e160a718a00707">SAMRAI::pdat::NodeFloatInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeIntegerInjection.html#3e69dccfb8c8307920c9c2cfd6ffe7d7">SAMRAI::pdat::NodeIntegerInjection</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDoubleConstantCoarsen.html#8ddcc88d9af0b8acfc4455f9651801af">SAMRAI::pdat::OuternodeDoubleConstantCoarsen</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexWeightedAverage.html#5978fe7c4b8022f70c63fc1fb355a5f1">SAMRAI::geom::CartesianCellComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellDoubleWeightedAverage.html#5b4d23b839d5bc09bc6f1588b384e56e">SAMRAI::geom::CartesianCellDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellFloatWeightedAverage.html#2c0ec542f2b7dc084ffcf1e12d62f59e">SAMRAI::geom::CartesianCellFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#80c7b9f481a7ab9f37efa1cfb20bedd5">SAMRAI::geom::CartesianEdgeComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeDoubleWeightedAverage.html#f974d60c74f816d624bae7963b4c4949">SAMRAI::geom::CartesianEdgeDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeFloatWeightedAverage.html#22c4a8a601f49af8c911b52a48c0e96c">SAMRAI::geom::CartesianEdgeFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceComplexWeightedAverage.html#7408faa272472a2bd6454f4510be8907">SAMRAI::geom::CartesianFaceComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleWeightedAverage.html#9a293de686c006e9897c5240a07d5879">SAMRAI::geom::CartesianFaceDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceFloatWeightedAverage.html#71b730aac9d8c152d287e5b34f12d33a">SAMRAI::geom::CartesianFaceFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceComplexWeightedAverage.html#2dc59024e060c5d08f445cd6fecf09d8">SAMRAI::geom::CartesianOuterfaceComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceDoubleWeightedAverage.html#96e03a12d2cb662cebee3e94bfb26ca3">SAMRAI::geom::CartesianOuterfaceDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#72bbff98200bfedcf92181105c76251b">SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOutersideDoubleWeightedAverage.html#a62d529da329ac33d5463a65d4bc190e">SAMRAI::geom::CartesianOutersideDoubleWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideComplexWeightedAverage.html#7a28b764b5689fcc5f883ca46f3bd759">SAMRAI::geom::CartesianSideComplexWeightedAverage</a>, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideDoubleWeightedAverage.html#aba0cbc1805f07eac431a89befa813e5">SAMRAI::geom::CartesianSideDoubleWeightedAverage</a>, and <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideFloatWeightedAverage.html#cf2c667095219b103347cbff284df067">SAMRAI::geom::CartesianSideFloatWeightedAverage</a>.
 </div>
 </div><p>
 <a class="anchor" name="29396bcc3a492149287a09ba3ccd5cf1"></a><!-- doxytag: member="SAMRAI::hier::CoarsenOperator::coarsen" ref="29396bcc3a492149287a09ba3ccd5cf1" args="(Patch &amp;coarse, const Patch &amp;fine, const int dst_component, const int src_component, const Box &amp;coarse_box, const IntVector &amp;ratio) const =0" -->
@@ -271,28 +261,9 @@ Get the max stencil width of all coarsen operators.
 The max stencil width computed from all registered (constructed) coarsen operators. 
 </div>
 </div><p>
-<a class="anchor" name="4c24f58430fa7eec707d197ca0421475"></a><!-- doxytag: member="SAMRAI::hier::CoarsenOperator::getDim" ref="4c24f58430fa7eec707d197ca0421475" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::CoarsenOperator::getDim           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return the dimension of this object. 
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="CoarsenOperator_8h.html">CoarsenOperator.h</a><li>source/SAMRAI/hier/<a class="el" href="CoarsenOperator_8C.html">CoarsenOperator.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

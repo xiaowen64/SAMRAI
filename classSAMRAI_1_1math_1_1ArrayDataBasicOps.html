@@ -61,7 +61,7 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::math::ArrayDataBasicOps&lt; TYPE &gt;</h3>
 
-Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataBasicOps.html">ArrayDataBasicOps</a> implements a set of basic operations that apply to numerical data maintained as pdat::ArrayData&lt;DIM&gt; objects. These operations include simple arithmetic operations as well as min and max, etc. This class provides a single implementation of these operations that may used to manipulate any of the standard array-based patch data types defined on a patch. Note that each member function accepts a box argument which specifies the portion of the array data on which the associated operation is performed. The actual index region on which the operation occurs is the intersection of this box and the boxes of all the pdat::ArrayData&lt;DIM&gt; objects involved.<p>
+Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataBasicOps.html">ArrayDataBasicOps</a> implements a set of basic operations that apply to numerical data maintained as pdat::ArrayData&lt;TYPE&gt; objects. These operations include simple arithmetic operations as well as min and max, etc. This class provides a single implementation of these operations that may used to manipulate any of the standard array-based patch data types defined on a patch. Note that each member function accepts a box argument which specifies the portion of the array data on which the associated operation is performed. The actual index region on which the operation occurs is the intersection of this box and the boxes of all the pdat::ArrayData&lt;TYPE&gt; objects involved.<p>
 These operations typically apply only to the numerical standard built-in types, such as double, float, and int, and the complex type (which may or may not be a built-in type depending on the C++ compiler). Thus, this templated class should only be used to instantiate objects with those types as the template parameter. Those operations whose implementations depend of the data type are specialized for each numerical type. To use this class with other standard types or user-defined types (which may or may not make sense), the member functions must be specialized so that the correct operations are performed.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a> </dd></dl>
 
@@ -150,7 +150,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src, elementwise. 
+Set dst = alpha * src, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#388b9d7688354a83de5266f659b93305">tbox::MathUtilities&lt;TYPE&gt;::getZero()</a>) || (alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#d5fd714ae301457ea7b44e744ecdeea6">tbox::MathUtilities&lt;TYPE&gt;::getOne()</a>) || (dst.getDepth() == src.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="fac75a9070c94b6384671f505932c545"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::addScalar" ref="fac75a9070c94b6384671f505932c545" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src, const TYPE &amp;alpha, const hier::Box &amp;box) const " -->
@@ -193,7 +196,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src + alpha, elementwise. 
+Set dst = src + alpha, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#388b9d7688354a83de5266f659b93305">tbox::MathUtilities&lt;TYPE&gt;::getZero()</a>) || (dst.getDepth() == src.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="8b89fe9667a41816251251dbcd7145f3"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::add" ref="8b89fe9667a41816251251dbcd7145f3" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -236,7 +242,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 + src2, elementwise. 
+Set dst = src1 + src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="35937c3f2c2b64ae28cb7524a15769e6"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::subtract" ref="35937c3f2c2b64ae28cb7524a15769e6" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -279,7 +288,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 - src2, elementwise. 
+Set dst = src1 - src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="9d8a7d51763e91b0b05fb5246063f97e"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::multiply" ref="9d8a7d51763e91b0b05fb5246063f97e" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -322,7 +334,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 * src2, elementwise. 
+Set dst = src1 * src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c4816c3914a42a59492003235ce6f272"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::divide" ref="c4816c3914a42a59492003235ce6f272" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -365,7 +380,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = src1 / src2, elementwise. No check for division by zero. 
+Set dst = src1 / src2, elementwise. No check for division by zero.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7b8b1f127cb6c729a1d4d7e9cd70598e"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::reciprocal" ref="7b8b1f127cb6c729a1d4d7e9cd70598e" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -402,7 +420,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = 1 / src, elementwise. No check for division by zero. 
+Set dst = 1 / src, elementwise. No check for division by zero.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a4d172abc2f1e818349f0afa7bd1a2fd"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::linearSum" ref="a4d172abc2f1e818349f0afa7bd1a2fd" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const TYPE &amp;alpha, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const TYPE &amp;beta, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -457,7 +478,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src1 + beta * src2, elementwise. 
+Set dst = alpha * src1 + beta * src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4f34ec834350fe4dd805932763ca23b6"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::axpy" ref="4f34ec834350fe4dd805932763ca23b6" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const TYPE &amp;alpha, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -506,7 +530,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src1 + src2, elementwise. 
+Set dst = alpha * src1 + src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#388b9d7688354a83de5266f659b93305">tbox::MathUtilities&lt;TYPE&gt;::getZero()</a>) || (alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#d5fd714ae301457ea7b44e744ecdeea6">tbox::MathUtilities&lt;TYPE&gt;::getOne()</a>) || (alpha == -tboxMathUtilities&lt;TYPE&gt;::getOne()) || ((dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth())) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="188a392261893f416d8e031940e3184d"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::axmy" ref="188a392261893f416d8e031940e3184d" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const TYPE &amp;alpha, const pdat::ArrayData&lt; TYPE &gt; &amp;src1, const pdat::ArrayData&lt; TYPE &gt; &amp;src2, const hier::Box &amp;box) const " -->
@@ -555,7 +582,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst = alpha * src1 - src2, elementwise. 
+Set dst = alpha * src1 - src2, elementwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src1.getDim()) &amp;&amp; (dst.getDim() == src2.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+(alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#388b9d7688354a83de5266f659b93305">tbox::MathUtilities&lt;TYPE&gt;::getZero()</a>) || (alpha == <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#d5fd714ae301457ea7b44e744ecdeea6">tbox::MathUtilities&lt;TYPE&gt;::getOne()</a>) || ((dst.getDepth() == src1.getDepth()) &amp;&amp; (dst.getDepth() == src2.getDepth())) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a1a59bbfd5c4a751e20fbc359ad4eef1"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::min" ref="a1a59bbfd5c4a751e20fbc359ad4eef1" args="(const pdat::ArrayData&lt; TYPE &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -586,7 +616,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the minimum array data entry. If data is complex, return the array data entry with the minimum norm. 
+Return the minimum array data entry. If data is complex, return the array data entry with the minimum norm.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data.getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="8c029193d46a67849e1de0a728ce2606"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::max" ref="8c029193d46a67849e1de0a728ce2606" args="(const pdat::ArrayData&lt; TYPE &gt; &amp;data, const hier::Box &amp;box) const " -->
@@ -617,7 +649,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the maximum array data entry. If data is complex, return the array data entry with the maximum norm. 
+Return the maximum array data entry. If data is complex, return the array data entry with the maximum norm.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data.getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="57204902c02aaa28c158da28b8a2ea11"></a><!-- doxytag: member="SAMRAI::math::ArrayDataBasicOps::setRandomValues" ref="57204902c02aaa28c158da28b8a2ea11" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const TYPE &amp;width, const TYPE &amp;low, const hier::Box &amp;box) const " -->
@@ -660,12 +694,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set dst to random values. If the data is int, each element of dst is set as dst = mrand48(). If the data is double or float, each element of dst is set as dst = width * drand48() + low. If the data is complex, each element of dst is set as dst = dcomplex(rval, ival), where rval = real(width) * drand48() + real(low), and ival = imag(width) * drand48() + imag(low). 
+Set dst to random values. If the data is int, each element of dst is set as dst = mrand48(). If the data is double or float, each element of dst is set as dst = width * drand48() + low. If the data is complex, each element of dst is set as dst = dcomplex(rval, ival), where rval = real(width) * drand48() + real(low), and ival = imag(width) * drand48() + imag(low).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst.getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="ArrayDataBasicOps_8h.html">ArrayDataBasicOps.h</a><li>source/SAMRAI/math/<a class="el" href="ArrayDataBasicOps_8C.html">ArrayDataBasicOps.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

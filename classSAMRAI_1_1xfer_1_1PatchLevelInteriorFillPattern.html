@@ -40,15 +40,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#a8ec210131516ecd451c96a435a22527">~PatchLevelInteriorFillPattern</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#a8ec210131516ecd451c96a435a22527"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#8700a4519a948362f6be31af020c58a2">computeFillBoxesAndNeighborhoodSets</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;fill_mapped_boxes, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_fill, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_src, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#a8404ccffc5dda1c003934ab7977011b">computeFillBoxesAndNeighborhoodSets</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;fill_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_fill, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_src, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the mapped boxes to be filled and related communication data.  <a href="#8700a4519a948362f6be31af020c58a2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the boxes to be filled and related communication data.  <a href="#a8404ccffc5dda1c003934ab7977011b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#6f75a3b13b000c16109d8abd02e37032">needsToCommunicateDestinationFillBoxes</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return false because source patch owner can compute destination fill boxes.  <a href="#6f75a3b13b000c16109d8abd02e37032"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#1c7a1dcdea7a599fee9dd5e99a18cfc7">computeDestinationFillBoxesOnSourceProc</a> (<a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#62ec75c7180c8d5e1b9afe3824c639f3">FillSet</a> &amp;dst_fill_boxes_on_src_proc, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#5584dafc17cd8e71eef2d3ba8e6dcfb8">computeDestinationFillBoxesOnSourceProc</a> (<a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#62ec75c7180c8d5e1b9afe3824c639f3">FillSet</a> &amp;dst_fill_boxes_on_src_proc, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the destination fill boxes.  <a href="#1c7a1dcdea7a599fee9dd5e99a18cfc7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the destination fill boxes.  <a href="#5584dafc17cd8e71eef2d3ba8e6dcfb8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#1e8339e989cd3b0dd2c7d2bf65f5ba61">doesSourceLevelCommunicateToDestination</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> to communicate data directly from source level to destination level.  <a href="#1e8339e989cd3b0dd2c7d2bf65f5ba61"></a><br></td></tr>
@@ -60,7 +60,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns false because this fill pattern fills only interior data.  <a href="#ec77f1047e6a27a63a48baba9e7184a8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelInteriorFillPattern.html#f6de672c6bfa7b764c87b7a602ba0d24">fillingEnhancedConnectivityOnly</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns false because this fill pattern is specialized for enhanced connectivity only.  <a href="#f6de672c6bfa7b764c87b7a602ba0d24"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns false because this fill pattern is not specialized for enhanced connectivity only.  <a href="#f6de672c6bfa7b764c87b7a602ba0d24"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> implementation for patch interior filling. 
@@ -115,7 +115,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="8700a4519a948362f6be31af020c58a2"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets" ref="8700a4519a948362f6be31af020c58a2" args="(hier::BoxLevel &amp;fill_mapped_boxes, hier::Connector &amp;dst_to_fill, const hier::BoxLevel &amp;dst_mapped_box_level, const hier::Connector &amp;dst_to_dst, const hier::Connector &amp;dst_to_src, const hier::Connector &amp;src_to_dst, const hier::IntVector &amp;fill_ghost_width)" -->
+<a class="anchor" name="a8404ccffc5dda1c003934ab7977011b"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets" ref="a8404ccffc5dda1c003934ab7977011b" args="(hier::BoxLevel &amp;fill_box_level, hier::Connector &amp;dst_to_fill, const hier::BoxLevel &amp;dst_box_level, const hier::Connector &amp;dst_to_dst, const hier::Connector &amp;dst_to_src, const hier::Connector &amp;src_to_dst, const hier::IntVector &amp;fill_ghost_width)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -123,7 +123,7 @@ Destructor.
           <td class="memname">void SAMRAI::xfer::PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fill_mapped_boxes</em>, </td>
+          <td class="paramname"> <em>fill_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -135,7 +135,7 @@ Destructor.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dst_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>dst_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -171,23 +171,24 @@ Destructor.
 <div class="memdoc">
 
 <p>
-Compute the mapped boxes to be filled and related communication data. 
+Compute the boxes to be filled and related communication data. 
 <p>
-The computed fill_mapped_boxes will be the boxes of dst_mapped_box_level, the "interior" of the destination level.<p>
+The computed fill_box_level will be the boxes of dst_box_level, the "interior" of the destination level.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fill_mapped_boxes</em>&nbsp;</td><td>Output BoxLevel to be filled </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>dst_to_fill</em>&nbsp;</td><td>Output Connector between dst_mapped_box_level and and fill_mapped_boxes </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_mapped_box_level</em>&nbsp;</td><td>destination level </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fill_box_level</em>&nbsp;</td><td>Output BoxLevel to be filled </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>dst_to_fill</em>&nbsp;</td><td>Output Connector between dst_box_level and fill_box_level </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_box_level</em>&nbsp;</td><td>destination level </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_to_dst</em>&nbsp;</td><td>Connector of destination to itself </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_to_src</em>&nbsp;</td><td>Connector of destination to source </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_to_dst</em>&nbsp;</td><td>Connector of source to destination </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_ghost_width</em>&nbsp;</td><td>Ghost width being filled by refine schedule </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_ghost_width</em>&nbsp;</td><td>Ghost width being filled by refine schedule</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst_box_level.getDim() == fill_ghost_width.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#13db97cb834837a51a80c93e6cc1d8ee">SAMRAI::xfer::PatchLevelFillPattern</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#ec4a3e1536b4123c804b0d0796e2f201">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
 <a class="anchor" name="6f75a3b13b000c16109d8abd02e37032"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelInteriorFillPattern::needsToCommunicateDestinationFillBoxes" ref="6f75a3b13b000c16109d8abd02e37032" args="() const " -->
@@ -215,7 +216,7 @@ For this fill pattern, the source owner can compute fill boxes for all of its de
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#25c69f091a221ea90cc044b557f23552">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="1c7a1dcdea7a599fee9dd5e99a18cfc7"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc" ref="1c7a1dcdea7a599fee9dd5e99a18cfc7" args="(FillSet &amp;dst_fill_boxes_on_src_proc, const hier::BoxLevel &amp;dst_mapped_box_level, const hier::Connector &amp;src_to_dst, const hier::IntVector &amp;fill_ghost_width)" -->
+<a class="anchor" name="5584dafc17cd8e71eef2d3ba8e6dcfb8"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc" ref="5584dafc17cd8e71eef2d3ba8e6dcfb8" args="(FillSet &amp;dst_fill_boxes_on_src_proc, const hier::BoxLevel &amp;dst_box_level, const hier::Connector &amp;src_to_dst, const hier::IntVector &amp;fill_ghost_width)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -229,7 +230,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dst_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>dst_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -257,12 +258,13 @@ Compute the destination fill boxes.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_mapped_box_level</em>&nbsp;</td><td>Destination level </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_box_level</em>&nbsp;</td><td>Destination level </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_to_dst</em>&nbsp;</td><td>Connector of source to destination </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_ghost_width</em>&nbsp;</td><td>Ghost width filled by refine schedule </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>dst_fill_boxes_on_src_proc</em>&nbsp;</td><td>FillSet storing the destination neighbors of the source mapped boxes </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>dst_fill_boxes_on_src_proc</em>&nbsp;</td><td>FillSet storing the destination neighbors of the source mapped boxes</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst_box_level.getDim() == fill_ghost_width.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -354,7 +356,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html
 <div class="memdoc">
 
 <p>
-Returns false because this fill pattern is specialized for enhanced connectivity only. 
+Returns false because this fill pattern is not specialized for enhanced connectivity only. 
 <p>
 
 <p>
@@ -363,7 +365,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="PatchLevelInteriorFillPattern_8h.html">PatchLevelInteriorFillPattern.h</a><li>source/SAMRAI/xfer/<a class="el" href="PatchLevelInteriorFillPattern_8C.html">PatchLevelInteriorFillPattern.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:59 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

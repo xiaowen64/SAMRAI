@@ -53,8 +53,8 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::math::ArrayDataMiscellaneousOpsReal&lt; TYPE &gt;</h3>
 
-Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataMiscellaneousOpsReal.html">ArrayDataMiscellaneousOpsReal</a> provides various operations that may be applied to arrays of real (double and float) numerical data values maintained using pdat::ArrayData&lt;DIM&gt; objects. These operations are sufficiently different from basic arithmetic and norm operations that we chose to implement them in a separate class. However, as in the case of the * more common operations, the intent of this class is to provide a single implementation of the operations as they are needed by objects that manipulate standard array-based patch data types (i.e., cell-centered, face-centered, node-centered). Each operation is implemented in two different ways. The choice of operation is based on whether control volume information is to be used to weight the contribution of each data entry to the calculation. The use of control volumes is important when these operations are used in vector kernels where the data resides over multiple levels of spatial resolution in an AMR hierarchy. The actual index region on which each operation occurs is the intersection of this box and the boxes of all the pdat::ArrayData&lt;DIM&gt; objects involved.<p>
-Since these operations are used only by the vector kernels for the KINSOL and CVODE solver packages at this time, they are intended to be instantiated for the standard built-in types double and float (since those solvers only treat double and float data). To extend this class to other data types or to include other operations, the member functions must be specialized or the * new operations must be added.<p>
+Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataMiscellaneousOpsReal.html">ArrayDataMiscellaneousOpsReal</a> provides various operations that may be applied to arrays of real (double and float) numerical data values maintained using pdat::ArrayData&lt;TYPE&gt; objects. These operations are sufficiently different from basic arithmetic and norm operations that we chose to implement them in a separate class. However, as in the case of the more common operations, the intent of this class is to provide a single implementation of the operations as they are needed by objects that manipulate standard array-based patch data types (i.e., cell-centered, face-centered, node-centered). Each operation is implemented in two different ways. The choice of operation is based on whether control volume information is to be used to weight the contribution of each data entry to the calculation. The use of control volumes is important when these operations are used in vector kernels where the data resides over multiple levels of spatial resolution in an AMR hierarchy. The actual index region on which each operation occurs is the intersection of this box and the boxes of all the pdat::ArrayData&lt;TYPE&gt; objects involved.<p>
+Since these operations are used only by the vector kernels for the KINSOL and CVODE solver packages at this time, they are intended to be instantiated for the standard built-in types double and float (since those solvers only treat double and float data). To extend this class to other data types or to include other operations, the member functions must be specialized or the new operations must be added.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a> </dd></dl>
 
 <p>
@@ -142,7 +142,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_6.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_7.png">, for any <img class="formulaInl" alt="$i$" src="form_8.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. Otherwise return 0. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_6.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_7.png">, for any <img class="formulaInl" alt="$i$" src="form_8.png"> in the index region, where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. Otherwise return 0. <dl compact><dt><b>Precondition:</b></dt><dd>(data1.getDim() == data2.getDim()) &amp;&amp; (data1.getDim() == cvol.getDim()) &amp;&amp; (data1.getDim() == box.getDim()) <p>
+data1.getDepth() == data2.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7389bfd7b376d293f1a491164fdf458d"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::computeConstrProdPos" ref="7389bfd7b376d293f1a491164fdf458d" args="(const pdat::ArrayData&lt; TYPE &gt; &amp;data1, const pdat::ArrayData&lt; TYPE &gt; &amp;data2, const hier::Box &amp;box) const " -->
@@ -179,7 +181,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_6.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_7.png">, for any <img class="formulaInl" alt="$i$" src="form_8.png"> in the index region. Otherwise return 0. 
+Return 1 if <img class="formulaInl" alt="$\|data2_i\| > 0$" src="form_6.png"> and <img class="formulaInl" alt="$data1_i * data2_i \leq 0$" src="form_7.png">, for any <img class="formulaInl" alt="$i$" src="form_8.png"> in the index region. Otherwise return 0. <dl compact><dt><b>Precondition:</b></dt><dd>(data1.getDim() == data2.getDim()) &amp;&amp; (data1.getDim() == box.getDim()) <p>
+data1.getDepth() == data2.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6c59d358c43a31a9f330a7d5658af7df"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::compareToScalarWithControlVolume" ref="6c59d358c43a31a9f330a7d5658af7df" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src, const TYPE &amp;alpha, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -228,7 +232,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_10.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_11.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1$" src="form_10.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_11.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == cvol.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="657ccee61dc426ca2fc72071ea1965f7"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::compareToScalar" ref="657ccee61dc426ca2fc72071ea1965f7" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src, const TYPE &amp;alpha, const hier::Box &amp;box) const " -->
@@ -271,7 +278,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$dst_i = 1$" src="form_10.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_11.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. 
+Set <img class="formulaInl" alt="$dst_i = 1$" src="form_10.png"> if <img class="formulaInl" alt="$\|src_i\| > \alpha$" src="form_11.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f16eda2b608f54f088b82e8e0201eb83"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::testReciprocalWithControlVolume" ref="f16eda2b608f54f088b82e8e0201eb83" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src, const pdat::ArrayData&lt; double &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -314,7 +324,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_13.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_14.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> anywhere, 0 is the return value. Otherwise 1 is returned. 
+Wherever <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"> in the index region, set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_13.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_14.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> anywhere, 0 is the return value. Otherwise 1 is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == cvol.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="57b7eb372eee76bf6d93e5c42525761e"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::testReciprocal" ref="57b7eb372eee76bf6d93e5c42525761e" args="(pdat::ArrayData&lt; TYPE &gt; &amp;dst, const pdat::ArrayData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -351,7 +364,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_13.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_14.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> anywhere, 0 is the return value. Otherwise 1 is returned. 
+Set <img class="formulaInl" alt="$dst_i = 1/src_i$" src="form_13.png"> if <img class="formulaInl" alt="$src_i \neq 0$" src="form_14.png">, and <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> otherwise. If <img class="formulaInl" alt="$dst_i = 0$" src="form_12.png"> anywhere, 0 is the return value. Otherwise 1 is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="95db34a990c42bd68fc34c49f2af33bf"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::maxPointwiseDivide" ref="95db34a990c42bd68fc34c49f2af33bf" args="(const pdat::ArrayData&lt; TYPE &gt; &amp;numer, const pdat::ArrayData&lt; TYPE &gt; &amp;denom, const hier::Box &amp;box) const " -->
@@ -392,7 +408,10 @@ Compute max of "conditional" quotients of two arrays.
 <p>
 Return the maximum of pointwise "conditional" quotients of the numerator and denominator.<p>
 The "conditional" quotient is defined as |numerator/denominator| where the denominator is nonzero. Otherwise, it is defined as |numerator|.<p>
-<b>Note:</b> This method is currently intended to support the PETSc-2.1.6 vector wrapper only. Please do not use it! 
+<b>Note:</b> This method is currently intended to support the PETSc-2.1.6 vector wrapper only. Please do not use it!<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(numer.getDim() == denom.getDim()) &amp;&amp; (numer.getDim() == box.getDim()) <p>
+numer.getDepth() == denom.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="d8a6e669286929e7c6fc83fac3422d73"></a><!-- doxytag: member="SAMRAI::math::ArrayDataMiscellaneousOpsReal::minPointwiseDivide" ref="d8a6e669286929e7c6fc83fac3422d73" args="(const pdat::ArrayData&lt; TYPE &gt; &amp;numer, const pdat::ArrayData&lt; TYPE &gt; &amp;denom, const hier::Box &amp;box) const " -->
@@ -433,12 +452,15 @@ Compute min of quotients of two arrays.
 <p>
 Return the minimum of pointwise quotients of the numerator and denominator.<p>
 The quotient is defined as (numerator/denominator) where the denominator is nonzero. When the denominator is zero, the entry is skipped. If the denominator is always zero, the value of tbox::IEEE::getDBL_MAX() is returned (see <a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html">SAMRAI::tbox::IEEE</a>).<p>
-<b>Note:</b> This method is currently intended to support the SUNDIALS vector wrapper only. Please do not use it! 
+<b>Note:</b> This method is currently intended to support the SUNDIALS vector wrapper only. Please do not use it!<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(numer.getDim() == denom.getDim()) &amp;&amp; (numer.getDim() == box.getDim()) <p>
+numer.getDepth() == denom.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="ArrayDataMiscellaneousOpsReal_8h.html">ArrayDataMiscellaneousOpsReal.h</a><li>source/SAMRAI/math/<a class="el" href="ArrayDataMiscellaneousOpsReal_8C.html">ArrayDataMiscellaneousOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

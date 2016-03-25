@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeVariable.html">OuternodeVariable</a></div>
-<h1>SAMRAI::pdat::OuternodeVariable&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::OuternodeVariable" --><!-- doxytag: inherits="SAMRAI::hier::Variable" -->Class OuternodeVariable&lt;DIM&gt; is a templated variable class used to define node-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.).  
+<h1>SAMRAI::pdat::OuternodeVariable&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::OuternodeVariable" --><!-- doxytag: inherits="SAMRAI::hier::Variable" -->Class OuternodeVariable&lt;TYPE&gt; is a templated variable class used to define node-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.).  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/pdat/OuternodeVariable.h&gt;</code>
@@ -54,12 +54,12 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::pdat::OuternodeVariable&lt; TYPE &gt;</h3>
 
-Class OuternodeVariable&lt;DIM&gt; is a templated variable class used to define node-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.). 
+Class OuternodeVariable&lt;TYPE&gt; is a templated variable class used to define node-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.). 
 <p>
-Note that the data layout in the outernode data arrays matches the corresponding array sections provided by the node data implementation. See header file for the OuternodeData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
-<dl compact><dt><b>See also:</b></dt><dd>NodeData&lt;DIM&gt; <p>
-OuternodeData&lt;DIM&gt; <p>
-OuternodeDataFactory&lt;DIM&gt; <p>
+Note that the data layout in the outernode data arrays matches the corresponding array sections provided by the node data implementation. See header file for the OuternodeData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
+<dl compact><dt><b>See also:</b></dt><dd>NodeData&lt;TYPE&gt; <p>
+OuternodeData&lt;TYPE&gt; <p>
+OuternodeDataFactory&lt;TYPE&gt; <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> </dd></dl>
 
 <p>
@@ -202,7 +202,7 @@ Return the the depth (number of components).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OuternodeVariable_8h.html">OuternodeVariable.h</a><li>source/SAMRAI/pdat/<a class="el" href="OuternodeVariable_8C.html">OuternodeVariable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

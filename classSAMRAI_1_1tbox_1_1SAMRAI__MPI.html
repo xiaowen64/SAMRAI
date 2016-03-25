@@ -114,15 +114,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b6310aa222da0c6eb6c854c30fc6d8ee">Send</a> (void *buf, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#23ea92990f278044fbfdbeb0a43f3f42">Datatype</a> datatype, int dest, int tag) const </td></tr>
 
 <tr><td colspan="2"><div class="groupHeader">Specialized reductions for certain common types.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7cee51dc151b3496599f308523ab2dc4">AllReduce</a> (int *x, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eaff1423d87d618f7e6b6980ab2d01f8">Op</a> op, int *ranks_of_extrema=NULL) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#79254c433930ad31bb802a3db861abdb">AllReduce</a> (int *x, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eaff1423d87d618f7e6b6980ab2d01f8">Op</a> op, int *ranks_of_extrema=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specialized Allreduce for integers.  <a href="#7cee51dc151b3496599f308523ab2dc4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7e7ad87e2c58d93a3f87531da3c7a9a4">AllReduce</a> (double *x, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eaff1423d87d618f7e6b6980ab2d01f8">Op</a> op, int *ranks_of_extrema=NULL) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specialized Allreduce for integers.  <a href="#79254c433930ad31bb802a3db861abdb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#2d63c705380dcb387873fa445b06e22b">AllReduce</a> (double *x, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eaff1423d87d618f7e6b6980ab2d01f8">Op</a> op, int *ranks_of_extrema=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specialized Allreduce for doubles.  <a href="#7e7ad87e2c58d93a3f87531da3c7a9a4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#221b4d1b61f84e8bed9a54104357deb1">AllReduce</a> (float *x, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eaff1423d87d618f7e6b6980ab2d01f8">Op</a> op, int *ranks_of_extrema=NULL) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specialized Allreduce for doubles.  <a href="#2d63c705380dcb387873fa445b06e22b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#93ce9b7655a2eeca445a03540add2c0c">AllReduce</a> (float *x, int count, <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#eaff1423d87d618f7e6b6980ab2d01f8">Op</a> op, int *ranks_of_extrema=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specialized Allreduce for floats.  <a href="#221b4d1b61f84e8bed9a54104357deb1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specialized Allreduce for floats.  <a href="#93ce9b7655a2eeca445a03540add2c0c"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Generic high-level operations not in MPI interfaces.</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#e733128fa45b7187485570b0f54ca4a1">parallelPrefixSum</a> (int *x, int count, int tag) const </td></tr>
 
@@ -621,7 +621,9 @@ Inequality comparison operator (compares MPI communicator).
 <p>
 MPI wrappers that don't use the internal communicator. 
 <p>
-The purpose of these wrappers is to provide a single place for compile- and run-time toggling of MPI code. The signatures and return values of these methods are identical to the MPI C bindings. Thes methods will throw an assertion if they are called when MPI is not enabled. 
+The purpose of these wrappers is to provide a single place for compile- and run-time toggling of MPI code. The signatures and return values of these methods are identical to the MPI C bindings. These methods will throw an assertion if they are called when MPI is not enabled.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_mpi_is_initialized </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="107518fb93f5ce2107382c0debb9fe0c"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::Comm_free" ref="107518fb93f5ce2107382c0debb9fe0c" args="(Comm *comm)" -->
@@ -989,7 +991,9 @@ MPI Wtime (if MPI is enabled) or an alternate time calculation.
 <p>
 MPI wrappers for methods associated with an MPI communicator. 
 <p>
-The purpose of these wrappers is to provide a single place for compile- and run-time toggling of MPI code. The signatures and return values of these methods are identical to the MPI C bindings, except that the communicators are omitted. The communicator used is that associated with the <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> object (typically passed to the constructor). These methods throw an assertion if called while MPI is not enabled, except where noted. 
+The purpose of these wrappers is to provide a single place for compile- and run-time toggling of MPI code. The signatures and return values of these methods are identical to the MPI C bindings, except that the communicators are omitted. The communicator used is that associated with the <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> object (typically passed to the constructor). These methods throw an assertion if called while MPI is not enabled, except where noted.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_mpi_is_initialized </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="61221c45e6f00afe2d4cf729a7f78ce9"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::Allgatherv" ref="61221c45e6f00afe2d4cf729a7f78ce9" args="(void *sendbuf, int sendcvount, Datatype sendtype, void *recvbuf, int *recvcounts, int *displs, Datatype recvtype) const " -->
@@ -1720,7 +1724,7 @@ MPI Comm_size (Set size to 1 when MPI is disabled).
 
 </div>
 </div><p>
-<a class="anchor" name="7cee51dc151b3496599f308523ab2dc4"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::AllReduce" ref="7cee51dc151b3496599f308523ab2dc4" args="(int *x, int count, Op op, int *ranks_of_extrema=NULL) const " -->
+<a class="anchor" name="79254c433930ad31bb802a3db861abdb"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::AllReduce" ref="79254c433930ad31bb802a3db861abdb" args="(int *x, int count, Op op, int *ranks_of_extrema=0) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1746,7 +1750,7 @@ MPI Comm_size (Set size to 1 when MPI is disabled).
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *&nbsp;</td>
-          <td class="paramname"> <em>ranks_of_extrema</em> = <code>NULL</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>ranks_of_extrema</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1767,13 +1771,15 @@ If MPI_MINLOC or MPI_MAXLOC is given as the operator, the ranks_of_extrema argum
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> of integers to reduce. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>count</em>&nbsp;</td><td>Number of items in x. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op</em>&nbsp;</td><td>A valid MPI reduce operation. </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>ranks_of_extrema</em>&nbsp;</td><td>Ranks associated with min or max of x (if op indicates min or max operation). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>ranks_of_extrema</em>&nbsp;</td><td>Ranks associated with min or max of x (if op indicates min or max operation).</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(op != MPI_MINLOC &amp;&amp; op != MPI_MAXLOC) || (ranks_of_extrema != 0) <p>
+s_mpi_is_initialized </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="7e7ad87e2c58d93a3f87531da3c7a9a4"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::AllReduce" ref="7e7ad87e2c58d93a3f87531da3c7a9a4" args="(double *x, int count, Op op, int *ranks_of_extrema=NULL) const " -->
+<a class="anchor" name="2d63c705380dcb387873fa445b06e22b"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::AllReduce" ref="2d63c705380dcb387873fa445b06e22b" args="(double *x, int count, Op op, int *ranks_of_extrema=0) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1799,7 +1805,7 @@ If MPI_MINLOC or MPI_MAXLOC is given as the operator, the ranks_of_extrema argum
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *&nbsp;</td>
-          <td class="paramname"> <em>ranks_of_extrema</em> = <code>NULL</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>ranks_of_extrema</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1819,13 +1825,15 @@ If MPI_MINLOC or MPI_MAXLOC is given as the operator, the ranks_of_extrema argum
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> of doubles to reduce. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>count</em>&nbsp;</td><td>Number of items in x. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op</em>&nbsp;</td><td>A valid MPI reduce operation. </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>ranks_of_extrema</em>&nbsp;</td><td>Ranks associated with min or max of x (if op indicates min or max operation). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>ranks_of_extrema</em>&nbsp;</td><td>Ranks associated with min or max of x (if op indicates min or max operation).</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(op != MPI_MINLOC &amp;&amp; op != MPI_MAXLOC) || (ranks_of_extrema != 0) <p>
+s_mpi_is_initialized </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="221b4d1b61f84e8bed9a54104357deb1"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::AllReduce" ref="221b4d1b61f84e8bed9a54104357deb1" args="(float *x, int count, Op op, int *ranks_of_extrema=NULL) const " -->
+<a class="anchor" name="93ce9b7655a2eeca445a03540add2c0c"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAI_MPI::AllReduce" ref="93ce9b7655a2eeca445a03540add2c0c" args="(float *x, int count, Op op, int *ranks_of_extrema=0) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1851,7 +1859,7 @@ If MPI_MINLOC or MPI_MAXLOC is given as the operator, the ranks_of_extrema argum
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *&nbsp;</td>
-          <td class="paramname"> <em>ranks_of_extrema</em> = <code>NULL</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>ranks_of_extrema</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1871,9 +1879,11 @@ If MPI_MINLOC or MPI_MAXLOC is given as the operator, the ranks_of_extrema argum
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> of floats to reduce. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>count</em>&nbsp;</td><td>Number of items in x. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op</em>&nbsp;</td><td>A valid MPI reduce operation. </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>ranks_of_extrema</em>&nbsp;</td><td>Ranks associated with min or max of x (if op indicates min or max operation). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>ranks_of_extrema</em>&nbsp;</td><td>Ranks associated with min or max of x (if op indicates min or max operation).</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(op != MPI_MINLOC &amp;&amp; op != MPI_MAXLOC) || (ranks_of_extrema != 0) <p>
+s_mpi_is_initialized </dd></dl>
 
 </div>
 </div><p>
@@ -2179,7 +2189,7 @@ MPI communicator constants.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="SAMRAI__MPI_8h.html">SAMRAI_MPI.h</a><li>source/SAMRAI/tbox/<a class="el" href="SAMRAI__MPI_8C.html">SAMRAI_MPI.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

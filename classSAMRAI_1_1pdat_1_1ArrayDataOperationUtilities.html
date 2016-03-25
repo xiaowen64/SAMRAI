@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataOperationUtilities.html">ArrayDataOperationUtilities</a></div>
-<h1>SAMRAI::pdat::ArrayDataOperationUtilities&lt; TYPE, OP &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::ArrayDataOperationUtilities" -->Struct ArrayDataOperationUtilities&lt;DIM, TYPE, OP&gt; provides generic looping operations for all array-based patch data types. The operations are templated on spatial dimension, data type, and the operation that will be performed on individual array elements in the innermost loop.  
+<h1>SAMRAI::pdat::ArrayDataOperationUtilities&lt; TYPE, OP &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::ArrayDataOperationUtilities" -->Struct ArrayDataOperationUtilities&lt;TYPE, OP&gt; provides generic looping operations for all array-based patch data types. The operations are templated on data type and the operation that will be performed on individual array elements in the innermost loop.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/pdat/ArrayDataOperationUtilities.h&gt;</code>
@@ -38,7 +38,7 @@
 <h3>template&lt;class TYPE, class OP&gt;<br>
  class SAMRAI::pdat::ArrayDataOperationUtilities&lt; TYPE, OP &gt;</h3>
 
-Struct ArrayDataOperationUtilities&lt;DIM, TYPE, OP&gt; provides generic looping operations for all array-based patch data types. The operations are templated on spatial dimension, data type, and the operation that will be performed on individual array elements in the innermost loop. 
+Struct ArrayDataOperationUtilities&lt;TYPE, OP&gt; provides generic looping operations for all array-based patch data types. The operations are templated on data type and the operation that will be performed on individual array elements in the innermost loop. 
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a> </dd></dl>
 
@@ -121,7 +121,11 @@ Perform operation on a subset of data components of source and destination array
     <tr><td valign="top"></td><td valign="top"><em>op</em>&nbsp;</td><td>Const reference to object that performs operations on individual data array elements.</td></tr>
   </table>
 </dl>
-When assertion checking is active, assertion will result when any of the depth-related arguments are out-of-bounds for the given array data objects. 
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == opbox.getDim()) &amp;&amp; (dst.getDim() == src_shift.getDim()) <p>
+num_depth &gt;= 0 <p>
+(0 &lt;= dst_start_depth) &amp;&amp; (dst_start_depth + num_depth &lt;= dst.getDepth()) <p>
+(0 &lt;= src_start_depth) &amp;&amp; (src_start_depth + num_depth &lt;= src.getDepth()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="43ee8a6b09676261efa122dc8aeef66e"></a><!-- doxytag: member="SAMRAI::pdat::ArrayDataOperationUtilities::doArrayDataBufferOperationOnBox" ref="43ee8a6b09676261efa122dc8aeef66e" args="(const ArrayData&lt; TYPE &gt; &amp;arraydata, const TYPE *buffer, const hier::Box &amp;opbox, bool src_is_buffer, const OP &amp;op)" -->
@@ -180,12 +184,15 @@ Perform operation on all data components of array data object and corresponding 
     <tr><td valign="top"></td><td valign="top"><em>op</em>&nbsp;</td><td>Const reference to object that performs operations on individual data array elements.</td></tr>
   </table>
 </dl>
-When assertion checking is active, assertion will result when buffer pointer is null or operation box is not the same as the array data box. 
+<dl compact><dt><b>Precondition:</b></dt><dd>arraydata.getDim() == opbox.getDim() <p>
+buffer != 0 <p>
+opbox.isSpatiallyEqual(opbox * arraydata.getBox()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="ArrayDataOperationUtilities_8h.html">ArrayDataOperationUtilities.h</a><li>source/SAMRAI/pdat/<a class="el" href="ArrayDataOperationUtilities_8C.html">ArrayDataOperationUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

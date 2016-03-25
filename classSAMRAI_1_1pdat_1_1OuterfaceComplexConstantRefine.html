@@ -31,13 +31,13 @@
 <a href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#94dcd23d8030ee6ede4b2f74b69c720c">OuterfaceComplexConstantRefine</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#08c522f40e4f540893275fb69850da3d">OuterfaceComplexConstantRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#a5fa1e919d11d1865c8569f60f220cf5">~OuterfaceComplexConstantRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#beca759d81105d19691a8885b7cd5013">getOperatorPriority</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#a6284e73bdd0a95fe0b49a59afa697df">getStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#607c212449bb4f3b0463bb523c1f4bd0">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.html#1ccb56070161e5b8d8a395322c266166">refine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;fine_overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio) const </td></tr>
 
@@ -48,15 +48,14 @@ Class <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceComplexConstantRefine.
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="94dcd23d8030ee6ede4b2f74b69c720c"></a><!-- doxytag: member="SAMRAI::pdat::OuterfaceComplexConstantRefine::OuterfaceComplexConstantRefine" ref="94dcd23d8030ee6ede4b2f74b69c720c" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="08c522f40e4f540893275fb69850da3d"></a><!-- doxytag: member="SAMRAI::pdat::OuterfaceComplexConstantRefine::OuterfaceComplexConstantRefine" ref="08c522f40e4f540893275fb69850da3d" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::pdat::OuterfaceComplexConstantRefine::OuterfaceComplexConstantRefine           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -109,14 +108,15 @@ The priority of outerface complex constant interpolation is 0. It will be perfor
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0ffa0be747cd1a388f8cf1c1766">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
-<a class="anchor" name="a6284e73bdd0a95fe0b49a59afa697df"></a><!-- doxytag: member="SAMRAI::pdat::OuterfaceComplexConstantRefine::getStencilWidth" ref="a6284e73bdd0a95fe0b49a59afa697df" args="() const " -->
+<a class="anchor" name="607c212449bb4f3b0463bb523c1f4bd0"></a><!-- doxytag: member="SAMRAI::pdat::OuterfaceComplexConstantRefine::getStencilWidth" ref="607c212449bb4f3b0463bb523c1f4bd0" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::pdat::OuterfaceComplexConstantRefine::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -127,7 +127,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0
 <p>
 The stencil width of the constant interpolation operator is the vector of zeros. That is, its stencil does not extend outside the fine box. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b461868ada200e3f99e6705d5f60">SAMRAI::hier::RefineOperator</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#71f9bd222f7b762e9cab2d6cd7bc517d">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <a class="anchor" name="1ccb56070161e5b8d8a395322c266166"></a><!-- doxytag: member="SAMRAI::pdat::OuterfaceComplexConstantRefine::refine" ref="1ccb56070161e5b8d8a395322c266166" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const int dst_component, const int src_component, const hier::BoxOverlap &amp;fine_overlap, const hier::IntVector &amp;ratio) const " -->
@@ -180,14 +180,16 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b4
 <div class="memdoc">
 
 <p>
-Refine the source component on the coarse patch to the destination component on the fine patch using the outerface complex constant interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator. 
+Refine the source component on the coarse patch to the destination component on the fine patch using the outerface complex constant interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const FaceOverlap *&gt;(&amp;fine_overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd2e5352276f7bef4d48eede3ab9">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OuterfaceComplexConstantRefine_8h.html">OuterfaceComplexConstantRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

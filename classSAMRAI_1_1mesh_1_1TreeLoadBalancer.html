@@ -55,7 +55,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#3784dd2378c8d1f626d2678cfc9a24bf">getLoadBalanceDependsOnPatchData</a> (int level_number) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if load balancing procedure for given level depends on patch data on mesh; otherwise return false.  <a href="#3784dd2378c8d1f626d2678cfc9a24bf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#7860ab42620c0246165a86b8ed196403">loadBalanceBoxLevel</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balance_mapped_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;balance_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;anchor_to_balance, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;unbalanced_to_attractor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;attractor_to_unbalanced, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;domain_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> &amp;rank_group=<a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a>()) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#746a5638e9821aa34719bd1a920b5d62">loadBalanceBoxLevel</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balance_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;balance_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;anchor_to_balance, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;unbalanced_to_attractor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;attractor_to_unbalanced, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;domain_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> &amp;rank_group=<a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a>()) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#36f542438086c03c66146c0b72356567">printClassData</a> (std::ostream &amp;output_stream) const </td></tr>
 
@@ -63,6 +63,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#8b73e0de6c9713f262418f5d2cb9a4b7">printStatistics</a> (std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out statistics recorded for the most recent load balancing result.  <a href="#8b73e0de6c9713f262418f5d2cb9a4b7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#961572429f39204f81e73f28e6a9abb9">getObjectName</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#961572429f39204f81e73f28e6a9abb9"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#59ca95043634f47c99de4786bdc13e2b">operator&lt;&lt;</a> (std::ostream &amp;co, const BoxInTransit &amp;r)</td></tr>
 
@@ -73,25 +76,23 @@ Provides load balancing routines for AMR hierarchy by implemementing the LoadBal
 <p>
 This class implements a tree-based load balancer. The MPI processes are arranged in a tree. Work load is transmitted from process to process along the edges of the tree.<p>
 Currently, only uniform load balancing is supported. Eventually, non-uniform load balancing should be supported. (Non-uniform load balancing is supported by the CutAndPackLoadBalancer class.)<p>
-Inputs and their default values:<p>
-No special inputs are required for this class.<p>
-<div class="fragment"><pre class="fragment"> * min_load_fraction_per_box = 0.03
- *                           // Additional restriction on box size.
- *                           // Will not generate a box that has less
- *                           // than this fraction of the global average
- *                           // work load in order to move work load.
- *                           // Set to negative to disable.
- * report_load_balance = TRUE // Write out load balance report in log
- * n_root_cycles = -1         // Number of steps over which to smoothly spread
- *                            // out work load.  This helps scalability when
- *                            // initial work load is grossly unbalanced.
- *                            // Usually 1 step is sufficient.
- *                            // Can be set higher (2 or 3) to reduce negative
- *                            // performance effects of extremely poor initial
- *                            // load balance.  Set to -1 (default) to compute
- *                            // the number of cycles by a simple heuristic.
- *                            // Set to zero to effectively bypass load balancing.
- * </pre></div><p>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>n_root_cycles</b> Number of steps over which to smoothly spread out work load. This helps scalability when initial work load is grossly unbalanced. Usually 1 step is sufficient. Can be set higher (2 or 3) to reduce negative performance effects of extremely poor initial load balance. Set to -1, the default, or any negative number to compute the number of cycles by a simple heuristic. Set to zero to effectively bypass load balancing.</li></ul>
+<p>
+<ul>
+<li><b>min_load_fraction_per_box</b> Additional restriction on box size. Will not generate a box that has less than this fraction of the global average work load in order to move work load.</li></ul>
+<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>n_root_cycles </td><td>int </td><td>-1 </td><td>any int </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>min_load_fraction_per_box </td><td>double </td><td>0.03 </td><td>&gt;=0 &amp;&amp; &lt;=1.0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+</table>
+<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">mesh::LoadBalanceStrategy</a> </dd></dl>
 
 <p>
@@ -134,9 +135,10 @@ Initializing constructor sets object state to default or, if database provided, 
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>name</em>&nbsp;</td><td>User-defined std::string identifier used for error reporting and timer names. If omitted, "TreeLoadBalancer" is used.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td>(optional) database pointer providing parameters from input file. This pointer may be null indicating no input is used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td>(optional) database pointer providing parameters from input file. This pointer may be null indicating no input is used.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
 
 </div>
 </div><p>
@@ -183,7 +185,9 @@ Set the internal SAMRAI_MPI to a duplicate of the given SAMRAI_MPI.
 <p>
 The given SAMRAI_MPI must have a valid communicator.<p>
 The given SAMRAI_MPI is duplicated for private use. This requires a global communication, so all processes in the communicator must call it. The advantage of a duplicate communicator is that it ensures the communications for the object won't accidentally interact with other communications.<p>
-If the duplicate SAMRAI_MPI it is set, the <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html">TreeLoadBalancer</a> will only balance BoxLevels with congruent SAMRAI_MPI objects and will use the duplicate SAMRAI_MPI for communications. Otherwise, the SAMRAI_MPI of the BoxLevel will be used. The duplicate MPI communicator is freed when the object is destructed, or <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#28b59ceed1449bd501114a47ad62f3c0">freeMPICommunicator()</a> is called. 
+If the duplicate SAMRAI_MPI it is set, the <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html">TreeLoadBalancer</a> will only balance BoxLevels with congruent SAMRAI_MPI objects and will use the duplicate SAMRAI_MPI for communications. Otherwise, the SAMRAI_MPI of the BoxLevel will be used. The duplicate MPI communicator is freed when the object is destructed, or <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#28b59ceed1449bd501114a47ad62f3c0">freeMPICommunicator()</a> is called.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>samrai_mpi.getCommunicator() != <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#5e5a6d3ca83a7ca17784a0549e87d20e">tbox::SAMRAI_MPI::commNull</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="28b59ceed1449bd501114a47ad62f3c0"></a><!-- doxytag: member="SAMRAI::mesh::TreeLoadBalancer::freeMPICommunicator" ref="28b59ceed1449bd501114a47ad62f3c0" args="()" -->
@@ -241,9 +245,10 @@ Note: This method currently does not affect the results because this class does 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer value of patch data identifier for workload estimate on each cell. An invalid value (i.e., &lt; 0) indicates that a spatially-uniform work estimate will be used. The default value is -1 (undefined) implying the uniform work estimate.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>Optional integer number for level on which data id is used. If no value is given, the data will be used for all levels. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>Optional integer number for level on which data id is used. If no value is given, the data will be used for all levels.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#53dede87024da9e337e1e7d2e2c9a59f">hier::VariableDatabase::getDatabase()</a>-&gt;getPatchDescriptor()-&gt;getPatchDataFactory(data_id) is actually a boost::shared_ptr&lt;pdat::CellDataFactory&lt;double&gt; &gt; </dd></dl>
 
 </div>
 </div><p>
@@ -303,7 +308,7 @@ Return true if load balancing procedure for given level depends on patch data on
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1b1525f4eafbf028b8585def7a19541b">SAMRAI::mesh::LoadBalanceStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="7860ab42620c0246165a86b8ed196403"></a><!-- doxytag: member="SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel" ref="7860ab42620c0246165a86b8ed196403" args="(hier::BoxLevel &amp;balance_mapped_box_level, hier::Connector &amp;balance_to_anchor, hier::Connector &amp;anchor_to_balance, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const hier::Connector &amp;unbalanced_to_attractor, const hier::Connector &amp;attractor_to_unbalanced, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_mapped_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const " -->
+<a class="anchor" name="746a5638e9821aa34719bd1a920b5d62"></a><!-- doxytag: member="SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel" ref="746a5638e9821aa34719bd1a920b5d62" args="(hier::BoxLevel &amp;balance_box_level, hier::Connector &amp;balance_to_anchor, hier::Connector &amp;anchor_to_balance, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const hier::Connector &amp;unbalanced_to_attractor, const hier::Connector &amp;attractor_to_unbalanced, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -311,7 +316,7 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1
           <td class="memname">void SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>balance_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>balance_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -365,7 +370,7 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>domain_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>domain_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -396,28 +401,35 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1
 
 <p>
 Given a BoxLevel, representing the domain of a specified level in the AMR hierarchy, generate a new BoxLevel from which the patches for the level may be formed and update two Connectors incident on the changed BoxLevel.<p>
-The union of the boxes in the balance_mapped_box_level is the same before and after the the method call.<p>
+The union of the boxes in the balance_box_level is the same before and after the the method call.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_mapped_box_level</em>&nbsp;</td><td>Input BoxLevel. On input, this is the pre-balance BoxLevel. On output, it is the balanced BoxLevel.</td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td>Connector between the balance_mapped_box_level and some given "anchor mapped_box_level". This must be accurate on input. On putput, connects the newly balanced balance_mapped_box_level to the anchor mapped_box_level.</td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_box_level</em>&nbsp;</td><td>Input BoxLevel. On input, this is the pre-balance BoxLevel. On output, it is the balanced BoxLevel.</td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td>Connector between the balance_box_level and some given "anchor box_level". This must be accurate on input. On putput, connects the newly balanced balance_box_level to the anchor box_level.</td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>anchor_to_balance</em>&nbsp;</td><td>Transpose of balance_to_anchor.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The hierarchy where the work distribution data lives.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td>The number of the level where the work distribution data lives.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>unbalanced_to_attractor</em>&nbsp;</td><td>Connector between the balance_mapped_box_level and an "attractor" BoxLevel. This data may be used to indicate preference for data locality. The implementation should try to maximize overlaps between attractor and balance cells owned by the same process.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>unbalanced_to_attractor</em>&nbsp;</td><td>Connector between the balance_box_level and an "attractor" BoxLevel. This data may be used to indicate preference for data locality. The implementation should try to maximize overlaps between attractor and balance cells owned by the same process.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>attractor_to_unbalanced</em>&nbsp;</td><td>Transpose of unbalanced_to_attractor.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_size</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> representing mimimum box size.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_size</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> representing maximum box size.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain_mapped_box_level</em>&nbsp;</td><td>Description of the domain.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain_box_level</em>&nbsp;</td><td>Description of the domain.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bad_interval</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> indicating the length of an interval of cells along each side of the box where chopping the box may produce boxes with certain "bad" properties. For example, this is primiarily used to avoid generating ghost regions for patches that intersect the domain boundary in ways that may it difficult for a use to provide boundary values. Thus, it is typically related to the maximum ghost cell width in the problem. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> header file for more information.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cut_factor</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> indicating factor for chopping each side of a box; i.e., after chopping a box, the number of cells along each direction of each piece must be an integer multiple of the corresponding entry in the cut factor vector. For example, the cut factor may be related to the coarsen ratio between levels in the hierarchy in which case it may be used to produce boxes that can be coarsened by a certain factor if needed. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> header file for more information.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rank_group</em>&nbsp;</td><td>Input <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> indicating a set of ranks on which all boxes in the output balance_mapped_box_level will be restricted. Some child classes may not make use of this argument.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rank_group</em>&nbsp;</td><td>Input <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> indicating a set of ranks on which all boxes in the output balance_box_level will be restricted. Some child classes may not make use of this argument.</td></tr>
   </table>
 </dl>
 <p>
-Note: This implementation does not yet support non-uniform load balancing. 
+Note: This implementation does not yet support non-uniform load balancing.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>anchor_to_balance.isFinalized() == balance_to_anchor.isFinalized() <p>
+!anchor_to_balance.isFinalized() || anchor_to_balance.isTransposeOf(balance_to_anchor) <p>
+(d_dim == balance_box_level.getDim()) &amp;&amp; (d_dim == min_size.getDim()) &amp;&amp; (d_dim == max_size.getDim()) &amp;&amp; (d_dim == domain_box_level.getDim()) &amp;&amp; (d_dim == bad_interval.getDim()) &amp;&amp; (d_dim == cut_factor.getDim()) <p>
+!hierarchy || (d_dim == hierarchy-&gt;getDim()) <p>
+!d_mpi_is_dupe || (d_mpi.getSize() == balance_box_level.getMPI().getSize()) <p>
+!d_mpi_is_dupe || (d_mpi.getSize() == balance_box_level.getMPI().getRank()) </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#e5a2078b10f2a9727fb406074b593f64">SAMRAI::mesh::LoadBalanceStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#de61f9ac7ac39f028abfbf808d66e711">SAMRAI::mesh::LoadBalanceStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="36f542438086c03c66146c0b72356567"></a><!-- doxytag: member="SAMRAI::mesh::TreeLoadBalancer::printClassData" ref="36f542438086c03c66146c0b72356567" args="(std::ostream &amp;output_stream) const " -->
@@ -474,6 +486,27 @@ Write out statistics recorded for the most recent load balancing result.
 
 </div>
 </div><p>
+<a class="anchor" name="961572429f39204f81e73f28e6a9abb9"></a><!-- doxytag: member="SAMRAI::mesh::TreeLoadBalancer::getObjectName" ref="961572429f39204f81e73f28e6a9abb9" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string&amp; SAMRAI::mesh::TreeLoadBalancer::getObjectName           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get the name of this object. 
+<p>
+
+</div>
+</div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
 <a class="anchor" name="59ca95043634f47c99de4786bdc13e2b"></a><!-- doxytag: member="SAMRAI::mesh::TreeLoadBalancer::operator&lt;&lt;" ref="59ca95043634f47c99de4786bdc13e2b" args="(std::ostream &amp;co, const BoxInTransit &amp;r)" -->
 <div class="memitem">
@@ -508,7 +541,7 @@ Insert BoxInTransit into an output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="TreeLoadBalancer_8h.html">TreeLoadBalancer.h</a><li>source/SAMRAI/mesh/<a class="el" href="TreeLoadBalancer_8C.html">TreeLoadBalancer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

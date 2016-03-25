@@ -67,7 +67,7 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html">CellGeometry</a> manages the mapping between the AMR index space and the cell-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between cell- centered box geometries for communication operations.<p>
-See header file for CellData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+See header file for CellData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">pdat::CellOverlap</a> </dd></dl>
 
@@ -117,6 +117,8 @@ The BoxOverlap implemenation for this geometry.
 <p>
 Construct the cell geometry object given an AMR index space box and ghost cell width. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim()== ghosts.getDim() <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -266,6 +268,7 @@ This static method applies a coordinate system transformation to the given <a cl
 <p>
 Compute the overlap in cell-centered index space between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#311ee5eddd3e973aede461e4b3bbfdd4">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
@@ -329,6 +332,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c04
 <p>
 Compute the cell-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#311ee5eddd3e973aede461e4b3bbfdd4">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -409,7 +413,7 @@ Return the ghost cell width for this cell centered box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="CellGeometry_8h.html">CellGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="CellGeometry_8C.html">CellGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

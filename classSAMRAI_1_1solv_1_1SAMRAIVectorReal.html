@@ -185,9 +185,12 @@ template&lt;class TYPE&gt; </div>
 <p>
 Constructor for <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a> class is used to construct each unique vector within an application. That is, each vector that is used to represent a unique set of variable quantities is considered unique. This constructor is used to create a solution vector for an application or solver algorithm. The <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#28741ea22cdec9beb5378c9ecd06533d">cloneVector()</a> function is provided to generate copies of a given vector. For example, the clone function may be used by a solver to generate copies of the vector as needed; e.g., in a Krylov subspace method like GMRES.<p>
 Before the vector may be used, data components must be added to it using the adddComponent(0 function. Also, this constructor does not allocate storage for vector data. This is usually done after all components are added. The <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#7a7a25a368bfe788e1e5f012bb8091ca">allocateVectorData()</a> function is used for this purpose. Otherwise, existing patch data quantities can be added as vector components. In any case, storage for all components must be allocated before the vector can be used.<p>
-It is important to note that a non-recoverable assertion will result if the specified levels do not exist in the hierarchy before a vector object is used, or if the hierarchy pointer itself is null. The range levels can be reset at any time (e.g., if the level configuration changes by re-meshing), by calling the <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#b28708c3197cb505e9f555b4732034d9">resetLevels()</a> member function.<p>
+The range levels can be reset at any time (e.g., if the level configuration changes by re-meshing), by calling the <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#b28708c3197cb505e9f555b4732034d9">resetLevels()</a> member function.<p>
 Although an empty std::string may be passed as the vector name, it is recommended that a descriptive name be used to facilitate debugging and error reporting.<p>
-By default the vector component information and data will be sent to the "plog" output stream when the <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#c0123b3a41d9253e9b9f5b08eda76799">print()</a> function is called. This stream can be changed at any time via the <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#eb743cebeb3e8c896dda3cf32afc1054">setOutputStream()</a> function. 
+By default the vector component information and data will be sent to the "plog" output stream when the <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#c0123b3a41d9253e9b9f5b08eda76799">print()</a> function is called. This stream can be changed at any time via the <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#eb743cebeb3e8c896dda3cf32afc1054">setOutputStream()</a> function.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (finest_level &gt;= coarsest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#2fb831a0c5fd521c7c56d296255dd4de">getFinestLevelNumber()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="855d5f52911c163e2a85aa35135c284d"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::~SAMRAIVectorReal" ref="855d5f52911c163e2a85aa35135c284d" args="()" -->
@@ -441,7 +444,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return patch data object for given vector component index. 
+Return patch data object for given vector component index.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(comp_id &gt;= 0) &amp;&amp; (comp_id &lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#eaa5130f646a4677108ce0930fab794c">getNumberOfComponents()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="891945091286309e43de3f7d491a722f"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::getComponentPatchData" ref="891945091286309e43de3f7d491a722f" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;var, const hier::Patch &amp;patch) const " -->
@@ -472,7 +477,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return patch data object associated with given variable. 
+Return patch data object associated with given variable.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>var <p>
+d_variableid_2_vectorcomponent_map[var-&gt;getInstanceIdentifier()] &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="04b1defb0e914f9ee70a82d94b7b39e8"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::getComponentVariable" ref="04b1defb0e914f9ee70a82d94b7b39e8" args="(const int component) const " -->
@@ -494,7 +502,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return pointer to variable for specified vector component. 
+Return pointer to variable for specified vector component.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(component &gt;= 0) &amp;&amp; (component &lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#eaa5130f646a4677108ce0930fab794c">getNumberOfComponents()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e7c6870d553290004844347117c97593"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::getComponentDescriptorIndex" ref="e7c6870d553290004844347117c97593" args="(const int component) const " -->
@@ -516,7 +526,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return patch data index for specified vector component. 
+Return patch data index for specified vector component.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(component &gt;= 0) &amp;&amp; (component &lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#eaa5130f646a4677108ce0930fab794c">getNumberOfComponents()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e4bb95aa6c287975d950f892fb646427"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::getControlVolumeIndex" ref="e4bb95aa6c287975d950f892fb646427" args="(const int component) const " -->
@@ -538,7 +550,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return patch data index of control volume data for vector component. 
+Return patch data index of control volume data for vector component.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(component &gt;= 0) &amp;&amp; (component &lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#eaa5130f646a4677108ce0930fab794c">getNumberOfComponents()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="28741ea22cdec9beb5378c9ecd06533d"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::cloneVector" ref="28741ea22cdec9beb5378c9ecd06533d" args="(const std::string &amp;name) const " -->
@@ -628,7 +642,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Add a new variable and patch data component to this vector. The integer values passed in represent the patch data indices for the vector component data and the component control volume data. If the control volume patch data index is not specified (i.e., control_vol_id &lt; 0), no weighting will be applied in vector operations associated with the component. This routine also accepts a hierarchy data operation object for the component should the user want to provide a special set of such operations. If left unspecified (nearly all cases), the standard operations for the given variable type are used.<p>
 Note that this function maps the variable to the component data index (i.e., patch data index) in the variable database. Thus, the mapping between the variable and its patch data for the vector can be obtained from the variable database if needed.<p>
-When assertion checking is active, this routine checks make sure that the type of the variable matches the types associated with the patch data indices passed in. 
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#53dede87024da9e337e1e7d2e2c9a59f">hier::VariableDatabase::getDatabase()</a>-&gt;checkVariablePatchDataIndexType(var, comp_data_id) <p>
+(comp_vol_id &lt; 0) || (<a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#53dede87024da9e337e1e7d2e2c9a59f">hier::VariableDatabase::getDatabase()</a>-&gt;checkVariablePatchDataIndexType(var, comp_vol_id)) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7a7a25a368bfe788e1e5f012bb8091ca"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::allocateVectorData" ref="7a7a25a368bfe788e1e5f012bb8091ca" args="(const double timestamp=0.0)" -->
@@ -650,7 +666,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Allocate data storage for all components of this vector object. 
+Allocate data storage for all components of this vector object.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>getPatchHierarchy <p>
+(<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#b53567badbfc8bba0e18aae5dafec1e9">getCoarsestLevelNumber()</a> &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#2fb831a0c5fd521c7c56d296255dd4de">getFinestLevelNumber()</a> &gt;= <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#b53567badbfc8bba0e18aae5dafec1e9">getCoarsestLevelNumber()</a>) &amp;&amp; (getFinestLevelNumber( &lt;= d_hierarchy-&gt;<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#2fb831a0c5fd521c7c56d296255dd4de">getFinestLevelNumber()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="8452a06b2b703e9d3fcca7720d16dc73"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::deallocateVectorData" ref="8452a06b2b703e9d3fcca7720d16dc73" args="()" -->
@@ -671,7 +690,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Deallocate data storage for all components of this vector object. Note that this routine will not free the associated data indices in the patch descriptor. See <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#bd236d0d9b8340617e9ad886f9f25746">freeVectorComponents()</a> function. 
+Deallocate data storage for all components of this vector object. Note that this routine will not free the associated data indices in the patch descriptor. See <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#bd236d0d9b8340617e9ad886f9f25746">freeVectorComponents()</a> function.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>getPatchHierarchy <p>
+(<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#b53567badbfc8bba0e18aae5dafec1e9">getCoarsestLevelNumber()</a> &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#2fb831a0c5fd521c7c56d296255dd4de">getFinestLevelNumber()</a> &gt;= <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#b53567badbfc8bba0e18aae5dafec1e9">getCoarsestLevelNumber()</a>) &amp;&amp; (getFinestLevelNumber( &lt;= d_hierarchy-&gt;<a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#2fb831a0c5fd521c7c56d296255dd4de">getFinestLevelNumber()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c0123b3a41d9253e9b9f5b08eda76799"></a><!-- doxytag: member="SAMRAI::solv::SAMRAIVectorReal::print" ref="c0123b3a41d9253e9b9f5b08eda76799" args="(std::ostream &amp;s=tbox::plog, const bool interior_only=true) const " -->
@@ -1511,7 +1533,7 @@ The "conditional" quotient is defined as |numerator/denominator| if the denomina
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="SAMRAIVectorReal_8h.html">SAMRAIVectorReal.h</a><li>source/SAMRAI/solv/<a class="el" href="SAMRAIVectorReal_8C.html">SAMRAIVectorReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

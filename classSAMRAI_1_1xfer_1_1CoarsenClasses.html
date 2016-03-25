@@ -191,13 +191,13 @@ Return total number of coarsen items that have been registered and stored in the
 <p>
 Get representative item for a given equivalence class index. 
 <p>
-When assertion checking is active, the index will be checked for validity.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>Given an index of an existing equivalence class, one item from that class is returned.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>equiv_class_index</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(equiv_class_index &gt;= 0) &amp;&amp; (equiv_class_index &lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -249,7 +249,7 @@ The internal storage of the coarsen items held by this class is not controlled b
 <p>
 Return an iterator for the list of array ids corresponding to the equivalence class with the given integer index. 
 <p>
-The number of quivalence classes can be determined via the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a> member function. Valid integer arguments are from 0 to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>-1. When assertion checking is active, the id will be checked for validity.<p>
+The number of quivalence classes can be determined via the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a> member function. Valid integer arguments are from 0 to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>-1.<p>
 <dl compact><dt><b>Note:</b></dt><dd>The list should not be modified through this iterator.</dd></dl>
 <dl compact><dt><b>Returns:</b></dt><dd>The iterator iterates over a list of integers which are array ids that can be passed into <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#74c752800fdd0292d9ca06423b5c84fe">getCoarsenItem()</a>. The array ids in a single list all correspond to coarsen items in a single equivalence class.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -257,6 +257,7 @@ The number of quivalence classes can be determined via the <a class="el" href="c
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>equiv_class_index</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(equiv_class_index &gt;= 0) &amp;&amp; (equiv_class_index &lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -279,7 +280,7 @@ The number of quivalence classes can be determined via the <a class="el" href="c
 <p>
 Return an iterator for the list of array ids corresponding to the equivalence class with the given integer index. 
 <p>
-The number of quivalence classes can be determined via the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a> member function. Valid integer arguments are from 0 to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>-1. When assertion checking is active, the id will be checked for validity.<p>
+The number of quivalence classes can be determined via the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a> member function. Valid integer arguments are from 0 to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>-1.<p>
 <dl compact><dt><b>Note:</b></dt><dd>The list should not be modified through this iterator.</dd></dl>
 <dl compact><dt><b>Returns:</b></dt><dd>The iterator iterates over a list of integers which are array ids that can be passed into <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#74c752800fdd0292d9ca06423b5c84fe">getCoarsenItem()</a>. The array ids in a single list all correspond to coarsen items in a single equivalence class.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -287,6 +288,7 @@ The number of quivalence classes can be determined via the <a class="el" href="c
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>equiv_class_index</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(equiv_class_index &gt;= 0) &amp;&amp; (equiv_class_index &lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#fbfd8c7fcda161aa25bb568881ab7f3f">getNumberOfEquivalenceClasses()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -319,7 +321,6 @@ The number of quivalence classes can be determined via the <a class="el" href="c
 Given a <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">CoarsenClasses::Data</a> object, insert it into the proper equivalence class. 
 <p>
 If the item belongs in an existing equivalence class, it will be added to that class. Otherwise, a new equivalence class will be created for this item. The integer class index in the data item will set to the index of the equivalence class into which it is inserted.<p>
-If assertion checking is active, the data item will be checked for validity. See <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#5244a95a8d85c8e0e902e6db873fe9ad">itemIsValid()</a> for explanation of validity.<p>
 If a null patch descriptor argument is passed (or ommitted), the descriptor associated with the variable database Singleton object will be used.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -327,6 +328,7 @@ If a null patch descriptor argument is passed (or ommitted), the descriptor asso
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>descriptor</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>itemIsValid(data, descriptor) </dd></dl>
 
 </div>
 </div><p>
@@ -594,7 +596,7 @@ Print single coarsen item to the specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8h.html">CoarsenClasses.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8C.html">CoarsenClasses.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -31,13 +31,13 @@
 <a href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#cb7649ef048912cd342520d3fbc44272">CartesianOuterfaceFloatWeightedAverage</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#09acbbc94b817cca3214cd6f402f5d8e">CartesianOuterfaceFloatWeightedAverage</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#92d3c5e62b9f27698223a1f9588e55da">~CartesianOuterfaceFloatWeightedAverage</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#ad85242894189c1d21368f61ca920fc9">getOperatorPriority</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#d0cd6dbe7d8277b032ba9e9d48b94527">getStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#72bbff98200bfedcf92181105c76251b">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeightedAverage.html#0dfaa752904a1721f74ba72f93cf4cf6">coarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio) const </td></tr>
 
@@ -48,15 +48,14 @@ Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianOuterfaceFloatWeighted
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="cb7649ef048912cd342520d3fbc44272"></a><!-- doxytag: member="SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::CartesianOuterfaceFloatWeightedAverage" ref="cb7649ef048912cd342520d3fbc44272" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="09acbbc94b817cca3214cd6f402f5d8e"></a><!-- doxytag: member="SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::CartesianOuterfaceFloatWeightedAverage" ref="09acbbc94b817cca3214cd6f402f5d8e" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::CartesianOuterfaceFloatWeightedAverage           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -109,14 +108,15 @@ The priority of outerface float weighted averaging is 0. It will be performed be
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c35826baea5e71b75c1691f10940128a">SAMRAI::hier::CoarsenOperator</a>.
 </div>
 </div><p>
-<a class="anchor" name="d0cd6dbe7d8277b032ba9e9d48b94527"></a><!-- doxytag: member="SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::getStencilWidth" ref="d0cd6dbe7d8277b032ba9e9d48b94527" args="() const " -->
+<a class="anchor" name="72bbff98200bfedcf92181105c76251b"></a><!-- doxytag: member="SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::getStencilWidth" ref="72bbff98200bfedcf92181105c76251b" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -127,7 +127,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c3582
 <p>
 The stencil width of the weighted averaging operator is the vector of zeros. That is, its stencil does not extend outside the fine box. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#549c9a8090f27cff92d4742507c98aa3">SAMRAI::hier::CoarsenOperator</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#92b956782ff2a3755240a7d0df93894e">SAMRAI::hier::CoarsenOperator</a>.
 </div>
 </div><p>
 <a class="anchor" name="0dfaa752904a1721f74ba72f93cf4cf6"></a><!-- doxytag: member="SAMRAI::geom::CartesianOuterfaceFloatWeightedAverage::coarsen" ref="0dfaa752904a1721f74ba72f93cf4cf6" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const int dst_component, const int src_component, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio) const " -->
@@ -180,14 +180,20 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#549c9
 <div class="memdoc">
 
 <p>
-Coarsen the source component on the fine patch to the destination component on the coarse patch using the outerface float weighted averaging operator. Coarsening is performed on the intersection of the destination patch and the coarse box. It is assumed that the fine patch contains sufficient data for the stencil width of the coarsening operator. 
+Coarsen the source component on the fine patch to the destination component on the coarse patch using the outerface float weighted averaging operator. Coarsening is performed on the intersection of the destination patch and the coarse box. It is assumed that the fine patch contains sufficient data for the stencil width of the coarsening operator.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == coarse_box.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) <p>
+fine.getPatchData(src_component) is actually a boost::shared_ptr&lt;pdat::OuterfaceData&lt;float&gt; &gt; <p>
+coarse.getPatchData(dst_component) is actually a boost::shared_ptr&lt;pdat::OuterfaceData&lt;float&gt; &gt; <p>
+fine.getPatchData(src_component)-&gt;getDepth() == coarse.getPatchData(dst_component)-&gt;getDepth() <p>
+(fine.getDim().getValue() == 1) || (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#29396bcc3a492149287a09ba3ccd5cf1">SAMRAI::hier::CoarsenOperator</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianOuterfaceFloatWeightedAverage_8h.html">CartesianOuterfaceFloatWeightedAverage.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

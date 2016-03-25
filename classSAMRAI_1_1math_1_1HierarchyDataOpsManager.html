@@ -159,8 +159,11 @@ Note that when the manager is accessed for the first time, the Singleton instanc
 <p>
 Return pointer to operation object for a double variable on the given hierarchy. 
 <p>
-Return pointer to operation object for a double variable on the given hierarchy.<p>
-If a unique operator object is not requested, and if one already exists for the hierarchy and variable specified, the existing one will be created and returned. Otherwise, a new one is created. Objects created created for unique requests will not be used later when an equivalent request is made. <dl compact><dt><b>Parameters: </b></dt><dd>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+hierarchy <p>
+variable-&gt;getDim() == hierarchy.getDim() <p>
+returned value not NULL </dd></dl>
+<dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>variable</em>&nbsp;</td><td>
 operation should correspond to this variable </td></tr>
@@ -206,8 +209,11 @@ Whether a unique operator is requested </td></tr>
 <p>
 Return pointer to operation object for a float variable on the given hierarchy. 
 <p>
-Return pointer to operation object for a float variable on the given hierarchy.<p>
-If a unique operator object is not requested, and if one already exists for the hierarchy and variable specified, the existing one will be created and returned. Otherwise, a new one is created. Objects created created for unique requests will not be used later when an equivalent request is made. <dl compact><dt><b>Parameters: </b></dt><dd>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+hierarchy <p>
+variable-&gt;getDim() == hierarchy.getDim() <p>
+returned value not NULL </dd></dl>
+<dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>variable</em>&nbsp;</td><td>
 operation should correspond to this variable </td></tr>
@@ -253,8 +259,11 @@ Whether a unique operator is requested </td></tr>
 <p>
 Return pointer to operation object for a complex variable on the given hierarchy. 
 <p>
-Return pointer to operation object for a complex variable on the given hierarchy.<p>
-If a unique operator object is not requested, and if one already exists for the hierarchy and variable specified, the existing one will be created and returned. Otherwise, a new one is created. Objects created created for unique requests will not be used later when an equivalent request is made. <dl compact><dt><b>Parameters: </b></dt><dd>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+hierarchy <p>
+variable-&gt;getDim() == hierarchy.getDim() <p>
+returned value not NULL </dd></dl>
+<dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>variable</em>&nbsp;</td><td>
 operation should correspond to this variable </td></tr>
@@ -300,8 +309,11 @@ Whether a unique operator is requested </td></tr>
 <p>
 Return pointer to operation object for a integer variable on the given hierarchy. 
 <p>
-Return pointer to operation object for an integer variable on the given hierarchy.<p>
-If a unique operator object is not requested, and if one already exists for the hierarchy and variable specified, the existing one will be created and returned. Otherwise, a new one is created. Objects created created for unique requests will not be used later when an equivalent request is made. <dl compact><dt><b>Parameters: </b></dt><dd>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+hierarchy <p>
+variable-&gt;getDim() == hierarchy.getDim() <p>
+returned value not NULL </dd></dl>
+<dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>variable</em>&nbsp;</td><td>
 operation should correspond to this variable </td></tr>
@@ -330,12 +342,14 @@ Whether a unique operator is requested </td></tr>
 <div class="memdoc">
 
 <p>
-Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class. 
+Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!s_pdat_op_manager_instance </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyDataOpsManager_8h.html">HierarchyDataOpsManager.h</a><li>source/SAMRAI/math/<a class="el" href="HierarchyDataOpsManager_8C.html">HierarchyDataOpsManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

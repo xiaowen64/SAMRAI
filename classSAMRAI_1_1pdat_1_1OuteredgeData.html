@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a></div>
-<h1>SAMRAI::pdat::OuteredgeData&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::OuteredgeData" --><!-- doxytag: inherits="SAMRAI::hier::PatchData" -->Class OuteredgeData&lt;DIM&gt; provides an implementation for data defined at cell edges on the boundaries of AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, an outeredge data object represents data of some template TYPE and depth on the cell edges on the boundary of the box. Here, depth indicates the number of data values at each edge index location. The OuteredgedgeGeometry class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and outeredge-centered data.  
+<h1>SAMRAI::pdat::OuteredgeData&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::OuteredgeData" --><!-- doxytag: inherits="SAMRAI::hier::PatchData" -->Class OuteredgeData&lt;TYPE&gt; provides an implementation for data defined at cell edges on the boundaries of AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, an outeredge data object represents data of some template TYPE and depth on the cell edges on the boundary of the box. Here, depth indicates the number of data values at each edge index location. The OuteredgedgeGeometry class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and outeredge-centered data.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/pdat/OuteredgeData.h&gt;</code>
@@ -127,12 +127,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#b799936031bb8bc0a34832efebc8538f">printAxisSide</a> (int axis, int face_normal, int side, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all outeredge centered data values for specified axis, face_normal, side, and depth residing in the specified box.  <a href="#b799936031bb8bc0a34832efebc8538f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#3cc415b4c77ee6af117beded349522bf">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#d20f6ec5dcbc80cb962daaf6cc5b121a">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check that class version and restart file version are equal. If so, read data members from the database.  <a href="#3cc415b4c77ee6af117beded349522bf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#1ce497c1efdca6dd4fd4a3d262b79a61">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check that class version and restart file version are equal. If so, read data members from the restart database.  <a href="#d20f6ec5dcbc80cb962daaf6cc5b121a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#a43731fc134dc4687908c8a146da60de">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out the class version number and other data members to the database.  <a href="#1ce497c1efdca6dd4fd4a3d262b79a61"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out the class version number and other data members to the restart database.  <a href="#a43731fc134dc4687908c8a146da60de"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#1f2383a406bc6f18af91a8a1f9a7fbab">getSizeOfData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth)</td></tr>
 
@@ -142,7 +142,7 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;</h3>
 
-Class OuteredgeData&lt;DIM&gt; provides an implementation for data defined at cell edges on the boundaries of AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, an outeredge data object represents data of some template TYPE and depth on the cell edges on the boundary of the box. Here, depth indicates the number of data values at each edge index location. The OuteredgedgeGeometry class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and outeredge-centered data. 
+Class OuteredgeData&lt;TYPE&gt; provides an implementation for data defined at cell edges on the boundaries of AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, an outeredge data object represents data of some template TYPE and depth on the cell edges on the boundary of the box. Here, depth indicates the number of data values at each edge index location. The OuteredgedgeGeometry class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and outeredge-centered data. 
 <p>
 Outeredge data is stored in 2*DIM*(DIM-2) arrays, each of which contains data associated with edge indices in a coordinate axis direction, an outward pointing face normal direction, and an upper or lower box face in the face normal direction. The data layout in the outernode data arrays matches the corresponding array sections provided by the node data implementation. Note that outeredge data is NOT defined when the axis and face normal are equal. This is consistent with the edge data representation. Where an edge index falls on more than one box face (patch boundary edges and corners), the outeredge data value belongs to only one data array so that there are no redundant data values. Specifically, when DIM &gt; 2, outeredge data boxes are "trimmed" for each axis edge direction so that each edge index that lives on more than one face on the box boundary will be associated with the largest face normal direction and only that face. Within each array, data is stored in (i,...,k,d) order, where i,...,k indicates a spatial index and the d indicates the component depth at that location. Memory allocation is in column-major ordering (e.g., Fortran style) so that the leftmost index runs fastest in memory.<p>
 To illustrate the outeredge data layout, in particular the "box trimming" that prevents redundant data values, we describe the data for a three-dimensional outeredge data object instantiated over a box [l0:u0,l1:u1,l2:u2] in the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space. Note: no boxes are trimmed when DIM &lt; 3.<p>
@@ -237,9 +237,10 @@ Note: Outeredge data always has ghost cell width of zero.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const Box reference describing the interior of the standard CELL-centered index box over which the outeredge data object will be created. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>gives the number of data values for each spatial location in the array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>gives the number of data values for each spatial location in the array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -301,9 +302,10 @@ This function assumes that the amount of memory needed for TYPE is sizeof(TYPE).
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const Box reference describing the interior of the standard CELL-centered index box over which the outeredge data object will be created. Note: the ghost cell width is assumed to be zero. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>gives the number of data values for each spatial location in the array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>gives the number of data values for each spatial location in the array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -363,9 +365,11 @@ Returns true if outeredge data exists for the given axis and face normal directi
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>axis</em>&nbsp;</td><td>integer edge data coordinate axis, must satisfy 0 &lt;= axis &lt; DIM </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal direction for data, must satisfy 0 &lt;= face_normal &lt; DIM </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal direction for data, must satisfy 0 &lt;= face_normal &lt; DIM</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -462,9 +466,13 @@ Get a pointer to the beginning of a particular axis, face normal, side, and dept
     <tr><td valign="top"></td><td valign="top"><em>axis</em>&nbsp;</td><td>integer edge data coordinate axis, must satisfy 0 &lt;= axis &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal direction for data, must satisfy 0 &lt;= face_normal &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(side == 0) || (side == 1) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -515,9 +523,13 @@ Get a const pointer to the beginning of a particular axis, face normal, side, an
     <tr><td valign="top"></td><td valign="top"><em>axis</em>&nbsp;</td><td>integer edge data coordinate axis, must satisfy 0 &lt;= axis &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal direction for data, must satisfy 0 &lt;= face_normal &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(side == 0) || (side == 1) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -554,9 +566,12 @@ Return a reference to data entry corresponding to a given edge index and depth.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td>const reference to <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a>, <em>MUST</em> be an index on the outeredge of the box. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == i.getDim() <p>
+(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -593,9 +608,12 @@ Return a const reference to data entry corresponding to a given edge index and d
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td>const reference to <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a>, <em>MUST</em> be an index on the outeredge of the box. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == i.getDim() <p>
+(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -639,9 +657,12 @@ Return a reference to the array data object for given axis, face normal, and sid
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>axis</em>&nbsp;</td><td>integer edge data coordinate axis, must satisfy 0 &lt;= axis &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal direction for data, must satisfy 0 &lt;= face_normal &lt; DIM </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(side == 0) || (side == 1) </dd></dl>
 
 </div>
 </div><p>
@@ -685,9 +706,12 @@ Return a const reference to the array data object for given axis, face normal, a
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>axis</em>&nbsp;</td><td>integer edge data coordinate axis, must satisfy 0 &lt;= axis &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal direction for data, must satisfy 0 &lt;= face_normal &lt; DIM </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(side == 0) || (side == 1) </dd></dl>
 
 </div>
 </div><p>
@@ -712,7 +736,10 @@ template&lt;class TYPE&gt; </div>
 <p>
 A fast copy from source to destination (i.e., this) patch data object. 
 <p>
-Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results. 
+Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() <p>
+dynamic_cast&lt;const EdgeData&lt;TYPE&gt; *&gt;(&amp;src) != 0 || dynamic_cast&lt;const OuteredgeData&lt;TYPE&gt; *&gt;(&amp;src) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1eceef85e707249a51fd6e8719b8b888">SAMRAI::hier::PatchData</a>.
 </div>
@@ -738,7 +765,10 @@ template&lt;class TYPE&gt; </div>
 <p>
 A fast copy from source (i.e., this) to destination patch data object. 
 <p>
-Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, destination data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results. 
+Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, destination data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() <p>
+dynamic_cast&lt;EdgeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 || dynamic_cast&lt;OuteredgeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#09c4b4a8c05efa18ad83662db4ba5351">SAMRAI::hier::PatchData</a>.
 </div>
@@ -773,7 +803,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Copy data from source to destination (i.e., this) patch data object on the given overlap. 
 <p>
-Currently, source data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results. 
+Currently, source data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() <p>
+dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 <p>
+dynamic_cast&lt;const EdgeData&lt;TYPE&gt; *&gt;(&amp;src) != 0 || dynamic_cast&lt;const OuteredgeData&lt;TYPE&gt; *&gt;(&amp;src) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#60dd0fcc44ae5ef062a4249dad8a4f47">SAMRAI::hier::PatchData</a>.
 </div>
@@ -808,7 +842,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Copy data from source (i.e., this) to destination patch data object on the given overlap. 
 <p>
-Currently, destination data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results. 
+Currently, destination data must be either <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() <p>
+dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 <p>
+dynamic_cast&lt;EdgeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 || dynamic_cast&lt;OuteredgeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#bd068fc4e5d159b2f927d59ea2ffda40">SAMRAI::hier::PatchData</a>.
 </div>
@@ -849,6 +887,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fast copy (i.e., assumes edge and outeredge data objects are defined over the same box) from the given edge source data object to this destination outeredge data object at the specified depths. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -888,6 +927,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fast copy (i.e., assumes edge and outeredge data objects are defined over the same box) to the given edge destination data object from this source outeredge data object at the specified depths. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -921,7 +961,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Add data from source to destination (i.e., this) patch data object on the given overlap. 
 <p>
-Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results. 
+Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">OuteredgeData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() <p>
+dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 <p>
+dynamic_cast&lt;const OuteredgeData&lt;TYPE&gt; *&gt;(&amp;src) != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="016a375ab38b51a5b4395991cf307209"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::canEstimateStreamSizeFromBox" ref="016a375ab38b51a5b4395991cf307209" args="() const " -->
@@ -970,7 +1014,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region. 
 <p>
-This routine is defined for the standard types (bool, char, double, float, int, and dcomplex). 
+This routine is defined for the standard types (bool, char, double, float, int, and dcomplex).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#c70a44451c3a87e5744328e09b33efa8">SAMRAI::hier::PatchData</a>.
 </div>
@@ -1005,6 +1051,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Pack data in this patch data object lying in the specified box overlap region into the stream. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5f351ded8a02c75ecf9eb124cec0b509">SAMRAI::hier::PatchData</a>.
@@ -1040,6 +1087,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Unpack data from stream into this patch data object over the specified box overlap region. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#64f047f667adb684706c6a546176f460">SAMRAI::hier::PatchData</a>.
@@ -1075,6 +1123,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Unpack data from stream and add into this patch data object over the specified box overlap region. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -1108,6 +1157,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all values at depth d with the value t. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1147,6 +1197,8 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all values at depth d within the box with the value t. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1204,6 +1256,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all depth components within the box with value t. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -1247,9 +1300,10 @@ Print all outeredge data values residing in the specified box. If the depth of t
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to edge index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -1300,9 +1354,11 @@ Print all outeredge data values at the given array depth in the specified box.
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to edge index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1367,9 +1423,13 @@ Print all outeredge centered data values for specified axis, face_normal, and si
     <tr><td valign="top"></td><td valign="top"><em>side</em>&nbsp;</td><td>integer lower (0) or upper (1) side of outeredge data array </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to edge index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(side == 0) || (side == 1) </dd></dl>
 
 </div>
 </div><p>
@@ -1441,23 +1501,28 @@ Print all outeredge centered data values for specified axis, face_normal, side, 
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to edge index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth()</a>) <p>
+(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(side == 0) || (side == 1) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="3cc415b4c77ee6af117beded349522bf"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getSpecializedFromDatabase" ref="3cc415b4c77ee6af117beded349522bf" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="d20f6ec5dcbc80cb962daaf6cc5b121a"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getFromRestart" ref="d20f6ec5dcbc80cb962daaf6cc5b121a" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getSpecializedFromDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
         </tr>
@@ -1466,24 +1531,25 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Check that class version and restart file version are equal. If so, read data members from the database. 
+Check that class version and restart file version are equal. If so, read data members from the restart database. 
 <p>
-Assertions: database must be a non-null pointer. 
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1cf0a7a7a58668744601638c036103a1">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5af241c296edc22d41af70f76aff5108">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="1ce497c1efdca6dd4fd4a3d262b79a61"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::putSpecializedToDatabase" ref="1ce497c1efdca6dd4fd4a3d262b79a61" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="a43731fc134dc4687908c8a146da60de"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::putToRestart" ref="a43731fc134dc4687908c8a146da60de" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::putSpecializedToDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -1492,16 +1558,17 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Write out the class version number and other data members to the database. 
+Write out the class version number and other data members to the restart database. 
 <p>
-Assertions: database must be a non-null pointer. 
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e0de5996e1ec46a9c409ab9d87df58f2">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#d057afe4f494361226db6bbd932348cf">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8h.html">OuteredgeData.h</a><li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8C.html">OuteredgeData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

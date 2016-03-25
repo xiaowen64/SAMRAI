@@ -44,21 +44,21 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">ConnectorWidthRequestorStrategy</a> implementation to the set of implementations that, by default, gets registered to all <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> objects.  <a href="#57056379dc5b6a6cb088289c4baffece"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#cf5a7fc46b65db49b5415d7eab63c906">PatchHierarchy</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;(), bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9c16ec5c046141aed36d35f26a378050">PatchHierarchy</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor initializing the state of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>.  <a href="#cf5a7fc46b65db49b5415d7eab63c906"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor initializing the state of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>.  <a href="#9c16ec5c046141aed36d35f26a378050"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#5f81f08dcc6c0989ff2d1cdaa018bf15">~PatchHierarchy</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor for <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>.  <a href="#5f81f08dcc6c0989ff2d1cdaa018bf15"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#8e2f80b7460a11fcd5a513beaf1c6fac">makeRefinedPatchHierarchy</a> (const std::string &amp;fine_hierarchy_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refine_ratio, bool register_for_restart) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#71ea2570bd03d42bd7d86c9427473756">makeRefinedPatchHierarchy</a> (const std::string &amp;fine_hierarchy_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refine_ratio) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a refined version of this patch hierarchy.  <a href="#8e2f80b7460a11fcd5a513beaf1c6fac"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#314c899cf604a990099fba98c3589595">makeCoarsenedPatchHierarchy</a> (const std::string &amp;coarse_hierarchy_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;coarsen_ratio, bool register_for_restart) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a refined version of this patch hierarchy.  <a href="#71ea2570bd03d42bd7d86c9427473756"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#acfe7c724394d2e2130280ab50cb88bf">makeCoarsenedPatchHierarchy</a> (const std::string &amp;coarse_hierarchy_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;coarsen_ratio) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a coarsened version of this patch hierarchy.  <a href="#314c899cf604a990099fba98c3589595"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#4c7d30e2e5ae3f0b86a4f9a5e0990568">makeNewPatchLevel</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;new_mapped_box_level)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a coarsened version of this patch hierarchy.  <a href="#acfe7c724394d2e2130280ab50cb88bf"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#79193280f21098c020f1e18df1be15e0">makeNewPatchLevel</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;new_box_level)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number.  <a href="#4c7d30e2e5ae3f0b86a4f9a5e0990568"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number.  <a href="#79193280f21098c020f1e18df1be15e0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9b0968d197c29055bb92088a7dd93a0c">removePatchLevel</a> (const int level)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove a patch level.  <a href="#9b0968d197c29055bb92088a7dd93a0c"></a><br></td></tr>
@@ -104,15 +104,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#067447609da85fa14b94771dd9b02fa6">getGridGeometry</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the grid geometry.  <a href="#067447609da85fa14b94771dd9b02fa6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#46c0e606b6d8341b1460694349dd257f">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#e4304d5ba780a7106b40cd60c841a41f">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object and the PatchLevels it contains to the database.  <a href="#46c0e606b6d8341b1460694349dd257f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ffca1ad2721ad099477511e0bccdc9f0">getFromRestart</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object and the PatchLevels it contains to the restart database.  <a href="#e4304d5ba780a7106b40cd60c841a41f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#f15e0f82857a3370b1024724880964fe">initializeHierarchy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read in the entire hierarchy from the restart file.  <a href="#ffca1ad2721ad099477511e0bccdc9f0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#be25767a078acb5e35c5a226029bc21f">getFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read in the entire hierarchy from the specified database.  <a href="#be25767a078acb5e35c5a226029bc21f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read in the entire hierarchy from the restart database.  <a href="#f15e0f82857a3370b1024724880964fe"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ff54b94ff8b6b0f73e46b8f010aa1513">getDim</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of this object.  <a href="#ff54b94ff8b6b0f73e46b8f010aa1513"></a><br></td></tr>
@@ -164,29 +161,48 @@
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> maintains the patch levels that define the AMR hierarchy. 
 <p>
-The following describes the input file keys and data types. For each input key that involves input for levels in the hierarchy, assume that we have N levels, numbered coarsest to finest as 0,..., N-1. For such input, the value for a level must be given as ``level_n = value'' where n is the level number. When more values are given than needed for the maximum number of levels, extra values are ignored. When fewer values are given, the last value provided will be used on each level without a specified input value. See example input below.<p>
-<ul>
-<li><b>max_levels</b> Integer value specifying maximum number of levels allowed in the AMR patch hierarchy.</li></ul>
+<b> Input Parameters </b> <br>
+ For ratio_to_coarser, smallest_patch_size, and largest_patch_size assume that we have N levels numbered coarsest to finest as 0,..., N-1. For these inputs, the value for a level must be given as ``level_n = value'' where n is the level number. When more values are given than needed for the maximum number of levels, extra values are ignored. When fewer values are given, the last value provided will be used on each level without a specified input value. See example input below.<p>
+<b> Definitions: </b><ul>
+<li><b>max_levels</b> specifies maximum number of levels allowed in the AMR patch hierarchy.</li></ul>
 <p>
 <ul>
-<li><b>ratio_to_coarser</b> A set of max_levels - 1 integer vectors (each has length = DIM), each of which indicates the ratio of the index space of a patch level to that of the next coarser level in the hierarchy. The input is given for each level n, where n (= 1, 2,..., N-1) is the level number.</li></ul>
+<li><b>ratio_to_coarser</b> A set of max_levels - 1 integer arrays each with length = DIM, each of which indicates the ratio of the index space of a patch level to that of the next coarser level in the hierarchy. The input is given for each level n, where n (= 1, 2,..., N-1) is the level number.</li></ul>
 <p>
 <ul>
-<li><b>largest_patch_size</b> A set of max_levels integer vectors (each has length = DIM) each of which indicates the dimensions of largest patch allowed on the level in the hierarchy. Non-positive values for patch size corresponds to no upper limit on patch size. The input is given for each level n, where n (= 0, 1,..., N-1) is the level number.</li></ul>
+<li><b>smallest_patch_size</b> A set of max_levels integer vectors each with length = DIM, each of which indicates the size of smallest patch allowed on the level in the hierarchy. The smallest patch allowed must be at least as large as the maximum ghost cell width for all variables in the problem. If some smaller patch size is given in input, then it will be overridden by the maximum ghost width. If no input is given, a default of the maximum ghost cell width over all variables is used. The input is given for each level n, where n (= 0, 1,..., N-1) is the level number.</li></ul>
 <p>
 <ul>
-<li><b>smallest_patch_size</b> A set of max_levels integer vectors (each has length = DIM) each of which indicates the dimensions of smallest patch allowed on the level in the hierarchy. The smallest patch allowed must be at least as large as the maximum ghost cell width for all variables in the problem. If some smaller patch size is given in input, then it will be overridden by the maximum ghost width. If no input is given, a default of the maximum ghost cell width over all variables is used. The input is given for each level n, where n (= 0, 1,..., N-1) is the level number.</li></ul>
+<li><b>largest_patch_size</b> A set of max_levels integer vectors each with length = DIM, each of which indicates the size of largest patch allowed on the level in the hierarchy. Negative values for patch size corresponds to no upper limit on patch size. The input is given for each level n, where n (= 0, 1,..., N-1) is the level number.</li></ul>
 <p>
 <ul>
 <li><b>proper_nesting_buffer</b> A set of max_levels - 1 integer values specifying the number of coarse cells by which the next finer level is nested within the interior of the union of the patches on the next coarser level. The input is given for each level n, where n (= 0, 1,..., N-2) is the level number.</li></ul>
 <p>
 <ul>
-<li><b>allow_patches_smaller_than_ghostwidth</b> A boolean value ("TRUE" or "FALSE") indicating whether patches are allowed that are smaller than the maximum variable ghost width along some coordinate direction. Recall that when a smallest patch size provided in the input file is smaller than the maximum ghost width of all the registered variables, then by default the smallest patch size will be set to the maximum ghost width. Set this flag to TRUE to override this default behavior and to allow the smallest patch size given in the input to remain in effect. The default value is FALSE.</li></ul>
+<li><b>allow_patches_smaller_than_ghostwidth</b> indicates whether patches are allowed that are smaller than the maximum variable ghost width along some coordinate direction. Recall that when a smallest patch size provided in the input file is smaller than the maximum ghost width of all the registered variables, then by default the smallest patch size will be set to the maximum ghost width. Set this flag to TRUE to override this default behavior and to allow the smallest patch size given in the input to remain in effect.</li></ul>
 <p>
 <ul>
-<li><b>allow_patches_smaller_than_minimum_size_to_prevent_overlaps</b> A boolean value ("TRUE" or "FALSE") indicating whether patches are allowed to be smaller than the minimum patch size to prevent overlapping patches. In order to enforce minimum patch size restrictions, boxes may be grown during adaptive gridding operations. This may lead to patches whose boxes overlap. This may be a problem for some applications. If overlaps are undesirable and you are willing to relax the minimum size constraints, set this parameter TRUE. By default, it is FALSE.</li></ul>
+<li><b>allow_patches_smaller_than_minimum_size_to_prevent_overlaps</b> indicates whether patches are allowed to be smaller than the minimum patch size to prevent overlapping patches. In order to enforce minimum patch size restrictions, boxes may be grown during adaptive gridding operations. This may lead to patches whose boxes overlap. This may be a problem for some applications. If overlaps are undesirable and you are willing to relax the minimum size constraints, set this parameter TRUE.</li></ul>
 <p>
-Note that when continuing from restart, the input values in the input file override all values read in from the restart database.<p>
+<b> Details: </b> <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>max_levels </td><td>int </td><td>&gt;0 </td><td>1 </td><td>opt </td><td>May be made smaller by input db on restart  </td></tr>
+<tr>
+<td>ratio_to_coarser </td><td>max_levels-1 int[] </td><td>all values 1 </td><td>all values &gt;0 </td><td>opt </td><td>May not be modified by input db on restart  </td></tr>
+<tr>
+<td>smallest_patch_size </td><td>max_levels int[] </td><td>all values 1 </td><td>all values &gt;0 </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>largest_patch_size </td><td>max_levels int[] </td><td>all values max int </td><td>each value &gt;=0 must be &gt;= corresponding smallest_patch_size value </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>proper_nesting_buffer </td><td>int[] </td><td>all values 1 </td><td>all values &gt;=0 </td><td>opt </td><td>May not be modified by input db on restart  </td></tr>
+<tr>
+<td>allow_patches_smaller_than_ghostwidth </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>May not be modified by input db on restart  </td></tr>
+<tr>
+<td>allow_patches_smaller_than_minimum_size_to_prevent_overlap </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+</table>
+<p>
 The following represents sample input data for a three-dimensional problem:<p>
 <div class="fragment"><pre class="fragment">   <span class="comment">// Required input: maximum number of levels in patch hierarchy</span>
    max_levels = 4
@@ -219,7 +235,7 @@ The following represents sample input data for a three-dimensional problem:<p>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="cf5a7fc46b65db49b5415d7eab63c906"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::PatchHierarchy" ref="cf5a7fc46b65db49b5415d7eab63c906" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;geometry, const boost::shared_ptr&lt; tbox::Database &gt; &amp;database=boost::shared_ptr&lt; tbox::Database &gt;(), bool register_for_restart=true)" -->
+<a class="anchor" name="9c16ec5c046141aed36d35f26a378050"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::PatchHierarchy" ref="9c16ec5c046141aed36d35f26a378050" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;geometry, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -239,13 +255,7 @@ The following represents sample input data for a three-dimensional problem:<p>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -259,16 +269,16 @@ The following represents sample input data for a three-dimensional problem:<p>
 <p>
 Constructor initializing the state of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. 
 <p>
-The constructor for the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> initializes the number of levels to zero, sets the geometry for the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>, and registers the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> for restart with the specified name by default.<p>
-<dl compact><dt><b>Errors/Assertions</b></dt><dd>Passing in an empty std::string or a null grid geometry pointer will result in an unrecoverable assertion when assertion checking is active.</dd></dl>
+The constructor for the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> initializes the number of levels to zero, sets the geometry for the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>, and registers the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> for restart with the specified name.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>geometry</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td>Database specifying hierarchy parameters. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td><b>Default:</b> true </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td>Input database specifying hierarchy parameters.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+geometry </dd></dl>
 
 </div>
 </div><p>
@@ -294,7 +304,7 @@ Destructor for <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">P
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="8e2f80b7460a11fcd5a513beaf1c6fac"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeRefinedPatchHierarchy" ref="8e2f80b7460a11fcd5a513beaf1c6fac" args="(const std::string &amp;fine_hierarchy_name, const IntVector &amp;refine_ratio, bool register_for_restart) const " -->
+<a class="anchor" name="71ea2570bd03d42bd7d86c9427473756"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeRefinedPatchHierarchy" ref="71ea2570bd03d42bd7d86c9427473756" args="(const std::string &amp;fine_hierarchy_name, const IntVector &amp;refine_ratio) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -308,13 +318,7 @@ Destructor for <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">P
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>refine_ratio</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>refine_ratio</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -334,13 +338,16 @@ Create and return pointer to a patch hierarchy that is a refined version of this
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_hierarchy_name</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refine_ratio</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ff54b94ff8b6b0f73e46b8f010aa1513">getDim()</a> == refine_ratio.getDim() <p>
+!fine_hierarchy_name.empty() <p>
+fine_hierarchy_name != <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#0640c6552feab25504d9ad8aa3d330c7">getObjectName()</a> <p>
+refine_ratio &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(refine_ratio.getDim()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="314c899cf604a990099fba98c3589595"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeCoarsenedPatchHierarchy" ref="314c899cf604a990099fba98c3589595" args="(const std::string &amp;coarse_hierarchy_name, const IntVector &amp;coarsen_ratio, bool register_for_restart) const " -->
+<a class="anchor" name="acfe7c724394d2e2130280ab50cb88bf"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeCoarsenedPatchHierarchy" ref="acfe7c724394d2e2130280ab50cb88bf" args="(const std::string &amp;coarse_hierarchy_name, const IntVector &amp;coarsen_ratio) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -354,13 +361,7 @@ Create and return pointer to a patch hierarchy that is a refined version of this
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarsen_ratio</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>coarsen_ratio</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -380,13 +381,16 @@ Create and return pointer to a patch hierarchy that is a coarsened version of th
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_hierarchy_name</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_ratio</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ff54b94ff8b6b0f73e46b8f010aa1513">getDim()</a> == coarsen_ratio.getDim() <p>
+!coarse_hierarchy_name.empty() <p>
+coarse_hierarchy_name != <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#0640c6552feab25504d9ad8aa3d330c7">getObjectName()</a> <p>
+coarsen_ratio &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(coarsen_ratio.getDim()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="4c7d30e2e5ae3f0b86a4f9a5e0990568"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeNewPatchLevel" ref="4c7d30e2e5ae3f0b86a4f9a5e0990568" args="(const int level_number, const BoxLevel &amp;new_mapped_box_level)" -->
+<a class="anchor" name="79193280f21098c020f1e18df1be15e0"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeNewPatchLevel" ref="79193280f21098c020f1e18df1be15e0" args="(const int level_number, const BoxLevel &amp;new_box_level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -400,7 +404,7 @@ Create and return pointer to a patch hierarchy that is a coarsened version of th
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>new_mapped_box_level</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>new_box_level</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -414,13 +418,16 @@ Create and return pointer to a patch hierarchy that is a coarsened version of th
 <p>
 Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number. 
 <p>
-Boxes, their mappings and the refinement ratio are obtained from <code>new_mapped_box_level</code>.<p>
+Boxes, their mappings and the refinement ratio are obtained from <code>new_box_level</code>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>new_mapped_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>new_box_level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ff54b94ff8b6b0f73e46b8f010aa1513">getDim()</a> == new_box_level.getDim() <p>
+level_number &gt;= 0 &amp;&amp; ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a> <p>
+new_box_level.getRefinementRatio() &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ff54b94ff8b6b0f73e46b8f010aa1513">getDim()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -449,6 +456,7 @@ Remove <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt;= 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ae19d90acd01ad0ca4f9b83ea6ddac96">getNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -477,6 +485,7 @@ Get a <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt;= 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ae19d90acd01ad0ca4f9b83ea6ddac96">getNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -621,7 +630,8 @@ Get the finest level in the hierarchy.
 <p>
 Check whether specified level can be refined. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>true if level associated with the specified level number can be refined; i.e., the level number is less than that of the finest level allowed in the hierarchy. Otherwise, false is returned. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>true if level associated with the specified level number can be refined; i.e., the level number is less than that of the finest level allowed in the hierarchy. Otherwise, false is returned.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>level_number &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -686,9 +696,11 @@ Get const access to the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.htm
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_ln</em>&nbsp;</td><td>The base level indicating one end of the connector. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_ln</em>&nbsp;</td><td>The head level indicating the other end of the connector. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_ln</em>&nbsp;</td><td>The head level indicating the other end of the connector.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(base_ln &gt;= 0) &amp;&amp; (base_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ae19d90acd01ad0ca4f9b83ea6ddac96">getNumberOfLevels()</a>) <p>
+(head_ln &gt;= 0) &amp;&amp; (head_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ae19d90acd01ad0ca4f9b83ea6ddac96">getNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -713,12 +725,12 @@ Register the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1Connec
 <p>
 Used to adjust the results of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9afa657dccd500ee42468ac792ee5f9b">getRequiredConnectorWidth()</a>. This method can be called multiple times to provide as much connector width information for any object that requires a connector width constraint. The largest <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width over all provided will be used in the hierarchy.<p>
 <dl compact><dt><b>Important</b></dt><dd>All registrations must occur before the first call to <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9afa657dccd500ee42468ac792ee5f9b">getRequiredConnectorWidth()</a>.</dd></dl>
-<dl compact><dt><b>Errors/Assertions</b></dt><dd>Calling this method after the first <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9afa657dccd500ee42468ac792ee5f9b">getRequiredConnectorWidth()</a> results in an unrecoverable assertion.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cwrs</em>&nbsp;</td><td>The connector width requester strategy instance. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cwrs</em>&nbsp;</td><td>The connector width requester strategy instance.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_connector_widths_are_computed </dd></dl>
 
 </div>
 </div><p>
@@ -758,6 +770,8 @@ The two level numbers must differ by no more than one.<p>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_ln</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(head_ln &gt;= 0) &amp;&amp; (head_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) <p>
+(base_ln &gt;= 0) &amp;&amp; (base_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -806,7 +820,7 @@ Add a <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidt
 <p>
 Access the domain description as a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
-The domain <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is maintained in Globalized mode with processor 0 owning all mapped boxes.<p>
+The domain <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is maintained in Globalized mode with processor 0 owning all boxes.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>The domain description as a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> </dd></dl>
 
 </div>
@@ -918,6 +932,7 @@ Set the ratio to coarser level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt; 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -946,6 +961,7 @@ Get the ratio between specified level and next coarser level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -983,6 +999,7 @@ Set the smallest patch size on the given level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt;= 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1011,6 +1028,7 @@ Get the smallest patch size on the given level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt;= 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1048,6 +1066,7 @@ Set the largest patch size on the given level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt;= 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1076,6 +1095,7 @@ Get the largest patch size.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level &gt;= 0) &amp;&amp; (level &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1106,6 +1126,7 @@ If <code>ln</code> &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarc
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ln</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(ln &gt;= 0) &amp;&amp; (ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#718bedf4041b784e3dd1571addd1acf8">getMaxNumberOfLevels()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1229,15 +1250,15 @@ Get the grid geometry.
 
 </div>
 </div><p>
-<a class="anchor" name="46c0e606b6d8341b1460694349dd257f"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::putToDatabase" ref="46c0e606b6d8341b1460694349dd257f" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="e4304d5ba780a7106b40cd60c841a41f"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::putToRestart" ref="e4304d5ba780a7106b40cd60c841a41f" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::PatchHierarchy::putToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::PatchHierarchy::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -1246,24 +1267,24 @@ Get the grid geometry.
 <div class="memdoc">
 
 <p>
-Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object and the PatchLevels it contains to the database. 
+Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object and the PatchLevels it contains to the restart database. 
 <p>
-<dl compact><dt><b>Note:</b></dt><dd>Only those patch data which have been registered for restart with the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a> will be written to the database. This method implements the pure virtual method in <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">tbox::Serializable</a> class which is used by the <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">tbox::RestartManager</a> for writing the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> to a restart file. </dd></dl>
-<dl compact><dt><b>Assertions</b></dt><dd>When assertion checking is active, the database pointer must be non-null.</dd></dl>
+<dl compact><dt><b>Note:</b></dt><dd>Only those patch data which have been registered for restart with the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a> will be written to the database. This method implements the pure virtual method in <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">tbox::Serializable</a> class which is used by the <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">tbox::RestartManager</a> for writing the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> to a restart file.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="ffca1ad2721ad099477511e0bccdc9f0"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getFromRestart" ref="ffca1ad2721ad099477511e0bccdc9f0" args="()" -->
+<a class="anchor" name="f15e0f82857a3370b1024724880964fe"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::initializeHierarchy" ref="f15e0f82857a3370b1024724880964fe" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::PatchHierarchy::getFromRestart           </td>
+          <td class="memname">void SAMRAI::hier::PatchHierarchy::initializeHierarchy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -1274,49 +1295,8 @@ Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarch
 <div class="memdoc">
 
 <p>
-Read in the entire hierarchy from the restart file. 
+Read in the entire hierarchy from the restart database. 
 <p>
-The database from which the restart data is read is determined by the object_name specified in the constructor.<p>
-<dl compact><dt><b>Note:</b></dt><dd><ul>
-<li>
-This method handles the memory allocation for each <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> it reads in. </li>
-<li>
-The number of levels read in is the minimum of the d_max_levels and the number of levels stored in the database. </li>
-</ul>
-</dd></dl>
-<dl compact><dt><b>Assertions</b></dt><dd>When assertion checking is active, <code>d_max_levels</code> must be greater than zero. An unrecoverable assertion will result if the database cannot be found in the restart file or the data in the restart file is erroneous. </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="be25767a078acb5e35c5a226029bc21f"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getFromDatabase" ref="be25767a078acb5e35c5a226029bc21f" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database, const ComponentSelector &amp;component_selector)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::PatchHierarchy::getFromDatabase           </td>
-          <td>(</td>
-          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>component_selector</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Read in the entire hierarchy from the specified database. 
-<p>
-The component_selector specifies which patch data components to read in from the database.<p>
 <dl compact><dt><b>Note:</b></dt><dd><ul>
 <li>
 Warning messages will be printed to the log file if any patch data component specified in the component_selector cannot be found in the database. </li>
@@ -1327,17 +1307,8 @@ This method handles the memory allocation for each <a class="el" href="classSAMR
 <dl compact><dt><b>Assertions</b></dt><dd></dd></dl>
 <ul>
 <li>
-The database argument must not be null. </li>
-<li>
 The number of levels (if given) must be greater than zero. </li>
 </ul>
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>component_selector</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
 
 </div>
 </div><p>
@@ -1435,7 +1406,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8C.html">PatchHierarchy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

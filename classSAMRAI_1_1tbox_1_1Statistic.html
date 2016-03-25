@@ -52,9 +52,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#55164d1831d4ecbf57e84773e5d81881">printClassData</a> (std::ostream &amp;stream, int precision=12) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#b022ebc54dd73fa9b8298292f1e4225c">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#47b0eefda3c5db412e30f8eac096b199">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#41ca3e7a6efb2ea67be82bd7287ef99f">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#714be18021bd41693bcbb01eb948dce6">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;restart_db)</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#bfa3b78399c7bf293a3643788a8b0311">Statistic</a> (const std::string &amp;name, const std::string &amp;stat_type, int instance_id)</td></tr>
@@ -137,7 +137,12 @@ Virtual destructor destroys recorded object data.
 <div class="memdoc">
 
 <p>
-The constructor for the <a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html">Statistic</a> class sets the name string and the statistic type for a statistic object. 
+The constructor for the <a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html">Statistic</a> class sets the name string and the statistic type for a statistic object.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() <p>
+!stat_type.empty() <p>
+(stat_type == "PROC_STAT") || (stat_type = "PATCH_STAT") <p>
+instance_id &gt; -1 </dd></dl>
+
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -262,7 +267,9 @@ Reset the state of the statistic information.
 <div class="memdoc">
 
 <p>
-Record double processor statistic value. The optional sequence number argument identifies where in timestep sequence the value should be. If the sequence number is not specified, an internal counter will determine the appropriate sequence number. When assertion checking is active, an unrecoverable assertion will result if this function is called and "PATCH_STAT" was specified in the constructor. 
+Record double processor statistic value. The optional sequence number argument identifies where in timestep sequence the value should be. If the sequence number is not specified, an internal counter will determine the appropriate sequence number.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#34efaff1158c3ab66cf5d47ab7e397b6">getType()</a> == "PROC_STAT" </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7b8f8929e3968d0c226509c7c99c0648"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::recordPatchStat" ref="7b8f8929e3968d0c226509c7c99c0648" args="(int patch_num, double value, int seq_num)" -->
@@ -297,7 +304,9 @@ Record double processor statistic value. The optional sequence number argument i
 <div class="memdoc">
 
 <p>
-Record double patch statistic value. The patch number refers to the global patch number on a level. The sequence number argument identifies where in timestep sequence the value should be. The sequence number MUST be explicitly specified because the number of patches on each processor will generally be different at each sequence step. When assertion checking is active, an unrecoverable assertion will result if this function is called and "PROC_STAT" was specified in the constructor. 
+Record double patch statistic value. The patch number refers to the global patch number on a level. The sequence number argument identifies where in timestep sequence the value should be. The sequence number MUST be explicitly specified because the number of patches on each processor will generally be different at each sequence step.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#34efaff1158c3ab66cf5d47ab7e397b6">getType()</a> == "PATCH_STAT" </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c6aeb45175d23babe126f3d039b477e9"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::canEstimateDataStreamSize" ref="c6aeb45175d23babe126f3d039b477e9" args="()" -->
@@ -355,7 +364,9 @@ Return integer number of bytes needed to stream the statistic data. This is the 
 <div class="memdoc">
 
 <p>
-Pack contents of statistic data structure into message stream. 
+Pack contents of statistic data structure into message stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7a31310ba00a790a313d2122df8d7a6f">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a300bf9602bbbf5130026ee498d3cb21"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::unpackStream" ref="a300bf9602bbbf5130026ee498d3cb21" args="(MessageStream &amp;stream)" -->
@@ -375,7 +386,9 @@ Pack contents of statistic data structure into message stream.
 <div class="memdoc">
 
 <p>
-Unpack contents of statistic data structure from message stream. 
+Unpack contents of statistic data structure from message stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7a31310ba00a790a313d2122df8d7a6f">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() == 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="55164d1831d4ecbf57e84773e5d81881"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::printClassData" ref="55164d1831d4ecbf57e84773e5d81881" args="(std::ostream &amp;stream, int precision=12) const " -->
@@ -404,18 +417,20 @@ Unpack contents of statistic data structure from message stream.
 <div class="memdoc">
 
 <p>
-Print statistic data to given output stream. Floating point precision can be specified (default is 12). 
+Print statistic data to given output stream. Floating point precision can be specified (default is 12).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>precision &gt; 0 </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="b022ebc54dd73fa9b8298292f1e4225c"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::putUnregisteredToDatabase" ref="b022ebc54dd73fa9b8298292f1e4225c" args="(const boost::shared_ptr&lt; Database &gt; &amp;db) const " -->
+<a class="anchor" name="47b0eefda3c5db412e30f8eac096b199"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::putToRestart" ref="47b0eefda3c5db412e30f8eac096b199" args="(const boost::shared_ptr&lt; Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::tbox::Statistic::putUnregisteredToDatabase           </td>
+          <td class="memname">void SAMRAI::tbox::Statistic::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -424,10 +439,12 @@ Print statistic data to given output stream. Floating point precision can be spe
 <div class="memdoc">
 
 <p>
-Write statistic data members to database. When assertion checking is on, the database pointer must be non-null. 
+Write statistic data members to restart database. The restart_db pointer must be non-null.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="41ca3e7a6efb2ea67be82bd7287ef99f"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::getFromRestart" ref="41ca3e7a6efb2ea67be82bd7287ef99f" args="(const boost::shared_ptr&lt; Database &gt; &amp;db)" -->
+<a class="anchor" name="714be18021bd41693bcbb01eb948dce6"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::getFromRestart" ref="714be18021bd41693bcbb01eb948dce6" args="(const boost::shared_ptr&lt; Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -435,7 +452,7 @@ Write statistic data members to database. When assertion checking is on, the dat
           <td class="memname">void SAMRAI::tbox::Statistic::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -444,7 +461,9 @@ Write statistic data members to database. When assertion checking is on, the dat
 <div class="memdoc">
 
 <p>
-Read restarted times from restart database. When assertion checking is on, the database pointer must be non-null. 
+Read restarted times from restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7ef3d582fe9a39ab3850bf17cceff221"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::getProcStatSeqArray" ref="7ef3d582fe9a39ab3850bf17cceff221" args="() const " -->
@@ -503,7 +522,7 @@ Return const reference to list of patch records.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Statistic_8h.html">Statistic.h</a><li>source/SAMRAI/tbox/<a class="el" href="Statistic_8C.html">Statistic.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

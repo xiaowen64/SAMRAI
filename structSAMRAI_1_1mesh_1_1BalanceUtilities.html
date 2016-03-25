@@ -100,9 +100,11 @@ Assign workloads to processors using a greedy algorithm that attempts to distrib
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>mapping</em>&nbsp;</td><td>Output processor mapping. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>weights</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of double-valued weights to distribute. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nproc</em>&nbsp;</td><td>Integer number of processors, must be &gt; 0. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nproc</em>&nbsp;</td><td>Integer number of processors, must be &gt; 0.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>nproc &gt; 0 <p>
+for each memeber of weights, w, w &gt;=0 </dd></dl>
 
 </div>
 </div><p>
@@ -155,7 +157,9 @@ Note that this routine potentially reorders the boxes passed in to achieve the f
     <tr><td valign="top"></td><td valign="top"><em>nproc</em>&nbsp;</td><td>Integer number of processors, must be &gt; 0.</td></tr>
   </table>
 </dl>
-Note that the wight and box arrrays must be the same size. 
+<dl compact><dt><b>Precondition:</b></dt><dd>nproc &gt; 0 <p>
+weights.getSize() == boxes.size() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e1c1ad8b851c7121173fa82d7f6d0665"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::recursiveBisectionUniform" ref="e1c1ad8b851c7121173fa82d7f6d0665" args="(hier::BoxContainer &amp;out_boxes, std::list&lt; double &gt; &amp;out_workloads, const hier::BoxContainer &amp;in_boxes, double ideal_workload, const double workload_tolerance, const hier::IntVector &amp;min_size, const hier::IntVector &amp;cut_factor, const hier::IntVector &amp;bad_interval, const hier::BoxContainer &amp;physical_domain)" -->
@@ -234,12 +238,19 @@ Recursively chop chops boxes in input boxlist until each box has a workload less
     <tr><td valign="top"></td><td valign="top"><em>in_boxes</em>&nbsp;</td><td>Input boxlist for chopping. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ideal_workload</em>&nbsp;</td><td>Input double ideal box workload, must be &gt; 0. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>workload_tolerance</em>&nbsp;</td><td>Input double workload tolerance, must be &gt;= 0 and &lt; 1.0 </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum dimensions for output boxes. All entries must be &gt; 0. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct dimensions. The length of each box dimension will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum sizes for output boxes. All entries must be &gt; 0. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct sizes. The box size in each direction will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bad_interval</em>&nbsp;</td><td>Input integer vector used to create boxes near physical domain boundary with sufficient number of cells. No box face will be closer to the boundary than the corresponding interval of cells to the boundary (the corresponding value is given by the normal direction of the box face) unless the face coincides with the boundary itself. The point of this argument is to have no patch live within a certain ghost cell width of the boundary if its boundary does not coincide with that boundary . That is, all ghost cells along a face will be either in the domain interior or outside the domain. All entries must be &gt;= 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(min_size.getDim() == cut_factor.getDim()) &amp;&amp; (min_size.getDim() == bad_interval.getDim()) <p>
+ideal_workload &gt; 0 <p>
+(workload_tolerance &gt;= 0) &amp;&amp; (workload_tolerance &lt; 1.0) <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(min_size.getDim()) <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(min_size.getDim()) <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(min_size.getDim()) <p>
+!physical_domain.isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -326,12 +337,19 @@ Recursively chops boxes given by patches on input patch level until each box has
     <tr><td valign="top"></td><td valign="top"><em>work_id</em>&nbsp;</td><td>Input integer patch data id for cell-centered double work estimate for each cell. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ideal_workload</em>&nbsp;</td><td>Input double ideal box workload, must be &gt; 0. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>workload_tolerance</em>&nbsp;</td><td>Input double workload tolerance, must be &gt;= 0 and &lt; 1.0 </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum dimensions for output boxes. All entries must be &gt; 0. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct dimensions. The length of each box dimension will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum sizes for output boxes. All entries must be &gt; 0. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct sizes. The box size in each direction will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bad_interval</em>&nbsp;</td><td>Input integer vector used to create boxes near physical domain boundary with sufficient number of cells. No box face will be closer to the boundary than the corresponding interval of cells to the boundary (the corresponding value is given by the normal direction of the box face) unless the face coincides with the boundary itself. The point of this argument is to have no patch live within a certain ghost cell width of the boundary if its boundary does not coincide with that boundary . That is, all ghost cells along a face will be either in the domain interior or outside the domain. All entries must be &gt;= 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(min_size.getDim() == cut_factor.getDim()) &amp;&amp; (min_size.getDim() == bad_interval.getDim()) <p>
+ideal_workload &gt; 0 <p>
+(workload_tolerance &gt;= 0) &amp;&amp; (workload_tolerance &lt; 1.0) <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(min_size.getDim()) <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(min_size.getDim()) <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(min_size.getDim()) <p>
+!physical_domain.isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -367,14 +385,17 @@ Recursively chops boxes given by patches on input patch level until each box has
 <div class="memdoc">
 
 <p>
-Compute factorization of processors corresponding to dimensions of given box.<p>
+Compute factorization of processors corresponding to size of given box.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>proc_dist</em>&nbsp;</td><td>Output number of processors for each coordinate direction. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>num_procs</em>&nbsp;</td><td>Input integer number of processors, must be &gt; 0. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Input box to be distributed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Input box to be distributed.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>proc_dist.getDim() == box.getDim() <p>
+num_procs &gt; 0 <p>
+for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -415,9 +436,12 @@ Compute a factorization of processors that does NOT necessarily correspond to th
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>proc_dist</em>&nbsp;</td><td>Output number of processors for each coordinate direction. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>num_procs</em>&nbsp;</td><td>Input integer number of processors, must be &gt; 0. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Input box to be distributed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Input box to be distributed.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>proc_dist.getDim() == box.getDim() <p>
+num_procs &gt; 0 <p>
+for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -455,7 +479,8 @@ Note that if you simply want to sort boxes based on their size, see <a class="el
     <tr><td valign="top"></td><td valign="top"><em>workload</em>&nbsp;</td><td>Workloads to use for sorting boxes.</td></tr>
   </table>
 </dl>
-Note that both arrays must be the same size. 
+<dl compact><dt><b>Precondition:</b></dt><dd>boxes.size() == workload.getSize() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ddb5960c049014ca76a6b8e2d38fec7f"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkload" ref="ddb5960c049014ca76a6b8e2d38fec7f" args="(const boost::shared_ptr&lt; hier::Patch &gt; &amp;patch, int wrk_indx, const hier::Box &amp;box)" -->
@@ -499,7 +524,10 @@ Compute total workload in region of argument box based on patch data defined by 
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Input box region</td></tr>
   </table>
 </dl>
-Note that wrk_indx must refer to a valid cell-centered patch data entry. 
+Note that wrk_indx must refer to a valid cell-centered patch data entry.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>param <p>
+param-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="05b65eebfb27e50855d27c1af4b7faa3"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency" ref="05b65eebfb27e50855d27c1af4b7faa3" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, std::ostream &amp;os, int workload_data_id=-1)" -->
@@ -540,9 +568,10 @@ Compute and return load balance efficiency for a level.<p>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td>Input patch level to consider, can't be null. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>Output stream for reporting load balance details. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>workload_data_id</em>&nbsp;</td><td>(Optional) Input integer id for workload data on level. If no value is given, the calculation assumes spatially-uniform load. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>workload_data_id</em>&nbsp;</td><td>(Optional) Input integer id for workload data on level. If no value is given, the calculation assumes spatially-uniform load.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>level </dd></dl>
 
 </div>
 </div><p>
@@ -585,7 +614,7 @@ To be used for performance evaluation. Not recommended for general use.<p>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_workload</em>&nbsp;</td><td>Workload of the local process</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mpi</em>&nbsp;</td><td>Represents all processes involved in the load balancing.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td>TODO: This method is a utility that doesn't strictly belong in a strategy design pattern. It should be moved elsewhere. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -672,12 +701,13 @@ Given the workloads of a number of processes, format and write out a brief repor
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>workloads.size() == <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7a31310ba00a790a313d2122df8d7a6f">tbox::SAMRAI_MPI::getSAMRAIWorld()</a>.getSize() </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8h.html">BalanceUtilities.h</a><li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8C.html">BalanceUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

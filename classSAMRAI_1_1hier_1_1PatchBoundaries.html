@@ -52,6 +52,8 @@
  <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchBoundaries.html#2d2c1c00771d1e6fc57eb68740882021">getArrays</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get const copy of the internal arrays.  <a href="#2d2c1c00771d1e6fc57eb68740882021"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchBoundaries.html#9bb693aea451f824f97b95b6265ff3fe">getDim</a> () const </td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1hier_1_1PatchBoundaries.html">PatchBoundaries</a> is a container class for storing <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> objects for a single patch. 
@@ -163,9 +165,10 @@ Array access operator.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>Array index. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>Array index.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchBoundaries.html#9bb693aea451f824f97b95b6265ff3fe">getDim()</a>.getValue() </dd></dl>
 
 </div>
 </div><p>
@@ -190,9 +193,10 @@ Const Array access operator.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>Array index. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>Array index.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchBoundaries.html#9bb693aea451f824f97b95b6265ff3fe">getDim()</a>.getValue() </dd></dl>
 
 </div>
 </div><p>
@@ -240,9 +244,28 @@ Get const copy of the internal arrays.
 
 </div>
 </div><p>
+<a class="anchor" name="9bb693aea451f824f97b95b6265ff3fe"></a><!-- doxytag: member="SAMRAI::hier::PatchBoundaries::getDim" ref="9bb693aea451f824f97b95b6265ff3fe" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::PatchBoundaries::getDim           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchBoundaries_8h.html">PatchBoundaries.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchBoundaries_8C.html">PatchBoundaries.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -44,6 +44,9 @@
  <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html#378525c907a1c26de92a14816c0b06b2">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in edge-centered index space between the source box geometry and the destination box geometry.  <a href="#378525c907a1c26de92a14816c0b06b2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html#b5246fd06f21c2bcefeb1adb3783dce8">computeDestinationBoxes</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &gt; &amp;dst_boxes, const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html">EdgeGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the edge-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry.  <a href="#b5246fd06f21c2bcefeb1adb3783dce8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
  <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html#892539b56f4eefe0e2fe1d6b7a5b4035">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
 
@@ -57,7 +60,7 @@
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html#52ad07a1e63633db6c7d35bc999412d5">toEdgeBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int axis_direction)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into an edge geometry box. An edge geometry box extends the given AMR index box space box by one in upper dimension for each coordinate direction not equal to the axis direction.  <a href="#52ad07a1e63633db6c7d35bc999412d5"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into an edge geometry box. An edge geometry box extends the given AMR index box space box by one in upper end for each coordinate direction not equal to the axis direction.  <a href="#52ad07a1e63633db6c7d35bc999412d5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html#b0d585338858eae90bf5eb2d3a0efa56">transform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int &amp;axis_direction, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform an edge-centered box.  <a href="#b0d585338858eae90bf5eb2d3a0efa56"></a><br></td></tr>
@@ -67,7 +70,7 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html">EdgeGeometry</a> manages the mapping between the AMR index space and the edge-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between edge- centered box geometries for communication operations.<p>
-See header file for EdgeData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+See header file for EdgeData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">pdat::EdgeOverlap</a> </dd></dl>
 
@@ -117,6 +120,8 @@ The BoxOverlap implemenation for this geometry.
 <p>
 Construct the edge geometry object given an AMR index space box and ghost cell width. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -168,8 +173,9 @@ The virtual destructor does nothing interesting.
 <div class="memdoc">
 
 <p>
-Convert an AMR index box space box into an edge geometry box. An edge geometry box extends the given AMR index box space box by one in upper dimension for each coordinate direction not equal to the axis direction. 
+Convert an AMR index box space box into an edge geometry box. An edge geometry box extends the given AMR index box space box by one in upper end for each coordinate direction not equal to the axis direction. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(0 &lt;= axis) &amp;&amp; (axis &lt; box.getDim().getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -320,9 +326,72 @@ This static method applies a coordinate system transformation to the given <a cl
 <p>
 Compute the overlap in edge-centered index space between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html#de6bc16b53456bd4809a99051a908ac1">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
+</div>
+</div><p>
+<a class="anchor" name="b5246fd06f21c2bcefeb1adb3783dce8"></a><!-- doxytag: member="SAMRAI::pdat::EdgeGeometry::computeDestinationBoxes" ref="b5246fd06f21c2bcefeb1adb3783dce8" args="(tbox::Array&lt; hier::BoxContainer &gt; &amp;dst_boxes, const EdgeGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::pdat::EdgeGeometry::computeDestinationBoxes           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_boxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeGeometry.html">EdgeGeometry</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>fill_box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>overwrite_interior</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transformation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_restrict_boxes</em> = <code><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Compute the edge-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry. 
+<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>src_mask.getDim() == transformation.getOffset.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="892539b56f4eefe0e2fe1d6b7a5b4035"></a><!-- doxytag: member="SAMRAI::pdat::EdgeGeometry::setUpOverlap" ref="892539b56f4eefe0e2fe1d6b7a5b4035" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
@@ -402,7 +471,7 @@ Return the ghost cell width for this edge centered box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="EdgeGeometry_8h.html">EdgeGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="EdgeGeometry_8C.html">EdgeGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

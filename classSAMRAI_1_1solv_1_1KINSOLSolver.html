@@ -30,7 +30,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#eec2fc679b88c76f3f45155b35ea5553">~KINSOLSolver</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#d019d8fc6fa9c98b16926c7527b6b020">initialize</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *solution, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *uscale=NULL, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *fscale=NULL)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#06d222665ea10b99a56026f84a1df028">initialize</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *solution, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *uscale=0, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *fscale=0)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#38be1141d777bb65ea3dde2e3fcbdda7">solve</a> ()</td></tr>
 
@@ -151,8 +151,10 @@ KINSOL was developed in the Center for Applied Scientific Computing (CASC) at La
 
 <p>
 Constructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html">KINSOLSolver</a> sets default KINSOL parameters and initializes the solver package with user-supplied functions. Solver parameters may be changed later using member functions described below. The integer flags indicate whether user-supplied preconditioner and Jacobian-vector product function should be used. Zero indicates no user function; otherwise, user function will be used by the nonlinear solver.<p>
-Important note: The solution vector is not passed into the constructor. Before the solver can be used, the <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#d019d8fc6fa9c98b16926c7527b6b020">initialize()</a> function must be called.<p>
-When assertion checking is active, an unrecoverable assertion will result if pointer to functions is null or string is empty. 
+Important note: The solution vector is not passed into the constructor. Before the solver can be used, the <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.html#06d222665ea10b99a56026f84a1df028">initialize()</a> function must be called.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+my_functions != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="eec2fc679b88c76f3f45155b35ea5553"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::~KINSOLSolver" ref="eec2fc679b88c76f3f45155b35ea5553" args="()" -->
@@ -175,7 +177,7 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.h
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="d019d8fc6fa9c98b16926c7527b6b020"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::initialize" ref="d019d8fc6fa9c98b16926c7527b6b020" args="(SundialsAbstractVector *solution, SundialsAbstractVector *uscale=NULL, SundialsAbstractVector *fscale=NULL)" -->
+<a class="anchor" name="06d222665ea10b99a56026f84a1df028"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::initialize" ref="06d222665ea10b99a56026f84a1df028" args="(SundialsAbstractVector *solution, SundialsAbstractVector *uscale=0, SundialsAbstractVector *fscale=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -189,13 +191,13 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.h
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
-          <td class="paramname"> <em>uscale</em> = <code>NULL</code>, </td>
+          <td class="paramname"> <em>uscale</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
-          <td class="paramname"> <em>fscale</em> = <code>NULL</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>fscale</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -208,9 +210,10 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1KINSOLSolver.h
 
 <p>
 Initialize solver with solution vector. The solution vector is required to initialize the memory record used internally within KINSOL. This routine must be called before the solver can be used.<p>
-When assertion checking is active, an unrecoverable assertion will result if vector pointer is null.<p>
 Optionally set the scaling vectors used by KINSOL to scale either nonlinear solution vector or nonlinear residual vector. The elements of the scaling vectors must be positive. In either case, the scaling vector should be defined so that the vector formed by taking the element-wise product of the solution/residual vector and scaling vector has all elements roughly the same magnitude when the solution vector IS/IS NOT NEAR a root of the nonlinear function.<p>
-See KINSOL documentation for more information. 
+See KINSOL documentation for more information.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>solution != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="38be1141d777bb65ea3dde2e3fcbdda7"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::solve" ref="38be1141d777bb65ea3dde2e3fcbdda7" args="()" -->
@@ -265,7 +268,9 @@ KINSOL printing options are:<p>
 <li><b>0</b> {no statistics printed}</li><li><b>1</b> {output iteration count, residual norm, number function calls}</li><li><b>2</b> {same as 1, but with statistics on globalization process}</li><li><b>3</b> {same as 2, but with more Krylov iteration statistics}</li></ul>
 <p>
 The default is no output (i.e., 0). If the file name string is empty the default file name "kinsol.log" is used.<p>
-See KINSOL documentation for more information. 
+See KINSOL documentation for more information.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>flag &gt;= 0 &amp;&amp; flag &lt;= 3 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="accb4e758241aa635c925842e5ca8811"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setKINSOLFunctions" ref="accb4e758241aa635c925842e5ca8811" args="(KINSOLAbstractFunctions *my_functions, const int uses_preconditioner, const int uses_jac_times_vector)" -->
@@ -304,7 +309,9 @@ Accessory functions for passing user-defined function information to KINSOL.<p>
 my_functions is a pointer to the abstract function subclass object that defines the residual calculation and preconditioner functions.<p>
 uses_preconditioner turns user preconditioner on or off.<p>
 uses_jac_times_vector turns user Jacobian-vector product on or off.<p>
-Flags use "TRUE"/"FALSE" values defined in KINSOL. See KINSOL documentation for more information. 
+Flags use "TRUE"/"FALSE" values defined in KINSOL. See KINSOL documentation for more information.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>my_functions != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1e94eb061a432d2669cae93fa1fc8bc9"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setPreconditioner" ref="1e94eb061a432d2669cae93fa1fc8bc9" args="(const int uses_preconditioner)" -->
@@ -417,7 +424,9 @@ Default maximum Newton step is 1000*max(norm(uscale*u_0), norm(uscale)), where u
 Default scaled step tolerarnce between successive nonlinear iterates is <img class="formulaInl" alt="$machine_epsilon^(2/3)$" src="form_65.png">.<p>
 Default relative error for nonlinear function is set to machine_epsilon.<p>
 Scalar update constraint value restricts update of solution to del(u)/u &lt; constraint_value. Here, vector ratio is another vector each element of which is the ratio of the corresponding entries in the original vectors. The default is no constraint.<p>
-See KINSOL documentation for more information. 
+See KINSOL documentation for more information.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(tol == -1.0) || (tol &gt;= 0.0) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ccca90f149de1f2d72abb6ec91c57b72"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setMaxIterations" ref="ccca90f149de1f2d72abb6ec91c57b72" args="(const int maxits)" -->
@@ -565,7 +574,9 @@ The convergence test indicates the value for eta; options are:<p>
 The default option is ETACONSTANT.<p>
 The default constant value for eta is 0.1.<p>
 For choice ETACHOICE2, alpha = 2.0 and gamma = 0.9 are defaults.<p>
-See KINSOL documentation for more information. 
+See KINSOL documentation for more information.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(conv == KIN_ETACONSTANT) || (conv == KIN_ETACHOICE1) || (conv == KIN_ETACHOICE2) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b76d869624257d2370aff9de9493bfbe"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setLinearSolverConstantTolerance" ref="b76d869624257d2370aff9de9493bfbe" args="(const double tol)" -->
@@ -704,7 +715,11 @@ The number of nonlinear iterations between checks by the nonlinear residual moni
 
 <p>
 Set values of omega_min and omega_max scalars used by nonlinear residual monitoring algorithm.<p>
-Defaults is [0.00001 and 0.9] 
+Defaults is [0.00001 and 0.9]<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>omega_min &gt;= 0 <p>
+omega_max &gt;= 0 <p>
+omega_max &gt;= omega_min </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6a4ad9ef435ccffd5274686ebea90d5f"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setResidualMonitoringConstant" ref="6a4ad9ef435ccffd5274686ebea90d5f" args="(const double omega)" -->
@@ -725,7 +740,9 @@ Defaults is [0.00001 and 0.9]
 
 <p>
 Set constant value used by residual monitoring algorithm. If omega=0, then it is estimated using omega_min and omega_max.<p>
-Default is 0.0. 
+Default is 0.0.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>omega &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7832138ca3372c7ff38a202b40fabb01"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setNoMinEps" ref="7832138ca3372c7ff38a202b40fabb01" args="(const bool flag)" -->
@@ -769,7 +786,9 @@ Default is FALSE
 
 <p>
 Set maximum number of beta condition failures in the line search algorithm.<p>
-Default is [MXNBCF_DEFAULT] (defined in kinsol_impl.h) 
+Default is [MXNBCF_DEFAULT] (defined in kinsol_impl.h)<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_beta_fails &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5a4e6b644c0cb0f1a3c6f0afd897f38a"></a><!-- doxytag: member="SAMRAI::solv::KINSOLSolver::setNoInitialSetup" ref="5a4e6b644c0cb0f1a3c6f0afd897f38a" args="(const bool flag)" -->
@@ -987,7 +1006,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="KINSOLSolver_8h.html">KINSOLSolver.h</a><li>source/SAMRAI/solv/<a class="el" href="KINSOLSolver_8C.html">KINSOLSolver.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

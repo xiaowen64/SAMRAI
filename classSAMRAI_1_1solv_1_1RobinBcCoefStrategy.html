@@ -175,7 +175,7 @@ When setting the values of the boundary condition coefficients it is useful to n
     *        (i,j)------(i,j)-----(i+1,j)
     *
     * </pre></div> Once this is understood, translation between the index in the boundary box index space to the index of things on the boundary is simple.<p>
-The boundary condition coefficients should be placed in the pdat::ArrayData&lt;DIM&gt; objects, <code>acoef_data</code> and <code>gcoef_data</code> (see argument list), which are dimensioned to contain the indices of the points alligned with <code>variable</code> and lying on the the boundary defined by <code>bdry_box</code>.<p>
+The boundary condition coefficients should be placed in the pdat::ArrayData&lt;TYPE&gt; objects, <code>acoef_data</code> and <code>gcoef_data</code> (see argument list), which are dimensioned to contain the indices of the points alligned with <code>variable</code> and lying on the the boundary defined by <code>bdry_box</code>.<p>
 This function is only used with type-1 boundary boxes, such as faces in 3D. Other types of boundaries do not have a well-defined surface normal.<p>
 The parameter <code>variable</code> is passed through to tell the implementation of this function what variable to set the coefficients for. You may wish to ignore it if your implementation is intended for a specific variable.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -217,7 +217,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="RobinBcCoefStrategy_8h.html">RobinBcCoefStrategy.h</a><li>source/SAMRAI/solv/<a class="el" href="RobinBcCoefStrategy_8C.html">RobinBcCoefStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

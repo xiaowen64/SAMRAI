@@ -36,7 +36,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if two <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> objects are transposes of each other.  <a href="#6d698bef0fdbff456fbc393f9e18d657"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#49a84230be56f85f9985e64a3ef068c4">checkConsistencyWithBase</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check for consistency between the relationship data and base mapped boxes, and return the number of consistency errors.  <a href="#49a84230be56f85f9985e64a3ef068c4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check for consistency between the relationship data and base boxes, and return the number of consistency errors.  <a href="#49a84230be56f85f9985e64a3ef068c4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ddc5d71cccfd2e515b627922a11e77c3">assertConsistencyWithBase</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Run <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#49a84230be56f85f9985e64a3ef068c4">checkConsistencyWithBase()</a>.  <a href="#ddc5d71cccfd2e515b627922a11e77c3"></a><br></td></tr>
@@ -74,40 +74,16 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1NeighborIterator.html">BoxNeighborhoodCollection::NeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#6f2523bb66a9e83272156fe1891210eb">NeighborIterator</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type of the iterator over neighbors in a neighborhood.  <a href="#6f2523bb66a9e83272156fe1891210eb"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc6009826ac0d4e33ee3fa7738c341863c62c">COMPLETE_OVERLAP</a> = 1</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600e354a4dd29704e94e0e40b004f82fe67">COMPLETE_OVERLAP_NO_PERIODIC</a> = 2</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600ec4b9ebf2e9df63f3d14562390dde623">INCOMPLETE_OVERLAP</a> = 3</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600a0ff0b72912ebda8f7c0fc9287e87712">BASE_GENERATED</a> = 4</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600fef0643c5bf1d2a0ffb44e5b0ebf10e3">MAPPING</a> = 5</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc60094d44ff0aa0d747707b4bcc0b2715038">UNKNOWN</a> = 6</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">ConnectorType</a> { <br>
-&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc6009826ac0d4e33ee3fa7738c341863c62c">COMPLETE_OVERLAP</a> =  1, 
-<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600e354a4dd29704e94e0e40b004f82fe67">COMPLETE_OVERLAP_NO_PERIODIC</a> =  2, 
-<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600ec4b9ebf2e9df63f3d14562390dde623">INCOMPLETE_OVERLAP</a> =  3, 
-<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600a0ff0b72912ebda8f7c0fc9287e87712">BASE_GENERATED</a> =  4, 
-<br>
-&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600fef0643c5bf1d2a0ffb44e5b0ebf10e3">MAPPING</a> =  5, 
-<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc60094d44ff0aa0d747707b4bcc0b2715038">UNKNOWN</a> =  6
-<br>
- }</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">TODO: Possible refactor? Since Connectors do not imply relationship Types of Connectors.  <a href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#7a1af6ad01664e746fba3f1f2433b796">Connector</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#54198bc41a8c8aaa34faab65c4e1dc69">Connector</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an uninitialized <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> object in the distributed state.  <a href="#7a1af6ad01664e746fba3f1f2433b796"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an uninitialized <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> object in the distributed state.  <a href="#54198bc41a8c8aaa34faab65c4e1dc69"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#0571e3610e6b6f47ab22c1ab5afe556a">Connector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;other)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#0571e3610e6b6f47ab22c1ab5afe556a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#50bb0ccf43ab3c4b17e4c1d80e2de9eb">Connector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;base_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228">BoxLevel::ParallelState</a> parallel_state=BoxLevel::DISTRIBUTED)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b29cf3cc5269ce3b74ececc3bcd114d5">Connector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;base_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228">BoxLevel::ParallelState</a> parallel_state=BoxLevel::DISTRIBUTED)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with no defined relationships.  <a href="#50bb0ccf43ab3c4b17e4c1d80e2de9eb"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with no defined relationships.  <a href="#b29cf3cc5269ce3b74ececc3bcd114d5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#3602859eaa03b56bca29d674e22b562e">~Connector</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#3602859eaa03b56bca29d674e22b562e"></a><br></td></tr>
@@ -159,9 +135,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#e906638b4c981d4bacce844211f4791a">neighborhoodEqual</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;other) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the neighborhood of the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of this and other are the same.  <a href="#e906638b4c981d4bacce844211f4791a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#1ef57d6149adfdc103c681d8e3b249e1">hasNeighborSet</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#a593bc8bc94403368f99ffc131bc97fc">hasNeighborSet</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if a neighbor set exists for the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#1ef57d6149adfdc103c681d8e3b249e1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if a neighbor set exists for the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#a593bc8bc94403368f99ffc131bc97fc"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ad0e666b354ae3c61128e1cc90b3964a">hasLocalNeighbor</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;neighbor) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if the supplied box is in the neighborhood of the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#ad0e666b354ae3c61128e1cc90b3964a"></a><br></td></tr>
@@ -243,12 +219,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#c5664771cc53c0c142d2d1d292937058">shrinkWidth</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;new_width)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Shrink the width of the connector modifying the proximity relationships as needed.  <a href="#c5664771cc53c0c142d2d1d292937058"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#74607a5c7ea3dcd864c16ae23feffb61">setConnectorType</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">ConnectorType</a> connector_type)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> type.  <a href="#74607a5c7ea3dcd864c16ae23feffb61"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">ConnectorType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#e90cd5c812f09b2aaaac1a01a05dff56">getConnectorType</a> () const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> type.  <a href="#e90cd5c812f09b2aaaac1a01a05dff56"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#47b4d653987ee533b438e804ecd57291">getLocalNumberOfNeighborSets</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return local number of neighbor sets.  <a href="#47b4d653987ee533b438e804ecd57291"></a><br></td></tr>
@@ -264,12 +234,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#251e4d5e60d39e61990db68e618c0227">cacheGlobalReducedData</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">If global reduced data (global number of relationships, etc.) has not been updated, compute and cache them (communication required).  <a href="#251e4d5e60d39e61990db68e618c0227"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#dc887c929849aaad38109472cda15abf">putNeighborhoodsToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#036f35332962b69b62a533c06c7ecf53">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the neighborhoods to a database.  <a href="#dc887c929849aaad38109472cda15abf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#c6d52dc4f0aa54c8f074c87656879859">getNeighborhoodsFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;database)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the neighborhoods to a restart database.  <a href="#036f35332962b69b62a533c06c7ecf53"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#22a12494b088fc167c9088136b763c9f">getFromRestart</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;restart_db)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the neighborhoods from a database.  <a href="#c6d52dc4f0aa54c8f074c87656879859"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the neighborhoods from a restart database.  <a href="#22a12494b088fc167c9088136b763c9f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4677d5ee248d46bd780042c0910bf8ab">writeNeighborhoodsToErrorStream</a> (const std::string &amp;border) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the neighborhoods to <a class="el" href="namespaceSAMRAI_1_1tbox.html#bf6210a537fcb1ec9e4eb3b5b1019b4d">tbox::perr</a>.  <a href="#4677d5ee248d46bd780042c0910bf8ab"></a><br></td></tr>
@@ -286,9 +256,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#dbd62c4a11264190540cf48bb4c998ce">insertNeighbors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;neighbors, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;base_box)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Insert additional neighbors for the specified base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#dbd62c4a11264190540cf48bb4c998ce"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#552ac2e1eb0102a365614ceb7b326f83">eraseNeighbor</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;neighbor, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#0e7acf2e089a3a43371389b5e1066c6e">eraseNeighbor</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;neighbor, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Erase neighbor of the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#552ac2e1eb0102a365614ceb7b326f83"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Erase neighbor of the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#0e7acf2e089a3a43371389b5e1066c6e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#d1cb9d183ced7da1cf6af17f4e153002">insertLocalNeighbor</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;neighbor, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds a neighbor of the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#d1cb9d183ced7da1cf6af17f4e153002"></a><br></td></tr>
@@ -427,57 +397,16 @@ Type of the iterator over neighbors in a neighborhood.
 
 </div>
 </div><p>
-<hr><h2>Member Enumeration Documentation</h2>
-<a class="anchor" name="8279997d6a41fb6f91020741fa9fc600"></a><!-- doxytag: member="SAMRAI::hier::Connector::ConnectorType" ref="8279997d6a41fb6f91020741fa9fc600" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">SAMRAI::hier::Connector::ConnectorType</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-TODO: Possible refactor? Since Connectors do not imply relationship Types of Connectors. 
-<p>
-The types describe the meaning of the relationships in a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.<p>
-<b>COMPLETE_OVERLAP:</b> The relationships represent overlaps, and every overlap is represented by an relationship, including overlaps with periodic images.<p>
-<b>COMPLETE_OVERLAP_NO_PERIODIC:</b> The relationships represent overlaps, and every overlap is represented by an relationship. Overlaps with periodic images are omitted.<p>
-<b>INCOMPLETE_OVERLAP:</b> The relationships represent overlaps, but not all overlaps are represented.<p>
-<b>BASE_GENERATED:</b> The head is generated from the base. Each head <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> comes from a base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> and there is an relationship from the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to the head <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.<p>
-<b>MAPPING:</b> relationships indicate a mapping relationship. Applying the map would change Connectors incident to the base into Connectors incident to the head.<p>
-<b>UNKNOWN:</b> Meaning of relationships are unknown.<p>
-See <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#74607a5c7ea3dcd864c16ae23feffb61">setConnectorType()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#e90cd5c812f09b2aaaac1a01a05dff56">getConnectorType()</a>.<p>
-The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> types are not exclusive. For example, a mapping <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> may also be used as an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>. <dl compact><dt><b>Enumerator: </b></dt><dd>
-<table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="8279997d6a41fb6f91020741fa9fc6009826ac0d4e33ee3fa7738c341863c62c"></a><!-- doxytag: member="COMPLETE_OVERLAP" ref="8279997d6a41fb6f91020741fa9fc6009826ac0d4e33ee3fa7738c341863c62c" args="" -->COMPLETE_OVERLAP</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="8279997d6a41fb6f91020741fa9fc600e354a4dd29704e94e0e40b004f82fe67"></a><!-- doxytag: member="COMPLETE_OVERLAP_NO_PERIODIC" ref="8279997d6a41fb6f91020741fa9fc600e354a4dd29704e94e0e40b004f82fe67" args="" -->COMPLETE_OVERLAP_NO_PERIODIC</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="8279997d6a41fb6f91020741fa9fc600ec4b9ebf2e9df63f3d14562390dde623"></a><!-- doxytag: member="INCOMPLETE_OVERLAP" ref="8279997d6a41fb6f91020741fa9fc600ec4b9ebf2e9df63f3d14562390dde623" args="" -->INCOMPLETE_OVERLAP</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="8279997d6a41fb6f91020741fa9fc600a0ff0b72912ebda8f7c0fc9287e87712"></a><!-- doxytag: member="BASE_GENERATED" ref="8279997d6a41fb6f91020741fa9fc600a0ff0b72912ebda8f7c0fc9287e87712" args="" -->BASE_GENERATED</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="8279997d6a41fb6f91020741fa9fc600fef0643c5bf1d2a0ffb44e5b0ebf10e3"></a><!-- doxytag: member="MAPPING" ref="8279997d6a41fb6f91020741fa9fc600fef0643c5bf1d2a0ffb44e5b0ebf10e3" args="" -->MAPPING</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="8279997d6a41fb6f91020741fa9fc60094d44ff0aa0d747707b4bcc0b2715038"></a><!-- doxytag: member="UNKNOWN" ref="8279997d6a41fb6f91020741fa9fc60094d44ff0aa0d747707b4bcc0b2715038" args="" -->UNKNOWN</em>&nbsp;</td><td>
-</td></tr>
-</table>
-</dl>
-
-</div>
-</div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="7a1af6ad01664e746fba3f1f2433b796"></a><!-- doxytag: member="SAMRAI::hier::Connector::Connector" ref="7a1af6ad01664e746fba3f1f2433b796" args="()" -->
+<a class="anchor" name="54198bc41a8c8aaa34faab65c4e1dc69"></a><!-- doxytag: member="SAMRAI::hier::Connector::Connector" ref="54198bc41a8c8aaa34faab65c4e1dc69" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::hier::Connector::Connector           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -488,7 +417,14 @@ The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> typ
 <p>
 Creates an uninitialized <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> object in the distributed state. 
 <p>
-<dl compact><dt><b>See also:</b></dt><dd>initialize() </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dim</em>&nbsp;</td><td>The dimension of the head and base BoxLevels that this object will eventually connect.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#7a372e808c0751b3c8942ba70e680595">setBase()</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b196da89b0e0e798273708cf8544f47e">setHead()</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#2c2c248587b318d01aeadcd23b0277da">setWidth()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -519,7 +455,7 @@ Copy constructor.
 
 </div>
 </div><p>
-<a class="anchor" name="50bb0ccf43ab3c4b17e4c1d80e2de9eb"></a><!-- doxytag: member="SAMRAI::hier::Connector::Connector" ref="50bb0ccf43ab3c4b17e4c1d80e2de9eb" args="(const BoxLevel &amp;base_mapped_box_level, const BoxLevel &amp;head_mapped_box_level, const IntVector &amp;base_width, const BoxLevel::ParallelState parallel_state=BoxLevel::DISTRIBUTED)" -->
+<a class="anchor" name="b29cf3cc5269ce3b74ececc3bcd114d5"></a><!-- doxytag: member="SAMRAI::hier::Connector::Connector" ref="b29cf3cc5269ce3b74ececc3bcd114d5" args="(const BoxLevel &amp;base_box_level, const BoxLevel &amp;head_box_level, const IntVector &amp;base_width, const BoxLevel::ParallelState parallel_state=BoxLevel::DISTRIBUTED)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -527,13 +463,13 @@ Copy constructor.
           <td class="memname">SAMRAI::hier::Connector::Connector           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>base_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>base_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>head_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>head_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -562,12 +498,13 @@ Initialize a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connecto
 The Connector's relationships are initialized to a dummy state.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_mapped_box_level</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_mapped_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_box_level</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_width</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>parallel_state</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(base_box_level.getDim() == head_box_level.getDim()) &amp;&amp; (base_box_level.getDim() == base_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -993,7 +930,7 @@ Returns true if the neighborhood of the supplied <a class="el" href="classSAMRAI
 
 </div>
 </div><p>
-<a class="anchor" name="1ef57d6149adfdc103c681d8e3b249e1"></a><!-- doxytag: member="SAMRAI::hier::Connector::hasNeighborSet" ref="1ef57d6149adfdc103c681d8e3b249e1" args="(const BoxId &amp;mapped_box_id) const " -->
+<a class="anchor" name="a593bc8bc94403368f99ffc131bc97fc"></a><!-- doxytag: member="SAMRAI::hier::Connector::hasNeighborSet" ref="a593bc8bc94403368f99ffc131bc97fc" args="(const BoxId &amp;box_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1001,7 +938,7 @@ Returns true if the neighborhood of the supplied <a class="el" href="classSAMRAI
           <td class="memname">bool SAMRAI::hier::Connector::hasNeighborSet           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_box_id</em>          </td>
+          <td class="paramname"> <em>box_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [inline]</code></td>
         </tr>
@@ -1014,7 +951,7 @@ Return true if a neighbor set exists for the specified <a class="el" href="class
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box_id</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -1054,6 +991,7 @@ Return true if the supplied box is in the neighborhood of the supplied <a class=
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>neighbor</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box_id.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank() </dd></dl>
 
 </div>
 </div><p>
@@ -1091,6 +1029,7 @@ Return the neighbor set for the specified <a class="el" href="classSAMRAI_1_1hie
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>nbr_boxes</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>hasNeighborSet(box_id) </dd></dl>
 
 </div>
 </div><p>
@@ -1172,6 +1111,7 @@ Returns the number of neighbors in the neighborhood with the supplied <a class="
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>hasNeighborSet(box_id) </dd></dl>
 
 </div>
 </div><p>
@@ -1295,10 +1235,12 @@ Insert additional neighbors for the specified base <a class="el" href="classSAMR
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#63919a628614459d87f0d773997857f9">getParallelState()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228ff24ef90739a7fb75f8ddd6116ae57d9">BoxLevel::GLOBALIZED</a>) || (base_box.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank()) <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ee6712ee99e7a13276e9f073dc6a5fee">getBase()</a>.hasBox(base_box) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="552ac2e1eb0102a365614ceb7b326f83"></a><!-- doxytag: member="SAMRAI::hier::Connector::eraseNeighbor" ref="552ac2e1eb0102a365614ceb7b326f83" args="(const Box &amp;neighbor, const BoxId &amp;mapped_box_id)" -->
+<a class="anchor" name="0e7acf2e089a3a43371389b5e1066c6e"></a><!-- doxytag: member="SAMRAI::hier::Connector::eraseNeighbor" ref="0e7acf2e089a3a43371389b5e1066c6e" args="(const Box &amp;neighbor, const BoxId &amp;box_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1312,7 +1254,7 @@ Insert additional neighbors for the specified base <a class="el" href="classSAMR
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_box_id</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>box_id</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1326,13 +1268,14 @@ Insert additional neighbors for the specified base <a class="el" href="classSAMR
 <p>
 Erase neighbor of the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. 
 <p>
-<dl compact><dt><b>Note:</b></dt><dd>Assertions It is an error to to specify a non-existent <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>neighbor</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box_id</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#63919a628614459d87f0d773997857f9">getParallelState()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228ff24ef90739a7fb75f8ddd6116ae57d9">BoxLevel::GLOBALIZED</a>) || (base_box.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank()) <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ee6712ee99e7a13276e9f073dc6a5fee">getBase()</a>.hasBox(box_id) </dd></dl>
 
 </div>
 </div><p>
@@ -1370,6 +1313,7 @@ Adds a neighbor of the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxI
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box_id.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank() </dd></dl>
 
 </div>
 </div><p>
@@ -1407,6 +1351,7 @@ Adds a neighbor of the base box pointed to by base_box_itr.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr-&gt;getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank() </dd></dl>
 
 </div>
 </div><p>
@@ -1434,6 +1379,7 @@ Erases the neighborhood of the specified <a class="el" href="classSAMRAI_1_1hier
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box_id.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank() </dd></dl>
 
 </div>
 </div><p>
@@ -1525,6 +1471,7 @@ Make an empty set of neighbors of the supplied box_id.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box_id.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#b0ab41196a6602d9e0341095a23bca4f">getMPI()</a>.getRank() </dd></dl>
 
 </div>
 </div><p>
@@ -1675,7 +1622,12 @@ Grow all neighbors of this connector by growth.
 <p>
 Enforces implicit class invariants and removes non-local neighbors from relationships. 
 <p>
-To be called after modifying a Connector's context through setBase, setHead, or setWidth methods. 
+To be called after modifying a Connector's context through setBase, setHead, or setWidth methods.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_base_handle &amp;&amp; d_head_handle <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ee6712ee99e7a13276e9f073dc6a5fee">getBase()</a>.getGridGeometry() == <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#5065c8f3bfebd6412b65e70a15cca4f4">getHead()</a>.getGridGeometry() <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ee6712ee99e7a13276e9f073dc6a5fee">getBase()</a>.getRefinementRatio() &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#5065c8f3bfebd6412b65e70a15cca4f4">getHead()</a>.getRefinementRatio()) || (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ee6712ee99e7a13276e9f073dc6a5fee">getBase()</a>.getRefinementRatio() &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#5065c8f3bfebd6412b65e70a15cca4f4">getHead()</a>.getRefinementRatio()) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#63919a628614459d87f0d773997857f9">getParallelState()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228ed64b0ef3f3b9fe551c2a39a3f8f1b16">BoxLevel::DISTRIBUTED</a>) || (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#ee6712ee99e7a13276e9f073dc6a5fee">getBase()</a>.<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#63919a628614459d87f0d773997857f9">getParallelState()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228ff24ef90739a7fb75f8ddd6116ae57d9">BoxLevel::GLOBALIZED</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7a372e808c0751b3c8942ba70e680595"></a><!-- doxytag: member="SAMRAI::hier::Connector::setBase" ref="7a372e808c0751b3c8942ba70e680595" args="(const BoxLevel &amp;new_base, bool finalize_context=false)" -->
@@ -1712,6 +1664,7 @@ Change the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
     <tr><td valign="top"></td><td valign="top"><em>finalize_context</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>new_base.isInitialized() </dd></dl>
 
 </div>
 </div><p>
@@ -1733,6 +1686,7 @@ Change the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
 <p>
 Return a reference to the base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1770,6 +1724,7 @@ Change the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
     <tr><td valign="top"></td><td valign="top"><em>finalize_context</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>new_head.isInitialized() </dd></dl>
 
 </div>
 </div><p>
@@ -1791,6 +1746,7 @@ Change the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
 <p>
 Return a reference to the head <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1812,7 +1768,8 @@ Return a reference to the head <a class="el" href="classSAMRAI_1_1hier_1_1BoxLev
 <p>
 Get the refinement ratio between the base and head BoxLevels. 
 <p>
-The ratio is the same regardless of which is the coarser of the two. Use <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#80ba5665299532cda4f86cfab3ab43b6">getHeadCoarserFlag()</a> to determine which is coarser. If the ratio cannot be represented by an <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>, truncated.<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#cf852b619e2378a1c14ee9b43224f547">ratioIsExact()</a>. </dd></dl>
+The ratio is the same regardless of which is the coarser of the two. Use <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#80ba5665299532cda4f86cfab3ab43b6">getHeadCoarserFlag()</a> to determine which is coarser. If the ratio cannot be represented by an <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>, truncated.<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#cf852b619e2378a1c14ee9b43224f547">ratioIsExact()</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1834,7 +1791,8 @@ The ratio is the same regardless of which is the coarser of the two. Use <a clas
 <p>
 Whether the ratio given by <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#9b532aaf8fa58931b8ffc718aa058890">getRatio()</a> is exact. 
 <p>
-The ratio is exact if it can be represented by an <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>. <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#9b532aaf8fa58931b8ffc718aa058890">getRatio()</a>. </dd></dl>
+The ratio is exact if it can be represented by an <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>. <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#9b532aaf8fa58931b8ffc718aa058890">getRatio()</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1856,6 +1814,7 @@ The ratio is exact if it can be represented by an <a class="el" href="classSAMRA
 <p>
 Return true if head <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is coarser than base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1996,7 +1955,7 @@ Inequality operator checks the same data that equality operator checks.
 <p>
 Set the parallel distribution state. 
 <p>
-Before a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> can be in a GLOBALIZED state, The base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> given in initialize() must already be in GLOBALIZED mode. The base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> should remain in GLOBALIZED mode for compatibility with the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.<p>
+Before a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> can be in a GLOBALIZED state, the base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> given in <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#7a372e808c0751b3c8942ba70e680595">setBase()</a> must already be in GLOBALIZED mode. The base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> should remain in GLOBALIZED mode for compatibility with the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.<p>
 This method is not necessarily trivial. More memory is required to store additional relationships.<p>
 For serial (one processor) runs, there is no difference between the parallel states (except for the names), and there is no real cost for switching parallel states.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -2004,6 +1963,7 @@ For serial (one processor) runs, there is no difference between the parallel sta
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>parallel_state</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2046,6 +2006,7 @@ Return the current parallel state.
 <p>
 Returns the MPI communication object, which is always that of the base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2083,6 +2044,7 @@ Change the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
     <tr><td valign="top"></td><td valign="top"><em>finalize_context</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>new_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(new_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -2104,7 +2066,9 @@ Change the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
 <p>
 Return the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width associated with the relationships. 
 <p>
-For overlap Connectors, an relationship exists between a base and head Boxes if the base mapped_box, grown by this width, overlaps the head mapped_box. For mapping Connectors, the width the amount that a pre-map box must grow to nest the post-map boxes. 
+For overlap Connectors, an relationship exists between a base and head Boxes if the base box, grown by this width, overlaps the head box. For mapping Connectors, the width the amount that a pre-map box must grow to nest the post-map boxes<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a>. </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c5664771cc53c0c142d2d1d292937058"></a><!-- doxytag: member="SAMRAI::hier::Connector::shrinkWidth" ref="c5664771cc53c0c142d2d1d292937058" args="(const IntVector &amp;new_width)" -->
@@ -2131,6 +2095,8 @@ Shrink the width of the connector modifying the proximity relationships as neede
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>new_width</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>new_width &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#cde8ad81135eb10cb42b11d3c83ac812">getConnectorWidth()</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#63919a628614459d87f0d773997857f9">getParallelState()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228ed64b0ef3f3b9fe551c2a39a3f8f1b16">BoxLevel::DISTRIBUTED</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2243,7 +2209,8 @@ This method is static because (1) it has nothing to do with an existing <a class
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_gcw</em>&nbsp;</td><td>The connector width in the head index space.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>A copy of the connector width converted to the base index space. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A copy of the connector width converted to the base index space.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(base_refinement_ratio &gt;= head_refinement_ratio) || (base_refinement_ratio &lt;= head_refinement_ratio) </dd></dl>
 
 </div>
 </div><p>
@@ -2263,9 +2230,9 @@ This method is static because (1) it has nothing to do with an existing <a class
 <div class="memdoc">
 
 <p>
-Check for consistency between the relationship data and base mapped boxes, and return the number of consistency errors. 
+Check for consistency between the relationship data and base boxes, and return the number of consistency errors. 
 <p>
-Consistency stipulates that each neighbor list must correspond to a base mapped box.<p>
+Consistency stipulates that each neighbor list must correspond to a base box.<p>
 relationship consistency errors should be treated as fatal because many operations assume consistency. 
 </div>
 </div><p>
@@ -2309,7 +2276,8 @@ If any inconsistency is found, write out diagnostic information and throw an unr
 Check that the neighbors specified by the relationships exist in the head <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
 If the head is not GLOBALIZED, a temporary copy is made and globalized for checking, triggering communication.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>number of inconsistencies found. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>number of inconsistencies found.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#5065c8f3bfebd6412b65e70a15cca4f4">getHead()</a>.getGlobalizedVersion().<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#63919a628614459d87f0d773997857f9">getParallelState()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#25e22f80d254d035cab74ae07032c228ff24ef90739a7fb75f8ddd6116ae57d9">BoxLevel::GLOBALIZED</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2456,54 +2424,6 @@ Run checkTransposeCorrectness. If any errors are found, print out diagnostic inf
 
 </div>
 </div><p>
-<a class="anchor" name="74607a5c7ea3dcd864c16ae23feffb61"></a><!-- doxytag: member="SAMRAI::hier::Connector::setConnectorType" ref="74607a5c7ea3dcd864c16ae23feffb61" args="(ConnectorType connector_type)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::Connector::setConnectorType           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">ConnectorType</a>&nbsp;</td>
-          <td class="paramname"> <em>connector_type</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> type. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_type</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="e90cd5c812f09b2aaaac1a01a05dff56"></a><!-- doxytag: member="SAMRAI::hier::Connector::getConnectorType" ref="e90cd5c812f09b2aaaac1a01a05dff56" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#8279997d6a41fb6f91020741fa9fc600">ConnectorType</a> SAMRAI::hier::Connector::getConnectorType           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> type. 
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="47b4d653987ee533b438e804ecd57291"></a><!-- doxytag: member="SAMRAI::hier::Connector::getLocalNumberOfNeighborSets" ref="47b4d653987ee533b438e804ecd57291" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -2564,7 +2484,9 @@ Return local number of relationships.
 <p>
 Return global number of neighbor sets. 
 <p>
-This requires a global sum reduction, if the global size has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#251e4d5e60d39e61990db68e618c0227">cacheGlobalReducedData()</a> first. 
+This requires a global sum reduction, if the global size has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#251e4d5e60d39e61990db68e618c0227">cacheGlobalReducedData()</a> first.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2ef6a44788533111d11f5a7b53c43977"></a><!-- doxytag: member="SAMRAI::hier::Connector::getGlobalNumberOfRelationships" ref="2ef6a44788533111d11f5a7b53c43977" args="() const " -->
@@ -2585,7 +2507,9 @@ This requires a global sum reduction, if the global size has not been computed a
 <p>
 Return global number of relationships. 
 <p>
-This requires a global sum reduction if the global size has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#251e4d5e60d39e61990db68e618c0227">cacheGlobalReducedData()</a> first. 
+This requires a global sum reduction if the global size has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#251e4d5e60d39e61990db68e618c0227">cacheGlobalReducedData()</a> first.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="251e4d5e60d39e61990db68e618c0227"></a><!-- doxytag: member="SAMRAI::hier::Connector::cacheGlobalReducedData" ref="251e4d5e60d39e61990db68e618c0227" args="() const " -->
@@ -2607,18 +2531,20 @@ This requires a global sum reduction if the global size has not been computed an
 If global reduced data (global number of relationships, etc.) has not been updated, compute and cache them (communication required). 
 <p>
 After this method is called, data requiring global reduction can be accessed without further communications, until the object changes.<p>
-Sets d_global_data_up_to_date; 
+Sets d_global_data_up_to_date;<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#4b2b9af71ee2b00c127085fec0d9867e">isFinalized()</a> </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="dc887c929849aaad38109472cda15abf"></a><!-- doxytag: member="SAMRAI::hier::Connector::putNeighborhoodsToDatabase" ref="dc887c929849aaad38109472cda15abf" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="036f35332962b69b62a533c06c7ecf53"></a><!-- doxytag: member="SAMRAI::hier::Connector::putToRestart" ref="036f35332962b69b62a533c06c7ecf53" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::Connector::putNeighborhoodsToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::Connector::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
         </tr>
@@ -2627,25 +2553,25 @@ Sets d_global_data_up_to_date;
 <div class="memdoc">
 
 <p>
-Write the neighborhoods to a database. 
+Write the neighborhoods to a restart database. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="c6d52dc4f0aa54c8f074c87656879859"></a><!-- doxytag: member="SAMRAI::hier::Connector::getNeighborhoodsFromDatabase" ref="c6d52dc4f0aa54c8f074c87656879859" args="(tbox::Database &amp;database)" -->
+<a class="anchor" name="22a12494b088fc167c9088136b763c9f"></a><!-- doxytag: member="SAMRAI::hier::Connector::getFromRestart" ref="22a12494b088fc167c9088136b763c9f" args="(tbox::Database &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::Connector::getNeighborhoodsFromDatabase           </td>
+          <td class="memname">void SAMRAI::hier::Connector::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
         </tr>
@@ -2654,11 +2580,11 @@ Write the neighborhoods to a database.
 <div class="memdoc">
 
 <p>
-Read the neighborhoods from a database. 
+Read the neighborhoods from a restart database. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -2848,7 +2774,7 @@ Usage example: <div class="fragment"><pre class="fragment">    cout &lt;&lt; <sp
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="Connector_8h.html">Connector.h</a><li>source/SAMRAI/hier/<a class="el" href="Connector_8C.html">Connector.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -143,7 +143,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Create and return a new PETSc vector object. The <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object is wrapped so that it may be manipulated through the PETSc vector structure in the <a class="el" href="classSAMRAI_1_1solv_1_1PETScAbstractVectorReal.html">PETScAbstractVectorReal</a> base class. It is important to note that this function does not allocate storage for the vector data. Data must be allocated through the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object directly. For output of the data through PETSc "ViewVec" calls, the output stream to which the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object writes will be used. 
+Create and return a new PETSc vector object. The <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object is wrapped so that it may be manipulated through the PETSc vector structure in the <a class="el" href="classSAMRAI_1_1solv_1_1PETScAbstractVectorReal.html">PETScAbstractVectorReal</a> base class. It is important to note that this function does not allocate storage for the vector data. Data must be allocated through the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object directly. For output of the data through PETSc "ViewVec" calls, the output stream to which the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object writes will be used.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>samrai_vec </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="281545c50fb500c1c5e06802950305a2"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::destroyPETScVector" ref="281545c50fb500c1c5e06802950305a2" args="(Vec petsc_vec)" -->
@@ -165,7 +167,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Destroy a given PETSc vector object. It is important to note that this function does not deallocate storage for the vector data. Vector data must be deallocated through the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object. 
+Destroy a given PETSc vector object. It is important to note that this function does not deallocate storage for the vector data. Vector data must be deallocated through the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!petsc_vec || petsc_vec-&gt;data </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e70201789be0301098d27f438eaa7959"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::getSAMRAIVector" ref="e70201789be0301098d27f438eaa7959" args="(Vec petsc_vec)" -->
@@ -187,12 +191,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return pointer to the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object associated with the given PETSc vector. 
+Return pointer to the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object associated with the given PETSc vector.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>petsc_vec &amp;&amp; petsc_vec-&gt;data </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8h.html">PETSc_SAMRAIVectorReal.h</a><li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8C.html">PETSc_SAMRAIVectorReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

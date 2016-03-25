@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1xfer.html">xfer</a>::<a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html">PatchInteriorVariableFillPattern</a></div>
-<h1>SAMRAI::xfer::PatchInteriorVariableFillPattern Class Reference</h1><!-- doxytag: class="SAMRAI::xfer::PatchInteriorVariableFillPattern" --><!-- doxytag: inherits="SAMRAI::xfer::VariableFillPattern" -->Class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> is a default implementation of the abstract base class VariableFillPattern.Class <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html">PatchInteriorVariableFillPattern</a> is an implementation of the abstract base class <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>.  
+<h1>SAMRAI::xfer::PatchInteriorVariableFillPattern Class Reference</h1><!-- doxytag: class="SAMRAI::xfer::PatchInteriorVariableFillPattern" --><!-- doxytag: inherits="SAMRAI::xfer::VariableFillPattern" -->Class <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html">PatchInteriorVariableFillPattern</a> is an implementation of the abstract base class <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/xfer/PatchInteriorVariableFillPattern.h&gt;</code>
@@ -53,7 +53,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a string name identifier "PATCH_INTERIOR_FILL_PATTERN".  <a href="#657fe1b1b9a20415bb7343223b568c8c"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> is a default implementation of the abstract base class VariableFillPattern.Class <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html">PatchInteriorVariableFillPattern</a> is an implementation of the abstract base class <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>. 
+Class <a class="el" href="classSAMRAI_1_1xfer_1_1PatchInteriorVariableFillPattern.html">PatchInteriorVariableFillPattern</a> is an implementation of the abstract base class <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>. 
 <p>
 It is used to calculate overlaps hat consist of the intersections between patches, including only patch interiors. (The boundaries of a patch are considered to be part of the interior.) 
 <p>
@@ -178,7 +178,8 @@ If the argument overwrite_interior is set to false, then the returned BoxOverlap
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transformation</em>&nbsp;</td><td>the transformation from source to destination index space.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to the calculated overlap object </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to the calculated overlap object</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst_patch_box.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#8f30fcc5fed521301476782381619eb5">SAMRAI::xfer::VariableFillPattern</a>.
@@ -285,7 +286,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html#3
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="PatchInteriorVariableFillPattern_8h.html">PatchInteriorVariableFillPattern.h</a><li>source/SAMRAI/xfer/<a class="el" href="PatchInteriorVariableFillPattern_8C.html">PatchInteriorVariableFillPattern.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

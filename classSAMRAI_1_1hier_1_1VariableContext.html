@@ -75,7 +75,8 @@ Class <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableC
 
 <p>
 The variable context constructor creates a context with the given name and increments the context index counter.<p>
-When assertion checking is active, an unrecoverable assertion results when the name std::string is empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2b11f9915931733b8956bf2ed09581b2"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::~VariableContext" ref="2b11f9915931733b8956bf2ed09581b2" args="()" -->
@@ -177,7 +178,7 @@ Check whether two contexts are the same. Return true if the index of the argumen
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="VariableContext_8h.html">VariableContext.h</a><li>source/SAMRAI/hier/<a class="el" href="VariableContext_8C.html">VariableContext.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

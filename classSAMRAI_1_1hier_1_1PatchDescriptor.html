@@ -52,6 +52,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#bb3fe2ccfd346b05e96d160f1a64b1d9">setMinGhostWidth</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_value)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#5f58f58c823164c7c59ec7f3b75f52f8">getMaxGhostWidth()</a>.  <a href="#bb3fe2ccfd346b05e96d160f1a64b1d9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#d782c0d6ac0a20e00e0d6dec6fcb84ee">getPatchDataDim</a> (int data_id) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the Dimension of the data for the given data_id.  <a href="#d782c0d6ac0a20e00e0d6dec6fcb84ee"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#ce449449d8fa32daeeac40b38c6dedf0">printClassData</a> (std::ostream &amp;stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>) const </td></tr>
 
 </table>
@@ -136,10 +139,13 @@ Add a new patch data factory and name std::string identifier to the patch descri
 <dl compact><dt><b>Returns:</b></dt><dd>int index assigned to given patch data factory in patch descriptor.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>std::string name to be associated in name list with given factory, which must be non-empty when assertion checking is active. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>factory</em>&nbsp;</td><td>pointer to factory to add to patch descriptor, which must be non-null when assertion checking is active. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>std::string name to be associated in name list with given factory </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>factory</em>&nbsp;</td><td>pointer to factory to add to patch descriptor</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() <p>
+factory <p>
+!d_free_indices.empty() </dd></dl>
 
 </div>
 </div><p>
@@ -190,9 +196,10 @@ Retrieve a patch data factory by integer index identifier. The identifier is the
 <dl compact><dt><b>Returns:</b></dt><dd>pointer to patch data factory assigned to given index.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>int index of factory to return, which must be &gt;= 0 and &lt; the return value of <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#907544ec811a9cc48f8f2a6ff0e0da16">getMaxNumberRegisteredComponents()</a>; </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>int index of factory to return, which must be &gt;= 0 and &lt; the return value of <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#907544ec811a9cc48f8f2a6ff0e0da16">getMaxNumberRegisteredComponents()</a>;</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#907544ec811a9cc48f8f2a6ff0e0da16">getMaxNumberRegisteredComponents()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -281,7 +288,9 @@ Lookup a factory by std::string name and return its integer index identifier. No
 <div class="memdoc">
 
 <p>
-Lookup a factory by identifier and return its name. 
+Lookup a factory by identifier and return its name.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html#907544ec811a9cc48f8f2a6ff0e0da16">getMaxNumberRegisteredComponents()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5f58f58c823164c7c59ec7f3b75f52f8"></a><!-- doxytag: member="SAMRAI::hier::PatchDescriptor::getMaxGhostWidth" ref="5f58f58c823164c7c59ec7f3b75f52f8" args="(const tbox::Dimension &amp;dim) const " -->
@@ -334,6 +343,33 @@ This method allows users to specify a mininum value returned by <a class="el" hr
 The dimension associated with the set value is taken to be <code>min_value.getDim()</code>. 
 </div>
 </div><p>
+<a class="anchor" name="d782c0d6ac0a20e00e0d6dec6fcb84ee"></a><!-- doxytag: member="SAMRAI::hier::PatchDescriptor::getPatchDataDim" ref="d782c0d6ac0a20e00e0d6dec6fcb84ee" args="(int data_id) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> SAMRAI::hier::PatchDescriptor::getPatchDataDim           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>data_id</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return the Dimension of the data for the given data_id. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="ce449449d8fa32daeeac40b38c6dedf0"></a><!-- doxytag: member="SAMRAI::hier::PatchDescriptor::printClassData" ref="ce449449d8fa32daeeac40b38c6dedf0" args="(std::ostream &amp;stream=tbox::plog) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -356,7 +392,7 @@ Print patch descriptor data to given output stream (plog by default).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchDescriptor_8h.html">PatchDescriptor.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchDescriptor_8C.html">PatchDescriptor.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

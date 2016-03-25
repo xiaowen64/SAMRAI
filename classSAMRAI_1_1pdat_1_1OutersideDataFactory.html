@@ -94,7 +94,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-The default constructor for the outerside data factory class. The depth (number of components) gives the default for all of the outerside data objects created with this factory. 
+The default constructor for the outerside data factory class. The depth (number of components) gives the default for all of the outerside data objects created with this factory.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="67dee72ac89760a3269c2a0e1fcf71c7"></a><!-- doxytag: member="SAMRAI::pdat::OutersideDataFactory::~OutersideDataFactory" ref="67dee72ac89760a3269c2a0e1fcf71c7" args="()" -->
@@ -143,9 +145,10 @@ Abstract virtual function to clone a patch data factory.
 This will return a new instantiation of the abstract factory with the same properties. The properties of the cloned factory can then be changed without modifying the original.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == ghosts.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#8e25f724ce554c386c4942565956e5ea">SAMRAI::hier::PatchDataFactory</a>.
@@ -170,7 +173,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Virtual factory function to allocate a concrete outerside data object. The default information about the object (e.g., depth) is taken from the factory. 
+Virtual factory function to allocate a concrete outerside data object. The default information about the object (e.g., depth) is taken from the factory.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == patch.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -194,7 +199,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Allocate the box geometry object associated with the patch data. This information will be used in the computation of intersections and data dependencies between objects. 
+Allocate the box geometry object associated with the patch data. This information will be used in the computation of intersections and data dependencies between objects.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#0714dc4177b9fa53181a4146fe31fc7d">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -239,7 +246,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Calculate the amount of memory needed to store the outerside data object, including object data and dynamically allocated data. 
+Calculate the amount of memory needed to store the outerside data object, including object data and dynamically allocated data.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#81f1cf57f6d5e5d600b7dd439f5cdfbb">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -262,7 +271,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return a boolean true value indicating that fine data for the outerside quantity will take precedence on coarse-fine interfaces. See the OutersideVariable&lt;DIM&gt; class header file for more information. 
+Return a boolean true value indicating that fine data for the outerside quantity will take precedence on coarse-fine interfaces. See the OutersideVariable&lt;TYPE&gt; class header file for more information. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#f43fa01dd54c980fb6931f820100e57a">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -309,12 +318,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">OutersideDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">OutersideDataFactory</a>, false otherwise. 
+Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">OutersideDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">OutersideDataFactory</a>, false otherwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == dst_pdf-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OutersideDataFactory_8h.html">OutersideDataFactory.h</a><li>source/SAMRAI/pdat/<a class="el" href="OutersideDataFactory_8C.html">OutersideDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

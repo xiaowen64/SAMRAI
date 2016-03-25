@@ -29,7 +29,7 @@
 <a href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#62ac57cb9cc38b85c33ee8ed06ff734b">readBoundaryInput</a> (<a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *bdry_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;bdry_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;face_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;edge_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;node_conds, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;periodic)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#19ca7a19cf87a65de2d5e7cfa6b17202">getFromInput</a> (<a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *bdry_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;face_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;edge_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;node_conds, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;periodic)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#444eecd7dabdb406ad7757b444b849e7">fillFaceBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_face_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
@@ -41,74 +41,54 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#4882760652f6bbbcaf864410091d391d">getFaceLocationForNodeBdry</a> (int node_loc, int node_btype)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#939fff8382c7cf48622ae8aa9ea63c7b">checkBdryData</a> (const std::string &amp;varname, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, int data_id, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;gcw_to_check, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;bbox, int bcase, double bstate)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#4eee567cec05bd414d2e2c477fc19a9b">checkBdryData</a> (const std::string &amp;varname, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, int data_id, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;gcw_to_check, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;bbox, int bcase, const double &amp;bstate)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html">CartesianBoundaryUtilities3</a> is a utility class that simplifies the implementation of simple physical boundary data in 3 spatial dimensions. It contains routines for reading boundary data information from input files, applying those boundary conditions, and error checking boundary data. These routines apply to the case of cell-centered double data only. One may use all of these capabilities, or use the input reading, boundary setting, and error checking routines independently. 
 <p>
+<b> Input Parameters </b><p>
 To use the boundary condition input reading capabilities, the format of the input file section containing the boundary information must be as described next. Boundary face, node, and edge entries are only required for those that are not filled automatically when periodic conditions apply.<p>
 The boundary condition for face "*" is provided in a section as follows:<p>
-<div class="fragment"><pre class="fragment"> *
- *    boundary_face_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
- *       // Any problem-specific boundary data read by user routines
- *       // is placed here...
- *    }
- *
- * Allowable face identifiers (i.e., values for "*") are:
- *       xlo, xhi, ylo, yhi, zlo, zhi
- * Supported face boundary_condition std::string values are:
- *       "FLOW", "REFLECT", "DIRICHLET", "NEUMANN"
- *
- * </pre></div><p>
+<div class="fragment"><pre class="fragment">    boundary_face_* {
+       boundary_condition  = ...  <span class="comment">// boundary condition string identifier</span>
+    }
+</pre></div><p>
+Allowable face identifiers (i.e., values for "*") are: <br>
+ xlo, xhi, ylo, yhi, zlo, zhi <br>
+ Supported face boundary_condition string values are: <br>
+ "FLOW", "REFLECT", "DIRICHLET", "NEUMANN"<p>
 The boundary condition for edge "*" is provided in a section as follows:<p>
-<div class="fragment"><pre class="fragment"> *
- *    boundary_edge_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
- *    }
- *
- * Allowable edge identifiers (i.e., values for "*") are:
- *       ylo_zlo, yhi_zlo, ylo_zhi, yhi_zhi,
- *       xlo_zlo, xlo_zhi, xhi_zlo, xhi_zhi,
- *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi
- * Supported edge boundary_condition std::string values are:
- *       "XFLOW", "YFLOW", "ZFLOW",
- *       "XREFLECT", "YREFLECT", "ZREFLECT",
- *       "XDIRICHLET", "YDIRICHLET", "ZDIRICHLET"
- *       "XNEUMANN", "YNEUMANN", "ZNEUMANN"
- *
- * </pre></div><p>
+<div class="fragment"><pre class="fragment">    boundary_edge_* {
+       boundary_condition  = ...  <span class="comment">// boundary condition string identifier</span>
+    }
+</pre></div><p>
+Allowable edge identifiers (i.e., values for "*") are: <br>
+ ylo_zlo, yhi_zlo, ylo_zhi, yhi_zhi, xlo_zlo, xlo_zhi, xhi_zlo, xhi_zhi, xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi <br>
+ Supported edge boundary_condition string values are: <br>
+ "XFLOW", "YFLOW", "ZFLOW", "XREFLECT", "YREFLECT", "ZREFLECT", "XDIRICHLET", "YDIRICHLET", "ZDIRICHLET" "XNEUMANN", "YNEUMANN", "ZNEUMANN"<p>
 Note that edge conditions must be consistent with adjacent face conditions.<p>
 The boundary condition for node "*" is provided in a section as follows:<p>
-<div class="fragment"><pre class="fragment"> *
- *    boundary_node_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
- *    }
- *
- * Allowable node identifiers (i.e., values for "*") are:
- *       ylo_zlo, yhi_zlo, ylo_zhi, yhi_zhi,
- *       xlo_zlo, xlo_zhi, xhi_zlo, xhi_zhi,
- *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi
- * Supported node boundary_condition values are:
- *       "XFLOW", "YFLOW", "ZFLOW",
- *       "XREFLECT", "YREFLECT", "ZREFLECT",
- *       "XDIRICHLET", "YDIRICHLET", "ZDIRICHLET"
- *       "XNEUMANN", "YNEUMANN", "ZNEUMANN"
- *
- * </pre></div><p>
+<div class="fragment"><pre class="fragment">    boundary_node_* {
+       boundary_condition  = ...  <span class="comment">// boundary condition string identifier</span>
+    }
+</pre></div><p>
+Allowable node identifiers (i.e., values for "*") are: <br>
+ xlo_ylo_zlo, xhi_ylo_zlo, xlo_yhi_zlo, xhi_yhi_zlo, xlo_ylo_zhi, xhi_ylo_zhi, xlo_yhi_zhi, xhi_yhi_zhi <br>
+ Supported node boundary_condition values are: <br>
+ "XFLOW", "YFLOW", "ZFLOW", "XREFLECT", "YREFLECT", "ZREFLECT", "XDIRICHLET", "YDIRICHLET", "ZDIRICHLET" "XNEUMANN", "YNEUMANN", "ZNEUMANN"<p>
 Note that node conditions must be consistent with adjacent face conditions.<p>
 See the include file <a class="el" href="CartesianBoundaryDefines_8h.html">CartesianBoundaryDefines.h</a> for integer constant definitions that apply for the various boundary types, locations, and boundary conditions. If you choose to use the input reading capabilities only and write your own boundary condition routines in FORTRAN, you should note that the integer constants for the various boundary condition types and locations are automatically "stuffed" into FORTRAN common blocks. This avoids potential problems with inconsistencies between C++ and FORTRAN usage. Please see the FORTRAN include file cartbdryparams3d.i for details.<p>
 <dl compact><dt><b>See also:</b></dt><dd>appu::BoundaryUtilityStrategy3 </dd></dl>
 
 <p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="62ac57cb9cc38b85c33ee8ed06ff734b"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::readBoundaryInput" ref="62ac57cb9cc38b85c33ee8ed06ff734b" args="(BoundaryUtilityStrategy *bdry_strategy, const boost::shared_ptr&lt; tbox::Database &gt; &amp;bdry_db, tbox::Array&lt; int &gt; &amp;face_conds, tbox::Array&lt; int &gt; &amp;edge_conds, tbox::Array&lt; int &gt; &amp;node_conds, const hier::IntVector &amp;periodic)" -->
+<a class="anchor" name="19ca7a19cf87a65de2d5e7cfa6b17202"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::getFromInput" ref="19ca7a19cf87a65de2d5e7cfa6b17202" args="(BoundaryUtilityStrategy *bdry_strategy, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, tbox::Array&lt; int &gt; &amp;face_conds, tbox::Array&lt; int &gt; &amp;edge_conds, tbox::Array&lt; int &gt; &amp;node_conds, const hier::IntVector &amp;periodic)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static void SAMRAI::appu::CartesianBoundaryUtilities3::readBoundaryInput           </td>
+          <td class="memname">static void SAMRAI::appu::CartesianBoundaryUtilities3::getFromInput           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *&nbsp;</td>
           <td class="paramname"> <em>bdry_strategy</em>, </td>
@@ -117,7 +97,7 @@ See the include file <a class="el" href="CartesianBoundaryDefines_8h.html">Carte
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>bdry_db</em>, </td>
+          <td class="paramname"> <em>input_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -159,13 +139,19 @@ When assertion checking is active, assertions will result when any of the pointe
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>bdry_strategy</em>&nbsp;</td><td>user-defined object that reads DIRICHLET or NEUMANN conditions </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>bdry_db</em>&nbsp;</td><td>input database containing all boundary data </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>input_db</em>&nbsp;</td><td>input database containing all boundary data </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>face_conds</em>&nbsp;</td><td>array into which integer face boundary condition types are read </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>edge_conds</em>&nbsp;</td><td>array into which integer edge boundary condition types are read </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>node_conds</em>&nbsp;</td><td>array into which integer node boundary condition types are read </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>periodic</em>&nbsp;</td><td>integer vector specifying which coordinate directions are periodic (e.g., value returned from GridGeometry2::getPeriodicShift()) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>periodic</em>&nbsp;</td><td>integer vector specifying which coordinate directions are periodic (e.g., value returned from GridGeometry2::getPeriodicShift())</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>input_db <p>
+periodic.getDim() == tbox::Dimension(3) <p>
+bdry_strategy != 0 <p>
+face_conds.getSize() == NUM_3D_FACES <p>
+edge_conds.getSize() == NUM_3D_EDGES <p>
+node_conds.getSize() == NUM_3D_NODES </dd></dl>
 
 </div>
 </div><p>
@@ -228,9 +214,15 @@ When assertion checking is active, assertions will result when any of the pointe
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> on which data object lives. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ghost_width_to_fill</em>&nbsp;</td><td>Width of ghost region to fill. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_face_conds</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary condition types for patch faces. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>bdry_face_values</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary values for patch faces. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bdry_face_values</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary values for patch faces.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
+vardata <p>
+bdry_face_conds.getSize() == NUM_3D_FACES <p>
+bdry_face_values.getSize() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
+ghost_fill_width.getDim() == tbox::Dimension(3) <p>
+(vardata-&gt;getDim() == patch.getDim()) &amp;&amp; (vardata-&gt;getDim() == ghost_fill_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -293,9 +285,15 @@ When assertion checking is active, assertions will result when any of the pointe
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> on which data object lives. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ghost_width_to_fill</em>&nbsp;</td><td>Width of ghost region to fill. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_edge_conds</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary condition types for patch edges. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>bdry_face_values</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary values for patch faces. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bdry_face_values</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary values for patch faces.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
+vardata <p>
+bdry_edge_conds.getSize() == NUM_3D_EDGES <p>
+bdry_face_values.getSize() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
+ghost_fill_width.getDim() == tbox::Dimension(3) <p>
+(vardata-&gt;getDim() == patch.getDim()) &amp;&amp; (vardata-&gt;getDim() == ghost_fill_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -358,9 +356,15 @@ When assertion checking is active, assertions will result when any of the pointe
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> on which data object lives. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ghost_width_to_fill</em>&nbsp;</td><td>Width of ghost region to fill. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_node_conds</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary condition types for patch nodes. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>bdry_face_values</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary values for patch faces. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bdry_face_values</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boundary values for patch faces.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
+vardata <p>
+bdry_node_conds.getSize() == NUM_3D_NODES <p>
+bdry_face_values.getSize() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
+ghost_fill_width.getDim() == tbox::Dimension(3) <p>
+(vardata-&gt;getDim() == patch.getDim()) &amp;&amp; (vardata-&gt;getDim() == ghost_fill_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -396,9 +400,10 @@ If the edge boundary condition type or edge location are unknown, or the boundar
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>edge_loc</em>&nbsp;</td><td>Integer location for edge. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>edge_btype</em>&nbsp;</td><td>Integer boundary condition type for edge. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>edge_btype</em>&nbsp;</td><td>Integer boundary condition type for edge.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efcc8f13862d7855939becbad0dac032d8">BdryCond::XFLOW</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efd1e3207e9bfd92726c298f1d80fa5c19">BdryCond::XREFLECT</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef9df91a0be611dac987a15ea40033ee23">BdryCond::XDIRICHLET</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efad29f0c31c337fb35164f15fa5487de0">BdryCond::XNEUMANN</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef02ee0a0c2dd3303de1b2dd384ff555b1">BdryCond::YFLOW</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef3720981172ba0f340b448c01190785a9">BdryCond::YREFLECT</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efc75bfbe5eef5c04e1db47057137de8ee">BdryCond::YDIRICHLET</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef8dad64347d7599fff79d8cb68cde11da">BdryCond::YNEUMANN</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef84e96ff1b920d0670692cf4050724c1a">BdryCond::ZFLOW</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef0aa7648d872dbecab5dbc7a83b7ed123">BdryCond::ZREFLECT</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef54b0000adab3b7b9ffeb42a39fe0cb32">BdryCond::ZDIRICHLET</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef7dd412e354961cd6cf3f138f0784db0a">BdryCond::ZNEUMANN</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -434,13 +439,14 @@ If the node boundary condition type or node location are unknown, or the boundar
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>node_loc</em>&nbsp;</td><td>Integer location for node. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>node_btype</em>&nbsp;</td><td>Integer boundary condition type for node. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>node_btype</em>&nbsp;</td><td>Integer boundary condition type for node.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efcc8f13862d7855939becbad0dac032d8">BdryCond::XFLOW</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efd1e3207e9bfd92726c298f1d80fa5c19">BdryCond::XREFLECT</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef9df91a0be611dac987a15ea40033ee23">BdryCond::XDIRICHLET</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efad29f0c31c337fb35164f15fa5487de0">BdryCond::XNEUMANN</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef02ee0a0c2dd3303de1b2dd384ff555b1">BdryCond::YFLOW</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef3720981172ba0f340b448c01190785a9">BdryCond::YREFLECT</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efc75bfbe5eef5c04e1db47057137de8ee">BdryCond::YDIRICHLET</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef8dad64347d7599fff79d8cb68cde11da">BdryCond::YNEUMANN</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef84e96ff1b920d0670692cf4050724c1a">BdryCond::ZFLOW</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef0aa7648d872dbecab5dbc7a83b7ed123">BdryCond::ZREFLECT</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef54b0000adab3b7b9ffeb42a39fe0cb32">BdryCond::ZDIRICHLET</a>) || (edge_btype == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef7dd412e354961cd6cf3f138f0784db0a">BdryCond::ZNEUMANN</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="939fff8382c7cf48622ae8aa9ea63c7b"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::checkBdryData" ref="939fff8382c7cf48622ae8aa9ea63c7b" args="(const std::string &amp;varname, const hier::Patch &amp;patch, int data_id, int depth, const hier::IntVector &amp;gcw_to_check, const hier::BoundaryBox &amp;bbox, int bcase, double bstate)" -->
+<a class="anchor" name="4eee567cec05bd414d2e2c477fc19a9b"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::checkBdryData" ref="4eee567cec05bd414d2e2c477fc19a9b" args="(const std::string &amp;varname, const hier::Patch &amp;patch, int data_id, int depth, const hier::IntVector &amp;gcw_to_check, const hier::BoundaryBox &amp;bbox, int bcase, const double &amp;bstate)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -489,7 +495,7 @@ If the node boundary condition type or node location are unknown, or the boundar
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&nbsp;</td>
+          <td class="paramtype">const double &amp;&nbsp;</td>
           <td class="paramname"> <em>bstate</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -514,15 +520,22 @@ When assertion checking is active, assertions will result when any of the pointe
     <tr><td valign="top"></td><td valign="top"><em>gcw_to_check</em>&nbsp;</td><td>Width of ghost region to check. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bbox</em>&nbsp;</td><td>Boundary box to check. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bcase</em>&nbsp;</td><td>Boundary condition type for given edge or node. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>bstate</em>&nbsp;</td><td>Boundary value that applies in DIRICHLET or NEUMANN case. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bstate</em>&nbsp;</td><td>Boundary value that applies in DIRICHLET or NEUMANN case.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
+data_id &gt;= 0 <p>
+depth &gt;= 0 <p>
+gcw_to_check.getDim() == tbox::Dimension(3) <p>
+(patch.getDim() == gcw_to_check.getDim() &amp;&amp; (patch.getDim() == bbox.getDim()) <p>
+(bbox.getBoundaryType() == <a class="el" href="namespaceBdry.html#52c990a5e0784db2442f55637bf9ec3b81d7711739c945d4d7fb5c8434c61e3c">Bdry::FACE3D</a>) || (bbox.getBoundaryType() == <a class="el" href="namespaceBdry.html#52c990a5e0784db2442f55637bf9ec3bc42ff0f5b96bc5a46c9ebd51053005ee">Bdry::EDGE3D</a>) || (bbox.getBoundaryType() == <a class="el" href="namespaceBdry.html#52c990a5e0784db2442f55637bf9ec3bdc8c230d2589ae50ae1226aac3b7f0a1">Bdry::NODE3D</a>) <p>
+((bbox.getBoundaryType() == <a class="el" href="namespaceBdry.html#52c990a5e0784db2442f55637bf9ec3b81d7711739c945d4d7fb5c8434c61e3c">Bdry::FACE3D</a>) &amp;&amp; ((bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef3d1ff2cb99f088dd675fc3869b3d5dce">BdryCond::FLOW</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efc640795181e834d1f1622dfd212b55fa">BdryCond::REFLECT</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efcecfd335b109e4a3562ac85646f83fd2">BdryCond::DIRICHLET</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef01f0c1539bff1dc9e4f38c7ce4e08cf4">BdryCond::NEUMANN</a>))) || (((bbox.getBoundaryType() == <a class="el" href="namespaceBdry.html#52c990a5e0784db2442f55637bf9ec3bc42ff0f5b96bc5a46c9ebd51053005ee">Bdry::EDGE3D</a>) || (bbox.getBoundaryType() == <a class="el" href="namespaceBdry.html#52c990a5e0784db2442f55637bf9ec3bdc8c230d2589ae50ae1226aac3b7f0a1">Bdry::NODE3D</a>)) &amp;&amp; ((bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efcc8f13862d7855939becbad0dac032d8">BdryCond::XFLOW</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef02ee0a0c2dd3303de1b2dd384ff555b1">BdryCond::YFLOW</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef84e96ff1b920d0670692cf4050724c1a">BdryCond::ZFLOW</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efd1e3207e9bfd92726c298f1d80fa5c19">BdryCond::XREFLECT</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef3720981172ba0f340b448c01190785a9">BdryCond::YREFLECT</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efd1e3207e9bfd92726c298f1d80fa5c19">BdryCond::XREFLECT</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef9df91a0be611dac987a15ea40033ee23">BdryCond::XDIRICHLET</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efc75bfbe5eef5c04e1db47057137de8ee">BdryCond::YDIRICHLET</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef54b0000adab3b7b9ffeb42a39fe0cb32">BdryCond::ZDIRICHLET</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6efad29f0c31c337fb35164f15fa5487de0">BdryCond::XNEUMANN</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef8dad64347d7599fff79d8cb68cde11da">BdryCond::YNEUMANN</a>) || (bcase == <a class="el" href="namespaceBdryCond.html#52196a479e1210e9c7be5994fbc4d6ef7dd412e354961cd6cf3f138f0784db0a">BdryCond::ZNEUMANN</a>))) </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="CartesianBoundaryUtilities3_8h.html">CartesianBoundaryUtilities3.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

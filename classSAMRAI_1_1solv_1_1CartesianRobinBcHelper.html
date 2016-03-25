@@ -34,22 +34,25 @@
 <a href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#5b35a1d32576ceac5129c88de74747d4">CartesianRobinBcHelper</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, std::string object_name=std::string(), <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *coef_strategy=NULL)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#ebf80006e6b37c67badab3b2a5238bc6">CartesianRobinBcHelper</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, std::string object_name=std::string(), <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *coef_strategy=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor using.  <a href="#5b35a1d32576ceac5129c88de74747d4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor using.  <a href="#ebf80006e6b37c67badab3b2a5238bc6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#3dc75529ca1a47fb5bfe5376b30e7c91">~CartesianRobinBcHelper</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#3dc75529ca1a47fb5bfe5376b30e7c91"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#6b01eb9d1284523dec2147a12da6bfb9">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#6b01eb9d1284523dec2147a12da6bfb9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#b0b772c03c2c376cfdce41bb5adbd6c3">getDim</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#b0b772c03c2c376cfdce41bb5adbd6c3"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#036d4b480f37ed811e36650ea76f73c5">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function interface for physical boundary filling.  <a href="#036d4b480f37ed811e36650ea76f73c5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#ccc4c66735dbad0976c556b6a38c9cac">getRefineOpStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#406512e9038767c362f5a84264dd3326">getRefineOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data refinement operations performed by this object.  <a href="#ccc4c66735dbad0976c556b6a38c9cac"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data refinement operations performed by this object.  <a href="#406512e9038767c362f5a84264dd3326"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#f9cfae649ce238deb28b990c8b4e98d5">preprocessRefineBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fine_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#fa142e52689d375d2b150cf1da41e19d">preprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
@@ -60,9 +63,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#ef8ff23d92caeba0c5da381834d09e8e">postprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#ef8ff23d92caeba0c5da381834d09e8e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#4413a7b1133fa54f4aac158a1fb1ea01">fillSingularityBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;encon_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_encon, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;boundary_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;grid_geometry)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ghost data at a multiblock singularity.  <a href="#4413a7b1133fa54f4aac158a1fb1ea01"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to set boundary condition values</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#f53f3ff119ee35deb172b754036e97cd">setBoundaryValuesInCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, int target_data_id, bool homogeneous_bc=false) const </td></tr>
 
@@ -93,7 +93,7 @@ See <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBc
 This class inherits and implements virtual functions from <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> so it may be used to help create communication schedules if desired. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="5b35a1d32576ceac5129c88de74747d4"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::CartesianRobinBcHelper" ref="5b35a1d32576ceac5129c88de74747d4" args="(const tbox::Dimension &amp;dim, std::string object_name=std::string(), RobinBcCoefStrategy *coef_strategy=NULL)" -->
+<a class="anchor" name="ebf80006e6b37c67badab3b2a5238bc6"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::CartesianRobinBcHelper" ref="ebf80006e6b37c67badab3b2a5238bc6" args="(const tbox::Dimension &amp;dim, std::string object_name=std::string(), RobinBcCoefStrategy *coef_strategy=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -113,7 +113,7 @@ This class inherits and implements virtual functions from <a class="el" href="cl
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>coef_strategy</em> = <code>NULL</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>coef_strategy</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -208,14 +208,15 @@ Set data in ghost regions at patch boundaries that touch the physical domain bou
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#428a5d166ab97a9ce9c8344685817b26">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="ccc4c66735dbad0976c556b6a38c9cac"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::getRefineOpStencilWidth" ref="ccc4c66735dbad0976c556b6a38c9cac" args="() const " -->
+<a class="anchor" name="406512e9038767c362f5a84264dd3326"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::getRefineOpStencilWidth" ref="406512e9038767c362f5a84264dd3326" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::solv::CartesianRobinBcHelper::getRefineOpStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -227,9 +228,9 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#4
 Return maximum stencil width needed for user-defined data refinement operations performed by this object. 
 <p>
 This is needed to determine the correct interpolatin data dependencies and to ensure that the data has a sufficient amount of ghost width.<p>
-For any user-defined interpolation operations implemented in the preprocess or postprocess methods, return the maximum stencil needed on a coarse patch to refine data to a fine patch. 
+For any user-defined interpolation operations implemented in the preprocess or postprocess methods, return the maximum stencil needed on a coarse patch to refine data to a fine patch. If your implementation doesn't work with the given dimension, return zero. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#ac3c39692c90393a6748ea7a4f52facd">SAMRAI::xfer::RefinePatchStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bb3eaa0149ac4477ec4c8d85d0cbf074">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="f9cfae649ce238deb28b990c8b4e98d5"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::preprocessRefineBoxes" ref="f9cfae649ce238deb28b990c8b4e98d5" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::BoxContainer &amp;fine_boxes, const hier::IntVector &amp;ratio)" -->
@@ -278,9 +279,10 @@ The default implementation of this virtual function loops over the box list and 
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing destination data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch containing source data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_boxes</em>&nbsp;</td><td>List of box regions on fine patch into which data is refined. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) </dd></dl>
 
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#b7ecf070476c948a6bf2f4e26f904bc0">SAMRAI::xfer::RefinePatchStrategy</a>.
@@ -386,9 +388,10 @@ The default implementation of this virtual function loops over the box list and 
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing destination data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch containing source data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_boxes</em>&nbsp;</td><td>List of box regions on fine patch into which data is refined. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) </dd></dl>
 
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5250bd18bb4200f7f89741d6493fad6">SAMRAI::xfer::RefinePatchStrategy</a>.
@@ -446,82 +449,6 @@ This member function is called after standard refine operations (expressed using
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">SAMRAI::xfer::RefinePatchStrategy</a>.
-</div>
-</div><p>
-<a class="anchor" name="4413a7b1133fa54f4aac158a1fb1ea01"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::fillSingularityBoundaryConditions" ref="4413a7b1133fa54f4aac158a1fb1ea01" args="(hier::Patch &amp;patch, const hier::PatchLevel &amp;encon_level, const hier::Connector &amp;dst_to_encon, const double fill_time, const hier::Box &amp;fill_box, const hier::BoundaryBox &amp;boundary_box, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;grid_geometry)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void SAMRAI::solv::CartesianRobinBcHelper::fillSingularityBoundaryConditions           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>patch</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>encon_level</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dst_to_encon</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>fill_time</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fill_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>boundary_box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>grid_geometry</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the ghost data at a multiblock singularity. 
-<p>
-This virtual method allows for a user-defined implemenation to fill ghost data at ghost regions located at reduced or enhanced connectivity multiblock singularities. The method is virtual so that it need not be overridden in single-block applications. The encon_level and dst_to_encon arguments may be ignored if the patch touches no enhanced connectivity singularities.<p>
-The patches in encon level are in the coordinate system of the blocks where they originated, not in that of the destination patch, so the filling operation must take into account the transformation between blocks.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td>The patch containing the data to be filled </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>encon_level</em>&nbsp;</td><td>Level representing enhanced connectivity ghost regions </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dst_to_encon</em>&nbsp;</td><td>Connector from destination level to encon_level </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Simulation time at which data is filled </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fill_box</em>&nbsp;</td><td>Box covering maximum amount of ghost cells to be filled </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>boundary_box</em>&nbsp;</td><td>BoundaryBox describing location of singularity in relation to patch </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-<p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#3aae5c61f8c70809a01cf8471d1cd702">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="f53f3ff119ee35deb172b754036e97cd"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::setBoundaryValuesInCells" ref="f53f3ff119ee35deb172b754036e97cd" args="(hier::Patch &amp;patch, const double fill_time, const hier::IntVector &amp;ghost_width_to_fill, int target_data_id, bool homogeneous_bc=false) const " -->
@@ -644,9 +571,10 @@ Loop through all patches on the given level and call setBoundaryValuesInCells(<a
     <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Solution time corresponding to filling </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ghost_width_to_fill</em>&nbsp;</td><td>Max ghost width requiring fill </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>target_data_id</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> data index of data to be set. This data must be a cell-centered double. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>homogeneous_bc</em>&nbsp;</td><td>Set a homogeneous boundary condition. This means g=0 for the boundary. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>homogeneous_bc</em>&nbsp;</td><td>Set a homogeneous boundary condition. This means g=0 for the boundary.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>level.getDim() == ghost_width_to_fill.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -732,9 +660,10 @@ Provide an implementation of the <a class="el" href="classSAMRAI_1_1solv_1_1Robi
 Provide the implementation that can be used to set the Robin bc coefficients.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>coef_strategy</em>&nbsp;</td><td>Pointer to a concrete inmplementation of the coefficient strategy. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>coef_strategy</em>&nbsp;</td><td>Pointer to a concrete inmplementation of the coefficient strategy.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>coef_strategy </dd></dl>
 
 </div>
 </div><p>
@@ -804,9 +733,30 @@ Get the name of this object.
 
 </div>
 </div><p>
+<a class="anchor" name="b0b772c03c2c376cfdce41bb5adbd6c3"></a><!-- doxytag: member="SAMRAI::solv::CartesianRobinBcHelper::getDim" ref="b0b772c03c2c376cfdce41bb5adbd6c3" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::solv::CartesianRobinBcHelper::getDim           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return the dimension of this object. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="CartesianRobinBcHelper_8h.html">CartesianRobinBcHelper.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

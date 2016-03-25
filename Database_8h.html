@@ -24,7 +24,7 @@
 <code>#include &quot;<a class="el" href="Complex_8h.html">SAMRAI/tbox/Complex.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="PIO_8h.html">SAMRAI/tbox/PIO.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
-<code>#include &lt;boost/shared_ptr.hpp&gt;</code><br>
+<code>#include &quot;boost/shared_ptr.hpp&quot;</code><br>
 <code>#include &lt;vector&gt;</code><br>
 <code>#include &lt;string&gt;</code><br>
 <code>#include &lt;iostream&gt;</code><br>
@@ -39,8 +39,58 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">SAMRAI::tbox::Database</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> is an abstract base class for the input, restart, and visualization databases.  <a href="classSAMRAI_1_1tbox_1_1Database.html#_details">More...</a><br></td></tr>
+<tr><td colspan="2"><br><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Database_8h.html#601f71558e0793a2229a2d7477aec57b">INPUT_RANGE_ERROR</a>(param_name)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Database_8h.html#b52b10eb5ec6e452c4b37b4cfc54f763">INPUT_VALUE_ERROR</a>(param_name)</td></tr>
+
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
+<hr><h2>Define Documentation</h2>
+<a class="anchor" name="601f71558e0793a2229a2d7477aec57b"></a><!-- doxytag: member="Database.h::INPUT_RANGE_ERROR" ref="601f71558e0793a2229a2d7477aec57b" args="(param_name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INPUT_RANGE_ERROR          </td>
+          <td>(</td>
+          <td class="paramtype">param_name&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#0f7312139c387188f90b7d326801f51a">TBOX_ERROR</a>(getObjectName() &lt;&lt; <span class="stringliteral">": getFromInput() error\n"</span> &lt;&lt; param_name \
+      &lt;&lt; <span class="stringliteral">" out of range.  Check documentation for valid input.\n"</span>)
+</pre></div>
+</div>
+</div><p>
+<a class="anchor" name="b52b10eb5ec6e452c4b37b4cfc54f763"></a><!-- doxytag: member="Database.h::INPUT_VALUE_ERROR" ref="b52b10eb5ec6e452c4b37b4cfc54f763" args="(param_name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INPUT_VALUE_ERROR          </td>
+          <td>(</td>
+          <td class="paramtype">param_name&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#0f7312139c387188f90b7d326801f51a">TBOX_ERROR</a>(getObjectName() &lt;&lt; <span class="stringliteral">": getFromInput() error\n"</span> &lt;&lt; param_name \
+      &lt;&lt; <span class="stringliteral">" invalid value.  Check documentation for valid input.\n"</span>)
+</pre></div>
+</div>
+</div><p>
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:53 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

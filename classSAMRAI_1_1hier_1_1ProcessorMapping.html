@@ -197,7 +197,7 @@ Resize the mapping so that it has n elements. Before it can be used, each elemen
 <div class="memdoc">
 
 <p>
-Sets the number of mapped_boxes to n. IMPORTANT NOTE: This method should only be used for testing purposes. Under normal circumstances, the number of mapped_boxes is set by a call to tbox::SAMRAI_MPI::getNodes() and should NOT be changed. 
+Sets the number of boxes to n. IMPORTANT NOTE: This method should only be used for testing purposes. Under normal circumstances, the number of boxes is set by a call to tbox::SAMRAI_MPI::getNodes() and should NOT be changed. 
 </div>
 </div><p>
 <a class="anchor" name="3bd9ab4bd13529ce0f212d37f5b75f70"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getProcessorAssignment" ref="3bd9ab4bd13529ce0f212d37f5b75f70" args="(const int i) const " -->
@@ -217,7 +217,9 @@ Sets the number of mapped_boxes to n. IMPORTANT NOTE: This method should only be
 <div class="memdoc">
 
 <p>
-Return the processor assignment for the specified patch index. 
+Return the processor assignment for the specified patch index.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#233cc758273df05e09bb0a519c0814f4">getProcessorMapping()</a>.getSize()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f80c8ba66de5422d4ef95a31ca70170b"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::setProcessorAssignment" ref="f80c8ba66de5422d4ef95a31ca70170b" args="(const int i, const int p)" -->
@@ -246,7 +248,10 @@ Return the processor assignment for the specified patch index.
 <div class="memdoc">
 
 <p>
-Set the processor assignment (second argument) for the specified patch index (first argument). 
+Set the processor assignment (second argument) for the specified patch index (first argument).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#233cc758273df05e09bb0a519c0814f4">getProcessorMapping()</a>.getSize()) <p>
+(p &gt;= 0) &amp;&amp; (p &lt; d_nodes) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="233cc758273df05e09bb0a519c0814f4"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getProcessorMapping" ref="233cc758273df05e09bb0a519c0814f4" args="() const " -->
@@ -285,7 +290,7 @@ Return an <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;
 <div class="memdoc">
 
 <p>
-Sets the processor mappings from an <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;int&gt;</a>. Remaps the processors so that patches are not accidentally mapped to non-existent mapped_boxes. 
+Sets the processor mappings from an <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;int&gt;</a>. Remaps the processors so that patches are not accidentally mapped to non-existent boxes. 
 </div>
 </div><p>
 <a class="anchor" name="0a1c27cc5af80de34fd19ca3f119cf5b"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getNumberOfLocalIndices" ref="0a1c27cc5af80de34fd19ca3f119cf5b" args="() const " -->
@@ -362,12 +367,14 @@ Return the total number of indices in the mapping array.
 <div class="memdoc">
 
 <p>
-Check whether the specified index is a local index (that is, mapped to the local processor). 
+Check whether the specified index is a local index (that is, mapped to the local processor).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#233cc758273df05e09bb0a519c0814f4">getProcessorMapping()</a>.getSize()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="ProcessorMapping_8h.html">ProcessorMapping.h</a><li>source/SAMRAI/hier/<a class="el" href="ProcessorMapping_8C.html">ProcessorMapping.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

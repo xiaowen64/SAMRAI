@@ -31,8 +31,6 @@
 <a href="classSAMRAI_1_1pdat_1_1SideDataFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#8095905ba283ec1da49b1817298fc4d5">SideDataFactory</a> (int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts, bool fine_boundary_represents_var)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#e9ba291454f95c4697a5a3632bcd710e">SideDataFactory</a> (int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts, bool fine_boundary_represents_var, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;directions)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#6783db99761fe195760de71146313c2a">~SideDataFactory</a> ()</td></tr>
@@ -71,43 +69,6 @@ pdat::PatchDataFactory </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="8095905ba283ec1da49b1817298fc4d5"></a><!-- doxytag: member="SAMRAI::pdat::SideDataFactory::SideDataFactory" ref="8095905ba283ec1da49b1817298fc4d5" args="(int depth, const hier::IntVector &amp;ghosts, bool fine_boundary_represents_var)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SAMRAI::pdat::SideDataFactory</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a>           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>depth</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>ghosts</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>fine_boundary_represents_var</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-The constructor for the side data factory class. The ghost cell width, depth (number of components), and fine boundary representation arguments give the defaults for all edge data objects created with this factory. Also, the default data allocation scheme is to generate storage for sides in all coordinate directions (default integer vector of all 1's). To use this factory to manage side data objects for sides associated with a single direction only, provide the directions vector argument. A zero entry indicates that data for that direction is not wanted. Otherwise, data will be created for that direction. See the SideVariable&lt;DIM&gt; class header file for more information. 
-</div>
-</div><p>
 <a class="anchor" name="e9ba291454f95c4697a5a3632bcd710e"></a><!-- doxytag: member="SAMRAI::pdat::SideDataFactory::SideDataFactory" ref="e9ba291454f95c4697a5a3632bcd710e" args="(int depth, const hier::IntVector &amp;ghosts, bool fine_boundary_represents_var, const hier::IntVector &amp;directions)" -->
 <div class="memitem">
 <div class="memproto">
@@ -148,7 +109,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Same as previous constructor but with directions vector of 1's 
+The constructor for the side data factory class. The ghost cell width, depth (number of components), and fine boundary representation arguments give the defaults for all edge data objects created with this factory. Also, the default data allocation scheme is to generate storage for sides in all coordinate directions (default integer vector of all 1's). To use this factory to manage side data objects for sides associated with a single direction only, provide the directions vector argument. A zero entry indicates that data for that direction is not wanted. Otherwise, data will be created for that direction. See the SideVariable&lt;TYPE&gt; class header file for more information.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 <p>
+ghosts.min() &gt;= 0 <p>
+directions.min() &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6783db99761fe195760de71146313c2a"></a><!-- doxytag: member="SAMRAI::pdat::SideDataFactory::~SideDataFactory" ref="6783db99761fe195760de71146313c2a" args="()" -->
@@ -197,9 +162,10 @@ Abstract virtual function to clone a patch data factory.
 This will return a new instantiation of the abstract factory with the same properties. The properties of the cloned factory can then be changed without modifying the original.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == ghosts.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#8e25f724ce554c386c4942565956e5ea">SAMRAI::hier::PatchDataFactory</a>.
@@ -224,7 +190,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Virtual factory function to allocate a concrete side data object. The default information about the object (e.g., ghost cell width) is taken from the factory. 
+Virtual factory function to allocate a concrete side data object. The default information about the object (e.g., ghost cell width) is taken from the factory.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == patch.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -248,7 +216,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Allocate the box geometry object associated with the patch data. This information will be used in the computation of intersections and data dependencies between objects. 
+Allocate the box geometry object associated with the patch data. This information will be used in the computation of intersections and data dependencies between objects.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#0714dc4177b9fa53181a4146fe31fc7d">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -314,7 +284,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Calculate the amount of memory needed to store the side data object, including object data and dynamically allocated data. 
+Calculate the amount of memory needed to store the side data object, including object data and dynamically allocated data.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#81f1cf57f6d5e5d600b7dd439f5cdfbb">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -337,7 +309,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return a boolean value indicating how data for the side quantity will be treated on coarse-fine interfaces. This value is passed into the constructor. See the FaceVariable&lt;DIM&gt; class header file for more information. 
+Return a boolean value indicating how data for the side quantity will be treated on coarse-fine interfaces. This value is passed into the constructor. See the FaceVariable&lt;TYPE&gt; class header file for more information. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#f43fa01dd54c980fb6931f820100e57a">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -384,12 +356,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">OutersideDataFactory</a>, false otherwise. 
+Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">OutersideDataFactory</a>, false otherwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == dst_pdf-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="SideDataFactory_8h.html">SideDataFactory.h</a><li>source/SAMRAI/pdat/<a class="el" href="SideDataFactory_8C.html">SideDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

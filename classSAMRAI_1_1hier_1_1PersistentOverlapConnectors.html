@@ -53,6 +53,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#e32981a847d4a51c820586e76c241dc1">clear</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Delete stored Connectors.  <a href="#e32981a847d4a51c820586e76c241dc1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#621ae498fb35018489dc12c6552826af">myBoxLevel</a> ()</td></tr>
+
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#cf045e30a508d246fb9f39fc632f03a5">BoxLevel</a></td></tr>
@@ -64,11 +66,19 @@ A managager of overlap Connectors incident from a <a class="el" href="classSAMRA
 <p>
 PersistantOverlapConnectors provides a mechanism for objects using the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to look up overlap Connectors for the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Connectors created or returned by this class are complete overlap Connectors that always contain the correct overlap neighbor data.<p>
 For improved scalability, Connectors can be constructed externally and copied into the collection. Connectors can also be automatically computed using a non-scalable global search.<p>
-If the input database contains a <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> database, the following inputs are recognized:<p>
-<b>bool check_created_connectors:</b> When true, checks Connectors when they are created. The check is an non-scalable operation and is meant for debugging.<p>
-<b>bool check_accessed_connectors:</b> When true, check Connectors when they are accessed. The check is an non-scalable operation and is meant for debugging.<p>
-<b>bool always_create_missing_connector:</b> When true, override <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#ce4edec6ddae4bfb8735270b8f292f4c">findConnector()</a> to behave like <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#6c6d7e4110a624e7b301c83e6457b619">findOrCreateConnector()</a>. This essentially ensures that any Connectors sought are always found.<p>
-<dl compact><dt><b>Note:</b></dt><dd>Creating Connectors this way (setting always_create_missing_connector to true) is non-scalable. Nevertheless, the default is true, so that application writers need not to worry about creating Connectors in a scalable way. For performance, this should be set to false. To selectively enable automatic <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> generation, set this to false and use <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#6c6d7e4110a624e7b301c83e6457b619">findOrCreateConnector()</a> instead of <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#ce4edec6ddae4bfb8735270b8f292f4c">findConnector()</a> where one is unsure if the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> has been created.</dd></dl>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>always_create_missing_connector</b> When true, override <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#ce4edec6ddae4bfb8735270b8f292f4c">findConnector()</a> to behave like <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#6c6d7e4110a624e7b301c83e6457b619">findOrCreateConnector()</a>. This essentially ensures that any Connectors sought are always found.</li></ul>
+<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>always_create_missing_connector </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+</table>
+<p>
+<dl compact><dt><b>Note:</b></dt><dd>Setting always_create_missing_connector to true is non-scalable. Nevertheless, the default is true, so that application writers need not worry about creating Connectors in a scalable way. For performance, this should be set to false. To selectively enable automatic <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> generation, set this to false and use <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#6c6d7e4110a624e7b301c83e6457b619">findOrCreateConnector()</a> instead of <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#ce4edec6ddae4bfb8735270b8f292f4c">findConnector()</a> where one is unsure if the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> has been created.</dd></dl>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#ce4edec6ddae4bfb8735270b8f292f4c">findConnector()</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#6c6d7e4110a624e7b301c83e6457b619">findOrCreateConnector()</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> </dd></dl>
@@ -134,7 +144,9 @@ hier::Connector::initialize()</dd></dl>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>A const reference to the newly created overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A const reference to the newly created overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#621ae498fb35018489dc12c6552826af">myBoxLevel()</a>.isInitialized() <p>
+head.isInitialized() </dd></dl>
 
 </div>
 </div><p>
@@ -182,6 +194,8 @@ hier::Connector::initialize()</dd></dl>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>relationships</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#621ae498fb35018489dc12c6552826af">myBoxLevel()</a>.isInitialized() <p>
+head.isInitialized() </dd></dl>
 
 </div>
 </div><p>
@@ -220,6 +234,7 @@ The head will be the supplied head and the base will be the <a class="el" href="
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#621ae498fb35018489dc12c6552826af">myBoxLevel()</a>.isInitialized() </dd></dl>
 
 </div>
 </div><p>
@@ -267,7 +282,9 @@ TODO: The criterion for selecting a single <a class="el" href="classSAMRAI_1_1hi
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> which matches the search criterion. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> which matches the search criterion.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html#621ae498fb35018489dc12c6552826af">myBoxLevel()</a>.isInitialized() <p>
+head.isInitialized() </dd></dl>
 
 </div>
 </div><p>
@@ -386,6 +403,25 @@ Delete stored Connectors.
 
 </div>
 </div><p>
+<a class="anchor" name="621ae498fb35018489dc12c6552826af"></a><!-- doxytag: member="SAMRAI::hier::PersistentOverlapConnectors::myBoxLevel" ref="621ae498fb35018489dc12c6552826af" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>&amp; SAMRAI::hier::PersistentOverlapConnectors::myBoxLevel           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
 <a class="anchor" name="cf045e30a508d246fb9f39fc632f03a5"></a><!-- doxytag: member="SAMRAI::hier::PersistentOverlapConnectors::BoxLevel" ref="cf045e30a508d246fb9f39fc632f03a5" args="" -->
 <div class="memitem">
@@ -406,7 +442,7 @@ Only BoxLevels are allowed to construct a <a class="el" href="classSAMRAI_1_1hie
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PersistentOverlapConnectors_8h.html">PersistentOverlapConnectors.h</a><li>source/SAMRAI/hier/<a class="el" href="PersistentOverlapConnectors_8C.html">PersistentOverlapConnectors.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

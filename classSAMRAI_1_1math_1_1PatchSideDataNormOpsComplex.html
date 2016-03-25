@@ -130,7 +130,10 @@ Empty constructor and destructor.
 <div class="memdoc">
 
 <p>
-Return the number of data values for the side-centered data object in the given box. Note that it is assumed that the box refers to the cell-centered index space corresponding to the patch hierarchy. 
+Return the number of data values for the side-centered data object in the given box. Note that it is assumed that the box refers to the cell-centered index space corresponding to the patch hierarchy.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1193276cfcdc1923b66746fdd01a2654"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::sumControlVolumes" ref="1193276cfcdc1923b66746fdd01a2654" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -165,7 +168,10 @@ Return the number of data values for the side-centered data object in the given 
 <div class="memdoc">
 
 <p>
-Return sum of control volume entries for the side-centered data object. 
+Return sum of control volume entries for the side-centered data object.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data &amp;&amp; cvol <p>
+data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="41d052a0cf15cf91283829ddde969e2c"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::abs" ref="41d052a0cf15cf91283829ddde969e2c" args="(const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -200,7 +206,11 @@ Return sum of control volume entries for the side-centered data object.
 <div class="memdoc">
 
 <p>
-Set destination component to norm of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \sqrt{ {real(s_i)}^2 + {imag(s_i)}^2 }$" src="form_15.png">. 
+Set destination component to norm of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \sqrt{ {real(s_i)}^2 + {imag(s_i)}^2 }$" src="form_15.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+dst-&gt;getDirectionVector() == src-&gt;getDirectionVector() <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="92a89f8d5cc389fe8cee23adba33158b"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::L1Norm" ref="92a89f8d5cc389fe8cee23adba33158b" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -235,7 +245,12 @@ Set destination component to norm of source component. That is, each destination
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$" src="form_45.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_18.png">. 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$" src="form_45.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_18.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() <p>
+!cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) <p>
+!cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="9af972e6f8d3e442abc2ea9b20b2ce11"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::L2Norm" ref="9af972e6f8d3e442abc2ea9b20b2ce11" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -270,7 +285,12 @@ Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of t
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$" src="form_20.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$" src="form_21.png">. 
+Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} cvol_i ) }$" src="form_20.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( data_i * \bar{data_i} ) }$" src="form_21.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() <p>
+!cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) <p>
+!cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="952e40389cf2d07f64175072f3938d2f"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::weightedL2Norm" ref="952e40389cf2d07f64175072f3938d2f" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;weight, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -311,7 +331,13 @@ Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of t
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data &amp;&amp; weight <p>
+(data-&gt;getDim() == weight-&gt;getDim()) &amp;&amp; (data-&gt;getDim() == box.getDim()) <p>
+data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), weight-&gt;getDirectionVector()) <p>
+!cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) <p>
+!cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7d75d5f9287611ec27a26d8437edc65c"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::RMSNorm" ref="7d75d5f9287611ec27a26d8437edc65c" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -346,7 +372,9 @@ Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-
 <div class="memdoc">
 
 <p>
-Return discrete root mean squared norm of the data. If the control volume is not NULL, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries. 
+Return discrete root mean squared norm of the data. If the control volume is not NULL, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="dd8cf4b2a3aa5d71a3afc780d5458993"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::weightedRMSNorm" ref="dd8cf4b2a3aa5d71a3afc780d5458993" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;weight, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -387,7 +415,9 @@ Return discrete root mean squared norm of the data. If the control volume is not
 <div class="memdoc">
 
 <p>
-Return discrete weighted root mean squared norm of the data. If the control volume is not NULL, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries. 
+Return discrete weighted root mean squared norm of the data. If the control volume is not NULL, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data &amp;&amp; weight </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7a37088d0479b3824e7657eb035a8dc0"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::maxNorm" ref="7a37088d0479b3824e7657eb035a8dc0" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -422,7 +452,10 @@ Return discrete weighted root mean squared norm of the data. If the control volu
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. If the control volume is NULL, it is ignored during the computation of the maximum. 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. If the control volume is NULL, it is ignored during the computation of the maximum.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+!cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7da2d6a72d885b862aeffa96e9b7de04"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::dot" ref="7da2d6a72d885b862aeffa96e9b7de04" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data1, const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data2, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt;()) const " -->
@@ -463,7 +496,11 @@ Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the d
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">. If the control volume is NULL, it is ignored during the summation. 
+Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">. If the control volume is NULL, it is ignored during the summation.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data1 &amp;&amp; data2 <p>
+data1-&gt;getDirectionVector() == data2-&gt;getDirectionVector() <p>
+!cvol || (data1-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data1-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1878d8850e0713510257344ed22e0763"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsComplex::integral" ref="1878d8850e0713510257344ed22e0763" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::SideData&lt; double &gt; &gt; &amp;vol) const " -->
@@ -498,12 +535,15 @@ Return the dot product of the two data arrays using the control volume to weight
 <div class="memdoc">
 
 <p>
-Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">. 
+Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#fc90b86bda7a9ab9b0dd70ffa355f343">hier::IntVector::min</a>(data-&gt;getDirectionVector(), vol-&gt;getDirectionVector()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchSideDataNormOpsComplex_8h.html">PatchSideDataNormOpsComplex.h</a><li>source/SAMRAI/math/<a class="el" href="PatchSideDataNormOpsComplex_8C.html">PatchSideDataNormOpsComplex.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

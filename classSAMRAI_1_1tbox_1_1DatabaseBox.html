@@ -38,7 +38,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#cba3c5a564e069968f460e507dc9b0ce">empty</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#32c36ebf4e5b369094bb4aedb36df6b5">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#217d2c3b3109c1685552eab525a4a289">getDimVal</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ebe4afe81dcc38e0feb2d6db50ba7c7c">setDim</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;dim)</td></tr>
 
@@ -56,11 +56,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1DatabaseBox__POD.html">DatabaseBox_POD</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#d45ea4693ca0faf80f9604ea04862892">d_data</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">All data members in a POD type.  <a href="#d45ea4693ca0faf80f9604ea04862892"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#551b96bbe5be609cc6208bb5a508835e">d_dim</a></td></tr>
-
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> represents a one, two, or three dimensional box in the AMR index space. It is defined by lower and upper bounds given by integer arrays.<p>
+Class <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> represents a box of up to MAX_DIM_VAL dimensions in the AMR index space. It is defined by lower and upper bounds given by integer arrays.<p>
 This box is an auxilliary data structure used by the database routines to manipulate boxes. This box type removes cyclic dependencies among the database routines (which need a box) and the box (which needs the database routines). The box classes in the hierarchy package convert this box structure into the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> box class used by the AMR algorithms. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -115,7 +113,7 @@ The default constructor creates a zero dimension empty box.
 <div class="memdoc">
 
 <p>
-Create a box of the specified dimension describing the index space between lower and upper. The dimension argument must be zero, one, two, or three. 
+Create a box of the specified dimension describing the index space between lower and upper. 
 </div>
 </div><p>
 <a class="anchor" name="a72172e6bd4832cad410bfdd712d5ecb"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::DatabaseBox" ref="a72172e6bd4832cad410bfdd712d5ecb" args="(const DatabaseBox &amp;box)" -->
@@ -194,15 +192,15 @@ The assignment operator copies the index space of the argument box.
 <div class="memdoc">
 
 <p>
-Return whether the box is empty. A box is empty if it has dimension zero or if any of the upper dimensions is less than its corresponding lower dimension. 
+Return whether the box is empty. A box is empty if it has dimension zero or if any part of the upper index is less than its corresponding part of the lower index. 
 </div>
 </div><p>
-<a class="anchor" name="32c36ebf4e5b369094bb4aedb36df6b5"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::getDim" ref="32c36ebf4e5b369094bb4aedb36df6b5" args="() const " -->
+<a class="anchor" name="217d2c3b3109c1685552eab525a4a289"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::getDimVal" ref="217d2c3b3109c1685552eab525a4a289" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a>&amp; SAMRAI::tbox::DatabaseBox::getDim           </td>
+          <td class="memname">const int&amp; SAMRAI::tbox::DatabaseBox::getDimVal           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -253,7 +251,9 @@ Return the dimension of this object.
 <div class="memdoc">
 
 <p>
-Return the specified component (non-const) of the lower index of the box. 
+Return the specified component (non-const) of the lower index of the box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#217d2c3b3109c1685552eab525a4a289">getDimVal()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a5fba9ba1d0470837a4e6b2f922b3ec3"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::upper" ref="a5fba9ba1d0470837a4e6b2f922b3ec3" args="(const int i)" -->
@@ -273,7 +273,9 @@ Return the specified component (non-const) of the lower index of the box.
 <div class="memdoc">
 
 <p>
-Return the specified component (non-const) of the upper index of the box. 
+Return the specified component (non-const) of the upper index of the box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#217d2c3b3109c1685552eab525a4a289">getDimVal()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e55561c944a973c3da7283b76f5b1450"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::lower" ref="e55561c944a973c3da7283b76f5b1450" args="(const int i) const " -->
@@ -293,7 +295,9 @@ Return the specified component (non-const) of the upper index of the box.
 <div class="memdoc">
 
 <p>
-Return the specified component (const) of the lower index of the box. 
+Return the specified component (const) of the lower index of the box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#217d2c3b3109c1685552eab525a4a289">getDimVal()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3d53de4bee591de067426c36ed352fbb"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::upper" ref="3d53de4bee591de067426c36ed352fbb" args="(const int i) const " -->
@@ -313,7 +317,9 @@ Return the specified component (const) of the lower index of the box.
 <div class="memdoc">
 
 <p>
-Return the specified component (const) of the upper index of the box. 
+Return the specified component (const) of the upper index of the box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#217d2c3b3109c1685552eab525a4a289">getDimVal()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="389511f885419b0e529c1adff497156e"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::operator==" ref="389511f885419b0e529c1adff497156e" args="(const DatabaseBox &amp;box) const " -->
@@ -355,24 +361,9 @@ Due to the need to compute offsets for data members and that offsets cannot be c
 Data members are public so that the <a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html">HDFDatabase</a> need not mirror this structure in defining a compound type for HDF. 
 </div>
 </div><p>
-<a class="anchor" name="551b96bbe5be609cc6208bb5a508835e"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::d_dim" ref="551b96bbe5be609cc6208bb5a508835e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#551b96bbe5be609cc6208bb5a508835e">SAMRAI::tbox::DatabaseBox::d_dim</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="DatabaseBox_8h.html">DatabaseBox.h</a><li>source/SAMRAI/tbox/<a class="el" href="DatabaseBox_8C.html">DatabaseBox.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

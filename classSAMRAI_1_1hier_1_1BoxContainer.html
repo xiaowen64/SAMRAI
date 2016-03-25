@@ -42,9 +42,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7009e4fed5a772cc507ede414a969eec">operator!=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;rhs) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Inequality operator.  <a href="#7009e4fed5a772cc507ede414a969eec"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#afcff8896290c861b214c3cc72f0f4fc">makeTree</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> *grid_geometry=NULL, const int min_number=10) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#89cd827612c72401f202afb607a8c3f2">makeTree</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> *grid_geometry=0, const int min_number=10) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a search tree representation of the boxes in this container.  <a href="#afcff8896290c861b214c3cc72f0f4fc"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a search tree representation of the boxes in this container.  <a href="#89cd827612c72401f202afb607a8c3f2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#78a7a3f136947ff1b1020a2bc7606c45">hasTree</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Query if the search tree representation exists.  <a href="#78a7a3f136947ff1b1020a2bc7606c45"></a><br></td></tr>
@@ -267,22 +267,22 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#128bb671cf84252e0f427f09c75e39a7">erase</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Erase a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from the container.  <a href="#128bb671cf84252e0f427f09c75e39a7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#62ced82a28e45cba8f63e632c275a652">separatePeriodicImages</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;real_mapped_box_vector, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;periodic_image_mapped_box_vector) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#39186d8f4c96a53bad6398227377522d">separatePeriodicImages</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;real_box_vector, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;periodic_image_box_vector) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy the members of this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> into two vector&lt;Box&gt; objects, one containing real Boxes and one containing their periodic images.  <a href="#62ced82a28e45cba8f63e632c275a652"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy the members of this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> into two vector&lt;Box&gt; objects, one containing real Boxes and one containing their periodic images.  <a href="#39186d8f4c96a53bad6398227377522d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#2a6449b4569cdda49b2911988a2aea33">removePeriodicImageBoxes</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Any members of this container that are periodic images will be erased.  <a href="#2a6449b4569cdda49b2911988a2aea33"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#d2b53b56653aa208809c07dee130168d">unshiftPeriodicImageBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;output_mapped_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refinement_ratio) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#e40dd74cf37afa0dbb174ddd17f30f80">unshiftPeriodicImageBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;output_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refinement_ratio) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Place unshifted versions of Boxes into a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>.  <a href="#d2b53b56653aa208809c07dee130168d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Place unshifted versions of Boxes into a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>.  <a href="#e40dd74cf37afa0dbb174ddd17f30f80"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#1e579f1b6a4b9785d5eaf418647af61f">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#1ba1d07a647b3f4047d9e84b62d5b915">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> to a database.  <a href="#1e579f1b6a4b9785d5eaf418647af61f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#35ca65e2f2e662b2a239726532622ef1">getFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;database)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> to a restart database.  <a href="#1ba1d07a647b3f4047d9e84b62d5b915"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#2c29695f8018a85b1d64175751aea301">getFromRestart</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;restart_db)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> from a database.  <a href="#35ca65e2f2e662b2a239726532622ef1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> from a restart database.  <a href="#2c29695f8018a85b1d64175751aea301"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#5077a949df4f80ea3328b09e6ce8674e">operator tbox::Array</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Conversion from <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> to tbox::Array&lt;tbox::DatabaseBox&gt;.  <a href="#5077a949df4f80ea3328b09e6ce8674e"></a><br></td></tr>
@@ -316,8 +316,8 @@ A <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>
 An ordered container can always have its state switched to unordered by a call to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#45d4d5bcb82292aaaad45e8ced732e04">unorder()</a> method. An unordered container can also have its state switched to ordered by a call to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#731fc8ee508231087f37e1da002c1296">order()</a> method, but only under certain conditions specified below in the comments for <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#731fc8ee508231087f37e1da002c1296">order()</a>.<p>
 Certain methods in this class can only be called on ordered containers while others can only be called on unordered containers. Violating these restrictions will result in a run-time error.<p>
 Regardless of unordered/unordered state, all Boxes within a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> must be of the same Dimension. If a new <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> added to a container has a different Dimension than the Boxes already in the container, an assertion failure will occur.<p>
-An option exists to create an internal search tree representation based on the spatial coordinates of the Boxes in the container. This option can be used to reduce the cost of searching operations in the methods <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7c25839cc04833346267c7e5f0543f5d">removeIntersections()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#ae61c71f43a24e0e6312a23c5c912b54">intersectBoxes()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#f5159af109948aebc38f9625a295664b">findOverlapBoxes()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#786d8a85c7741095b98705700f58f565">hasOverlap()</a>. This option is invoked by calling the method <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#afcff8896290c861b214c3cc72f0f4fc">makeTree()</a>. This option should only be used in cases where the listed search methods will be called multiple times on the same unchanging <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>. The cost of building the tree representaion is O(N(log(N)), while the tree reduces the cost of the search operations to O(log(N)) rather than O(N), thus it is adviseable to only use the tree representation when the reduction in search cost is expected to outweigh the increased cost of building the tree.<p>
-Constructing the tree represenation via <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#afcff8896290c861b214c3cc72f0f4fc">makeTree()</a> will change nothing about the Boxes stored in the container, nor will it change the ordered/unordered state of the container.<p>
+An option exists to create an internal search tree representation based on the spatial coordinates of the Boxes in the container. This option can be used to reduce the cost of searching operations in the methods <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7c25839cc04833346267c7e5f0543f5d">removeIntersections()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#ae61c71f43a24e0e6312a23c5c912b54">intersectBoxes()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#f5159af109948aebc38f9625a295664b">findOverlapBoxes()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#786d8a85c7741095b98705700f58f565">hasOverlap()</a>. This option is invoked by calling the method <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#89cd827612c72401f202afb607a8c3f2">makeTree()</a>. This option should only be used in cases where the listed search methods will be called multiple times on the same unchanging <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>. The cost of building the tree representaion is O(N(log(N)), while the tree reduces the cost of the search operations to O(log(N)) rather than O(N), thus it is adviseable to only use the tree representation when the reduction in search cost is expected to outweigh the increased cost of building the tree.<p>
+Constructing the tree represenation via <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#89cd827612c72401f202afb607a8c3f2">makeTree()</a> will change nothing about the Boxes stored in the container, nor will it change the ordered/unordered state of the container.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> </dd></dl>
 
 <p>
@@ -1131,6 +1131,7 @@ The rank of every member of this container is inserted into the set.<p>
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>owners</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> || for each box in container has valid <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1300,6 +1301,7 @@ Only boxes of the given <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html"
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>each box in container must have a valid <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1321,7 +1323,9 @@ Only boxes of the given <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html"
 <p>
 Returns the bounding box for all the boxes in the container. 
 <p>
-A run-time error will occur if Boxes in this container have different BlockIds. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!isEmpty() <p>
+each <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in container has same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="0de5fd4497d32eced847e66d07cf77ca"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::getBoundingBox" ref="0de5fd4497d32eced847e66d07cf77ca" args="(const BlockId &amp;block_id) const " -->
@@ -1343,6 +1347,12 @@ A run-time error will occur if Boxes in this container have different BlockIds.
 <p>
 Returns the bounding box for all the boxes in the container having the given <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -1386,8 +1396,9 @@ Check for non-empty intersection among boxes in container.
 <p>
 Changes state of this container to ordered. 
 <p>
-This can be called on an unordered container with the restriction that every member of the container must have a valid and unique <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. If this restriction is not met, then a run-time error will occur.<p>
-If called on a container that is already ordered, nothing changes. 
+If called on a container that is already ordered, nothing changes.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>each box in container must have valid and unique <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="45d4d5bcb82292aaaad45e8ced732e04"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::unorder" ref="45d4d5bcb82292aaaad45e8ced732e04" args="()" -->
@@ -1458,6 +1469,8 @@ Makes "item" the member of the container that will be returned by <a class="el" 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>item</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == item.getDim()) <p>
+!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1486,6 +1499,8 @@ Makes "item" the member of the container that will be returned by <a class="el" 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>item</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == item.getDim()) <p>
+!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1521,9 +1536,11 @@ Places "item" immediately before the member of the container pointed to by "iter
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>iter</em>&nbsp;</td><td>Location to add item before. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>item</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to add to container. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>item</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to add to container.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == item.getDim()) <p>
+!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1559,9 +1576,11 @@ Places "item" immediately after the member of the container pointed to by "iter"
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>iter</em>&nbsp;</td><td>Location to add item after. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>item</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to add to container. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>item</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to add to container.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == item.getDim()) <p>
+!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1590,6 +1609,9 @@ Prepends the Boxes in "boxes" to this <a class="el" href="classSAMRAI_1_1hier_1_
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>boxes</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == item.getDim()) <p>
+!isOrdered()</dd></dl>
+<dl compact><dt><b>Postcondition:</b></dt><dd>boxes.isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -1618,6 +1640,9 @@ Appends the Boxes in "boxes" to this <a class="el" href="classSAMRAI_1_1hier_1_1
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>boxes</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == item.getDim()) <p>
+!isOrdered()</dd></dl>
+<dl compact><dt><b>Postcondition:</b></dt><dd>boxes.isEmpty() </dd></dl>
 
 </div>
 </div><p>
@@ -1639,6 +1664,7 @@ Appends the Boxes in "boxes" to this <a class="el" href="classSAMRAI_1_1hier_1_1
 <p>
 Remove the first member of the unordered container. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1660,6 +1686,7 @@ Remove the first member of the unordered container.
 <p>
 Remove the last member of the unordered container. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1681,7 +1708,10 @@ Remove the last member of the unordered container.
 <p>
 Place the boxes in the container into a canonical ordering. 
 <p>
-The canonical ordering for boxes is defined such that boxes that lie next to each other in higher dimensions are coalesced together before boxes that lie next to each other in lower dimensions. This ordering provides a standard representation that can be used to compare box containers. The canonical ordering also does not allow any overlap between the boxes in the container. This routine is potentially expensive, since the running time is <img class="formulaInl" alt="$O(N^2)$" src="form_0.png"> for N boxes. None of the domain calculus routines call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#ab8f157713a170dd685a5e862722e2fd">simplify()</a>; all calls to simplify the boxes must be explicit. Note that this routine is distinct from <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#340464abe18be386fa5689587a1431d4">coalesce()</a>, which is not guaranteed to produce a canonical ordering. 
+The canonical ordering for boxes is defined such that boxes that lie next to each other in higher directions are coalesced together before boxes that lie next to each other in lower directions. This ordering provides a standard representation that can be used to compare box containers. The canonical ordering also does not allow any overlap between the boxes in the container. This routine is potentially expensive, since the running time is <img class="formulaInl" alt="$O(N^2)$" src="form_0.png"> for N boxes. None of the domain calculus routines call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#ab8f157713a170dd685a5e862722e2fd">simplify()</a>; all calls to simplify the boxes must be explicit. Note that this routine is distinct from <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#340464abe18be386fa5689587a1431d4">coalesce()</a>, which is not guaranteed to produce a canonical ordering.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || all Boxes in container have same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="340464abe18be386fa5689587a1431d4"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::coalesce" ref="340464abe18be386fa5689587a1431d4" args="()" -->
@@ -1702,7 +1732,10 @@ The canonical ordering for boxes is defined such that boxes that lie next to eac
 <p>
 Combine any boxes in the container which may be coalesced. 
 <p>
-Two boxes may be coalesced if their union is a box (recall that boxes are not closed under index set unions). Empty boxes in the container are removed during this process. Note that this is potentially an expensive calculation (e.g., it will require <img class="formulaInl" alt="$(N-1)!$" src="form_1.png"> box comparisons for a box container with <img class="formulaInl" alt="$N$" src="form_2.png"> boxes in the worst possible case). So this routine should be used sparingly. Also note that this routine is different than <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#ab8f157713a170dd685a5e862722e2fd">simplify()</a> since it does not produce a canonical ordering. In particular, this routine processes the boxes in the order in which they appear in the container, rather than attempting to coalesce boxes along specific coordinate directions before others. 
+Two boxes may be coalesced if their union is a box (recall that boxes are not closed under index set unions). Empty boxes in the container are removed during this process. Note that this is potentially an expensive calculation (e.g., it will require <img class="formulaInl" alt="$(N-1)!$" src="form_1.png"> box comparisons for a box container with <img class="formulaInl" alt="$N$" src="form_2.png"> boxes in the worst possible case). So this routine should be used sparingly. Also note that this routine is different than <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#ab8f157713a170dd685a5e862722e2fd">simplify()</a> since it does not produce a canonical ordering. In particular, this routine processes the boxes in the order in which they appear in the container, rather than attempting to coalesce boxes along specific coordinate directions before others.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || all Boxes in container have same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f7c1d208178fd5e6652ad311a9c9f79b"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::rotate" ref="f7c1d208178fd5e6652ad311a9c9f79b" args="(const Transformation::RotationIdentifier rotation_ident)" -->
@@ -1730,6 +1763,8 @@ Rotate boxes in container according to a RotationIdentifier.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rotation_ident</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>each <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in container has dim 2 or 3 <p>
+each <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in container has same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1755,9 +1790,10 @@ Remove from each box the portions that intersect takeaway.
 This operation can be thought of as a set difference defined over the abstract AMR box index space. Performing the set difference will require <img class="formulaInl" alt="$O(N)$" src="form_3.png"> time for a container with <img class="formulaInl" alt="$N$" src="form_2.png"> boxes. For each box, b, in this container this operation computes b-(b^takeaway) where '^' indicates intersection.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>takeaway</em>&nbsp;</td><td>What to exclude from each box in the container. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>takeaway</em>&nbsp;</td><td>What to exclude from each box in the container.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1784,9 +1820,10 @@ For each box, b, in this container and for each box, t, in takeaway this operati
 This only works if all boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> and the takeaway <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> have the same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>. An error will occur otherwise.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>takeaway</em>&nbsp;</td><td>What to exclude from each box in the container. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>takeaway</em>&nbsp;</td><td>What to exclude from each box in the container.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1829,9 +1866,11 @@ Uses refinement ratio and grid geometry to handle intersections across block bou
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refinement_ratio</em>&nbsp;</td><td>All boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> are assumed to exist in index space that has this refinement ratio relative to the coarse-level domain.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>takeaway</em>&nbsp;</td><td>The boxes to take away from this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>. An error will occur if makeTree with a non-null <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> argument has not been previously called on this container.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>include_singularity_block_neighbors</em>&nbsp;</td><td>If true, intersections with neighboring blocks that touch only across an enhanced connectivity singularity will be removed. If false, those intersections are ignored. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>include_singularity_block_neighbors</em>&nbsp;</td><td>If true, intersections with neighboring blocks that touch only across an enhanced connectivity singularity will be removed. If false, those intersections are ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() <p>
+takeaway.hasTree() </dd></dl>
 
 </div>
 </div><p>
@@ -1870,6 +1909,9 @@ This is special version for the case where the container is empty initially. Upo
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>takeaway</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> <p>
+box.getBlockId() == takeaway.getBlockId() </dd></dl>
 
 </div>
 </div><p>
@@ -1898,6 +1940,7 @@ Performing the intersection will require <img class="formulaInl" alt="$O(N)$" sr
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>keep</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1927,6 +1970,7 @@ This only works if all boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>keep</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -1969,9 +2013,11 @@ Uses refinement ratio and grid geometry to handle intersections across block bou
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refinement_ratio</em>&nbsp;</td><td>All boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> are assumed to exist in index space that has this refinement ratio relative to the coarse-level domain.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>keep</em>&nbsp;</td><td>The boxes to intersect with this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>. An error will occur if makeTree with a non-null <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> argument has not been previously called on this container.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>include_singularity_block_neighbors</em>&nbsp;</td><td>If true, intersections with neighboring blocks that touch only across an enhanced connectivity singularity will be kept. If false, those intersections are ignored. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>include_singularity_block_neighbors</em>&nbsp;</td><td>If true, intersections with neighboring blocks that touch only across an enhanced connectivity singularity will be kept. If false, those intersections are ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!isOrdered() <p>
+keep.hasTree() </dd></dl>
 
 </div>
 </div><p>
@@ -1998,9 +2044,12 @@ The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> will be added t
 <dl compact><dt><b>Returns:</b></dt><dd>True if the container did not already have a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> with the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>, false otherwise.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to attempt to insert into the container. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to attempt to insert into the container.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getBoxId().isValid() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == box.getDim()) <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2039,9 +2088,13 @@ The iterator argument does not determine the place the <a class="el" href="class
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>position</em>&nbsp;</td><td>Location to begin searching for place to insert <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to attempt to insert into the container </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to attempt to insert into the container</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getBoxId().isValid() <p>
+box.getBlockId() != <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html#a65f5c3711e7ece2c05202907e641808">BlockId::invalidId()</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == box.getDim()) <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2080,6 +2133,8 @@ Boxes in the range [first, last) are added to the ordered container, as long as 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>last</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> <p>
+for each box in [first, last), box.getBoxId().isValid() &amp;&amp; (isEmpty || <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#7f7f5e31607a50991f60ef124e1eec92">front()</a>.getDim() == box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -2106,9 +2161,10 @@ Search for a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> having
 <dl compact><dt><b>Returns:</b></dt><dd>If a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> with the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> as the argument is found, the iterator points to that <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this container, otherwise <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#db022e9e683d3a8b84834264d92b7a24">end()</a> for this container is returned.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key for the find operation. Only its <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> is compared to members of this container. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key for the find operation. Only its <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> is compared to members of this container.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2135,9 +2191,10 @@ This may only be called on an ordered container.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>iterator pointing to the first member of this container with a <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> value greater than or equal to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of the argument <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key for the lower bound search. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key for the lower bound search.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2160,13 +2217,13 @@ This may only be called on an ordered container.<p>
 <p>
 Get upper bound iterator for a given <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. 
 <p>
-This may only be called on an ordered container.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>iterator pointing to the first member of this container with a <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> value greater than the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of the argument <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. Will return <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#db022e9e683d3a8b84834264d92b7a24">end()</a> if there are no members with a greater <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> value.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key for the upper bound search. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key for the upper bound search.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2189,17 +2246,18 @@ This may only be called on an ordered container.<p>
 <p>
 Erase a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from the container. 
 <p>
-This may only be called on an ordered container. If a member of the container has the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> as the argument <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, it will be erased from the container. If no such member is found, the container is unchanged.<p>
+If a member of the container has the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> as the argument <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, it will be erased from the container. If no such member is found, the container is unchanged.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>1 if a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is erased, 0 otherwise.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key to find a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to be erased. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> serving as key to find a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to be erased.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="62ced82a28e45cba8f63e632c275a652"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::separatePeriodicImages" ref="62ced82a28e45cba8f63e632c275a652" args="(std::vector&lt; Box &gt; &amp;real_mapped_box_vector, std::vector&lt; Box &gt; &amp;periodic_image_mapped_box_vector) const " -->
+<a class="anchor" name="39186d8f4c96a53bad6398227377522d"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::separatePeriodicImages" ref="39186d8f4c96a53bad6398227377522d" args="(std::vector&lt; Box &gt; &amp;real_box_vector, std::vector&lt; Box &gt; &amp;periodic_image_box_vector) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2207,13 +2265,13 @@ This may only be called on an ordered container. If a member of the container ha
           <td class="memname">void SAMRAI::hier::BoxContainer::separatePeriodicImages           </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>real_mapped_box_vector</em>, </td>
+          <td class="paramname"> <em>real_box_vector</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>periodic_image_mapped_box_vector</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>periodic_image_box_vector</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -2230,10 +2288,11 @@ Copy the members of this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer
 Put the results in the output vectors. For flexibility and efficiency, the output containers are NOT cleared first, so users may want to clear them before calling this method.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>real_mapped_box_vector</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>periodic_image_mapped_box_vector</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>real_box_vector</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>periodic_image_box_vector</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2255,10 +2314,11 @@ Put the results in the output vectors. For flexibility and efficiency, the outpu
 <p>
 Any members of this container that are periodic images will be erased. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#55426f67a67df631755436ddba55da59">isEmpty()</a> || <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d2b53b56653aa208809c07dee130168d"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::unshiftPeriodicImageBoxes" ref="d2b53b56653aa208809c07dee130168d" args="(BoxContainer &amp;output_mapped_boxes, const IntVector &amp;refinement_ratio) const " -->
+<a class="anchor" name="e40dd74cf37afa0dbb174ddd17f30f80"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::unshiftPeriodicImageBoxes" ref="e40dd74cf37afa0dbb174ddd17f30f80" args="(BoxContainer &amp;output_boxes, const IntVector &amp;refinement_ratio) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2266,7 +2326,7 @@ Any members of this container that are periodic images will be erased.
           <td class="memname">void SAMRAI::hier::BoxContainer::unshiftPeriodicImageBoxes           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>output_mapped_boxes</em>, </td>
+          <td class="paramname"> <em>output_boxes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2290,10 +2350,11 @@ For all members of this container that are periodic images, create an unshifted 
 For flexibility and efficiency, the output container is NOT cleared first, so users may want to clear it before calling this method.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>output_mapped_boxes</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refinement_ratio</em>&nbsp;</td><td>Refinement ratio where the boxes live. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>output_boxes</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refinement_ratio</em>&nbsp;</td><td>Refinement ratio where the boxes live.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#9deb06956dc5e7e51240fc36e568a235">isOrdered()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2353,15 +2414,15 @@ Inequality operator.
 
 </div>
 </div><p>
-<a class="anchor" name="1e579f1b6a4b9785d5eaf418647af61f"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::putUnregisteredToDatabase" ref="1e579f1b6a4b9785d5eaf418647af61f" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="1ba1d07a647b3f4047d9e84b62d5b915"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::putToRestart" ref="1ba1d07a647b3f4047d9e84b62d5b915" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BoxContainer::putUnregisteredToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BoxContainer::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -2370,20 +2431,20 @@ Inequality operator.
 <div class="memdoc">
 
 <p>
-Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> to a database. 
+Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> to a restart database. 
 <p>
 
 </div>
 </div><p>
-<a class="anchor" name="35ca65e2f2e662b2a239726532622ef1"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::getFromDatabase" ref="35ca65e2f2e662b2a239726532622ef1" args="(tbox::Database &amp;database)" -->
+<a class="anchor" name="2c29695f8018a85b1d64175751aea301"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::getFromRestart" ref="2c29695f8018a85b1d64175751aea301" args="(tbox::Database &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BoxContainer::getFromDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BoxContainer::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -2392,7 +2453,7 @@ Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxConta
 <div class="memdoc">
 
 <p>
-Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> from a database. 
+Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> from a restart database. 
 <p>
 
 </div>
@@ -2473,7 +2534,7 @@ Print each box in the container to the specified output stream.
 <p>
 Return a object to that can format the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> for inserting into output streams. 
 <p>
-Usage example (printing with a tab indentation): <div class="fragment"><pre class="fragment">    *    cout &lt;&lt; "my mapped_boxes:\n" &lt;&lt; mapped_boxes.format("\t") &lt;&lt; endl;
+Usage example (printing with a tab indentation): <div class="fragment"><pre class="fragment">    *    cout &lt;&lt; "my boxes:\n" &lt;&lt; boxes.format("\t") &lt;&lt; endl;
     * </pre></div><p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -2484,7 +2545,7 @@ Usage example (printing with a tab indentation): <div class="fragment"><pre clas
 
 </div>
 </div><p>
-<a class="anchor" name="afcff8896290c861b214c3cc72f0f4fc"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::makeTree" ref="afcff8896290c861b214c3cc72f0f4fc" args="(const BaseGridGeometry *grid_geometry=NULL, const int min_number=10) const " -->
+<a class="anchor" name="89cd827612c72401f202afb607a8c3f2"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::makeTree" ref="89cd827612c72401f202afb607a8c3f2" args="(const BaseGridGeometry *grid_geometry=0, const int min_number=10) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2492,7 +2553,7 @@ Usage example (printing with a tab indentation): <div class="fragment"><pre clas
           <td class="memname">void SAMRAI::hier::BoxContainer::makeTree           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> *&nbsp;</td>
-          <td class="paramname"> <em>grid_geometry</em> = <code>NULL</code>, </td>
+          <td class="paramname"> <em>grid_geometry</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2518,12 +2579,14 @@ The building of the tree is an O(N log(N)) operation, but it reduces the cost of
 The min_number argument is used to indicate a container size below which there is no benefit from building the tree, so no tree is created when the size is less than or equal to this value.<p>
 If a tree representation has been created via this method, and then any other <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> method is called that changes the container by adding or removing boxes, or by changing the spatial coordinates of the boxes, the tree representation is destroyed.<p>
 A non-null pointer to a <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> must be provided if this container is going to be used in any of the methods that handle multiblock transformations. If this container is used only in a single-block context, no <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> argument is necessary.<p>
+<dl compact><dt><b>Note:</b></dt><dd>The grid_geometry argument is required for multiblock. It must be the GridGeometry from which the Boxes stored in the container came from.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>To handle multiblock transformations if needed. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_number</em>&nbsp;</td><td>An assertion failure will occur if not positive </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_number</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>min_number &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -2599,7 +2662,7 @@ This is an efficient query if the the tree representation of this container has 
 Find all boxes that intersect with a given box. 
 <p>
 Every <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> that intersects with the box argument will be added to the overlap_boxes output container. The output container will retain the same ordered/unordered state that it had prior to being passed into this method.<p>
-If this method is used multiple times on the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, it is recommended for efficiency's sake to call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#afcff8896290c861b214c3cc72f0f4fc">makeTree()</a> on this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> before calling this method.<p>
+If this method is used multiple times on the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, it is recommended for efficiency's sake to call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#89cd827612c72401f202afb607a8c3f2">makeTree()</a> on this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> before calling this method.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>overlap_boxes</em>&nbsp;</td><td></td></tr>
@@ -2638,13 +2701,14 @@ If this method is used multiple times on the same <a class="el" href="classSAMRA
 Find all boxes that intersect with a given box. 
 <p>
 A pointer to every <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> that intersects with the box argument will be copied to the overlap_boxes output vector. The vector is not sorted in any way.<p>
-If this method is used multiple times on the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, it is recommended for efficiency's sake to call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#afcff8896290c861b214c3cc72f0f4fc">makeTree()</a> on this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> before calling this method.<p>
+If this method is used multiple times on the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, it is recommended for efficiency's sake to call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#89cd827612c72401f202afb607a8c3f2">makeTree()</a> on this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> before calling this method.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>overlap_boxes</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!hasTree() || (d_tree-&gt;getNumberBlocksInTree() == 1) </dd></dl>
 
 </div>
 </div><p>
@@ -2695,9 +2759,10 @@ Every <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this <a cl
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>overlap_boxes</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refinement_ratio</em>&nbsp;</td><td>All boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> are assumed to exist in index space that has this refinement ratio relative to the coarse-level domain.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>include_singularity_block_neighbors</em>&nbsp;</td><td>If true, intersections with neighboring blocks that touch only across an enhanced connectivity singularity will be added to output. If false, those intersections are ignored. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>include_singularity_block_neighbors</em>&nbsp;</td><td>If true, intersections with neighboring blocks that touch only across an enhanced connectivity singularity will be added to output. If false, those intersections are ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#78a7a3f136947ff1b1020a2bc7606c45">hasTree()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2720,7 +2785,7 @@ Every <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in this <a cl
 <p>
 Determine if a given box intersects with the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>. 
 <p>
-If this method is used multiple times on the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, it is recommended for efficiency's sake to call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#afcff8896290c861b214c3cc72f0f4fc">makeTree()</a> on this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> before calling this method.<p>
+If this method is used multiple times on the same <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, it is recommended for efficiency's sake to call <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#89cd827612c72401f202afb607a8c3f2">makeTree()</a> on this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> before calling this method.<p>
 This only works if all boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> have the same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>, and the argument box also has that same <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>. An error will occur if these conditions are not met.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>True if box intersects with any member of the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>, false otherwise.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -2764,7 +2829,7 @@ This only works if all boxes in this <a class="el" href="classSAMRAI_1_1hier_1_1
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxContainer_8h.html">BoxContainer.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxContainer_8C.html">BoxContainer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

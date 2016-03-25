@@ -420,9 +420,10 @@ Add the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> t
 If the given <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> already exists nothing is done; the same <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> may be added multiple times. If a <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> exists with the same name identifier but is a different <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> object, an error will be logged and the program will abort. This prevents multiple Variables being associated with the same name.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable </dd></dl>
 
 </div>
 </div><p>
@@ -541,11 +542,13 @@ The new index and variable pair is added to the <a class="el" href="classSAMRAI_
 <dl compact><dt><b>Note:</b></dt><dd>This function does not deallocate any patch data storage associated with the new patch data index.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to <code><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a></code>. If the variable is unknown to the database, then an invalid patch data index (&lt; 0) will be returned. When assertion checking is active, an assertion will result when the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to <code><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a></code>. If the variable is unknown to the database, then an invalid patch data index (&lt; 0) will be returned </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>old_id</em>&nbsp;</td><td>Integer patch data index currently associated with variable. If this value is not a valid patch data index (&lt; 0) or does not map to patch data matching the type of the given variable, the program will abort with an error message.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>New integer patch data index. If new patch data not added, return value is an invalid (undefined) patch data index (&lt; 0). </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>New integer patch data index. If new patch data not added, return value is an invalid (undefined) patch data index (&lt; 0).</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+checkVariablePatchDataIndex(variable, old_id) </dd></dl>
 
 </div>
 </div><p>
@@ -590,11 +593,13 @@ This function must not be used by <a class="el" href="namespaceSAMRAI.html">SAMR
 </dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>. When assertion checking is active, an assertion will result when the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Optional integer patch data index to be added (along with variable) to the database. If the value is unspecified (default case), the default variable patch data factory is used to generate a new factory. If the value is provided and does not map to patch data matching the type of the given variable, the program will abort with an error message.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>New integer patch data index. If new patch data index not added, return value is an invalid patch data index (&lt; 0). </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>New integer patch data index. If new patch data index not added, return value is an invalid patch data index (&lt; 0).</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+data_id == <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#d7a395e9092ab9be82130f6285b5597e">idUndefined()</a> || checkVariablePatchDataIndex(variable, data_id) </dd></dl>
 
 </div>
 </div><p>
@@ -621,7 +626,7 @@ Remove the patch data index from the <a class="el" href="classSAMRAI_1_1hier_1_1
 <dl compact><dt><b>Note:</b></dt><dd>This function does not deallocate any patch data storage associated with the integer index.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index to be removed from the database. When assertion checking is active, an assertion will result when the patch data index is invalid (i.e., &lt; 0). </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index to be removed from the database </td></tr>
   </table>
 </dl>
 
@@ -657,11 +662,13 @@ Check whether the given variable is mapped to the given patch data index in the 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index. When assertion checking is active, an unrecoverable assertion will result if the value is an invalid identifier (either &lt; 0 or larger than the maximum allowed patch data id).</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Boolean true if the variable is mapped the given patch data index; false otherwise. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Boolean true if the variable is mapped the given patch data index; false otherwise.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+(data_id &gt;= 0) &amp;&amp; (data_id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#5d1106501a191a187c006b6aa01543e2">getPatchDescriptor()</a>-&gt;getMaxNumberRegisteredComponents()) </dd></dl>
 
 </div>
 </div><p>
@@ -695,11 +702,13 @@ Check whether the given variable matches the patch data type associated with the
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index. When assertion checking is active, an unrecoverable assertion will result if the value is an invalid identifier (either &lt; 0 or larger than the maximum allowed patch data id).</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Boolean true if the type of the variable matches the type of the patch data at the given patch data index; false otherwise. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Boolean true if the type of the variable matches the type of the patch data at the given patch data index; false otherwise.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+(data_id &gt;= 0) &amp;&amp; (data_id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#5d1106501a191a187c006b6aa01543e2">getPatchDescriptor()</a>-&gt;getMaxNumberRegisteredComponents()) </dd></dl>
 
 </div>
 </div><p>
@@ -742,12 +751,15 @@ Register variable and context pair along with the ghost width for the patch data
 <dl compact><dt><b>Note:</b></dt><dd>It is an error to map a (<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>,<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>) pair plus data index having a different ghost width than that passed in the argument list. The program will abort with a descriptive message in this case.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context. When assertion checking is active, an unrecoverable assertion will result if the context pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghosts</em>&nbsp;</td><td>Optional ghost width for patch data associated with variable-context pair. If the ghost width is given, all entries of the vector must be &gt;= 0. When assertion checking is active, an unrecoverable assertion will result if the ghost width vector contains a negative entry.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghosts</em>&nbsp;</td><td>Optional ghost width for patch data associated with variable-context pair.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-context pair in database. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-context pair in database.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+context <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -783,11 +795,13 @@ If there is no such pair in the database (either the variable does not exist, th
 <dl compact><dt><b>Note:</b></dt><dd>For this function to operate as expected, the database mapping information must have been generated using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext()</a> function. If the variable was registered without a variable context, then the patch data index associated with the variable will not be returned. See the other map...() functions declared in this class.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context. When assertion checking is active, an unrecoverable assertion will result if the variable context pointer is null.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-context pair in database. If the variable-context pair was not registered with the database, then an invalid data index (&lt; 0) will be returned. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-context pair in database. If the variable-context pair was not registered with the database, then an invalid data index (&lt; 0) will be returned.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+context </dd></dl>
 
 </div>
 </div><p>
@@ -821,7 +835,7 @@ Map patch data index to variable associated with the data, if possible, and set 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>index</em>&nbsp;</td><td>Integer patch data index. When assertion checking is active, an unrecoverable assertion will if the index is invalid (i.e., &lt; 0). </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>index</em>&nbsp;</td><td>Integer patch data index </td></tr>
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable that maps to patch data index in database. If there is no index in the database matching the index input value, then the variable pointer is set to null.</td></tr>
   </table>
 </dl>
@@ -1048,11 +1062,13 @@ This function will generate a new patch data index for the variable and ghost wi
 <dl compact><dt><b>Note:</b></dt><dd>This routine is intended for managing internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> work variables that are typically unseen by users. It should not be called by users for registering variables, or within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> for registering any user-defined variables with the variable database. This function enforces the same constraints on variable registration that are applied for registering user-defined variables; e.g., using the routine <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext()</a>. Thus, it is the responsibility of <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers to avoid naming and ghost width conflicts with user-defined variables or other internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghosts</em>&nbsp;</td><td>Ghost width for patch data associated with the variable. All entries of the vector must be &gt;= 0. When assertion checking is active, an unrecoverable assertion results if the vector contains a negative entry. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghosts</em>&nbsp;</td><td>Ghost width for patch data associated with the variable </td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-ghost width pair in database. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-ghost width pair in database.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -1149,12 +1165,13 @@ Return integer identifier for first variable found matching given string name id
 <p>
 Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!s_variable_database_instance </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8h.html">VariableDatabase.h</a><li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8C.html">VariableDatabase.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

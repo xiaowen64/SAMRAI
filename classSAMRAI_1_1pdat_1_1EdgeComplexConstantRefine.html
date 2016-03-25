@@ -31,13 +31,13 @@
 <a href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#0bd9aa3e50ee53b007fb5f8ca9fed5e4">EdgeComplexConstantRefine</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#2e0931090246a54dd81a9c2b3a8bdc8f">EdgeComplexConstantRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#ed4158f95bd8d124efd2f3904266c154">~EdgeComplexConstantRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#dc3ec061673f02175d221c394b0905c1">getOperatorPriority</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#00c852746b657d85272cde4361731706">getStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#1d7690be720e844ac6e4233df9182598">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html#0ca0b1ce8b9c7182dafd78c658efd558">refine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;fine_overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio) const </td></tr>
 
@@ -48,15 +48,14 @@ Class <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeComplexConstantRefine.html"
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="0bd9aa3e50ee53b007fb5f8ca9fed5e4"></a><!-- doxytag: member="SAMRAI::pdat::EdgeComplexConstantRefine::EdgeComplexConstantRefine" ref="0bd9aa3e50ee53b007fb5f8ca9fed5e4" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="2e0931090246a54dd81a9c2b3a8bdc8f"></a><!-- doxytag: member="SAMRAI::pdat::EdgeComplexConstantRefine::EdgeComplexConstantRefine" ref="2e0931090246a54dd81a9c2b3a8bdc8f" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::pdat::EdgeComplexConstantRefine::EdgeComplexConstantRefine           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -109,14 +108,15 @@ The priority of edge-centered complex constant interpolation is 0. It will be pe
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0ffa0be747cd1a388f8cf1c1766">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
-<a class="anchor" name="00c852746b657d85272cde4361731706"></a><!-- doxytag: member="SAMRAI::pdat::EdgeComplexConstantRefine::getStencilWidth" ref="00c852746b657d85272cde4361731706" args="() const " -->
+<a class="anchor" name="1d7690be720e844ac6e4233df9182598"></a><!-- doxytag: member="SAMRAI::pdat::EdgeComplexConstantRefine::getStencilWidth" ref="1d7690be720e844ac6e4233df9182598" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::pdat::EdgeComplexConstantRefine::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -127,7 +127,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0
 <p>
 The stencil width of the constant interpolation operator is the vector of zeros. That is, its stencil does not extend outside the fine box. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b461868ada200e3f99e6705d5f60">SAMRAI::hier::RefineOperator</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#71f9bd222f7b762e9cab2d6cd7bc517d">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <a class="anchor" name="0ca0b1ce8b9c7182dafd78c658efd558"></a><!-- doxytag: member="SAMRAI::pdat::EdgeComplexConstantRefine::refine" ref="0ca0b1ce8b9c7182dafd78c658efd558" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const int dst_component, const int src_component, const hier::BoxOverlap &amp;fine_overlap, const hier::IntVector &amp;ratio) const " -->
@@ -180,14 +180,16 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b4
 <div class="memdoc">
 
 <p>
-Refine the source component on the coarse patch to the destination component on the fine patch using the edge-centered complex constant interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator. 
+Refine the source component on the coarse patch to the destination component on the fine patch using the edge-centered complex constant interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;fine_overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd2e5352276f7bef4d48eede3ab9">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="EdgeComplexConstantRefine_8h.html">EdgeComplexConstantRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

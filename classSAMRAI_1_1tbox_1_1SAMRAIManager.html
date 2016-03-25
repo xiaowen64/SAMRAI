@@ -100,9 +100,10 @@ This function should be invoked ONLY ONCE at the start of a process to initializ
 This function initializes <a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html">IEEE</a> expection handlers and <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> I/O, as well as data for any classes that implement the initialize callback interface through <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>initialize_IEEE_assertion_handlers</em>&nbsp;</td><td>(defaults to true) </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>initialize_IEEE_assertion_handlers</em>&nbsp;</td><td>(defaults to true)</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!s_initialized </dd></dl>
 
 </div>
 </div><p>
@@ -124,7 +125,10 @@ This function initializes <a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html"
 <p>
 Startup of the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> package. 
 <p>
-This function invokes startup for any classes that implement the startup callback interface through <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a>. This function may be invoked more than once in a process if solving multiple <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> problems. 
+This function invokes startup for any classes that implement the startup callback interface through <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a>. This function may be invoked more than once in a process if solving multiple <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> problems.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_initialized <p>
+!s_started </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="91b66ecabb362a74d1d6751ff59733a1"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::shutdown" ref="91b66ecabb362a74d1d6751ff59733a1" args="()" -->
@@ -145,7 +149,10 @@ This function invokes startup for any classes that implement the startup callbac
 <p>
 Shutdown the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> package. 
 <p>
-This function invokes shutdown for any classes that implement the startup callback interface through <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a>. This function may be invoked more than once in an process if solving multiple <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> problems. 
+This function invokes shutdown for any classes that implement the startup callback interface through <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a>. This function may be invoked more than once in an process if solving multiple <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> problems.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_initialized <p>
+s_started </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e808267f57b7b143818364eec0adf86e"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::finalize" ref="e808267f57b7b143818364eec0adf86e" args="()" -->
@@ -168,7 +175,9 @@ Final cleanup of the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> packag
 <p>
 This function should be invoked ONLY ONCE at the end of a process to complete the cleanup of <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> memory allocations and any other cleanup tasks. <a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html">IEEE</a> assertion handlers and <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> I/O will be finalized, as well as data for any classes that implement the finalize callback interface through <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a>.<p>
 After this function is called, the only thing that should occur before exiting the program is a call to <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#c4764f0357b95ae29fc124ccb0752e64">SAMRAI_MPI::finalize()</a>.<p>
-This function should be invoked only once. 
+This function should be invoked only once.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_initialized </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="aa16ecacb82ec671cf7188c0d879224a"></a><!-- doxytag: member="SAMRAI::tbox::SAMRAIManager::isInitialized" ref="aa16ecacb82ec671cf7188c0d879224a" args="()" -->
@@ -254,12 +263,14 @@ The value is either the default value (256) or the value set by calling the <a c
 Set maximum number of patch data entries supported by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. 
 <p>
 The maximum number will be set to the maximum of the current value and the argument value.<p>
-Note that this routine cannot be called anytime after the max patch data entries value has been accessed via the <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAIManager.html#cf8d9cb18b1114b6b59248a0029b51b6">getMaxNumberPatchDataEntries()</a> function, neither by the user nor internally within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Typically, the first internal access of this value occurs whenever any objects related to the patch hierarchy or variables are created. 
+Note that this routine cannot be called anytime after the max patch data entries value has been accessed via the <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAIManager.html#cf8d9cb18b1114b6b59248a0029b51b6">getMaxNumberPatchDataEntries()</a> function, neither by the user nor internally within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Typically, the first internal access of this value occurs whenever any objects related to the patch hierarchy or variables are created.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>s_max_patch_data_entries_accessed </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="SAMRAIManager_8h.html">SAMRAIManager.h</a><li>source/SAMRAI/tbox/<a class="el" href="SAMRAIManager_8C.html">SAMRAIManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

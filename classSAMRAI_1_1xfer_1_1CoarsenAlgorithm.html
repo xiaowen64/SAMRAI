@@ -41,9 +41,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#1aa1dbcfe2009b0de2c5d984143811e3">registerCoarsen</a> (const int dst, const int src, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a> &gt; &amp;opcoarsen, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; &amp;var_fill_pattern=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;())</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a coarsening operation with the coarsening algorithm.  <a href="#1aa1dbcfe2009b0de2c5d984143811e3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#eb5fba06e953f70682de4bbd3dac2f64">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;crse_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;fine_level, <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> *coarsen_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> *) NULL), const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> &gt;())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#10e87d9961f227f7c8dc829a83a30cfe">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;crse_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;fine_level, <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> *coarsen_strategy=0, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule to coarsen data from the given fine patch level to the given coarse patch level.  <a href="#eb5fba06e953f70682de4bbd3dac2f64"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule to coarsen data from the given fine patch level to the given coarse patch level.  <a href="#10e87d9961f227f7c8dc829a83a30cfe"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#338ad81041e02dd29e8f8423a8350b26">checkConsistency</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> &gt; &amp;schedule) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a previously-generated coarsen schedule, check for consistency with this coarsen algorithm object to see whether a call to resetSchedule is a valid operation.  <a href="#338ad81041e02dd29e8f8423a8350b26"></a><br></td></tr>
@@ -71,7 +71,7 @@ Construct a coarsen algorithm object. </li>
 <li>
 Register coarsen operations with the coarsen algorithm. Using the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#035429d4769934564164b144f588bda1">registerCoarsen()</a> methods(s), one provides source and destination patch data information, as well as spatial coarsening operators as needed. </li>
 <li>
-After all operations are registered with the algorithm, one creates a communication schedule using the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#eb5fba06e953f70682de4bbd3dac2f64">createSchedule()</a> method. This method identifies the source (fine) and destination (coarse) patch levels for data coarsening. Note that when creating a communication schedule, a concrete instance of a <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> object may be required to supply user-defined spatial data coarsening operations. </li>
+After all operations are registered with the algorithm, one creates a communication schedule using the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#10e87d9961f227f7c8dc829a83a30cfe">createSchedule()</a> method. This method identifies the source (fine) and destination (coarse) patch levels for data coarsening. Note that when creating a communication schedule, a concrete instance of a <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> object may be required to supply user-defined spatial data coarsening operations. </li>
 <li>
 Invoke the coarsenData() method in the communication schedule to perform the data transfers. </li>
 </ul>
@@ -197,9 +197,10 @@ Some special circumstances require that data be coarsened from the ghost cell re
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src</em>&nbsp;</td><td>Patch data index coarsened from the source level. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>opcoarsen</em>&nbsp;</td><td>Coarsening operator. This may be a null pointer. If null, coarsening must be handled by the coarsen patch strategy member functions. See the comments for <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#0814ce9491959240638a20bd848a2350">CoarsenPatchStrategy::preprocessCoarsen()</a> and <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#a2d42bd7e5e5b39581df0d5a15059a33">CoarsenPatchStrategy::postprocessCoarsen()</a>. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gcw_to_coarsen</em>&nbsp;</td><td>Ghost cell width to be used when data should be coarsened from ghost cell regions of the source (finer) level into the destination (coarser) level. If coarsening from fine ghost cell regions is not desired, then it should be a zero IntVector. If this argument is nonzero, its value should be the cell width, in the destination (coarser) index space, of the region around the fine level where this coarsening should occur. This argument should only be made nonzero by those who specifically require this special behavior and know how to properly process the patch data on coarse and fine patch levels during the coarsening process. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_fill_pattern</em>&nbsp;</td><td>boost::shared_ptr to the variable fill pattern, which controls how box overlaps are constructed. If the NULL default is used, then class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> will be used internally. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_fill_pattern</em>&nbsp;</td><td>boost::shared_ptr to the variable fill pattern, which controls how box overlaps are constructed. If the NULL default is used, then class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> will be used internally.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!d_schedule_created </dd></dl>
 
 </div>
 </div><p>
@@ -246,7 +247,7 @@ Register a coarsening operation with the coarsening algorithm.
 This will do all of the same things as the above <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#035429d4769934564164b144f588bda1">registerCoarsen()</a>, except it does not have the gcw_to_coarsen parameter. 
 </div>
 </div><p>
-<a class="anchor" name="eb5fba06e953f70682de4bbd3dac2f64"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenAlgorithm::createSchedule" ref="eb5fba06e953f70682de4bbd3dac2f64" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;crse_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;fine_level, CoarsenPatchStrategy *coarsen_strategy=((CoarsenPatchStrategy *) NULL), const boost::shared_ptr&lt; CoarsenTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; CoarsenTransactionFactory &gt;())" -->
+<a class="anchor" name="10e87d9961f227f7c8dc829a83a30cfe"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenAlgorithm::createSchedule" ref="10e87d9961f227f7c8dc829a83a30cfe" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;crse_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;fine_level, CoarsenPatchStrategy *coarsen_strategy=0, const boost::shared_ptr&lt; CoarsenTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; CoarsenTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -266,7 +267,7 @@ This will do all of the same things as the above <a class="el" href="classSAMRAI
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>coarsen_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramname"> <em>coarsen_strategy</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -287,7 +288,6 @@ This will do all of the same things as the above <a class="el" href="classSAMRAI
 Create a communication schedule to coarsen data from the given fine patch level to the given coarse patch level. 
 <p>
 This communication schedule may then be executed to perform the data transfers. This schedule creation procedure assumes that the coarse level represents a region of coarser index space than the fine level. To avoid potentially erroneous behavior, the coarse level domain should cover the domain of the fine level.<p>
-Neither patch level can be null and when assertion checking is active, passing a null level pointer will produce an unrecoverable assertion.<p>
 Note that the schedule remains valid as long as the levels do not change; thus, it can be used for multiple data communication cycles.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to coarsen schedule that performs the data transfers.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -295,9 +295,11 @@ Note that the schedule remains valid as long as the levels do not change; thus, 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>crse_level</em>&nbsp;</td><td>boost::shared_ptr to coarse (destination) level. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_level</em>&nbsp;</td><td>boost::shared_ptr to fine (source) level. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_strategy</em>&nbsp;</td><td>boost::shared_ptr to a coarsen patch strategy that provides user-defined coarsen operations. If this patch strategy is null (default state), then no user-defined coarsen operations will be performed. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Optional boost::shared_ptr to a coarsen transaction factory that creates data transactions for the schedule. If this pointer is null default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html">StandardCoarsenTransactionFactory</a> object will be used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Optional boost::shared_ptr to a coarsen transaction factory that creates data transactions for the schedule. If this pointer is null default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html">StandardCoarsenTransactionFactory</a> object will be used.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>crse_level &amp;&amp; fine_level <p>
+(<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#8f38c816e00ed15bd0a6460f3856e0d2">getDim()</a> == crse_level-&gt;<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#8f38c816e00ed15bd0a6460f3856e0d2">getDim()</a>) &amp;&amp; (<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#8f38c816e00ed15bd0a6460f3856e0d2">getDim()</a> == fine_level-&gt;<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#8f38c816e00ed15bd0a6460f3856e0d2">getDim()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -324,9 +326,10 @@ Consistency means that the number of operations registered must be the same and 
 <dl compact><dt><b>Returns:</b></dt><dd>true if schedule reset is valid; false otherwise.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>boost::shared_ptr to coarsen schedule, which cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>boost::shared_ptr to coarsen schedule, which cannot be null.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>schedule </dd></dl>
 
 </div>
 </div><p>
@@ -352,9 +355,11 @@ Given a previously-generated coarsen schedule, reconfigure it to peform the comm
 That is, the schedule will be transformed so that it will function as though this coarsen algorithm created it. Note that the set of operations registered with this coarsen algorithm must be essentially the same as those registered with the coarsen algorithm that created the schedule originally, and this is enforced using a call to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#338ad81041e02dd29e8f8423a8350b26">checkConsistency()</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>boost::shared_ptr to coarsen schedule, which cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>boost::shared_ptr to coarsen schedule, which cannot be null.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>schedule <p>
+d_coarsen_classes-&gt;classesMatch(schedule-&gt;getEquivalenceClasses()) </dd></dl>
 
 </div>
 </div><p>
@@ -408,7 +413,7 @@ Return the dimension of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenAlgorithm_8h.html">CoarsenAlgorithm.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenAlgorithm_8C.html">CoarsenAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

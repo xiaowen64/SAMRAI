@@ -112,9 +112,10 @@ In addition to the generation of patch data, the patch data factory also generat
 The constructor for the patch data factory class.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>ghost cell width for concrete classes created from the factory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>ghost cell width for concrete classes created from the factory.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -387,7 +388,7 @@ Return the dimension of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8h.html">PatchDataFactory.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8C.html">PatchDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

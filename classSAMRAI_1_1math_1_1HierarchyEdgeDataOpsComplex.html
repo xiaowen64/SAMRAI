@@ -134,7 +134,9 @@ Note that, when it makes sense, an operation accept a boolean argument which ind
 <div class="memdoc">
 
 <p>
-The constructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html">HierarchyEdgeDataOpsComplex</a> class sets the default patch hierarchy and coarsest and finest patch levels in that hierarchy over which operations will be performed. The hierarchy and operations may be reset using the member fuctions <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#363d9d85b70d32f7c6ed5ccee6e65d8a">setPatchHierarchy()</a> and <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#2e4fb8a1d21a157d41401b38ddf4d311">resetLevels()</a> below. If no level number arguments are given here, the levels over which the operations will be performed are those already existing in the hierarchy. If the hierarchy level configuration changes, the operations must be explicitly reset by calling the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#2e4fb8a1d21a157d41401b38ddf4d311">resetLevels()</a> function. 
+The constructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html">HierarchyEdgeDataOpsComplex</a> class sets the default patch hierarchy and coarsest and finest patch levels in that hierarchy over which operations will be performed. The hierarchy and operations may be reset using the member fuctions <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#363d9d85b70d32f7c6ed5ccee6e65d8a">setPatchHierarchy()</a> and <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#2e4fb8a1d21a157d41401b38ddf4d311">resetLevels()</a> below. If no level number arguments are given here, the levels over which the operations will be performed are those already existing in the hierarchy. If the hierarchy level configuration changes, the operations must be explicitly reset by calling the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#2e4fb8a1d21a157d41401b38ddf4d311">resetLevels()</a> function.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="00fe32940f453aa973adfa8684f97ba0"></a><!-- doxytag: member="SAMRAI::math::HierarchyEdgeDataOpsComplex::~HierarchyEdgeDataOpsComplex" ref="00fe32940f453aa973adfa8684f97ba0" args="()" -->
@@ -174,7 +176,9 @@ Virtual destructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyE
 <div class="memdoc">
 
 <p>
-Reset patch hierarchy over which operations occur. 
+Reset patch hierarchy over which operations occur.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#1b637797880c7d68948229cb2bae2b7b">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -205,7 +209,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Reset range of patch levels over which operations occur. Levels must exist in hierarchy or an assertion will result. 
+Reset range of patch levels over which operations occur.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(coarsest_level &gt;= 0) &amp;&amp; (finest_level &gt;= coarsest_level) &amp;&amp; (finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#b5b99262b034399b559f5b6963770752">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -263,7 +270,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Copy source data to destination data. 
+Copy source data to destination data.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#9fba42ce7a485811d0149b2de19a279e">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -294,7 +304,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Swap data pointers (i.e., storage) between two data components. 
+Swap data pointers (i.e., storage) between two data components.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#0261002394c72244f147672536f3de1e">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -331,7 +344,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Print data over multiple levels to specified output stream. 
+Print data over multiple levels to specified output stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#aca57dc127ff16a99f98506eb8a6d876">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -368,7 +384,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set data component to given scalar. 
+Set data component to given scalar.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#4782b5e097678f9ba916c98a0f6d9fd7">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -411,7 +430,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set destination to source multiplied by given scalar, pointwise. 
+Set destination to source multiplied by given scalar, pointwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#3c5bffecd50594b0dc2ae727a77c9809">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -454,7 +476,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Add scalar to each entry in source data and set destination to result. 
+Add scalar to each entry in source data and set destination to result.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#b4708151227624e9d2860c28460afc3b">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -497,7 +522,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set destination to sum of two source components, pointwise. 
+Set destination to sum of two source components, pointwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#78b21104370c52855160546f794b1e08">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -540,7 +568,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Subtract second source component from first source component pointwise and set destination data component to result. 
+Subtract second source component from first source component pointwise and set destination data component to result.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#f03f680b2ed89acb8eb98fe4d8df37a0">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -583,7 +614,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set destination component to product of two source components, pointwise. 
+Set destination component to product of two source components, pointwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a33dba7de727af0b96c1c6718b444ae9">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -626,7 +660,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Divide first data component by second source component pointwise and set destination data component to result. 
+Divide first data component by second source component pointwise and set destination data component to result.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#5e38c68541c8c79e1e51d8cf003b9a1c">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -663,7 +700,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set each entry of destination component to reciprocal of corresponding source data component entry. 
+Set each entry of destination component to reciprocal of corresponding source data component entry.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#0bfb93c6f1133733281350c7d0150fd1">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -718,7 +758,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 + \beta s_2$" src="form_38.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha, \beta$" src="form_41.png"> are scalar values. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 + \beta s_2$" src="form_38.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha, \beta$" src="form_41.png"> are scalar values.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#48097d6a5bd0d369ee3d947c5ac4ab41">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -767,7 +810,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 + s_2$" src="form_42.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 + s_2$" src="form_42.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#83d43ff7c32d1c8416ba0c8337d6e2d8">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -816,7 +862,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set <img class="formulaInl" alt="$d = \alpha s_1 - s_2$" src="form_44.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar. 
+Set <img class="formulaInl" alt="$d = \alpha s_1 - s_2$" src="form_44.png">, where <img class="formulaInl" alt="$d$" src="form_39.png"> is the destination patch data component and <img class="formulaInl" alt="$s_1, s_2$" src="form_40.png"> are the first and second source components, respectively. Here <img class="formulaInl" alt="$\alpha$" src="form_43.png"> is a scalar.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#ce1f0d9781ec971c72a54f7692dafb87">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -853,7 +902,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set destination data to absolute value of source data, pointwise. Note that the source data must be dcomplex and the destination must be double. 
+Set destination data to absolute value of source data, pointwise. Note that the source data must be dcomplex and the destination must be double.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#e2d8228bb8641b2264759f5f2796ea6a">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -896,7 +948,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Set data entries to random values. See the operations in the array data operation classes for details on the generation of the random values. 
+Set data entries to random values. See the operations in the array data operation classes for details on the generation of the random values.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#95a15e5c9e0409b3099be70aea2ce7cf">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -927,7 +982,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return the total number of data values for the component on the set of hierarchy levels. If the boolean argument is true, the number of elements will be summed over patch interiors in a unique way which avoids multiple counting of redundant values (recall the definition of node points on a patch interior). If the boolean argument is false, all elements will be counted (including ghost values) over all patches. 
+Return the total number of data values for the component on the set of hierarchy levels. If the boolean argument is true, the number of elements will be summed over patch interiors in a unique way which avoids multiple counting of redundant values (recall the definition of node points on a patch interior). If the boolean argument is false, all elements will be counted (including ghost values) over all patches.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#4147e221b99a21931123f2d0d103f902">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -958,7 +1016,11 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return sum of the control volumes associated with the data component. Note that if the ontrol volumes are set propery, this is equivalent to integrating a data component containing all ones over the collection of hierarchy levels. 
+Return sum of the control volumes associated with the data component. Note that if the ontrol volumes are set propery, this is equivalent to integrating a data component containing all ones over the collection of<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>vol_id &gt;= 0 <p>
+<a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) hierarchy levels. </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#ed0b8ae7453823191a917390df9e5059">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -989,7 +1051,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$" src="form_45.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_18.png">. 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}}*cvol_i )$" src="form_45.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sum_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_18.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#b53822f24558d20cb280e6d7df828ed8">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -1057,7 +1122,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">. If the control volume is undefined (vol_id &lt; 0), the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * wgt_i) * \bar{(data_i * wgt_i)} cvol_i ) }$" src="form_22.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#edb98c39109fe2953426dbf9d1a4e1e6">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -1156,7 +1224,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the computation of the maximum. 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the computation of the maximum.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#86cc160405f9889d2a83cc4cc8a09300">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -1193,7 +1264,10 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the summation. 
+Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png">. If the control volume is undefined (vol_id &lt; 0), it is ignored during the summation.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#07e3016bfdc7f9b7298f0606c027ded0">SAMRAI::math::HierarchyDataOpsComplex</a>.
 </div>
@@ -1224,12 +1298,15 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.ht
 <div class="memdoc">
 
 <p>
-Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">. 
+Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a> <p>
+(d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#cd955865e6746a03ba956f3d87f81002">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyEdgeDataOpsComplex_8h.html">HierarchyEdgeDataOpsComplex.h</a><li>source/SAMRAI/math/<a class="el" href="HierarchyEdgeDataOpsComplex_8C.html">HierarchyEdgeDataOpsComplex.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

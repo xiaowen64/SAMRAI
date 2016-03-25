@@ -32,13 +32,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayDataIterator.html">ArrayDataIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#cac0e33301deefb57ade39df9c3ecaca">iterator</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#8d7105ba88246dd898f0e8c1cb8de25a">ArrayData</a> ()</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#0ac3abeccf53bd6acb6a606cc41e526f">ArrayData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#b6c570cfb8bac255c4deb8fed4c55978">~ArrayData</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#16721ea5363e314c4b1084cb07a08243">initializeArray</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#b4318fbc760311b3c14c73d93f2c7c59">isInitialized</a> () const </td></tr>
 
@@ -103,19 +99,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#b6d34044fbf094e5d6232dbb77890f47">fill</a> (const TYPE &amp;t, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const int d=0)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#fa1c126de528d2cb212e63850a5718f0">getFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#f60d247d45b5fb1ea7442a58f727e5ea">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#8016dc0faeb3c5c4c5445316184fe231">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, bool data_only=false) const </td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#e8e2658370f18f491d8ffc5be8d898a2">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#646080669eeed074aa3b9e6bfe3834bc">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#ab0d1aafe2f112679e6ab39d9537b73f">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#7e8f40d516754c80f1fb194c5c5b1554">getDim</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#9212b539cc95d5224c3296f4fd71a1b6">invalidateArray</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Invalidate an array as opposed to initializing it.  <a href="#9212b539cc95d5224c3296f4fd71a1b6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#9217a0351e823009c41570d277a868d4">isValid</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the array is valid.  <a href="#9217a0351e823009c41570d277a868d4"></a><br></td></tr>
@@ -153,27 +142,6 @@ The array data iterator iterates over the elements of a box associated with an <
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="8d7105ba88246dd898f0e8c1cb8de25a"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::ArrayData" ref="8d7105ba88246dd898f0e8c1cb8de25a" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-The default constructor creates an empty array data object. The <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#16721ea5363e314c4b1084cb07a08243">initializeArray()</a> member function must be called before the array can be used. 
-</div>
-</div><p>
 <a class="anchor" name="0ac3abeccf53bd6acb6a606cc41e526f"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::ArrayData" ref="0ac3abeccf53bd6acb6a606cc41e526f" args="(const hier::Box &amp;box, int depth)" -->
 <div class="memitem">
 <div class="memproto">
@@ -206,9 +174,10 @@ Construct an array data object.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box object describing the spatial extents of the index space associated with the array data object. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>Integer number of data values at each spatial location in the array. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>Integer number of data values at each spatial location in the array.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -252,7 +221,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Static member function that returns tru when the amount of buffer space in a message stream can be estimated from box only. For built-in types (bool, char, double, float, int, and dcomplex), this routine returns true. For other data types (template paramters) that may require special handling, a different implementation must be provided. 
+Static member function that returns true when the amount of buffer space in a message stream can be estimated from box only. For built-in types (bool, char, double, float, int, and dcomplex), this routine returns true. For other data types (template paramters) that may require special handling, a different implementation must be provided. 
 </div>
 </div><p>
 <a class="anchor" name="d04c744d6bf2832f3f7bc21849793fd5"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::getSizeOfData" ref="d04c744d6bf2832f3f7bc21849793fd5" args="(const hier::Box &amp;box, int depth)" -->
@@ -295,45 +264,6 @@ Note that this function is only defined for the standard data types: bool, char,
 
 </div>
 </div><p>
-<a class="anchor" name="16721ea5363e314c4b1084cb07a08243"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::initializeArray" ref="16721ea5363e314c4b1084cb07a08243" args="(const hier::Box &amp;box, int depth)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::initializeArray           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>depth</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Initialize the size of array data and depth. This method is somewhat poorly named as the data is NOT initialized to anything to avoid the performance cost of the data initialization.<p>
-Use undefineData to initialize the data.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box object describing the spatial extents of the index space associated with the array data object. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>Integer number of data values at each spatial location in the array. </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
 <a class="anchor" name="b4318fbc760311b3c14c73d93f2c7c59"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::isInitialized" ref="b4318fbc760311b3c14c73d93f2c7c59" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -354,7 +284,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Returns true when the array has been properly initialized and storage has been allocated; otherwise, return false. 
 <p>
-Note: Only arrays that have been initialized can do anything useful. Initialize an uninitialized array by calling the <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#16721ea5363e314c4b1084cb07a08243">initializeArray()</a> method. 
+Note: Only arrays that have been initialized can do anything useful. 
 </div>
 </div><p>
 <a class="anchor" name="c20e9b3e32e6cb1d77e660d9996cf965"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::undefineData" ref="c20e9b3e32e6cb1d77e660d9996cf965" args="()" -->
@@ -460,7 +390,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Get a non-const pointer to the beginning of the given depth component of this data array. 
+Get a non-const pointer to the beginning of the given depth component of this data array.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="04be6f16030ddd073a66f5210946783a"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::getPointer" ref="04be6f16030ddd073a66f5210946783a" args="(const int d=0) const " -->
@@ -482,7 +414,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Get a const pointer to the beginning of the given depth component of this data array. 
+Get a const pointer to the beginning of the given depth component of this data array.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="739d3b820ac2cda78a61cc6c6a7e0a89"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::operator()" ref="739d3b820ac2cda78a61cc6c6a7e0a89" args="(const hier::Index &amp;i, const int d)" -->
@@ -513,7 +447,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return reference to value in this array associated with the given box index and depth component. 
+Return reference to value in this array associated with the given box index and depth component.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#7e8f40d516754c80f1fb194c5c5b1554">getDim()</a> == i.getDim() <p>
+(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3042a210780a3fa58320ce17f96f8eb1"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::operator()" ref="3042a210780a3fa58320ce17f96f8eb1" args="(const hier::Index &amp;i, const int d) const " -->
@@ -544,7 +481,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return const reference to value in this array associated with the given box index and depth component. 
+Return const reference to value in this array associated with the given box index and depth component.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#7e8f40d516754c80f1fb194c5c5b1554">getDim()</a> == i.getDim() <p>
+(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a5236d567261cd29c10acafb85cea6bc"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::copy" ref="a5236d567261cd29c10acafb85cea6bc" args="(const ArrayData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box)" -->
@@ -580,9 +520,10 @@ Note that this routine assumes that the source and destination box regions requi
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>src</em>&nbsp;</td><td>Const reference to source array data object. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box object describing the spatial extents of the index space region over which to perform the copy operation. Note: the box is in either the source or destination index space (which are assumed to be the same). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box object describing the spatial extents of the index space region over which to perform the copy operation. Note: the box is in either the source or destination index space (which are assumed to be the same).</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#7e8f40d516754c80f1fb194c5c5b1554">getDim()</a> == src.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#7e8f40d516754c80f1fb194c5c5b1554">getDim()</a> == box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -799,9 +740,11 @@ Note that this routine assumes that the source and destination box regions requi
     <tr><td valign="top"></td><td valign="top"><em>dst_depth</em>&nbsp;</td><td>Integer depth of destination array. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>src</em>&nbsp;</td><td>Const reference to source array data object. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>src_depth</em>&nbsp;</td><td>Integer depth of source array. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box object describing the spatial extents of the index space region over which to perform the copy operation. Note: the box is in either the source or destination index space (which are assumed to be the same). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box object describing the spatial extents of the index space region over which to perform the copy operation. Note: the box is in either the source or destination index space (which are assumed to be the same).</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(0 &lt;= dst_depth) &amp;&amp; (dst_depth &lt;= <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>)) <p>
+(0 &lt;= src_depth) &amp;&amp; (src_depth &lt;= src.getDepth()) </dd></dl>
 
 </div>
 </div><p>
@@ -968,9 +911,10 @@ Calculate the number of bytes needed to stream the data living in the specified 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>boxes</em>&nbsp;</td><td>Const reference to box list describing the spatial extents of the index space regions of interest. Note: the boxes are assumed to be in the index space of this array data object. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_shift</em>&nbsp;</td><td>Const reference to vector used to shift the given boxes into the index space region of this array data object. Note: this argument is currently ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_shift</em>&nbsp;</td><td>Const reference to vector used to shift the given boxes into the index space region of this array data object. Note: this argument is currently ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#7e8f40d516754c80f1fb194c5c5b1554">getDim()</a> == src_shift.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1017,7 +961,7 @@ Note that this routine assumes that the given box region must be shifted to be c
     <tr><td valign="top"></td><td valign="top"><em>src_shift</em>&nbsp;</td><td>Const reference to vector used to shift the given box into the index space region of this (source) array data object.</td></tr>
   </table>
 </dl>
-Note: The shifted box must lie completely within the index space of this array data object. When assertion checking is active, the routine will abort if the box is not contained in the index space of this array. 
+Note: The shifted box must lie completely within the index space of this array data object. When assertion checking is active, the routine will abort if the shifted box is not contained in the index space of this array. 
 </div>
 </div><p>
 <a class="anchor" name="dc5a4a458f5128892904c9abbe79e5e7"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::packStream" ref="dc5a4a458f5128892904c9abbe79e5e7" args="(tbox::MessageStream &amp;stream, const hier::Box &amp;dest_box, const hier::Transformation &amp;src_shift) const " -->
@@ -1401,7 +1345,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Fill all array values associated with depth component d with the value t. 
+Fill all array values associated with depth component d with the value t.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b6d34044fbf094e5d6232dbb77890f47"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::fill" ref="b6d34044fbf094e5d6232dbb77890f47" args="(const TYPE &amp;t, const hier::Box &amp;box, const int d=0)" -->
@@ -1438,20 +1384,22 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Fill all array values associated with depth component d within the box with the value t. 
+Fill all array values associated with depth component d within the box with the value t.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#be7b6878cb94103ca94864007da52c99">getDepth()</a>) </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="fa1c126de528d2cb212e63850a5718f0"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::getFromDatabase" ref="fa1c126de528d2cb212e63850a5718f0" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="f60d247d45b5fb1ea7442a58f727e5ea"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::getFromRestart" ref="f60d247d45b5fb1ea7442a58f727e5ea" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::getFromDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -1460,75 +1408,22 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Check to make sure that the class version and restart file version are equal. If so, read in data from database. This routine calls <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#e8e2658370f18f491d8ffc5be8d898a2">getSpecializedFromDatabase()</a> to read in the proper data type.<p>
-Assertions: database must be a non-null pointer. 
-</div>
-</div><p>
-<a class="anchor" name="8016dc0faeb3c5c4c5445316184fe231"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::putUnregisteredToDatabase" ref="8016dc0faeb3c5c4c5445316184fe231" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database, bool data_only=false) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::putUnregisteredToDatabase           </td>
-          <td>(</td>
-          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>data_only</em> = <code>false</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+Check to make sure that the class version and restart file version are equal. If so, read in data from restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
-<p>
-Write out array data object data to database. This routine calls <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html#646080669eeed074aa3b9e6bfe3834bc">putSpecializedToDatabase()</a> to read in the proper data type. The default behavior (boolean argument is false) is to put all data members in database. Otherwise, only the array contents are written out.<p>
-Assertions: database must be a non-null pointer. 
 </div>
 </div><p>
-<a class="anchor" name="e8e2658370f18f491d8ffc5be8d898a2"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::getSpecializedFromDatabase" ref="e8e2658370f18f491d8ffc5be8d898a2" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="ab0d1aafe2f112679e6ab39d9537b73f"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::putToRestart" ref="ab0d1aafe2f112679e6ab39d9537b73f" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::getSpecializedFromDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Use specialized template method to get the correct behavior when reading in the array of data. 
-</div>
-</div><p>
-<a class="anchor" name="646080669eeed074aa3b9e6bfe3834bc"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::putSpecializedToDatabase" ref="646080669eeed074aa3b9e6bfe3834bc" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::putSpecializedToDatabase           </td>
-          <td>(</td>
-          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -1537,7 +1432,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Use specialized template method to get the correct behavior when writing out the array of data. 
+Write out array data object data to restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7e8f40d516754c80f1fb194c5c5b1554"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::getDim" ref="7e8f40d516754c80f1fb194c5c5b1554" args="() const " -->
@@ -1561,30 +1458,6 @@ template&lt;class TYPE&gt; </div>
 Return the dimension of this object. 
 </div>
 </div><p>
-<a class="anchor" name="9212b539cc95d5224c3296f4fd71a1b6"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::invalidateArray" ref="9212b539cc95d5224c3296f4fd71a1b6" args="(const tbox::Dimension &amp;dim)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">SAMRAI::pdat::ArrayData</a>&lt; TYPE &gt;::invalidateArray           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Invalidate an array as opposed to initializing it. 
-<p>
-The box associated with the array will be set to empty so intersections will be the empty set. 
-</div>
-</div><p>
 <a class="anchor" name="9217a0351e823009c41570d277a868d4"></a><!-- doxytag: member="SAMRAI::pdat::ArrayData::isValid" ref="9217a0351e823009c41570d277a868d4" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -1605,12 +1478,12 @@ template&lt;class TYPE&gt; </div>
 <p>
 Returns true if the array is valid. 
 <p>
-Invalid state can be set using the invalidateArray method. 
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="ArrayData_8h.html">ArrayData.h</a><li>source/SAMRAI/pdat/<a class="el" href="ArrayData_8C.html">ArrayData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

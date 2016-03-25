@@ -117,6 +117,8 @@ Return the shift distance corresponding to the given shift number.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_number</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>shift_number.isValid() <p>
+shift_number.getPeriodicValue() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicShiftCatalog.html#3ec2857f042b3c0ce13187ba83eba2a4">getNumberOfShifts()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -193,6 +195,8 @@ Return the shift number corresponding to the negative of the shift distance of t
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_number</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>shift_number.isValid() <p>
+shift_number.getPeriodicValue() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicShiftCatalog.html#3ec2857f042b3c0ce13187ba83eba2a4">getNumberOfShifts()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -291,7 +295,7 @@ TODO: possible refactor? This method should probably be changed to a regular mem
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PeriodicShiftCatalog_8h.html">PeriodicShiftCatalog.h</a><li>source/SAMRAI/hier/<a class="el" href="PeriodicShiftCatalog_8C.html">PeriodicShiftCatalog.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

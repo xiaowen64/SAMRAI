@@ -31,13 +31,13 @@
 <a href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#172cb193eb2a2980f1aa791de201d643">CartesianFaceDoubleConservativeLinearRefine</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#244736c17decec141de036c9f401134f">CartesianFaceDoubleConservativeLinearRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#3c3ddd9c356d6b37a02226255aea55d3">~CartesianFaceDoubleConservativeLinearRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#b9df7de4c9e466b0059d84b5b876ac67">getOperatorPriority</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#b594b6c6e0c9994cf6c9e5766c32422f">getStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#f5e485cd7bc9a8d8f65434465618ed66">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#d08a58ac066a4cd535f356fb9b873baf">refine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;fine_overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio) const </td></tr>
 
@@ -48,15 +48,14 @@ Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservative
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="172cb193eb2a2980f1aa791de201d643"></a><!-- doxytag: member="SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::CartesianFaceDoubleConservativeLinearRefine" ref="172cb193eb2a2980f1aa791de201d643" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="244736c17decec141de036c9f401134f"></a><!-- doxytag: member="SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::CartesianFaceDoubleConservativeLinearRefine" ref="244736c17decec141de036c9f401134f" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::CartesianFaceDoubleConservativeLinearRefine           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -109,14 +108,15 @@ The priority of face-centered double conservative linear is 0. It will be perfor
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0ffa0be747cd1a388f8cf1c1766">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
-<a class="anchor" name="b594b6c6e0c9994cf6c9e5766c32422f"></a><!-- doxytag: member="SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::getStencilWidth" ref="b594b6c6e0c9994cf6c9e5766c32422f" args="() const " -->
+<a class="anchor" name="f5e485cd7bc9a8d8f65434465618ed66"></a><!-- doxytag: member="SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::getStencilWidth" ref="f5e485cd7bc9a8d8f65434465618ed66" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -127,7 +127,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0
 <p>
 The stencil width of the conservative linear interpolation operator is the vector of ones. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b461868ada200e3f99e6705d5f60">SAMRAI::hier::RefineOperator</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#71f9bd222f7b762e9cab2d6cd7bc517d">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <a class="anchor" name="d08a58ac066a4cd535f356fb9b873baf"></a><!-- doxytag: member="SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine::refine" ref="d08a58ac066a4cd535f356fb9b873baf" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const int dst_component, const int src_component, const hier::BoxOverlap &amp;fine_overlap, const hier::IntVector &amp;ratio) const " -->
@@ -180,14 +180,21 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b4
 <div class="memdoc">
 
 <p>
-Refine the source component on the coarse patch to the destination component on the fine patch using the face-centered double conservative linear interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator. 
+Refine the source component on the coarse patch to the destination component on the fine patch using the face-centered double conservative linear interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) <p>
+dynamic_cast&lt;const pdat::FaceOverlap *&gt;(&amp;fine_overlap) != 0 <p>
+coarse.getPatchData(src_component) is actually a boost::shared_ptr&lt;pdat::FaceData&lt;double&gt; &gt; <p>
+fine.getPatchData(dst_component) is actually a boost::shared_ptr&lt;pdat::FaceData&lt;double&gt; &gt; <p>
+coarse.getPatchData(src_component)-&gt;getDepth() == fine.getPatchData(dst_component)-&gt;getDepth() <p>
+(fine.getDim().getValue() == 1) || (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd2e5352276f7bef4d48eede3ab9">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianFaceDoubleConservativeLinearRefine_8h.html">CartesianFaceDoubleConservativeLinearRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

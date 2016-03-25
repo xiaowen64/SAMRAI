@@ -37,12 +37,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#4c59a502a1f6d36faea9117f2db60f2a">print</a> (std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">plog</a>)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#80d1f7e63ce00dfb2490a5c89ac0a10b">createManager</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;input_db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#5789b864e714501d3430dac483f26887">createManager</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">getManager</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#b2b2b9173c412554dd073bd371cb4255">TimerManager</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;input_db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#9b10e04ab08209f11776217702f61d4b">TimerManager</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#495e924a0da81820e10e1b06353b27e2">~TimerManager</a> ()</td></tr>
 
@@ -61,65 +61,93 @@ Class <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager
 Typically, entries in the input file guide timer invocation and output generation. Within the source code, timer objects are retrieved as follows:<p>
 boost::shared_ptr&lt;Timer&gt; name_timer = <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">TimerManager::getManager</a>-&gt;getTimer("name");<p>
 Here `name' is the name string identifier for the timer.<p>
-The input data is summarized as follows.<p>
-Required input keys: NONE<p>
-Optional input keys and defaults:<p>
-<ul>
-<li><b>print_exclusive</b> (bool) Specifying whether to track and print exclusive times. Exclusive times are convenient for identifying time spent inside nested routines. Exclusive time is measured by turning off the parent timer when the timer in the nested routine is started. It then turns on the parent timer again once the nested timer is stopped. This option should be used with some discretion because the extra overhead to manage the nested list of timers is between four and seven times more expensive than doing simple start/stop operations (as is done with the print_total option). For this reason, we leave it off by default. [FALSE]</li></ul>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>print_exclusive</b> Specifies whether to track and print exclusive times. Exclusive times are convenient for identifying time spent inside nested routines. This option should be used with some discretion because the extra overhead to manage the nested list of timers is between four and seven times more expensive than doing simple start/stop operations (as is done with the print_total option). For this reason, we leave it off by default.</li></ul>
 <p>
 <ul>
-<li><b>print_total</b> (bool) Specifies whether to print total (i.e. non-nested) time. This is the least expensive way to time parts of the code. The overhead associated with each start/stop sequence is about one-half a millionth of a second. [TRUE]</li></ul>
+<li><b>print_total</b> Specifies whether to print total (i.e. non-nested) time. This is the least expensive way to time parts of the code. The overhead associated with each start/stop sequence is about one-half a millionth of a second.</li></ul>
 <p>
 <ul>
-<li><b>print_wall</b> (bool) Print wallclock time. [TRUE]</li></ul>
+<li><b>print_processor</b> Print times measured on individual processors.</li></ul>
 <p>
 <ul>
-<li><b>print_user</b> (bool) Print user time (measured by system clock). [FALSE]</li></ul>
+<li><b>print_max</b> Print maximum time spent on any processor, and the processor ID that incurred the time.</li></ul>
 <p>
 <ul>
-<li><b>print_sys</b> (bool) Print system time (measured by system clock). [FALSE]</li></ul>
+<li><b>print_summed</b> Print time summed across all processors.</li></ul>
 <p>
 <ul>
-<li><b>print_processor</b> (bool) Print times measured on individual processors. [TRUE]</li></ul>
+<li><b>print_user</b> Print user time (measured by system clock).</li></ul>
 <p>
 <ul>
-<li><b>print_summed</b> (bool) Print time summed across all processors. [FALSE]</li></ul>
+<li><b>print_sys</b> Print system time (measured by system clock).</li></ul>
 <p>
 <ul>
-<li><b>print_max</b> (bool) Print maximum time spent on any processor, and the processor ID that incurred the time. [FALSE]</li></ul>
+<li><b>print_wall</b> Print wallclock time.</li></ul>
 <p>
 <ul>
-<li><b>print_concurrent</b> (bool) Prints the concurrent timer tree, as determined during exclusive timing. That is, for each timer, it prints the list of names of the timers in nested routines it calls. [FALSE]</li></ul>
+<li><b>print_percentage</b> Prints the percentage of total time with each timer.</li></ul>
 <p>
 <ul>
-<li><b>print_percentage</b> (bool) Prints the percentage of total time with each timer. [TRUE]</li></ul>
+<li><b>print_concurrent</b> Prints the concurrent timer tree, as determined during exclusive timing. That is, for each timer, it prints the list of names of the timers in nested routines it calls.</li></ul>
 <p>
 <ul>
-<li><b>print_timer_overhead</b> (bool) Prints some overhead stats associated with the timers. Information like the number of times a start/stop sequence was called for the timer, and the predicted overhead time associated with the timer. This is a convenient option to occasionally check to make sure the timers themselves are not affecting the performance of your calculation. [FALSE]</li></ul>
+<li><b>print_timer_overhead</b> Prints some overhead stats associated with the timers. Information like the number of times a start/stop sequence was called for the timer, and the predicted overhead time associated with the timer. This is a convenient option to occasionally check to make sure the timers themselves are not affecting the performance of your calculation.</li></ul>
 <p>
 <ul>
-<li><b>print_threshold</b> (double) Timers that use up less than (<em>print_threshold</em>) percent of the overall run time are not printed. This can be a convenient option to limit output if you have many timers invoked. [0.25]</li></ul>
+<li><b>print_threshold</b> Timers that use up less than (<em>print_threshold</em>) percent of the overall run time are not printed. This can be a convenient option to limit output if you have many timers invoked.</li></ul>
 <p>
 <ul>
-<li><b>timer_list</b> (string array) List of timers to be invoked. The timers can be listed individually in <code>package::class::method</code> format or the entries may contain wildcards to turn on a set of timers in a given package or class: <div class="fragment"><pre class="fragment"> *          timer_list = "pkg1::*::*", "pkg2::class2::*", ...
- *       </pre></div></li></ul>
+<li><b>timer_list</b> List of timers to be invoked. The timers can be listed individually in <code>package::class::method</code> format or the entries may contain wildcards to turn on a set of timers in a given package or class: <br>
+ timer_list = "pkg1::*::*", "pkg2::class2::*", ...</li></ul>
+<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>print_exclusive </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_total </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_processor </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_max </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_summed </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_user </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_sys </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_wall </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_percentage </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_concurrent </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_timer_overhead </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>print_threshold </td><td>double </td><td>0.25 </td><td>any double </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>timer_list </td><td>Array&lt;string&gt; </td><td>none </td><td>N/A </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+</table>
 <p>
 A sample input file entry might look like:<p>
-<div class="fragment"><pre class="fragment"> *
- *    print_exclusive      = TRUE
- *    print_timer_overhead = TRUE
- *    timer_list = "algs::HyperbolicLevelIntegrator::advanceLevel()",
- *                 "mesh::GriddingAlgorithm::*",
- *                 "xfer::*::*"
- *
- * </pre></div><p>
-<a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> expects timer names to be in a certain format to preserve the wildcard naming capability (i.e. to turn on entire package or class of timers). See the PDF document in /SAMRAI/docs/userdocs/timing.pdf for a discussion of how to add timers that maintain this format as well as a catalog of available timers currently implemented in the library.<p>
+<div class="fragment"><pre class="fragment">    print_exclusive      = TRUE &lt;br&gt;
+    print_timer_overhead = TRUE &lt;br&gt;
+    timer_list = <span class="stringliteral">"algs::HyperbolicLevelIntegrator::advanceLevel()"</span>, &lt;br&gt;
+                 <span class="stringliteral">"mesh::GriddingAlgorithm::*"</span>, &lt;br&gt;
+                 <span class="stringliteral">"xfer::*::*"</span> &lt;br&gt;
+</pre></div><p>
+<a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> expects timer names to be in a certain format to preserve the wildcard naming capability (i.e. to turn on entire package or class of timers). See the PDF document in /SAMRAI/docs/userdocs/Timing-Instrumentation.pdf for a discussion of how to add timers that maintain this format as well as a catalog of available timers currently implemented in the library.<p>
 Timing recursive function calls will yeild erroneous results and may lead to memory problems. We recommend {<em>not</em> to use timers to time recursive function calls}.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="b2b2b9173c412554dd073bd371cb4255"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::TimerManager" ref="b2b2b9173c412554dd073bd371cb4255" args="(const boost::shared_ptr&lt; Database &gt; &amp;input_db)" -->
+<a class="anchor" name="9b10e04ab08209f11776217702f61d4b"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::TimerManager" ref="9b10e04ab08209f11776217702f61d4b" args="(const boost::shared_ptr&lt; Database &gt; &amp;input_db=boost::shared_ptr&lt; Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -127,7 +155,7 @@ Timing recursive function calls will yeild erroneous results and may lead to mem
           <td class="memname">SAMRAI::tbox::TimerManager::TimerManager           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>input_db</em>          </td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a>&nbsp;&gt;()</code>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit, protected]</code></td>
         </tr>
@@ -159,7 +187,7 @@ The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="80d1f7e63ce00dfb2490a5c89ac0a10b"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::createManager" ref="80d1f7e63ce00dfb2490a5c89ac0a10b" args="(const boost::shared_ptr&lt; Database &gt; &amp;input_db)" -->
+<a class="anchor" name="5789b864e714501d3430dac483f26887"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::createManager" ref="5789b864e714501d3430dac483f26887" args="(const boost::shared_ptr&lt; Database &gt; &amp;input_db=boost::shared_ptr&lt; Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -167,7 +195,7 @@ The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html
           <td class="memname">void SAMRAI::tbox::TimerManager::createManager           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>input_db</em>          </td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a>&nbsp;&gt;()</code>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [static]</code></td>
         </tr>
@@ -226,7 +254,8 @@ Return a pointer to the singleton instance of the timer manager. All access to t
 
 <p>
 Return pointer to timer object with the given name string. If a timer with the given name already appears in the database of timers, the timer with that name will be returned. Otherwise, a new timer will be created with that name. Typically, only a timer specified (to be turned on) in the input file will be active. <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> names are parsed according to the input data parsing criteria (described at the top of this class header). One may override this functionality by adding the timer with a `true' argument. This argument allows one to override the input file criteria and turn the timer on anyway.<p>
-When assertion checking is active, an assertion will result if the string is empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="36826131e09ca25788b3c4224c33e6b4"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::checkTimerExists" ref="36826131e09ca25788b3c4224c33e6b4" args="(boost::shared_ptr&lt; Timer &gt; &amp;timer, const std::string &amp;name) const " -->
@@ -255,7 +284,9 @@ When assertion checking is active, an assertion will result if the string is emp
 <div class="memdoc">
 
 <p>
-Return true if a timer whose name matches the argument string exists in the database of timers controlled by the manager. If a match is found, the timer pointer in the argument list is set to that timer. Otherwise, return false and return a null pointer. If the name string is empty, a null pointer is returned. 
+Return true if a timer whose name matches the argument string exists in the database of timers controlled by the manager. If a match is found, the timer pointer in the argument list is set to that timer. Otherwise, return false and return a null pointer.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3aae3ed8356df84848bd4bb2c8aee271"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::checkTimerRunning" ref="3aae3ed8356df84848bd4bb2c8aee271" args="(const std::string &amp;name) const " -->
@@ -275,7 +306,9 @@ Return true if a timer whose name matches the argument string exists in the data
 <div class="memdoc">
 
 <p>
-Return true if a timer whose name matches the argument string exists in the database of timers and is currently running. Otherwise, return false. 
+Return true if a timer whose name matches the argument string exists in the database of timers and is currently running. Otherwise, return false.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="922535063b959036a2468772e266482c"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::resetAllTimers" ref="922535063b959036a2468772e266482c" args="()" -->
@@ -334,7 +367,9 @@ Print the timing statistics to the specified output stream.
 <div class="memdoc">
 
 <p>
-Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class. 
+Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!s_timer_manager_instance </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="0b647a1ac6d5279f7872c12a49d7923f"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::startTime" ref="0b647a1ac6d5279f7872c12a49d7923f" args="(Timer *timer)" -->
@@ -355,7 +390,8 @@ Initialize Singleton instance with instance of subclass. This function is used t
 
 <p>
 Mark given timer as running in timer database. If exclusive time option is set, start exclusive time for given timer. Also stop exclusive time for timer on top of exclusive timer stack and push given timer on to that stack.<p>
-When assertion checking is active, the timer pointer must be non-null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>timer != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5abf75601c73f8bca11a94dab3ef3992"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::stopTime" ref="5abf75601c73f8bca11a94dab3ef3992" args="(Timer *timer)" -->
@@ -376,7 +412,8 @@ When assertion checking is active, the timer pointer must be non-null.
 
 <p>
 Mark given timer as not running in timer database. If exclusive time option is set, stop exclusive time for given timer. Also, pop timer off top of exclusive timer stack and start exclusive timer for new top of stack timer.<p>
-When assertion checking is active, the timer pointer must be non-null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>timer != 0 </dd></dl>
+
 </div>
 </div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
@@ -397,7 +434,7 @@ When assertion checking is active, the timer pointer must be non-null.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="TimerManager_8h.html">TimerManager.h</a><li>source/SAMRAI/tbox/<a class="el" href="TimerManager_8C.html">TimerManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

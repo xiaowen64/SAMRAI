@@ -110,7 +110,10 @@ Create the directory specified by the path string. Permissions are set by defaul
 <div class="memdoc">
 
 <p>
-Rename a file from old file name to new file name. 
+Rename a file from old file name to new file name.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!old_filename.empty() <p>
+!new_filename.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="154e32cadcd111becfb0d2875c021e26"></a><!-- doxytag: member="SAMRAI::tbox::Utilities::intToString" ref="154e32cadcd111becfb0d2875c021e26" args="(int num, int min_width=1)" -->
@@ -281,7 +284,7 @@ Aborts the run after printing an error message with file and linenumber informat
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Utilities_8h.html">Utilities.h</a><li>source/SAMRAI/tbox/<a class="el" href="Utilities_8C.html">Utilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

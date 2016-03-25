@@ -258,12 +258,8 @@ Notes:<p>
 <ul>
 <li>The solution vector is not passed into the constructor. Before the solver can be used, the <a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#f46b2e62c8aff2e5dbd611337e3cbffb">initialize()</a> function must be called.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>my_functions must not be null</li></ul>
-<p>
-<ul>
-<li>object_name must not be empty. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+my_functions != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -305,12 +301,8 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.ht
 
 <p>
 Initialize solver with solution vector. The solution vector is required to initialize the memory record used internally within CVODE. This routine must be called before the solver can be used.<p>
-Assertion checks:<p>
-<ul>
-<li>the solution vector must not be null</li></ul>
-<p>
-<ul>
-<li>the solution vector must not have already been set </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>solution != 0 <p>
+d_solution_vector == 0 </dd></dl>
 
 </div>
 </div><p>
@@ -361,9 +353,7 @@ CVODE Termination Codes:<p>
 <p>
 See cvode.h header file for more information about return values.<p>
 If CVODE or CVSpgmr requires re-initialization, it is automatically done before the solve. This may be required if any of the CVODE or CVSpgmr data parameters have changed since the last call to the solver.<p>
-Assertion checks:<p>
-<ul>
-<li>The user specified final value for the independent variable t must be greater than the specified initial value. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_user_t_f &gt; d_t_0 </dd></dl>
 
 </div>
 </div><p>
@@ -384,8 +374,7 @@ Assertion checks:<p>
 <div class="memdoc">
 
 <p>
-Accessor function for setting CVODE output log file name and output printing options. Output file name and options may be changed throughout run as desired.<p>
-If the file name string is empty the default file name "cvode.log" is used. 
+Accessor function for setting CVODE output log file name and output printing options. Output file name and options may be changed throughout run as desired. 
 </div>
 </div><p>
 <a class="anchor" name="0e5a3871b89bfdb65f02d11fca4209fe"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setCVODEFunctions" ref="0e5a3871b89bfdb65f02d11fca4209fe" args="(CVODEAbstractFunctions *my_functions, const bool uses_preconditioner)" -->
@@ -415,9 +404,7 @@ If the file name string is empty the default file name "cvode.log" is used.
 
 <p>
 Set <a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html">CVODESolver</a> to use my_functions as the concrete subclass of the <a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a> class that defines the right-hand side evaluation and preconditioner functions. The uses_preconditioner argument indicates whether or not the the user has defined preconditioner routines in their concrete subclass of the <a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a> class.<p>
-Assertion checks:<p>
-<ul>
-<li>my_function must not be a null pointer </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>my_functions != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -458,11 +445,9 @@ Return pointer to object that provides user-defined functions for CVODE and CVSp
 
 <p>
 Set linear multistep method. The user can specify either ADAMS or BDF (backward differentiation formula) methods The BDF method is recommended for stiff problems, and the ADAMS method is recommended for nonstiff problems.<p>
-Assertion checks:<p>
-<ul>
-<li>linear_multistep_method must be one of ADAMS or BDF.</li></ul>
-<p>
-Note: the enumeration constants ADAMS and BDF are defined in cvode.h. 
+Note: the enumeration constants ADAMS and BDF are defined in cvode.h.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(linear_multistep_method == CV_ADAMS) || (linear_multistep_method == CV_BDF) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b4ef6bbfb197584fd6fe0314487dbebe"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setIterationType" ref="b4ef6bbfb197584fd6fe0314487dbebe" args="(int iteration_type)" -->
@@ -483,11 +468,9 @@ Note: the enumeration constants ADAMS and BDF are defined in cvode.h.
 
 <p>
 Set iteration type. The user can specify either FUNCTIONAL iteration, which does not require linear algebra, or a NEWTON iteration, which requires the solution of linear systems. In the NEWTON case, the user must also specify a CVODE linear solver. NEWTON is recommended in case of stiff problems.<p>
-Assertion checks:<p>
-<ul>
-<li>iteration_type must be one of FUNCTIONAL or NEWTON</li></ul>
-<p>
-Note: the enumeration constants FUNCTIONAL and NEWTON are defined in cvode.h. 
+Note: the enumeration constants FUNCTIONAL and NEWTON are defined in cvode.h.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(iteration_type == CV_FUNCTIONAL) || (iteration_type == CV_NEWTON) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="97d7e08e18c8fc65307c18133304acb1"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setToleranceType" ref="97d7e08e18c8fc65307c18133304acb1" args="(int tolerance_type)" -->
@@ -508,11 +491,9 @@ Note: the enumeration constants FUNCTIONAL and NEWTON are defined in cvode.h.
 
 <p>
 Set tolerance type. This parameter specifies the relative and absolute tolerance types to be used. The SS tolerance type means a scalar relative and absolute tolerance, while the SV tolerance type means a scalar relative tolerance and a vector absolute tolerance (a potentially different absolute tolerance for each vector component).<p>
-Assertion checks:<p>
-<ul>
-<li>tolerance_type must be one of SS or SV</li></ul>
-<p>
-Note: the enumeration constants SS and SV are defined in cvode.h. 
+Note: the enumeration constants SS and SV are defined in cvode.h.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(tolerance_type == CV_SS) || (tolerance_type == CV_SV) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="87e59db3a5e5ea1f16c7924fd8f27e93"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setRelativeTolerance" ref="87e59db3a5e5ea1f16c7924fd8f27e93" args="(double relative_tolerance)" -->
@@ -533,11 +514,9 @@ Note: the enumeration constants SS and SV are defined in cvode.h.
 
 <p>
 Set the relative tolerance level.<p>
-Assertion checks:<p>
-<ul>
-<li>relative_tolerance must be greater than or equal to 0.0</li></ul>
-<p>
-Note that pure absolute tolerance can be used by setting the relative tolerance to 0. However, it is an error to simultaneously set relative and absolute tolerances to 0. 
+Note that pure absolute tolerance can be used by setting the relative tolerance to 0. However, it is an error to simultaneously set relative and absolute tolerances to 0.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>relative_tolerance &gt;= 0.0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="37b23a169437d798fe6fae127db619ad"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setAbsoluteTolerance" ref="37b23a169437d798fe6fae127db619ad" args="(double absolute_tolerance)" -->
@@ -558,11 +537,9 @@ Note that pure absolute tolerance can be used by setting the relative tolerance 
 
 <p>
 Set the scalar absolute tolerance level.<p>
-Assertion checks:<p>
-<ul>
-<li>absolute_tolerance must be greater than or equal to 0.0</li></ul>
-<p>
-Note that pure relative tolerance can be used by setting the absolute tolerance to 0. However, it is an error to simultaneously set relative and absolute tolerances to 0. 
+Note that pure relative tolerance can be used by setting the absolute tolerance to 0. However, it is an error to simultaneously set relative and absolute tolerances to 0.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>absolute_tolerance &gt;= 0.0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="70a77de797968f316d305dfb7082dfa3"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setAbsoluteTolerance" ref="70a77de797968f316d305dfb7082dfa3" args="(SundialsAbstractVector *absolute_tolerance)" -->
@@ -583,14 +560,10 @@ Note that pure relative tolerance can be used by setting the absolute tolerance 
 
 <p>
 Set the vector absolute tolerance level.<p>
-Assertion checks:<p>
-<ul>
-<li>absolute_tolerance must not be a null pointer</li></ul>
-<p>
-<ul>
-<li>each component of absolute_tolerance must be greater than or equal to 0.0</li></ul>
-<p>
-Note that pure relative tolerance can be used by setting the absolute tolerance to 0. However, it is an error to simultaneously set relative and absolute tolerances to 0. 
+Note that pure relative tolerance can be used by setting the absolute tolerance to 0. However, it is an error to simultaneously set relative and absolute tolerances to 0.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>absolute_tolerance != 0 <p>
+absolute_tolerance-&gt;vecMin() &gt;= 0.0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4c7dd62716a239ec2c0168564d3cfacd"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setSteppingMethod" ref="4c7dd62716a239ec2c0168564d3cfacd" args="(int stepping_method)" -->
@@ -611,11 +584,9 @@ Note that pure relative tolerance can be used by setting the absolute tolerance 
 
 <p>
 Set stepping method to use for integration. There are stepping methods: NORMAL and ONE_STEP. The NORMAL method has the solver take internal steps until it has reached or just passed the user specified t_f parameter. The solver then interpolates in order to return an approximate value of y(t_f). The ONE_STEP option tells the solver to just take one internal step and return the solution at the point reached by that step.<p>
-Assertion checks:<p>
-<ul>
-<li>stepping_method must be one of NORMAL or ONE_STEP</li></ul>
-<p>
-Note: the enumeration constants NORMAL and ONE_STEP are defined in cvode.h. 
+Note: the enumeration constants NORMAL and ONE_STEP are defined in cvode.h.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(stepping_method == CV_NORMAL) || (stepping_method == CV_ONE_STEP) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="0ab445a0df1495c106092d84ed1faaa5"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::setInitialValueOfIndependentVariable" ref="0ab445a0df1495c106092d84ed1faaa5" args="(double t_0)" -->
@@ -685,9 +656,7 @@ Set final value for independent variable (i.e. the value of independent variable
 
 <p>
 Set initial condition vector.<p>
-Assertion checks:<p>
-<ul>
-<li>ic_vector must not be null </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>ic_vector != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -709,9 +678,7 @@ Assertion checks:<p>
 
 <p>
 Set maximum order for the linear multistep method. By default, this is set to 12 for ADAMS methods and 5 for BDF methods.<p>
-Assertion checks:<p>
-<ul>
-<li>max_order must be greater than or equal to 0 </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_order &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -733,9 +700,7 @@ Assertion checks:<p>
 
 <p>
 Set maximum number of internal steps to be taken by the solver in its attempt to reach t_f. By default, this is set to 500.<p>
-Assertion checks:<p>
-<ul>
-<li>max_num_internal_steps must be greater than or equal to 0 </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_num_internal_steps &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -757,9 +722,7 @@ Assertion checks:<p>
 
 <p>
 Set maximum number of warning messages issued by the solver that (t + h == t) on the next internal step. By default, this is set to 10.<p>
-Assertion checks:<p>
-<ul>
-<li>max_num_warnings must be greater than or equal to 0 </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_num_warnings &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -781,9 +744,7 @@ Assertion checks:<p>
 
 <p>
 Set initial step size.<p>
-Assertion checks:<p>
-<ul>
-<li>init_step_size must be greater than or equal to 0.0 </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>init_step_size &gt;= 0.0 </dd></dl>
 
 </div>
 </div><p>
@@ -805,9 +766,7 @@ Assertion checks:<p>
 
 <p>
 Set maximum absolute value of step size allowed. By default, there is no upper bound on the absolute value of step size.<p>
-Assertion checks:<p>
-<ul>
-<li>max_step_size must be greater than or equal to 0.0 </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_step_size &gt;= 0.0 </dd></dl>
 
 </div>
 </div><p>
@@ -829,9 +788,7 @@ Assertion checks:<p>
 
 <p>
 Set minimum absolute value of step size allowed. By default, this is set to 0.0.<p>
-Assertion checks:<p>
-<ul>
-<li>min_step_size must be greater than or equal to 0.0 </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>min_step_size &gt;= 0.0 </dd></dl>
 
 </div>
 </div><p>
@@ -853,9 +810,7 @@ Assertion checks:<p>
 
 <p>
 Set the preconditioning type to be used by CVSpgmr. This must be one of the four enumeration constants NONE, LEFT, RIGHT, or BOTH defined in iterativ.h. These correspond to no preconditioning, left preconditioning only, right preconditioning only, and both left and right preconditioning, respectively.<p>
-Assertion Checks:<p>
-<ul>
-<li>precondition_type must be one of NONE, LEFT, RIGHT, or BOTH. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(precondition_type == PREC_NONE) || (precondition_type == PREC_LEFT) || (precondition_type == PREC_RIGHT) || (precondition_type == PREC_BOTH) </dd></dl>
 
 </div>
 </div><p>
@@ -877,9 +832,7 @@ Assertion Checks:<p>
 
 <p>
 Set the Gram-Schmidt orthogonalization type to be used by CVSpgmr. This must be one of the two enumeration constants MODIFIED_GS or CLASSICAL_GS defined in iterativ.h. These correspond to using modified Gram-Schmidt and classical Gram-Schmidt, respectively.<p>
-Assertion Checks:<p>
-<ul>
-<li>gs_type must be one of CLASSICAL_GS or MODIFIED_GS. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(gs_type == CLASSICAL_GS) || (gs_type == MODIFIED_GS) </dd></dl>
 
 </div>
 </div><p>
@@ -901,9 +854,7 @@ Assertion Checks:<p>
 
 <p>
 Set the maximum Krylov dimension to be used by CVSpgmr. This is an optional input to the CVSPGMR solver. Pass 0 to use the default value MIN(num_equations, CVSPGMR_MAXL=5).<p>
-Assertion Checks:<p>
-<ul>
-<li>max_krylov_dim must be nonnegative </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_krylov_dim &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -925,9 +876,7 @@ Assertion Checks:<p>
 
 <p>
 Set the factor by which the tolerance on the nonlinear iteration is multiplied to get a tolerance on the linear iteration. This is an optional input to the CVSPGMR solver. Pass 0 to use the default value CVSPGMR_DELT = 0.05.<p>
-Assertion Checks:<p>
-<ul>
-<li>tol_scale_factor must be nonnegative </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>tol_scale_factor &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -1590,7 +1539,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8h.html">CVODESolver.h</a><li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8C.html">CVODESolver.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

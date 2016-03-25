@@ -69,6 +69,8 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Query whether patch touches a specific regular boundary.  <a href="#597cbafe4dc255daf0a948aa7d76a375"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#3ce807dcf07127b3a7bb2e82d8d03d84">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#d694fc9950c3c4561af5024535733df7">getDim</a> () const </td></tr>
+
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a></td></tr>
 
@@ -113,7 +115,10 @@ Class <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">PatchGeomet
 <div class="memdoc">
 
 <p>
-The default constructor for the patch geometry base class. 
+The constructor for the patch geometry base class.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(ratio_to_level_zero.getDim() == touches_regular_bdry.getDim()) &amp;&amp; (ratio_to_level_zero.getDim() == touches_periodic_bdry.getDim()) <p>
+all components of ratio_to_level_zero must be nonzero and all components of ratio_to_level_zero not equal to 1 must have the same sign </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f0063284d3424f8cf569fccfde9e6862"></a><!-- doxytag: member="SAMRAI::hier::PatchGeometry::~PatchGeometry" ref="f0063284d3424f8cf569fccfde9e6862" args="()" -->
@@ -257,7 +262,8 @@ Return array of boundary box components for patch each of which intersects the p
 
 <p>
 Return array of boundary box components for patch each of which intersects the patch along a 1-dim edge (i.e., 1-dim intersection between cells in patch and cells in boundary box).<p>
-When assertion checking is active, this routine throws an assertion when DIM &lt; 2. 
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#d694fc9950c3c4561af5024535733df7">getDim()</a>.getValue() &gt;= 2 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a39d626db639150a41f73f76d1e7490c"></a><!-- doxytag: member="SAMRAI::hier::PatchGeometry::getFaceBoundaries" ref="a39d626db639150a41f73f76d1e7490c" args="() const " -->
@@ -277,7 +283,8 @@ When assertion checking is active, this routine throws an assertion when DIM &lt
 
 <p>
 Return array of boundary box components for patch each of which intersects the patch along a 2-dim face (i.e., 2-dim intersection between cells in patch and cells in boundary box).<p>
-When assertion checking is active, this routine throws an assertion when DIM &lt; 3. 
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#d694fc9950c3c4561af5024535733df7">getDim()</a>.getValue() &gt;= 3 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ecb76e1d901576cef3e6b4880559c961"></a><!-- doxytag: member="SAMRAI::hier::PatchGeometry::getCodimensionBoundaries" ref="ecb76e1d901576cef3e6b4880559c961" args="(const int codim) const " -->
@@ -301,7 +308,8 @@ Return array of boundary box components for patch each of which intersects the p
 if DIM == 1: (codim == 1) =&gt; same components as getNodeBoundaries.<p>
 if DIM == 2, (codim == 1) =&gt; same components as getEdgeBoundaries. (codim == 2) =&gt; same components as getNodeBoundaries.<p>
 if DIM == 3, (codim == 1) =&gt; same components as getFaceBoundaries. (codim == 2) =&gt; same components as getEdgeBoundaries. (codim == 3) =&gt; same components as getNodeBoundaries.<p>
-When assertion checking is active, this routine throws an assertion when codim &lt; 0 or codim &gt; DIM. 
+<dl compact><dt><b>Precondition:</b></dt><dd>(codim &gt; 0) &amp;&amp; (codim &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#d694fc9950c3c4561af5024535733df7">getDim()</a>.getValue()) when codim &lt; 0 or codim &gt; DIM. </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e1ded55e2f7bc95b69ec34a2540c52be"></a><!-- doxytag: member="SAMRAI::hier::PatchGeometry::setCodimensionBoundaries" ref="e1ded55e2f7bc95b69ec34a2540c52be" args="(const tbox::Array&lt; BoundaryBox &gt; &amp;bdry_boxes, const int codim)" -->
@@ -330,7 +338,10 @@ When assertion checking is active, this routine throws an assertion when codim &
 <div class="memdoc">
 
 <p>
-Set the array of boundary box components of the given codimension for a patch. 
+Set the array of boundary box components of the given codimension for a patch.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(codim &gt; 0) &amp;&amp; (codim &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#d694fc9950c3c4561af5024535733df7">getDim()</a>.getValue()) <p>
+for each boundary_box in bdry_boxes, getBoundaryType() == codim </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="dc761d341223c80466a735b4c2855beb"></a><!-- doxytag: member="SAMRAI::hier::PatchGeometry::getBoundaryFillBox" ref="dc761d341223c80466a735b4c2855beb" args="(const BoundaryBox &amp;bbox, const Box &amp;patch_box, const IntVector &amp;gcw) const " -->
@@ -372,9 +383,12 @@ The patch box will be grown by the given ghost cell width and then intersected w
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>bbox</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> representing location and type of boundary </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch_box</em>&nbsp;</td><td>The box for the patch where data is being filled </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>gcw</em>&nbsp;</td><td>ghost cell width to fill </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>gcw</em>&nbsp;</td><td>ghost cell width to fill</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>bbox.getDim() == patch_box.getDim() <p>
+bbox.getDim() == gcw.getDim() <p>
+all components of gcw are &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -452,9 +466,11 @@ Returns true if the <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>axis</em>&nbsp;</td><td>Axis direction normal to the side being checked </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>upperlower</em>&nbsp;</td><td>Flag should be 0 if checking the lower side in the axis direction, or 1 if checking the upper side. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>upperlower</em>&nbsp;</td><td>Flag should be 0 if checking the lower side in the axis direction, or 1 if checking the upper side.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#d694fc9950c3c4561af5024535733df7">getDim()</a>.getValue()) <p>
+(upperlower == 0) || (upperlower == 1) </dd></dl>
 
 </div>
 </div><p>
@@ -480,9 +496,28 @@ Print object data to the specified output stream.
 Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianPatchGeometry.html#c66f200f651a1fe7410598fee0ff2107">SAMRAI::geom::CartesianPatchGeometry</a>.
 </div>
 </div><p>
+<a class="anchor" name="d694fc9950c3c4561af5024535733df7"></a><!-- doxytag: member="SAMRAI::hier::PatchGeometry::getDim" ref="d694fc9950c3c4561af5024535733df7" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::PatchGeometry::getDim           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchGeometry_8h.html">PatchGeometry.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchGeometry_8C.html">PatchGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

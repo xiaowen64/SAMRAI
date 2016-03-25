@@ -116,6 +116,8 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attach the <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> to an existing Silo file.  <a href="#d88f90c824bebc6953f8eef6b7362b8c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#ba338f8f3e86e855646efeff2c253cf8">close</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#2c02ec9a4279dd2d36379461c1138c1f">hasDirectory</a> ()</td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html">SiloDatabase</a> implements the interface of the <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> class to store data in the Silo (Hierarchical Data Format) data format.<p>
@@ -142,7 +144,8 @@ It is assumed that all processors will access the database in the same manner. E
 
 <p>
 The Silo database constructor creates an empty database with the specified name. By default the database will not be associated with a file until it is mounted, using the mount() member function.<p>
-When assertion checking is active, the name string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="31a2f1fc057e2dc1f7c08efc5fa41554"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::SiloDatabase" ref="31a2f1fc057e2dc1f7c08efc5fa41554" args="(const std::string &amp;name, DBfile *file, const std::string &amp;directory, const bool create_in_file)" -->
@@ -183,7 +186,11 @@ When assertion checking is active, the name string must be non-empty.
 <div class="memdoc">
 
 <p>
-Constructor used to create sub-databases. 
+Constructor used to create sub-databases.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() <p>
+file != 0 <p>
+!directory.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5e75773827b5b575bd84df9fda9a313d"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::~SiloDatabase" ref="5e75773827b5b575bd84df9fda9a313d" args="()" -->
@@ -224,7 +231,8 @@ The database destructor closes the Silo group or data file.
 
 <p>
 Return true if the specified key exists in the database and false otherwise.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#80d36ab3404b6754d0a4901f19e0bc79">SAMRAI::tbox::Database</a>.
 </div>
@@ -245,7 +253,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#80d36ab3404b
 <div class="memdoc">
 
 <p>
-Return an array of all keys in the current database. Note that no keys from subdatabases contained in the current database will appear in the array. To get the keys of any other database, you must call this routine for that database. 
+Return an array of all keys in the current database. Note that no keys from subdatabases contained in the current database will appear in the array. To get the keys of any other database, you must call this routine for that database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#2c02ec9a4279dd2d36379461c1138c1f">hasDirectory()</a> </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1f8eb562360696af77c8bab946be86e3">SAMRAI::tbox::Database</a>.
 </div>
@@ -272,9 +282,10 @@ Return the type of data associated with the key.
 If the key does not exist, then INVALID is returned<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#396ce72dd2149e09c0ce2ab44f77c4b5">SAMRAI::tbox::Database</a>.
@@ -298,7 +309,8 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#396ce72dd214
 
 <p>
 Return the size of the array associated with the key. If the key does not exist, then zero is returned.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#27ec3db81d84750e311903da3b189c3b">SAMRAI::tbox::Database</a>.
 </div>
@@ -320,7 +332,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#27ec3db81d84
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a database entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a database entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471329aa4c509463f168330">SAMRAI::tbox::Database</a>.
 </div>
@@ -343,7 +357,8 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471
 
 <p>
 Create a new database with the specified key name and return a pointer to it. A new group with the key name is also created in the data file.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ed79eabacdec5c32a6cbd2af92c48ef7">SAMRAI::tbox::Database</a>.
 </div>
@@ -366,7 +381,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ed79eabacdec
 
 <p>
 Get the database with the specified key name. If the specified key does not represent a database entry in the database, then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isDatabase(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#01c167dc865e82e220a9049d2fdc7f78">SAMRAI::tbox::Database</a>.
 </div>
@@ -388,7 +405,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#01c167dc865e
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a boolean entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a boolean entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#5d706b8e004233f36f464ca06d02051e">SAMRAI::tbox::Database</a>.
 </div>
@@ -426,7 +445,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#5d706b8e0042
 
 <p>
 Create a boolean array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#655ed62e621e1548e7f609e2865ebc09">SAMRAI::tbox::Database</a>.
 </div>
@@ -451,9 +472,11 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#655ed62e621e
 Get a boolean entry from the database with the specified key name. If the specified key does not exist in the database or is not a boolean array, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isBool(key) </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#4b233481c0927268cff48197a5a85ea8">SAMRAI::tbox::Database</a>.
@@ -476,7 +499,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#4b233481c092
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a box entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a box entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#af83552207c070b95f2306c4af307e3c">SAMRAI::tbox::Database</a>.
 </div>
@@ -514,7 +539,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#af83552207c0
 
 <p>
 Create a box array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#bc1506f2d9a19cf4aa0a416e85ef4aee">SAMRAI::tbox::Database</a>.
 </div>
@@ -537,7 +564,8 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#bc1506f2d9a1
 
 <p>
 Get a box entry from the database with the specified key name. If the specified key does not exist in the database, then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d724f21c47ac43d8e6d8771ba0d95857">SAMRAI::tbox::Database</a>.
 </div>
@@ -559,7 +587,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d724f21c47ac
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a char entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a char entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#9249e254d3206594bcbc96bfaf734ed7">SAMRAI::tbox::Database</a>.
 </div>
@@ -597,7 +627,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#9249e254d320
 
 <p>
 Create a character array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#2dae85fd35b3efc00bd948b253874731">SAMRAI::tbox::Database</a>.
 </div>
@@ -620,7 +652,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#2dae85fd35b3
 
 <p>
 Get a character entry from the database with the specified key name. If the specified key does not exist in the database, then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isChar(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#c62698e7bf2decd46cd12936eea8d285">SAMRAI::tbox::Database</a>.
 </div>
@@ -642,7 +676,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#c62698e7bf2d
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a complex entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a complex entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#2ea0b1723b3b01b472b8585f50b8f9e5">SAMRAI::tbox::Database</a>.
 </div>
@@ -680,7 +716,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#2ea0b1723b3b
 
 <p>
 Create a complex array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1dd9e2c691a5cdba5d68012b5a42b5af">SAMRAI::tbox::Database</a>.
 </div>
@@ -703,7 +741,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1dd9e2c691a5
 
 <p>
 Get a complex entry from the database with the specified key name. If the specified key does not exist in the database then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isComplex(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#f3359ffe04afa0ce6abb66f8c09d7e42">SAMRAI::tbox::Database</a>.
 </div>
@@ -725,7 +765,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#f3359ffe04af
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a double entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a double entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#dae64ce5997a94a684212d9c462d2f21">SAMRAI::tbox::Database</a>.
 </div>
@@ -763,7 +805,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#dae64ce5997a
 
 <p>
 Create a double array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d08e21d5732e49d982982b9573a4729d">SAMRAI::tbox::Database</a>.
 </div>
@@ -786,7 +830,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d08e21d5732e
 
 <p>
 Get a double entry from the database with the specified key name. If the specified key does not exist in the database then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isDouble(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1259ad6610207ac7dc6cecf02e2e7e54">SAMRAI::tbox::Database</a>.
 </div>
@@ -808,7 +854,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1259ad661020
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a float entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a float entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#5df6281a271d168d300a0e3e6b46561f">SAMRAI::tbox::Database</a>.
 </div>
@@ -846,7 +894,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#5df6281a271d
 
 <p>
 Create a float array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7d7e3c63b090d5277ea64482a74609a1">SAMRAI::tbox::Database</a>.
 </div>
@@ -869,7 +919,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7d7e3c63b090
 
 <p>
 Get a float entry from the database with the specified key name. If the specified key does not exist in the database then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isFloat(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1afc11cec9d61647360e53cde52a6e74">SAMRAI::tbox::Database</a>.
 </div>
@@ -891,7 +943,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1afc11cec9d6
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents an integer entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents an integer entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#54f2d7838423443b138ec60da478b4a8">SAMRAI::tbox::Database</a>.
 </div>
@@ -929,7 +983,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#54f2d7838423
 
 <p>
 Create an integer array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#9585209c8a69a109d61d4899097780a9">SAMRAI::tbox::Database</a>.
 </div>
@@ -952,7 +1008,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#9585209c8a69
 
 <p>
 Get an integer entry from the database with the specified key name. If the specified key does not exist in the database then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isInteger(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#0c7d324ae33feca83f0dc17bda871f99">SAMRAI::tbox::Database</a>.
 </div>
@@ -974,7 +1032,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#0c7d324ae33f
 <div class="memdoc">
 
 <p>
-Return true or false depending on whether the specified key represents a string entry. If the key does not exist or if the string is empty, then false is returned. 
+Return true or false depending on whether the specified key represents a string entry. If the key does not exist, then false is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#195764631b6129126bd443a07e2f4a09">SAMRAI::tbox::Database</a>.
 </div>
@@ -1012,7 +1072,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#195764631b61
 
 <p>
 Create a string array entry in the database with the specified key name.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+data != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#cd87437540f7f944f0c04548b82d0850">SAMRAI::tbox::Database</a>.
 </div>
@@ -1035,7 +1097,9 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#cd87437540f7
 
 <p>
 Get a string entry from the database with the specified key name. If the specified key does not exist in the database then an error message is printed and the program exits.<p>
-When assertion checking is active, the key string must be non-empty. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() <p>
+isString(key) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#e962e6a0071e1880473620567bafaa2d">SAMRAI::tbox::Database</a>.
 </div>
@@ -1106,9 +1170,10 @@ Create a new database file.<p>
 Returns true if successful.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>name of database. Normally a filename. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>name of database. Normally a filename.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#907464f9873aefa6ea2b941fbd0719d1">SAMRAI::tbox::Database</a>.
@@ -1145,9 +1210,10 @@ Returns true if successful.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>name of database. Normally a filename.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>read_write_mode</em>&nbsp;</td><td>Open the database in read-write mode instead of read-only mode. NOTE: This class currently does not support read-only mode, so this flag must be true. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>read_write_mode</em>&nbsp;</td><td>Open the database in read-write mode instead of read-only mode. NOTE: This class currently does not support read-only mode, so this flag must be true.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#84a9ffda036165574fef274599ab33e2">SAMRAI::tbox::Database</a>.
@@ -1183,7 +1249,9 @@ Attach the <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a
 <p>
 If an application has an existing Silo file used for restart this method can be used to write <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> restart information to the existing file instead of <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> creating a distinct file.<p>
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> data will be written to the directory specified within the Silo file.<p>
-Returns true if attach was successful. 
+Returns true if attach was successful.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>file != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ba338f8f3e86e855646efeff2c253cf8"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::close" ref="ba338f8f3e86e855646efeff2c253cf8" args="()" -->
@@ -1209,9 +1277,28 @@ If the database is currently open then close it. This should flush all data to t
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#c491f20e84ec85bdfb417fa631c12e37">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
+<a class="anchor" name="2c02ec9a4279dd2d36379461c1138c1f"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::hasDirectory" ref="2c02ec9a4279dd2d36379461c1138c1f" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::SiloDatabase::hasDirectory           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="SiloDatabase_8h.html">SiloDatabase.h</a><li>source/SAMRAI/tbox/<a class="el" href="SiloDatabase_8C.html">SiloDatabase.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

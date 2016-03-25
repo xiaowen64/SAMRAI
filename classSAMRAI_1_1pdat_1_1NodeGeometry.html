@@ -60,7 +60,7 @@
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#6239818309aafa32afd62635d45ce767">toNodeBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into a node geometry box. A node geometry box is extends the given AMR index box space box by one in upper dimension for each coordinate direction.  <a href="#6239818309aafa32afd62635d45ce767"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into a node geometry box. A node geometry box is extends the given AMR index box space box by one at upper end for each coordinate direction.  <a href="#6239818309aafa32afd62635d45ce767"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#5f90baa607bb2055fb7ce2dd08cd9d4b">transform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a node-centered box.  <a href="#5f90baa607bb2055fb7ce2dd08cd9d4b"></a><br></td></tr>
@@ -70,7 +70,7 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html">NodeGeometry</a> manages the mapping between the AMR index space and the node-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between node- centered box geometries for communication operations.<p>
-See header file for NodeData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+See header file for NodeData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html">pdat::NodeOverlap</a> </dd></dl>
 
@@ -120,6 +120,8 @@ The BoxOverlap implemenation for this geometry.
 <p>
 Construct the node geometry object given an AMR index space box and ghost cell width. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -162,7 +164,7 @@ The virtual destructor does nothing interesting.
 <div class="memdoc">
 
 <p>
-Convert an AMR index box space box into a node geometry box. A node geometry box is extends the given AMR index box space box by one in upper dimension for each coordinate direction. 
+Convert an AMR index box space box into a node geometry box. A node geometry box is extends the given AMR index box space box by one at upper end for each coordinate direction. 
 <p>
 
 </div>
@@ -307,6 +309,7 @@ This static method applies a coordinate system transformation to the given <a cl
 <p>
 Compute the overlap in node-centered index space between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#23b99f5eb14d617c796f197014a0b9a2">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
@@ -370,6 +373,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c04
 <p>
 Compute the node-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>src_mask.getDim() == transformation.getOffset.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -450,7 +454,7 @@ Return the ghost cell width for this node centered box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8h.html">NodeGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8C.html">NodeGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

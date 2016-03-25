@@ -40,12 +40,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#a2bd4bb5f665d1dbe1da09e1e17bb46c">~SimpleCellRobinBcCoefs</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#a2bd4bb5f665d1dbe1da09e1e17bb46c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#dcfd87c911f2ad14caa730c5bd16cbdc">setHierarchy</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;, const int ln_min=-1, const int ln_max=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#a48924ad18a1610bd6a124bd7e7452ed">setHierarchy</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int ln_min=-1, const int ln_max=-1)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the hierarchy where boundary data associated with the hierarchy is found.  <a href="#dcfd87c911f2ad14caa730c5bd16cbdc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries</a> (const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the hierarchy where boundary data associated with the hierarchy is found.  <a href="#a48924ad18a1610bd6a124bd7e7452ed"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#242eec31c9aea0e9432b51d33899ce64">setBoundaries</a> (const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify the boundary conditions that are to be used at the physical domain boundary.  <a href="#6f10285acdd4c9006fc550dbca198c46"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify the boundary conditions that are to be used at the physical domain boundary.  <a href="#242eec31c9aea0e9432b51d33899ce64"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#b70719fc9ab54bf750e743f01af473e7">cacheDirichletData</a> (int dirichlet_data_id)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Cache data providing Dirichlet boundary values.  <a href="#b70719fc9ab54bf750e743f01af473e7"></a><br></td></tr>
@@ -186,7 +186,7 @@ Destructor.
 <p>
 Function to fill arrays of Robin boundary condition coefficients at a patch boundary. 
 <p>
-This implementation of the virtual function <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">RobinBcCoefStrategy::setBcCoefs()</a> uses information specified by the call to <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries()</a> to determine the coefficients.<p>
+This implementation of the virtual function <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">RobinBcCoefStrategy::setBcCoefs()</a> uses information specified by the call to <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#242eec31c9aea0e9432b51d33899ce64">setBoundaries()</a> to determine the coefficients.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>acoef_data</em>&nbsp;</td><td>boundary coefficient data. This is defined to include index range for the boundary faces on the boundary box <code>bdry_box</code>. If this is a null pointer, then the calling function is not interested in a, and you can disregard it. </td></tr>
@@ -195,9 +195,13 @@ This implementation of the virtual function <a class="el" href="classSAMRAI_1_1s
     <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td>variable to set the coefficients for. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td>patch requiring bc coefficients </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_box</em>&nbsp;</td><td>boundary box showing where on the boundary the coefficient data is needed. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>solution time corresponding to filling, for use when coefficients are time-dependent. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>solution time corresponding to filling, for use when coefficients are time-dependent.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_dim == patch.getDim()) &amp;&amp; (d_dim == bdry_box.getDim()) <p>
+!acoef_data || (d_dim == acoef_data-&gt;getDim()) <p>
+!bcoef_data || (d_dim == bcoef_data-&gt;getDim()) <p>
+!gcoef_data || (d_dim == gcoef_data-&gt;getDim()) </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">SAMRAI::solv::RobinBcCoefStrategy</a>.
@@ -224,7 +228,7 @@ Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#5
 Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#f58238e9b0828211744a9c5150221f7e">SAMRAI::solv::RobinBcCoefStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="dcfd87c911f2ad14caa730c5bd16cbdc"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy" ref="dcfd87c911f2ad14caa730c5bd16cbdc" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;, const int ln_min=-1, const int ln_max=-1)" -->
+<a class="anchor" name="a48924ad18a1610bd6a124bd7e7452ed"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy" ref="a48924ad18a1610bd6a124bd7e7452ed" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int ln_min=-1, const int ln_max=-1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -232,7 +236,7 @@ Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#f
           <td class="memname">void SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname">, </td>
+          <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -258,10 +262,14 @@ Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#f
 <p>
 Set the hierarchy where boundary data associated with the hierarchy is found. 
 <p>
-This class requires you to specify some grid data associated with a hierarchy, such as the Dirichlet boundary values, the flux or the Dirichlet/Neumann flag. That hierarchy and the range of relevant patch levels is specified by calling this function. 
+This class requires you to specify some grid data associated with a hierarchy, such as the Dirichlet boundary values, the flux or the Dirichlet/Neumann flag. That hierarchy and the range of relevant patch levels is specified by calling this function.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+d_dim == hierarchy-&gt;getDim()</dd></dl>
+<dl compact><dt><b>Postcondition:</b></dt><dd>(d_ln_min &gt;= 0) &amp;&amp; (d_ln_max &gt;= 0) &amp;&amp; (d_ln_min &lt;= d_ln_max) </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="6f10285acdd4c9006fc550dbca198c46"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setBoundaries" ref="6f10285acdd4c9006fc550dbca198c46" args="(const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)" -->
+<a class="anchor" name="242eec31c9aea0e9432b51d33899ce64"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setBoundaries" ref="242eec31c9aea0e9432b51d33899ce64" args="(const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -287,7 +295,7 @@ This class requires you to specify some grid data associated with a hierarchy, s
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *&nbsp;</td>
-          <td class="paramname"> <em>bdry_types</em> = <code>NULL</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>bdry_types</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -302,9 +310,13 @@ This class requires you to specify some grid data associated with a hierarchy, s
 Specify the boundary conditions that are to be used at the physical domain boundary. 
 <p>
 The boundary conditions specified as the std::string argument "boundary_type." The boundary type argument can be "Dirichlet", "Neumann", or "Mixed".<p>
-If using Dirichlet boundary conditions, then before the solver is called, the storage for the unknown u must have a mapped_box_level of ghost cells at least one cell wide that includes the Dirichlet boundary values.<p>
+If using Dirichlet boundary conditions, then before the solver is called, the storage for the unknown u must have a box_level of ghost cells at least one cell wide that includes the Dirichlet boundary values.<p>
 If using Neumann boundary conditions, then before the solver is called, the outerface boundary flux data must be set for the Neumann conditions. The fluxes argument gives the patch data index of this flux data.<p>
-The mixed boundary type is for a mixture of Dirichlet and Neumann boundary conditions are used at the physical domain boundary. The fluxes argument gives the patch data index of the outerface data that specifies the flux data for the Neumann conditions. The flags array is an outerface data array of integer flags that specifies whether Dirichlet (flag == zero) or Neumann (flag == one) conditions are to be used at a particular cell boundary face. Note that the flag data must be set before the matrix entries can be computed and the flux data must be set before the solver is called. The bdry_types argument can be used if the boundary conditions are mixed but one or more of the faces of the physical boundary are entirely either Dirichlet or Neumann boundaries. The bdry_types argument should be an array of 2*DIM integers, specifying the boundary conditions on each side of the physical domain. It should be ordered {x_lo, x_hi, y_lo, y_hi, z_lo, z_hi}, with the values for each face being 0 for Dirichlet conditions, 1 for Neumann conditions, and 2 for mixed boundary conditions. The bdry_type argument is never required, but if used it can sometimes make the PoissonHYPRESolver class more efficient. 
+The mixed boundary type is for a mixture of Dirichlet and Neumann boundary conditions are used at the physical domain boundary. The fluxes argument gives the patch data index of the outerface data that specifies the flux data for the Neumann conditions. The flags array is an outerface data array of integer flags that specifies whether Dirichlet (flag == zero) or Neumann (flag == one) conditions are to be used at a particular cell boundary face. Note that the flag data must be set before the matrix entries can be computed and the flux data must be set before the solver is called. The bdry_types argument can be used if the boundary conditions are mixed but one or more of the faces of the physical boundary are entirely either Dirichlet or Neumann boundaries. The bdry_types argument should be an array of 2*DIM integers, specifying the boundary conditions on each side of the physical domain. It should be ordered {x_lo, x_hi, y_lo, y_hi, z_lo, z_hi}, with the values for each face being 0 for Dirichlet conditions, 1 for Neumann conditions, and 2 for mixed boundary conditions. The bdry_type argument is never required, but if used it can sometimes make the PoissonHYPRESolver class more efficient.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(boundary_type != "Neumann") || (fluxes &gt;= 0) <p>
+(boundary_type != "Mixed") || ((fluxes &gt;= 0) &amp;&amp; (flags &gt;= 0)) <p>
+(boundary_type == "Dirichlet") || (boundary_type != "Neumann") || (boundary_type != "Mixed") </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b70719fc9ab54bf750e743f01af473e7"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData" ref="b70719fc9ab54bf750e743f01af473e7" args="(int dirichlet_data_id)" -->
@@ -327,12 +339,13 @@ The mixed boundary type is for a mixture of Dirichlet and Neumann boundary condi
 Cache data providing Dirichlet boundary values. 
 <p>
 This function makes a private copy of the relevant ghost cell data that it later uses provide the coefficient g on Dirichlet boundaries. The index must correspond to cell-centered double data with non-zero ghost width.<p>
-Functions <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#dcfd87c911f2ad14caa730c5bd16cbdc">setHierarchy()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries()</a> should be called before this one. This function should be called each time the hierarchy or Dirichlet data changes.<p>
+Functions <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#a48924ad18a1610bd6a124bd7e7452ed">setHierarchy()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#242eec31c9aea0e9432b51d33899ce64">setBoundaries()</a> should be called before this one. This function should be called each time the hierarchy or Dirichlet data changes.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>dirichlet_data_id</em>&nbsp;</td><td>patch data id of the source cell data for copy. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dirichlet_data_id</em>&nbsp;</td><td>patch data id of the source cell data for copy.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_hierarchy </dd></dl>
 
 </div>
 </div><p>
@@ -359,9 +372,10 @@ Reverse action of cacheDirichletData by copying cached data back into the ghost 
 The cached data is not dallocated.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>dirichlet_data_id</em>&nbsp;</td><td>patch data id of the destination cell data for copy. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dirichlet_data_id</em>&nbsp;</td><td>patch data id of the destination cell data for copy.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!d_dirichlet_data_pos.empty() </dd></dl>
 
 </div>
 </div><p>
@@ -435,7 +449,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8h.html">SimpleCellRobinBcCoefs.h</a><li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8C.html">SimpleCellRobinBcCoefs.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

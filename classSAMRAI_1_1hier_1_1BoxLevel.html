@@ -60,6 +60,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#0c6d525f947858fcd68f739ec95a2be2">operator!=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;rhs) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Inequality comparison.  <a href="#0c6d525f947858fcd68f739ec95a2be2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#70b86cc29d92198998c189fe16134fba">invalidateGlobalData</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets d_global_data_up_to_date to false. Must be called after calls to addBox or eraseBox.  <a href="#70b86cc29d92198998c189fe16134fba"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#f86fbfacb3f47f8f317e087c43d7f5a3">getPersistentOverlapConnectors</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the collection of overlap Connectors dedicated to provide overlap neighbors for this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#f86fbfacb3f47f8f317e087c43d7f5a3"></a><br></td></tr>
@@ -189,9 +192,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Coarsen all Boxes of this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> by ratio placing result into coarser making coarser's ratio final_ratio.  <a href="#781a2e5bcc0ce41aa657eb006487789f"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Individual Box methods.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html">BoxContainer::const_iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#31ca5a8d4b6d93df37ca53c4905833f1">addBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id, const bool use_vacant_index=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html">BoxContainer::const_iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#ae819168c4fbe5ba3a1275b703434eb1">addBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create new local <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from given <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> and add it to this level.  <a href="#31ca5a8d4b6d93df37ca53c4905833f1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create new local <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from given <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> and add it to this level.  <a href="#ae819168c4fbe5ba3a1275b703434eb1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#04569f993cb446a57d8d69de7067e579">addBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to this level.  <a href="#04569f993cb446a57d8d69de7067e579"></a><br></td></tr>
@@ -235,12 +238,12 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true when this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> has a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> matching the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of the given box.  <a href="#989a5937806c38349195694c449d1d2f"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">IO support.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#708bac92ccc04022a4d1f004252641ab">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#bdc4cc498cd19642a86b8d34572899b2">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a database.  <a href="#708bac92ccc04022a4d1f004252641ab"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#44c1f47418c7dfa2b597b7e1e1dd39f0">getFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;database, const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geom)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a restart database.  <a href="#bdc4cc498cd19642a86b8d34572899b2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#0d4272d89368a180cda4ab48ae37c6d4">getFromRestart</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;restart_db, const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geom)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> from a database.  <a href="#44c1f47418c7dfa2b597b7e1e1dd39f0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> from a restart database.  <a href="#0d4272d89368a180cda4ab48ae37c6d4"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Methods for outputs, error checking and debugging.</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#e7eee9eaf5843c1f34ff54d036c42bc2">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border, int detail_depth=0) const </td></tr>
 
@@ -261,10 +264,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#896e93d5776f9baa5a18aedd3052782b">finalizeCallback</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free static timers.  <a href="#896e93d5776f9baa5a18aedd3052782b"></a><br></td></tr>
-<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#0ffde531e623d3f0ab07261aa48769ba">std::vector&lt; BoxLevel &gt;</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allows std::vector to allocate objects with uninitialized dimensions.  <a href="#0ffde531e623d3f0ab07261aa48769ba"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel_1_1Outputter.html">Outputter</a></td></tr>
 
@@ -430,8 +429,7 @@ Persistent Connectors are not duplicated. This decision was based on expected us
 <p>
 Constructs an empty, initialized object. 
 <p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#31ca5a8d4b6d93df37ca53c4905833f1">addBox()</a> <p>
-<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#31ca5a8d4b6d93df37ca53c4905833f1">addBox()</a> <p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#ae819168c4fbe5ba3a1275b703434eb1">addBox()</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#66d3522a2b18ef07a01876c00b7a7682">initialize()</a></dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -507,8 +505,7 @@ Deallocate internal data.
 Initialize the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> without and Boxes. 
 <p>
 The content and state of the object before calling this function is discarded.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#31ca5a8d4b6d93df37ca53c4905833f1">addBox()</a> <p>
-<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#31ca5a8d4b6d93df37ca53c4905833f1">addBox()</a> <p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#ae819168c4fbe5ba3a1275b703434eb1">addBox()</a> <p>
 initialize(const BoxContainer&amp;, const IntVector&amp;, const tbox::SAMRAI_MPI&amp;, const ParallelState)</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -580,6 +577,7 @@ The state of the object before calling this function is discarded. The <a class=
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>parallel_state</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>&amp;boxes != &amp;<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2d2bb306ab54429cc5ad2fc888b62f1d">getBoxes()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -721,6 +719,7 @@ Data not used by the new state gets deallocated.<p>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>parallel_state</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -764,7 +763,9 @@ Returns the ParallelState of the object.
 If global reduced data (global <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> count, global cell count and global bounding box) have not been updated, compute and cache them (communication required). 
 <p>
 After this method is called, data requiring global reduction can be accessed without further communications, until the object changes.<p>
-Sets d_global_data_up_to_date; 
+Sets d_global_data_up_to_date to true;<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4b99ccba3c6901f6fb072d286fc32c21"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getGlobalizedVersion" ref="4b99ccba3c6901f6fb072d286fc32c21" args="() const " -->
@@ -787,7 +788,10 @@ Return the globalized version of the <a class="el" href="classSAMRAI_1_1hier_1_1
 <p>
 If the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is in globalized state, return <code>*this</code>. If not, create and cache a globalized version (if necessary) and return that.<p>
 The cached version remains until it is removed by <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#60a3ceeaefceb53990af46b9697c6b32">deallocateGlobalizedVersion()</a> or a method that can potentially change the Boxes is called. Note that globalizing and globalized data is not scalable. Use only when necessary.<p>
-Obviously, when the globalized version must be created (when the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is in DISTRIBUTED state and there is no cached version yet), all processes must make this call at the same point. 
+Obviously, when the globalized version must be created (when the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is in DISTRIBUTED state and there is no cached version yet), all processes must make this call at the same point.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a></dd></dl>
+<dl compact><dt><b>Postcondition:</b></dt><dd>d_globalized_version-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="60a3ceeaefceb53990af46b9697c6b32"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::deallocateGlobalizedVersion" ref="60a3ceeaefceb53990af46b9697c6b32" args="() const " -->
@@ -808,6 +812,7 @@ Obviously, when the globalized version must be created (when the <a class="el" h
 <p>
 Deallocate the internal globalized version of the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>, if there is any. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_globalized_version == 0) || (d_globalized_version-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) </dd></dl>
 
 </div>
 </div><p>
@@ -898,6 +903,7 @@ Persistent Connectors are not swapped. This decision was based on expected usage
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>level_b</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(&amp;level_a == &amp;level_b) || !level_a.<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> || !level_b.<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> || (level_a.getDim() == level_b.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -979,6 +985,8 @@ Returns the container of local Boxes.
 <p>
 <dl compact><dt><b>Important</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> returned contains periodic image Boxes (if any). To iterate through real Boxes only, see <a class="el" href="classSAMRAI_1_1hier_1_1RealBoxConstIterator.html">RealBoxConstIterator</a>.</dd></dl>
 You cannot directly modify the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> because it may invalidate other internal data. Use other methods for modifying the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>.<p>
+<dl compact><dt><b>Note:</b></dt><dd>It is possible that one may wish to perform repeated searches on the Boxes in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> returned by this method. As noted in BoxContainer's documentation, it may be advantageous to call the makeTree method on the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> in this case. If you do, remember that the GridGeometry passed to makeTree must be the GridGeometry held by this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Thus the proper use of makeTree with the result of a call to this method will look like: <div class="fragment"><pre class="fragment">    *    box_level.getBoxes().makeTree(box_level.getGridGeometry());
+    * </pre></div></dd></dl>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2587c43d3bd495e4db0690a014bf2eb1">getGlobalNumberOfBoxes()</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#5a8067d74ffcfcea775e899b149c7419">getLocalNumberOfBoxes()</a> </dd></dl>
 
@@ -1002,6 +1010,8 @@ You cannot directly modify the <a class="el" href="classSAMRAI_1_1hier_1_1BoxCon
 <p>
 Returns the container of global Boxes. 
 <p>
+<dl compact><dt><b>Note:</b></dt><dd>It is possible that one may wish to perform repeated searches on the Boxes in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> returned by this method. As noted in BoxContainer's documentation, it may be advantageous to call the makeTree method on the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> in this case. If you do, remember that the GridGeometry passed to makeTree must be the GridGeometry held by this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Thus the proper use of makeTree with the result of a call to this method will look like: <div class="fragment"><pre class="fragment">    *    box_level.getBoxes().makeTree(box_level.getGridGeometry());
+    * </pre></div> </dd></dl>
 
 </div>
 </div><p>
@@ -1045,6 +1055,7 @@ Fill the container with the global Boxes.
 <p>
 Returns the first <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a>, or one with a value of -1 if no local <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> exists. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1066,6 +1077,7 @@ Returns the first <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">Local
 <p>
 Returns the last <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a>, or one with a value of -1 if no local <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> exists. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1108,7 +1120,9 @@ Get const access to BoxLevel's refinement ratio (with respect to a reference lev
 <p>
 Return local number of boxes. 
 <p>
-Periodic image Boxes are excluded. 
+Periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6ed65e220961665ab06fba294587cb68"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getLocalNumberOfBoxes" ref="6ed65e220961665ab06fba294587cb68" args="(int rank) const " -->
@@ -1131,12 +1145,14 @@ Periodic image Boxes are excluded.
 Return number of boxes local to the given rank. 
 <p>
 Periodic image Boxes are excluded.<p>
-Object must be in GLOBALIZED mode to use this method.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rank</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) || (rank == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) <p>
+(rank &gt;= 0) &amp;&amp; (rank &lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getSize()) </dd></dl>
 
 </div>
 </div><p>
@@ -1159,7 +1175,9 @@ Object must be in GLOBALIZED mode to use this method.<p>
 Return global number of Boxes. 
 <p>
 This requires a global reduction, if the global-reduced data has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#183b36593e2211131739690181396e99">cacheGlobalReducedData()</a> first.<p>
-Periodic image Boxes are excluded. 
+Periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c04928996f56ba42127c956e976610f4"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getMaxNumberOfBoxes" ref="c04928996f56ba42127c956e976610f4" args="() const " -->
@@ -1181,7 +1199,9 @@ Periodic image Boxes are excluded.
 Return maximum number of Boxes over all processes. 
 <p>
 This requires a global reduction, if the global-reduced data has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#183b36593e2211131739690181396e99">cacheGlobalReducedData()</a> first.<p>
-Periodic image Boxes are excluded. 
+Periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5cb56e921d2f7af5cbd809a0bbdfa4ba"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getMinNumberOfBoxes" ref="5cb56e921d2f7af5cbd809a0bbdfa4ba" args="() const " -->
@@ -1203,7 +1223,9 @@ Periodic image Boxes are excluded.
 Return maximum number of Boxes over all processes. 
 <p>
 This requires a global reduction, if the global-reduced data has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#183b36593e2211131739690181396e99">cacheGlobalReducedData()</a> first.<p>
-Periodic image Boxes are excluded. 
+Periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="8e018a0a522b3fb925003d8880168708"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getLocalNumberOfCells" ref="8e018a0a522b3fb925003d8880168708" args="() const " -->
@@ -1224,7 +1246,9 @@ Periodic image Boxes are excluded.
 <p>
 Return local number of cells. 
 <p>
-Cells in periodic image Boxes are excluded. 
+Cells in periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="78975b8d6869c071db8b66bc0c8fa34c"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getMaxNumberOfCells" ref="78975b8d6869c071db8b66bc0c8fa34c" args="() const " -->
@@ -1246,7 +1270,9 @@ Cells in periodic image Boxes are excluded.
 Return maximum number of cells over all processes. 
 <p>
 This requires a global reduction, if the global-reduced data has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#183b36593e2211131739690181396e99">cacheGlobalReducedData()</a> first.<p>
-Periodic image Boxes are excluded. 
+Periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1fcedeb0804d152f78e9e3791f2cabff"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getMinNumberOfCells" ref="1fcedeb0804d152f78e9e3791f2cabff" args="() const " -->
@@ -1268,7 +1294,9 @@ Periodic image Boxes are excluded.
 Return maximum number of cells over all processes. 
 <p>
 This requires a global reduction, if the global-reduced data has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#183b36593e2211131739690181396e99">cacheGlobalReducedData()</a> first.<p>
-Periodic image Boxes are excluded. 
+Periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="907c93058e8a8bc5451c654da8116deb"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getLocalNumberOfCells" ref="907c93058e8a8bc5451c654da8116deb" args="(int rank) const " -->
@@ -1291,12 +1319,14 @@ Periodic image Boxes are excluded.
 Return number of cells local to the given rank. 
 <p>
 Cells in periodic image Boxes are excluded.<p>
-Object must be in GLOBALIZED mode to use this method.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rank</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) || (rank == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) <p>
+(rank &gt;= 0) &amp;&amp; (rank &lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getSize()) </dd></dl>
 
 </div>
 </div><p>
@@ -1319,7 +1349,9 @@ Object must be in GLOBALIZED mode to use this method.<p>
 Return global number of cells. 
 <p>
 This requires a global reduction if the global-reduced data has not been computed and cached. When communication is required, all processors must call this method. To ensure that no communication is needed, call <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#183b36593e2211131739690181396e99">cacheGlobalReducedData()</a> first.<p>
-Cells in periodic image Boxes are excluded. 
+Cells in periodic image Boxes are excluded.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7a75dbd23c213da59cca0a946d0a8c5e">isInitialized()</a> </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="13cce4466852fa2aa9a6cd2fa9e6f9ab"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getLocalBoundingBox" ref="13cce4466852fa2aa9a6cd2fa9e6f9ab" args="(int block_number) const " -->
@@ -1472,7 +1504,7 @@ This requires a global reduction if the global bounding box has not been compute
 <p>
 Return the dimension of this object. 
 <p>
-If object has never been initialized, return <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acba22b89da4fa98f35b4ea217e1264f">tbox::Dimension::getInvalidDimension()</a>. 
+
 </div>
 </div><p>
 <a class="anchor" name="48f3d09fc617a1a40fbfb1f7079fbd71"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getGridGeometry" ref="48f3d09fc617a1a40fbfb1f7079fbd71" args="() const " -->
@@ -1584,7 +1616,7 @@ Coarsen all Boxes of this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.ht
 
 </div>
 </div><p>
-<a class="anchor" name="31ca5a8d4b6d93df37ca53c4905833f1"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::addBox" ref="31ca5a8d4b6d93df37ca53c4905833f1" args="(const Box &amp;box, const BlockId &amp;block_id, const bool use_vacant_index=true)" -->
+<a class="anchor" name="ae819168c4fbe5ba3a1275b703434eb1"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::addBox" ref="ae819168c4fbe5ba3a1275b703434eb1" args="(const Box &amp;box, const BlockId &amp;block_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1598,13 +1630,7 @@ Coarsen all Boxes of this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.ht
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const bool&nbsp;</td>
-          <td class="paramname"> <em>use_vacant_index</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>block_id</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1620,15 +1646,16 @@ Create new local <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> fr
 <p>
 The new <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> will be assigned an unused local index. To be efficient, no communication will be used. Therefore, the state must be distributed.<p>
 The new <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> will have a periodic shift number corresponding to zero-shift.<p>
-It is faster not to request a vacant index when adding a box.<p>
+<dl compact><dt><b>Note:</b></dt><dd>It is imperative that applications which call addBox also call invalidateGlobalData. It is possible for some processes to add Boxes and for others to not. Since the addBox method sets d_global_data_up_to_date to false, some processes in this situation will have this flag set to true and others will not. This will result in a hang in cacheGlobalReducedData when global data is accessed. We could have performed and allReduce of this flag to the top of cacheGlobalReducedData but this would have added a costly call for every access of global data.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_vacant_index</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>iterator to the new <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>iterator to the new <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a></dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == DISTRIBUTED <p>
+(box.getBlockId() == <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html#a65f5c3711e7ece2c05202907e641808">BlockId::invalidId()</a>) || (box.getBlockId() == block_id) </dd></dl>
 
 </div>
 </div><p>
@@ -1651,11 +1678,10 @@ It is faster not to request a vacant index when adding a box.<p>
 <p>
 Add a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to this level. 
 <p>
-Adding a remote <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is allowed if the object is in GLOBALIZED mode.<p>
 <dl compact><dt><b>CAUTION</b></dt><dd>To be efficient, no checks are made to make sure the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> representation is consistent across all processors. Setting inconsistent data leads potentially elusive bugs.</dd></dl>
 <dl compact><dt><b>Errors</b></dt><dd>It is an error to add a periodic image of a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that is not a part of the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.</dd></dl>
 It is an error to add any <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that already exists.<p>
-FIXME: Should we prevent this operation if persistent overlap Connectors are attached to this object?<p>
+<dl compact><dt><b>Note:</b></dt><dd>It is imperative that applications which call addBox also call invalidateGlobalData. It is possible for some processes to add Boxes and for others to not. Since the addBox method sets d_global_data_up_to_date to false, some processes in this situation will have this flag set to true and others will not. This will result in a hang in cacheGlobalReducedData when global data is accessed. We could have performed and allReduce of this flag to the top of cacheGlobalReducedData but this would have added a costly call for every access of global data.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
@@ -1719,17 +1745,17 @@ Add a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to this level
 <p>
 Insert given periodic image of an existing <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. 
 <p>
-Adding a remote <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is allowed if the object is in GLOBALIZED mode.<p>
 Unlike adding a regular <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, it is OK to add a periodic image <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that already exists. However, that is a no-op.<p>
-<dl compact><dt><b>CAUTION</b></dt><dd>To be efficient, no checks are made to make sure the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> representation is consistent across all processors. Setting inconsistent data leads potentially elusive bugs.</dd></dl>
+<dl compact><dt><b>CAUTION</b></dt><dd>To be efficient, no checks are made to make sure the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> representation is consistent across all processors. Setting inconsistent data leads to potentially elusive bugs.</dd></dl>
 <dl compact><dt><b>Errors</b></dt><dd>It is an error to add a periodic image of a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that does not exist.</dd></dl>
 FIXME: Should we prevent this operation if persistent overlap Connectors are attached to this object?<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>existing_box</em>&nbsp;</td><td>An existing <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> for reference. This <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> must be in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> added is an image of the reference <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> but shifted to another position. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_number</em>&nbsp;</td><td>The valid shift number for the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> being added. The shift amount is taken from the <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicShiftCatalog.html">PeriodicShiftCatalog</a>. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>shift_number</em>&nbsp;</td><td>The valid shift number for the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> being added. The shift amount is taken from the <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicShiftCatalog.html">PeriodicShiftCatalog</a>.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>shift_number != <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicShiftCatalog.html#e5af438e68ff1c0384b2ec2aa81b27ef">PeriodicShiftCatalog::getCatalog</a>(<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#01ab4dc0bdd8111d1b225194a3a46724">getDim()</a>)-&gt;getZeroShiftNumber() </dd></dl>
 
 </div>
 </div><p>
@@ -1755,11 +1781,14 @@ Erase the existing <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> 
 The given iterator <em>MUST</em> be a valid iterator pointing to a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> currently in this object. After erasing, the iterator is advanced to the next valid <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> (or the end of its <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>).<p>
 Erasing a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> also erases all of its periodic images.<p>
 FIXME: Should we prevent this operation if the object has persistent overlap Connectors?<p>
+<dl compact><dt><b>Note:</b></dt><dd>It is imperative that applications which call eraseBox also call invalidateGlobalData. It is possible for some processes to erase Boxes and for others to not. Since the eraseBox method sets d_global_data_up_to_date to false, some processes in this situation will have this flag set to true and others will not. This will result in a hang in cacheGlobalReducedData when global data is accessed. We could have performed and allReduce of this flag to the top of cacheGlobalReducedData but this would have erased a costly call for every access of global data.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ibox</em>&nbsp;</td><td>The iterator of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to erase. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ibox</em>&nbsp;</td><td>The iterator of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to erase.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == DISTRIBUTED <p>
+ibox == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2d2bb306ab54429cc5ad2fc888b62f1d">getBoxes()</a>.find(*ibox) </dd></dl>
 
 </div>
 </div><p>
@@ -1785,11 +1814,14 @@ Erase the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> matching 
 The given <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> <em>MUST</em> match a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> currently in this object. Matching means that the BoxId's match (disregarding the spatial coordinates).<p>
 Erasing a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> also erases all of its periodic images.<p>
 FIXME: Should we prevent this operation if the object has persistent overlap Connectors?<p>
+<dl compact><dt><b>Note:</b></dt><dd>It is imperative that applications which call eraseBox also call invalidateGlobalData. It is possible for some processes to erase Boxes and for others to not. Since the eraseBox method sets d_global_data_up_to_date to false, some processes in this situation will have this flag set to true and others will not. This will result in a hang in cacheGlobalReducedData when global data is accessed. We could have performed and allReduce of this flag to the top of cacheGlobalReducedData but this would have erased a costly call for every access of global data.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == DISTRIBUTED <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2d2bb306ab54429cc5ad2fc888b62f1d">getBoxes()</a>.find(box) != <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2d2bb306ab54429cc5ad2fc888b62f1d">getBoxes()</a>.end() </dd></dl>
 
 </div>
 </div><p>
@@ -1846,7 +1878,8 @@ If <code>box</code> is not a local <a class="el" href="classSAMRAI_1_1hier_1_1Bo
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Iterator to the box, or <code>getBoxes(owner)</code>.end() if box does not exist in set. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Iterator to the box, or <code>getBoxes(owner)</code>.end() if box does not exist in set.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(box.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) </dd></dl>
 
 </div>
 </div><p>
@@ -1900,13 +1933,13 @@ Find the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> matching t
 Only the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> matters in matching, so the actual <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> can be anything.<p>
 If <code>box</code> is not owned by the local process, the state must be GLOBALIZED.<p>
 You cannot directly modify the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> because it may invalidate other internal data. Use other methods for modifying the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>.<p>
-<dl compact><dt><b>Assertions</b></dt><dd>Throws an unrecoverable assertion if the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> does not exist.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Iterator to the box. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Iterator to the box.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>((box.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2d2bb306ab54429cc5ad2fc888b62f1d">getBoxes()</a>.find(box) != <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#2d2bb306ab54429cc5ad2fc888b62f1d">getBoxes()</a>.end())) || ((box.getOwnerRank() != <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#cf1a4a576d843618c7c1c76da337766d">getGlobalBoxes()</a>.find(box) != <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#cf1a4a576d843618c7c1c76da337766d">getGlobalBoxes()</a>.end())) </dd></dl>
 
 </div>
 </div><p>
@@ -1930,13 +1963,14 @@ You cannot directly modify the <a class="el" href="classSAMRAI_1_1hier_1_1BoxCon
 Find the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> specified by the given <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. 
 <p>
 You cannot directly modify the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> because it may invalidate other internal data. Use other methods for modifying the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>.<p>
-<dl compact><dt><b>Assertions</b></dt><dd>Throw an unrecoverable assertion if the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> does not exist.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Iterator to the box. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Iterator to the box.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(box_id.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) <p>
+box with supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> exists in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2073,18 +2107,19 @@ Returns true when this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html"
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(box.getOwnerRank() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#09139ebc67a5fead7e6e4d985889152d">getMPI()</a>.getRank()) || (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ea9e52f223207d7dfca86f8bd8b44a5">getParallelState()</a> == GLOBALIZED) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="708bac92ccc04022a4d1f004252641ab"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::putUnregisteredToDatabase" ref="708bac92ccc04022a4d1f004252641ab" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="bdc4cc498cd19642a86b8d34572899b2"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::putToRestart" ref="bdc4cc498cd19642a86b8d34572899b2" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BoxLevel::putUnregisteredToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BoxLevel::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -2093,27 +2128,26 @@ Returns true when this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html"
 <div class="memdoc">
 
 <p>
-Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a database. 
+Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a restart database. 
 <p>
 Write only local parts regardless of parallel state (to avoid writing tons of repetitive data).<p>
-<dl compact><dt><b>Assertions</b></dt><dd>Check that database is a non-null Pointer.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="44c1f47418c7dfa2b597b7e1e1dd39f0"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getFromDatabase" ref="44c1f47418c7dfa2b597b7e1e1dd39f0" args="(tbox::Database &amp;database, const boost::shared_ptr&lt; const BaseGridGeometry &gt; &amp;grid_geom)" -->
+<a class="anchor" name="0d4272d89368a180cda4ab48ae37c6d4"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getFromRestart" ref="0d4272d89368a180cda4ab48ae37c6d4" args="(tbox::Database &amp;restart_db, const boost::shared_ptr&lt; const BaseGridGeometry &gt; &amp;grid_geom)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BoxLevel::getFromDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BoxLevel::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>, </td>
+          <td class="paramname"> <em>restart_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2131,17 +2165,39 @@ Write only local parts regardless of parallel state (to avoid writing tons of re
 <div class="memdoc">
 
 <p>
-Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> from a database. 
+Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> from a restart database. 
 <p>
 Put the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> in the DISTRIBUTED parallel state and read only local parts.<p>
 If the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is initialized, use its SAMRAI_MPI object and require its refinement ratio to match that in the database. If the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is uninitialized, it will be initialized to use <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7a31310ba00a790a313d2122df8d7a6f">tbox::SAMRAI_MPI::getSAMRAIWorld()</a> for the SAMRAI_MPI object. Note that these behaviors have not been extensively discussed by the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers and may be subject to change.<p>
-<dl compact><dt><b>Assertions</b></dt><dd>Check that database is a non-null Pointer.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geom</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+
+</div>
+</div><p>
+<a class="anchor" name="70b86cc29d92198998c189fe16134fba"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::invalidateGlobalData" ref="70b86cc29d92198998c189fe16134fba" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::BoxLevel::invalidateGlobalData           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Sets d_global_data_up_to_date to false. Must be called after calls to addBox or eraseBox. 
+<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#ae819168c4fbe5ba3a1275b703434eb1">addBox()</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#5a1412abb328dce673eb1a98c67e9e64">eraseBox()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2199,7 +2255,8 @@ Operations that can invalidate <a class="el" href="classSAMRAI_1_1hier_1_1Connec
 <li>going out of scope</li>
 </ul>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelHandle.html">BoxLevelHandle</a>.</dd></dl>
-<dl compact><dt><b>Returns:</b></dt><dd>A boost::shared_ptr to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelHandle.html">BoxLevelHandle</a> </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A boost::shared_ptr to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelHandle.html">BoxLevelHandle</a></dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!d_handle || (d_handle-&gt;d_box_level == this) </dd></dl>
 
 </div>
 </div><p>
@@ -2359,27 +2416,9 @@ Free static timers.
 Only called by StartupShutdownManager. 
 </div>
 </div><p>
-<hr><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" name="0ffde531e623d3f0ab07261aa48769ba"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::std::vector&lt; BoxLevel &gt;" ref="0ffde531e623d3f0ab07261aa48769ba" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt;<code> [friend]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Allows std::vector to allocate objects with uninitialized dimensions. 
-<p>
-
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxLevel_8h.html">BoxLevel.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxLevel_8C.html">BoxLevel.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

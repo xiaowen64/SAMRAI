@@ -44,7 +44,7 @@
  }</td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#b6cf6532c97d1f05e8bbfdab4dabfb87">MethodOfLinesIntegrator</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html">MethodOfLinesPatchStrategy</a> *patch_strategy, bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#9e4d624980806a349a8b7355b5e702c2">MethodOfLinesIntegrator</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html">MethodOfLinesPatchStrategy</a> *patch_strategy)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#5d6ab79320741e0b09187cbcd90e7f18">~MethodOfLinesIntegrator</a> ()</td></tr>
 
@@ -64,7 +64,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#9c4f23ddff32c34cb64107cba91154be">applyGradientDetector</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const double time, const int tag_index, const bool initial_time, const bool uses_richardson_extrapolation_too)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#0106ce68c8e81702001d1ed6ded5d686">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#d895769de37644308f393ed2912bb1dd">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#216da353c4cb6b07570308d272f8658a">getObjectName</a> () const </td></tr>
 
@@ -75,22 +75,31 @@ Class <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">M
 The original non-adaptive version of the algorithm is described in S. Gottlieb, C.W. Shu, E. Tadmor, SIAM Review, Vol. 43, No. 1, pp. 89-112. The <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#df6f79d0893f5ae89aed4f196c84ea64">advanceHierarchy()</a> method integrates all levels of an AMR hierarchy through a specified timestep. See this method for details of the time-stepping process. Application-specific numerical routines that are necessary for these operations are provided by the <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html">MethodOfLinesPatchStrategy</a> data member. The collaboration between this class and the patch strategy follows the the Strategy design pattern. A concrete patch strategy object is derived from the base class to provide those routines for a specific problem.<p>
 This class is derived from the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> abstract base class which defines an interface for routines required by the dynamic adaptive mesh refinement routines in the <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">mesh::GriddingAlgorithm</a> class. This collaboration also follows the Strategy design pattern.<p>
 Initialization of an <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> object is performed by first setting default values, then reading from input. All input values may override values read from restart. Data read from input is summarized as follows:<p>
-Required input keys and data types: NONE<p>
-Optional input keys, data types, and defaults:<p>
-<ul>
-<li><b>order</b> integer value specifying order of Runge-Kutta scheme. If no input value is given, third order (i.e. order = 3) is used.</li></ul>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>alpha_1</b> </li><li><b>alpha_2</b> </li><li><b>beta</b> <br>
+ arrays of double values (length = order) specifying the coeffients used in the multi-step Strong Stability Preserving (SSP) Runge-Kutta algorithm.</li></ul>
 <p>
-<ul>
-<li><b>alpha_1</b> </li><li><b>alpha_2</b> </li><li><b>beta</b> arrays of double values (length = order) specifying the coeffients used in the multi-step Strong Stability Preserving (SSP) Runge-Kutta algorithm. If no input is supplied, the default alpha_1, alpha_2, and beta values are automatically set to correspond to the specified order.</li></ul>
+Note that when continuing from restart, the input parameters in the input database override all values read in from the restart database.<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>alpha_1 </td><td>Array&lt;double&gt; </td><td>[1.0, 0.75, 2.0/3.0] </td><td>any doubles but no more than 3 of them </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>alpha_2 </td><td>Array&lt;double&gt; </td><td>[0.0, 0.25, 2.0/3.0] </td><td>any doubles but no more than 3 of them </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>beta </td><td>Array&lt;double&gt; </td><td>[1.0, 0.25, 2.0/3.0] </td><td>any doubles but no more than 3 of them </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+</table>
 <p>
 The following represents a sample input entry:<p>
-<div class="fragment"><pre class="fragment"> *  MethodOfLinesIntegrator{
- *     order                 = 3
- *     alpha_1               = 1., 0.75, 0.33333
- *     alpha_2               = 0., 0.25, 0.66666
- *     beta                  = 1., 0.25, 0.66666
- *  }
- *  </pre></div><p>
+<div class="fragment"><pre class="fragment">  <a class="code" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#9e4d624980806a349a8b7355b5e702c2">MethodOfLinesIntegrator</a>{
+     alpha_1               = 1., 0.75, 0.33333
+     alpha_2               = 0., 0.25, 0.66666
+     beta                  = 1., 0.25, 0.66666
+  }
+</pre></div><p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> </dd></dl>
 
 <p>
@@ -122,7 +131,7 @@ Enumerated type for the different categories of variable quantities allowed by t
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="b6cf6532c97d1f05e8bbfdab4dabfb87"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::MethodOfLinesIntegrator" ref="b6cf6532c97d1f05e8bbfdab4dabfb87" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, MethodOfLinesPatchStrategy *patch_strategy, bool register_for_restart=true)" -->
+<a class="anchor" name="9e4d624980806a349a8b7355b5e702c2"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::MethodOfLinesIntegrator" ref="9e4d624980806a349a8b7355b5e702c2" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, MethodOfLinesPatchStrategy *patch_strategy)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -142,13 +151,7 @@ Enumerated type for the different categories of variable quantities allowed by t
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html">MethodOfLinesPatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -160,8 +163,10 @@ Enumerated type for the different categories of variable quantities allowed by t
 <div class="memdoc">
 
 <p>
-The constructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> configures the method of lines integration algorithm with the concrete patch strategy object (containing problem-specific numerical routines) and initializes integration algorithm parameters provided in the specified input database and in the restart database corresponding to the specified object_name. The constructor also registers this object for restart using the specified object name when the boolean argument is true. Whether object will write its state to restart files during program execution is determined by this argument. Note that it has a default state of true.<p>
-When assertion checking is active, passing in any null pointer or an empty std::string will result in an unrecoverable assertion. 
+The constructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> configures the method of lines integration algorithm with the concrete patch strategy object (containing problem-specific numerical routines) and initializes integration algorithm parameters provided in the specified input database and in the restart database corresponding to the specified object_name.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+patch_strategy != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5d6ab79320741e0b09187cbcd90e7f18"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::~MethodOfLinesIntegrator" ref="5d6ab79320741e0b09187cbcd90e7f18" args="()" -->
@@ -180,7 +185,7 @@ When assertion checking is active, passing in any null pointer or an empty std::
 <div class="memdoc">
 
 <p>
-The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> unregisters the integrator object with the restart manager when so registered. 
+The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> unregisters the integrator object with the restart manager. 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -202,7 +207,9 @@ The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesInteg
 
 <p>
 Initialize integrator by setting the number of time levels of data needed based on specifications of the gridding algorithm.<p>
-This routine also invokes variable registration in the patch strategy. 
+This routine also invokes variable registration in the patch strategy.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>gridding_alg </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7f2173fd4bfbe51c978b28a100c7d1b9"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::getTimestep" ref="7f2173fd4bfbe51c978b28a100c7d1b9" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const double time) const " -->
@@ -231,7 +238,9 @@ This routine also invokes variable registration in the patch strategy.
 <div class="memdoc">
 
 <p>
-Return a suitable time increment over which to integrate the ODE problem. A minimum is taken over the increment computed on each patch in the hierarchy. 
+Return a suitable time increment over which to integrate the ODE problem. A minimum is taken over the increment computed on each patch in the hierarchy.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="df6f79d0893f5ae89aed4f196c84ea64"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::advanceHierarchy" ref="df6f79d0893f5ae89aed4f196c84ea64" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const double time, const double dt)" -->
@@ -266,7 +275,9 @@ Return a suitable time increment over which to integrate the ODE problem. A mini
 <div class="memdoc">
 
 <p>
-Advance the solution through the specified dt, which is assumed for the problem and state of the solution. Advances all patches in the hierarchy passed in. 
+Advance the solution through the specified dt, which is assumed for the problem and state of the solution. Advances all patches in the hierarchy passed in.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="df9e494270964a2ec6d162bb6b7f8e4b"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::registerVariable" ref="df9e494270964a2ec6d162bb6b7f8e4b" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable, const hier::IntVector &amp;ghosts, const MOL_VAR_TYPE m_v_type, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;transfer_geom, const std::string &amp;coarsen_name=std::string(), const std::string &amp;refine_name=std::string())" -->
@@ -319,7 +330,11 @@ Advance the solution through the specified dt, which is assumed for the problem 
 <div class="memdoc">
 
 <p>
-Register variable quantity defined in the patch strategy with the method of lines integrator which manipulates its storage. 
+Register variable quantity defined in the patch strategy with the method of lines integrator which manipulates its storage.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>variable <p>
+transfer_geom <p>
+variable-&gt;getDim() == ghosts.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="84753dd2f1959d799046f56cc2331466"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::printClassData" ref="84753dd2f1959d799046f56cc2331466" args="(std::ostream &amp;os) const " -->
@@ -401,7 +416,12 @@ Print all data members of <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLin
 Initialize data on a new level after it is inserted into an AMR patch hierarchy by the gridding algorithm. The level number indicates that of the new level. The old_level pointer corresponds to the level that resided in the hierarchy before the level with the specified number was introduced. If the pointer is NULL, there was no level in the hierarchy prior to the call and the level data is set based on the user routines and the simulation time. Otherwise, the specified level replaces the old level and the new level receives data from the old level appropriately before it is destroyed.<p>
 Typically, when data is set, it is interpolated from coarser levels in the hierarchy. If the data is to be set, the level number must match that of the old level, if non-NULL. If the old level is non-NULL, then data is copied from the old level to the new level on regions of intersection between those levels before interpolation occurs. Then, user-supplied patch routines are called to further initialize the data if needed. The boolean argument after_regrid is passed into the user's routines.<p>
 The boolean argument initial_time indicates whether the integration time corresponds to the initial simulation time. If true, the level should be initialized with initial simulation values. Otherwise, it should be assumed that the simulation time is at some point after the start of the simulation. This information is provided since the initialization of the data on a patch may be different in each of those circumstances. The can_be_refined boolean argument indicates whether the level is the finest allowable level in the hierarchy.<p>
-Note: This function is overloaded from the base class <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a>. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+level_number &gt;= 0 <p>
+hierarchy-&gt;getPatchLevel(level_number) <p>
+!old_level || (level_number == old_level-&gt;getLevelNumber()) <p>
+!old_level || (hierarchy-&gt;getDim() == old_level-&gt;getDim()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#43aab4033b5be85ecee18f52c8e4980c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -439,7 +459,9 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy
 
 <p>
 Reset cached communication schedules after the hierarchy has changed (due to regridding, for example) and the data has been initialized on the new levels. The intent is that the cost of data movement on the hierarchy will be amortized across multiple communication cycles, if possible. Note, that whenever this routine is called, communication schedules are updated for every level finer than and including that indexed by coarsest_level.<p>
-Note: This function is overloaded from the base class <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a>. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (coarsest_level &lt;= finest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;getFinestLevelNumber()) </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#fe20d86963726d6aa8fa80cf0417c27c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
@@ -495,20 +517,22 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy
 
 <p>
 Set integer tags to "one" on the given level where refinement of that level should occur using the user-supplied gradient detector. The boolean argument initial_time is true when the level is being subject to error estimation at initialization time. If it is false, the error estimation process is being invoked at some later time after the AMR hierarchy was initially constructed. The boolean argument uses_richardson_extrapolation_too is true when Richardson extrapolation error estimation is used in addition to the gradient detector, and false otherwise. This argument helps the user to manage multiple regridding criteria. This information is passed along to the user's patch data tagging routines since the application of the error estimator may be different in each of those circumstances.<p>
-Note: This function is overloaded from the base class <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a>. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+hierarchy-&gt;getPatchLevel(level_number) </dd></dl>
+
 <p>
 Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#9d335c20033ca83646f72980d5d7715b">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="0106ce68c8e81702001d1ed6ded5d686"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::putToDatabase" ref="0106ce68c8e81702001d1ed6ded5d686" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
+<a class="anchor" name="d895769de37644308f393ed2912bb1dd"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::putToRestart" ref="d895769de37644308f393ed2912bb1dd" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::algs::MethodOfLinesIntegrator::putToDatabase           </td>
+          <td class="memname">void SAMRAI::algs::MethodOfLinesIntegrator::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -517,8 +541,9 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 <div class="memdoc">
 
 <p>
-Writes object state out to the given database.<p>
-When assertion checking is enabled, the database pointer must be non-null. 
+Writes object state out to the given restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="216da353c4cb6b07570308d272f8658a"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesIntegrator::getObjectName" ref="216da353c4cb6b07570308d272f8658a" args="() const " -->
@@ -542,7 +567,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="MethodOfLinesIntegrator_8h.html">MethodOfLinesIntegrator.h</a><li>source/SAMRAI/algs/<a class="el" href="MethodOfLinesIntegrator_8C.html">MethodOfLinesIntegrator.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

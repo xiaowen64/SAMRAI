@@ -44,6 +44,9 @@
  <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#dd8dd4c89d6cd04205865697a87e9b60">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in face-centered index space between the source box geometry and the destination box geometry.  <a href="#dd8dd4c89d6cd04205865697a87e9b60"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#d4e7177d93229c8b4800b7475bbf62ff">computeDestinationBoxes</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &gt; &amp;dst_boxes, const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the face-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry.  <a href="#d4e7177d93229c8b4800b7475bbf62ff"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
  <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#8c84dffbed37e92ade3fd3d1fd4ca30d">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
 
@@ -57,7 +60,7 @@
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#a4bf0005c6eea59ef3290034d4c51dac">toFaceBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int face_normal)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into an face geometry box. An face geometry box extends the given AMR index box space box by one in upper dimension for the face normal coordinate direction.  <a href="#a4bf0005c6eea59ef3290034d4c51dac"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into an face geometry box. An face geometry box extends the given AMR index box space box by one in upper end for the face normal coordinate direction.  <a href="#a4bf0005c6eea59ef3290034d4c51dac"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#7a20012f0793d2dd40c8bec1eaaa997d">transform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int &amp;normal_direction, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a face-centered box.  <a href="#7a20012f0793d2dd40c8bec1eaaa997d"></a><br></td></tr>
@@ -67,7 +70,7 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> manages the mapping between the AMR index space and the face-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between face- centered box geometries for communication operations.<p>
-See header file for FaceData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+See header file for FaceData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">pdat::FaceOverlap</a> </dd></dl>
 
@@ -117,6 +120,8 @@ The BoxOverlap implemenation for this geometry.
 <p>
 Construct the face geometry object given an AMR index space box and ghost cell width. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -168,9 +173,11 @@ The virtual destructor does nothing interesting.
 <div class="memdoc">
 
 <p>
-Convert an AMR index box space box into an face geometry box. An face geometry box extends the given AMR index box space box by one in upper dimension for the face normal coordinate direction. 
+Convert an AMR index box space box into an face geometry box. An face geometry box extends the given AMR index box space box by one in upper end for the face normal coordinate direction. 
 <p>
-Recall that box indices are cyclically shifted such that the face normal direction is the first coordinate index. See <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">SideData</a> header file. 
+Recall that box indices are cyclically shifted such that the face normal direction is the first coordinate index. See <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">SideData</a> header file.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; box.getDim().getValue()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7a20012f0793d2dd40c8bec1eaaa997d"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::transform" ref="7a20012f0793d2dd40c8bec1eaaa997d" args="(hier::Box &amp;box, int &amp;normal_direction, const hier::Transformation &amp;transformation)" -->
@@ -320,9 +327,72 @@ This static method applies a coordinate system transformation to the given <a cl
 <p>
 Compute the overlap in face-centered index space between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#6610b2ed30022e4f55bdbdc68edabb75">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
+</div>
+</div><p>
+<a class="anchor" name="d4e7177d93229c8b4800b7475bbf62ff"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::computeDestinationBoxes" ref="d4e7177d93229c8b4800b7475bbf62ff" args="(tbox::Array&lt; hier::BoxContainer &gt; &amp;dst_boxes, const FaceGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::pdat::FaceGeometry::computeDestinationBoxes           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_boxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>fill_box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>overwrite_interior</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transformation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_restrict_boxes</em> = <code><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Compute the face-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry. 
+<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>src_mask.getDim() == transformation.getOffset.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="8c84dffbed37e92ade3fd3d1fd4ca30d"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::setUpOverlap" ref="8c84dffbed37e92ade3fd3d1fd4ca30d" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
@@ -402,7 +472,7 @@ Return the ghost cell width for this face centered box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8h.html">FaceGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8C.html">FaceGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

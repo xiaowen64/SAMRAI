@@ -25,8 +25,8 @@
 <code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
 <code>#include &quot;kinsol/kinsol.h&quot;</code><br>
 <code>#include &quot;kinsol/kinsol_spgmr.h&quot;</code><br>
-<code>#include &lt;kinsol/kinsol_impl.h&gt;</code><br>
-<code>#include &lt;kinsol/kinsol_spils.h&gt;</code><br>
+<code>#include &quot;kinsol/kinsol_impl.h&quot;</code><br>
+<code>#include &quot;kinsol/kinsol_spils.h&quot;</code><br>
 <code>#include &lt;string&gt;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
@@ -62,12 +62,12 @@
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                          \
-      <span class="keywordflow">if</span> (ierr != KIN_SUCCESS) {                                                                \
-         std::ostringstream tboxos;                                                     \
-         tbox::Utilities::abort( \
-            tboxos.str().c_str(), __FILE__, __LINE__);      \
-      }                                                                         \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                                             \
+      <span class="keywordflow">if</span> (ierr != KIN_SUCCESS) {                                    \
+         std::ostringstream tboxos;                                 \
+         tbox::Utilities::abort(                                    \
+            tboxos.str().c_str(), __FILE__, __LINE__);              \
+      }                                                             \
    } <span class="keywordflow">while</span> (0)
 </pre></div>
 </div>
@@ -95,7 +95,7 @@
 </pre></div>
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:53 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

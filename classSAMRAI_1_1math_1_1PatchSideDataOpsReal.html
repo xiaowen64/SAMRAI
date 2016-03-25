@@ -135,7 +135,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Copy dst data to src data over given box. 
+Copy dst data to src data over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+dst-&gt;getDirectionVector() == src-&gt;getDirectionVector() <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7f31b222b4077ab1cfc0ce82565c5d02"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataOpsReal::swapData" ref="7f31b222b4077ab1cfc0ce82565c5d02" args="(const boost::shared_ptr&lt; hier::Patch &gt; &amp;patch, const int data1_id, const int data2_id) const " -->
@@ -172,7 +176,15 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box. 
+Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>patch <p>
+patch-&gt;getPatchData(data1_id) is actually a boost::shared_ptr&lt;pdat::SideData&lt;TYPE&gt; &gt; <p>
+patch-&gt;getPatchData(data2_id) is actually a boost::shared_ptr&lt;pdat::SideData&lt;TYPE&gt; &gt; <p>
+patch-&gt;getPatchData(data1_id)-&gt;getDepth() == patch-&gt;getPatchData(data2_id)-&gt;getDepth() <p>
+patch-&gt;getPatchData(data1_id)-&gt;getBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getBox()) <p>
+patch-&gt;getPatchData(data1_id)-&gt;getDirectionVector() == patch-&gt;getPatchData(data2_id)-&gt;getDirectionVector() <p>
+patch-&gt;getPatchData(data1_id)-&gt;getGhostBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getGhostBox()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3d62e83d41b1422e60b15e898b6c9254"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataOpsReal::printData" ref="3d62e83d41b1422e60b15e898b6c9254" args="(const boost::shared_ptr&lt; pdat::SideData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box, std::ostream &amp;s=tbox::plog) const " -->
@@ -209,7 +221,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Print data entries over given box to given output stream. 
+Print data entries over given box to given output stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e5ccb5e863fcff0c257d733c4cf15377"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataOpsReal::setToScalar" ref="e5ccb5e863fcff0c257d733c4cf15377" args="(const boost::shared_ptr&lt; pdat::SideData&lt; TYPE &gt; &gt; &amp;dst, const TYPE &amp;alpha, const hier::Box &amp;box) const " -->
@@ -246,12 +261,15 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Initialize data to given scalar over given box. 
+Initialize data to given scalar over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst <p>
+dst-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchSideDataOpsReal_8h.html">PatchSideDataOpsReal.h</a><li>source/SAMRAI/math/<a class="el" href="PatchSideDataOpsReal_8C.html">PatchSideDataOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

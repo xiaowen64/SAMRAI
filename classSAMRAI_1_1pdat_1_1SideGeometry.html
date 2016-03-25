@@ -44,6 +44,9 @@
  <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html#01e50ba61728cdc026f3dff049097927">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in side-centered index space between the source box geometry and the destination box geometry.  <a href="#01e50ba61728cdc026f3dff049097927"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html#fe460b6e9b2145e11ab12ae9b8ef9af3">computeDestinationBoxes</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &gt; &amp;dst_boxes, const <a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html">SideGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the side-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry.  <a href="#fe460b6e9b2145e11ab12ae9b8ef9af3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
  <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html#5575f7c66298926f5847a87d0bee9b5b">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
 
@@ -59,7 +62,7 @@
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html#301642cbd99542d4d41f8326f320b9d0">toSideBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int side_normal)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into an side geometry box. An side geometry box extends the given AMR index box space box by one in upper dimension for the side normal coordinate direction.  <a href="#301642cbd99542d4d41f8326f320b9d0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into an side geometry box. An side geometry box extends the given AMR index space box by one at upper end for the side normal coordinate direction.  <a href="#301642cbd99542d4d41f8326f320b9d0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html#b5134d9674140b056e257cb7f1020a35">transform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int &amp;normal_direction, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a side-centered box.  <a href="#b5134d9674140b056e257cb7f1020a35"></a><br></td></tr>
@@ -69,7 +72,7 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html">SideGeometry</a> manages the mapping between the AMR index space and the side-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between side- centered box geometries for communication operations.<p>
-See header file for SideData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+See header file for SideData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1SideOverlap.html">pdat::SideOverlap</a> </dd></dl>
 
@@ -125,6 +128,9 @@ The BoxOverlap implemenation for this geometry.
 <p>
 Construct the side geometry object given an AMR index space box, ghost cell width and directions vector indicating which coordinate directions are allocated. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+ghosts.min() &gt;= 0 <p>
+directions.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -176,8 +182,9 @@ The virtual destructor does nothing interesting.
 <div class="memdoc">
 
 <p>
-Convert an AMR index box space box into an side geometry box. An side geometry box extends the given AMR index box space box by one in upper dimension for the side normal coordinate direction. 
+Convert an AMR index box space box into an side geometry box. An side geometry box extends the given AMR index space box by one at upper end for the side normal coordinate direction. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(side_normal &gt;= 0) &amp;&amp; (side_normal &lt; box.getDim().getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -328,9 +335,72 @@ This static method applies a coordinate system transformation to the given <a cl
 <p>
 Compute the overlap in side-centered index space between the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html#59020a371f618f6e6a8d9f8cfa8caf9a">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
+</div>
+</div><p>
+<a class="anchor" name="fe460b6e9b2145e11ab12ae9b8ef9af3"></a><!-- doxytag: member="SAMRAI::pdat::SideGeometry::computeDestinationBoxes" ref="fe460b6e9b2145e11ab12ae9b8ef9af3" args="(tbox::Array&lt; hier::BoxContainer &gt; &amp;dst_boxes, const SideGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::pdat::SideGeometry::computeDestinationBoxes           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_boxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html">SideGeometry</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>fill_box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>overwrite_interior</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transformation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_restrict_boxes</em> = <code><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Compute the side-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry. 
+<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>src_mask.getDim() == transformation.getOffset.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5575f7c66298926f5847a87d0bee9b5b"></a><!-- doxytag: member="SAMRAI::pdat::SideGeometry::setUpOverlap" ref="5575f7c66298926f5847a87d0bee9b5b" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
@@ -430,7 +500,7 @@ A vector entry of zero indicates that this object will not perform operations in
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="SideGeometry_8h.html">SideGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="SideGeometry_8C.html">SideGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

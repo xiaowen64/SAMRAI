@@ -36,7 +36,7 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#6213046c5343baf11269236509a585d7">OuternodeDataFactory</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, int depth)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default constructor for the outernode data factory class.  <a href="#6213046c5343baf11269236509a585d7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for the outernode data factory class.  <a href="#6213046c5343baf11269236509a585d7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#91ac08d950edb16b519c81e29abbcd5c">~OuternodeDataFactory</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for the outernode data factory class.  <a href="#91ac08d950edb16b519c81e29abbcd5c"></a><br></td></tr>
@@ -104,9 +104,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-The default constructor for the outernode data factory class. 
+The constructor for the outernode data factory class. 
 <p>
-The depth (number of components) gives the default for all of the outernode data objects created with this factory. 
+The depth (number of components) gives the default for all of the outernode data objects created with this factory.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="91ac08d950edb16b519c81e29abbcd5c"></a><!-- doxytag: member="SAMRAI::pdat::OuternodeDataFactory::~OuternodeDataFactory" ref="91ac08d950edb16b519c81e29abbcd5c" args="()" -->
@@ -157,9 +159,10 @@ Abstract virtual function to clone a patch data factory.
 This will return a new instantiation of the abstract factory with the same properties. The properties of the cloned factory can then be changed without modifying the original.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == ghosts.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#8e25f724ce554c386c4942565956e5ea">SAMRAI::hier::PatchDataFactory</a>.
@@ -186,7 +189,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Virtual factory function to allocate a concrete outernode data object. 
 <p>
-The default information about the object (e.g., depth) is taken from the factory. 
+The default information about the object (e.g., depth) is taken from the factory.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == patch.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -212,7 +217,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Allocate the box geometry object associated with the patch data. 
 <p>
-This information will be used in the computation of intersections and data dependencies between objects. 
+This information will be used in the computation of intersections and data dependencies between objects.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#0714dc4177b9fa53181a4146fe31fc7d">SAMRAI::hier::PatchDataFactory</a>.
 </div>
@@ -261,6 +268,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Calculate the amount of memory needed to store the outernode data object, including object data and dynamically allocated data. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#81f1cf57f6d5e5d600b7dd439f5cdfbb">SAMRAI::hier::PatchDataFactory</a>.
@@ -331,12 +339,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html">OuternodeDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html">NodeDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html">OuternodeDataFactory</a>, false otherwise. 
+Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html">OuternodeDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html">NodeDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html">OuternodeDataFactory</a>, false otherwise.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == dst_pdf-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OuternodeDataFactory_8h.html">OuternodeDataFactory.h</a><li>source/SAMRAI/pdat/<a class="el" href="OuternodeDataFactory_8C.html">OuternodeDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

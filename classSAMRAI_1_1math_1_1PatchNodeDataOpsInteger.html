@@ -120,7 +120,10 @@ Empty constructor and destructor.
 <div class="memdoc">
 
 <p>
-Return the number of data values for the node-centered data object in the given box. Note that it is assumed that the box refers to the cell-centered index space corresponding to the patch hierarchy. 
+Return the number of data values for the node-centered data object in the given box. Note that it is assumed that the box refers to the cell-centered index space corresponding to the patch hierarchy.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f7b585e663631a9a85717f5fc6f5e4ab"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::copyData" ref="f7b585e663631a9a85717f5fc6f5e4ab" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -155,7 +158,10 @@ Return the number of data values for the node-centered data object in the given 
 <div class="memdoc">
 
 <p>
-Copy dst data to src data over given box. 
+Copy dst data to src data over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="209e65e25fe57062067d84f87e63754a"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::swapData" ref="209e65e25fe57062067d84f87e63754a" args="(const boost::shared_ptr&lt; hier::Patch &gt; &amp;patch, const int data1_id, const int data2_id) const " -->
@@ -190,7 +196,14 @@ Copy dst data to src data over given box.
 <div class="memdoc">
 
 <p>
-Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box. 
+Swap pointers for patch data objects. Objects iare checked for consistency of depth, box, and ghost box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>patch <p>
+patch-&gt;getPatchData(data1_id) is actually a boost::shared_ptr&lt;pdat::NodeData&lt;int&gt; &gt; <p>
+patch-&gt;getPatchData(data2_id) is actually a boost::shared_ptr&lt;pdat::NodeData&lt;int&gt; &gt; <p>
+patch-&gt;getPatchData(data1_id)-&gt;getDepth() == patch-&gt;getPatchData(data2_id)-&gt;getDepth() <p>
+patch-&gt;getPatchData(data1_id)-&gt;getBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getBox()) <p>
+patch-&gt;getPatchData(data1_id)-&gt;getGhostBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getGhostBox()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="938f76b852867a9a8cebc95ac7bb81c3"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::printData" ref="938f76b852867a9a8cebc95ac7bb81c3" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;data, const hier::Box &amp;box, std::ostream &amp;s=tbox::plog) const " -->
@@ -225,7 +238,10 @@ Swap pointers for patch data objects. Objects are checked for consistency of dep
 <div class="memdoc">
 
 <p>
-Print data entries over given box to given output stream. 
+Print data entries over given box to given output stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="353cbb518140ec9790929c9bde3c4095"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::setToScalar" ref="353cbb518140ec9790929c9bde3c4095" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;dst, const int &amp;alpha, const hier::Box &amp;box) const " -->
@@ -260,7 +276,10 @@ Print data entries over given box to given output stream.
 <div class="memdoc">
 
 <p>
-Initialize data to given scalar over given box. 
+Initialize data to given scalar over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst <p>
+dst-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c49ac1aa9515517bffade00d505c6cf9"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::abs" ref="c49ac1aa9515517bffade00d505c6cf9" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -295,12 +314,15 @@ Initialize data to given scalar over given box.
 <div class="memdoc">
 
 <p>
-Set destination component to absolute value of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \| s_i \|$" src="form_29.png">. 
+Set destination component to absolute value of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \| s_i \|$" src="form_29.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataOpsInteger_8h.html">PatchNodeDataOpsInteger.h</a><li>source/SAMRAI/math/<a class="el" href="PatchNodeDataOpsInteger_8C.html">PatchNodeDataOpsInteger.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -35,21 +35,21 @@
 <a href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#17aa0c34d733a3118c6c8688ed349000">GriddingAlgorithm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; &amp;level_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> &gt; &amp;generator, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;balancer, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;balancer_zero=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;(), bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#a58323c1cd13b60070b0b87a0d17f3a7">GriddingAlgorithm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; &amp;level_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> &gt; &amp;generator, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;balancer, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;balancer_zero=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> configures the gridding algorithm with the patch hierarchy and concrete algorithm strategy objects in the argument list.  <a href="#17aa0c34d733a3118c6c8688ed349000"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> configures the gridding algorithm with the patch hierarchy and concrete algorithm strategy objects in the argument list.  <a href="#a58323c1cd13b60070b0b87a0d17f3a7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d564619fa83f3ec37d0349a31a7c0a30">~GriddingAlgorithm</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#d564619fa83f3ec37d0349a31a7c0a30"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d1846e119aeff11f5f40c7dd2aa2e7f5">makeCoarsestLevel</a> (const double level_time)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create or rebalance the coarsest level.  <a href="#d1846e119aeff11f5f40c7dd2aa2e7f5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#56901ef8299000705e5aa47e190b2a9e">makeFinerLevel</a> (const double level_time, const bool initial_time, const int tag_buffer, const double regrid_start_time=0.0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#dc701340eb3493711efc342f1fb0644d">makeFinerLevel</a> (const int tag_buffer, const bool initial_cycle, const int cycle, const double level_time, const double regrid_start_time=0.0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to create a new level in the hierarchy finer than the finest level currently residing in the hierarchy.  <a href="#56901ef8299000705e5aa47e190b2a9e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#5d2ef5face4b4c3b40ba814906916089">regridAllFinerLevels</a> (const int level_number, const double regrid_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;tag_buffer, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; regrid_start_time=<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to create a new level in the hierarchy finer than the finest level currently residing in the hierarchy.  <a href="#dc701340eb3493711efc342f1fb0644d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#e1549d30754f0d258ac15e81e7e4f2f9">regridAllFinerLevels</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;tag_buffer, const int cycle, const double level_time, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; regrid_start_time=<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to regrid each level in the PatchHierarchy that is finer than the specified level.  <a href="#5d2ef5face4b4c3b40ba814906916089"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to regrid each level in the PatchHierarchy that is finer than the specified level.  <a href="#e1549d30754f0d258ac15e81e7e4f2f9"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
  <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#f6477d7887a8b2b5fc734fb824242b0c">getTagAndInitializeStrategy</a> () const </td></tr>
 
@@ -77,11 +77,14 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#8f18dca77480c966b2253020162a31c0">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all data members of the class instance to given output stream.  <a href="#8f18dca77480c966b2253020162a31c0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#b59a959a4dd4328b432d3e194cedd93e">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#977c948a553e71f7da18afc0c89ee7fe">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write object state out to the gien database.  <a href="#b59a959a4dd4328b432d3e194cedd93e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write object state out to the given restart database.  <a href="#977c948a553e71f7da18afc0c89ee7fe"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#b412d10052255cff13ffa3f104dd8a09">printStatistics</a> (std::ostream &amp;s=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#387cc824a49a8ab50622e0e0740da346">getObjectName</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#387cc824a49a8ab50622e0e0740da346"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> manages AMR patch hierarchy construction operations in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. Specifically, it provides AMR patch hierarchy generation and regridding routines that may be used with a variety of AMR solution algorithms and application codes. 
@@ -90,58 +93,95 @@ The three main functions provided by this class are:<ul>
 <li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d1846e119aeff11f5f40c7dd2aa2e7f5">makeCoarsestLevel()</a></b> This routine constructs or repartitions the coarsest hierarchy level (level 0).</li></ul>
 <p>
 <ul>
-<li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#56901ef8299000705e5aa47e190b2a9e">makeFinerLevel()</a></b> This routine will attempt to add a new finest level to the hierarchy if the maximum number of levels allows it and cells on the current finest level are tagged for refinement.</li></ul>
+<li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#dc701340eb3493711efc342f1fb0644d">makeFinerLevel()</a></b> This routine will attempt to add a new finest level to the hierarchy if the maximum number of levels allows it and cells on the current finest level are tagged for refinement.</li></ul>
 <p>
 <ul>
-<li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#5d2ef5face4b4c3b40ba814906916089">regridAllFinerLevels()</a></b> This routine will regrid all levels finer than some specified level based on cells that are tagged for refinement on each level finer than and including the given level. This routine may add a new finest hierarchy level if the maximum number of levels allows it and cells on the current finest level are tagged for refinement. Levels may also be removed from the hierarchy if no cells are tagged.</li></ul>
+<li><b><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#e1549d30754f0d258ac15e81e7e4f2f9">regridAllFinerLevels()</a></b> This routine will regrid all levels finer than some specified level based on cells that are tagged for refinement on each level finer than and including the given level. This routine may add a new finest hierarchy level if the maximum number of levels allows it and cells on the current finest level are tagged for refinement. Levels may also be removed from the hierarchy if no cells are tagged.</li></ul>
 <p>
 These basic AMR operations are used to generate levels in the AMR patch hierarchy at the beginning of a simulation, and regridding collections of levels during an adaptive calculation. More details are found in the comments accompanying each member function below.<p>
 Other objects passed to the constructor provide the gridding algorithm with particular operations needed during meshing operations. Operations that tag cells for refinement on a patch level and initialize data on new levels are provided by the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> argument. Operations that cluster tagged cells into a boxes are provided by the <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> argument. Routines that load balance patches on a level are provided by the <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> constructor argument.<p>
-Initialization of a <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> object is performed via a combination of default parameters and values read from an input database. Data read from input is summarized as follows:<p>
-Optional input keys, data types, and defaults:<p>
-<ul>
-<li><b>efficiency_tolerance</b> An array of double values, each of which specifies the minimum fraction of tagged cells to total cells in boxes used to construct patches on a new level. If the ratio is below the tolerance value, the box may be split into smaller boxes and pieces removed until the ratio becomes greater than or equal to the tolerance. This tolerance helps users control the amount of extra refined cells created (beyond those tagged explicitly) that is typical in patch-based AMR computations. If no input values are given, a default of 0.8 is used. See sample input below for input file format. The index of the value in the array corresponds to the number of the level to which the tolerance value applies. If more values are given than the maximum number of levels allowed in the hierarchy, extra values will be ignored. If fewer values are given, then the last value given will be used for each level without a specified input value. For example, if only a single value is specified, then that value will be used on all levels.</li></ul>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>check_overflow_nesting</b> </li></ul>
 <p>
 <ul>
-<li><b>combine_efficiency</b> An array of double values, each of which serves as a threshold for the ratio of the total number of cells in two boxes into which a box may be split and the number of cells in the original box. If that ratio is greater than the combine efficiency, the box will not be split. This tolerance helps users avoids splitting up portions of the domain into into very small patches which can increase the overhead of AMR operations. If no input values are given, a default of 0.8 is used. See sample input below for input file format. Multiple values in the array are handled similar to efficiency_tolerance.</li></ul>
+<li><b>check_proper_nesting</b> </li></ul>
 <p>
 <ul>
-<li><b>check_nonnesting_user_boxes</b> A flag to control how user-specified refinement boxes that violate proper nesting are handled. Set to one of these strings: <b>"IGNORE"</b> - nesting violations will be quietly disregarded. <b>"WARN"</b> - nesting violations will cause a warning but the code will continue anyway. <b>"ERROR"</b> - nesting violations will cause an unrecoverable assertion. The default is "ERROR". We highly recommend making nesting violation an error. The code may work anyway, but there are no guarantees.</li></ul>
+<li><b>efficiency_tolerance</b> each value specifies the minimum fraction of tagged cells to total cells in boxes used to construct patches on a new level. If the ratio is below the tolerance value, the box may be split into smaller boxes and pieces removed until the ratio becomes greater than or equal to the tolerance. This tolerance helps users control the amount of extra refined cells created (beyond those tagged explicitly) that is typical in patch-based AMR computations. The index of the value in the array corresponds to the number of the level to which the tolerance value applies. If more values are given than the maximum number of levels allowed in the hierarchy, extra values will be ignored. If fewer values are given, then the last value given will be used for each level without a specified input value. For example, if only a single value is specified, then that value will be used on all levels.</li></ul>
 <p>
 <ul>
-<li><b>check_boundary_proximity_violation</b> A flag to control how to resolve refinement boxes that violate boundary proximity (are less than the max ghost cell width of physical boundaries without touching the boundary). Set to one of these strings: <b>"IGNORE"</b> - violations will be quietly disregarded. <b>"WARN"</b> - violations will cause a warning but the code will continue anyway. <b>"ERROR"</b> - violations will cause an unrecoverable assertion. The default is "ERROR". We highly recommend making boundary proximity violation an error. The code may work anyway, but there are no guarantees.</li></ul>
+<li><b>combine_efficiency</b> each value serves as a threshold for the ratio of the total number of cells in two boxes into which a box may be split and the number of cells in the original box. If that ratio is greater than the combine efficiency, the box will not be split. This tolerance helps users avoids splitting up portions of the domain into into very small patches which can increase the overhead of AMR operations. Multiple values in the array are handled similar to efficiency_tolerance.</li></ul>
 <p>
 <ul>
-<li><b>check_nonrefined_tags</b> A flag to control how to resolve user-specified tags that violate proper nesting.</li></ul>
-<p>
-If a tag violates the nesting requirements, its location in index space will not be refined when creating the finer level. This flag allows the user to determine what to do when this occurs<p>
-Set to one of these strings: <b>"IGNORE"</b> - violating tags will be quietly disregarded. <b>"WARN"</b> - violating tags will cause a warning and be disregarded. <b>"ERROR"</b> - violating tags will cause an unrecoverable assertion. The default is "WARN". It is fastest to ignore non-nesting tags because no checking has to be done.<p>
-<ul>
-<li><b>check_overlapping_patches</b> A flag to control checking for overlapping patches on a new level. Set to one of these strings: <b>"IGNORE"</b> - there is no check for overlapping patches, and they will be quietly disregarded. <b>"WARN"</b> - overlapping patches will cause a warning and be disregarded. <b>"ERROR"</b> - violating tags will cause an unrecoverable assertion. The default is "WARN". The check for overlapping patches may be and should be bypassed by application that can tolerate overlaps. To prevent the creation of levels with overlapping patches, see the input flag "allow_patches_smaller_than_minimum_size_to_prevent_overlaps"</li></ul>
-<p>
-<ul>
-<li><b>sequentialize_patch_indices</b> A flag to specify whether patch indices will be globally sequentialized. This is not scalable, but is required for writing correct VisIt files. Due to the current VisIt requirement, this is currently true by default. It will evetually be set back to false after we remove the VisIt requirement.</li></ul>
+<li><b>check_nonrefined_tags</b> controls how to resolve user-specified tags that violate proper nesting. If a tag violates the nesting requirements, its location in index space will not be refined when creating the finer level. This flag allows the user to determine what to do when this occurs. <br>
+ Set to one of these characters: <br>
+ <b>'i'</b> - violating tags will be quietly disregarded. <br>
+ <b>'w'</b> - violating tags will cause a warning and be disregarded. <br>
+ <b>'e'</b> - violating tags will cause an unrecoverable assertion. <br>
+ It is fastest to ignore non-nesting tags because no checking has to be done.</li></ul>
 <p>
 <ul>
-<li><b>log_metadata_statistics</b> = FALSE Whether to log metadata statistics after generating a new level. This flag writes out data that would be of interest to analyzing how metadata statistics affects performance.</li></ul>
+<li><b>check_overlapping_patches</b> controls checking for overlapping patches on a new level. <br>
+ Set to one of these characters: <br>
+ <b>'i'</b> - there is no check for overlapping patches, and they will be quietly disregarded. <br>
+ <b>'w'</b> - overlapping patches will cause a warning and be disregarded. <br>
+ <b>'e'</b> - violating tags will cause an unrecoverable assertion. <br>
+ The check for overlapping patches may be and should be bypassed by applications that can tolerate overlaps. To prevent the creation of levels with overlapping patches, see the PatchHierarchy input flag "allow_patches_smaller_than_minimum_size_to_prevent_overlaps".</li></ul>
 <p>
-Note that when continuing from restart, the input values in the input file override all values read in from the restart database.<p>
+<ul>
+<li><b>check_nonnesting_user_boxes</b> controls how user-specified refinement boxes that violate proper nesting are handled. <br>
+ Set to one of these characters: <br>
+ <b>'i'</b> - nesting violations will be quietly disregarded. <br>
+ <b>'w'</b> - nesting violations will cause a warning but the code will continue anyway. <br>
+ <b>'e'</b> - nesting violations will cause an unrecoverable assertion <br>
+ We highly recommend making nesting violation an error. The code may work anyway, but there are no guarantees.</li></ul>
+<p>
+<ul>
+<li><b>sequentialize_patch_indices</b> whether patch indices will be globally sequentialized. This is not scalable, but is required for writing correct VisIt files. Due to the current VisIt requirement, this is currently true by default. It will evetually be set back to false after we remove the VisIt requirement.</li></ul>
+<p>
+<ul>
+<li><b>enforce_proper_nesting</b> </li></ul>
+<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>check_overflow_nesting </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>check_proper_nesting </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>efficiency_tolerance </td><td>Array&lt;double&gt; </td><td>0.8 for each level </td><td>all values &gt; 0.0 &amp;&amp; &lt; 1.0 </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>combine_efficiency </td><td>Array&lt;double&gt; </td><td>0.8 for each level </td><td>all values &gt; 0.0 &amp;&amp; &lt; 1.0 </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>check_nonrefined_tags </td><td>string </td><td>"WARN" </td><td>"WARN", "IGNORE", "ERROR" </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>check_overlapping_patches </td><td>string </td><td>"IGNORE" </td><td>"WARN", "IGNORE", "ERROR" </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>check_nonnesting_user_boxes </td><td>string </td><td>"ERROR" </td><td>"WARN", "IGNORE", "ERROR" </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>sequentialize_patch_indices </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>enforce_proper_nesting </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+</table>
+<p>
+All values read in from a restart database may be overriden by input database values. If no new input database value is given, the restart database value is used.<p>
 The following represents sample input data for a three-level problem:<p>
-<div class="fragment"><pre class="fragment"> *
- *   // Optional input: different efficiency tolerance for each coarser level
- *   efficiency_tolerance = 0.80e0, 0.85e0, 0.90e0
- *
- *   // Optional input: combine efficiency is same for all levels.
- *   combine_efficiency = 0.95e0
- *
- * </pre></div><p>
+<div class="fragment"><pre class="fragment">   <span class="comment">// Optional input: different efficiency tolerance for each coarser level</span>
+   efficiency_tolerance = 0.80e0, 0.85e0, 0.90e0
+
+   <span class="comment">// Optional input: combine efficiency is same for all levels.</span>
+   combine_efficiency = 0.95e0
+</pre></div><p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">mesh::TagAndInitializeStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">mesh::LoadBalanceStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="17aa0c34d733a3118c6c8688ed349000"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm" ref="17aa0c34d733a3118c6c8688ed349000" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, const boost::shared_ptr&lt; TagAndInitializeStrategy &gt; &amp;level_strategy, const boost::shared_ptr&lt; BoxGeneratorStrategy &gt; &amp;generator, const boost::shared_ptr&lt; LoadBalanceStrategy &gt; &amp;balancer, const boost::shared_ptr&lt; LoadBalanceStrategy &gt; &amp;balancer_zero=boost::shared_ptr&lt; LoadBalanceStrategy &gt;(), bool register_for_restart=true)" -->
+<a class="anchor" name="a58323c1cd13b60070b0b87a0d17f3a7"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm" ref="a58323c1cd13b60070b0b87a0d17f3a7" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, const boost::shared_ptr&lt; TagAndInitializeStrategy &gt; &amp;level_strategy, const boost::shared_ptr&lt; BoxGeneratorStrategy &gt; &amp;generator, const boost::shared_ptr&lt; LoadBalanceStrategy &gt; &amp;balancer, const boost::shared_ptr&lt; LoadBalanceStrategy &gt; &amp;balancer_zero=boost::shared_ptr&lt; LoadBalanceStrategy &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -185,13 +225,7 @@ The following represents sample input data for a three-level problem:<p>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>balancer_zero</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a>&nbsp;&gt;()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>register_for_restart</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>balancer_zero</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -205,8 +239,7 @@ The following represents sample input data for a three-level problem:<p>
 <p>
 The constructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> configures the gridding algorithm with the patch hierarchy and concrete algorithm strategy objects in the argument list. 
 <p>
-Gridding parameters are initialized from values provided in the specified input and in the restart database corresponding to the specified object_name argument. The constructor also registers this object for restart using the specified object name when the boolean argument is true (default).<p>
-If assertion checking is turned on, an unrecoverable assertion will result if any of the required pointer arguments is null. Assertions may also be thrown if any checks for consistency among input parameters fail.<p>
+Gridding parameters are initialized from values provided in the specified input and in the restart database corresponding to the specified object_name argument.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The hierarchy that this <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> will work on. The pointer is cached. All hierarchy operations will be on this hierarchy.</td></tr>
@@ -216,9 +249,13 @@ If assertion checking is turned on, an unrecoverable assertion will result if an
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>generator</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>balancer</em>&nbsp;</td><td>Load balancer</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>balancer_zero</em>&nbsp;</td><td>Special load balancer to use for level zero. If omitted, will use <code>balancer</code> instead.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+!object_name.empty() <p>
+tag_init_strategy <p>
+generator <p>
+balancer </dd></dl>
 
 </div>
 </div><p>
@@ -265,38 +302,45 @@ Create or rebalance the coarsest level.
 <p>
 This is an implementation of interface defined in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">GriddingAlgorithmStrategy</a>.<p>
 This routine will attempt to construct the coarsest level in the AMR patch hierarchy (i.e., level 0). If level 0 does not already exist, then the domain specification is checked against the constraints of the grid generation procedures. Recall that the domain specification is maintained by the grid geometry object associated with the hierarchy. Generally, an unrecoverable assertion will result if the constraints are not satisfied.<p>
-If level 0 already exists in the hierarchy, then the routine will generate a new level zero by re-applying the load balancing procedure to the existing level. Data will be moved from the old level to the new level and the pre-existing level 0 will be discarded. Note that this routine is different than the routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#56901ef8299000705e5aa47e190b2a9e">makeFinerLevel()</a> below, which is used to construct levels finer than level zero. In particular, this routine does not select cells for refinement, whereas the other routine does.<p>
+If level 0 already exists in the hierarchy, then the routine will generate a new level zero by re-applying the load balancing procedure to the existing level. Data will be moved from the old level to the new level and the pre-existing level 0 will be discarded. Note that this routine is different than the routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#dc701340eb3493711efc342f1fb0644d">makeFinerLevel()</a> below, which is used to construct levels finer than level zero. In particular, this routine does not select cells for refinement, whereas the other routine does.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_time</em>&nbsp;</td><td>Simulation time. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_time</em>&nbsp;</td><td>Simulation time.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_hierarchy-&gt;getMaxNumberOfLevels() &gt; 0 </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#719a01e9347f418653d860d1460762da">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="56901ef8299000705e5aa47e190b2a9e"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::makeFinerLevel" ref="56901ef8299000705e5aa47e190b2a9e" args="(const double level_time, const bool initial_time, const int tag_buffer, const double regrid_start_time=0.0)" -->
+<a class="anchor" name="dc701340eb3493711efc342f1fb0644d"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::makeFinerLevel" ref="dc701340eb3493711efc342f1fb0644d" args="(const int tag_buffer, const bool initial_cycle, const int cycle, const double level_time, const double regrid_start_time=0.0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::makeFinerLevel           </td>
           <td>(</td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>level_time</em>, </td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>tag_buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const bool&nbsp;</td>
-          <td class="paramname"> <em>initial_time</em>, </td>
+          <td class="paramname"> <em>initial_cycle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>tag_buffer</em>, </td>
+          <td class="paramname"> <em>cycle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&nbsp;</td>
+          <td class="paramname"> <em>level_time</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -316,22 +360,26 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.
 <p>
 Attempt to create a new level in the hierarchy finer than the finest level currently residing in the hierarchy. 
 <p>
-This is an implementation of interface method <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#25a60c233136dcd8f62af4724b7b824a">GriddingAlgorithmStrategy::makeFinerLevel()</a>.<p>
+This is an implementation of interface method <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#f6541670ca43ef5e7b0a2c8c214e2f74">GriddingAlgorithmStrategy::makeFinerLevel()</a>.<p>
 The tag buffer indicates the number of cells by which cells selected for refinement should be buffered before new finer level boxes are constructed. All tagged cells should be refined except where refinement would violate proper nesting. The buffer is meant to keep phenomena of interest on refined regions of the mesh until adaptive regridding occurs next. Callers of this method should take into account how the simulation may evolve before regridding occurs (e.g., number of timesteps taken) when calculating the tag_buffer.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_time</em>&nbsp;</td><td>See above text.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>initial_time</em>&nbsp;</td><td>See above text.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_buffer</em>&nbsp;</td><td>See above text.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>regrid_start_time</em>&nbsp;</td><td>The simulation time when the regridding operation began (this parameter is ignored except when using Richardson extrapolation) </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>initial_cycle</em>&nbsp;</td><td>See above text</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cycle</em>&nbsp;</td><td>See above text.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_time</em>&nbsp;</td><td>See above text..</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>regrid_start_time</em>&nbsp;</td><td>The simulation time when the regridding operation began (this parameter is ignored except when using Richardson extrapolation)</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_hierarchy <p>
+d_hierarchy-&gt;getPatchLevel(d_hierarchy-&gt;getFinestLevelNumber()) <p>
+tag_buffer &gt;= 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#25a60c233136dcd8f62af4724b7b824a">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#f6541670ca43ef5e7b0a2c8c214e2f74">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="5d2ef5face4b4c3b40ba814906916089"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::regridAllFinerLevels" ref="5d2ef5face4b4c3b40ba814906916089" args="(const int level_number, const double regrid_time, const tbox::Array&lt; int &gt; &amp;tag_buffer, tbox::Array&lt; double &gt; regrid_start_time=tbox::Array&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)" -->
+<a class="anchor" name="e1549d30754f0d258ac15e81e7e4f2f9"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::regridAllFinerLevels" ref="e1549d30754f0d258ac15e81e7e4f2f9" args="(const int level_number, const tbox::Array&lt; int &gt; &amp;tag_buffer, const int cycle, const double level_time, tbox::Array&lt; double &gt; regrid_start_time=tbox::Array&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -344,14 +392,20 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>regrid_time</em>, </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>tag_buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>tag_buffer</em>, </td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>cycle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&nbsp;</td>
+          <td class="paramname"> <em>level_time</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -377,22 +431,26 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.
 <p>
 Attempt to regrid each level in the PatchHierarchy that is finer than the specified level. 
 <p>
-This method implements the virtual interface <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#2ca0e474cc71e77856d09344e1566cb7">GriddingAlgorithmStrategy::regridAllFinerLevels()</a>.<p>
+This method implements the virtual interface <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#c0e7e6cf96051ea23cad8fbd109c657b">GriddingAlgorithmStrategy::regridAllFinerLevels()</a>.<p>
 Note that the current algorithm permits at most one new finest level to be added to the hierarchy with each invocation of the regridding process. This constraint, though seemingly restrictive makes the process of maintaining properly nested levels much easier.<p>
 Note that the current algorithm permits at most one new finest level to be added to the hierarchy with each call to this method. This constraint, though seemingly restrictive makes the process of maintaining properly nested levels much easier.<p>
-Important note: If assertion checking is activated, several checks are applied to the functions arguments. If any check is violated, an unrecoverable assertion will result. In particular, the given level number must match that of of some level in the hierarchy. Also, the tag buffer array must contain a positive value for each level in the hierarchy.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td>Coarsest level on which cells will be tagged for refinement</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>regrid_time</em>&nbsp;</td><td>Simulaition time when regridding occurs</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_buffer</em>&nbsp;</td><td>Size of buffer on each level around tagged cells that will be covered by the next finer level</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cycle</em>&nbsp;</td><td>Simulaition cycle when regridding occurs</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_time</em>&nbsp;</td><td>Simulation time of the level corresponding to level_num when regridding occurs</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>regrid_start_time</em>&nbsp;</td><td>The simulation time when the regridding operation began on each level (this parameter is ignored except when using Richardson extrapolation)</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_is_coarsest_to_sync</em>&nbsp;</td><td>Level is the coarsest to sync </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_is_coarsest_to_sync</em>&nbsp;</td><td>Level is the coarsest to sync</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt;= d_hierarchy-&gt;getFinestLevelNumber()) <p>
+d_hierarchy-&gt;getPatchLevel(level_number) <p>
+tag_buffer.getSize() &gt;= level_number + 1 <p>
+for each member, tb, of tag_buffer, tb &gt;= 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#2ca0e474cc71e77856d09344e1566cb7">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#c0e7e6cf96051ea23cad8fbd109c657b">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="f6477d7887a8b2b5fc734fb824242b0c"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getTagAndInitializeStrategy" ref="f6477d7887a8b2b5fc734fb824242b0c" args="() const " -->
@@ -497,6 +555,8 @@ Set efficiency tolerance for clustering tags on level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) <p>
+(efficiency_tolerance &gt;= 0) &amp;&amp; (efficiency_tolerance &lt;= 1.0) </dd></dl>
 
 </div>
 </div><p>
@@ -519,7 +579,8 @@ Set efficiency tolerance for clustering tags on level.
 <p>
 Return efficiency tolerance for clustering tags on level. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>efficiency tolerance for clustering tags on level. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>efficiency tolerance for clustering tags on level.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) </dd></dl>
 
 </div>
 </div><p>
@@ -557,6 +618,8 @@ Set combine efficiency for clustering tags on level.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) <p>
+(combine_efficiency &gt;= 0) &amp;&amp; (combine_efficiency &lt;= 1.0) </dd></dl>
 
 </div>
 </div><p>
@@ -579,7 +642,8 @@ Set combine efficiency for clustering tags on level.
 <p>
 Return combine efficiency for clustering tags on level. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>combine efficiency for clustering tags on level. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>combine efficiency for clustering tags on level.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(level_number &gt;= 0) &amp;&amp; (level_number &lt; d_hierarchy-&gt;getMaxNumberOfLevels()) </dd></dl>
 
 </div>
 </div><p>
@@ -605,15 +669,15 @@ Print all data members of the class instance to given output stream.
 
 </div>
 </div><p>
-<a class="anchor" name="b59a959a4dd4328b432d3e194cedd93e"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::putToDatabase" ref="b59a959a4dd4328b432d3e194cedd93e" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
+<a class="anchor" name="977c948a553e71f7da18afc0c89ee7fe"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::putToRestart" ref="977c948a553e71f7da18afc0c89ee7fe" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::putToDatabase           </td>
+          <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -622,9 +686,10 @@ Print all data members of the class instance to given output stream.
 <div class="memdoc">
 
 <p>
-Write object state out to the gien database. 
+Write object state out to the given restart database. 
 <p>
-When assertion checking is active, the database pointer must be non-null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b412d10052255cff13ffa3f104dd8a09"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::printStatistics" ref="b412d10052255cff13ffa3f104dd8a09" args="(std::ostream &amp;s=tbox::plog) const " -->
@@ -647,9 +712,30 @@ When assertion checking is active, the database pointer must be non-null.
 
 </div>
 </div><p>
+<a class="anchor" name="387cc824a49a8ab50622e0e0740da346"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getObjectName" ref="387cc824a49a8ab50622e0e0740da346" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string&amp; SAMRAI::mesh::GriddingAlgorithm::getObjectName           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get the name of this object. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8h.html">GriddingAlgorithm.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8C.html">GriddingAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -65,7 +65,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html#4d2e26dbc9b455faf7926fb36b1a9233">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html#9ab276c97b71f6e73433d5e77da83a20">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html#43e947a0fa36d1722c97fabff52aa2b8">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html#e10321abd0f16fb7cdc87b8b8f6e0c30">getObjectName</a> () const </td></tr>
 
@@ -74,15 +74,23 @@
 Manage implicit time integration over an AMR patch hierarchy. 
 <p>
 Class <a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html">ImplicitIntegrator</a> manages implicit time integration over an AMR patch hierarchy. It maintains references to <a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html">ImplicitEquationStrategy</a> and <a class="el" href="classSAMRAI_1_1solv_1_1NonlinearSolverStrategy.html">solv::NonlinearSolverStrategy</a> objects, which provide operations describing the implicit equations and solving the problem at each time step, respectively. When a time step is performed, data on all levels is integrated through the same time increment.<p>
-Initialization of an <a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html">ImplicitIntegrator</a> object is performed via a combination of default parameters and values read from input. Data read from input is summarized as follows:<p>
-Required input keys and data types: <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>initial_time</em>&nbsp;</td><td>double value for the initial simulation time. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>final_time</em>&nbsp;</td><td>double value for the final simulation time. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>max_integrator_steps</em>&nbsp;</td><td>integer value for the maximum number of timesteps allowed.</td></tr>
-  </table>
-</dl>
-All input data items described above, except for initial_time, may be overwritten by new input values when continuing from restart.<p>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>initial_time</b> initial simulation time.</li><li><b>final_time</b> final simulation time.</li><li><b>max_integrator_steps</b> maximum number of timesteps performed on the coarsest hierarchy level during the simulation.</li></ul>
+<p>
+All input data items described above, except for initial_time, may be overridden by new input values when continuing from restart.<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>initial_time </td><td>double </td><td>none </td><td>&gt;=0 </td><td>req </td><td>May not be modified by input db on restart  </td></tr>
+<tr>
+<td>final_time </td><td>double </td><td>none </td><td>final_time &gt;= initial_time </td><td>req </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>max_integrator_steps </td><td>int </td><td>none </td><td>&gt;=0 </td><td>req </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+</table>
+<p>
 A sample input file entry might look like:<p>
 <div class="fragment"><pre class="fragment"> initial_time = 0.0
  final_time   = 1.0
@@ -139,7 +147,11 @@ A sample input file entry might look like:<p>
 <p>
 The constructor for <a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html">ImplicitIntegrator</a> initializes the default state of the integrator. The integrator is configured with the concrete strategy objects in the argument list that provide operations related to the nonlinear solver and implicit equations to solve. Data members are initialized from the input and restart databases.<p>
 Note that no vectors are created in the constructor. Vectors are created and the nonlinear solver is initialized in the <a class="el" href="classSAMRAI_1_1algs_1_1ImplicitIntegrator.html#8666654fa6bacc390beff5335c51c8f0">initialize()</a> member function.<p>
-If assertion checking is turned on, an unrecoverable assertion will result if any of the database, strategy, or hierarchy pointers is null. Assertions may also be thrown if any checks for consistency among input parameters fail. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+implicit_equations != 0 <p>
+nonlinear_solver != 0 <p>
+hierarchy </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="8740a8cf73a8cbac01ef825f12fcb4a7"></a><!-- doxytag: member="SAMRAI::algs::ImplicitIntegrator::~ImplicitIntegrator" ref="8740a8cf73a8cbac01ef825f12fcb4a7" args="()" -->
@@ -442,15 +454,15 @@ Return true if the number of integration steps performed by the integrator has n
 Print out all members of integrator instance to given output stream. 
 </div>
 </div><p>
-<a class="anchor" name="9ab276c97b71f6e73433d5e77da83a20"></a><!-- doxytag: member="SAMRAI::algs::ImplicitIntegrator::putToDatabase" ref="9ab276c97b71f6e73433d5e77da83a20" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
+<a class="anchor" name="43e947a0fa36d1722c97fabff52aa2b8"></a><!-- doxytag: member="SAMRAI::algs::ImplicitIntegrator::putToRestart" ref="43e947a0fa36d1722c97fabff52aa2b8" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::algs::ImplicitIntegrator::putToDatabase           </td>
+          <td class="memname">void SAMRAI::algs::ImplicitIntegrator::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -459,8 +471,9 @@ Print out all members of integrator instance to given output stream.
 <div class="memdoc">
 
 <p>
-Write out state of object to given database.<p>
-When assertion checking is active, the database pointer must be non-null. 
+Write out state of object to given restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e10321abd0f16fb7cdc87b8b8f6e0c30"></a><!-- doxytag: member="SAMRAI::algs::ImplicitIntegrator::getObjectName" ref="e10321abd0f16fb7cdc87b8b8f6e0c30" args="() const " -->
@@ -484,7 +497,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="ImplicitIntegrator_8h.html">ImplicitIntegrator.h</a><li>source/SAMRAI/algs/<a class="el" href="ImplicitIntegrator_8C.html">ImplicitIntegrator.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -74,6 +74,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#7e8aa77029f4cb7f3d39a37a4816ee58">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print class data to the specified output stream.  <a href="#7e8aa77029f4cb7f3d39a37a4816ee58"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#4e42699c43d69177d53499b8246c474c">allocatedCommunicationObjects</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the communication objects have been allocated.  <a href="#4e42699c43d69177d53499b8246c474c"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a> is used to construct and execute a set of data communication transactions. Each transaction represents some data dependency and exchange between two processors, or locally involving a single processor. 
@@ -123,7 +126,9 @@ Create an empty schedule with no transactions.
 <p>
 The destructor deletes the schedule and all associated storage. 
 <p>
-Note that the schedule can not be deleted during a communication phase; this will result in an assertion being thrown. 
+Note that the schedule can not be deleted during a communication phase; this will result in an assertion being thrown.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!allocatedCommunicationObjects() </dd></dl>
+
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
@@ -298,7 +303,10 @@ By default the communicator returned by <a class="el" href="classSAMRAI_1_1tbox_
 <p>
 Specify MPI tag values to use in communication. 
 <p>
-If you are using MPI communicators that are not sufficiently isolated from other communications, you can specify distinct tags to avoid message mix-ups. Up to two messages are sent from each communicating pairs. Specify two distinct tags. 
+If you are using MPI communicators that are not sufficiently isolated from other communications, you can specify distinct tags to avoid message mix-ups. Up to two messages are sent from each communicating pairs. Specify two distinct tags.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>first_tag &gt;= 0 <p>
+second_tag &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ab7b17f6a29a1652a816962b0153f709"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::setFirstMessageLength" ref="ab7b17f6a29a1652a816962b0153f709" args="(int first_message_length)" -->
@@ -326,9 +334,10 @@ This two message protocol was designed based on the observed platform-dependent 
 first_message_length defaults to 1000.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>first_message_length</em>&nbsp;</td><td>length (in bytes) of first message </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>first_message_length</em>&nbsp;</td><td>length (in bytes) of first message</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>first_message_length &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -439,9 +448,30 @@ Print class data to the specified output stream.
 
 </div>
 </div><p>
+<a class="anchor" name="4e42699c43d69177d53499b8246c474c"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::allocatedCommunicationObjects" ref="4e42699c43d69177d53499b8246c474c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::Schedule::allocatedCommunicationObjects           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if the communication objects have been allocated. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Schedule_8h.html">Schedule.h</a><li>source/SAMRAI/tbox/<a class="el" href="Schedule_8C.html">Schedule.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

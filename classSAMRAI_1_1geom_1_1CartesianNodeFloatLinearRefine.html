@@ -31,13 +31,13 @@
 <a href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#78972bbcfe0a24488956e8febacd7dc5">CartesianNodeFloatLinearRefine</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#280f7806aff0a435f6a40565c3fa2095">CartesianNodeFloatLinearRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#ae82532c7f70a576169ad463268adc84">~CartesianNodeFloatLinearRefine</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#2ae6d35d9084b09fcd2ec97033d2efb6">getOperatorPriority</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#3e86903ab238b53e5914f56e821fabc6">getStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#6edb1cc8ecfe836bd837887684d4fba4">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#537ea54b6429bc6e6e4aa72671fca143">refine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;fine_overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio) const </td></tr>
 
@@ -50,15 +50,14 @@ Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="78972bbcfe0a24488956e8febacd7dc5"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeFloatLinearRefine::CartesianNodeFloatLinearRefine" ref="78972bbcfe0a24488956e8febacd7dc5" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="280f7806aff0a435f6a40565c3fa2095"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeFloatLinearRefine::CartesianNodeFloatLinearRefine" ref="280f7806aff0a435f6a40565c3fa2095" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::geom::CartesianNodeFloatLinearRefine::CartesianNodeFloatLinearRefine           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -111,14 +110,15 @@ The priority of node-centered float linear interpolation is 0. It will be perfor
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0ffa0be747cd1a388f8cf1c1766">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
-<a class="anchor" name="3e86903ab238b53e5914f56e821fabc6"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeFloatLinearRefine::getStencilWidth" ref="3e86903ab238b53e5914f56e821fabc6" args="() const " -->
+<a class="anchor" name="6edb1cc8ecfe836bd837887684d4fba4"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeFloatLinearRefine::getStencilWidth" ref="6edb1cc8ecfe836bd837887684d4fba4" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::geom::CartesianNodeFloatLinearRefine::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -129,7 +129,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b591c0
 <p>
 The stencil width of the linear interpolation operator is the vector of zeros. That is, its stencil does not extend outside the fine box. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b461868ada200e3f99e6705d5f60">SAMRAI::hier::RefineOperator</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#71f9bd222f7b762e9cab2d6cd7bc517d">SAMRAI::hier::RefineOperator</a>.
 </div>
 </div><p>
 <a class="anchor" name="537ea54b6429bc6e6e4aa72671fca143"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeFloatLinearRefine::refine" ref="537ea54b6429bc6e6e4aa72671fca143" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const int dst_component, const int src_component, const hier::BoxOverlap &amp;fine_overlap, const hier::IntVector &amp;ratio) const " -->
@@ -182,7 +182,9 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#2ec1b4
 <div class="memdoc">
 
 <p>
-Refine the source component on the coarse patch to the destination component on the fine patch using the node-centered float linear interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator. 
+Refine the source component on the coarse patch to the destination component on the fine patch using the node-centered float linear interpolation operator. Interpolation is performed on the intersection of the destination patch and the boxes contained in fine_overlap It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const pdat::NodeOverlap *&gt;(&amp;fine_overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd2e5352276f7bef4d48eede3ab9">SAMRAI::hier::RefineOperator</a>.
 </div>
@@ -237,12 +239,18 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd
 <div class="memdoc">
 
 <p>
-Refine the source component on the coarse patch to the destination component on the fine patch using the node-centered float linear interpolation operator. Interpolation is performed on the intersection of the destination patch and the fine box. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator. This differs from the above <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#537ea54b6429bc6e6e4aa72671fca143">refine()</a> method only in that it operates on a single fine box instead of a BoxOverlap. 
+Refine the source component on the coarse patch to the destination component on the fine patch using the node-centered float linear interpolation operator. Interpolation is performed on the intersection of the destination patch and the fine box. It is assumed that the coarse patch contains sufficient data for the stencil width of the refinement operator. This differs from the above <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#537ea54b6429bc6e6e4aa72671fca143">refine()</a> method only in that it operates on a single fine box instead of a BoxOverlap.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == fine_box.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) <p>
+coarse.getPatchData(src_component) is actually a boost::shared_ptr&lt;pdat::NodeData&lt;float&gt; &gt; <p>
+fine.getPatchData(dst_component) is actually a boost::shared_ptr&lt;pdat::NodeData&lt;float&gt; &gt; <p>
+coarse.getPatchData(src_component)-&gt;getDepth() == fine.getPatchData(dst_component)-&gt;getDepth() <p>
+(fine.getDim().getValue() == 1) || (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3) </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianNodeFloatLinearRefine_8h.html">CartesianNodeFloatLinearRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -22,7 +22,7 @@
 <code>#include &quot;<a class="el" href="IOStream_8h.html">SAMRAI/tbox/IOStream.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="MathUtilities_8h.html">SAMRAI/tbox/MathUtilities.h</a>&quot;</code><br>
-<code>#include &lt;boost/make_shared.hpp&gt;</code><br>
+<code>#include &quot;boost/make_shared.hpp&quot;</code><br>
 <code>#include &lt;cstring&gt;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
@@ -137,10 +137,10 @@
 <p>
 <b>Value:</b><div class="fragment"><pre class="fragment">{                                                     \
       herr_t (* H5E_saved_efunc)( \
-         <span class="keywordtype">void</span> *) = NULL;          \
-      <span class="keywordtype">void</span>* H5E_saved_edata = NULL;                      \
+         <span class="keywordtype">void</span> *) = 0;          \
+      <span class="keywordtype">void</span>* H5E_saved_edata = 0;                      \
       H5Eget_auto(&amp;H5E_saved_efunc, &amp;H5E_saved_edata);   \
-      H5Eset_auto(NULL, NULL);
+      H5Eset_auto(0, 0);
 </pre></div>
 </div>
 </div><p>
@@ -161,7 +161,7 @@
 </pre></div>
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:53 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

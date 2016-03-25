@@ -225,12 +225,12 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Populate object based on information contained in an integer communication buffer.  <a href="#1502494f317645cea3c482afc6820384"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">IO--these are only called from the mblktree test.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#5127bc5bda99dc562acb8d2cfb869c58">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#2f991153a167860c2715cae78d51e747">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the neighborhood information to the supplied database.  <a href="#5127bc5bda99dc562acb8d2cfb869c58"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#92921946add1b286683ff83b975e1cc8">getFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;database)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the neighborhood information to the supplied restart database.  <a href="#2f991153a167860c2715cae78d51e747"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#932b2c707198a73821d3f6f1a236f992">getFromRestart</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;restart_db)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructs the neighborhoods from the supplied database.  <a href="#92921946add1b286683ff83b975e1cc8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructs the neighborhoods from the supplied restart database.  <a href="#932b2c707198a73821d3f6f1a236f992"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#52c2c237fb844d65a3a2842e9068cddf">Iterator</a></td></tr>
 
@@ -610,6 +610,8 @@ Returns an iterator pointing to the first neighbor in the neighborhood of the ba
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -637,6 +639,8 @@ Returns an iterator pointing to the first neighbor in the neighborhood of the ba
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -718,6 +722,8 @@ Returns an iterator pointing just past the last neighbor in the neighborhood of 
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -745,6 +751,8 @@ Returns an iterator pointing just past the last neighbor in the neighborhood of 
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -895,6 +903,8 @@ Returns true if the neighborhood of the base <a class="el" href="classSAMRAI_1_1
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -949,6 +959,8 @@ Returns the number of neighbors in the neighborhood of the base <a class="el" hr
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1273,9 +1285,11 @@ Inserts a new neighbor into the neighborhood of the base <a class="el" href="cla
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html">Iterator</a> pointing to the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>new_nbr</em>&nbsp;</td><td>The new neighbor of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>new_nbr</em>&nbsp;</td><td>The new neighbor of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1313,7 +1327,9 @@ Inserts new neighbors into the neighborhood of the base <a class="el" href="clas
     <tr><td valign="top"></td><td valign="top"><em>new_nbrs</em>&nbsp;</td><td>The new neighbors of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>An <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html">Iterator</a> pointing to the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> with the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>An <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html">Iterator</a> pointing to the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> with the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -1423,9 +1439,12 @@ Erases a neighbor from the neighborhood of the base <a class="el" href="classSAM
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td>An iterator pointing to the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nbr</em>&nbsp;</td><td>The neighbor of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to be erased. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbr</em>&nbsp;</td><td>The neighbor of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to be erased.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> <p>
+d_nbrs.find(nbr) != d_nbrs.end() </dd></dl>
 
 </div>
 </div><p>
@@ -1497,9 +1516,12 @@ Erases neighbors from the neighborhood of the base <a class="el" href="classSAMR
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td>An iterator pointing to the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>nbrs</em>&nbsp;</td><td>The neighbors of base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to be erased. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbrs</em>&nbsp;</td><td>The neighbors of base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to be erased.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> <p>
+for each box in nbrs, d_nbrs.find(box) != d_nbrs.end() </dd></dl>
 
 </div>
 </div><p>
@@ -1579,9 +1601,11 @@ Erases the neighbors of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html">Iterator</a> pointing to the base box whose neighbors are to be erased. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>base_box_itr</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html">Iterator</a> pointing to the base box whose neighbors are to be erased.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>base_box_itr.d_collection == this <p>
+base_box_itr != <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#097534d1061158917736061682c306b2">end()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -2050,15 +2074,15 @@ Populate object based on information contained in an integer communication buffe
 
 </div>
 </div><p>
-<a class="anchor" name="5127bc5bda99dc562acb8d2cfb869c58"></a><!-- doxytag: member="SAMRAI::hier::BoxNeighborhoodCollection::putUnregisteredToDatabase" ref="5127bc5bda99dc562acb8d2cfb869c58" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="2f991153a167860c2715cae78d51e747"></a><!-- doxytag: member="SAMRAI::hier::BoxNeighborhoodCollection::putToRestart" ref="2f991153a167860c2715cae78d51e747" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BoxNeighborhoodCollection::putUnregisteredToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BoxNeighborhoodCollection::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -2067,25 +2091,25 @@ Populate object based on information contained in an integer communication buffe
 <div class="memdoc">
 
 <p>
-Writes the neighborhood information to the supplied database. 
+Writes the neighborhood information to the supplied restart database. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="92921946add1b286683ff83b975e1cc8"></a><!-- doxytag: member="SAMRAI::hier::BoxNeighborhoodCollection::getFromDatabase" ref="92921946add1b286683ff83b975e1cc8" args="(tbox::Database &amp;database)" -->
+<a class="anchor" name="932b2c707198a73821d3f6f1a236f992"></a><!-- doxytag: member="SAMRAI::hier::BoxNeighborhoodCollection::getFromRestart" ref="932b2c707198a73821d3f6f1a236f992" args="(tbox::Database &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::BoxNeighborhoodCollection::getFromDatabase           </td>
+          <td class="memname">void SAMRAI::hier::BoxNeighborhoodCollection::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -2094,11 +2118,11 @@ Writes the neighborhood information to the supplied database.
 <div class="memdoc">
 
 <p>
-Constructs the neighborhoods from the supplied database. 
+Constructs the neighborhoods from the supplied restart database. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -2137,7 +2161,7 @@ Constructs the neighborhoods from the supplied database.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxNeighborhoodCollection_8h.html">BoxNeighborhoodCollection.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxNeighborhoodCollection_8C.html">BoxNeighborhoodCollection.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

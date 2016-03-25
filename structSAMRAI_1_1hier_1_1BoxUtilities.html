@@ -80,14 +80,14 @@ A cut point for a coordinate direction is an integer that specifies the index va
 <p>
 The following provides an explanation some of the arguments common to many of the functions in this class.<p>
 <ul>
-<li><b>min_size</b> min_size is a <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that specifies the minimum allowable box length in each dimension. For example, if min_size = (10,4,15), then the minimum box length in the x, y, and z dimensions are 10, 4, and 15 respectively.</li></ul>
+<li><b>min_size</b> min_size is a <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that specifies the minimum allowable box length in each direction. For example, if min_size = (10,4,15), then the minimum box length in the x, y, and z directions are 10, 4, and 15 respectively.</li></ul>
 <p>
 <ul>
-<li><b>max_size</b> max_size is a <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that specifies the maximum allowable box length in each dimension. For example, if max_size = (10,40,50), then the maximum box length in the x, y, and z dimensions are 10, 40, and 50 respectively.</li></ul>
+<li><b>max_size</b> max_size is a <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that specifies the maximum allowable box length in each direction. For example, if max_size = (10,40,50), then the maximum box length in the x, y, and z directions are 10, 40, and 50 respectively.</li></ul>
 <p>
 It should be noted that the max_size constraint has lower priority than the other constraints. In instances where all constraints cannot be simultaneously satisfied, the max_size constraint is sacrificed.<p>
 <ul>
-<li><b>cut_factor</b> cut_factor is a <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that constrains the dimensions of a box to be multiples of the components of the cut_factor. For instance, if cut_factor = (2,4,5), then the x, y, and z dimensions of a 8 box that satisfies the cut_factor constraint would be multiples of 2, 4, and 5 respectively.</li></ul>
+<li><b>cut_factor</b> cut_factor is a <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that constrains the size of a box to be multiples of the components of the cut_factor. For instance, if cut_factor = (2,4,5), then the x, y, and z directions of a 8 box that satisfies the cut_factor constraint would be multiples of 2, 4, and 5 respectively.</li></ul>
 <p>
 This constraint is usually enforced with the cut_factor equal to a multiple of the refinement ratio between levels to ensure that if the box is coarsened, the resulting box is aligned with the coarse grid (it is assumed that the boundary of the fine box is aligned with a coarse cell boundary).<p>
 <ul>
@@ -163,12 +163,10 @@ If there is no constraint on the box location within the box list domain, pass i
 <ul>
 <li><b>physical_boxes</b> (input) box array representing the index space of box list domain</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>all components of min_size and bad_interval must be nonnegative</li></ul>
-<p>
-<ul>
-<li>all components of cut_factor must be positive </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(min_size.getDim() == cut_factor.getDim()) &amp;&amp; (min_size.getDim() == bad_interval.getDim()) <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -250,7 +248,15 @@ Notes:<p>
 <li>Any box with side length not equal to a multiple of the cut factor for that direction, will not be chopped along that direction.</li></ul>
 <p>
 <ul>
-<li>The maximum size restriction may be sacrificed if the box cannot be chopped at appropriate points. However, this is generally the case only when the box is adjacent to the box list domain boundary and an irregular boundary configuration restricts the cut locations or if the maximum size is not a multiple of the cut factor. </li></ul>
+<li>The maximum size restriction may be sacrificed if the box cannot be chopped at appropriate points. However, this is generally the case only when the box is adjacent to the box list domain boundary and an irregular boundary configuration restricts the cut locations or if the maximum size is not a multiple of the cut factor.</li></ul>
+<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(max_size.getDim() == min_size.getDim()) &amp;&amp; (max_size.getDim() == cut_factor.getDim()) &amp;&amp; (max_size.getDim() == bad_interval.getDim()) <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) <p>
+max_size &gt;= min_size <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) <p>
+!physical_boxes.isEmpty() <p>
+!boxes.isOrdered() </dd></dl>
 
 </div>
 </div><p>
@@ -299,14 +305,13 @@ Arguments:<p>
 <p>
 Assertion checks:<p>
 <ul>
-<li>The cut point array must have size equal to the number of spatial dimensions for the box.</li></ul>
-<p>
-<ul>
 <li>The cut points for each direction must be on the list in increasing order.</li></ul>
 <p>
 Notes:<p>
 <ul>
-<li>The "boxes" <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> is cleared before any box operations are performed. Thus, any boxes on the list when the function is called will be lost. </li></ul>
+<li>The "boxes" <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> is cleared before any box operations are performed. Thus, any boxes on the list when the function is called will be lost.</li></ul>
+<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>cut_points.getSize() == box.getDim().getValue() </dd></dl>
 
 </div>
 </div><p>
@@ -342,7 +347,7 @@ Notes:<p>
 <div class="memdoc">
 
 <p>
-Extend the box in the list to domain boundary as needed so that the domain boundary does not intersect the ghost cell region around the box in an inappropriate manner. Intersections that are disallowed are those in which a portion of the domain boundary is parallel to a box face and lies strictly in the interior of the ghost cell mapped_box_level adjacent to that face. In other words, we eliminate ghost cell regions residing outside of a given domain and which are narrower than the specified ghost width. The boolean return value is true if the input box was extended to the boundary and thus is changed by the routine. Otherwise, the return value is false.<p>
+Extend the box in the list to domain boundary as needed so that the domain boundary does not intersect the ghost cell region around the box in an inappropriate manner. Intersections that are disallowed are those in which a portion of the domain boundary is parallel to a box face and lies strictly in the interior of the ghost cell box_level adjacent to that face. In other words, we eliminate ghost cell regions residing outside of a given domain and which are narrower than the specified ghost width. The boolean return value is true if the input box was extended to the boundary and thus is changed by the routine. Otherwise, the return value is false.<p>
 See description of bad_interval in the class header comments for more details.<p>
 Arguments:<p>
 <ul>
@@ -354,13 +359,6 @@ Arguments:<p>
 <ul>
 <li><b>ext_ghosts</b> (input) <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> that specifies the size of the desired ghost cell region</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>domain must not be an empty boxlist.</li></ul>
-<p>
-<ul>
-<li>All components of ext_ghosts must be nonnegative.</li></ul>
-<p>
 Notes:<p>
 <ul>
 <li>The ext_ghosts argument often corresponds to the bad_interval argument in many of the other functions in class.</li></ul>
@@ -369,7 +367,10 @@ Notes:<p>
 <li>This operation may produce overlap regions among boxes on the list.</li></ul>
 <p>
 <ul>
-<li>There exist some bizarre domain configurations for which it is impossible to grow a box to the boundary and eliminate bad ghost region intersections. This routine will extend each box as far as it can, but will not remedy these degenerate situations in general. </li></ul>
+<li>There exist some bizarre domain configurations for which it is impossible to grow a box to the boundary and eliminate bad ghost region intersections. This routine will extend each box as far as it can, but will not remedy these degenerate situations in general.</li></ul>
+<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!domain.isEmpty() <p>
+ext_ghosts &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(ext_ghosts.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -405,7 +406,10 @@ Notes:<p>
 <div class="memdoc">
 
 <p>
-Same function as <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#b167369ff453a5d125d54ca9d2a4fe02">extendBoxToDomainBoundary()</a> above except that it extends each box in a list of boxes to the domain boundary specified by the box list argument as needed. The boolean return value is true if any box in the input box list was extended to the boundary and thus is changed by the routine. Otherwise, the return value is false. 
+Same function as <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#b167369ff453a5d125d54ca9d2a4fe02">extendBoxToDomainBoundary()</a> above except that it extends each box in a list of boxes to the domain boundary specified by the box list argument as needed. The boolean return value is true if any box in the input box list was extended to the boundary and thus is changed by the routine. Otherwise, the return value is false.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!domain.isEmpty() <p>
+ext_ghosts &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(ext_ghosts.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e4f7d512e71d582b67a9412790a55be1"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::growBoxesWithinDomain" ref="e4f7d512e71d582b67a9412790a55be1" args="(BoxContainer &amp;boxes, const BoxContainer &amp;domain, const IntVector &amp;min_size)" -->
@@ -451,10 +455,6 @@ Arguments:<p>
 <ul>
 <li><b>min_size</b> (input) minimum allowed box size. See class header for further description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>The minimum box size argument must have all nonnegative entries.</li></ul>
-<p>
 Notes:<p>
 <ul>
 <li>Each box that is grown must remain within the union of the boxes of the given domain.</li></ul>
@@ -469,7 +469,9 @@ Notes:<p>
 <li>There exist some bizarre domain configurations for which it is impossible to grow a box sufficiently within the domain.</li></ul>
 <p>
 For instance if the domain is given by [(0,0),(2,10)], [(0,3),(1,4)], [(0,5),(10,10)] and the box is given by [(4,1),(6,2)] with a minimum size of (4,4), there is no way the box can be grown to the minimum size without have to "cross" the gap in the box list domain.<p>
-This routine will grow each box as far as it can, but will not remedy these situations, generally. 
+This routine will grow each box as far as it can, but will not remedy these situations, generally.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="92ad807482ac35ef806cd543a75fa174"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::growBoxWithinDomain" ref="92ad807482ac35ef806cd543a75fa174" args="(Box &amp;box, const BoxContainer &amp;local_domain_complement, const IntVector &amp;min_size)" -->
@@ -504,6 +506,8 @@ This routine will grow each box as far as it can, but will not remedy these situ
 <div class="memdoc">
 
 <p>
+Similar to growBoxesWithinDomain but works on one box at a time and the domain is specified by the complement of local parts of the domain.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(min_size.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -572,15 +576,10 @@ Arguments:<p>
 <ul>
 <li><b>cut_factor(input)</b> See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>all components of min_size must be nonnegative</li></ul>
-<p>
-<ul>
-<li>all components of max_size and cut_factor must be positive</li></ul>
-<p>
-<ul>
-<li>for each i between 0 and (dim-1), the i-th component of min_size must be less than or equal to the i-th component of max_size </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(max_size.getDim() == min_size.getDim()) &amp;&amp; (max_size.getDim() == cut_factor.getDim()) <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(max_size.getDim()) <p>
+min_size &lt;= max_size <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(max_size.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -658,15 +657,10 @@ Arguments:<p>
 <ul>
 <li><b>cut_factor</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>min_size must be nonnegative</li></ul>
-<p>
-<ul>
-<li>max_size and cut_factor must be positive</li></ul>
-<p>
-<ul>
-<li>min_size must be less than or equal to max_size </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>!box.empty() <p>
+min_size &gt; 0 <p>
+max_size &gt;= min_size <p>
+cut_factor &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -736,12 +730,11 @@ Arguments:<p>
 <li><b>cut_factor</b> (input) See class header for description.</li></ul>
 <p>
 Important note: By convention, each integer cut point that is computed corresponds to the cell index to the right of cut point.<p>
-Assertion checks:<p>
-<ul>
-<li>all components of min_size must be nonnegative</li></ul>
-<p>
-<ul>
-<li>all components of cut_factor and number_boxes must be positive </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(number_boxes.getDim() == min_size.getDim()) &amp;&amp; (number_boxes.getDim() == cut_factor.getDim()) <p>
+!box.empty() <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(number_boxes.getDim()) <p>
+number_boxes &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(number_boxes.getDim()) <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(number_boxes.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -819,12 +812,9 @@ Arguments:<p>
 <ul>
 <li><b>cut_factor</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>min_size must be nonnegative</li></ul>
-<p>
-<ul>
-<li>cut_factor and num_boxes must be positive </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>min_size &gt; 0 <p>
+num_boxes &gt; 0 <p>
+cut_factor &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -884,9 +874,8 @@ Arguments:<p>
 <ul>
 <li><b>bad_interval</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>all components of bad_interval must be nonnegative </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(bad_cut_information.getDim() == box.getDim()) &amp;&amp; (bad_cut_information.getDim() == bad_interval.getDim()) <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -946,9 +935,9 @@ Arguments:<p>
 <ul>
 <li><b>bad_interval</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>all components of bad_interval must be nonnegative. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == bad_interval.getDim() <p>
+!box.empty() <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1005,12 +994,9 @@ Arguments:<p>
 <ul>
 <li><b>bad_interval</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>all components of bad_interval must be nonnegative</li></ul>
-<p>
-<ul>
-<li>bad_cuts must have size equal to dim </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>!box.empty() <p>
+bad_cuts.getSize() == box.getDim().getValue() <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1075,9 +1061,9 @@ Arguments:<p>
 <ul>
 <li><b>bad_interval</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>all components of bad_interval must be nonnegative </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == bad_interval.getDim() <p>
+!box.empty() <p>
+bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1144,19 +1130,15 @@ Arguments:<p>
 <p>
 Assertion checks:<p>
 <ul>
-<li>All components of min_size must be nonnegative.</li></ul>
+<li>The cut points for each direction must be strictly increasing and all satisfy the cut_factor restriction.</li></ul>
 <p>
-<ul>
-<li>All components of cut_factor must be positive.</li></ul>
-<p>
-<ul>
-<li>cuts and bad_cuts must have size equal to dim</li></ul>
-<p>
-<ul>
-<li>Each array of integers in bad_cuts must have length equal to the number of cells for the box in that dimension.</li></ul>
-<p>
-<ul>
-<li>The cut points for each direction must be strictly increasing and all satisfy the cut_factor restriction. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>(box.getDim() == min_size.getDim()) &amp;&amp; (box.getDim() == cut_factor.getDim()) <p>
+cuts.getSize() == box.getDim().getValue() <p>
+bad_cuts.getSize() == box.getDim().getValue() <p>
+!box.empty() <p>
+min_size &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(box.getDim()) <p>
+cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">IntVector::getZero</a>(box.getDim()) <p>
+for the ith array in bad_cuts, array.getSize() == box.numberCells(i) </dd></dl>
 
 </div>
 </div><p>
@@ -1230,18 +1212,10 @@ Arguments:<p>
 <ul>
 <li><b>cut_factor</b> (input) See class header for description.</li></ul>
 <p>
-Assertion checks:<p>
-<ul>
-<li>min_size must be nonnegative.</li></ul>
-<p>
-<ul>
-<li>cut_factor must be positive.</li></ul>
-<p>
-<ul>
-<li>bad_cut_points must have size equal to the number of cells in the box along the specified coordinate direction.</li></ul>
-<p>
-<ul>
-<li>The cut points must be strictly increasing and all satisfy the cut_factor constraint. </li></ul>
+<dl compact><dt><b>Precondition:</b></dt><dd>bad_cuts.getSize() == box.numberCells(dir) <p>
+!box.empty() <p>
+min_size &gt; 0 <p>
+cut_factor &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -1289,7 +1263,12 @@ Assertion checks:<p>
 <div class="memdoc">
 
 <p>
-This static private member function is called by <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#38b85860bc7e0f0568178082f8de6a69">findBadCutPoints()</a>, and the <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#9ab86664ba277fda3ba47a2fc1f09672">findBadCutPointsForDirection()</a> member functions. It sets bad cut points near the lower and upper ends of the border box in the given coordinate direction. 
+This static private member function is called by <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#38b85860bc7e0f0568178082f8de6a69">findBadCutPoints()</a>, and the <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#9ab86664ba277fda3ba47a2fc1f09672">findBadCutPointsForDirection()</a> member functions. It sets bad cut points near the lower and upper ends of the border box in the given coordinate direction.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == border.getDim() <p>
+(0 &lt;= id) &amp;&amp; (id &lt; box.getDim().getValue()) <p>
+bad_cuts.getSize() == box.numberCells(id) <p>
+bad_interval &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="aae13268acca044c3e64176a924d3933"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers" ref="aae13268acca044c3e64176a924d3933" args="(tbox::Array&lt; BoxContainer &gt; &amp;box_list_array, const BoxContainer &amp;boxes)" -->
@@ -1330,7 +1309,7 @@ Arguments:<p>
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxUtilities_8h.html">BoxUtilities.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxUtilities_8C.html">BoxUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

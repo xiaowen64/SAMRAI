@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1OutersideVariable.html">OutersideVariable</a></div>
-<h1>SAMRAI::pdat::OutersideVariable&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::OutersideVariable" --><!-- doxytag: inherits="SAMRAI::hier::Variable" -->Class OutersideVariable&lt;DIM&gt; is a templated variable class used to define side-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.).  
+<h1>SAMRAI::pdat::OutersideVariable&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::OutersideVariable" --><!-- doxytag: inherits="SAMRAI::hier::Variable" -->Class OutersideVariable&lt;TYPE&gt; is a templated variable class used to define side-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.).  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/pdat/OutersideVariable.h&gt;</code>
@@ -54,10 +54,10 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::pdat::OutersideVariable&lt; TYPE &gt;</h3>
 
-Class OutersideVariable&lt;DIM&gt; is a templated variable class used to define side-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.). 
+Class OutersideVariable&lt;TYPE&gt; is a templated variable class used to define side-centered data quantities only on patch boundaries. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.). 
 <p>
-Note that the data layout in the outerside data arrays matches the corresponding array sections provided by the side data implementation. See header file for the OutersideData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
-IMPORTANT: The class OuterfaceVariable&lt;DIM&gt; and associated "outerface data" classes define the same storage as this outerside variable class, except that the individual array indices are permuted in the outerface data type.<p>
+Note that the data layout in the outerside data arrays matches the corresponding array sections provided by the side data implementation. See header file for the OutersideData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
+IMPORTANT: The class OuterfaceVariable&lt;TYPE&gt; and associated "outerface data" classes define the same storage as this outerside variable class, except that the individual array indices are permuted in the outerface data type.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideData.html">pdat::OutersideData</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html">pdat::OutersideDataFactory</a> <p>
@@ -203,7 +203,7 @@ Return the the depth (number of components).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OutersideVariable_8h.html">OutersideVariable.h</a><li>source/SAMRAI/pdat/<a class="el" href="OutersideVariable_8C.html">OutersideVariable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -44,9 +44,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7cf40e8cd471b1cea58261a175ac1a32">registerPlotQuantity</a> (const std::string &amp;variable_name, const std::string &amp;variable_type, const int patch_data_index, const int start_depth_index=0, const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;UNKNOWN&quot;)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers a variable with the VisIt data writer.  <a href="#7cf40e8cd471b1cea58261a175ac1a32"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7aea592f160b032f35a8042ecffb247c">registerDerivedPlotQuantity</a> (const std::string &amp;variable_name, const std::string &amp;variable_type, <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> *derived_writer=(<a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> *) NULL, const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;, const std::string &amp;variable_mix_type=&quot;CLEAN&quot;)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#f9d13a3ba2a0dda7e9cc6f5046571a1b">registerDerivedPlotQuantity</a> (const std::string &amp;variable_name, const std::string &amp;variable_type, <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> *derived_writer=0, const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;, const std::string &amp;variable_mix_type=&quot;CLEAN&quot;)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers a derived variable with the VisIt data writer.  <a href="#7aea592f160b032f35a8042ecffb247c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers a derived variable with the VisIt data writer.  <a href="#f9d13a3ba2a0dda7e9cc6f5046571a1b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#272af94d7a46aa1f1f218dbce87f4f67">resetLevelPlotQuantity</a> (const std::string &amp;variable_name, const int level_number, const int patch_data_index, const int start_depth_index=0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method resets the patch_data_index, and/or the depth_index, at a specific level, of a previously registered plot variable.  <a href="#272af94d7a46aa1f1f218dbce87f4f67"></a><br></td></tr>
@@ -91,13 +91,13 @@ A brief summary of the basic steps typically involved in using the VDW are:<p>
 <li>Create a VisIt data writer object, specifying a name for the object and the name of the directory to contain the visit dump files. An optional argument number_procs_per_file, applicable to parallel runs, sets the number of processors that share a common dump file. This can reduce parallel I/O contention. The default value of this arg is 1. If the value specified is greater than the number of processors, then all processors share a single dump file.</li></ul>
 <p>
 <ul>
-<li>Register hierarchy variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7cf40e8cd471b1cea58261a175ac1a32">registerPlotQuantity()</a>. The variables registered may be scalar, vector, or tensor (depth 1, DIM, and DIM*DIM, respectively) which is specified in the argument list. All variables require a string identifier and an index into the patch data array on the AMR hierarchy. Optionally, a start depth index may be supplied to plot a single component of a multi-component field (i.e. a scalar quantity within a vector, or a vector within a tensor). A scale factor may also optionally be specified. Lastly, for user-defined data that is not cell or node type, the proper centering (cell or node) for the data may be supplied.</li></ul>
+<li>Register hierarchy variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7cf40e8cd471b1cea58261a175ac1a32">registerPlotQuantity()</a>. The variables registered may be scalar, vector, or tensor (depth 1, dim, and dim*dim, respectively) which is specified in the argument list. All variables require a string identifier and an index into the patch data array on the AMR hierarchy. Optionally, a start depth index may be supplied to plot a single component of a multi-component field (i.e. a scalar quantity within a vector, or a vector within a tensor). A scale factor may also optionally be specified. Lastly, for user-defined data that is not cell or node type, the proper centering (cell or node) for the data may be supplied.</li></ul>
 <p>
 <ul>
-<li>If using derived data, set a default user-defined derived data writer using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#45da5f564956048f569b91f00e2cbc8c">setDefaultDerivedDataWriter()</a>. A derived data writer may also optionally be specified in the call to <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7aea592f160b032f35a8042ecffb247c">registerDerivedPlotQuantity()</a>; if so, this derived data writer will be used for the variable being registered. If no derived writer is specified in the registration call, the default derived data writer will be used.</li></ul>
+<li>If using derived data, set a default user-defined derived data writer using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#45da5f564956048f569b91f00e2cbc8c">setDefaultDerivedDataWriter()</a>. A derived data writer may also optionally be specified in the call to <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#f9d13a3ba2a0dda7e9cc6f5046571a1b">registerDerivedPlotQuantity()</a>; if so, this derived data writer will be used for the variable being registered. If no derived writer is specified in the registration call, the default derived data writer will be used.</li></ul>
 <p>
 <ul>
-<li>Register derived variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7aea592f160b032f35a8042ecffb247c">registerDerivedPlotQuantity()</a>. All derived variables require a string identifier. Optionally, a <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> object, a scale factor, and centering and may be specified. By default By default, the data is assumed to be cell-centered.</li></ul>
+<li>Register derived variable data fields using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#f9d13a3ba2a0dda7e9cc6f5046571a1b">registerDerivedPlotQuantity()</a>. All derived variables require a string identifier. Optionally, a <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> object, a scale factor, and centering and may be specified. By default By default, the data is assumed to be cell-centered.</li></ul>
 <p>
 <ul>
 <li>The <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#272af94d7a46aa1f1f218dbce87f4f67">resetLevelPlotQuantity()</a> method is provided for cases when a variable lives at different patch data indices on different levels. Invoking this method redefines the patch data array index for a given variable on a given level that will be written to a visit dump file. Before this method is called, the variable must be registered using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7cf40e8cd471b1cea58261a175ac1a32">registerPlotQuantity()</a> method.</li></ul>
@@ -168,7 +168,7 @@ The constructor initializes the VisIt data writer to a default state.
 The object_name argument is used primarily for error reporting. The dump_directory_name argument is the name of the directory which will contain the visit dump files. The directory name may include a path. If the dump directory or any intermediate directories in the path do not exist, they will be created. The optional number_procs_per_file argument is applicable to parallel runs and specifies the number of processors that share a common dump file; the default value is 1. If the specified number_procs_per_file is greater than the number of processors, then all processors share a single vis dump file. Reducing the number of files written may reduce parallel I/O contention and thus improve I/O efficiency. The optional argument is_multiblock defaults to false. It must be set to true for problems on multiblock domains, and left false in all other cases.<p>
 Before the data writer object can be used for dumping VisIt data, the variables and material-related data (if any) must be registered.<p>
 An error results and the program will halt if:<ul>
-<li>the data is not 2D nor 3D, i.e. DIM != 2 and DIM != 3</li><li>when assertion checking is active, the object name string is empty, or the number_procs_per_file is &lt;= 0.</li></ul>
+<li>the data is not 2D nor 3D, i.e. dim != 2 and dim != 3</li><li>when assertion checking is active, the object name string is empty, or the number_procs_per_file is &lt;= 0.</li></ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -176,9 +176,12 @@ An error results and the program will halt if:<ul>
     <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>String name for data writer object </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>dump_directory_name</em>&nbsp;</td><td>String name for dump directory, which may include a path. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>number_procs_per_file</em>&nbsp;</td><td>Optional integer number processors (&gt;= 1) to share a common dump file; default is 1. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>is_multiblock</em>&nbsp;</td><td>Optional argument should be set to true only only for problems on a multiblock domain. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>is_multiblock</em>&nbsp;</td><td>Optional argument should be set to true only only for problems on a multiblock domain.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+number_procs_per_file &gt; 0 <p>
+(dim.getValue() == 2) || (dim.getValue() == 3) </dd></dl>
 
 </div>
 </div><p>
@@ -223,15 +226,16 @@ The destructor for the writer does nothing interesting.
 <p>
 This method sets the default data writer to use for derived data. 
 <p>
-If a non-null derived data writer is supplied by the member function <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7aea592f160b032f35a8042ecffb247c">registerDerivedPlotQuantity()</a> it will be used in place of the one given here.<p>
+If a non-null derived data writer is supplied by the member function <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#f9d13a3ba2a0dda7e9cc6f5046571a1b">registerDerivedPlotQuantity()</a> it will be used in place of the one given here.<p>
 An error results and the program will halt if:<ul>
 <li>assertion checking is active and the default_derived_writer pointer is null.</li></ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>default_derived_writer</em>&nbsp;</td><td>Pointer to a <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> object. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>default_derived_writer</em>&nbsp;</td><td>Pointer to a <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> object.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>default_derived_writer != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -259,9 +263,10 @@ An error results and the program will halt if:<ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>materials_data_writer</em>&nbsp;</td><td>Pointer to a <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a> object. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>materials_data_writer</em>&nbsp;</td><td>Pointer to a <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a> object.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>materials_data_writer != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -317,7 +322,7 @@ An error results and the program will halt if:<ul>
 <p>
 This method registers a variable with the VisIt data writer. 
 <p>
-Each plot quantity requires a variable name, which is what VisIt will label the plotted quantity. The variable type is a string specifying either "SCALAR", "VECTOR", or "TENSOR". By default, the dimension of a scalar variable is 1, vector is DIM, and tensor is DIM*DIM. The integer patch data array index and optional depth index indicate where the data may be found on patches in the hierarchy.<p>
+Each plot quantity requires a variable name, which is what VisIt will label the plotted quantity. The variable type is a string specifying either "SCALAR", "VECTOR", or "TENSOR". By default, the dimension of a scalar variable is 1, vector is dim, and tensor is dim*dim. The integer patch data array index and optional depth index indicate where the data may be found on patches in the hierarchy.<p>
 A number of optional parameters may be used to further specify characteristics of the plotted variable. The start depth index allows subsets of variables with depth greater than than the supplied type (scalar, vector, tensor) to be specified. For example, a single depth index of a variable with depth greater than one may be registered as a scalar. A scale factor may be specified such that each data value is multiplied by this factor before being written to the file. Finally, Finally, the variable centering may be specified for data that is not standard CELL or NODE centered types. By default, the writer will set the centering according to the type of data in the supplied patch data index. It will revert to the supplied type only if it is unable to determine the type from the index.<p>
 Data does not need to exist on all patches or all levels.<p>
 An error results and the program will halt if:<ul>
@@ -330,13 +335,17 @@ An error results and the program will halt if:<ul>
     <tr><td valign="top"></td><td valign="top"><em>patch_data_index</em>&nbsp;</td><td>patch data descriptor id </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>start_depth_index</em>&nbsp;</td><td>(optional) zero by default; may specify starting index if patch_data_id has depth greater than the supplied variable_type </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>scale_factor</em>&nbsp;</td><td>(optional) scale factor for data </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>variable_centering</em>&nbsp;</td><td>(optional) "CELL" or "NODE" - used only when data being registered is not standard cell or node type. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>variable_centering</em>&nbsp;</td><td>(optional) "CELL" or "NODE" - used only when data being registered is not standard cell or node type.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!variable_name.empty() <p>
+!variable_type.empty() <p>
+patch_data_index &gt;= -1 <p>
+start_depth_index &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="7aea592f160b032f35a8042ecffb247c"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerDerivedPlotQuantity" ref="7aea592f160b032f35a8042ecffb247c" args="(const std::string &amp;variable_name, const std::string &amp;variable_type, VisDerivedDataStrategy *derived_writer=(VisDerivedDataStrategy *) NULL, const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;, const std::string &amp;variable_mix_type=&quot;CLEAN&quot;)" -->
+<a class="anchor" name="f9d13a3ba2a0dda7e9cc6f5046571a1b"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerDerivedPlotQuantity" ref="f9d13a3ba2a0dda7e9cc6f5046571a1b" args="(const std::string &amp;variable_name, const std::string &amp;variable_type, VisDerivedDataStrategy *derived_writer=0, const double scale_factor=1.0, const std::string &amp;variable_centering=&quot;CELL&quot;, const std::string &amp;variable_mix_type=&quot;CLEAN&quot;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -356,7 +365,7 @@ An error results and the program will halt if:<ul>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>derived_writer</em> = <code>(<a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a>&nbsp;*)&nbsp;NULL</code>, </td>
+          <td class="paramname"> <em>derived_writer</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -388,7 +397,7 @@ An error results and the program will halt if:<ul>
 <p>
 This method registers a derived variable with the VisIt data writer. 
 <p>
-Each derived variable requires a variable name, which is what VisIt will label the plotted quantity. The variable type is a string specifying either "SCALAR", "VECTOR", or "TENSOR". By default, the dimension of a scalar variable is 1, vector is DIM, and tensor is DIM*DIM. The derived writer should implement methods defined in the derived data strategy which compute the derived data.<p>
+Each derived variable requires a variable name, which is what VisIt will label the plotted quantity. The variable type is a string specifying either "SCALAR", "VECTOR", or "TENSOR". By default, the dimension of a scalar variable is 1, vector is dim, and tensor is dim*dim. The derived writer should implement methods defined in the derived data strategy which compute the derived data.<p>
 Optional parameters may be used to further define characteristics of the derived variable. A scale factor may be specified such that each data value is multiplied by this factor before being written to the file. The variable centering should specify the variable as "CELL" or "NODE" type (if unspecified, "CELL" is used by default).<p>
 An error results and the program will halt if:<ul>
 <li>a variable was previously registered with the same name.</li><li>the variable type is not "SCALAR", "VECTOR", or "TENSOR"</li><li>the derived_writer is NULL and there is no default derived writer.</li><li>the supplied variable centering is not "CELL" or "NODE".</li></ul>
@@ -400,9 +409,12 @@ An error results and the program will halt if:<ul>
     <tr><td valign="top"></td><td valign="top"><em>derived_writer</em>&nbsp;</td><td>(optional) derived data strategy object to use to calculate this derived data - will use default derived data object if not supplied </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>scale_factor</em>&nbsp;</td><td>(optional) scale factor with which to multiply all data values </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>variable_centering</em>&nbsp;</td><td>(optional) centering of derived data - "CELL" or "NODE" </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>variable_mix_type</em>&nbsp;</td><td>(optional) indicate whether or not the mixed material state will be stored, "MIXED", or the default of using cell averages "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must be provided. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>variable_mix_type</em>&nbsp;</td><td>(optional) indicate whether or not the mixed material state will be stored, "MIXED", or the default of using cell averages "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must be provided.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!variable_name.empty() <p>
+!variable_type.empty() <p>
+(variable_name != "Coords") || ((variable_type == "VECTOR") &amp;&amp; (variable_centering == "NODE")) </dd></dl>
 
 </div>
 </div><p>
@@ -455,9 +467,13 @@ An error results and the program will halt if:<ul>
     <tr><td valign="top"></td><td valign="top"><em>variable_name</em>&nbsp;</td><td>name of variable. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>level number on which data index is being reset. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch_data_index</em>&nbsp;</td><td>new patch data array index. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>start_depth_index</em>&nbsp;</td><td>(optional) argument indicating the new depth index. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>start_depth_index</em>&nbsp;</td><td>(optional) argument indicating the new depth index.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!variable_name.empty() <p>
+level_number &gt;= 0 <p>
+patch_data_index &gt;= -1 <p>
+start_depth_index &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -489,17 +505,19 @@ An error results and the program will halt if:<ul>
 <p>
 This method is used to register node coordinates for deformed structured AMR grids (moving grids). 
 <p>
-The patch data index must correspond to an DIM dimensional vector that defines the coordinate location ([X,Y] in 2D, [X,Y,Z] in 3D). The data defining the node locations must be node centered.<p>
+The patch data index must correspond to an dim-dimensional vector that defines the coordinate location ([X,Y] in 2D, [X,Y,Z] in 3D). The data defining the node locations must be node centered.<p>
 An error results and the program will halt if:<ul>
-<li>the patch data array index is invalid.</li><li>the depth of the patch data index is less than DIM.</li></ul>
+<li>the patch data array index is invalid.</li><li>the depth of the patch data index is less than dim.</li></ul>
 <p>
-If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7aea592f160b032f35a8042ecffb247c">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
+If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#f9d13a3ba2a0dda7e9cc6f5046571a1b">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>patch_data_index</em>&nbsp;</td><td>patch data index of the coordinate data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>start_depth_index</em>&nbsp;</td><td>(optional) start index for case where coordinate data is a subcomponent of a larger patch data vector </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>start_depth_index</em>&nbsp;</td><td>(optional) start index for case where coordinate data is a subcomponent of a larger patch data vector</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>patch_data_index &gt;= -1 <p>
+start_depth_index &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -544,15 +562,18 @@ If the nodal coordinates are not in a NodeData object on the hierarchy, you can 
 Same as above method, but allows registration of single coordinate for deformed structured AMR grids (moving grids). 
 <p>
 The coordinate number should be 0, 1, or 2 for X, Y, and Z directions, respectively. The patch data index must either be a scalar, or a vector with an appropriate depth index. A scale factor may be used to scale grid data.<p>
-If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#7aea592f160b032f35a8042ecffb247c">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
+If the nodal coordinates are not in a NodeData object on the hierarchy, you can use <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#f9d13a3ba2a0dda7e9cc6f5046571a1b">registerDerivedPlotQuantity()</a> with the variable name of "Coords", the type of "VECTOR" and the variable_centering of "NODE".<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>coordinate_number</em>&nbsp;</td><td>must be 0 or 1 for 2D, or 0,1,2 for 3D. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch_data_index</em>&nbsp;</td><td>patch data index of the coordinate data. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth_index</em>&nbsp;</td><td>(optional) index for case where coordinate data is a subcomponent of a larger patch data vector </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>scale_factor</em>&nbsp;</td><td>scale factor with which to multiply coordinate data values </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>scale_factor</em>&nbsp;</td><td>scale factor with which to multiply coordinate data values</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(coordinate_number &gt;= 0) &amp;&amp; (coordinate_number &lt; d_dim.getValue()) <p>
+patch_data_index &gt;= -1 <p>
+depth_index &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -584,9 +605,12 @@ An error results and the program will halt if:<ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>material_names.getSize() &gt; 0 <p>
+for each member of material_names, mn, !mn.empty() <p>
+d_materials_names.getSize() == 0 </dd></dl>
 
 </div>
 </div><p>
@@ -617,9 +641,12 @@ An error results and the program will halt if:<ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>material_names.getSize() &gt; 0 <p>
+for each member of material_names, mn, !mn.empty() <p>
+d_materials_names.getSize() == 0 </dd></dl>
 
 </div>
 </div><p>
@@ -660,9 +687,12 @@ An error results and the program will halt if:<ul>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>material_name</em>&nbsp;</td><td>String name of the material whose species names are being registered. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>species_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the species for material_name. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>species_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the species for material_name.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!material_name.empty() <p>
+species_names.getSize() &gt; 0 <p>
+d_materials_names.getSize() &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -745,9 +775,12 @@ An error results and the program will halt if:<ul>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>A pointer to the patch hierarchy on which the data to be plotted is defined. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>time_step</em>&nbsp;</td><td>Non-negative integer value specifying the current time step number. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>simulation_time</em>&nbsp;</td><td>Optional argument specifying the double precision simulation time. Default is 0.0. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>simulation_time</em>&nbsp;</td><td>Optional argument specifying the double precision simulation time. Default is 0.0.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+time_step_number &gt;= 0 <p>
+!d_top_level_directory_name.empty() </dd></dl>
 
 </div>
 </div><p>
@@ -770,7 +803,9 @@ An error results and the program will halt if:<ul>
 <p>
 Set the name of the summary file. 
 <p>
-This sets the summary file written at each step of the simulation which describes the data contained in the visit files written by each MPI process. The supplied string is appended with ".samrai" so the actual name of the file will be "&lt;filename&gt;.samrai". If no alternative name is supplied, by default the summary file used is "summary.samrai". 
+This sets the summary file written at each step of the simulation which describes the data contained in the visit files written by each MPI process. The supplied string is appended with ".samrai" so the actual name of the file will be "&lt;filename&gt;.samrai". If no alternative name is supplied, by default the summary file used is "summary.samrai".<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>!filename.empty() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="a130a311649aaa8d6ead3fcf12ffc986"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::getObjectName" ref="a130a311649aaa8d6ead3fcf12ffc986" args="() const " -->
@@ -797,7 +832,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8h.html">VisItDataWriter.h</a><li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8C.html">VisItDataWriter.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

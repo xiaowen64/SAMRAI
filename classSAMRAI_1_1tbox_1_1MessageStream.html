@@ -39,9 +39,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enumeration to identify if a buffer is being used to read or write data.  <a href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#00c9a54724ada990cba51f223e082ac4">MessageStream</a> (const size_t bytes, const <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751">StreamMode</a> mode, const void *data_to_read=NULL, bool deep_copy=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#88fc45aa8735a2b3837f919d25c580b1">MessageStream</a> (const size_t num_bytes, const <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751">StreamMode</a> mode, const void *data_to_read=0, bool deep_copy=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a message stream of the specified size and mode.  <a href="#00c9a54724ada990cba51f223e082ac4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a message stream of the specified size and mode.  <a href="#88fc45aa8735a2b3837f919d25c580b1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#381b049c2de6250b32f7e9f8e29eafaf">MessageStream</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor creates a message stream with a buffer that automatically grows as needed, for writing.  <a href="#381b049c2de6250b32f7e9f8e29eafaf"></a><br></td></tr>
@@ -56,6 +56,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#10eb5638cea3f7b26d6b05fa154bbe59">growBufferAsNeeded</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell a Write-mode stream to allocate more buffer as needed for data.  <a href="#10eb5638cea3f7b26d6b05fa154bbe59"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#62ea93de01c08c57c0e28a2ae296757a">hasBufferAccess</a> () const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#d5d9cb87c61b7a6fc1c7f7f97649a4bb">endOfData</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether a Read-mode <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> has reached the end of its data.  <a href="#d5d9cb87c61b7a6fc1c7f7f97649a4bb"></a><br></td></tr>
@@ -78,6 +80,21 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a50f641c86cfeace2cb74c010abb2df5">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print out internal object data.  <a href="#a50f641c86cfeace2cb74c010abb2df5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#aadd9de9910b8855a3d532ffb0c9f534">readMode</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if stream is in read mode.  <a href="#aadd9de9910b8855a3d532ffb0c9f534"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2ff9e7a73eba9e481c5968c22e76c17a">writeMode</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if stream is in write mode.  <a href="#2ff9e7a73eba9e481c5968c22e76c17a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#b4fc5b6d1f144168168d4ad660bcc60f">growAsNeeded</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the buffer is grown as needed in Write mode.  <a href="#b4fc5b6d1f144168168d4ad660bcc60f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#d28a6f139cbaca8eb72bd93ceb96eab5">canCopyIn</a> (size_t num_bytes) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if num_bytes can be copied into the stream.  <a href="#d28a6f139cbaca8eb72bd93ceb96eab5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#6632a8e19f95d57f8792d6607c3a68e8">canCopyOut</a> (size_t num_bytes) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if num_bytes can be copied out of the stream.  <a href="#6632a8e19f95d57f8792d6607c3a68e8"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename DATA_TYPE&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">static unsigned int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#64c64a72187bde7d9b47efcc83a2ca9d">getSizeof</a> (unsigned int num_items=1)</td></tr>
@@ -119,7 +136,7 @@ Enumeration to identify if a buffer is being used to read or write data.
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="00c9a54724ada990cba51f223e082ac4"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::MessageStream" ref="00c9a54724ada990cba51f223e082ac4" args="(const size_t bytes, const StreamMode mode, const void *data_to_read=NULL, bool deep_copy=true)" -->
+<a class="anchor" name="88fc45aa8735a2b3837f919d25c580b1"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::MessageStream" ref="88fc45aa8735a2b3837f919d25c580b1" args="(const size_t num_bytes, const StreamMode mode, const void *data_to_read=0, bool deep_copy=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -127,7 +144,7 @@ Enumeration to identify if a buffer is being used to read or write data.
           <td class="memname">SAMRAI::tbox::MessageStream::MessageStream           </td>
           <td>(</td>
           <td class="paramtype">const size_t&nbsp;</td>
-          <td class="paramname"> <em>bytes</em>, </td>
+          <td class="paramname"> <em>num_bytes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -139,7 +156,7 @@ Enumeration to identify if a buffer is being used to read or write data.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const void *&nbsp;</td>
-          <td class="paramname"> <em>data_to_read</em> = <code>NULL</code>, </td>
+          <td class="paramname"> <em>data_to_read</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -161,12 +178,14 @@ Create a message stream of the specified size and mode.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bytes</em>&nbsp;</td><td>Number of bytes in the stream.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>num_bytes</em>&nbsp;</td><td>Number of bytes in the stream.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mode</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751f1f3e32a1fa7a443067acbf49c22468f">MessageStream::Read</a> or <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c275167827dfaaf11d4fe8b9fd0a78b314920">MessageStream::Write</a>.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_to_read</em>&nbsp;</td><td>Data for unpacking, should be num_bytes bytes long. This is used when mode == <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751f1f3e32a1fa7a443067acbf49c22468f">MessageStream::Read</a>, ignored in write mode.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>deep_copy</em>&nbsp;</td><td>Whether to make deep copy of data_to_read. The default is to make a deep copy, which is safer but slower than a shallow (pointer) copy. This is used when mode == <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751f1f3e32a1fa7a443067acbf49c22468f">MessageStream::Read</a>, ignored in write mode. In shallow copy mode, you cannot call <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#10eb5638cea3f7b26d6b05fa154bbe59">growBufferAsNeeded()</a>. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>deep_copy</em>&nbsp;</td><td>Whether to make deep copy of data_to_read. The default is to make a deep copy, which is safer but slower than a shallow (pointer) copy. This is used when mode == <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2e6d8e0836ad5f288417acd9ca9c2751f1f3e32a1fa7a443067acbf49c22468f">MessageStream::Read</a>, ignored in write mode. In shallow copy mode, you cannot call <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#10eb5638cea3f7b26d6b05fa154bbe59">growBufferAsNeeded()</a>.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>num_bytes &gt;= 0 <p>
+mode != Read || data_to_read != 0 </dd></dl>
 
 </div>
 </div><p>
@@ -261,6 +280,7 @@ TODO: Implementation should be moved out of header? If we do this, Then we need 
 <p>
 Return a pointer to the start of the message buffer. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#62ea93de01c08c57c0e28a2ae296757a">hasBufferAccess()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -303,7 +323,28 @@ Return the current size of the buffer in bytes.
 <p>
 Tell a Write-mode stream to allocate more buffer as needed for data. 
 <p>
-It is an error to use this method for a Read-mode stream. 
+It is an error to use this method for a Read-mode stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2ff9e7a73eba9e481c5968c22e76c17a">writeMode()</a> </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="62ea93de01c08c57c0e28a2ae296757a"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::hasBufferAccess" ref="62ea93de01c08c57c0e28a2ae296757a" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::MessageStream::hasBufferAccess           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="d5d9cb87c61b7a6fc1c7f7f97649a4bb"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::endOfData" ref="d5d9cb87c61b7a6fc1c7f7f97649a4bb" args="() const " -->
@@ -324,6 +365,7 @@ It is an error to use this method for a Read-mode stream.
 <p>
 Whether a Read-mode <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> has reached the end of its data. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#aadd9de9910b8855a3d532ffb0c9f534">readMode()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -350,9 +392,10 @@ Pack a single data item into message stream.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td>Single item of type DATA_TYPE to be copied into the stream. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td>Single item of type DATA_TYPE to be copied into the stream.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2ff9e7a73eba9e481c5968c22e76c17a">writeMode()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -389,9 +432,10 @@ Pack an array of data items into message stream.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td>Pointer to an array of data of type DATA_TYPE to be copied into the stream. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>size</em>&nbsp;</td><td>Number of items to pack. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>size</em>&nbsp;</td><td>Number of items to pack.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#2ff9e7a73eba9e481c5968c22e76c17a">writeMode()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -418,9 +462,10 @@ Unpack a single data item from message stream.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td>Single item of type DATA_TYPE that will be copied from the stream. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td>Single item of type DATA_TYPE that will be copied from the stream.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#aadd9de9910b8855a3d532ffb0c9f534">readMode()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -457,9 +502,10 @@ Unpack an array of data items from message stream.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td>Pointer to an array of data of type DATA_TYPE that will receive data copied from the stream. </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>size</em>&nbsp;</td><td>Number of items that will be copied. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>size</em>&nbsp;</td><td>Number of items that will be copied.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#aadd9de9910b8855a3d532ffb0c9f534">readMode()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -490,9 +536,116 @@ Print out internal object data.
 
 </div>
 </div><p>
+<a class="anchor" name="aadd9de9910b8855a3d532ffb0c9f534"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::readMode" ref="aadd9de9910b8855a3d532ffb0c9f534" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::MessageStream::readMode           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if stream is in read mode. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="2ff9e7a73eba9e481c5968c22e76c17a"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::writeMode" ref="2ff9e7a73eba9e481c5968c22e76c17a" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::MessageStream::writeMode           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if stream is in write mode. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="b4fc5b6d1f144168168d4ad660bcc60f"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::growAsNeeded" ref="b4fc5b6d1f144168168d4ad660bcc60f" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::MessageStream::growAsNeeded           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if the buffer is grown as needed in Write mode. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="d28a6f139cbaca8eb72bd93ceb96eab5"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::canCopyIn" ref="d28a6f139cbaca8eb72bd93ceb96eab5" args="(size_t num_bytes) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::MessageStream::canCopyIn           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>num_bytes</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if num_bytes can be copied into the stream. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6632a8e19f95d57f8792d6607c3a68e8"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::canCopyOut" ref="6632a8e19f95d57f8792d6607c3a68e8" args="(size_t num_bytes) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::tbox::MessageStream::canCopyOut           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>num_bytes</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if num_bytes can be copied out of the stream. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="MessageStream_8h.html">MessageStream.h</a><li>source/SAMRAI/tbox/<a class="el" href="MessageStream_8C.html">MessageStream.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

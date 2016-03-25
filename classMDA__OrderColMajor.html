@@ -37,9 +37,9 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type for the index.  <a href="#ba2c04307ae89dd63e7b088933c089c2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a>&lt; MDA_DIM &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#1e1549ae1f5ebf6440efa65800a225f4">range_t</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">range_t::dim_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#e86b14298917b275041b75237a026d3c">dim_t</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">range_t::dir_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#c27709c2cc4fdd27ad24f19a08e7c76a">dir_t</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type for the dimension counter.  <a href="#e86b14298917b275041b75237a026d3c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type for the dimension counter.  <a href="#c27709c2cc4fdd27ad24f19a08e7c76a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a>&lt;<br>
  MDA_Reduced_DIM &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#c9acaa6430e973ed2dea0fab9e980a33">reduced_order_t</a></td></tr>
 
@@ -61,10 +61,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor for specifying index range object.  <a href="#4acba69f58d4f708be91d90b5bf51248"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#f0b91b9ef4c62f1d80fce60d4fd3df55">totalSize</a> (unsigned short d) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the total size of subarray starting with dimension d.  <a href="#f0b91b9ef4c62f1d80fce60d4fd3df55"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the total size of subarray starting with direction d.  <a href="#f0b91b9ef4c62f1d80fce60d4fd3df55"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#bbc60a0c64a76c6a0a0b15c500d3260b">reduce</a> (<a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> i, <a class="el" href="classMDA__OrderColMajor.html">reduced_order_t</a> &amp;new_order) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Computes the order object and offset for reducing the slowest dimension.  <a href="#bbc60a0c64a76c6a0a0b15c500d3260b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Computes the order object and offset for reducing the slowest direction.  <a href="#bbc60a0c64a76c6a0a0b15c500d3260b"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Access to index range (see MDA_IndexRange)</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__IndexRange.html">range_t</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#89950a017d910846964056452c846ea9">range</a> () const </td></tr>
 
@@ -75,9 +75,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#67b918bcf6d246ad0d38fa8368ce8930">setInclusiveRange</a> (const <a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> first[MDA_DIM], const <a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> final[MDA_DIM])</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classMDA__IndexRange.html#37d9b08e079d3ff429bb8896200edc6f">MDA_IndexRange::setInclusiveRange()</a>.  <a href="#67b918bcf6d246ad0d38fa8368ce8930"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#9ddc9f7d4e236e29fe511758faa3f118">adjustDim</a> (<a class="el" href="classMDA__OrderColMajor.html#e86b14298917b275041b75237a026d3c">dim_t</a> d, <a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> first, <a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> final)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#09cf129d960fb091011f34cefaf5f545">adjustDim</a> (<a class="el" href="classMDA__OrderColMajor.html#c27709c2cc4fdd27ad24f19a08e7c76a">dir_t</a> d, <a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> first, <a class="el" href="classMDA__OrderColMajor.html#ba2c04307ae89dd63e7b088933c089c2">index_t</a> final)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classMDA__IndexRange.html#f456f8155c49ebd3c0a0d09e75dba037">MDA_IndexRange::adjustDim()</a>.  <a href="#9ddc9f7d4e236e29fe511758faa3f118"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classMDA__IndexRange.html#acb72003c8fa21919640899f44c02527">MDA_IndexRange::adjustDim()</a>.  <a href="#09cf129d960fb091011f34cefaf5f545"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Logical comparisons</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__OrderColMajor.html#8f6e1b52f97d8d122b73f419807b6e59">operator==</a> (const <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a> &amp;r) const </td></tr>
 
@@ -162,14 +162,14 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="e86b14298917b275041b75237a026d3c"></a><!-- doxytag: member="MDA_OrderColMajor::dim_t" ref="e86b14298917b275041b75237a026d3c" args="" -->
+<a class="anchor" name="c27709c2cc4fdd27ad24f19a08e7c76a"></a><!-- doxytag: member="MDA_OrderColMajor::dir_t" ref="c27709c2cc4fdd27ad24f19a08e7c76a" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;unsigned short MDA_DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">range_t::dim_t</a> <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a>&lt; MDA_DIM &gt;::<a class="el" href="classMDA__OrderColMajor.html#e86b14298917b275041b75237a026d3c">dim_t</a>          </td>
+          <td class="memname">typedef <a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">range_t::dir_t</a> <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a>&lt; MDA_DIM &gt;::<a class="el" href="classMDA__OrderColMajor.html#c27709c2cc4fdd27ad24f19a08e7c76a">dir_t</a>          </td>
         </tr>
       </table>
 </div>
@@ -178,9 +178,9 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <p>
 Type for the dimension counter. 
 <p>
-Type dim_t could be "unsigned short" instead of "short", but using short causes the GNU compiler to issue unneeded warnings about certain comparisons always being false (when instantiating with MDA_DIM of 1). 
+Type dir_t could be "unsigned short" instead of "short", but using short causes the GNU compiler to issue unneeded warnings about certain comparisons always being false (when instantiating with MDA_DIM of 1). 
 <p>
-Reimplemented from <a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">MDA_IndexRange&lt; MDA_DIM &gt;</a>.
+Reimplemented from <a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">MDA_IndexRange&lt; MDA_DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="c9acaa6430e973ed2dea0fab9e980a33"></a><!-- doxytag: member="MDA_OrderColMajor::reduced_order_t" ref="c9acaa6430e973ed2dea0fab9e980a33" args="" -->
@@ -459,7 +459,7 @@ Similar to <a class="el" href="classMDA__IndexRange.html#37d9b08e079d3ff429bb889
 Reimplemented from <a class="el" href="classMDA__IndexRange.html#37d9b08e079d3ff429bb8896200edc6f">MDA_IndexRange&lt; MDA_DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="9ddc9f7d4e236e29fe511758faa3f118"></a><!-- doxytag: member="MDA_OrderColMajor::adjustDim" ref="9ddc9f7d4e236e29fe511758faa3f118" args="(dim_t d, index_t first, index_t final)" -->
+<a class="anchor" name="09cf129d960fb091011f34cefaf5f545"></a><!-- doxytag: member="MDA_OrderColMajor::adjustDim" ref="09cf129d960fb091011f34cefaf5f545" args="(dir_t d, index_t first, index_t final)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -468,7 +468,7 @@ template&lt;unsigned short MDA_DIM&gt; </div>
         <tr>
           <td class="memname">const <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a>&amp; <a class="el" href="classMDA__OrderColMajor.html">MDA_OrderColMajor</a>&lt; MDA_DIM &gt;::adjustDim           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classMDA__OrderColMajor.html#e86b14298917b275041b75237a026d3c">dim_t</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classMDA__OrderColMajor.html#c27709c2cc4fdd27ad24f19a08e7c76a">dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>d</em>, </td>
         </tr>
         <tr>
@@ -493,7 +493,7 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classMDA__IndexRange.html#f456f8155c49ebd3c0a0d09e75dba037">MDA_IndexRange::adjustDim()</a>. 
+Similar to <a class="el" href="classMDA__IndexRange.html#acb72003c8fa21919640899f44c02527">MDA_IndexRange::adjustDim()</a>. 
 <p>
 
 </div>
@@ -743,7 +743,7 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the total size of subarray starting with dimension d. 
+Return the total size of subarray starting with direction d. 
 <p>
 
 </div>
@@ -776,7 +776,7 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Computes the order object and offset for reducing the slowest dimension. 
+Computes the order object and offset for reducing the slowest direction. 
 <p>
 A reduced array is the subarray resulting from fixing the slowest (last) index. The reduced array has one fewer dimension, a different ordering object and its data starts at a different point in memory. The change in starting point is the returned offset value, and the new order object is returned in the referenced argument.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>Pointer offset (always positive) to the reduced array pointer. </dd></dl>
@@ -785,7 +785,7 @@ A reduced array is the subarray resulting from fixing the slowest (last) index. 
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="MDA__Access_8h.html">MDA_Access.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -42,10 +42,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for base class.  <a href="#4bcbf4ca52bdb020c6e93b7791c65857"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#ba5c49a0d55f56f362cc9ddca43cc4f5">setRefineItems</a> (const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">xfer::RefineClasses::Data</a> **refine_items, int num_refine_items)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the array of xfer::RefineClass&lt;DIM&gt;::Data items used by the transactions.  <a href="#ba5c49a0d55f56f362cc9ddca43cc4f5"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the array of <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">xfer::RefineClasses::Data</a> items used by the transactions.  <a href="#ba5c49a0d55f56f362cc9ddca43cc4f5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#3cc69f14c9dbce86b892d40518645c1d">unsetRefineItems</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clear the array of xfer::RefineClass&lt;DIM&gt;::Data items used by the transactions.  <a href="#3cc69f14c9dbce86b892d40518645c1d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clear the array of <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">xfer::RefineClasses::Data</a> items used by the transactions.  <a href="#3cc69f14c9dbce86b892d40518645c1d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#97f4223849bcbc6552c89c78362c9281">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_node, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_node, int ritem_id, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, bool use_time_interpolation=false) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate an <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransaction.html">OuternodeSumTransaction</a> object.  <a href="#97f4223849bcbc6552c89c78362c9281"></a><br></td></tr>
@@ -133,7 +133,7 @@ Virtual destructor for base class.
 <div class="memdoc">
 
 <p>
-Set the array of xfer::RefineClass&lt;DIM&gt;::Data items used by the transactions. 
+Set the array of <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">xfer::RefineClasses::Data</a> items used by the transactions. 
 <p>
 
 <p>
@@ -156,7 +156,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.h
 <div class="memdoc">
 
 <p>
-Clear the array of xfer::RefineClass&lt;DIM&gt;::Data items used by the transactions. 
+Clear the array of <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">xfer::RefineClasses::Data</a> items used by the transactions. 
 <p>
 
 <p>
@@ -234,14 +234,21 @@ Allocate an <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransaction.h
     <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td>boost::shared_ptr to overlap region between patches. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>dst_node</em>&nbsp;</td><td>Destination Box in destination patch level. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>src_node</em>&nbsp;</td><td>Source Box in source patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ritem_id</em>&nbsp;</td><td>Integer index of xfer::RefineClass&lt;DIM&gt;::Data item associated with transaction. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ritem_id</em>&nbsp;</td><td>Integer index of <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">xfer::RefineClasses::Data</a> item associated with transaction. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Const reference to box defining region of refine transaction. Use following allocate method if not needed. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td>Optional boolean flag indicating whether the refine transaction involves time interpolation. Default is false. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td>Optional boolean flag indicating whether the refine transaction involves time interpolation. Default is false.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst_level <p>
+src_level <p>
+overlap <p>
+dst_node.getLocalId() &gt;= 0 <p>
+src_node.getLocalId() &gt;= 0 <p>
+ritem_id &gt;= 0 <p>
+(dst_level-&gt;getDim() == src_level-&gt;getDim()) &amp;&amp; (dst_level-&gt;getDim() == dst_node.getDim()) &amp;&amp; (dst_level-&gt;getDim() == src_node.getDim()) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#ca36a7626ddbfa6a181a185d68f253da">SAMRAI::xfer::RefineTransactionFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#9197271dc19f991ccb71f76a64fb6d49">SAMRAI::xfer::RefineTransactionFactory</a>.
 </div>
 </div><p>
 <a class="anchor" name="f6487144755081f832353805b88b0202"></a><!-- doxytag: member="SAMRAI::algs::OuternodeSumTransactionFactory::allocate" ref="f6487144755081f832353805b88b0202" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_node, const hier::Box &amp;src_node, int ritem_id) const " -->
@@ -296,9 +303,17 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.h
 <p>
 Allocate an <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransaction.html">OuternodeSumTransaction</a> object. 
 <p>
-Same as previous allocate routine but with default empty box and no timer interpolation. 
+Same as previous allocate routine but with default empty box and no timer interpolation.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst_level <p>
+src_level <p>
+overlap <p>
+dst_node.getLocalId() &gt;= 0 <p>
+src_node.getLocalId() &gt;= 0 <p>
+ritem_id &gt;= 0 <p>
+(dst_level-&gt;getDim() == src_level-&gt;getDim()) &amp;&amp; (dst_level-&gt;getDim() == dst_node.getDim()) &amp;&amp; (dst_level-&gt;getDim() == src_node.getDim()) </dd></dl>
+
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#7d2b283cbcb751e3217628c2c9687916">SAMRAI::xfer::RefineTransactionFactory</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#4d74246bd2eec18429f51e140c896ace">SAMRAI::xfer::RefineTransactionFactory</a>.
 </div>
 </div><p>
 <a class="anchor" name="5d4c2a14008216480f8285d6a74f7b85"></a><!-- doxytag: member="SAMRAI::algs::OuternodeSumTransactionFactory::preprocessScratchSpace" ref="5d4c2a14008216480f8285d6a74f7b85" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, double fill_time, const hier::ComponentSelector &amp;preprocess_vector) const " -->
@@ -339,9 +354,10 @@ Function to initialize scratch space data for the sum transactions (patch data c
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td>boost::shared_ptr to patch level holding scratch data. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Double value of simulation time at which preprocess operation is called. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>preprocess_vector</em>&nbsp;</td><td>Const reference to <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">hier::ComponentSelector</a> indicating patch data array indices of scratch patch data objects to preprocess. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>preprocess_vector</em>&nbsp;</td><td>Const reference to <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">hier::ComponentSelector</a> indicating patch data array indices of scratch patch data objects to preprocess.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>level </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#a48ba0fc529457fb0e75648837658088">SAMRAI::xfer::RefineTransactionFactory</a>.
@@ -349,7 +365,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.h
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="OuternodeSumTransactionFactory_8h.html">OuternodeSumTransactionFactory.h</a><li>source/SAMRAI/algs/<a class="el" href="OuternodeSumTransactionFactory_8C.html">OuternodeSumTransactionFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

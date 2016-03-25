@@ -186,9 +186,14 @@ This implementation of the virtual function <a class="el" href="classSAMRAI_1_1s
     <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td>variable to set the coefficients for. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td>patch requiring bc coefficients </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_box</em>&nbsp;</td><td>boundary box showing where on the boundary the coefficient data is needed. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>solution time corresponding to filling, for use when coefficients are time-dependent. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>solution time corresponding to filling, for use when coefficients are time-dependent.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_dim == variable-&gt;getDim()) &amp;&amp; (d_dim == patch.getDim()) &amp;&amp; (d_dim == bdry_box.getDim()) <p>
+!acoef_data || (d_dim == acoef_data-&gt;getDim()) <p>
+!bcoef_data || (d_dim == bcoef_data-&gt;getDim()) <p>
+!gcoef_data || (d_dim == gcoef_data-&gt;getDim()) <p>
+!gcoef_data || (d_ghost_data_id != -1) </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">SAMRAI::solv::RobinBcCoefStrategy</a>.
@@ -247,9 +252,10 @@ The index must correspond to cell-centered double data with the given ghost widt
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>ghost_data_id</em>&nbsp;</td><td>patch data index of ghost data </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>extensions_fillable</em>&nbsp;</td><td>the number of extensions past edge of a patch that has valid ghost cell values. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>extensions_fillable</em>&nbsp;</td><td>the number of extensions past edge of a patch that has valid ghost cell values.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_dim == extensions_fillable.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -277,7 +283,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="GhostCellRobinBcCoefs_8h.html">GhostCellRobinBcCoefs.h</a><li>source/SAMRAI/solv/<a class="el" href="GhostCellRobinBcCoefs_8C.html">GhostCellRobinBcCoefs.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

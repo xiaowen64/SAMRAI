@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1pdat.html">pdat</a>::<a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a></div>
-<h1>SAMRAI::pdat::FaceData&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::FaceData" --><!-- doxytag: inherits="SAMRAI::hier::PatchData" -->Class FaceData&lt;DIM&gt; provides an implementation for data defined at cell faces on AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, a face data object represents data of some template TYPE and depth on the faces of the cells in the box. Here, depth indicates the number of data values at each face index location. The <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and face-centered data.  
+<h1>SAMRAI::pdat::FaceData&lt; TYPE &gt; Class Template Reference</h1><!-- doxytag: class="SAMRAI::pdat::FaceData" --><!-- doxytag: inherits="SAMRAI::hier::PatchData" -->Class FaceData&lt;TYPE&gt; provides an implementation for data defined at cell faces on AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, a face data object represents data of some template TYPE and depth on the faces of the cells in the box. Here, depth indicates the number of data values at each face index location. The <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and face-centered data.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/pdat/FaceData.h&gt;</code>
@@ -118,9 +118,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#d29145dd16349a14d6cd47e057b60e11">printAxis</a> (int face_normal, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face centered data values for specified face normal direction residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#d29145dd16349a14d6cd47e057b60e11"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#40b97f1c45c6c48211292b30c27ff96d">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#c01b68f9cba1ef75bc25ff71bed6a899">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#def00725cd1a61181ba5c06eefbca717">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#f29c9b6a08d66c946b71255c383b3a69">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#f18cb849e1b3828491099d1d219608e7">getSizeOfData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
@@ -131,9 +131,9 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::pdat::FaceData&lt; TYPE &gt;</h3>
 
-Class FaceData&lt;DIM&gt; provides an implementation for data defined at cell faces on AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, a face data object represents data of some template TYPE and depth on the faces of the cells in the box. Here, depth indicates the number of data values at each face index location. The <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and face-centered data. 
+Class FaceData&lt;TYPE&gt; provides an implementation for data defined at cell faces on AMR patches. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> interface common to all <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> patch data types. Given a CELL-centered AMR index space box, a face data object represents data of some template TYPE and depth on the faces of the cells in the box. Here, depth indicates the number of data values at each face index location. The <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">FaceGeometry</a> class provides the translation between the standard <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> cell-centered AMR index space and face-centered data. 
 <p>
-Face data is stored in DIM arrays, each of which contains the data for the faces normal to a corresponding coordinate direction. In addition, the array indices are permuted so that the fastest array dimension is the same as the normal direction of the face. Memory allocation is in column-major ordering (e.g., Fortran style) so that the leftmost index runs fastest in memory. For example, a three-dimensional face data object created over a CELL-centered AMR index space [l0:u0,l1:u1,l2:u2] allocates three data arrays dimensioned as follows: <div class="fragment"><pre class="fragment"> *
+Face data is stored in DIM arrays, each of which contains the data for the faces normal to a corresponding coordinate direction. In addition, the array indices are permuted so that the fastest array direction is the same as the normal direction of the face. Memory allocation is in column-major ordering (e.g., Fortran style) so that the leftmost index runs fastest in memory. For example, a three-dimensional face data object created over a CELL-centered AMR index space [l0:u0,l1:u1,l2:u2] allocates three data arrays sized as follows: <div class="fragment"><pre class="fragment"> *
  * face normal 0
  *   [ l0 : u0+1 ,
  *     l1 : u1 ,
@@ -151,7 +151,7 @@ Face data is stored in DIM arrays, each of which contains the data for the faces
  *
  * </pre></div> Here the face normal directions 0, 1, 2 can be thought of as the x, y, and z face normal directions, respectively, and d is the depth index (i.e., number of values at each face index location). Other spatial dimensions are represented similarly.<p>
 The data type TYPE must define a default constructor (that takes no arguments) and also the assignment operator.<p>
-IMPORTANT: The SideData&lt;DIM&gt; class provides the same storage as this face data class, except that the coordinate directions of the individual arrays are not permuted.<p>
+IMPORTANT: The SideData&lt;TYPE&gt; class provides the same storage as this face data class, except that the coordinate directions of the individual arrays are not permuted.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html">pdat::FaceDataFactory</a> <p>
@@ -219,9 +219,12 @@ The constructor for a face data object.
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const Box reference describing the interior of the standard CELL-centered index box over which the face data object will be created. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>gives the number of components for each spatial location in the array. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>const IntVector reference indicating the width of the ghost cell region around the box over which the face data will be allocated. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>const IntVector reference indicating the width of the ghost cell region around the box over which the face data will be allocated.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+depth &gt; 0 <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -290,9 +293,11 @@ This function assumes that the amount of memory needed for TYPE is sizeof(TYPE).
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const Box reference describing the interior of the standard CELL-centered index box over which the face data object will be created. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>gives the number of components for each spatial location in the array. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>const IntVector reference indicating the width of the ghost cell region around the box over which the face data will be allocated. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>const IntVector reference indicating the width of the ghost cell region around the box over which the face data will be allocated.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+depth &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -349,6 +354,8 @@ template&lt;class TYPE&gt; </div>
 <p>
 Get a pointer to the beginning of a particular face normal and depth component of the face centered array. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -382,6 +389,8 @@ template&lt;class TYPE&gt; </div>
 <p>
 Get a const pointer to the beginning of a particular face normal and depth component of the face centered array. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -415,6 +424,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a reference to the data entry corresponding to a given face index and depth. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == i.getDim() <p>
+(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue())); <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -448,6 +460,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a const reference to the data entry corresponding to a given face index and depth. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == i.getDim() <p>
+(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue())); <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -472,6 +487,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a reference to the array data object for the given face normal of the face centered data object. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -496,6 +512,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a const reference to the array data object for the given face normal of the face centered data object. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -520,7 +537,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 A fast copy from source to destination (i.e., this) patch data object. 
 <p>
-Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE. If not, then an unrecoverable error results. 
+Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1eceef85e707249a51fd6e8719b8b888">SAMRAI::hier::PatchData</a>.
 </div>
@@ -546,7 +565,10 @@ template&lt;class TYPE&gt; </div>
 <p>
 A fast copy from source (i.e., this) to destination patch data object. 
 <p>
-Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, destination data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE. If not, then an unrecoverable error results. 
+Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, destination data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() <p>
+dynamic_cast&lt;FaceData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#09c4b4a8c05efa18ad83662db4ba5351">SAMRAI::hier::PatchData</a>.
 </div>
@@ -581,7 +603,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Copy data from source to destination (i.e., this) patch data object on the given overlap. 
 <p>
-Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. If not, then an unrecoverable error results. 
+Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#60dd0fcc44ae5ef062a4249dad8a4f47">SAMRAI::hier::PatchData</a>.
 </div>
@@ -616,7 +640,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Copy data from source (i.e., this) to destination patch data object on the given overlap. 
 <p>
-Currently, destination data must be <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. If not, then an unrecoverable error results. 
+Currently, destination data must be <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() <p>
+dynamic_cast&lt;FaceData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 <p>
+dynamic_cast&lt;const FaceOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#bd068fc4e5d159b2f927d59ea2ffda40">SAMRAI::hier::PatchData</a>.
 </div>
@@ -651,6 +679,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -690,6 +719,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fast copy (i.e., source and this face data objects are defined over the same box) to this destination face data object from the given source face data object at the specified depths. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -739,7 +769,9 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region. 
 <p>
-This routine is defined for the standard types (bool, char, double, float, int, and dcomplex). 
+This routine is defined for the standard types (bool, char, double, float, int, and dcomplex).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const FaceOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#c70a44451c3a87e5744328e09b33efa8">SAMRAI::hier::PatchData</a>.
 </div>
@@ -774,6 +806,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Pack data in this patch data object lying in the specified box overlap region into the stream. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const FaceOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5f351ded8a02c75ecf9eb124cec0b509">SAMRAI::hier::PatchData</a>.
@@ -809,6 +842,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Unpack data from stream into this patch data object over the specified box overlap region. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const FaceOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#64f047f667adb684706c6a546176f460">SAMRAI::hier::PatchData</a>.
@@ -844,6 +878,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all values at depth d with the value t. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -883,6 +918,8 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all values at depth d within the box with the value t. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -940,6 +977,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all depth components within the box with value t. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -983,9 +1021,10 @@ Print all face data values residing in the specified box. If the depth of the ar
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to face index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -1036,9 +1075,11 @@ Print all face data values at the given array depth in the specified box.
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to face index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -1089,9 +1130,11 @@ Print all face centered data values for specified face normal direction residing
     <tr><td valign="top"></td><td valign="top"><em>face_normal</em>&nbsp;</td><td>integer face normal coordinate direction, must satisfy 0 &lt;= face_normal &lt; DIM </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to face index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -1149,23 +1192,26 @@ Print all face centered data values for specified face normal direction residing
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>const reference to box over whioch to print data. Note box is assumed to reside in standard cell-centered index space and will be converted to face index space. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth</em>&nbsp;</td><td>integer depth component, must satisfy 0 &lt;= depth &lt; actual depth of data array </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>reference to output stream. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth()</a>) <p>
+(face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="40b97f1c45c6c48211292b30c27ff96d"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getSpecializedFromDatabase" ref="40b97f1c45c6c48211292b30c27ff96d" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="c01b68f9cba1ef75bc25ff71bed6a899"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getFromRestart" ref="c01b68f9cba1ef75bc25ff71bed6a899" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getSpecializedFromDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
         </tr>
@@ -1174,23 +1220,24 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Check that class version and restart file version are equal. If so, read data members from the database.<p>
-Assertions: database must be non-null pointer. 
+Check that class version and restart file version are equal. If so, read data members from the restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1cf0a7a7a58668744601638c036103a1">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5af241c296edc22d41af70f76aff5108">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="def00725cd1a61181ba5c06eefbca717"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::putSpecializedToDatabase" ref="def00725cd1a61181ba5c06eefbca717" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="f29c9b6a08d66c946b71255c383b3a69"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::putToRestart" ref="f29c9b6a08d66c946b71255c383b3a69" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::putSpecializedToDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -1199,15 +1246,16 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Write out the class version number and other data members to the database.<p>
-Assertions: database must be non-null pointer. 
+Write out the class version number and other data members to the restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e0de5996e1ec46a9c409ab9d87df58f2">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#d057afe4f494361226db6bbd932348cf">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="FaceData_8h.html">FaceData.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceData_8C.html">FaceData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

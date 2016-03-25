@@ -29,7 +29,7 @@
 <a href="classSAMRAI_1_1solv_1_1FACPreconditioner-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#2e9c467686dbdb2e6d7aeed69b73aebe">FACPreconditioner</a> (const std::string &amp;name, <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> &amp;user_ops, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#d76dfde564c112a70bc82fedb7668bb2">FACPreconditioner</a> (const std::string &amp;name, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> &gt; user_ops, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#bf1bf0cc1ece3ad7ceacda43fd48e4c4">~FACPreconditioner</a> ()</td></tr>
 
@@ -52,25 +52,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#66f2514781a4e19a2722bc454b9aecd3"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to set solving parameters.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#106b064c71994802f3a5cdc3ccc4afc7">setPresmoothingSweeps</a> (int num_pre_sweeps)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of pre-smoothing sweeps during FAC iteration process.  <a href="#106b064c71994802f3a5cdc3ccc4afc7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#56931d46e0b47521deeac16bd94d8f2c">setPostsmoothingSweeps</a> (int num_post_sweeps)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of post-smoothing sweeps during FAC iteration process.  <a href="#56931d46e0b47521deeac16bd94d8f2c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#fe186c64f642b4250e38cf525d7e4ffa">setMaxCycles</a> (int max_cycles)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the max number of iterations (cycles) to use per solve.  <a href="#fe186c64f642b4250e38cf525d7e4ffa"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#bc8ee965b915317f32f1c623441814e4">setResidualTolerance</a> (double residual_tol, double relative_residual_tol=-1.0)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the residual tolerance for stopping.  <a href="#bc8ee965b915317f32f1c623441814e4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#a08148017b68708b80720938132685f9">setAlgorithmChoice</a> (const std::string &amp;choice)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the choice of FAC cycling algorithm to use.  <a href="#a08148017b68708b80720938132685f9"></a><br></td></tr>
-<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#4c89ecf5208e7b610667034fcc52161d">enableLogging</a> (bool enabled=true)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enable or disable logging.  <a href="#4c89ecf5208e7b610667034fcc52161d"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to get data on last solve.</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#afebbb6567c56eaf44bbbbfccdcaa69d">getNumberOfIterations</a> () const </td></tr>
 
@@ -96,11 +80,43 @@ Implements the FAC iterative solution procedure for a linear system of equations
 <p>
 The solution is found by applying an FAC algorithm to the composite grid represented in the hierarchy. After each FAC cycle the norm of the residual will be computed over all levels involved. The FAC iteration will stop when either the maximum number of iterations is reached, or the residual norm on all levels is below the given tolerance.<p>
 The user must perform the following steps to use the FAC solver:<ol type=1>
-<li>Create a <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html">FACPreconditioner</a>, providing a valid concrete <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> object.</li><li>Set the stopping criteria using the setStoppingParameters() function.</li><li>Set the number of smooting sweeps using the setSmoothingSweeps() function. This is optional; if not used, the default is one sweep in each case.</li><li>Enable logging to record the FAC residual norms during the FAC itertion using the setFACLogFlag() function. This is optional; the default is to turn logging off. When loggin is turned on, the default mode is to send this information to the application log file (i.e., plog).</li><li>Invoke the FAC iteration process by calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#c3109814e040e2133204a26d31ec2f0b">solveSystem()</a>, providing the vectors u and f, defined on a patch hierarchy containing the desired range of levels.</li><li>After solving, get solver statistics by viewing the log information and calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#afebbb6567c56eaf44bbbbfccdcaa69d">getNumberOfIterations()</a>, <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#b23e8cbbe2df95cd59f0011baa5440b5">getResidualNorm()</a> functions if desired. </li></ol>
+<li>Create a <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html">FACPreconditioner</a>, providing a valid concrete <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> object.</li><li>Set the stopping criteria using the setStoppingParameters() function.</li><li>Set the number of smooting sweeps using the setSmoothingSweeps() function. This is optional; if not used, the default is one sweep in each case.</li><li>Enable logging to record the FAC residual norms during the FAC itertion using the setFACLogFlag() function. This is optional; the default is to turn logging off. When loggin is turned on, the default mode is to send this information to the application log file (i.e., plog).</li><li>Invoke the FAC iteration process by calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#c3109814e040e2133204a26d31ec2f0b">solveSystem()</a>, providing the vectors u and f, defined on a patch hierarchy containing the desired range of levels.</li><li>After solving, get solver statistics by viewing the log information and calling <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#afebbb6567c56eaf44bbbbfccdcaa69d">getNumberOfIterations()</a>, <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#b23e8cbbe2df95cd59f0011baa5440b5">getResidualNorm()</a> functions if desired.</li></ol>
+<p>
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>max_cycles</b> </li></ul>
+<p>
+<ul>
+<li><b>residual_tol</b> </li></ul>
+<p>
+<ul>
+<li><b>relative_residual_tol</b> </li></ul>
+<p>
+<ul>
+<li><b>num_pre_sweeps</b> </li></ul>
+<p>
+<ul>
+<li><b>num_post_sweeps</b> </li></ul>
+<p>
+<b> Details:</b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>max_cycles </td><td>int </td><td>10 </td><td>&gt;=1 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>residual_tol </td><td>double </td><td>1.0e-6 </td><td>&gt;0.0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>relative_residual_tol </td><td>double </td><td>-1.0 </td><td>-1.0 or &gt;0.0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>num_pre_sweeps </td><td>int </td><td>1 </td><td>&gt;=0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>num_post_sweeps </td><td>int </td><td>1 </td><td>&gt;=0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+</table>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="2e9c467686dbdb2e6d7aeed69b73aebe"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::FACPreconditioner" ref="2e9c467686dbdb2e6d7aeed69b73aebe" args="(const std::string &amp;name, FACOperatorStrategy &amp;user_ops, const boost::shared_ptr&lt; tbox::Database &gt; &amp;database=boost::shared_ptr&lt; tbox::Database &gt;())" -->
+<a class="anchor" name="d76dfde564c112a70bc82fedb7668bb2"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::FACPreconditioner" ref="d76dfde564c112a70bc82fedb7668bb2" args="(const std::string &amp;name, boost::shared_ptr&lt; FACOperatorStrategy &gt; user_ops, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -113,14 +129,14 @@ The user must perform the following steps to use the FAC solver:<ol type=1>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html">FACOperatorStrategy</a> &gt;&nbsp;</td>
           <td class="paramname"> <em>user_ops</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -137,7 +153,7 @@ Constructor.<p>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>Object name </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>user_ops</em>&nbsp;</td><td>Reference to user-specified FAC operator </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>database</em>&nbsp;</td><td>Input database with initialization parameters </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>input_db</em>&nbsp;</td><td>Input database with initialization parameters </td></tr>
   </table>
 </dl>
 
@@ -205,7 +221,8 @@ Upon return from this function, the solution vector will contain the result of t
 </dl>
 See <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#224f2e5736891837a0a6f173ef2d5100">initializeSolverState()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#bf34a53392b560ef4450278071c2e5ef">deallocateSolverState()</a> for opportunities to save overhead when using multiple consecutive solves.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>whether solver converged to specified level</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#224f2e5736891837a0a6f173ef2d5100">initializeSolverState</a> </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#224f2e5736891837a0a6f173ef2d5100">initializeSolverState</a></dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!d_patch_hierarchy || checkVectorStateCompatibility(solution, rhs) </dd></dl>
 
 </div>
 </div><p>
@@ -252,9 +269,12 @@ After setting data for the current object, this function calls the operator's co
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>solution</em>&nbsp;</td><td>solution vector u </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>rhs</em>&nbsp;</td><td>right hand side vector f </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>rhs</em>&nbsp;</td><td>right hand side vector f</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Postcondition:</b></dt><dd>d_patch_hierarchy == rhs.getPatchHierarchy() <p>
+d_coarsest_ln &gt;= 0 <p>
+d_coarsest_ln &lt;= d_finest_ln </dd></dl>
 
 </div>
 </div><p>
@@ -312,118 +332,9 @@ Check compatibility of vectors with existing solver state.
 <p>
 Check whether the solution and residual vectors given are compatible with the existing solver state (solver state must be initialized). Compatibility means that the vectors are sufficiently similar with the vectors with which the state are initialized. Compatibility implies that the vectors may be used in <a class="el" href="classSAMRAI_1_1solv_1_1FACPreconditioner.html#c3109814e040e2133204a26d31ec2f0b">solveSystem()</a>.<p>
 The checking is not perfect! Due to the possibility of user-defined patch data, data-dependent checks cannot be performed. It is possible that a false compatibility is returned.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>true if vectors are compatible with existing state </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>true if vectors are compatible with existing state</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_patch_hierarchy </dd></dl>
 
-</div>
-</div><p>
-<a class="anchor" name="106b064c71994802f3a5cdc3ccc4afc7"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::setPresmoothingSweeps" ref="106b064c71994802f3a5cdc3ccc4afc7" args="(int num_pre_sweeps)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::FACPreconditioner::setPresmoothingSweeps           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>num_pre_sweeps</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the number of pre-smoothing sweeps during FAC iteration process. 
-<p>
-Presmoothing is applied during the fine-to-coarse phase of the iteration. The default is to use one sweep.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>num_pre_sweeps</em>&nbsp;</td><td>Number of presmoothing sweeps </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="56931d46e0b47521deeac16bd94d8f2c"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::setPostsmoothingSweeps" ref="56931d46e0b47521deeac16bd94d8f2c" args="(int num_post_sweeps)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::FACPreconditioner::setPostsmoothingSweeps           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>num_post_sweeps</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the number of post-smoothing sweeps during FAC iteration process. 
-<p>
-Postsmoothing is applied during the coarse-to-fine phase of the iteration. The default is to use one sweep.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>num_post_sweeps</em>&nbsp;</td><td>Number of postsmoothing sweeps </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="fe186c64f642b4250e38cf525d7e4ffa"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::setMaxCycles" ref="fe186c64f642b4250e38cf525d7e4ffa" args="(int max_cycles)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::FACPreconditioner::setMaxCycles           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>max_cycles</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the max number of iterations (cycles) to use per solve. 
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="bc8ee965b915317f32f1c623441814e4"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::setResidualTolerance" ref="bc8ee965b915317f32f1c623441814e4" args="(double residual_tol, double relative_residual_tol=-1.0)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::FACPreconditioner::setResidualTolerance           </td>
-          <td>(</td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>residual_tol</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>relative_residual_tol</em> = <code>-1.0</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the residual tolerance for stopping. 
-<p>
-The solution is considered converged if ||b-Ax|| &lt;= residual_tol <b>or</b> ||b-Ax|| &lt;= relative_residual_tol*||b||.<p>
-If you want the prescribed maximum number of cycles to always be taken, set both residual tolerances to negative numbers. 
 </div>
 </div><p>
 <a class="anchor" name="a08148017b68708b80720938132685f9"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::setAlgorithmChoice" ref="a08148017b68708b80720938132685f9" args="(const std::string &amp;choice)" -->
@@ -446,34 +357,6 @@ If you want the prescribed maximum number of cycles to always be taken, set both
 Set the choice of FAC cycling algorithm to use. 
 <p>
 For developer experimentation use only. All others should use the default choice. 
-</div>
-</div><p>
-<a class="anchor" name="4c89ecf5208e7b610667034fcc52161d"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::enableLogging" ref="4c89ecf5208e7b610667034fcc52161d" args="(bool enabled=true)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::FACPreconditioner::enableLogging           </td>
-          <td>(</td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>enabled</em> = <code>true</code>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Enable or disable logging. 
-<p>
-Set streams to NULL to turn off output.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>enabled</em>&nbsp;</td><td>Logging state. true=on, false=off. </td></tr>
-  </table>
-</dl>
-
 </div>
 </div><p>
 <a class="anchor" name="afebbb6567c56eaf44bbbbfccdcaa69d"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::getNumberOfIterations" ref="afebbb6567c56eaf44bbbbfccdcaa69d" args="() const " -->
@@ -529,9 +412,10 @@ The convergence factor is the factor to which the residual has been reduced. The
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>avg_factor</em>&nbsp;</td><td>average convergence factor over FAC cycles from last solve. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>final_factor</em>&nbsp;</td><td>convergence factor of the last FAC cycle </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>final_factor</em>&nbsp;</td><td>convergence factor of the last FAC cycle</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_number_iterations &gt; 0 </dd></dl>
 
 </div>
 </div><p>
@@ -553,7 +437,9 @@ The convergence factor is the factor to which the residual has been reduced. The
 <p>
 Get the net convergance rate of the last (or current if there is one) FAC solve. 
 <p>
-The net factor is the factor to which the residual has been reduced by the FAC cycles. It is (current residual)/( initial residual + epsilon), so it may not be accurate if the initial residual is very small. 
+The net factor is the factor to which the residual has been reduced by the FAC cycles. It is (current residual)/( initial residual + epsilon), so it may not be accurate if the initial residual is very small.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_number_iterations &gt; 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="38798adf3e0362d69ec57a7f8c2ef908"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::getAvgConvergenceFactor" ref="38798adf3e0362d69ec57a7f8c2ef908" args="() const " -->
@@ -574,7 +460,9 @@ The net factor is the factor to which the residual has been reduced by the FAC c
 <p>
 Get the average convergance rates of the last (or current if there is one) FAC solve. 
 <p>
-The average factor is the net factor to the power of 1/(number of FAC cycles). It may not be accurate if the initial residual is very small. 
+The average factor is the net factor to the power of 1/(number of FAC cycles). It may not be accurate if the initial residual is very small.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_number_iterations &gt; 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ab425776ab17c5a75fa61b0f446dedea"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::getFinalConvergenceFactor" ref="ab425776ab17c5a75fa61b0f446dedea" args="() const " -->
@@ -595,7 +483,9 @@ The average factor is the net factor to the power of 1/(number of FAC cycles). I
 <p>
 Get the final convergance rate of the last (or current if there is one) FAC solve. 
 <p>
-The final factor is the factor to which the residual has been reduced by the last FAC cycle. 
+The final factor is the factor to which the residual has been reduced by the last FAC cycle.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_number_iterations &gt; 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b23e8cbbe2df95cd59f0011baa5440b5"></a><!-- doxytag: member="SAMRAI::solv::FACPreconditioner::getResidualNorm" ref="b23e8cbbe2df95cd59f0011baa5440b5" args="() const " -->
@@ -666,7 +556,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="FACPreconditioner_8h.html">FACPreconditioner.h</a><li>source/SAMRAI/solv/<a class="el" href="FACPreconditioner_8C.html">FACPreconditioner.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -32,7 +32,7 @@
 <a href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#7aaa0efb36bf22f68d8770e8a2e00bb1">SNES_SAMRAIContext</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1solv_1_1SNESAbstractFunctions.html">SNESAbstractFunctions</a> *my_functions)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#cb46c4a406356e296917f1775a51a1a3">SNES_SAMRAIContext</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1solv_1_1SNESAbstractFunctions.html">SNESAbstractFunctions</a> *my_functions, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#6d40644ee0c5b7bcf03cf76d7a5620ab">~SNES_SAMRAIContext</a> ()</td></tr>
 
@@ -148,7 +148,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#e690983ce2ea90bb509a9eae4c7c1871">reportCompletionCode</a> (std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#8257b4c39f7e929ca73b2650cf2c3c15">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#a5e33dd6c7dca8a5303fc49581fdff4c">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#26640bee5286431de45b69f8ba677652">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
@@ -158,80 +158,130 @@
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html">SNES_SAMRAIContext</a> provides an interface to the SNES nonlinear solver capabilities in PETSc to facilitate their use with <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>. While PETSc is implemented in an object-based manner, this class makes it easier to use PETSc's routines with <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> data structures. In particular, it hides from the user some of the messy details required to link the C++ class library with PETSc which is written in C and to override PETSc objects, like vectors, with those found in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>.<p>
 This class declares five private static member functions to link user-defined routines for nonlinear residual calculation, Jacobian evaluation, preconditioner setup and solve, and Jacobian-vector product operations. The implementation of these functions is defined by the user in a subclass of the abstract base class <a class="el" href="classSAMRAI_1_1solv_1_1SNESAbstractFunctions.html">SNESAbstractFunctions</a>. The vector objects used within the solver are provided by the <a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html">PETSc_SAMRAIVectorReal</a> wrapper class.<p>
+<b> Input Parameters </b><p>
 If no parameters are read from input, PETSc defaults are used. See the PETSc documentation (<a href="http://www-unix.mcs.anl.gov/petsc/">http://www-unix.mcs.anl.gov/petsc/</a>). for more information on default parameters and SNES functionality.<p>
-Optional input keys and types that can be read by this class are:<p>
-<ul>
-<li>absolute_tolerance double value for absolute nonlinear convergence tolerance</li></ul>
+<b> Definitions: </b><ul>
+<li><b>maximum_nonlinear_iterations</b> maximum number of nonlinear iterations</li></ul>
 <p>
 <ul>
-<li>relative_tolerance double value for relative nonlinear convergence tolerance</li></ul>
+<li><b>maximum_function_evals</b> maximum number of nonlinear function evaluations</li></ul>
 <p>
 <ul>
-<li>step_tolerance double value for minimum tolerance on change in solution norm between nonlinear iterates</li></ul>
+<li><b>uses_preconditioner</b> whether or not a preconditioner is used in the solution of the Newton equations.</li></ul>
 <p>
 <ul>
-<li>maximum_nonlinear_iterations integer value for maximum number of nonlinear iterations</li></ul>
+<li><b>uses_explicit_jacobian</b> whether or not the user provides code to explicitly calculate Jacobian-vector products.</li></ul>
 <p>
 <ul>
-<li>maximum_function_evals integer value for maximum number of nonlinear function evaluations</li></ul>
+<li><b>absolute_tolerance</b> absolute nonlinear convergence tolerance</li></ul>
 <p>
 <ul>
-<li>forcing_term_strategy integer value for forcing term choice for linear solvers within the inexact Newton method. Choices are "CONSTANT" (default), "EWCHOICE1", and "EWCHOICE2".</li></ul>
+<li><b>relative_tolerance</b> relative nonlinear convergence tolerance</li></ul>
 <p>
 <ul>
-<li>constant_forcing_term double value for constant relative convergence tolerance in Krylov solver (default case)</li></ul>
+<li><b>step_tolerance</b> minimum tolerance on change in solution norm between nonlinear iterations</li></ul>
 <p>
 <ul>
-<li>initial_forcing_term double value for initial relative convergence tolerance in Krylov solver (used in Eisenstat-Walker case). Value must satisfy <img class="formulaInl" alt="$0 \le \eta_0 < 1$" src="form_102.png">.</li></ul>
+<li><b>forcing_term_strategy</b> forcing term choice for linear solvers within the inexact Newton method.</li></ul>
 <p>
 <ul>
-<li>maximum_forcing_term double value for maximum relative convergence tolerance in Krylov solver (used in Eisenstat-Walker case). Value must satisfy <img class="formulaInl" alt="$0 \le \eta_{max} < 1$" src="form_103.png">.</li></ul>
+<li><b>constant_forcing_term</b> constant relative convergence tolerance in Krylov solver</li></ul>
 <p>
 <ul>
-<li>EW_choice2_alpha double value for power used in Eisenstat-Walker choice 2 relative convergence tolerance computation. Value must satisfy <img class="formulaInl" alt="$1 < \alpha \le 2$" src="form_104.png">.</li></ul>
+<li><b>initial_forcing_term</b> initial relative convergence tolerance in Krylov solver (used in Eisenstat-Walker case).</li></ul>
 <p>
 <ul>
-<li>EW_safeguard_exponent double value for power for safeguard used in Eisenstat-Walker choice 2</li></ul>
+<li><b>maximum_forcing_term</b> maximum relative convergence tolerance in Krylov solver (used in Eisenstat-Walker case).</li></ul>
 <p>
 <ul>
-<li>EW_choice2_gamma double value for multiplicative factor used in Eisenstat-Walker choice 2 relative convergence tolerance computation. Value must satisfy <img class="formulaInl" alt="$0 \le \gamma \le 1$" src="form_105.png">.</li></ul>
+<li><b>EW_choice2_alpha</b> power used in Eisenstat-Walker choice 2 relative convergence tolerance computation.</li></ul>
 <p>
 <ul>
-<li>EW_safeguard_disable_threshold double value for threshold for imposing safeguard in Eisenstat-Walker choice 2. Value must satisfy <img class="formulaInl" alt="$0 < \eta_{threshold} < 1$" src="form_106.png">.</li></ul>
+<li><b>EW_choice2_gamma</b> multiplicative factor used in Eisenstat-Walker choice 2 relative convergence tolerance computation.</li></ul>
 <p>
 <ul>
-<li>linear_solver_type std::string value for type of linear solver. See the <a href="http://www-unix.mcs.anl.gov/petsc/">PETSc documentation</a> for the valid types.</li></ul>
+<li><b>EW_safeguard_exponent</b> power for safeguard used in Eisenstat-Walker choice 2</li></ul>
 <p>
 <ul>
-<li>uses_preconditioner boolean value for whether or not a preconditioner is used in the solution of the Newton equations.</li></ul>
+<li><b>EW_safeguard_disable_threshold</b> threshold for imposing safeguard in Eisenstat-Walker choice 2.</li></ul>
 <p>
 <ul>
-<li>linear_solver_absolute_tolerance double value for absolute convergence tolerance in linear solver</li></ul>
+<li><b>linear_solver_type</b> value for type of linear solver.</li></ul>
 <p>
 <ul>
-<li>linear_solver_divergence_tolerance double value for amount linear solver residual can increase before solver concludes method is diverging</li></ul>
+<li><b>linear_solver_absolute_tolerance</b> absolute convergence tolerance in linear solver</li></ul>
 <p>
 <ul>
-<li>maximum_linear_iterations integer value for maximum number of linear solver iterations</li></ul>
+<li><b>linear_solver_divergence_tolerance</b> amount linear solver residual can increase before solver concludes method is diverging</li></ul>
 <p>
 <ul>
-<li>maximum_gmres_krylov_dimension integer value for maximum dimension of Krylov subspace before restarting. Valid only if GMRES is used as the linear solver.</li></ul>
+<li><b>maximum_linear_iterations</b> maximum number of linear solver iterations</li></ul>
 <p>
 <ul>
-<li>gmres_orthogonalization_algorithm std::string value for algorithm used to incrementally construct the orthonormal basis of the Krylov subspace used by GMRES. Valid only if GMRES is used as the linear solver. Valid values are:</li></ul>
-<p>
-modifiedgramschmidt gmres_cgs_refine_ifneeded gmres_cgs_refine_always<p>
-See the <a href="http://www-unix.mcs.anl.gov/petsc/">PETSc documentation</a> for more information.<p>
-<ul>
-<li>uses_explicit_jacobian boolean value for whether or not the user provides code to explicitly calculate Jacobian-vector products.</li></ul>
+<li><b>maximum_gmres_krylov_dimension</b> maximum dimension of Krylov subspace before restarting. Valid only if GMRES is used as the linear solver.</li></ul>
 <p>
 <ul>
-<li>differencing_parameter_strategy std::string value indicating strategy used for computing the differencing parameter when Jacobian-vector products are approximated via finite differences. See the <a href="http://www-unix.mcs.anl.gov/petsc/">PETSc documentation</a> for valid values.</li></ul>
+<li><b>gmres_orthogonalization_algorithm</b> algorithm used to incrementally construct the orthonormal basis of the Krylov subspace used by GMRES. Valid only if GMRES is used as the linear solver</li></ul>
 <p>
 <ul>
-<li>function_evaluation_error double value that is the square root of the estimated relative error in function evaluation.</li></ul>
+<li><b>differencing_parameter_strategy</b> strategy used for computing the differencing parameter when Jacobian-vector products are approximated via finite differences</li></ul>
 <p>
-Note that all input values may override values read in from restart. If no new input value is given, the restart value is used.<p>
+<ul>
+<li><b>function_evaluation_error</b> square root of the estimated relative error in function evaluation</li></ul>
+<p>
+All values read in from a restart database may be overriden by input database values. If no new input database value is given, the restart database value is used.<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>maximum_nonliner_iterations </td><td>int </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>maximum_function_evals </td><td>int </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>uses_preconditioner </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>uses_explicit_jacobian </td><td>bool </td><td>TRUE </td><td>TRUE, FALSE </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>absolute_tolerance </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>relative_tolerance </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>step_tolerance </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>forcing_term_strategy </td><td>string </td><td>"CONSTANT" </td><td>"CONSTANT", "EWCHOICE1", "EWCHOICE2" </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>constant_forcing_term </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>initial_forcing_term </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>maximum_forcing_term </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>EW_choice2_alpha </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>EW_choice2_gamma </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>EW_safeguard_exponent </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>EW_safeguard_disable_threshold </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>linear_solver_type </td><td>string </td><td>"" </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>linear_solver_absolute_tolerance </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>linear_solver_divergence_tolerance </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>maximum_linear_iterations </td><td>int </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>maximum_gmres_krylov_dimension </td><td>int </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>gmres_orthogonalization_algorithm </td><td>string </td><td>"" </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>differencing_parameter_strategy </td><td>string </td><td>MATMFFD_WP </td><td>MATMFFD_WP, MATFFD_DS </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+<tr>
+<td>function_evaluation_error </td><td>double </td><td>PETSC_DEFAULT </td><td>Refer to PETSc documentation </td><td>opt </td><td>Parameter read from restart db may be overridden by input db  </td></tr>
+</table>
+<p>
 A sample input file entry might look like:<p>
 <div class="fragment"><pre class="fragment">    absolute_tolerance             = 10.e-10
     relative_tolerance             = 10.e-6
@@ -245,7 +295,7 @@ Note that input values can also be set using accessor functions. Values that are
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="7aaa0efb36bf22f68d8770e8a2e00bb1"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::SNES_SAMRAIContext" ref="7aaa0efb36bf22f68d8770e8a2e00bb1" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, SNESAbstractFunctions *my_functions)" -->
+<a class="anchor" name="cb46c4a406356e296917f1775a51a1a3"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::SNES_SAMRAIContext" ref="cb46c4a406356e296917f1775a51a1a3" args="(const std::string &amp;object_name, SNESAbstractFunctions *my_functions, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -258,14 +308,14 @@ Note that input values can also be set using accessor functions. Values that are
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>input_db</em>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SNESAbstractFunctions.html">SNESAbstractFunctions</a> *&nbsp;</td>
+          <td class="paramname"> <em>my_functions</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SNESAbstractFunctions.html">SNESAbstractFunctions</a> *&nbsp;</td>
-          <td class="paramname"> <em>my_functions</em></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -278,7 +328,9 @@ Note that input values can also be set using accessor functions. Values that are
 
 <p>
 Constructor for <a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html">SNES_SAMRAIContext</a> allocates the SNES object and initializes rudimentary state associated with user-supplied solver components. Then, it reads solver parameter from input and restart which may override default values.<p>
-When assertion checking is active, an unrecoverable assertion will result if the name std::string is empty or the pointer to the user-defined SNES functions object is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() <p>
+my_functions != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="6d40644ee0c5b7bcf03cf76d7a5620ab"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::~SNES_SAMRAIContext" ref="6d40644ee0c5b7bcf03cf76d7a5620ab" args="()" -->
@@ -608,7 +660,9 @@ Get strategy for forcing term.
 <div class="memdoc">
 
 <p>
-Set strategy for forcing term. 
+Set strategy for forcing term.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(strategy == "CONSTANT") || (strategy == "EWCHOICE1") || (strategy == "EWCHOICE2") </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5c3248a30f797769cf8c0435026202fa"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::getConstantForcingTerm" ref="5c3248a30f797769cf8c0435026202fa" args="() const " -->
@@ -1291,7 +1345,9 @@ Set estimate of error in function evaluation.
 <div class="memdoc">
 
 <p>
-Initialize the state of the SNES solver based on vector argument representing the solution of the nonlinear system. In general, this routine must be called before the <a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#6270e3b96744c0b94a165063135fc8da">solve()</a> routine is invoked. 
+Initialize the state of the SNES solver based on vector argument representing the solution of the nonlinear system. In general, this routine must be called before the <a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#6270e3b96744c0b94a165063135fc8da">solve()</a> routine is invoked.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>solution </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1solv_1_1NonlinearSolverStrategy.html#12fd62b55a9a7db8b929c7754bf592d5">SAMRAI::solv::NonlinearSolverStrategy</a>.
 </div>
@@ -1404,15 +1460,15 @@ Obtain total number of linear iterations accumulated over all nonlinear iteratio
 Report reason for termination. 
 </div>
 </div><p>
-<a class="anchor" name="8257b4c39f7e929ca73b2650cf2c3c15"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::putToDatabase" ref="8257b4c39f7e929ca73b2650cf2c3c15" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
+<a class="anchor" name="a5e33dd6c7dca8a5303fc49581fdff4c"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::putToRestart" ref="a5e33dd6c7dca8a5303fc49581fdff4c" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::solv::SNES_SAMRAIContext::putToDatabase           </td>
+          <td class="memname">void SAMRAI::solv::SNES_SAMRAIContext::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>db</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -1422,7 +1478,8 @@ Report reason for termination.
 
 <p>
 Write solver parameters to restart database matching object name.<p>
-When assertion checking is active, an unrecoverable assertion will result if database pointer is null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="26640bee5286431de45b69f8ba677652"></a><!-- doxytag: member="SAMRAI::solv::SNES_SAMRAIContext::printClassData" ref="26640bee5286431de45b69f8ba677652" args="(std::ostream &amp;os) const " -->
@@ -1466,7 +1523,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="SNES__SAMRAIContext_8h.html">SNES_SAMRAIContext.h</a><li>source/SAMRAI/solv/<a class="el" href="SNES__SAMRAIContext_8C.html">SNES_SAMRAIContext.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

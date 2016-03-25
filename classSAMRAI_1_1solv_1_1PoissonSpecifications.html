@@ -246,7 +246,9 @@ Print out class data.
 <p>
 Set the patch data index for variable D. 
 <p>
-In addition, disregard any previous value specified by <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html#2f1b3a1e4c916694308cecbe963613bf">setDConstant()</a>. 
+In addition, disregard any previous value specified by <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html#2f1b3a1e4c916694308cecbe963613bf">setDConstant()</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>id &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2f1b3a1e4c916694308cecbe963613bf"></a><!-- doxytag: member="SAMRAI::solv::PoissonSpecifications::setDConstant" ref="2f1b3a1e4c916694308cecbe963613bf" args="(double constant)" -->
@@ -334,7 +336,8 @@ Whether D is constant.
 Get D's patch data id. 
 <p>
 Error if D is not represented by a patch data id.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>D's id </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>D's id</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_D_id != -1 </dd></dl>
 
 </div>
 </div><p>
@@ -357,7 +360,8 @@ Error if D is not represented by a patch data id.<p>
 Get D constant value. 
 <p>
 Error if D is not represented by a constant.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>D's constant value </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>D's constant value</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_D_id != -1 </dd></dl>
 
 </div>
 </div><p>
@@ -380,7 +384,9 @@ Error if D is not represented by a constant.<p>
 <p>
 Set the patch data index for C. 
 <p>
-In addition, disregard any previous values specified by <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html#e1ee89be1d0ec750fc6960229d64b362">setCConstant()</a> or <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html#40a9b295796dcafe1be76e2241ac67ca">setCZero()</a>. 
+In addition, disregard any previous values specified by <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html#e1ee89be1d0ec750fc6960229d64b362">setCConstant()</a> or <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html#40a9b295796dcafe1be76e2241ac67ca">setCZero()</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>id &gt;= 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="e1ee89be1d0ec750fc6960229d64b362"></a><!-- doxytag: member="SAMRAI::solv::PoissonSpecifications::setCConstant" ref="e1ee89be1d0ec750fc6960229d64b362" args="(double constant)" -->
@@ -514,7 +520,8 @@ As it pertains to what this function returns, C is constant <em>only</em> by cal
 Get C's patch data id. 
 <p>
 Error if C is not represented by a patch data id.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>C's patch data id </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>C's patch data id</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_C_id != -1 </dd></dl>
 
 </div>
 </div><p>
@@ -537,7 +544,8 @@ Error if C is not represented by a patch data id.<p>
 Get C as a constant value. 
 <p>
 Error if C is not represented by a constant.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>C's constant value </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>C's constant value</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_C_id == -1) &amp;&amp; !d_C_zero </dd></dl>
 
 </div>
 </div><p>
@@ -565,7 +573,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="PoissonSpecifications_8h.html">PoissonSpecifications.h</a><li>source/SAMRAI/solv/<a class="el" href="PoissonSpecifications_8C.html">PoissonSpecifications.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

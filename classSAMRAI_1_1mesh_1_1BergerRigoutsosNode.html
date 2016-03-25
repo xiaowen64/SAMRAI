@@ -61,17 +61,18 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Method for advancing the algorithm.  <a href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#8a69889d5b0f0746db9644f3f0804db0">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#cb14affe5cfa93cc2251306dcd5ff30a">BergerRigoutsosNode</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;block_id, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;first_local_id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#bfd5a33f598e801f1c691771076ace12">BergerRigoutsosNode</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;first_local_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the root node of a BR dendogram.  <a href="#cb14affe5cfa93cc2251306dcd5ff30a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the root node of a BR dendogram.  <a href="#bfd5a33f598e801f1c691771076ace12"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#2cb42c2907c77b4f4953638af64ca828">~BergerRigoutsosNode</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#2cb42c2907c77b4f4953638af64ca828"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#6f1a065fdd68dee78ff02b6aba6bb4a0">setClusteringParameters</a> (const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_box_size, const double max_lap_cut_from_center, const double laplace_cut_threshold_ar)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#afcdddbe875ce870ad7634e1d6d40951">setClusteringParameters</a> (const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_box_size, const double max_inflection_cut_from_center, const double inflection_cut_threshold_ar)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set parameters for (our slight variation of) the Berger-Rigoutsos algorithm.  <a href="#6f1a065fdd68dee78ff02b6aba6bb4a0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#a6f659b17d58f84bd9b8400005756217">clusterAndComputeRelationships</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;new_mapped_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;tag_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;new_to_tag, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;bound_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi_object)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set parameters for (our slight variation of) the Berger-Rigoutsos algorithm.  <a href="#afcdddbe875ce870ad7634e1d6d40951"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#4318b27ab0628f29bfdede06ee47ae16">clusterAndComputeRelationships</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;new_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;tag_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;new_to_tag, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi_object)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Run the clustering algorithm to generate the new BoxLevel and compute relationships (if specified by <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#b339dad74eaa5832ee6cb8a64e358183">setComputeRelationships()</a>).  <a href="#4318b27ab0628f29bfdede06ee47ae16"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Algorithm mode settings</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#8e3ffa5a8dc45c641fcbcc84e93bb741">setAlgorithmAdvanceMode</a> (const std::string &amp;algo_advance_mode)</td></tr>
 
@@ -125,7 +126,7 @@ Clarification on the uses of the word "node":<ul>
 <p>
 Each dendogram node is associated with a candidate box, an owner process coordinating distributed computations on the box and a group of processors participating in those computations. Should the candidate box be one of the final output boxes, the owner also owns the graph node associated with the box.<p>
 To use this class:<ol type=1>
-<li>Construct the root dendogram node, an object of type <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a>.</li><li>Set the clustering parameters using <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#6f1a065fdd68dee78ff02b6aba6bb4a0">setClusteringParameters()</a>.</li><li>Finetune the algorithm settings using the methods under "Algorithm settings".</li><li>Start clustering by calling clusterAndComputeRelationships().</li></ol>
+<li>Construct the root dendogram node, an object of type <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a>.</li><li>Set the clustering parameters using <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#afcdddbe875ce870ad7634e1d6d40951">setClusteringParameters()</a>.</li><li>Finetune the algorithm settings using the methods under "Algorithm settings".</li><li>Start clustering by calling clusterAndComputeRelationships().</li></ol>
 <p>
 The 2 primary outputs of this implementation are:<ol type=1>
 <li>A BoxLevel of Boxes containing input tags. Each node corresponds to an output box.</li><li>Connector between the tag BoxLevel and the new BoxLevel.</li></ol>
@@ -190,7 +191,7 @@ Each corresponds to a choice permitted by <a class="el" href="classSAMRAI_1_1mes
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="cb14affe5cfa93cc2251306dcd5ff30a"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::BergerRigoutsosNode" ref="cb14affe5cfa93cc2251306dcd5ff30a" args="(const tbox::Dimension &amp;dim, const hier::BlockId &amp;block_id, const hier::LocalId &amp;first_local_id)" -->
+<a class="anchor" name="bfd5a33f598e801f1c691771076ace12"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::BergerRigoutsosNode" ref="bfd5a33f598e801f1c691771076ace12" args="(const tbox::Dimension &amp;dim, const hier::LocalId &amp;first_local_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -199,12 +200,6 @@ Each corresponds to a choice permitted by <a class="el" href="classSAMRAI_1_1mes
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -249,7 +244,7 @@ Deallocate internal data.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="6f1a065fdd68dee78ff02b6aba6bb4a0"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::setClusteringParameters" ref="6f1a065fdd68dee78ff02b6aba6bb4a0" args="(const int tag_data_index, const int tag_val, const hier::IntVector min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_box_size, const double max_lap_cut_from_center, const double laplace_cut_threshold_ar)" -->
+<a class="anchor" name="afcdddbe875ce870ad7634e1d6d40951"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::setClusteringParameters" ref="afcdddbe875ce870ad7634e1d6d40951" args="(const int tag_data_index, const int tag_val, const hier::IntVector min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_box_size, const double max_inflection_cut_from_center, const double inflection_cut_threshold_ar)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -293,13 +288,13 @@ Deallocate internal data.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>max_lap_cut_from_center</em>, </td>
+          <td class="paramname"> <em>max_inflection_cut_from_center</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>laplace_cut_threshold_ar</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>inflection_cut_threshold_ar</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -322,10 +317,11 @@ These parameters are not specific to the asynchronous algorithm or DLBG.<p>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>efficiency_tol</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>combine_tol</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_box_size</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_lap_cut_from_center</em>&nbsp;</td><td>Limit the Laplace cut to this fraction of the distance from the center plane to the end. Zero means cut only at the center plane. One means unlimited. Under most situations, one is fine.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>laplace_cut_threshold_ar</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_inflection_cut_from_center</em>&nbsp;</td><td>Limit the Laplace cut to this fraction of the distance from the center plane to the end. Zero means cut only at the center plane. One means unlimited. Under most situations, one is fine.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>inflection_cut_threshold_ar</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_common-&gt;d_dim == min_box.getDim()) &amp;&amp; (d_common-&gt;d_dim == max_box_size.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -352,7 +348,9 @@ Choices are:<ul>
 <li><b>"SYNCHRONOUS"</b> --&gt; wait for each communication stage to complete before moving on, thus resulting in synchronous execution.</li><li><b>"ADVANCE_ANY"</b> --&gt; advance an dendogram node through its communication stage by using <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ace7bb05b85804aae01a21d05e71d74b">tbox::AsyncCommStage::advanceAny()</a>.</li><li><b>"ADVANCE_SOME"</b> --&gt; advance an dendogram node through its communication stage by using <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#704955860c9392e0329168943100f9cc">tbox::AsyncCommStage::advanceSome()</a>.</li></ul>
 <p>
 The default is "ADVANCE_SOME".<p>
-Asynchronous modes are NOT guaranteed to compute the output graph nodes in any particular order. The order depends on the ordering of message completion, which is not deterministic. If you require consistent outputs, we suggest you have a scheme for reordering the output boxes. 
+Asynchronous modes are NOT guaranteed to compute the output graph nodes in any particular order. The order depends on the ordering of message completion, which is not deterministic. If you require consistent outputs, we suggest you have a scheme for reordering the output boxes.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(algo_advance_mode == "ADVANCE_ANY") || (algo_advance_mode == "ADVANCE_SOME") || (algo_advance_mode == "SYNCHRONOUS") </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="d5fec39c7084ef622c3c16b47361acc8"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::setOwnerMode" ref="d5fec39c7084ef622c3c16b47361acc8" args="(const std::string &amp;mode)" -->
@@ -376,7 +374,9 @@ Set the method for choosing the owner. Choices:<ul>
 <li>"MOST_OVERLAP" Ownership is given to the processor with the most overlap on the candidate box. Default.</li><li>"SINGLE_OWNER" In single-owner mode, the initial owner (process 0) always participates and owns all dendogram nodes.</li><li>"FEWEST_OWNED" Choose the processor that owns the fewest dendogram nodes when the choice is made. This is meant to relieve bottle-necks caused by excessive ownership. This option may lead to non-deterministic ownerships.</li><li>"LEAST_ACTIVE" Choose the processor that participates in the fewest number of dendogram nodes when the choice is made. This is meant to relieve bottle-necks caused by excessive participation. This option may lead to non-deterministic ownerships. </li></ul>
 
 <p>
-Experiments show that "MOST_OVERLAP" gives the best clustering speed, while "SINGLE_OWNER" may give a faster output globalization (since you don't need an all-gather). 
+Experiments show that "MOST_OVERLAP" gives the best clustering speed, while "SINGLE_OWNER" may give a faster output globalization (since you don't need an all-gather).<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(mode == "SINGLE_OWNER") ||(mode == "MOST_OVERLAP") || (mode == "FEWEST_OWNED") ||(mode == "LEAST_ACTIVE") </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b339dad74eaa5832ee6cb8a64e358183"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::setComputeRelationships" ref="b339dad74eaa5832ee6cb8a64e358183" args="(const std::string mode, const hier::IntVector &amp;ghost_cell_width)" -->
@@ -418,10 +418,13 @@ Valid mode values to set are:<p>
 <li>"BIDIRECTIONAL": Compute directed relationships from input (tagged) to output (new) graph nodes as well as the reverse. With this option, it is possible to determine output nodes neighboring any input nodes, as well as input nodes neighboring any output node. This is accomplished using an additional relationship-sharing communication after all graph nodes have been created.</li></ul>
 <p>
 The ghost_cell_width specifies the growth for the overlap checks. Overlap checking is done to determine nearest-neighbor relationships when generating connectivity to new graph nodes. If a box grown by this ammount intersects another box, the two boxes are considered neighbors.<p>
-By default, compute bidirectional relationships with a ghost cell width of 1. 
+By default, compute bidirectional relationships with a ghost cell width of 1.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(mode == "NONE") || (mode == "TAG_TO_NEW") || (mode == "BIDIRECTIONAL") <p>
+ghost_cell_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#75075186e3ca2b549792b84f3f5dcb9b">hier::IntVector::getZero</a>(d_common-&gt;d_dim) </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="a6f659b17d58f84bd9b8400005756217"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::clusterAndComputeRelationships" ref="a6f659b17d58f84bd9b8400005756217" args="(hier::BoxLevel &amp;new_mapped_box_level, hier::Connector &amp;tag_to_new, hier::Connector &amp;new_to_tag, const hier::Box &amp;bound_box, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const tbox::SAMRAI_MPI &amp;mpi_object)" -->
+<a class="anchor" name="4318b27ab0628f29bfdede06ee47ae16"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::clusterAndComputeRelationships" ref="4318b27ab0628f29bfdede06ee47ae16" args="(hier::BoxLevel &amp;new_box_level, hier::Connector &amp;tag_to_new, hier::Connector &amp;new_to_tag, const hier::BoxContainer &amp;bound_boxes, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const tbox::SAMRAI_MPI &amp;mpi_object)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -429,7 +432,7 @@ By default, compute bidirectional relationships with a ghost cell width of 1.
           <td class="memname">void SAMRAI::mesh::BergerRigoutsosNode::clusterAndComputeRelationships           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>new_mapped_box_level</em>, </td>
+          <td class="paramname"> <em>new_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -446,8 +449,8 @@ By default, compute bidirectional relationships with a ghost cell width of 1.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>bound_box</em>, </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>bound_boxes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -471,6 +474,22 @@ By default, compute bidirectional relationships with a ghost cell width of 1.
 <div class="memdoc">
 
 <p>
+Run the clustering algorithm to generate the new BoxLevel and compute relationships (if specified by <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#b339dad74eaa5832ee6cb8a64e358183">setComputeRelationships()</a>). 
+<p>
+If relationships computation is not specified, the Connectors are unchanged.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>new_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>tag_to_new</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>new_to_tag</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bound_boxes</em>&nbsp;</td><td>Contains one global bounding box for each block with a patch in tag_level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>tag_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mpi_object</em>&nbsp;</td><td>Alternative MPI communicator. If given, must be congruent with the tag box_level's MPI communicator. Specify <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#5e5a6d3ca83a7ca17784a0549e87d20e">tbox::SAMRAI_MPI::commNull</a> if unused. Highly recommend using an isolated communicator to prevent message mix-ups.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!bound_boxes.isEmpty() <p>
+d_parent == 0 <p>
+(d_common-&gt;d_dim == new_box_level.getDim()) &amp;&amp; (d_common-&gt;d_dim == (*(bound_boxes.begin())).getDim()) &amp;&amp; (d_common-&gt;d_dim == tag_level-&gt;getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -695,7 +714,7 @@ Set whether to log dendogram node action history (useful for debugging).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsosNode_8h.html">BergerRigoutsosNode.h</a><li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsosNode_8C.html">BergerRigoutsosNode.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

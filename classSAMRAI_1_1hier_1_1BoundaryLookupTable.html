@@ -35,6 +35,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#d0a45e01b1ef8f999a41ee636397ea6f">getMaxLocationIndices</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get array of maximum number of locations for each codimension boundary case.  <a href="#d0a45e01b1ef8f999a41ee636397ea6f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#7f8fce802346a5a20a83786c41f99414">getMaxLocationIndex</a> (int i) const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#9fd67205d094be9d0e57037518c7fe94">isLower</a> (int loc, int codim, int dir_index) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Determines if given boundary information indicates a a lower boundary region.  <a href="#9fd67205d094be9d0e57037518c7fe94"></a><br></td></tr>
@@ -44,6 +46,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#78bb03f875190d400d59a7f40e74af3c">getBoundaryDirections</a> (int codim) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get array of boundary direction IntVectors.  <a href="#78bb03f875190d400d59a7f40e74af3c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#e37ea09f1a9a4e68a99877d1d89d733e">getDim</a> () const </td></tr>
+
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html">BoundaryLookupTable</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#ade02e0600de23c5afe6e30298b7eab4">getLookupTable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
@@ -183,7 +187,9 @@ The active directions are those coordinate direction in which the boundary regio
     <tr><td valign="top"></td><td valign="top"><em>codim</em>&nbsp;</td><td>integer codimension of boundary region</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>const reference to integer array of length codim containing the active directions for this boundary case. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>const reference to integer array of length codim containing the active directions for this boundary case.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(codim &gt; 0) &amp;&amp; (codim &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#e37ea09f1a9a4e68a99877d1d89d733e">getDim()</a>.getValue()) <p>
+(loc &gt;= 0) &amp;&amp; (loc &lt; getMaxLocationIndex(codim - 1)) </dd></dl>
 
 </div>
 </div><p>
@@ -207,6 +213,26 @@ Get array of maximum number of locations for each codimension boundary case.
 <p>
 For example, a 2D patch has 4 possible locations for codimension 1 (edges) and 4 possible locations for codimension 2 (nodes). A 3D patch has 6 possible locations for codimension 1 (faces), 12 for codimension 2 (edges), and 8 for codimension 3 (nodes).<p>
 <dl compact><dt><b>Returns:</b></dt><dd>integer array of length dim, each entry of which indicates the maximum number of boundary locations for each codimension </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="7f8fce802346a5a20a83786c41f99414"></a><!-- doxytag: member="SAMRAI::hier::BoundaryLookupTable::getMaxLocationIndex" ref="7f8fce802346a5a20a83786c41f99414" args="(int i) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SAMRAI::hier::BoundaryLookupTable::getMaxLocationIndex           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>i</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -252,7 +278,10 @@ A boundary region is a "lower" boundary region if the associated patch box conta
     <tr><td valign="top"></td><td valign="top"><em>dir_index</em>&nbsp;</td><td>integer spatial direction identifier, an index into the array returned by <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#8309243fb565084f3b81dd8b44977ce7">getDirections()</a>.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>bool true if the boundary type of codimension codim indexed by loc is a lower boundary in the specified direction; return false if the boundary is an upper boundary. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>bool true if the boundary type of codimension codim indexed by loc is a lower boundary in the specified direction; return false if the boundary is an upper boundary.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(codim &gt; 0) &amp;&amp; (codim &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#e37ea09f1a9a4e68a99877d1d89d733e">getDim()</a>.getValue())) <p>
+(loc &gt;= 0) &amp;&amp; (loc &lt; getMaxLocationIndex(codim - 1)) <p>
+(dir_index &gt;= 0) &amp;&amp; (dir_index &lt; codim) </dd></dl>
 
 </div>
 </div><p>
@@ -298,7 +327,10 @@ A boundary region is an "upper" boundary region if the associated patch box cont
     <tr><td valign="top"></td><td valign="top"><em>dir_index</em>&nbsp;</td><td>integer spatial direction identifier, an index into the array returned by <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#8309243fb565084f3b81dd8b44977ce7">getDirections()</a>.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>bool true if the boundary type of codimension codim indexed by loc is an upper boundary in the specified direction; return false if the boundary is a lower boundary. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>bool true if the boundary type of codimension codim indexed by loc is an upper boundary in the specified direction; return false if the boundary is a lower boundary.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(codim &gt; 0) &amp;&amp; (codim &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#e37ea09f1a9a4e68a99877d1d89d733e">getDim()</a>.getValue()) <p>
+(loc &gt;= 0) &amp;&amp; (loc &lt; getMaxLocationIndex(codim - 1)) <p>
+(dir_index &gt;= 0) &amp;&amp; (dir_index &lt; codim) </dd></dl>
 
 </div>
 </div><p>
@@ -328,13 +360,33 @@ For a particular location, each element of the <a class="el" href="classSAMRAI_1
     <tr><td valign="top"></td><td valign="top"><em>codim</em>&nbsp;</td><td>codimension </td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Array of IntVectors, one element for each valid location </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Array of IntVectors, one element for each valid location</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(codim &gt; 0) &amp;&amp; (codim &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#e37ea09f1a9a4e68a99877d1d89d733e">getDim()</a>.getValue()) </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="e37ea09f1a9a4e68a99877d1d89d733e"></a><!-- doxytag: member="SAMRAI::hier::BoundaryLookupTable::getDim" ref="e37ea09f1a9a4e68a99877d1d89d733e" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::BoundaryLookupTable::getDim           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoundaryLookupTable_8h.html">BoundaryLookupTable.h</a><li>source/SAMRAI/hier/<a class="el" href="BoundaryLookupTable_8C.html">BoundaryLookupTable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

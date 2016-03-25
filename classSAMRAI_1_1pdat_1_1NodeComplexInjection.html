@@ -31,13 +31,13 @@
 <a href="classSAMRAI_1_1pdat_1_1NodeComplexInjection-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#6e05495dd072a51d901d9d9de67da435">NodeComplexInjection</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#0b39af4b1d27d9313f5ca6e2f548fd73">NodeComplexInjection</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#34f03d257713faca80342518f7f8a9c1">~NodeComplexInjection</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#bba465ec458058be1022e79a0aec6ba7">getOperatorPriority</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#2507faf8c39902faeb1a95dac3df567e">getStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#0ca41617f03e286a701f2921916ec313">getStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html#886671ffe566caf5887d7deb148d3a13">coarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const int dst_component, const int src_component, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio) const </td></tr>
 
@@ -48,15 +48,14 @@ Class <a class="el" href="classSAMRAI_1_1pdat_1_1NodeComplexInjection.html">Node
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="6e05495dd072a51d901d9d9de67da435"></a><!-- doxytag: member="SAMRAI::pdat::NodeComplexInjection::NodeComplexInjection" ref="6e05495dd072a51d901d9d9de67da435" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="0b39af4b1d27d9313f5ca6e2f548fd73"></a><!-- doxytag: member="SAMRAI::pdat::NodeComplexInjection::NodeComplexInjection" ref="0b39af4b1d27d9313f5ca6e2f548fd73" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::pdat::NodeComplexInjection::NodeComplexInjection           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
         </tr>
@@ -109,14 +108,15 @@ The priority of node-centered constant averaging is 0. It will be performed befo
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c35826baea5e71b75c1691f10940128a">SAMRAI::hier::CoarsenOperator</a>.
 </div>
 </div><p>
-<a class="anchor" name="2507faf8c39902faeb1a95dac3df567e"></a><!-- doxytag: member="SAMRAI::pdat::NodeComplexInjection::getStencilWidth" ref="2507faf8c39902faeb1a95dac3df567e" args="() const " -->
+<a class="anchor" name="0ca41617f03e286a701f2921916ec313"></a><!-- doxytag: member="SAMRAI::pdat::NodeComplexInjection::getStencilWidth" ref="0ca41617f03e286a701f2921916ec313" args="(const tbox::Dimension &amp;dim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::pdat::NodeComplexInjection::getStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -127,7 +127,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#c3582
 <p>
 The stencil width of the constant averaging operator is the vector of zeros. That is, its stencil does not extend outside the fine box. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#549c9a8090f27cff92d4742507c98aa3">SAMRAI::hier::CoarsenOperator</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#92b956782ff2a3755240a7d0df93894e">SAMRAI::hier::CoarsenOperator</a>.
 </div>
 </div><p>
 <a class="anchor" name="886671ffe566caf5887d7deb148d3a13"></a><!-- doxytag: member="SAMRAI::pdat::NodeComplexInjection::coarsen" ref="886671ffe566caf5887d7deb148d3a13" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const int dst_component, const int src_component, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio) const " -->
@@ -180,14 +180,16 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#549c9
 <div class="memdoc">
 
 <p>
-Coarsen the source component on the fine patch to the destination component on the coarse patch using the node-centered complex constant averaging operator. Coarsening is performed on the intersection of the destination patch and the coarse box. It is assumed that the fine patch contains sufficient data for the stencil width of the coarsening operator. 
+Coarsen the source component on the fine patch to the destination component on the coarse patch using the node-centered complex constant averaging operator. Coarsening is performed on the intersection of the destination patch and the coarse box. It is assumed that the fine patch contains sufficient data for the stencil width of the coarsening operator.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>coarse.getDim == fine.getDim() &amp;&amp; coarse.getDim == coarse_box.getDim() &amp;&amp; coarse.getDim == ratio.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#29396bcc3a492149287a09ba3ccd5cf1">SAMRAI::hier::CoarsenOperator</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="NodeComplexInjection_8h.html">NodeComplexInjection.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

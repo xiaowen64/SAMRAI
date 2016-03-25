@@ -39,6 +39,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html#aacb5ac881a41ba26a74333e5cc31f61">getDestinationBoxContainer</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html#94cf65115d2532f997fcb804c5d36399">getSourceBoxContainer</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;src_boxes) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a BoxContainer representing the source boxes of the overlap.  <a href="#94cf65115d2532f997fcb804c5d36399"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html#86746a3b949d98716116dbe81fcfd262">getSourceOffset</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html#aa365603659b256b637839b4093d11c4">getTransformation</a> () const </td></tr>
@@ -143,6 +146,35 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#ebb4098c7a
 Return the list of boxes (in cell centered index space) that constitute the intersection. The boxes are given in the destination coordinate space and must be shifted by -(<a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html#86746a3b949d98716116dbe81fcfd262">getSourceOffset()</a>) to lie in the source index space. 
 </div>
 </div><p>
+<a class="anchor" name="94cf65115d2532f997fcb804c5d36399"></a><!-- doxytag: member="SAMRAI::pdat::CellOverlap::getSourceBoxContainer" ref="94cf65115d2532f997fcb804c5d36399" args="(hier::BoxContainer &amp;src_boxes) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::pdat::CellOverlap::getSourceBoxContainer           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_boxes</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get a BoxContainer representing the source boxes of the overlap. 
+<p>
+The src_boxes container will be filled with the cell-centered source boxes of the overlap in the source coordinate space.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>src_boxes</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>src_boxes.isEmpty() </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="86746a3b949d98716116dbe81fcfd262"></a><!-- doxytag: member="SAMRAI::pdat::CellOverlap::getSourceOffset" ref="86746a3b949d98716116dbe81fcfd262" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -211,7 +243,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#b5
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="CellOverlap_8h.html">CellOverlap.h</a><li>source/SAMRAI/pdat/<a class="el" href="CellOverlap_8C.html">CellOverlap.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

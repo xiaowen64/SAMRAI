@@ -34,9 +34,9 @@
 <a href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#7ea3bef8aebfe4460ff9f8a0ab22ee28">LocationIndexRobinBcCoefs</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#c236761367bd3821a2ebd7b84bb6ba3b">LocationIndexRobinBcCoefs</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor using database.  <a href="#7ea3bef8aebfe4460ff9f8a0ab22ee28"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor using input database.  <a href="#c236761367bd3821a2ebd7b84bb6ba3b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#1ab58b2f3207eceb82fd0c097c1d88c2">~LocationIndexRobinBcCoefs</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#1ab58b2f3207eceb82fd0c097c1d88c2"></a><br></td></tr>
@@ -69,15 +69,21 @@ A prefabricated Robin boundary condition coefficients for coefficients that are 
 <p>
 This implementation of the strategy class <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> may be used when your Robin boundary condition coefficients are completely determined by the location index of the boundary box.<p>
 Before this class is used in to provide the boundary condition coefficients, you must specify what boundary conditions to associate with what location index. Methods for specifying these are <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#52e0e9e17d4f6867e1016d2d0486c5c6">setBoundaryValue()</a>, <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#d5db59e3eeaeb303a0c3895521454277">setBoundarySlope()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1LocationIndexRobinBcCoefs.html#bee8f03928d317c4b8ebf0e7ab1b4dd6">setRawCoefficients()</a>. The first two are for Dirichlet and Neumann boundary conditions, respectively. If the boundary condition is the more general Robin boundary condition, the third function should be used to set the coefficients a and g directly (see <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a>) for the meanings of a and g.<p>
-<b>Inputs:</b> You can specify the boundary conditions for any location index through the input database. One line is required for each location index. The input parameters are "boundary_N", where N is the index of the location. Each parameter must be a std::string array so that all boundary types can be accomodated the same way. The first std::string must be one of "value", "slope" or "coefficients". If the std::string is "value" or "slope" the next std::string is the value you want to set, defaulting to zero if not specified. If the first std::string is "coefficients", the next two strings specifies the values of a and g.<p>
-<b>Examples</b> inputs: <div class="fragment"><pre class="fragment"> * boundary_0 = "value", "0.0"
- * boundary_1 = "value", "1.0"
- * boundary_2 = "slope", "0.0"
- * boundary_4 = "coefficients", "1.0", "0.0"
- * </pre></div> 
+<b> Input Parameters </b><p>
+<b> Definitions:</b><ul>
+<li><b>boundary_N</b> You can specify the boundary conditions for any location index through the input database. One line is required for each location index. The input parameters are "boundary_N", where N is the index of the location. Each parameter must be a std::string array so that all boundary types can be accomodated the same way. The first std::string must be one of "value", "slope" or "coefficients". If the std::string is "value" or "slope" the next std::string is the value you want to set. If the first std::string is "coefficients", the next two strings specify the values of a and b.</li></ul>
+<p>
+<b> Details: </b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>boundary_N </td><td>Array&lt;string&gt; </td><td>none </td><td>"value", "gval"; "slope", "gval"; "coefficients", "aVal", "bVal" </td><td>req </td><td>Not written to restart. Value in input db used. </td></tr>
+</table>
+
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="7ea3bef8aebfe4460ff9f8a0ab22ee28"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs" ref="7ea3bef8aebfe4460ff9f8a0ab22ee28" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="c236761367bd3821a2ebd7b84bb6ba3b"></a><!-- doxytag: member="SAMRAI::solv::LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs" ref="c236761367bd3821a2ebd7b84bb6ba3b" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -97,7 +103,7 @@ Before this class is used in to provide the boundary condition coefficients, you
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>input_db</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -109,8 +115,9 @@ Before this class is used in to provide the boundary condition coefficients, you
 <div class="memdoc">
 
 <p>
-Constructor using database. 
+Constructor using input database. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>input_db </dd></dl>
 
 </div>
 </div><p>
@@ -203,9 +210,14 @@ This implementation of the virtual function <a class="el" href="classSAMRAI_1_1s
     <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td>variable to set the coefficients for. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td>patch requiring bc coefficients </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bdry_box</em>&nbsp;</td><td>boundary box showing where on the boundary the coefficient data is needed. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Solution time corresponding to filling, for use when coefficients are time-dependent. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Solution time corresponding to filling, for use when coefficients are time-dependent.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_dim == patch.getDim()) &amp;&amp; (d_dim == bdry_box.getDim()) <p>
+(!acoef_data || (d_dim == acoef_data.getDim()) <p>
+(!bcoef_data || (d_dim == acoef_data.betDim()) <p>
+(!gcoef_data || (d_dim == acoef_data.getDim()) <p>
+(bdry_box.getLocationIndex() &gt;= 0) &amp;&amp; (bdry_box.getLocationIndex() &lt; 2 * d_dim.getValue()) </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">SAMRAI::solv::RobinBcCoefStrategy</a>.
@@ -263,9 +275,10 @@ Set the boundary value at a given location index.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>location_index</em>&nbsp;</td><td>Set coefficients for this index. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>Boundary value at <code>location_index</code>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>Boundary value at <code>location_index</code>.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(location_index &gt;= 0) &amp;&amp; (location_index &lt; 2 * d_dim.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -300,9 +313,10 @@ Set the boundary slope at a given location index.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>location_index</em>&nbsp;</td><td>Set coefficients for this index. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>slope</em>&nbsp;</td><td>Boundary slope at <code>location_index</code>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>slope</em>&nbsp;</td><td>Boundary slope at <code>location_index</code>.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(location_index &gt;= 0) &amp;&amp; (location_index &lt; 2 * d_dim.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -353,9 +367,10 @@ If the boundary condition is neither Dirichlet nor Neumann (a general Robin boun
     <tr><td valign="top"></td><td valign="top"><em>location_index</em>&nbsp;</td><td>Set coefficients for this index. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>a</em>&nbsp;</td><td>Value of coefficient a at given location index. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>b</em>&nbsp;</td><td>Value of coefficient b at given location index. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>g</em>&nbsp;</td><td>Value of coefficient g at given location index. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>g</em>&nbsp;</td><td>Value of coefficient g at given location index.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(location_index &gt;= 0) &amp;&amp; (location_index &lt; 2 * d_dim.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -399,6 +414,15 @@ If the boundary condition is neither Dirichlet nor Neumann (a general Robin boun
 <p>
 Access coefficients. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>location_index</em>&nbsp;</td><td>Set coefficients for this index. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>a</em>&nbsp;</td><td>Value of coefficient a at given location index. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>b</em>&nbsp;</td><td>Value of coefficient b at given location index. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>g</em>&nbsp;</td><td>Value of coefficient g at given location index.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(location_index &gt;= 0) &amp;&amp; (location_index &lt; 2 * d_dim.getValue()) </dd></dl>
 
 </div>
 </div><p>
@@ -448,7 +472,7 @@ Assignment operator.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="LocationIndexRobinBcCoefs_8h.html">LocationIndexRobinBcCoefs.h</a><li>source/SAMRAI/solv/<a class="el" href="LocationIndexRobinBcCoefs_8C.html">LocationIndexRobinBcCoefs.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

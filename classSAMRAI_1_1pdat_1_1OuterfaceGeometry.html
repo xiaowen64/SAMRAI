@@ -57,7 +57,7 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceGeometry.html">OuterfaceGeometry</a> manages the mapping between the AMR index and the outerface geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between outerface box geometries and face or outerface box geometries for communication operations.<p>
-See header file for OuterfaceData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+See header file for OuterfaceData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html">pdat::FaceGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">pdat::FaceOverlap</a> </dd></dl>
@@ -108,6 +108,8 @@ The BoxOverlap implemenation for this geometry.
 <p>
 Construct an outerface geometry object given an AMR index space box and ghost cell width. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -197,6 +199,7 @@ The virtual destructor does nothing interesting.
 <p>
 Compute the overlap in face-centered index space on the boundaries of the source box geometry and the destination box geometry. 
 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceGeometry.html#b586472ef35e36913dc34a95f170e3d0">getBox()</a>.getDim() == src_mask.getDim() </dd></dl>
 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
@@ -279,7 +282,7 @@ Return the ghost cell width for this outerface box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="OuterfaceGeometry_8h.html">OuterfaceGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="OuterfaceGeometry_8C.html">OuterfaceGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

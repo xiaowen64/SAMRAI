@@ -100,32 +100,27 @@
 \form#99:$ w_i = 0 $
 \form#100:$ w_i = 1/x_i $
 \form#101:$ x_i \neq 0 $
-\form#102:$0 \le \eta_0 < 1$
-\form#103:$0 \le \eta_{max} < 1$
-\form#104:$1 < \alpha \le 2$
-\form#105:$0 \le \gamma \le 1$
-\form#106:$0 < \eta_{threshold} < 1$
-\form#107:$M z = r$
-\form#108:$M$
-\form#109:$c$
-\form#110:$c x$
-\form#111:$a x + b y$
-\form#112:$a, b$
-\form#113:$x, y$
-\form#114:$v_i = x_i y_i$
-\form#115:$x_i, y_i$
-\form#116:$x$
-\form#117:$y$
-\form#118:$v_i = x_i / y_i$
-\form#119:$v_i = 1 / x_i$
-\form#120:$x_i$
-\form#121:$b$
-\form#122:$0$
-\form#123:$x_i \neq 0$
-\form#124:$x_i z_i \leq 0$
-\form#125:$z_i$
-\form#126:$1$
-\form#127:$\mid x_i \mid \geq c$
-\form#128:$v_i = 1$
-\form#129:$v_i = 0$
-\form#130:$x_i = 0$
+\form#102:$M z = r$
+\form#103:$M$
+\form#104:$c$
+\form#105:$c x$
+\form#106:$a x + b y$
+\form#107:$a, b$
+\form#108:$x, y$
+\form#109:$v_i = x_i y_i$
+\form#110:$x_i, y_i$
+\form#111:$x$
+\form#112:$y$
+\form#113:$v_i = x_i / y_i$
+\form#114:$v_i = 1 / x_i$
+\form#115:$x_i$
+\form#116:$b$
+\form#117:$0$
+\form#118:$x_i \neq 0$
+\form#119:$x_i z_i \leq 0$
+\form#120:$z_i$
+\form#121:$1$
+\form#122:$\mid x_i \mid \geq c$
+\form#123:$v_i = 1$
+\form#124:$v_i = 0$
+\form#125:$x_i = 0$

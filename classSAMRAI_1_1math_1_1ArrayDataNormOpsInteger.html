@@ -34,7 +34,7 @@
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataNormOpsInteger.html">ArrayDataNormOpsInteger</a> provides a set of common norm operations that may be applied to arrays of integer data values maintained as pdat::ArrayData&lt;DIM&gt; objects. The intent of this class is to provide a single implementation of these operations as they are needed by objects that perform these operations on the standard array-based patch data types (i.e., cell-centered, face-centered, node-centered). Note that each operation is performed on the intersection of the box in the function argument list and the boxes associated with all pdat::ArrayData&lt;DIM&gt; objects. Currently, the only norm operation implemented in this class is the absolute value operation.<p>
+Class <a class="el" href="classSAMRAI_1_1math_1_1ArrayDataNormOpsInteger.html">ArrayDataNormOpsInteger</a> provides a set of common norm operations that may be applied to arrays of integer data values maintained as pdat::ArrayData&lt;TYPE&gt; objects. The intent of this class is to provide a single implementation of these operations as they are needed by objects that perform these operations on the standard array-based patch data types (i.e., cell-centered, face-centered, node-centered). Note that each operation is performed on the intersection of the box in the function argument list and the boxes associated with all pdat::ArrayData&lt;TYPE&gt; objects. Currently, the only norm operation implemented in this class is the absolute value operation.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a> </dd></dl>
 
 <p>
@@ -110,12 +110,15 @@ Empty constructor and destructor.
 <div class="memdoc">
 
 <p>
-Set destination component to absolute value of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \| s_i \|$" src="form_29.png">. 
+Set destination component to absolute value of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \| s_i \|$" src="form_29.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dst.getDim() == src.getDim()) &amp;&amp; (dst.getDim() == box.getDim()) <p>
+dst.getDepth() == src.getDepth() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="ArrayDataNormOpsInteger_8h.html">ArrayDataNormOpsInteger.h</a><li>source/SAMRAI/math/<a class="el" href="ArrayDataNormOpsInteger_8C.html">ArrayDataNormOpsInteger.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -87,9 +87,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#41ce4e137f2e60525668faf4b6af9382">getItem</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> &amp;index) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#74e546cc71f436939d4fc174417a99ad">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#1867bd84bd75482b4357d17f9171112b">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#dd5879287dc1945636ebb27b42ee9ef9">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#6250293cc37f0bbe9ecab110ef716e3e">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#29bf18abb486c1b3ee1fb5a3b425af36">IndexIterator&lt; TYPE, BOX_GEOMETRY &gt;</a></td></tr>
@@ -105,17 +105,17 @@ Additional insertion methods are provided for optimization in specific use cases
 index_data.addItemPointer(someIndex, new ItemToInsert());<p>
 The "replace" versions of the insert routines may be used when one wishes to preserve the existing iteration ordering. If an item already exists the replace insert will delete the old item and put the item provided in it's place (inserting it into that location in the linked list).<p>
 If one does not care about the iteration order and is frequently updating the items stored, the "replace" versions are significantly faster.<p>
-The template parameter TYPE * defines the storage at each index location. IndexDaga is derived from * <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>.<p>
+The template parameter TYPE * defines the storage at each index location. <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> is derived from * <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>.<p>
 The data type TYPE must define the following five methods which are require by this class:<p>
 <ul>
-<li><b>-</b> Default constructor (taking no arguments).</li><li><b>-</b> Assignment operator; i.e., TYPE&amp; operator=(const TYPE&amp; rhs)</li><li><b>-</b> Copy; copySourceItem(const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&amp; index, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; src_offset, const TYPE&amp; src_item)</li><li><b>-</b> Return size of data; size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a2b0401e571b5f725770daf5f270592e">getDataStreamSize()</a></li><li><b>-</b> Pack data into message stream; i.e., packStream(MessageStream&amp; stream,</li><li><b>-</b> Unpack data from message stream; i.e., unpackStream(MessageStream&amp; stream, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; offset)</li><li><b>-</b> Write to restart; putToDatabase(boost::shared_ptr&lt;tbox::Database&gt;&amp; database)</li><li><b>-</b> Retrieve from restart; getFromDatabase(boost::shared_ptr&lt;tbox::Database&gt;&amp; database)</li></ul>
+<li><b>-</b> Default constructor (taking no arguments).</li><li><b>-</b> Assignment operator; i.e., TYPE&amp; operator=(const TYPE&amp; rhs)</li><li><b>-</b> Copy; copySourceItem(const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&amp; index, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; src_offset, const TYPE&amp; src_item)</li><li><b>-</b> Return size of data; size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a2b0401e571b5f725770daf5f270592e">getDataStreamSize()</a></li><li><b>-</b> Pack data into message stream; i.e., packStream(MessageStream&amp; stream,</li><li><b>-</b> Unpack data from message stream; i.e., unpackStream(MessageStream&amp; stream, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; offset)</li><li><b>-</b> Write to restart; putToRestart(boost::shared_ptr&lt;tbox::Database&gt;&amp; restart_db)</li><li><b>-</b> Retrieve from restart; getFromRestart(boost::shared_ptr&lt;tbox::Database&gt;&amp; restart_db)</li></ul>
 <p>
 The BOX_GEOMETRY template parameter defines the geometry. BOX_GEOMETRY must have a nested class name Overlap that implements he following methods:<p>
 <ul>
 <li><b>-</b> getSourceOffset</li><li><b>-</b> getDestinationBoxList</li></ul>
 <p>
 More information about the templated TYPE is provided in the <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> README file.<p>
-IndexData&lt;DIM&gt; objects are created by the IndexDataFactory&lt;DIM&gt; factory object just as all other patch data types.<p>
+<a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> objects are created by the <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">IndexDataFactory</a> factory object just as all other patch data types.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">pdat::IndexData</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html">pdat::IndexDataFactory</a> </dd></dl>
@@ -168,7 +168,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-The constructor for an <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> object. The box describes the interior of the index space and the ghosts vector describes the ghost nodes in each coordinate direction. 
+The constructor for an <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> object. The box describes the interior of the index space and the ghosts vector describes the ghost nodes in each coordinate direction.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getDim() == ghosts.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="208e3b633060640ea8d4d50a9c4b74c2"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::~IndexData" ref="208e3b633060640ea8d4d50a9c4b74c2" args="()" -->
@@ -212,7 +214,10 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-A fast copy between the source and destination. All data is copied from the source into the destination where there is overlap in the index space. 
+A fast copy between the source and destination. All data is copied from the source into the destination where there is overlap in the index space.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() <p>
+dynamic_cast&lt;const IndexData&lt;TYPE, BOX_GEOMETRY&gt; *&gt;(&amp;src) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1eceef85e707249a51fd6e8719b8b888">SAMRAI::hier::PatchData</a>.
 </div>
@@ -236,7 +241,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-A fast copy between the source and destination. Data is copied from the source into the destination where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). If this copy does not understand how to copy data from the destination, then it may throw an assertion (aka dump core in a failed assertion). 
+A fast copy between the source and destination. All data is copied from the source into the destination where there is overlap in the index space.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#09c4b4a8c05efa18ad83662db4ba5351">SAMRAI::hier::PatchData</a>.
 </div>
@@ -269,7 +276,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Copy data from the source into the destination using the designated overlap descriptor. The overlap description should have been computed previously from computeIntersection(). 
+Copy data from the source into the destination using the designated overlap descriptor. The overlap description should have been computed previously from computeIntersection().<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() <p>
+dynamic_cast&lt;const IndexData&lt;TYPE, BOX_GEOMETRY&gt; *&gt;(&amp;src) != 0 <p>
+dynamic_cast&lt;const typename BOX_GEOMETRY::Overlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#60dd0fcc44ae5ef062a4249dad8a4f47">SAMRAI::hier::PatchData</a>.
 </div>
@@ -302,7 +313,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Copy data from the source into the destination using the designated overlap descriptor. The overlap description will have been computed using the appropriate box geometry objects If this member function cannot complete the copy from the destination, then it may throw an assertion (aka dump core in a failed assertion). 
+Copy data from the source into the destination using the designated overlap descriptor. The overlap description should have been computed previously from computeIntersection().<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#bd068fc4e5d159b2f927d59ea2ffda40">SAMRAI::hier::PatchData</a>.
 </div>
@@ -349,7 +362,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Calculate the number of bytes needed to stream the data lying in the specified box domain. 
+Calculate the number of bytes needed to stream the data lying in the specified box domain.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const typename BOX_GEOMETRY::Overlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#c70a44451c3a87e5744328e09b33efa8">SAMRAI::hier::PatchData</a>.
 </div>
@@ -382,7 +397,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Pack data lying on the specified index set into the output stream. 
+Pack data lying on the specified index set into the output stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const typename BOX_GEOMETRY::Overlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5f351ded8a02c75ecf9eb124cec0b509">SAMRAI::hier::PatchData</a>.
 </div>
@@ -415,7 +432,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Unpack data from the message stream into the specified index set. 
+Unpack data from the message stream into the specified index set.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const typename BOX_GEOMETRY::Overlap *&gt;(&amp;overlap) != 0 </dd></dl>
+
 <p>
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#64f047f667adb684706c6a546176f460">SAMRAI::hier::PatchData</a>.
 </div>
@@ -448,7 +467,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Add a new item to the tail of the irregular index set. 
+Add a new item to the tail of the irregular index set.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3b239be6b1e7e15895d6a9a79b9256fd"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::appendItemPointer" ref="3b239be6b1e7e15895d6a9a79b9256fd" args="(const hier::Index &amp;index, TYPE *item)" -->
@@ -480,7 +503,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 
 <p>
 Add a pointer to a new item to the tail of the irregular index set. <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> will delete the item when it is no longer needed by <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>. Due to this behavior item must be dynamically created (e.g. new) so that it may be deleted.<p>
-NOTE: This is an optimization to avoid an extra constructor call. It should be used with caution, the caller MUST NOT delete the referenced item. Think of this as giving up control of the item to <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>. 
+NOTE: This is an optimization to avoid an extra constructor call. It should be used with caution, the caller MUST NOT delete the referenced item. Think of this as giving up control of the item to <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="33e3cf4ac9c7c04a1d40cc763f9d84a3"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::addItem" ref="33e3cf4ac9c7c04a1d40cc763f9d84a3" args="(const hier::Index &amp;index, const TYPE &amp;item)" -->
@@ -511,7 +538,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Add a new item to the head of the irregular index set 
+Add a new item to the head of the irregular index set<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2ea0e89c4f0e22fe4c84d1ac1064ea40"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::addItemPointer" ref="2ea0e89c4f0e22fe4c84d1ac1064ea40" args="(const hier::Index &amp;index, TYPE *item)" -->
@@ -543,7 +574,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 
 <p>
 Add a pointer to a new item to the head of the irregular index set. <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a> will delete the item when it is no longer needed by <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>. Due to this behavior item must be dynamically created (e.g. new) so that it may be deleted.<p>
-NOTE: This is an optimization to avoid an extra constructor call. It should be used with caution, the caller MUST NOT delete the referenced item. Think of this as giving up control of the item to <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>. 
+NOTE: This is an optimization to avoid an extra constructor call. It should be used with caution, the caller MUST NOT delete the referenced item. Think of this as giving up control of the item to <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">IndexData</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b8b836411a0798641d43ad0e239cd64d"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::replaceAddItem" ref="b8b836411a0798641d43ad0e239cd64d" args="(const hier::Index &amp;index, const TYPE &amp;item)" -->
@@ -576,7 +611,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <p>
 Remove (deallocate) the item in the irregular index set located at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> and replace it with a new item.<p>
 This preserves the iteration order of the orginal insertions.<p>
-If an item does not already exist at index this is equivelent to addItem. 
+If an item does not already exist at index this is equivelent to addItem.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="23cfa0b7b0e7e9bf61ba2045c68c883d"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::replaceAddItemPointer" ref="23cfa0b7b0e7e9bf61ba2045c68c883d" args="(const hier::Index &amp;index, TYPE *item)" -->
@@ -610,7 +649,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 Remove (deallocate) the item in the irregular index set located at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> and replace it with a new item.<p>
 This preserves the iteration order of the original insertions.<p>
 If an item does not already exist at index this is equivelent to addItemPointer.<p>
-See addItemPointer for additional comments on pointer semantics. 
+See addItemPointer for additional comments on pointer semantics.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b0af51ce534ba20e235d2bee12b4fbc4"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::replaceAppendItem" ref="b0af51ce534ba20e235d2bee12b4fbc4" args="(const hier::Index &amp;index, const TYPE &amp;item)" -->
@@ -643,7 +686,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <p>
 Remove (deallocate) the item in the irregular index set located at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> and replace it with a new item.<p>
 This preserves the iteration order of the orginal insertions.<p>
-If an item does not already exist at index this is equivelent to appendItem. 
+If an item does not already exist at index this is equivelent to appendItem.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="9ae6cb58d56ae1509558b45ee8af899f"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::replaceAppendItemPointer" ref="9ae6cb58d56ae1509558b45ee8af899f" args="(const hier::Index &amp;index, TYPE *item)" -->
@@ -677,7 +724,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 Remove (deallocate) the item in the irregular index set located at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> and replace it with a new item.<p>
 This preserves the iteration order of the original insertions.<p>
 If an item does not already exist at index this is equivelent to appendItemPointer.<p>
-See addItemPointer for additional comments on pointer semantics. 
+See addItemPointer for additional comments on pointer semantics.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7b6ad43bcbc9b176ae27b49d6df573c5"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::removeItem" ref="7b6ad43bcbc9b176ae27b49d6df573c5" args="(const hier::Index &amp;index)" -->
@@ -699,7 +750,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Remove (deallocate) the item in the irregular index set located at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>. 
+Remove (deallocate) the item in the irregular index set located at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) <p>
+(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &gt;= 0) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.offset(index) &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="44cc5e05050e897d62cc5ea3ec6e4b9d"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getNumberOfItems" ref="44cc5e05050e897d62cc5ea3ec6e4b9d" args="() const " -->
@@ -720,7 +775,10 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the number of data items (i.e. the number of indices) in the index data list. 
+Return the number of data items (i.e. the number of indices) in the index data list.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>offset &gt;= 0 &amp;&amp; offset &lt;= <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.size() <p>
+d_data[offset] != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3762df0f2468fefcb2f4132a3ed0cbd3"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::removeInsideBox" ref="3762df0f2468fefcb2f4132a3ed0cbd3" args="(const hier::Box &amp;box)" -->
@@ -742,7 +800,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Remove (deallocate) any items in the irregular index set located in the index space of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>. 
+Remove (deallocate) any items in the irregular index set located in the index space of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4011bb1e9bbf5936ec6cd0eb9b36e9e6"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::removeOutsideBox" ref="4011bb1e9bbf5936ec6cd0eb9b36e9e6" args="(const hier::Box &amp;box)" -->
@@ -764,7 +824,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Remove (deallocate) any items in the irregular index set located outside of the index space of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>. 
+Remove (deallocate) any items in the irregular index set located outside of the index space of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="ec92b69d9f1702cc37c72521473ad2ea"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::removeGhostItems" ref="ec92b69d9f1702cc37c72521473ad2ea" args="()" -->
@@ -828,7 +890,10 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Returns true if there is an element of the irregular index set at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>. 
+Returns true if there is an element of the irregular index set at the specified <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4f5c3afa943d3a75104850d928ffb89f">hier::PatchData::getGhostBox()</a>.contains(index) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="41ce4e137f2e60525668faf4b6af9382"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getItem" ref="41ce4e137f2e60525668faf4b6af9382" args="(const hier::Index &amp;index) const " -->
@@ -850,20 +915,22 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Given an index, return a pointer to the item located at that index. If there is no item at the index, null is returned. 
+Given an index, return a pointer to the item located at that index. If there is no item at the index, null is returned.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == index.getDim() </dd></dl>
+
 </div>
 </div><p>
-<a class="anchor" name="74e546cc71f436939d4fc174417a99ad"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getSpecializedFromDatabase" ref="74e546cc71f436939d4fc174417a99ad" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
+<a class="anchor" name="1867bd84bd75482b4357d17f9171112b"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getFromRestart" ref="1867bd84bd75482b4357d17f9171112b" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getSpecializedFromDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
         </tr>
@@ -873,22 +940,23 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 
 <p>
 Check to make sure that the class version number is the same as the restart file version number.<p>
-Assertions: database must be a non-null pointer. 
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1cf0a7a7a58668744601638c036103a1">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5af241c296edc22d41af70f76aff5108">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="dd5879287dc1945636ebb27b42ee9ef9"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::putSpecializedToDatabase" ref="dd5879287dc1945636ebb27b42ee9ef9" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
+<a class="anchor" name="6250293cc37f0bbe9ecab110ef716e3e"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::putToRestart" ref="6250293cc37f0bbe9ecab110ef716e3e" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::putSpecializedToDatabase           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>          </td>
+          <td class="paramname"> <em>restart_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
         </tr>
@@ -897,10 +965,11 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <div class="memdoc">
 
 <p>
-Write out the class version number to the database.<p>
-Assertions: database must be a non-null pointer. 
+Write out the class version number to the restart database.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
+
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e0de5996e1ec46a9c409ab9d87df58f2">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#d057afe4f494361226db6bbd932348cf">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
@@ -923,7 +992,7 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="IndexData_8h.html">IndexData.h</a><li>source/SAMRAI/pdat/<a class="el" href="IndexData_8C.html">IndexData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

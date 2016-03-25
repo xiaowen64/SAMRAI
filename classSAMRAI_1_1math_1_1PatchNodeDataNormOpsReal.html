@@ -139,7 +139,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the number of data values for the node-centered data object in the given box. Note that it is assumed that the box refers to the cell-centered index space corresponding to the patch hierarchy. 
+Return the number of data values for the node-centered data object in the given box. Note that it is assumed that the box refers to the cell-centered index space corresponding to the patch hierarchy.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b2f4f72d271786a72137f430158b4565"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::sumControlVolumes" ref="b2f4f72d271786a72137f430158b4565" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol, const hier::Box &amp;box) const " -->
@@ -176,7 +179,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return sum of control volume entries for the node-centered data object. 
+Return sum of control volume entries for the node-centered data object.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data &amp;&amp; cvol </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="b09ffc5ec8f9d55d5be9ad80df71ebbd"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::abs" ref="b09ffc5ec8f9d55d5be9ad80df71ebbd" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;src, const hier::Box &amp;box) const " -->
@@ -213,7 +218,10 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Set destination component to absolute value of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \| s_i \|$" src="form_29.png">. 
+Set destination component to absolute value of source component. That is, each destination entry is set to <img class="formulaInl" alt="$d_i = \| s_i \|$" src="form_29.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="50c9b66e649fa2ea0ce58f9cc47d22ee"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::L1Norm" ref="50c9b66e649fa2ea0ce58f9cc47d22ee" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -250,7 +258,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \| data_i \| cvol_i )$" src="form_30.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sum_i ( \| data_i \| )$" src="form_31.png">. 
+Return discrete <img class="formulaInl" alt="$L_1$" src="form_16.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( \| data_i \| cvol_i )$" src="form_30.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sum_i ( \| data_i \| )$" src="form_31.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() <p>
+!cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="c8e4a8f2ef299a651b08a9d1549430a6"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::L2Norm" ref="c8e4a8f2ef299a651b08a9d1549430a6" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -287,7 +299,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_32.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_32.png">. 
+Return discrete <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of each data entry to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_32.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i)^2 cvol_i ) }$" src="form_32.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() <p>
+!cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="7d8f4eddbbce5b8c15322091b1ec289d"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::weightedL2Norm" ref="7d8f4eddbbce5b8c15322091b1ec289d" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;weight, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -330,7 +346,11 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) }$" src="form_33.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 ) }$" src="form_34.png">. 
+Return discrete weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm of the data using the control volume to weight the contribution of the data and weight entries to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 cvol_i ) }$" src="form_33.png">. If the control volume is NULL, the return value is <img class="formulaInl" alt="$\sqrt{ \sum_i ( (data_i * weight_i)^2 ) }$" src="form_34.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data &amp;&amp; weight <p>
+(data-&gt;getDim() == weight-&gt;getDim()) &amp;&amp; (data-&gt;getDim() == box.getDim()) <p>
+!cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="448cbf652c1170e62a2f20c4dd3d6043"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::RMSNorm" ref="448cbf652c1170e62a2f20c4dd3d6043" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -367,7 +387,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete root mean squared norm of the data. If the control volume is not NULL, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries. 
+Return discrete root mean squared norm of the data. If the control volume is not NULL, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="1f49952dd22cad36cc2e1ae472a94e03"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::weightedRMSNorm" ref="1f49952dd22cad36cc2e1ae472a94e03" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;weight, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -410,7 +432,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return discrete weighted root mean squared norm of the data. If the control volume is not NULL, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries. 
+Return discrete weighted root mean squared norm of the data. If the control volume is not NULL, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the sum of the control volumes. Otherwise, the return value is the weighted <img class="formulaInl" alt="$L_2$" src="form_19.png">-norm divided by the square root of the number of data entries.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data &amp;&amp; weight </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="93a6badd84e3fe869b36dccb5c8ba19f"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::maxNorm" ref="93a6badd84e3fe869b36dccb5c8ba19f" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -447,7 +471,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \| data_i \| )$" src="form_35.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. If the control volume is NULL, it is ignored during the computation of the maximum. 
+Return the <img class="formulaInl" alt="$\max$" src="form_24.png">-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \| data_i \| )$" src="form_35.png">, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png">. If the control volume is NULL, it is ignored during the computation of the maximum.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="88c7926277cfa06c780082eb52ea0a92"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::dot" ref="88c7926277cfa06c780082eb52ea0a92" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data1, const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data2, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt;()) const " -->
@@ -490,7 +516,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * data2_i * cvol_i )$" src="form_36.png">. If the control volume is NULL, it is ignored during the summation. 
+Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * data2_i * cvol_i )$" src="form_36.png">. If the control volume is NULL, it is ignored during the summation.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data1 &amp;&amp; data2 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="cec5a2e27c42bd7d6611aeb19bb7a6a4"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::integral" ref="cec5a2e27c42bd7d6611aeb19bb7a6a4" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box, const boost::shared_ptr&lt; pdat::NodeData&lt; double &gt; &gt; &amp;vol) const " -->
@@ -527,12 +555,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">. 
+Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png">.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataNormOpsReal_8h.html">PatchNodeDataNormOpsReal.h</a><li>source/SAMRAI/math/<a class="el" href="PatchNodeDataNormOpsReal_8C.html">PatchNodeDataNormOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

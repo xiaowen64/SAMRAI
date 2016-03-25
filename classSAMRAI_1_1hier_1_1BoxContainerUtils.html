@@ -30,18 +30,15 @@
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">I/O operations for containers that lack built-in versions.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainerUtils.html#49f31686082dc5706d3a3f6588bcc3f7">recursivePrintBoxVector</a> (const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;mapped_boxes, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, const std::string &amp;border=std::string(), int detail_depth=0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainerUtils.html#c21209b6f9245c5e58a960cad35182bf">recursivePrintBoxVector</a> (const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;boxes, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, const std::string &amp;border=std::string(), int detail_depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print a vector of Boxes to an output stream.  <a href="#49f31686082dc5706d3a3f6588bcc3f7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print a vector of Boxes to an output stream.  <a href="#c21209b6f9245c5e58a960cad35182bf"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Utilities for performing simple common tasks on a container of Boxes. 
 <p>
-TODO: Arguments should be re-ordered to the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> standard, output before input.<p>
-TODO: There are some very similar methods in this class. In many cases, one version supports input and output being the same object, but the other does not. For uniformity, all these methods should support input and output containers being the same object. It's simple to implement. 
-<p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="49f31686082dc5706d3a3f6588bcc3f7"></a><!-- doxytag: member="SAMRAI::hier::BoxContainerUtils::recursivePrintBoxVector" ref="49f31686082dc5706d3a3f6588bcc3f7" args="(const std::vector&lt; Box &gt; &amp;mapped_boxes, std::ostream &amp;output_stream=tbox::plog, const std::string &amp;border=std::string(), int detail_depth=0)" -->
+<a class="anchor" name="c21209b6f9245c5e58a960cad35182bf"></a><!-- doxytag: member="SAMRAI::hier::BoxContainerUtils::recursivePrintBoxVector" ref="c21209b6f9245c5e58a960cad35182bf" args="(const std::vector&lt; Box &gt; &amp;boxes, std::ostream &amp;output_stream=tbox::plog, const std::string &amp;border=std::string(), int detail_depth=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -49,7 +46,7 @@ TODO: There are some very similar methods in this class. In many cases, one vers
           <td class="memname">void SAMRAI::hier::BoxContainerUtils::recursivePrintBoxVector           </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_boxes</em>, </td>
+          <td class="paramname"> <em>boxes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -83,7 +80,7 @@ Print a vector of Boxes to an output stream.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_boxes</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>boxes</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>border</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>detail_depth</em>&nbsp;</td><td></td></tr>
@@ -94,7 +91,7 @@ Print a vector of Boxes to an output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxContainerUtils_8h.html">BoxContainerUtils.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxContainerUtils_8C.html">BoxContainerUtils.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

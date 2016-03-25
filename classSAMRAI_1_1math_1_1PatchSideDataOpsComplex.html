@@ -124,7 +124,11 @@ Empty constructor and destructor.
 <div class="memdoc">
 
 <p>
-Copy dst data to src data over given box. 
+Copy dst data to src data over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst &amp;&amp; src <p>
+dst-&gt;getDirectionVector() == src-&gt;getDirectionVector() <p>
+(dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="3e3c36ff4b3ad21330cb3b29c1518571"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataOpsComplex::swapData" ref="3e3c36ff4b3ad21330cb3b29c1518571" args="(const boost::shared_ptr&lt; hier::Patch &gt; &amp;patch, const int data1_id, const int data2_id) const " -->
@@ -159,7 +163,15 @@ Copy dst data to src data over given box.
 <div class="memdoc">
 
 <p>
-Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box. 
+Swap pointers for patch data objects. Objects are checked for consistency of depth, box, and ghost box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>patch <p>
+patch-&gt;getPatchData(data1_id) is actually a boost::shared_ptr&lt;pdat::SideData&lt;dcomplex&gt; &gt; <p>
+patch-&gt;getPatchData(data2_id) is actually a boost::shared_ptr&lt;pdat::SideData&lt;dcomplex&gt; &gt; <p>
+patch-&gt;getPatchData(data1_id)-&gt;getDepth() == patch-&gt;getPatchData(data2_id)-&gt;getDepth() <p>
+patch-&gt;getPatchData(data1_id)-&gt;getBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getBox()) <p>
+patch-&gt;getPatchData(data1_id)-&gt;getDirectionVector() == patch-&gt;getPatchData(data2_id)-&gt;getDirectionVector() <p>
+patch-&gt;getPatchData(data1_id)-&gt;getGhostBox().isSpatiallyEqual(patch-&gt;getPatchData(data2_id)-&gt;getGhostBox()) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="0da68cf5fcec0d523b94ad8baa6f6070"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataOpsComplex::printData" ref="0da68cf5fcec0d523b94ad8baa6f6070" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box, std::ostream &amp;s=tbox::plog) const " -->
@@ -194,7 +206,10 @@ Swap pointers for patch data objects. Objects are checked for consistency of dep
 <div class="memdoc">
 
 <p>
-Print data entries over given box to given output stream. 
+Print data entries over given box to given output stream.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>data <p>
+data-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="23523c34987ebb0451d0727c2bfaf821"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataOpsComplex::setToScalar" ref="23523c34987ebb0451d0727c2bfaf821" args="(const boost::shared_ptr&lt; pdat::SideData&lt; dcomplex &gt; &gt; &amp;dst, const dcomplex &amp;alpha, const hier::Box &amp;box) const " -->
@@ -229,12 +244,15 @@ Print data entries over given box to given output stream.
 <div class="memdoc">
 
 <p>
-Initialize data to given scalar over given box. 
+Initialize data to given scalar over given box.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dst <p>
+dst-&gt;getDim() == box.getDim() </dd></dl>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="PatchSideDataOpsComplex_8h.html">PatchSideDataOpsComplex.h</a><li>source/SAMRAI/math/<a class="el" href="PatchSideDataOpsComplex_8C.html">PatchSideDataOpsComplex.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -29,9 +29,9 @@
 <a href="classSAMRAI_1_1hier_1_1Patch-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#fdfbd4d139438688a6f7db5932e56b88">Patch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;mapped_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#9dd5e47e37d373de50c46e9dfa98181e">Patch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate a patch container over the box.  <a href="#fdfbd4d139438688a6f7db5932e56b88"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate a patch container over the box.  <a href="#9dd5e47e37d373de50c46e9dfa98181e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#db4a29c48c6750858eae54d3f2a22d53">~Patch</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for patch objects.  <a href="#db4a29c48c6750858eae54d3f2a22d53"></a><br></td></tr>
@@ -104,18 +104,21 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#6ccfbae83c584d2ee2a22364f49650e0">setPatchInHierarchy</a> (bool in_hierarchy)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a flag determining if the patch resides in a hierarchy.  <a href="#6ccfbae83c584d2ee2a22364f49650e0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#89acf0b98e8b5e387a707a058e61866e">getFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#d8f5afae315040c6bf759adc1c3fd32b">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the patch data items from the database.  <a href="#89acf0b98e8b5e387a707a058e61866e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#a2f85f51461b14eb9b184f1f2097a8d0">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;patchdata_write_table) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the patch data items from the restart database.  <a href="#d8f5afae315040c6bf759adc1c3fd32b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#4d9d8fd45da08a388d79da1d006c1df2">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;patchdata_write_table) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write patch data and other patch information to the database.  <a href="#a2f85f51461b14eb9b184f1f2097a8d0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write patch data and other patch information to the restart database.  <a href="#4d9d8fd45da08a388d79da1d006c1df2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#418252ce638a694ca94558d2586754fe">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border=std::string(), int depth=0) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print a patch (for debugging).  <a href="#418252ce638a694ca94558d2586754fe"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#729ff4cfbe4cf09b370077c8a68927dc">getDim</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of this object.  <a href="#729ff4cfbe4cf09b370077c8a68927dc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#ea8391805b0bdc258f9889027c7d2bfb">numPatchData</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Number of <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">PatchData</a> objects defined on this <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a>.  <a href="#ea8391805b0bdc258f9889027c7d2bfb"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#1b20bb8bdfb563d7e611dfa29a45592c">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;patch)</td></tr>
 
@@ -136,7 +139,7 @@ By default, the patch constructor does not allocate space for the various patch 
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="fdfbd4d139438688a6f7db5932e56b88"></a><!-- doxytag: member="SAMRAI::hier::Patch::Patch" ref="fdfbd4d139438688a6f7db5932e56b88" args="(const Box &amp;mapped_box, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor)" -->
+<a class="anchor" name="9dd5e47e37d373de50c46e9dfa98181e"></a><!-- doxytag: member="SAMRAI::hier::Patch::Patch" ref="9dd5e47e37d373de50c46e9dfa98181e" args="(const Box &amp;box, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -144,7 +147,7 @@ By default, the patch constructor does not allocate space for the various patch 
           <td class="memname">SAMRAI::hier::Patch::Patch           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_box</em>, </td>
+          <td class="paramname"> <em>box</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -167,10 +170,11 @@ Allocate a patch container over the box.
 <dl compact><dt><b>Note:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> data components are not allocated/instantiated.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>descriptor</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box.getLocalId() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -314,6 +318,7 @@ Typically, this function should only be called to access patch data objects that
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#ea8391805b0bdc258f9889027c7d2bfb">numPatchData()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -353,6 +358,8 @@ Typically, this function should only be called to access patch data objects that
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#729ff4cfbe4cf09b370077c8a68927dc">getDim()</a> == variable-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#729ff4cfbe4cf09b370077c8a68927dc">getDim()</a> <p>
+(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#ea8391805b0bdc258f9889027c7d2bfb">numPatchData()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -391,6 +398,8 @@ Set the patch data Pointer associated with the specified identifier.
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>data</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#729ff4cfbe4cf09b370077c8a68927dc">getDim()</a> == data-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#729ff4cfbe4cf09b370077c8a68927dc">getDim()</a>; <p>
+(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#ea8391805b0bdc258f9889027c7d2bfb">numPatchData()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -513,6 +522,7 @@ Allocate the specified component on the patch.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>time</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#54b3fe3f211a8e852bb86b3ba0cc61d7">getPatchDescriptor()</a>-&gt;getMaxNumberRegisteredComponents()) </dd></dl>
 
 </div>
 </div><p>
@@ -579,6 +589,7 @@ This component will need to be reallocated before its next use.<p>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#54b3fe3f211a8e852bb86b3ba0cc61d7">getPatchDescriptor()</a>-&gt;getMaxNumberRegisteredComponents()) </dd></dl>
 
 </div>
 </div><p>
@@ -694,6 +705,8 @@ Set the timestamp value for the specified patch component.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(id &gt;= 0) &amp;&amp; (id &lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#ea8391805b0bdc258f9889027c7d2bfb">numPatchData()</a>) <p>
+getPatchData(id) </dd></dl>
 
 </div>
 </div><p>
@@ -863,15 +876,15 @@ Set to true if the level holding this patch resides in a hierarchy; false otherw
 
 </div>
 </div><p>
-<a class="anchor" name="89acf0b98e8b5e387a707a058e61866e"></a><!-- doxytag: member="SAMRAI::hier::Patch::getFromDatabase" ref="89acf0b98e8b5e387a707a058e61866e" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database, const ComponentSelector &amp;component_selector)" -->
+<a class="anchor" name="d8f5afae315040c6bf759adc1c3fd32b"></a><!-- doxytag: member="SAMRAI::hier::Patch::getFromRestart" ref="d8f5afae315040c6bf759adc1c3fd32b" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db, const ComponentSelector &amp;component_selector)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::Patch::getFromDatabase           </td>
+          <td class="memname">void SAMRAI::hier::Patch::getFromRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>, </td>
+          <td class="paramname"> <em>restart_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -889,30 +902,31 @@ Set to true if the level holding this patch resides in a hierarchy; false otherw
 <div class="memdoc">
 
 <p>
-Get the patch data items from the database. 
+Get the patch data items from the restart database. 
 <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> state is read in from the database and all patch data objects specified in the component_selector are created.<p>
 The class version and restart file version must be equal.<p>
-<dl compact><dt><b>Assertions</b></dt><dd>Checks that the database is a non-null boost::shared_ptr, that data retrieved from the database are of the type expected, and that the patch_number read in from the database matches the patch number assigned to this <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a>. </dd></dl>
+<dl compact><dt><b>Assertions</b></dt><dd>Checks that data retrieved from the database are of the type expected, and that the patch_number read in from the database matches the patch number assigned to this <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a>. </dd></dl>
 <dl compact><dt><b>Note:</b></dt><dd>A warning will be printed to the log file if some patch data components that were requested through the component_selector are not found in the database.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>component_selector</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="a2f85f51461b14eb9b184f1f2097a8d0"></a><!-- doxytag: member="SAMRAI::hier::Patch::putUnregisteredToDatabase" ref="a2f85f51461b14eb9b184f1f2097a8d0" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database, const ComponentSelector &amp;patchdata_write_table) const " -->
+<a class="anchor" name="4d9d8fd45da08a388d79da1d006c1df2"></a><!-- doxytag: member="SAMRAI::hier::Patch::putToRestart" ref="4d9d8fd45da08a388d79da1d006c1df2" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db, const ComponentSelector &amp;patchdata_write_table) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::Patch::putUnregisteredToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::Patch::putToRestart           </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em>, </td>
+          <td class="paramname"> <em>restart_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -930,15 +944,16 @@ The class version and restart file version must be equal.<p>
 <div class="memdoc">
 
 <p>
-Write patch data and other patch information to the database. 
+Write patch data and other patch information to the restart database. 
 <p>
-Class version number and the state of the patch object are written. <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> data objects specified in the component selector are also written. <dl compact><dt><b>Assertions</b></dt><dd>Check that database is a non-null boost::shared_ptr.</dd></dl>
+Class version number and the state of the patch object are written. <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> data objects specified in the component selector are also written.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patchdata_write_table</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> specifying the patch data components to write. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patchdata_write_table</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> specifying the patch data components to write.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
 </div>
 </div><p>
@@ -1009,6 +1024,27 @@ Get the dimension of this object.
 
 </div>
 </div><p>
+<a class="anchor" name="ea8391805b0bdc258f9889027c7d2bfb"></a><!-- doxytag: member="SAMRAI::hier::Patch::numPatchData" ref="ea8391805b0bdc258f9889027c7d2bfb" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SAMRAI::hier::Patch::numPatchData           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Number of <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">PatchData</a> objects defined on this <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a>. 
+<p>
+
+</div>
+</div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
 <a class="anchor" name="1b20bb8bdfb563d7e611dfa29a45592c"></a><!-- doxytag: member="SAMRAI::hier::Patch::operator&lt;&lt;" ref="1b20bb8bdfb563d7e611dfa29a45592c" args="(std::ostream &amp;s, const Patch &amp;patch)" -->
 <div class="memitem">
@@ -1049,7 +1085,7 @@ Output patch information (box and number of components).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="Patch_8h.html">Patch.h</a><li>source/SAMRAI/hier/<a class="el" href="Patch_8C.html">Patch.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

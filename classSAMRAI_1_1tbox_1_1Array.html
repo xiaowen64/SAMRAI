@@ -270,7 +270,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Non-const array subscripting. Return a reference the object at array index ``i'' (between 0 and N-1, where N is the number of elements in the array. 
+Non-const array subscripting. Return a reference the object at array index ``i'' (between 0 and N-1, where N is the number of elements in the array.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> index of item whose reference is to be returned.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#cc3ec6cc97b6b8c5b46bd4f6382b9170">size()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2b4c4f0eb4dd00b5aeeb3cde234bd759"></a><!-- doxytag: member="SAMRAI::tbox::Array::operator[]" ref="2b4c4f0eb4dd00b5aeeb3cde234bd759" args="(const int i) const " -->
@@ -292,7 +299,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Const array subscripting. Return a const reference to the object at array index ``i'' (between 0 and N-1, where N is the number of elements in the array. 
+Const array subscripting. Return a const reference to the object at array index ``i'' (between 0 and N-1, where N is the number of elements in the array.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> index of item whose reference is to be returned.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#cc3ec6cc97b6b8c5b46bd4f6382b9170">size()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="4bb9bfc2fa8b0df88947694300e9e14a"></a><!-- doxytag: member="SAMRAI::tbox::Array::isNull" ref="4bb9bfc2fa8b0df88947694300e9e14a" args="() const " -->
@@ -400,7 +414,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return a non-const pointer to the i-th object. The index must be between 0 and N-1, where N is the number of elements in the array. 
+Return a non-const pointer to the i-th object. The index must be between 0 and N-1, where N is the number of elements in the array.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> index of item whose reference is to be returned.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#cc3ec6cc97b6b8c5b46bd4f6382b9170">size()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="fa85c54cb53d7438f89d4bd2d99aebd4"></a><!-- doxytag: member="SAMRAI::tbox::Array::getPointer" ref="fa85c54cb53d7438f89d4bd2d99aebd4" args="(const int i=0) const " -->
@@ -422,7 +443,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Return a const pointer to the i-th object. The index must be between 0 and N-1, where N is the number of elements in the array. 
+Return a const pointer to the i-th object. The index must be between 0 and N-1, where N is the number of elements in the array.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> index of item whose reference is to be returned.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#cc3ec6cc97b6b8c5b46bd4f6382b9170">size()</a>) </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="171a4d179d05a7c51c80b5bda2492a5f"></a><!-- doxytag: member="SAMRAI::tbox::Array::getSize" ref="171a4d179d05a7c51c80b5bda2492a5f" args="() const " -->
@@ -539,7 +567,9 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Returns a reference to the last element in the array container. 
+Returns a reference to the last element in the array container.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#cc3ec6cc97b6b8c5b46bd4f6382b9170">size()</a> &gt; 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="dd72893025e54feb05ff96d69aa03538"></a><!-- doxytag: member="SAMRAI::tbox::Array::erase" ref="dd72893025e54feb05ff96d69aa03538" args="(const int position)" -->
@@ -561,7 +591,14 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Removes from the array container a single element at position. 
+Removes from the array container a single element at position.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>position</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> index of element to be removed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(position &gt;= 0) &amp;&amp; (position &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#cc3ec6cc97b6b8c5b46bd4f6382b9170">size()</a>) </dd></dl>
+
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
@@ -584,7 +621,7 @@ template&lt;class TYPE&gt; </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Array_8h.html">Array.h</a><li>source/SAMRAI/tbox/<a class="el" href="Array_8C.html">Array.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

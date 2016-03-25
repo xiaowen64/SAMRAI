@@ -98,9 +98,10 @@ Constructor initializes object to default (mostly undefined) state.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>const std::string reference for name of object used in error reporting. When assertion checking is on, the string cannot be empty. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>const std::string reference for name of object used in error reporting.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>!object_name.empty() </dd></dl>
 
 </div>
 </div><p>
@@ -206,7 +207,10 @@ Register node data with given patch data identifier for summing.
     <tr><td valign="top"></td><td valign="top"><em>node_data_id</em>&nbsp;</td><td>integer patch data index for node data to sum</td></tr>
   </table>
 </dl>
-The node data id must be a valid patch data id (&gt;=0) and must correspond to node-centered double data. If not, an error will result. 
+<dl compact><dt><b>Precondition:</b></dt><dd>!d_setup_called <p>
+node_data_id &gt;= 0 <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#53dede87024da9e337e1e7d2e2c9a59f">hier::VariableDatabase::getDatabase()</a>-&gt;getPatchDescriptor()-&gt;getPatchDataFactory(node_data_id) is actually a boost::shared_ptr&lt;pdat::NodeDataFactory&lt;double&gt; &gt; </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="21d001989dbe742273ef7be9a4974ceb"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::setupSum" ref="21d001989dbe742273ef7be9a4974ceb" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level)" -->
@@ -234,7 +238,9 @@ If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.htm
     <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td>pointer to level on which to perform node sum</td></tr>
   </table>
 </dl>
-When assertion checking is active, the level pointer cannot be null. 
+<dl compact><dt><b>Precondition:</b></dt><dd>level <p>
+!d_hierarchy_setup_called </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5602ea6a72e3cdc8cb8b4ffc836d53e7"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::setupSum" ref="5602ea6a72e3cdc8cb8b4ffc836d53e7" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)" -->
@@ -279,7 +285,10 @@ If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.htm
     <tr><td valign="top"></td><td valign="top"><em>finest_level</em>&nbsp;</td><td>finest level number for node sum</td></tr>
   </table>
 </dl>
-When assertion checking is active, the hierarchy pointer cannot be null, and the range of levels must be valid. 
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+(coarsest_level &gt;= 0) &amp;&amp; (finest_level &gt;= coarsest_level) &amp;&amp; (finest_level &lt;= hierarchy-&gt;getFinestLevelNumber()) <p>
+!d_hierarchy_setup_called </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="2be0a033db98b02ced7743b8a68c0492"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::computeSum" ref="2be0a033db98b02ced7743b8a68c0492" args="(const bool fill_hanging_nodes=false) const " -->
@@ -336,7 +345,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryNodeSum_8h.html">PatchBoundaryNodeSum.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

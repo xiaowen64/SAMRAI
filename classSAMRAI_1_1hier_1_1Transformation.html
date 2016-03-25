@@ -153,6 +153,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#e3bd6fefcd558557ac959acb32e61234">inverseTransform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Apply the inverse of this object's transformation to the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#e3bd6fefcd558557ac959acb32e61234"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">Transformation</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#dc1f58802800eed2e663493d57cb70ff">getInverseTransformation</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a Tranformation object that defines the inverse of this tranformation.  <a href="#dc1f58802800eed2e663493d57cb70ff"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">Transformation</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#d72265046914bcfa546af5146b1b4e5a">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">Transformation</a> &amp;rhs)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assignment operator.  <a href="#d72265046914bcfa546af5146b1b4e5a"></a><br></td></tr>
@@ -464,9 +467,10 @@ Transform the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in th
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> will be transformed </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> will be transformed</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(box.getBlockId() == <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#7349488dd52bb7a3799cc764741b71c3">getBeginBlock()</a>) || (<a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#7349488dd52bb7a3799cc764741b71c3">getBeginBlock()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html#a65f5c3711e7ece2c05202907e641808">BlockId::invalidId()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -495,6 +499,28 @@ If <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#6dc86a372b95e4
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(box.getBlockId() == <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#7349488dd52bb7a3799cc764741b71c3">getBeginBlock()</a>) || (<a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#7349488dd52bb7a3799cc764741b71c3">getBeginBlock()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html#a65f5c3711e7ece2c05202907e641808">BlockId::invalidId()</a>) </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="dc1f58802800eed2e663493d57cb70ff"></a><!-- doxytag: member="SAMRAI::hier::Transformation::getInverseTransformation" ref="dc1f58802800eed2e663493d57cb70ff" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">Transformation</a> SAMRAI::hier::Transformation::getInverseTransformation           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get a Tranformation object that defines the inverse of this tranformation. 
+<p>
 
 </div>
 </div><p>
@@ -591,7 +617,7 @@ Get the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> for
 Map a string-based identifier of a rotation operation to a RotationIdentifier value. 
 <p>
 The rotation_string array must have each entry intended to be used to create a value of the enumerated type RotationIdentifier. For example, to create the value JUP_IDOWN_KUP, the strings in the array should be "J_UP", "I_DOWN", and "K_UP", in that order. See the comments for the RotationIdentifier definition for the explanation of the meaning of the RotationIdentifier values.<p>
-An assertion failure will occur if the array length is not equal to the dimension of the hierarchy. A run-time error will occur if the strings do not match the format needed to create a valid <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#1908f436f2e3bec8b6c0c24b3fcb8cd9">Transformation::RotationIdentifier</a> value.<p>
+A run-time error will occur if the strings do not match the format needed to create a valid <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#1908f436f2e3bec8b6c0c24b3fcb8cd9">Transformation::RotationIdentifier</a> value.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>RotationIdentifier determined by the strings.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -599,6 +625,8 @@ An assertion failure will occur if the array length is not equal to the dimensio
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>rotation_string.getSize() == dim.getValue() <p>
+(dim.getValue() == 2) || (dim.getValue() == 3) </dd></dl>
 
 </div>
 </div><p>
@@ -635,9 +663,10 @@ A rotation identifier signifies a specific rotation of an index space. For each 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rotation</em>&nbsp;</td><td>Rotation for which the reverse rotation is sought </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td>Dimension being used </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td>Dimension being used</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dim.getValue() == 2) || (dim.getValue() == 3) </dd></dl>
 
 </div>
 </div><p>
@@ -683,6 +712,8 @@ Given a rotation and shift that define the relationship between two neighboring 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rotation</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>back_shift.getDim() == shift.getDim() <p>
+(dim.getValue() == 2) || (dim.getValue() == 3) </dd></dl>
 
 </div>
 </div><p>
@@ -725,9 +756,10 @@ The parameter index is an int pointer with points to an array of int data, lengt
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>index</em>&nbsp;</td><td>array identifying a point in index space </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>dim</em>&nbsp;</td><td>Dimension of the index and the hierarchy where it is located </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>rotation</em>&nbsp;</td><td>identifier of the rotation that will be applied to index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>rotation</em>&nbsp;</td><td>identifier of the rotation that will be applied to index</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(dim.getValue() == 2) || (dim.getValue() == 3) </dd></dl>
 
 </div>
 </div><p>
@@ -771,7 +803,7 @@ According to the rotation number, the location of the given <a class="el" href="
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="Transformation_8h.html">Transformation.h</a><li>source/SAMRAI/hier/<a class="el" href="Transformation_8C.html">Transformation.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

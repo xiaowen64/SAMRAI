@@ -405,13 +405,13 @@ This is a modifying operation on this <a class="el" href="classSAMRAI_1_1hier_1_
 <p>
 Check whether the specified bit vector position is true. 
 <p>
-When assertion checking is active, an assertion will result if the given position is out-of-bounds.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>The position in the bit vector to check.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>True if the bit at position i is set to true. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>True if the bit at position i is set to true.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html#d1635ea0459541b6e91451db18ecbe94">getSize()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -434,12 +434,12 @@ When assertion checking is active, an assertion will result if the given positio
 <p>
 Set the specified bit vector position to true. 
 <p>
-When assertion checking is active, an assertion will result if the given position is out-of-bounds.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>The position in the bit vector to set to true. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>The position in the bit vector to set to true.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html#d1635ea0459541b6e91451db18ecbe94">getSize()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -462,12 +462,12 @@ When assertion checking is active, an assertion will result if the given positio
 <p>
 Set the specified bit vector position to false. 
 <p>
-When assertion checking is active, an assertion will result if the given position is out-of-bounds.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>The position in the bit vector to set to false. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>i</em>&nbsp;</td><td>The position in the bit vector to set to false.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html#d1635ea0459541b6e91451db18ecbe94">getSize()</a>) </dd></dl>
 
 </div>
 </div><p>
@@ -603,7 +603,7 @@ Print the bit vector data to the specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="ComponentSelector_8h.html">ComponentSelector.h</a><li>source/SAMRAI/hier/<a class="el" href="ComponentSelector_8C.html">ComponentSelector.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -34,18 +34,15 @@
 <a href="classSAMRAI_1_1solv_1_1CellPoissonFACOps-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#ee61404d3b33868e65c4327887d74e09">CellPoissonFACOps</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name=std::string(), const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#04df32dccff01a762789a6073bf67c08">CellPoissonFACOps</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> &gt; &amp;hypre_solver, const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name=std::string(), const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#ee61404d3b33868e65c4327887d74e09"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#04df32dccff01a762789a6073bf67c08"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#f68794b2e9ca3e0eedc662beb62e7f33">~CellPoissonFACOps</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#f68794b2e9ca3e0eedc662beb62e7f33"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#364ae41c84a837644eb57e559b0b6d36">setPoissonSpecifications</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> &amp;spec)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the scalar Poisson equation specifications.  <a href="#364ae41c84a837644eb57e559b0b6d36"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#fcdcb45d56d266db88ed7ccbb809f6c4">enableLogging</a> (bool enable_logging)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enable logging.  <a href="#fcdcb45d56d266db88ed7ccbb809f6c4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#4c96a2b13dc4830c3b19b69588b050bd">setPhysicalBcCoefObject</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *physical_bc_coef)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provide an implementation for getting the physical bc coefficients.  <a href="#4c96a2b13dc4830c3b19b69588b050bd"></a><br></td></tr>
@@ -61,28 +58,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#c14fd20b7566614fa56cf135b2717e60">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#c14fd20b7566614fa56cf135b2717e60"></a><br></td></tr>
-<tr><td colspan="2"><div class="groupHeader">Functions for setting solver mathematic algorithm controls</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#bddbb3e978fbd851c37daadb71384cdd">setSmoothingChoice</a> (const std::string &amp;smoothing_choice)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the choice of smoothing algorithms.  <a href="#bddbb3e978fbd851c37daadb71384cdd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#4f97bfbb403f6389ac098382477906d2">setCoarsestLevelSolverChoice</a> (const std::string &amp;choice)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set coarse level solver.  <a href="#4f97bfbb403f6389ac098382477906d2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#40cfa68fce513ed79d51c580053b8f2b">setCoarsestLevelSolverTolerance</a> (double tol)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set tolerance for coarse level solve.  <a href="#40cfa68fce513ed79d51c580053b8f2b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#7a66e3136abac36523184b73d3555d84">setCoarsestLevelSolverMaxIterations</a> (int max_iterations)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set max iterations for coarse level solve.  <a href="#7a66e3136abac36523184b73d3555d84"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#7b853e982526a76b049654668df07cfc">setCoarseFineDiscretization</a> (const std::string &amp;coarsefine_method)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the coarse-fine boundary discretization method.  <a href="#7b853e982526a76b049654668df07cfc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#0af08cba26ce97836f2454c23ff8ebad">setProlongationMethod</a> (const std::string &amp;prolongation_method)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the name of the prolongation method.  <a href="#0af08cba26ce97836f2454c23ff8ebad"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#ed16b05874c74eb7e767e4207815ccf1">setUseSMG</a> (bool use_smg)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use Hypre's PFMG algorithm instead of the SMG algorithm.  <a href="#ed16b05874c74eb7e767e4207815ccf1"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions for setting patch data indices and coefficients</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#c2a11e9c53e6e465b64e1aa9e998dc1a">setFluxId</a> (int flux_id)</td></tr>
 
@@ -122,6 +97,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#dda1412142d5c70a223128be7a0dfcd1">postprocessOneCycle</a> (int fac_cycle_num, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;current_soln, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;residual)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Regular call back routine to be called after each FAC cycle.  <a href="#dda1412142d5c70a223128be7a0dfcd1"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#68bc4a9635bcf7505346c1fd1ef2d43b">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read parameters from input database.  <a href="#68bc4a9635bcf7505346c1fd1ef2d43b"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 FAC operator class to solve Poisson's equation on a SAMR grid, using cell-centered, second-order finite-volume method, with Robin boundary conditions. 
@@ -140,23 +119,58 @@ This class is meant to provide the Poisson-specific operator used by the FAC pre
 <li>The solution vector <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>, with appropriate norm weighting for the cell-centered AMR mesh. This class provides the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#5f6fd2fc3f7e31a800cf63a5671440e1">computeVectorWeights()</a> to help with computing the appropriate weights. Since this is for a scalar equation, only the first depth of the first component of the vectors are used. All other parts are ignored.</li><li>The source vector <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a> for f.</li><li>A <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> objects to specify the cell-centered scalar field C and the side-centered diffusion coefficients D</li><li>The boundary condition specifications in terms of the coefficients <img class="formulaInl" alt="$ \alpha $" src="form_51.png">, <img class="formulaInl" alt="$ \beta $" src="form_52.png"> and <img class="formulaInl" alt="$ \gamma $" src="form_53.png"> in the Robin formula <img class="formulaInl" alt="$ \alpha u + \beta u_n = \gamma $" src="form_54.png"> applied on the boundary faces. See <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a>.</li></ol>
 <p>
 This class allocates and deallocates only its own scratch data. Other data that it manipuates are passed in as function arguments. Hence, it owns none of the solution vectors, error vectors, diffusion coefficient data, or any such things.<p>
-Input Examples <div class="fragment"><pre class="fragment"> * coarse_solver_choice = "hypre"    // see setCoarsestLevelSolverChoice()
- * coarse_solver_tolerance = 1e-14   // see setCoarsestLevelSolverTolerance()
- * coarse_solver_max_iterations = 10 // see setCoarsestLevelSolverMaxIterations()
- * smoothing_choice = "redblack"     // see setSmoothingChoice()
- * cf_discretization = "Ewing"       // see setCoarseFineDiscretization()
- * prolongation_method = "LINEAR_REFINE" // see setProlongationMethod()
- * hypre_solver = { ... }            // tbox::Database for initializing Hypre solver
- * </pre></div> 
+<b> Input Parameters </b><p>
+<b> Definitions: </b><ul>
+<li><b>coarse_solver_choice</b> </li></ul>
+<p>
+<ul>
+<li><b>coarse_solver_tolerance</b> </li></ul>
+<p>
+<ul>
+<li><b>coarse_solver_max_iterations</b> </li></ul>
+<p>
+<ul>
+<li><b>cf_discretization</b> </li></ul>
+<p>
+<ul>
+<li><b>prolongation_method</b> </li></ul>
+<p>
+<ul>
+<li><b>enable_logging</b> </li></ul>
+<p>
+<b> Details:</b> <br>
+ <table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
+<tr>
+<td>coarse_solver_choice </td><td>string </td><td>"hypre" </td><td>"hypre", "redblack", "jacobi" </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>coarse_solver_tolerance </td><td>double </td><td>1e-14 </td><td>&gt;0.0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>coarse_solver_max_iterations </td><td>int </td><td>10 </td><td>&gt;=1 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>cf_discretization </td><td>string </td><td>"Ewing" </td><td>"Ewing", "CONSTANT_REFINE", "CONSERVATIVE_LINEAR_REFINE", "LINEAR_REFINE" </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>prolongation_method </td><td>string </td><td>"LINEAR_REFINE" </td><td>"CONSTANT_REFINE", "CONSERVATIVE_LINEAR_REFINE", "LINEAR_REFINE" </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<tr>
+<td>enable_logging </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+</table>
+
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="ee61404d3b33868e65c4327887d74e09"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::CellPoissonFACOps" ref="ee61404d3b33868e65c4327887d74e09" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name=std::string(), const boost::shared_ptr&lt; tbox::Database &gt; &amp;database=boost::shared_ptr&lt; tbox::Database &gt;())" -->
+<a class="anchor" name="04df32dccff01a762789a6073bf67c08"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::CellPoissonFACOps" ref="04df32dccff01a762789a6073bf67c08" args="(const boost::shared_ptr&lt; CellPoissonHypreSolver &gt; &amp;hypre_solver, const tbox::Dimension &amp;dim, const std::string &amp;object_name=std::string(), const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::solv::CellPoissonFACOps::CellPoissonFACOps           </td>
           <td>(</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>hypre_solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>, </td>
         </tr>
@@ -170,12 +184,12 @@ Input Examples <div class="fragment"><pre class="fragment"> * coarse_solver_choi
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>database</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -187,8 +201,9 @@ Constructor.
 If you want standard output and logging, pass in valid pointers for those streams. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>Ojbect name </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>database</em>&nbsp;</td><td>Input database </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>Object name </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>hypre_solver</em>&nbsp;</td><td>underlying hypre solver </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>input_db</em>&nbsp;</td><td>Input database </td></tr>
   </table>
 </dl>
 
@@ -238,203 +253,6 @@ Set the scalar Poisson equation specifications.
 
 </div>
 </div><p>
-<a class="anchor" name="fcdcb45d56d266db88ed7ccbb809f6c4"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::enableLogging" ref="fcdcb45d56d266db88ed7ccbb809f6c4" args="(bool enable_logging)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::enableLogging           </td>
-          <td>(</td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>enable_logging</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Enable logging. 
-<p>
-By default, logging is disabled. The logging flag is propagated to the major components used by this class. 
-</div>
-</div><p>
-<a class="anchor" name="bddbb3e978fbd851c37daadb71384cdd"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setSmoothingChoice" ref="bddbb3e978fbd851c37daadb71384cdd" args="(const std::string &amp;smoothing_choice)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setSmoothingChoice           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>smoothing_choice</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the choice of smoothing algorithms. 
-<p>
-Current smoothing choices are:<ul>
-<li>"redblack": Red-black Gauss-Seidel smoothing. </li></ul>
-
-</div>
-</div><p>
-<a class="anchor" name="4f97bfbb403f6389ac098382477906d2"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setCoarsestLevelSolverChoice" ref="4f97bfbb403f6389ac098382477906d2" args="(const std::string &amp;choice)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setCoarsestLevelSolverChoice           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>choice</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set coarse level solver. 
-<p>
-Select from these:<ul>
-<li><code>"redblack"</code> (red-black smoothing until convergence--very slow!)</li><li><code>"hypre"</code> (only if the HYPRE library is available). </li></ul>
-
-</div>
-</div><p>
-<a class="anchor" name="40cfa68fce513ed79d51c580053b8f2b"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setCoarsestLevelSolverTolerance" ref="40cfa68fce513ed79d51c580053b8f2b" args="(double tol)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setCoarsestLevelSolverTolerance           </td>
-          <td>(</td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>tol</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set tolerance for coarse level solve. 
-<p>
-If the coarse level solver requires a tolerance (currently, they all do), the specified value is used. 
-</div>
-</div><p>
-<a class="anchor" name="7a66e3136abac36523184b73d3555d84"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setCoarsestLevelSolverMaxIterations" ref="7a66e3136abac36523184b73d3555d84" args="(int max_iterations)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setCoarsestLevelSolverMaxIterations           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>max_iterations</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set max iterations for coarse level solve. 
-<p>
-If the coarse level solver requires a max iteration limit (currently, they all do), the specified value is used. 
-</div>
-</div><p>
-<a class="anchor" name="7b853e982526a76b049654668df07cfc"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setCoarseFineDiscretization" ref="7b853e982526a76b049654668df07cfc" args="(const std::string &amp;coarsefine_method)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setCoarseFineDiscretization           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>coarsefine_method</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the coarse-fine boundary discretization method. 
-<p>
-Specify the <code>op_name</code> std::string which will be passed to xfer::Geometry::lookupRefineOperator() to get the operator for setting fine grid ghost cells from the coarse grid. Note that chosing this operator implicitly choses the discretization method at the coarse-fine boundary.<p>
-There is one important instance where this std::string is <em>not</em> passed to xfer::Geometry::lookupRefineOperator. If this variable is set to "Ewing", Ewing's coarse-fine discretization is used (a constant refinement is performed, and the flux is later corrected to result in Ewing's scheme). For a reference to Ewing's discretization method, see "Local Refinement Techniques for Elliptic Problems on Cell-Centered Grids, I. Error Analysis", Mathematics of Computation, Vol. 56, No. 194, April 1991, pp. 437-461.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>coarsefine_method</em>&nbsp;</td><td>String selecting the coarse-fine discretization method. </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="0af08cba26ce97836f2454c23ff8ebad"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setProlongationMethod" ref="0af08cba26ce97836f2454c23ff8ebad" args="(const std::string &amp;prolongation_method)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setProlongationMethod           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>prolongation_method</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the name of the prolongation method. 
-<p>
-Specify the <code>op_name</code> std::string which will be passed to xfer::Geometry::lookupRefineOperator() to get the operator for prolonging the coarse-grid correction.<p>
-By default, "CONSTANT_REFINE" is used. "LINEAR_REFINE" seems to to lead to faster convergence, but it does NOT satisfy the Galerkin condition.<p>
-Prolonging using linear refinement requires a Robin bc coefficient implementation that is capable of delivering coefficients for non-hierarchy data, because linear refinement requires boundary conditions to be set on temporary levels.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>prolongation_method</em>&nbsp;</td><td>String selecting the coarse-fine discretization method. </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="ed16b05874c74eb7e767e4207815ccf1"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setUseSMG" ref="ed16b05874c74eb7e767e4207815ccf1" args="(bool use_smg)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::setUseSMG           </td>
-          <td>(</td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>use_smg</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set whether to use Hypre's PFMG algorithm instead of the SMG algorithm. 
-<p>
-This flag affects the Hypre solver (used to solve the coarsest level). The flag is used to select which of HYPRE's linear solver algorithms to use if true, the semicoarsening multigrid algorithm is used, and if false, the ``PF'' multigrid algorithm is used. By default, the SMG algorithm is used.<p>
-This setting has effect only when Hypre is chosen for the coarsest level solver. See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#4f97bfbb403f6389ac098382477906d2">setCoarsestLevelSolverChoice()</a>.<p>
-Changing the algorithm must be done before initializing the solver state and must NOT be done while the state is initialized (the program will exit), as that would corrupt the state. 
-</div>
-</div><p>
 <a class="anchor" name="c2a11e9c53e6e465b64e1aa9e998dc1a"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setFluxId" ref="c2a11e9c53e6e465b64e1aa9e998dc1a" args="(int flux_id)" -->
 <div class="memitem">
 <div class="memproto">
@@ -454,7 +272,7 @@ Changing the algorithm must be done before initializing the solver state and mus
 <p>
 Set the scratch patch data index for the flux. 
 <p>
-The use of this function is optional. The patch data index should be a pdat::SideData&lt;DIM&gt; type of variable. If the flux id is -1 (the default initial value), scratch space for the flux is allocated as needed and immediately deallocated afterward, level by level. If you have space preallocated for flux and you would like that to be used, set flux id to the patch data index of that space. 
+The use of this function is optional. The patch data index should be a pdat::SideData&lt;TYPE&gt; type of variable. If the flux id is -1 (the default initial value), scratch space for the flux is allocated as needed and immediately deallocated afterward, level by level. If you have space preallocated for flux and you would like that to be used, set flux id to the patch data index of that space. 
 </div>
 </div><p>
 <a class="anchor" name="4c96a2b13dc4830c3b19b69588b050bd"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::setPhysicalBcCoefObject" ref="4c96a2b13dc4830c3b19b69588b050bd" args="(const RobinBcCoefStrategy *physical_bc_coef)" -->
@@ -557,9 +375,12 @@ This function is state-independent. All inputs are in the argument list.<p>
     <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>Hierarchy configuration to compute weights for </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>weight_id</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> data index of the weight </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>coarsest_ln</em>&nbsp;</td><td>Coarsest level number. Must be included in hierarchy. Must not be greater than <code>finest_ln</code>. Default to 0. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>finest_ln</em>&nbsp;</td><td>Finest level number. Must be included in hierarchy. Must not be less than <code>coarsest_ln</code>. Default to finest level in <code>hierarchy</code>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>finest_ln</em>&nbsp;</td><td>Finest level number. Must be included in hierarchy. Must not be less than <code>coarsest_ln</code>. Default to finest level in <code>hierarchy</code>.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>hierarchy <p>
+d_dim == hierarchy-&gt;getDim() <p>
+finest_ln &gt;= coarsest_ln </dd></dl>
 
 </div>
 </div><p>
@@ -638,9 +459,12 @@ Note that the patch must exist on a level in an AMR hierarchy so that the discre
     <tr><td valign="top"></td><td valign="top"><em>patch</em>&nbsp;</td><td>patch on which computation will take place </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ratio_to_coarser_level</em>&nbsp;</td><td>refinement ratio from coarser level to level on which patch lives; if current patch level is level zero, this is ignored </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>w_data</em>&nbsp;</td><td>cell-centered data </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>Dgradw_data</em>&nbsp;</td><td>side-centered flux data (i.e., D (grad w)) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Dgradw_data</em>&nbsp;</td><td>side-centered flux data (i.e., D (grad w))</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d_dim == patch.getDim()) &amp;&amp; (d_dim == ratio_to_coarser_level.getDim()) &amp;&amp; (d_dim == w_data.getDim()) &amp;&amp; (d_dim == Dgradw_data.getDim()) <p>
+patch.inHierarchy() <p>
+w_data.getGhostCellWidth() &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#901924f324929536e15796aff4360e57">hier::IntVector::getOne</a>(ratio_to_coarser_level.getDim()) </dd></dl>
 
 </div>
 </div><p>
@@ -1178,9 +1002,36 @@ Get the name of this object.
 
 </div>
 </div><p>
+<a class="anchor" name="68bc4a9635bcf7505346c1fd1ef2d43b"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACOps::getFromInput" ref="68bc4a9635bcf7505346c1fd1ef2d43b" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACOps::getFromInput           </td>
+          <td>(</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_db</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Read parameters from input database. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>input_db</em>&nbsp;</td><td>Input Database. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACOps_8h.html">CellPoissonFACOps.h</a><li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACOps_8C.html">CellPoissonFACOps.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

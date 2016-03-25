@@ -186,6 +186,9 @@ Assertions: bdry_type must be between 1 and dim, inclusive. location_index must 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>location_index</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(bdry_type &gt;= 1) &amp;&amp; (bdry_type &lt;= d_dim.getValue()) <p>
+location_index &gt;= 0 <p>
+location_index &lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#ade02e0600de23c5afe6e30298b7eab4">BoundaryLookupTable::getLookupTable</a>(box.getDim())-&gt;getMaxLocationIndices()[bdry_type - 1] </dd></dl>
 
 </div>
 </div><p>
@@ -318,7 +321,7 @@ Return the boundary type (codimension) of the boundary box.
 <p>
 Return the location index for the boundary box. 
 <p>
-The location index is an integer which indicates the location of the the boundary box in relation to the location of the associated patch. The conventions for the location index depend on the dimension of the problem and the boundary type (codimentsion) of the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>.<p>
+The location index is an integer which indicates the location of the the boundary box in relation to the location of the associated patch. The conventions for the location index depend on the dimension of the problem and the boundary type (codimension) of the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>.<p>
 <div class="fragment"><pre class="fragment">    * Conventions:
     * ============
     *
@@ -482,9 +485,10 @@ Returns BoundaryOrientation value indicating whether the boundary box is on the 
 <dl compact><dt><b>Returns:</b></dt><dd>BoundaryOrientation value LOWER, MIDDLE, or UPPER</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dir</em>&nbsp;</td><td>Coordinate direction on which to query </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dir</em>&nbsp;</td><td>Coordinate direction on which to query</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>dir &lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#d0a2849474f95cdce267f088e0f66856">getDim()</a>.getValue() </dd></dl>
 
 </div>
 </div><p>
@@ -512,7 +516,7 @@ Return the dimension of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8h.html">BoundaryBox.h</a><li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8C.html">BoundaryBox.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

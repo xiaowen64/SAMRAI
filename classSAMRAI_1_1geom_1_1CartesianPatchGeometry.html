@@ -121,7 +121,11 @@ Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianPatchGeometry.html">Ca
 <div class="memdoc">
 
 <p>
-Constructor for <a class="el" href="classSAMRAI_1_1geom_1_1CartesianPatchGeometry.html">CartesianPatchGeometry</a> class. It simply passes patch boundary information to <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">hier::PatchGeometry</a> base class constructor and allocates storage for spatial coordinates on patch. 
+Constructor for <a class="el" href="classSAMRAI_1_1geom_1_1CartesianPatchGeometry.html">CartesianPatchGeometry</a> class. It simply passes patch boundary information to <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">hier::PatchGeometry</a> base class constructor and allocates storage for spatial coordinates on patch.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>dx != 0 <p>
+x_lo != 0 <p>
+x_up != 0 </dd></dl>
+
 </div>
 </div><p>
 <a class="anchor" name="f37367a7c22ae92adcd69f0e5e56e3ff"></a><!-- doxytag: member="SAMRAI::geom::CartesianPatchGeometry::~CartesianPatchGeometry" ref="f37367a7c22ae92adcd69f0e5e56e3ff" args="()" -->
@@ -225,7 +229,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianPatchGeometry_8h.html">CartesianPatchGeometry.h</a><li>source/SAMRAI/geom/<a class="el" href="CartesianPatchGeometry_8C.html">CartesianPatchGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

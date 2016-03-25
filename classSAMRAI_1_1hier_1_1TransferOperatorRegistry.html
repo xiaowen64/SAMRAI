@@ -53,15 +53,16 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#ff498de1102fa4b73ebe7b1c8ebfbbb4">lookupTimeInterpolateOperator</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name=&quot;STD_LINEAR_TIME_INTERPOLATE&quot;)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for time interpolation operator.  <a href="#ff498de1102fa4b73ebe7b1c8ebfbbb4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#3e3e0fff267df2732e5d4792972bd117">getMaxTransferOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the max stencil width of all transfer operators.  <a href="#fd62b2eba263446bb4c4ed9812f66e94"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the max stencil width of all transfer operators.  <a href="#3e3e0fff267df2732e5d4792972bd117"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#5f4cd36f58411e1f745356c4c50792a4">setMinTransferOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_value)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth()</a>.  <a href="#5f4cd36f58411e1f745356c4c50792a4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#05ab4d0f78de2af8fa7adaade2709e56">getDim</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#3e3e0fff267df2732e5d4792972bd117">getMaxTransferOpStencilWidth()</a>.  <a href="#5f4cd36f58411e1f745356c4c50792a4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fe92250a1e044f0f46663a35430d71df">getMinTransferOpStencilWidth</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> holding this object.  <a href="#05ab4d0f78de2af8fa7adaade2709e56"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#abff7d2b28b82a7d154059a702f8613b">hasOperators</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#df4264e99ce8f4bd5a2af8e7dd2d7562">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print class data representation.  <a href="#df4264e99ce8f4bd5a2af8e7dd2d7562"></a><br></td></tr>
@@ -283,9 +284,11 @@ Extract the spatial coarsening operator matching the request for the given varia
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>The grid geometry with which the operator being looked up is associated. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> for which the corresponding coarsening operator should match. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the coarsening operator. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the coarsening operator.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>var <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fe92250a1e044f0f46663a35430d71df">getMinTransferOpStencilWidth()</a>.getDim() == var-&gt;getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -328,9 +331,11 @@ Extract the spatial refinement operator matching the request for the given varia
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>The grid geometry with which the operator being looked up is associated. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> for which the corresponding refinement operator should match. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the refinement operator. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the refinement operator.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>var <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fe92250a1e044f0f46663a35430d71df">getMinTransferOpStencilWidth()</a>.getDim() == var-&gt;getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -373,20 +378,23 @@ Extract the time interpolation operator matching the request for the given varia
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>The grid geometry with which the operator being looked up is associated. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> for which the corresponding time interpolation operator should match. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the time interpolation operator. <b>Default:</b> STD_LINEAR_TIME_INTERPOLATE </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the time interpolation operator. <b>Default:</b> STD_LINEAR_TIME_INTERPOLATE</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>var <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fe92250a1e044f0f46663a35430d71df">getMinTransferOpStencilWidth()</a>.getDim() == var-&gt;getDim() </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="fd62b2eba263446bb4c4ed9812f66e94"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::getMaxTransferOpStencilWidth" ref="fd62b2eba263446bb4c4ed9812f66e94" args="()" -->
+<a class="anchor" name="3e3e0fff267df2732e5d4792972bd117"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::getMaxTransferOpStencilWidth" ref="3e3e0fff267df2732e5d4792972bd117" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> SAMRAI::hier::TransferOperatorRegistry::getMaxTransferOpStencilWidth           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -399,7 +407,7 @@ Get the max stencil width of all transfer operators.
 <p>
 The max stencil width computed from all registered (constructed) transfer operators. This function is simply returns the max from the registered refine, coarsen and time-refine operators.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>The max stencil width computed from all registered operators.</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">hier::BaseGridGeometry::getMaxTransferOpStencilWidth()</a>. <p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#7b8b56570f463e7cd88a243d751288f0">hier::BaseGridGeometry::getMaxTransferOpStencilWidth()</a>. <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b976d26e0e6521cf138381e1470eef6c">hier::RefineOperator::getMaxRefineOpStencilWidth()</a>. <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#dd34063d8a6f6033fcf6ef6d979206de">hier::CoarsenOperator::getMaxCoarsenOpStencilWidth()</a>. </dd></dl>
 
@@ -422,23 +430,24 @@ The max stencil width computed from all registered (constructed) transfer operat
 <div class="memdoc">
 
 <p>
-Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth()</a>. 
+Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#3e3e0fff267df2732e5d4792972bd117">getMaxTransferOpStencilWidth()</a>. 
 <p>
-This method allows users to specify a minimum value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth()</a>. The default minimum is zero. This value can be used as a substitute for data that is not yet registered with the Geometry and therefore cannot be reflected in <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth()</a>.<p>
+This method allows users to specify a minimum value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#3e3e0fff267df2732e5d4792972bd117">getMaxTransferOpStencilWidth()</a>. The default minimum is zero. This value can be used as a substitute for data that is not yet registered with the Geometry and therefore cannot be reflected in <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#3e3e0fff267df2732e5d4792972bd117">getMaxTransferOpStencilWidth()</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_value</em>&nbsp;</td><td>The minimum value to set. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_value</em>&nbsp;</td><td>The minimum value to set.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fe92250a1e044f0f46663a35430d71df">getMinTransferOpStencilWidth()</a>.getDim() == min_value.getDim() </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="05ab4d0f78de2af8fa7adaade2709e56"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::getDim" ref="05ab4d0f78de2af8fa7adaade2709e56" args="() const " -->
+<a class="anchor" name="fe92250a1e044f0f46663a35430d71df"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::getMinTransferOpStencilWidth" ref="fe92250a1e044f0f46663a35430d71df" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::TransferOperatorRegistry::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&amp; SAMRAI::hier::TransferOperatorRegistry::getMinTransferOpStencilWidth           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -449,9 +458,25 @@ This method allows users to specify a minimum value returned by <a class="el" hr
 <div class="memdoc">
 
 <p>
-Get the dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> holding this object. 
+
+</div>
+</div><p>
+<a class="anchor" name="abff7d2b28b82a7d154059a702f8613b"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::hasOperators" ref="abff7d2b28b82a7d154059a702f8613b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::hier::TransferOperatorRegistry::hasOperators           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>The dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> holding this object. </dd></dl>
 
 </div>
 </div><p>
@@ -484,7 +509,7 @@ Print class data representation.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="TransferOperatorRegistry_8h.html">TransferOperatorRegistry.h</a><li>source/SAMRAI/hier/<a class="el" href="TransferOperatorRegistry_8C.html">TransferOperatorRegistry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

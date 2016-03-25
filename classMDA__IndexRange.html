@@ -43,9 +43,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::istream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#fdaed8c13dda1ce04cc4492a60c385be">operator&gt;&gt;</a> (std::istream &amp;is, <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a>&lt; MDA_DIM &gt; &amp;r)</td></tr>
 
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef short&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">dim_t</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef short&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">dir_t</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type for the dimension counter.  <a href="#0609e446b59cea1fefe710abaf39ed4a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type for the dimension counter.  <a href="#3bdef148dd85d1f6521b5d351c04dfad"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type for the index.  <a href="#73dce99ee1dbc4b3b0083f69c3cdc6e3"></a><br></td></tr>
@@ -64,9 +64,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#37d9b08e079d3ff429bb8896200edc6f">setInclusiveRange</a> (const <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> first[MDA_DIM], const <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> final[MDA_DIM])</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#f456f8155c49ebd3c0a0d09e75dba037">adjustDim</a> (<a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">dim_t</a> d, <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> first, <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> final)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#acb72003c8fa21919640899f44c02527">adjustDim</a> (<a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">dir_t</a> d, <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> first, <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> final)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adjust the dimensions.  <a href="#f456f8155c49ebd3c0a0d09e75dba037"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adjust the array sizes.  <a href="#acb72003c8fa21919640899f44c02527"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#c56571729bc21fd4213bbccfe2853914">operator==</a> (const <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a> &amp;r) const </td></tr>
 
@@ -77,16 +77,16 @@
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#d0e5ea7bbe565e8d2ce8468b090ca413">beg</a> (size_t i) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give starting index of a given dimension.  <a href="#d0e5ea7bbe565e8d2ce8468b090ca413"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give starting index of a given direction.  <a href="#d0e5ea7bbe565e8d2ce8468b090ca413"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#934d32d8e2209d704d7bf2cfd85bcb57">end</a> (size_t i) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give ending index (one more than the last valid index) of a given dimension.  <a href="#934d32d8e2209d704d7bf2cfd85bcb57"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give ending index (one more than the last valid index) of a given direction.  <a href="#934d32d8e2209d704d7bf2cfd85bcb57"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const size_t &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#a451ee77d51f417fad9d4cf3deb6f9fd">size</a> (size_t i) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give size along a given dimension.  <a href="#a451ee77d51f417fad9d4cf3deb6f9fd"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give size along a given direction.  <a href="#a451ee77d51f417fad9d4cf3deb6f9fd"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#5116927ca79ca8de81afac9fa6e2741c">totalSize</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give size for all dimensions.  <a href="#5116927ca79ca8de81afac9fa6e2741c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give size for all directions.  <a href="#5116927ca79ca8de81afac9fa6e2741c"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMDA__IndexRange.html#069d913f2c191ba28daff38b81b98456">has</a> (<a class="el" href="classMDA__IndexRange.html#73dce99ee1dbc4b3b0083f69c3cdc6e3">index_t</a> i0) const </td></tr>
 
@@ -143,14 +143,14 @@ Defines the abstract index range and methods for setting and accessing it.<p>
 Nothing is known about the ordering of the array. 
 <p>
 <hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="0609e446b59cea1fefe710abaf39ed4a"></a><!-- doxytag: member="MDA_IndexRange::dim_t" ref="0609e446b59cea1fefe710abaf39ed4a" args="" -->
+<a class="anchor" name="3bdef148dd85d1f6521b5d351c04dfad"></a><!-- doxytag: member="MDA_IndexRange::dir_t" ref="3bdef148dd85d1f6521b5d351c04dfad" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;unsigned short MDA_DIM&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef short <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a>&lt; MDA_DIM &gt;::<a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">dim_t</a>          </td>
+          <td class="memname">typedef short <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a>&lt; MDA_DIM &gt;::<a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">dir_t</a>          </td>
         </tr>
       </table>
 </div>
@@ -159,9 +159,9 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <p>
 Type for the dimension counter. 
 <p>
-Type dim_t could be "unsigned short" instead of "short", but using short causes the GNU compiler to issue unneeded warnings about certain comparisons always being false (when instantiating with MDA_DIM of 1). 
+Type dir_t could be "unsigned short" instead of "short", but using short causes the GNU compiler to issue unneeded warnings about certain comparisons always being false (when instantiating with MDA_DIM of 1). 
 <p>
-Reimplemented in <a class="el" href="classMDA__OrderRowMajor.html#931886cc36611e131593239ff206ada4">MDA_OrderRowMajor&lt; MDA_DIM &gt;</a>, and <a class="el" href="classMDA__OrderColMajor.html#e86b14298917b275041b75237a026d3c">MDA_OrderColMajor&lt; MDA_DIM &gt;</a>.
+Reimplemented in <a class="el" href="classMDA__OrderRowMajor.html#f0ab4625f62fea5fadd2ce8a3f3be339">MDA_OrderRowMajor&lt; MDA_DIM &gt;</a>, and <a class="el" href="classMDA__OrderColMajor.html#c27709c2cc4fdd27ad24f19a08e7c76a">MDA_OrderColMajor&lt; MDA_DIM &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="73dce99ee1dbc4b3b0083f69c3cdc6e3"></a><!-- doxytag: member="MDA_IndexRange::index_t" ref="73dce99ee1dbc4b3b0083f69c3cdc6e3" args="" -->
@@ -408,7 +408,7 @@ Final valid indices (NULL for no change) </td></tr>
 Reimplemented in <a class="el" href="classMDA__OrderRowMajor.html#209d4e979f007009762d425e41494be5">MDA_OrderRowMajor&lt; MDA_DIM &gt;</a>, and <a class="el" href="classMDA__OrderColMajor.html#67b918bcf6d246ad0d38fa8368ce8930">MDA_OrderColMajor&lt; MDA_DIM &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="f456f8155c49ebd3c0a0d09e75dba037"></a><!-- doxytag: member="MDA_IndexRange::adjustDim" ref="f456f8155c49ebd3c0a0d09e75dba037" args="(dim_t d, index_t first, index_t final)" -->
+<a class="anchor" name="acb72003c8fa21919640899f44c02527"></a><!-- doxytag: member="MDA_IndexRange::adjustDim" ref="acb72003c8fa21919640899f44c02527" args="(dir_t d, index_t first, index_t final)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -417,7 +417,7 @@ template&lt;unsigned short MDA_DIM&gt; </div>
         <tr>
           <td class="memname">const <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a>&amp; <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a>&lt; MDA_DIM &gt;::adjustDim           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classMDA__IndexRange.html#0609e446b59cea1fefe710abaf39ed4a">dim_t</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classMDA__IndexRange.html#3bdef148dd85d1f6521b5d351c04dfad">dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>d</em>, </td>
         </tr>
         <tr>
@@ -442,15 +442,15 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Adjust the dimensions. 
+Adjust the array sizes. 
 <p>
-Adjust the first and final indices. Set the dimension to adjust to &gt;= MDA_DIM to adjust <em>all</em> dimensions. <b>Note:</b> The third argument is the increment to the final index and not the size.<p>
+Adjust the first and final indices. Set the direction to adjust to &gt;= MDA_DIM to adjust <em>all</em> dimensions. <b>Note:</b> The third argument is the increment to the final index and not the size.<p>
 <b>Note:</b> No error checking is done, for example, to make sure that the resulting size is non-negative.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>Adjusted <a class="el" href="classMDA__IndexRange.html">MDA_IndexRange</a> object </dd></dl>
 <dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>d</em>&nbsp;</td><td>
-Dimension to adjust </td></tr>
+Direction to adjust </td></tr>
 <tr><td valign="top"><em>first</em>&nbsp;</td><td>
 Increment to first index </td></tr>
 <tr><td valign="top"><em>final</em>&nbsp;</td><td>
@@ -574,12 +574,12 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Give starting index of a given dimension. 
+Give starting index of a given direction. 
 <p>
 <dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>i</em>&nbsp;</td><td>
-index of dimension </td></tr>
+index of direction </td></tr>
 </table>
 </dl>
 </div>
@@ -603,12 +603,12 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Give ending index (one more than the last valid index) of a given dimension. 
+Give ending index (one more than the last valid index) of a given direction. 
 <p>
 <dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>i</em>&nbsp;</td><td>
-index of dimension </td></tr>
+index of direction </td></tr>
 </table>
 </dl>
 </div>
@@ -632,12 +632,12 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Give size along a given dimension. 
+Give size along a given direction. 
 <p>
 <dl compact><dt><b>Parameters: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>i</em>&nbsp;</td><td>
-index of dimension </td></tr>
+index of direction </td></tr>
 </table>
 </dl>
 </div>
@@ -660,7 +660,7 @@ template&lt;unsigned short MDA_DIM&gt; </div>
 <div class="memdoc">
 
 <p>
-Give size for all dimensions. 
+Give size for all directions. 
 <p>
 
 </div>
@@ -929,7 +929,7 @@ Array of sizes.
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="MDA__Access_8h.html">MDA_Access.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

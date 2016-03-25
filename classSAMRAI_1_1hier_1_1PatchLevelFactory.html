@@ -36,9 +36,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for patch level factory objects.  <a href="#3aaa1558115397658a50224394ff99ce"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevelFactory.html#e44acf23a1b0195d7fc728c9aa6217e4">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;mapped_box_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;()) const </td></tr>
+ <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevelFactory.html#49020090311336dc0ceab62f85849908">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate a patch level with the specified boxes and processor mappings.  <a href="#e44acf23a1b0195d7fc728c9aa6217e4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate a patch level with the specified boxes and processor mappings.  <a href="#49020090311336dc0ceab62f85849908"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
  <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevelFactory.html#2fcf08796c32af5d590e422bbb6fb613">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;(), const bool defer_boundary_box_creation=false) const </td></tr>
 
@@ -95,7 +95,7 @@ Virtual destructor for patch level factory objects.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="e44acf23a1b0195d7fc728c9aa6217e4"></a><!-- doxytag: member="SAMRAI::hier::PatchLevelFactory::allocate" ref="e44acf23a1b0195d7fc728c9aa6217e4" args="(const BoxLevel &amp;mapped_box_level, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;grid_geometry, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor, const boost::shared_ptr&lt; PatchFactory &gt; &amp;factory=boost::shared_ptr&lt; PatchFactory &gt;()) const " -->
+<a class="anchor" name="49020090311336dc0ceab62f85849908"></a><!-- doxytag: member="SAMRAI::hier::PatchLevelFactory::allocate" ref="49020090311336dc0ceab62f85849908" args="(const BoxLevel &amp;box_level, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;grid_geometry, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor, const boost::shared_ptr&lt; PatchFactory &gt; &amp;factory=boost::shared_ptr&lt; PatchFactory &gt;()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -103,7 +103,7 @@ Virtual destructor for patch level factory objects.
           <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt; SAMRAI::hier::PatchLevelFactory::allocate           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_box_level</em>, </td>
+          <td class="paramname"> <em>box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -139,12 +139,13 @@ Redefine this function to change the method for creating patch levels.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>A boost::shared_ptr to the newly created <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_level</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>descriptor</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>factory</em>&nbsp;</td><td><b>Default:</b> a boost::shared_ptr to the standard <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>factory</em>&nbsp;</td><td><b>Default:</b> a boost::shared_ptr to the standard <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a></td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>box_level.getDim() == grid_geometry-&gt;getDim() </dd></dl>
 
 </div>
 </div><p>
@@ -218,7 +219,7 @@ Redefine this function to change the method for creating patch levels from a dat
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchLevelFactory_8h.html">PatchLevelFactory.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchLevelFactory_8C.html">PatchLevelFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

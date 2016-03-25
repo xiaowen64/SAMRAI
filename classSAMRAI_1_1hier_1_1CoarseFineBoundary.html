@@ -38,9 +38,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#94fa246bf0a3282052b4e6173237efcf">CoarseFineBoundary</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &amp;hierarchy, int level_num, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;max_ghost_width)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a> object for the specified level in the given patch hierarchy.  <a href="#94fa246bf0a3282052b4e6173237efcf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#9590af01dfe011bcacfdb9c2f4ec089c">CoarseFineBoundary</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;mapped_box_level_to_domain, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;mapped_box_level_to_self, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;max_ghost_width)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#2aa06721fbd4cd7be07a91017cfe2134">CoarseFineBoundary</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;box_level_to_domain, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;box_level_to_self, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;max_ghost_width)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a> object for a specified level.  <a href="#9590af01dfe011bcacfdb9c2f4ec089c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a> object for a specified level.  <a href="#2aa06721fbd4cd7be07a91017cfe2134"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#410c66ad98d0bb614ff13978e20e12ce">~CoarseFineBoundary</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#410c66ad98d0bb614ff13978e20e12ce"></a><br></td></tr>
@@ -53,6 +53,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#87227a889838b0e13a52550f47a7d2ad">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a> &amp;rhs)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assignment operator.  <a href="#87227a889838b0e13a52550f47a7d2ad"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#b254f5ef09afaa7c5a63f145adf79984">getDim</a> () const </td></tr>
+
 <tr><td colspan="2"><div class="groupHeader">Functions to get the computed coarse-fine boundaries.</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#40a15c5e3f73003abc180f5e5b19ff04">getBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const int boundary_type, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
 
@@ -168,13 +170,14 @@ Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_num</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_ghost_width &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>(max_ghost_width.getDim(), -1) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="9590af01dfe011bcacfdb9c2f4ec089c"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::CoarseFineBoundary" ref="9590af01dfe011bcacfdb9c2f4ec089c" args="(const PatchLevel &amp;level, const Connector &amp;mapped_box_level_to_domain, const Connector &amp;mapped_box_level_to_self, const IntVector &amp;max_ghost_width)" -->
+<a class="anchor" name="2aa06721fbd4cd7be07a91017cfe2134"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::CoarseFineBoundary" ref="2aa06721fbd4cd7be07a91017cfe2134" args="(const PatchLevel &amp;level, const Connector &amp;box_level_to_domain, const Connector &amp;box_level_to_self, const IntVector &amp;max_ghost_width)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -188,13 +191,13 @@ Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_box_level_to_domain</em>, </td>
+          <td class="paramname"> <em>box_level_to_domain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_box_level_to_self</em>, </td>
+          <td class="paramname"> <em>box_level_to_self</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -214,16 +217,17 @@ Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">
 <p>
 Construct a <a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html">CoarseFineBoundary</a> object for a specified level. 
 <p>
-The coarse-fine boundary will be computed using the physical domain as the reference coarser level. The physical domain is provided to this method as the 'head' level of the mapped_box_level_to_domain <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.<p>
+The coarse-fine boundary will be computed using the physical domain as the reference coarser level. The physical domain is provided to this method as the 'head' level of the box_level_to_domain <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.<p>
 <dl compact><dt><b>Note:</b></dt><dd>If the level covers the entire physical domain, the coarse-fine boundary will be empty.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box_level_to_domain</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box_level_to_self</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_level_to_domain</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_level_to_self</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_ghost_width</em>&nbsp;</td><td>The ghost width determines the extent of the boundary boxes along the level domain boundary, similar to regular domain boundary boxes. Note that as in the case of regular boundary boxes, each box will always be one cell wide in the direction perpendicular to the patch boundary.</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>max_ghost_width &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>(max_ghost_width.getDim(), -1) </dd></dl>
 
 </div>
 </div><p>
@@ -309,9 +313,10 @@ The specified patch must exist in the level used to compute the internal state o
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>global_id</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>boundary_type</em>&nbsp;</td><td>Codimension of boundaries. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Defaults to 0 for the single block case </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Defaults to 0 for the single block case</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_initialize[block_id.getBlockValue()] </dd></dl>
 
 </div>
 </div><p>
@@ -387,9 +392,10 @@ Note that edge boxes are only meaningful if the dimension is &gt; 1. The specifi
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>global_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Defaults to 0 for the single block case </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Defaults to 0 for the single block case</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#b254f5ef09afaa7c5a63f145adf79984">getDim()</a>.getValue() &gt;= 2 </dd></dl>
 
 </div>
 </div><p>
@@ -426,9 +432,10 @@ Note that face boxes are only meaningful if the dimension is &gt; 2. The specifi
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>global_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Defaults to 0 for the single block case </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Defaults to 0 for the single block case</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#b254f5ef09afaa7c5a63f145adf79984">getDim()</a>.getValue() &gt;= 3 </dd></dl>
 
 </div>
 </div><p>
@@ -486,9 +493,28 @@ Assignment operator.
 
 </div>
 </div><p>
+<a class="anchor" name="b254f5ef09afaa7c5a63f145adf79984"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getDim" ref="b254f5ef09afaa7c5a63f145adf79984" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::CoarseFineBoundary::getDim           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="CoarseFineBoundary_8h.html">CoarseFineBoundary.h</a><li>source/SAMRAI/hier/<a class="el" href="CoarseFineBoundary_8C.html">CoarseFineBoundary.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

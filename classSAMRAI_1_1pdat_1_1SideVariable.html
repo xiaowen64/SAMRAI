@@ -31,9 +31,9 @@
 <a href="classSAMRAI_1_1pdat_1_1SideVariable-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html#7dd8b53d3dcc1d8f093b224a5ab20c19">SideVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true, int direction=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html#1491a1f02e7126fac0b01ddef9e36582">SideVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;directions, int depth=1, bool fine_boundary_represents_var=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an side-centered variable object with the given name and depth (i.e., number of data values at each edge index location). A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces.  <a href="#7dd8b53d3dcc1d8f093b224a5ab20c19"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an side-centered variable object with the given name and depth (i.e., number of data values at each edge index location). A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces.  <a href="#1491a1f02e7126fac0b01ddef9e36582"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html#14ff880b02f69aaafb07189c02995956">~SideVariable</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for side variable objects.  <a href="#14ff880b02f69aaafb07189c02995956"></a><br></td></tr>
@@ -54,9 +54,9 @@
 <h3>template&lt;class TYPE&gt;<br>
  class SAMRAI::pdat::SideVariable&lt; TYPE &gt;</h3>
 
-Class SideVariable&lt;DIM&gt; is a templated variable class used to define side-centered quantities on an AMR mesh. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.). See header file for SideData&lt;DIM&gt; class for a more detailed description of the data layout.<p>
+Class SideVariable&lt;TYPE&gt; is a templated variable class used to define side-centered quantities on an AMR mesh. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> and is templated on the type of the underlying data (e.g., double, int, bool, etc.). See header file for SideData&lt;TYPE&gt; class for a more detailed description of the data layout.<p>
 Note that it is possible to create a side data object for managing data at cell sides associated with a single coordinate direction only. See the constructor for more information.<p>
-IMPORTANT: The class FaceVariable&lt;DIM&gt; and associated "face data" classes define the same storage as this side variable class, except that the individual array indices are permuted in the face data type.<p>
+IMPORTANT: The class FaceVariable&lt;TPYE&gt; and associated "face data" classes define the same storage as this side variable class, except that the individual array indices are permuted in the face data type.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">pdat::SideDataFactory</a> <p>
 <a class="el" href="classSAMRAI_1_1pdat_1_1SideGeometry.html">pdat::SideGeometry</a> <p>
@@ -64,7 +64,7 @@ IMPORTANT: The class FaceVariable&lt;DIM&gt; and associated "face data" classes 
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="7dd8b53d3dcc1d8f093b224a5ab20c19"></a><!-- doxytag: member="SAMRAI::pdat::SideVariable::SideVariable" ref="7dd8b53d3dcc1d8f093b224a5ab20c19" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true, int direction=-1)" -->
+<a class="anchor" name="1491a1f02e7126fac0b01ddef9e36582"></a><!-- doxytag: member="SAMRAI::pdat::SideVariable::SideVariable" ref="1491a1f02e7126fac0b01ddef9e36582" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, const hier::IntVector &amp;directions, int depth=1, bool fine_boundary_represents_var=true)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -85,6 +85,12 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>directions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>depth</em> = <code>1</code>, </td>
         </tr>
@@ -92,13 +98,7 @@ template&lt;class TYPE&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>fine_boundary_represents_var</em> = <code>true</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>direction</em> = <code>-1</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>fine_boundary_represents_var</em> = <code>true</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -237,7 +237,7 @@ Return the the depth (number of components).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="SideVariable_8h.html">SideVariable.h</a><li>source/SAMRAI/pdat/<a class="el" href="SideVariable_8C.html">SideVariable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
