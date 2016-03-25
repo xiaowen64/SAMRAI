@@ -38,9 +38,18 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stage multiple non-blocking MPI communications so that codes waiting for them to complete can advance as their respective MPI requests are completed.  <a href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1BalancedDepthFirstTree.html">BalancedDepthFirstTree</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Utility to compute neighbors in a balanced depth-first tree.  <a href="classSAMRAI_1_1tbox_1_1BalancedDepthFirstTree.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implementation of <a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html">RankTreeStrategy</a> aranging ranks in a balanced, depth-first tree.  <a href="classSAMRAI_1_1tbox_1_1BalancedDepthFirstTree.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1BreadthFirstRankTree.html">BreadthFirstRankTree</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implementation of <a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html">RankTreeStrategy</a> aranging ranks in a breadth-first tree.  <a href="classSAMRAI_1_1tbox_1_1BreadthFirstRankTree.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html">CenteredRankTree</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implementation of <a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html">RankTreeStrategy</a> aranging ranks with the root at the center of its descendent ranks.  <a href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1Clock.html">Clock</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CommGraphWriter.html">CommGraphWriter</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Collects data on distributed communication graphs and writes out for analysis.  <a href="classSAMRAI_1_1tbox_1_1CommGraphWriter.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> is an abstract base class for the input, restart, and visualization databases.  <a href="classSAMRAI_1_1tbox_1_1Database.html#_details">More...</a><br></td></tr>
@@ -94,6 +103,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html">RankTreeStrategy</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Strategy pattern for getting information on MPI ranks aranged on a user-defined tree.  <a href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html">ReferenceCounter</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a></td></tr>
@@ -490,7 +502,7 @@ Parallel output stream perr writes to the standard error from all nodes. Output 
 Parallel output stream plog writes output to the log file. When logging from multiple processors, the processor number is appended to the filename. 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -37,9 +37,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3685131ffdf41ca44cc4a3c26bb7856b">registerConnectorWidthRequestor</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">ConnectorWidthRequestorStrategy</a> &amp;cwrs)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">ConnectorWidthRequestorStrategy</a> with the hierarchy.  <a href="#3685131ffdf41ca44cc4a3c26bb7856b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3d42c870d68df0578988280ab8f92e86">getRequiredConnectorWidth</a> (int base_ln, int head_ln) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9bf844ebbd58ba89a54dd308c5d5485a">getRequiredConnectorWidth</a> (int base_ln, int head_ln, bool commit=false) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the width required of the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> from the base to the head levels, as specified by the given level numbers.  <a href="#3d42c870d68df0578988280ab8f92e86"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the width required of the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> from the base to the head levels, as specified by the given level numbers.  <a href="#9bf844ebbd58ba89a54dd308c5d5485a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#51de1f1dadbd7be42be216db3d99feb2">registerAutoConnectorWidthRequestorStrategy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">ConnectorWidthRequestorStrategy</a> &amp;cwrs)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">ConnectorWidthRequestorStrategy</a> implementation to the set of implementations that, by default, gets registered to all <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> objects.  <a href="#51de1f1dadbd7be42be216db3d99feb2"></a><br></td></tr>
@@ -56,10 +56,13 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#1fd8481481dd59c84647d15b9a016b57">makeCoarsenedPatchHierarchy</a> (const std::string &amp;coarse_hierarchy_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;coarsen_ratio) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a coarsened version of this patch hierarchy.  <a href="#1fd8481481dd59c84647d15b9a016b57"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#5a520a044dcaacd2c312cef5a8536c83">makeNewPatchLevel</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;new_box_level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#5a520a044dcaacd2c312cef5a8536c83">makeNewPatchLevel</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;new_box_level)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number.  <a href="#5a520a044dcaacd2c312cef5a8536c83"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#b6516f43f72ba37d77a81efc62239edf">removePatchLevel</a> (const int level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#38d647039f310b23534fa875c81b13b0">makeNewPatchLevel</a> (const int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; new_box_level)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number.  <a href="#38d647039f310b23534fa875c81b13b0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#b6516f43f72ba37d77a81efc62239edf">removePatchLevel</a> (const int level)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove a patch level.  <a href="#b6516f43f72ba37d77a81efc62239edf"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#ea43670fac0f0635f169614442cf99f0">getPatchLevel</a> (const int level) const </td></tr>
@@ -86,9 +89,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#8bbf7b6f757433dbff8dbcb2b49f19be">getBoxLevel</a> (const int level) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a pointer to the specified <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#8bbf7b6f757433dbff8dbcb2b49f19be"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#f775005f777639c27bdd9588f809cac1">getConnector</a> (const int base_ln, const int head_ln) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the connector between two levels.  <a href="#f775005f777639c27bdd9588f809cac1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#43642b21b906419dbde0d69d1585d63d">getDomainBoxLevel</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Access the domain description as a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#43642b21b906419dbde0d69d1585d63d"></a><br></td></tr>
@@ -409,7 +409,7 @@ coarsen_ratio &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#178
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -418,6 +418,7 @@ coarsen_ratio &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#178
 <p>
 Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number. 
 <p>
+This method results in the new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> making a COPY of the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. If the caller intends to modify the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for other purposes after making the new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>, then this method must be used rather than the method taking a boost::shared_ptr&lt;BoxLevel&gt;.<p>
 Boxes, their mappings and the refinement ratio are obtained from <code>new_box_level</code>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -431,6 +432,48 @@ new_box_level.getRefinementRatio() &gt; <a class="el" href="classSAMRAI_1_1hier_
 
 </div>
 </div><p>
+<a class="anchor" name="38d647039f310b23534fa875c81b13b0"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::makeNewPatchLevel" ref="38d647039f310b23534fa875c81b13b0" args="(const int level_number, const boost::shared_ptr&lt; BoxLevel &gt; new_box_level)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::PatchHierarchy::makeNewPatchLevel           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>level_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt;&nbsp;</td>
+          <td class="paramname"> <em>new_box_level</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> in hierarchy at given level number. 
+<p>
+This method results in the new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> ACQUIRING the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. If the caller will not modify the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for other purposes after making the new <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>, then this method may be used rather than the method taking a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>&amp;. Use of this method where permitted is more efficient as it avoids copying an entire <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Note that this method results in the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being locked so that any attempt by the caller to modify it after calling this method will result in an unrecoverable error.<p>
+Boxes, their mappings and the refinement ratio are obtained from <code>new_box_level</code>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>new_box_level</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#68c6127dd45b86a1d74c7ca0da23867d">getDim()</a> == new_box_level-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#68c6127dd45b86a1d74c7ca0da23867d">getDim()</a> <p>
+level_number &gt;= 0 &amp;&amp; ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#0fe841aaeaa9d21e8e9bddf38542a381">getMaxNumberOfLevels()</a> <p>
+new_box_level-&gt;getRefinementRatio() &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#178dc4477a52ff09e80a2c3e86944e7f">IntVector::getZero</a>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#68c6127dd45b86a1d74c7ca0da23867d">getDim()</a>) </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="b6516f43f72ba37d77a81efc62239edf"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::removePatchLevel" ref="b6516f43f72ba37d77a81efc62239edf" args="(const int level)" -->
 <div class="memitem">
 <div class="memproto">
@@ -441,7 +484,7 @@ new_box_level.getRefinementRatio() &gt; <a class="el" href="classSAMRAI_1_1hier_
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -663,47 +706,6 @@ Return a pointer to the specified <a class="el" href="classSAMRAI_1_1hier_1_1Box
 
 </div>
 </div><p>
-<a class="anchor" name="f775005f777639c27bdd9588f809cac1"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getConnector" ref="f775005f777639c27bdd9588f809cac1" args="(const int base_ln, const int head_ln) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp; SAMRAI::hier::PatchHierarchy::getConnector           </td>
-          <td>(</td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>base_ln</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>head_ln</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Get the connector between two levels. 
-<p>
-Get const access to the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> between two given BoxLevels between two given levels in the hierarchy.<p>
-<dl compact><dt><b>Returns:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> between the two given level numbers.</dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_ln</em>&nbsp;</td><td>The base level indicating one end of the connector. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_ln</em>&nbsp;</td><td>The head level indicating the other end of the connector.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(base_ln &gt;= 0) &amp;&amp; (base_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#02b4cab2de98f95da4ad856f83f5dcc7">getNumberOfLevels()</a>) <p>
-(head_ln &gt;= 0) &amp;&amp; (head_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#02b4cab2de98f95da4ad856f83f5dcc7">getNumberOfLevels()</a>) </dd></dl>
-
-</div>
-</div><p>
 <a class="anchor" name="3685131ffdf41ca44cc4a3c26bb7856b"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::registerConnectorWidthRequestor" ref="3685131ffdf41ca44cc4a3c26bb7856b" args="(const ConnectorWidthRequestorStrategy &amp;cwrs)" -->
 <div class="memitem">
 <div class="memproto">
@@ -723,18 +725,18 @@ Get const access to the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.htm
 <p>
 Register the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">ConnectorWidthRequestorStrategy</a> with the hierarchy. 
 <p>
-Used to adjust the results of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3d42c870d68df0578988280ab8f92e86">getRequiredConnectorWidth()</a>. This method can be called multiple times to provide as much connector width information for any object that requires a connector width constraint. The largest <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width over all provided will be used in the hierarchy.<p>
-<dl compact><dt><b>Important</b></dt><dd>All registrations must occur before the first call to <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3d42c870d68df0578988280ab8f92e86">getRequiredConnectorWidth()</a>.</dd></dl>
+Used to adjust the results of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9bf844ebbd58ba89a54dd308c5d5485a">getRequiredConnectorWidth()</a>. This method can be called multiple times to provide as much connector width information for any object that requires a connector width constraint. The largest <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width over all provided will be used in the hierarchy.<p>
+<dl compact><dt><b>Important</b></dt><dd>All registrations must occur before the first call to <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9bf844ebbd58ba89a54dd308c5d5485a">getRequiredConnectorWidth()</a>.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cwrs</em>&nbsp;</td><td>The connector width requester strategy instance.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>d_connector_widths_are_computed </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_connector_widths_committed </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="3d42c870d68df0578988280ab8f92e86"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getRequiredConnectorWidth" ref="3d42c870d68df0578988280ab8f92e86" args="(int base_ln, int head_ln) const " -->
+<a class="anchor" name="9bf844ebbd58ba89a54dd308c5d5485a"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::getRequiredConnectorWidth" ref="9bf844ebbd58ba89a54dd308c5d5485a" args="(int base_ln, int head_ln, bool commit=false) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -748,7 +750,13 @@ Used to adjust the results of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHi
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>head_ln</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>head_ln</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>commit</em> = <code>false</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -763,15 +771,18 @@ Used to adjust the results of <a class="el" href="classSAMRAI_1_1hier_1_1PatchHi
 Get the width required of the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> from the base to the head levels, as specified by the given level numbers. 
 <p>
 The two level numbers must differ by no more than one.<p>
+The <b>commit</b> flag tells the hierarchy whether the calling code is commiting to the required widths in such a way that would break if this method later returns a bigger value. Once this method is called with commit = true, the hierarchy will always return the same width for the same pair of level numbers. Thus the hierarchy would not allow any changes that could result in changing the required widths.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>The widths required from the base to head levels.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_ln</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_ln</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>commit</em>&nbsp;</td><td>Set to true if you want all future return values to be the same for the same level numbers.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>(head_ln &gt;= 0) &amp;&amp; (head_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#0fe841aaeaa9d21e8e9bddf38542a381">getMaxNumberOfLevels()</a>) <p>
-(base_ln &gt;= 0) &amp;&amp; (base_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#0fe841aaeaa9d21e8e9bddf38542a381">getMaxNumberOfLevels()</a>) </dd></dl>
+(base_ln &gt;= 0) &amp;&amp; (base_ln &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#0fe841aaeaa9d21e8e9bddf38542a381">getMaxNumberOfLevels()</a>) <p>
+abs(base_ln - head_ln) &lt;= 1 </dd></dl>
 
 </div>
 </div><p>
@@ -1406,7 +1417,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8C.html">PatchHierarchy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

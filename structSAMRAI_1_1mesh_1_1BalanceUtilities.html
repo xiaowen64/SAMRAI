@@ -29,9 +29,9 @@
 <a href="structSAMRAI_1_1mesh_1_1BalanceUtilities-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#55d9d6210a7cee43b83a45d6adb20376">binPack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;mapping, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;weights, int nproc)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#9cf29c89fc3719cb605055c75d03cb48">binPack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;mapping, std::vector&lt; double &gt; &amp;weights, int nproc)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#7f3138f1458724afa23c724f039b234b">spatialBinPack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;mapping, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;weights, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const int nproc)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#2f830e0fe5db6e51f868fafacdd65ad8">spatialBinPack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;mapping, std::vector&lt; double &gt; &amp;weights, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const int nproc)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#f5c89c6c3e18619fec4ea501598b535f">recursiveBisectionUniform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;out_boxes, std::list&lt; double &gt; &amp;out_workloads, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;in_boxes, double ideal_workload, const double workload_tolerance, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;physical_domain)</td></tr>
 
@@ -41,7 +41,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#0daffa849931598823d3f8a4f6be32c0">computeDomainIndependentProcessorLayout</a> (<a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;proc_dist, int num_procs, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#eba9d89b7f9a3c83c64054ae1fdead84">sortDescendingBoxWorkloads</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;workload)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#1df6f03ad8e5a3b8bc1d5f36986d160a">sortDescendingBoxWorkloads</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, std::vector&lt; double &gt; &amp;workload)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#60465fbe335ac50e582163db963f2994">computeNonUniformWorkload</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &gt; &amp;patch, int wrk_indx, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
@@ -62,7 +62,7 @@
 Utility class <a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html">BalanceUtilities</a> provides several functions useful in various load balancing operations. These utilities include bin packing operations, box chopping by recursive bisection, and computation of effective processor layouts for boxes. 
 <p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="55d9d6210a7cee43b83a45d6adb20376"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::binPack" ref="55d9d6210a7cee43b83a45d6adb20376" args="(hier::ProcessorMapping &amp;mapping, tbox::Array&lt; double &gt; &amp;weights, int nproc)" -->
+<a class="anchor" name="9cf29c89fc3719cb605055c75d03cb48"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::binPack" ref="9cf29c89fc3719cb605055c75d03cb48" args="(hier::ProcessorMapping &amp;mapping, std::vector&lt; double &gt; &amp;weights, int nproc)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -75,7 +75,7 @@ Utility class <a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html"
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>weights</em>, </td>
         </tr>
         <tr>
@@ -99,7 +99,7 @@ Assign workloads to processors using a greedy algorithm that attempts to distrib
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>mapping</em>&nbsp;</td><td>Output processor mapping. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>weights</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of double-valued weights to distribute. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>weights</em>&nbsp;</td><td>std::vector of double-valued weights to distribute. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>nproc</em>&nbsp;</td><td>Integer number of processors, must be &gt; 0.</td></tr>
   </table>
 </dl>
@@ -108,7 +108,7 @@ for each memeber of weights, w, w &gt;=0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="7f3138f1458724afa23c724f039b234b"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::spatialBinPack" ref="7f3138f1458724afa23c724f039b234b" args="(hier::ProcessorMapping &amp;mapping, tbox::Array&lt; double &gt; &amp;weights, hier::BoxContainer &amp;boxes, const int nproc)" -->
+<a class="anchor" name="2f830e0fe5db6e51f868fafacdd65ad8"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::spatialBinPack" ref="2f830e0fe5db6e51f868fafacdd65ad8" args="(hier::ProcessorMapping &amp;mapping, std::vector&lt; double &gt; &amp;weights, hier::BoxContainer &amp;boxes, const int nproc)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -121,7 +121,7 @@ for each memeber of weights, w, w &gt;=0 </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>weights</em>, </td>
         </tr>
         <tr>
@@ -152,13 +152,13 @@ Note that this routine potentially reorders the boxes passed in to achieve the f
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>mapping</em>&nbsp;</td><td>Output processor mapping. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>weights</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of double-valued box weights to distribute. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>boxes</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes to distribute to processors. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>weights</em>&nbsp;</td><td>std::vector of double-valued box weights to distribute. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>boxes</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> of boxes to distribute to processors. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>nproc</em>&nbsp;</td><td>Integer number of processors, must be &gt; 0.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>nproc &gt; 0 <p>
-weights.getSize() == boxes.size() </dd></dl>
+weights.size() == boxes.size() </dd></dl>
 
 </div>
 </div><p>
@@ -241,7 +241,7 @@ Recursively chop chops boxes in input boxlist until each box has a workload less
     <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum sizes for output boxes. All entries must be &gt; 0. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct sizes. The box size in each direction will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bad_interval</em>&nbsp;</td><td>Input integer vector used to create boxes near physical domain boundary with sufficient number of cells. No box face will be closer to the boundary than the corresponding interval of cells to the boundary (the corresponding value is given by the normal direction of the box face) unless the face coincides with the boundary itself. The point of this argument is to have no patch live within a certain ghost cell width of the boundary if its boundary does not coincide with that boundary . That is, all ghost cells along a face will be either in the domain interior or outside the domain. All entries must be &gt;= 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>(min_size.getDim() == cut_factor.getDim()) &amp;&amp; (min_size.getDim() == bad_interval.getDim()) <p>
@@ -340,7 +340,7 @@ Recursively chops boxes given by patches on input patch level until each box has
     <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum sizes for output boxes. All entries must be &gt; 0. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct sizes. The box size in each direction will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bad_interval</em>&nbsp;</td><td>Input integer vector used to create boxes near physical domain boundary with sufficient number of cells. No box face will be closer to the boundary than the corresponding interval of cells to the boundary (the corresponding value is given by the normal direction of the box face) unless the face coincides with the boundary itself. The point of this argument is to have no patch live within a certain ghost cell width of the boundary if its boundary does not coincide with that boundary . That is, all ghost cells along a face will be either in the domain interior or outside the domain. All entries must be &gt;= 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> of boxes describing the physical extent of the index space associated with the in_boxes. This box array cannot be empty.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>(min_size.getDim() == cut_factor.getDim()) &amp;&amp; (min_size.getDim() == bad_interval.getDim()) <p>
@@ -445,7 +445,7 @@ for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="eba9d89b7f9a3c83c64054ae1fdead84"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::sortDescendingBoxWorkloads" ref="eba9d89b7f9a3c83c64054ae1fdead84" args="(hier::BoxContainer &amp;boxes, tbox::Array&lt; double &gt; &amp;workload)" -->
+<a class="anchor" name="1df6f03ad8e5a3b8bc1d5f36986d160a"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::sortDescendingBoxWorkloads" ref="1df6f03ad8e5a3b8bc1d5f36986d160a" args="(hier::BoxContainer &amp;boxes, std::vector&lt; double &gt; &amp;workload)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -458,7 +458,7 @@ for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>workload</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -479,7 +479,7 @@ Note that if you simply want to sort boxes based on their size, see <a class="el
     <tr><td valign="top"></td><td valign="top"><em>workload</em>&nbsp;</td><td>Workloads to use for sorting boxes.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>boxes.size() == workload.getSize() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>boxes.size() == workload.size() </dd></dl>
 
 </div>
 </div><p>
@@ -707,7 +707,7 @@ Given the workloads of a number of processes, format and write out a brief repor
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8h.html">BalanceUtilities.h</a><li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8C.html">BalanceUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

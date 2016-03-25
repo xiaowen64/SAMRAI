@@ -64,6 +64,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#e89558da3617e6310cd3ab730d517838">transform</a> (<a class="el" href="classSAMRAI_1_1pdat_1_1CellIndex.html">CellIndex</a> &amp;index, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a <a class="el" href="classSAMRAI_1_1pdat_1_1CellIndex.html">CellIndex</a>.  <a href="#e89558da3617e6310cd3ab730d517838"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1pdat_1_1CellIterator.html">CellIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#9d0731b69aab8528a698a82ce5e12153">begin</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1pdat_1_1CellIterator.html">CellIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#0566194da03a14c12c3fc683ca041869">end</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html">CellGeometry</a> manages the mapping between the AMR index space and the cell-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between cell- centered box geometries for communication operations.<p>
@@ -201,6 +205,46 @@ This static method applies a coordinate system transformation to the given <a cl
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transformation</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
+
+</div>
+</div><p>
+<a class="anchor" name="9d0731b69aab8528a698a82ce5e12153"></a><!-- doxytag: member="SAMRAI::pdat::CellGeometry::begin" ref="9d0731b69aab8528a698a82ce5e12153" args="(const hier::Box &amp;box)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1CellIterator.html">CellIterator</a> SAMRAI::pdat::CellGeometry::begin           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="0566194da03a14c12c3fc683ca041869"></a><!-- doxytag: member="SAMRAI::pdat::CellGeometry::end" ref="0566194da03a14c12c3fc683ca041869" args="(const hier::Box &amp;box)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1CellIterator.html">CellIterator</a> SAMRAI::pdat::CellGeometry::end           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -413,7 +457,7 @@ Return the ghost cell width for this cell centered box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="CellGeometry_8h.html">CellGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="CellGeometry_8C.html">CellGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

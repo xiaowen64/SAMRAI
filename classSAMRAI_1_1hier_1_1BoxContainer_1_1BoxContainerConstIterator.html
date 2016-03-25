@@ -28,10 +28,18 @@
 <p>
 <a href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#381da0785a7e99cca4d1dae1d5185e8e">BoxContainerConstIterator</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;container, bool from_start=true)</td></tr>
+<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef std::bidirectional_iterator_tag&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#45a70cd391088dc34278c6913633eca0">iterator_category</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor for the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html">BoxContainerConstIterator</a>.  <a href="#381da0785a7e99cca4d1dae1d5185e8e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#c71b56c12a8d2f1f203b56ea845431bc">value_type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef ptrdiff_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#70dcd98f3575d921599a19ca9f72a465">difference_type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#6d101597e8a8b74ee2c15aa8b4718711">pointer</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#bc331cd7f5d9700e96ae9569627cce70">reference</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#a1bc1ddcb4acb2db5a6da4172181742c">BoxContainerConstIterator</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html">BoxContainerConstIterator</a> &amp;other)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#a1bc1ddcb4acb2db5a6da4172181742c"></a><br></td></tr>
@@ -82,45 +90,83 @@ If iterating over an ordered <a class="el" href="classSAMRAI_1_1hier_1_1BoxConta
 <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerIterator.html">BoxContainerIterator</a> </dd></dl>
 
 <p>
-<hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="381da0785a7e99cca4d1dae1d5185e8e"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator" ref="381da0785a7e99cca4d1dae1d5185e8e" args="(const BoxContainer &amp;container, bool from_start=true)" -->
+<hr><h2>Member Typedef Documentation</h2>
+<a class="anchor" name="45a70cd391088dc34278c6913633eca0"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::iterator_category" ref="45a70cd391088dc34278c6913633eca0" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI::hier::BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>container</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>from_start</em> = <code>true</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td class="memname">typedef std::bidirectional_iterator_tag <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#45a70cd391088dc34278c6913633eca0">SAMRAI::hier::BoxContainer::BoxContainerConstIterator::iterator_category</a>          </td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Constructor for the <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html">BoxContainerConstIterator</a>. 
-<p>
-The iterator will point to the beginning or the end of the argument container, depending on the from_start argument<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>container</em>&nbsp;</td><td>The container whose members are iterated. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>from_start</em>&nbsp;</td><td>true if iteration starts at beginning of container. </td></tr>
-  </table>
-</dl>
 
 </div>
 </div><p>
+<a class="anchor" name="c71b56c12a8d2f1f203b56ea845431bc"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::value_type" ref="c71b56c12a8d2f1f203b56ea845431bc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::BoxContainer::BoxContainerConstIterator::value_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="70dcd98f3575d921599a19ca9f72a465"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::difference_type" ref="70dcd98f3575d921599a19ca9f72a465" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef ptrdiff_t <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1BoxContainerConstIterator.html#70dcd98f3575d921599a19ca9f72a465">SAMRAI::hier::BoxContainer::BoxContainerConstIterator::difference_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6d101597e8a8b74ee2c15aa8b4718711"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::pointer" ref="6d101597e8a8b74ee2c15aa8b4718711" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>* <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::BoxContainer::BoxContainerConstIterator::pointer</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="bc331cd7f5d9700e96ae9569627cce70"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::reference" ref="bc331cd7f5d9700e96ae9569627cce70" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">SAMRAI::hier::BoxContainer::BoxContainerConstIterator::reference</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="a1bc1ddcb4acb2db5a6da4172181742c"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator" ref="a1bc1ddcb4acb2db5a6da4172181742c" args="(const BoxContainerConstIterator &amp;other)" -->
 <div class="memitem">
 <div class="memproto">
@@ -442,7 +488,7 @@ Inequality operator.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxContainer_8h.html">BoxContainer.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxContainer_8C.html">BoxContainer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -46,6 +46,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#98fb046275b4195453ab0d1f787032da">getEquivalenceClasses</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return refine equivalence classes.  <a href="#98fb046275b4195453ab0d1f787032da"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#2a6f6489a81ea053e52a5bfa737bd538">setDeterministicUnpackOrderingFlag</a> (bool flag)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to unpack messages in a deterministic order.  <a href="#2a6f6489a81ea053e52a5bfa737bd538"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#ade71fc26d30b523133cbdca65af8c39">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print the refine schedule data to the specified data stream.  <a href="#ade71fc26d30b523133cbdca65af8c39"></a><br></td></tr>
@@ -345,6 +348,34 @@ Return refine equivalence classes.
 The equivalence class information is used in schedule classes. 
 </div>
 </div><p>
+<a class="anchor" name="2a6f6489a81ea053e52a5bfa737bd538"></a><!-- doxytag: member="SAMRAI::xfer::RefineSchedule::setDeterministicUnpackOrderingFlag" ref="2a6f6489a81ea053e52a5bfa737bd538" args="(bool flag)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::xfer::RefineSchedule::setDeterministicUnpackOrderingFlag           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>flag</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set whether to unpack messages in a deterministic order. 
+<p>
+By default message unpacking is ordered by receive time, which is not deterministic. If your results are dependent on unpack ordering and you want deterministic results, set this flag to true.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>flag</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="ade71fc26d30b523133cbdca65af8c39"></a><!-- doxytag: member="SAMRAI::xfer::RefineSchedule::printClassData" ref="ade71fc26d30b523133cbdca65af8c39" args="(std::ostream &amp;stream) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -374,7 +405,7 @@ Print the refine schedule data to the specified data stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefineSchedule_8h.html">RefineSchedule.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefineSchedule_8C.html">RefineSchedule.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

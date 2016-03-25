@@ -39,7 +39,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#d528c2b314fc9d9a7c24653c80c1bdab">keyExists</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; std::string &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#6a70b220f3caa05d5dd2b729c316ea8d">getAllKeys</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; std::string &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#9583a9aa63c5dec62b437b8cc5f18bea">getAllKeys</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual enum <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554">DataType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#f36d88869f6eba7ee927e3730f4fd4f1">getArrayType</a> (const std::string &amp;key)</td></tr>
 
@@ -58,49 +58,49 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#b66664221ff02bda6b43645167161f0c">putBoolArray</a> (const std::string &amp;key, const bool *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; bool &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#83a34ab811ac68f70924060c6f9e1420">getBoolArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; bool &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#3d24180a2f032b4b3bb5f0dbcbcbfcba">getBoolVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#bca45ea00c999fe27d2577b922b808cd">isDatabaseBox</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#c65f8def652796dc847653c489702f65">putDatabaseBoxArray</a> (const std::string &amp;key, const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#fa4aedf8c1a25b928cbce30d02759c4f">getDatabaseBoxArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#d5317518733360c3a19df98ede94e40b">getDatabaseBoxVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#d4485f23dd21b4723fcbe0a8dd148754">isChar</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#5ddd4da798e8a02751778bdd7b7f03a4">putCharArray</a> (const std::string &amp;key, const char *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#03f166e6631bc931c96cedc0558ec7df">getCharArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#c38a2b86ffcd8edb59b650f88dccecac">getCharVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#5092a5a6ef386969b4e68bc8fd7ecc6c">isComplex</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#0a8e54d2858c83d672fbca2f3b2bfb43">putComplexArray</a> (const std::string &amp;key, const <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#846f854b0ad8f6b145aa9c3f9f74ae05">getComplexArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#0b76bc2cfc8994379901a8d5229f80b0">getComplexVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#e4976e0e230a11df2c44a2eb1d85f04c">isDouble</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#bee17966fa3a5aff7468ec44ba6ef594">putDoubleArray</a> (const std::string &amp;key, const double *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; double &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#5fb78f277e9b5fd4d500464715980f5b">getDoubleArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; double &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#28dc9b846bd3f22f5be706feee7aedc4">getDoubleVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#411bc48236d75ef479ef25e9475be6f8">isFloat</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#5e38ac2648b2123787f7c02b59f12dbf">putFloatArray</a> (const std::string &amp;key, const float *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; float &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#032fecb042a2ea1d615971ec54c14a9e">getFloatArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; float &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#522bf45dee5e3ca8f7bba64519773941">getFloatVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#6d2cb9ca2ff21e2fadafa62fac3a38c8">isInteger</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#b5614d254fe24b7958a7db8fbe7ec995">putIntegerArray</a> (const std::string &amp;key, const int *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#a6352030546b4b7e532a0bf78c051af1">getIntegerArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#a785b633f5aee5a655593b9c1ba6a21c">getIntegerVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#7381d20337f960832ad28d2085ea473e">isString</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#1bf0c722386565796e5f45162e5cbfef">putStringArray</a> (const std::string &amp;key, const std::string *const data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; std::string &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#ec3a799ca2fe419795732640fe72c3cb">getStringArray</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::vector&lt; std::string &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#21c1573ce5e8c0ec232edc0edf541f28">getStringVector</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#33bbdf1dbf7d1dc85902e7d78dc9fdba">getName</a> ()</td></tr>
 
@@ -237,12 +237,12 @@ Return true if the specified key exists in the database and false otherwise.<p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#3d41b0525d33476e27bdc28a65c271be">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="6a70b220f3caa05d5dd2b729c316ea8d"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getAllKeys" ref="6a70b220f3caa05d5dd2b729c316ea8d" args="()" -->
+<a class="anchor" name="9583a9aa63c5dec62b437b8cc5f18bea"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getAllKeys" ref="9583a9aa63c5dec62b437b8cc5f18bea" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; std::string &gt; SAMRAI::tbox::SiloDatabase::getAllKeys           </td>
+          <td class="memname">std::vector&lt; std::string &gt; SAMRAI::tbox::SiloDatabase::getAllKeys           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -253,11 +253,11 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#3d41b0525d33
 <div class="memdoc">
 
 <p>
-Return an array of all keys in the current database. Note that no keys from subdatabases contained in the current database will appear in the array. To get the keys of any other database, you must call this routine for that database.<p>
+Return a vector of all keys in the current database. Note that no keys from subdatabases contained in the current database will appear in the array. To get the keys of any other database, you must call this routine for that database.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#dc307a35719adfe3769df7988f5df969">hasDirectory()</a> </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#cc13874f96bc41314dfa3b1bb5a0c720">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#1c88fbe496a6a4d31f88087504cdb5d3">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="f36d88869f6eba7ee927e3730f4fd4f1"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getArrayType" ref="f36d88869f6eba7ee927e3730f4fd4f1" args="(const std::string &amp;key)" -->
@@ -452,12 +452,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d58608644e1609f83babc919e1216c09">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="83a34ab811ac68f70924060c6f9e1420"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getBoolArray" ref="83a34ab811ac68f70924060c6f9e1420" args="(const std::string &amp;key)" -->
+<a class="anchor" name="3d24180a2f032b4b3bb5f0dbcbcbfcba"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getBoolVector" ref="3d24180a2f032b4b3bb5f0dbcbcbfcba" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; bool &gt; SAMRAI::tbox::SiloDatabase::getBoolArray           </td>
+          <td class="memname">std::vector&lt; bool &gt; SAMRAI::tbox::SiloDatabase::getBoolVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -469,7 +469,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d58608644e16
 <div class="memdoc">
 
 <p>
-Get a boolean entry from the database with the specified key name. If the specified key does not exist in the database or is not a boolean array, then an error message is printed and the program exits.<p>
+Get a boolean entry from the database with the specified key name. If the specified key does not exist in the database or is not a boolean vector, then an error message is printed and the program exits.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key name in database.</td></tr>
@@ -479,7 +479,7 @@ Get a boolean entry from the database with the specified key name. If the specif
 isBool(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7309e35076bcd485735b57fc9b4952ab">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#68ad2c8155610bc0c843fda990005e60">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="bca45ea00c999fe27d2577b922b808cd"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isDatabaseBox" ref="bca45ea00c999fe27d2577b922b808cd" args="(const std::string &amp;key)" -->
@@ -546,12 +546,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#449112af69fa50b9bbb2ad9dac3d7d78">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="fa4aedf8c1a25b928cbce30d02759c4f"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getDatabaseBoxArray" ref="fa4aedf8c1a25b928cbce30d02759c4f" args="(const std::string &amp;key)" -->
+<a class="anchor" name="d5317518733360c3a19df98ede94e40b"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getDatabaseBoxVector" ref="d5317518733360c3a19df98ede94e40b" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> &gt; SAMRAI::tbox::SiloDatabase::getDatabaseBoxArray           </td>
+          <td class="memname">std::vector&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> &gt; SAMRAI::tbox::SiloDatabase::getDatabaseBoxVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -567,7 +567,7 @@ Get a box entry from the database with the specified key name. If the specified 
 <dl compact><dt><b>Precondition:</b></dt><dd>!key.empty() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#22156a4c63da2fc2f84a23be3c74ad0e">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#39c6abb046d91a6ad4e8ba164435d34b">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="d4485f23dd21b4723fcbe0a8dd148754"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isChar" ref="d4485f23dd21b4723fcbe0a8dd148754" args="(const std::string &amp;key)" -->
@@ -634,12 +634,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#55ae208b5a9642655fc2aaa7682c4280">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="03f166e6631bc931c96cedc0558ec7df"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getCharArray" ref="03f166e6631bc931c96cedc0558ec7df" args="(const std::string &amp;key)" -->
+<a class="anchor" name="c38a2b86ffcd8edb59b650f88dccecac"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getCharVector" ref="c38a2b86ffcd8edb59b650f88dccecac" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; char &gt; SAMRAI::tbox::SiloDatabase::getCharArray           </td>
+          <td class="memname">std::vector&lt; char &gt; SAMRAI::tbox::SiloDatabase::getCharVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -656,7 +656,7 @@ Get a character entry from the database with the specified key name. If the spec
 isChar(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#e29b9c6325ec0f3824296debc4d32a63">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#b2b3c89d3f5010e1646bb14996fe2156">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="5092a5a6ef386969b4e68bc8fd7ecc6c"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isComplex" ref="5092a5a6ef386969b4e68bc8fd7ecc6c" args="(const std::string &amp;key)" -->
@@ -723,12 +723,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#52e81d82468c9dbe218363ae7d8b0fc4">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="846f854b0ad8f6b145aa9c3f9f74ae05"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getComplexArray" ref="846f854b0ad8f6b145aa9c3f9f74ae05" args="(const std::string &amp;key)" -->
+<a class="anchor" name="0b76bc2cfc8994379901a8d5229f80b0"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getComplexVector" ref="0b76bc2cfc8994379901a8d5229f80b0" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; SAMRAI::tbox::SiloDatabase::getComplexArray           </td>
+          <td class="memname">std::vector&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; SAMRAI::tbox::SiloDatabase::getComplexVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -745,7 +745,7 @@ Get a complex entry from the database with the specified key name. If the specif
 isComplex(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#b3df74e2ab847bd8f435fb0dc1058483">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#666df3e65a179f09940f8ef43c825342">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="e4976e0e230a11df2c44a2eb1d85f04c"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isDouble" ref="e4976e0e230a11df2c44a2eb1d85f04c" args="(const std::string &amp;key)" -->
@@ -812,12 +812,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#d203d0ba032f2492a7844872c857a031">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="5fb78f277e9b5fd4d500464715980f5b"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getDoubleArray" ref="5fb78f277e9b5fd4d500464715980f5b" args="(const std::string &amp;key)" -->
+<a class="anchor" name="28dc9b846bd3f22f5be706feee7aedc4"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getDoubleVector" ref="28dc9b846bd3f22f5be706feee7aedc4" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; double &gt; SAMRAI::tbox::SiloDatabase::getDoubleArray           </td>
+          <td class="memname">std::vector&lt; double &gt; SAMRAI::tbox::SiloDatabase::getDoubleVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -834,7 +834,7 @@ Get a double entry from the database with the specified key name. If the specifi
 isDouble(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#fdfa072aef0d5a40e63fff52ba7c212a">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#5b6a196de445047ce5377835fbb383f4">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="411bc48236d75ef479ef25e9475be6f8"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isFloat" ref="411bc48236d75ef479ef25e9475be6f8" args="(const std::string &amp;key)" -->
@@ -901,12 +901,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#0bc6785620f0450cae056db7792b3f53">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="032fecb042a2ea1d615971ec54c14a9e"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getFloatArray" ref="032fecb042a2ea1d615971ec54c14a9e" args="(const std::string &amp;key)" -->
+<a class="anchor" name="522bf45dee5e3ca8f7bba64519773941"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getFloatVector" ref="522bf45dee5e3ca8f7bba64519773941" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; float &gt; SAMRAI::tbox::SiloDatabase::getFloatArray           </td>
+          <td class="memname">std::vector&lt; float &gt; SAMRAI::tbox::SiloDatabase::getFloatVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -923,7 +923,7 @@ Get a float entry from the database with the specified key name. If the specifie
 isFloat(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ba9f096ab6b083ead6074a742b056636">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#e69520d09de72c04e4d4eb2781dc62a2">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="6d2cb9ca2ff21e2fadafa62fac3a38c8"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isInteger" ref="6d2cb9ca2ff21e2fadafa62fac3a38c8" args="(const std::string &amp;key)" -->
@@ -990,12 +990,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ac01e2a5035625bc1d6c41dc189ed579">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="a6352030546b4b7e532a0bf78c051af1"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getIntegerArray" ref="a6352030546b4b7e532a0bf78c051af1" args="(const std::string &amp;key)" -->
+<a class="anchor" name="a785b633f5aee5a655593b9c1ba6a21c"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getIntegerVector" ref="a785b633f5aee5a655593b9c1ba6a21c" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; int &gt; SAMRAI::tbox::SiloDatabase::getIntegerArray           </td>
+          <td class="memname">std::vector&lt; int &gt; SAMRAI::tbox::SiloDatabase::getIntegerVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -1012,7 +1012,7 @@ Get an integer entry from the database with the specified key name. If the speci
 isInteger(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#5623d765ea369e767ea6c753835724ef">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#733f2f103c28df889fc86cee6dfde9ed">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="7381d20337f960832ad28d2085ea473e"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isString" ref="7381d20337f960832ad28d2085ea473e" args="(const std::string &amp;key)" -->
@@ -1079,12 +1079,12 @@ data != 0 </dd></dl>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#04d52cb7dbd5b29fd4bd7c455a689d62">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="ec3a799ca2fe419795732640fe72c3cb"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getStringArray" ref="ec3a799ca2fe419795732640fe72c3cb" args="(const std::string &amp;key)" -->
+<a class="anchor" name="21c1573ce5e8c0ec232edc0edf541f28"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getStringVector" ref="21c1573ce5e8c0ec232edc0edf541f28" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; std::string &gt; SAMRAI::tbox::SiloDatabase::getStringArray           </td>
+          <td class="memname">std::vector&lt; std::string &gt; SAMRAI::tbox::SiloDatabase::getStringVector           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -1101,7 +1101,7 @@ Get a string entry from the database with the specified key name. If the specifi
 isString(key) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#c7da21a9b1ea74a20363608bd958f1eb">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#6426484e0b0fae858c34824428921d59">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="33bbdf1dbf7d1dc85902e7d78dc9fdba"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getName" ref="33bbdf1dbf7d1dc85902e7d78dc9fdba" args="()" -->
@@ -1298,7 +1298,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#09f40d20ff38
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="SiloDatabase_8h.html">SiloDatabase.h</a><li>source/SAMRAI/tbox/<a class="el" href="SiloDatabase_8C.html">SiloDatabase.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

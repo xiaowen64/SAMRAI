@@ -43,6 +43,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#96125360a070e96de0046f919ec99530">getFromInput</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read extra debugging flag from input database.  <a href="#96125360a070e96de0046f919ec99530"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#3698546884e96887a1efb39a099701ed">findOverlaps</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;base_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb4">BoxLevel::ParallelState</a> parallel_state=BoxLevel::DISTRIBUTED, const bool ignore_self_overlap=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> then discover and add overlaps from base to head to it.  <a href="#3698546884e96887a1efb39a099701ed"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#4e31509736543b0a9ea202fcdbf99de1">findOverlapsWithTranspose</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;base_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_width, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;transpose_base_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb4">BoxLevel::ParallelState</a> parallel_state=BoxLevel::DISTRIBUTED, const bool ignore_self_overlap=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose then discover and add overlaps from base to head to it and overlaps from head to base to transpose.  <a href="#4e31509736543b0a9ea202fcdbf99de1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#e332c260d625389d3d7ce6140fbcf788">findOverlaps</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const bool ignore_self_overlap=false) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Discover and add overlaps from base to head for an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.  <a href="#e332c260d625389d3d7ce6140fbcf788"></a><br></td></tr>
@@ -54,38 +60,30 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#00a49de1613717173249513c0e4a904a">extractNeighbors</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;other, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;gcw) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Like extractNeighbors above except that it computes all neighborhoods of connector placing them into other.  <a href="#00a49de1613717173249513c0e4a904a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#36f9a1b95d0481440b4e3e6a0b47ae35">bridgeWithNesting</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_east, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;center_growth_to_nest_west, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;center_growth_to_nest_east, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#29e80a211de4749ecc033596e4fe5c37">bridgeWithNesting</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;west_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;center_growth_to_nest_west, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;center_growth_to_nest_east, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit, bool compute_transpose) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap Connectors between BoxLevels efficiently by using information from existing overlap Connectors.  <a href="#36f9a1b95d0481440b4e3e6a0b47ae35"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ba9242be7ba1527ce47ea4fe89b48a9e">bridge</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_east, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap Connectors between BoxLevels efficiently by using information from existing overlap Connectors.  <a href="#29e80a211de4749ecc033596e4fe5c37"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#74e426410da5dfd3461c4ae7b268e4da">bridge</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;west_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit, bool compute_transpose) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without any guarantee of nesting.  <a href="#ba9242be7ba1527ce47ea4fe89b48a9e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#9b94c1d6cb200300932ae2d6d0fdbd8a">bridge</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without any guarantee of nesting.  <a href="#74e426410da5dfd3461c4ae7b268e4da"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ce6a5dbe88186e63811080f3734826e4">bridge</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;west_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, bool compute_transpose) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without computing the reverse bridge.  <a href="#9b94c1d6cb200300932ae2d6d0fdbd8a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#88cdea100b05a06c35094f1d1f634b09">bridge</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_east, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_west) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without limiting the connector_width of the result.  <a href="#ce6a5dbe88186e63811080f3734826e4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#2eee26beb8ea8bbc4977f5ac1eb45768">bridge</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without limiting the connector_width of the result.  <a href="#88cdea100b05a06c35094f1d1f634b09"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#62002e55ddb736796f75faf1363aeb30">bridge</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_west) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without any guarantee of nesting in which an input connector and its transpose are modified to form the resulting bridge connectors.  <a href="#2eee26beb8ea8bbc4977f5ac1eb45768"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#99bf3a60edd92ad43916c7410c9d5129">setBarrierBeforeCommunication</a> (bool do_barrier)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without computing the reverse bridge and without limiting the connector_width of the result.  <a href="#62002e55ddb736796f75faf1363aeb30"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#6c1f4d3963f7f04460662340b4306dd0">bridge</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_center, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_east, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;east_to_center, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;center_to_west, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width_limit) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A version of bridge without any guarantee of nesting in which one pair of input connectors is modified to form the resulting bridge connectors.  <a href="#6c1f4d3963f7f04460662340b4306dd0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to barrier before potential major communication.  <a href="#99bf3a60edd92ad43916c7410c9d5129"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#29f448936a23f8dd367ce65c371466a8">setSanityCheckMethodPreconditions</a> (bool do_check)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">When <code>do_check</code> is true, turn on sanity checks for input parameters.  <a href="#29f448936a23f8dd367ce65c371466a8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#7088a2d599fd1d4c7efca3d078207e98">setSanityCheckMethodPostconditions</a> (bool do_check)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">When <code>do_check</code> is true, turn on sanity checks for outputs.  <a href="#7088a2d599fd1d4c7efca3d078207e98"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#0b02ac3cab3c458913a70a2d55ac707c">checkOverlapCorrectness</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, bool ignore_self_overlap=false, bool assert_completeness=true, bool ignore_periodic_images=false) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#8d69f7abe729ec94f3e4ca647116286e">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ffbc9d6e16c0cf8515d71012afd275c0">assertOverlapCorrectness</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, bool ignore_self_overlap=false, bool assert_completeness=true, bool ignore_periodic_images=false) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assert overlap correctness.  <a href="#ffbc9d6e16c0cf8515d71012afd275c0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#e93ab6ff1829b5d3b8a3e9d95d40a318">findOverlapErrors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;missing, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;extra, bool ignore_self_overlap=false) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find errors in overlap data of an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.  <a href="#e93ab6ff1829b5d3b8a3e9d95d40a318"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setup names of timers.  <a href="#8d69f7abe729ec94f3e4ca647116286e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#8bb13003c85cb2ce6fbdc30488b9a6a4">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#8bb13003c85cb2ce6fbdc30488b9a6a4"></a><br></td></tr>
@@ -158,6 +156,147 @@ Destructor.
 <p>
 Read extra debugging flag from input database. 
 <p>
+
+</div>
+</div><p>
+<a class="anchor" name="3698546884e96887a1efb39a099701ed"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps" ref="3698546884e96887a1efb39a099701ed" args="(boost::shared_ptr&lt; Connector &gt; &amp;connector, const BoxLevel &amp;base_box_level, const BoxLevel &amp;head_box_level, const IntVector &amp;base_width, const BoxLevel::ParallelState parallel_state=BoxLevel::DISTRIBUTED, const bool ignore_self_overlap=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps           </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>base_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>base_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb4">BoxLevel::ParallelState</a>&nbsp;</td>
+          <td class="paramname"> <em>parallel_state</em> = <code>BoxLevel::DISTRIBUTED</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>ignore_self_overlap</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> then discover and add overlaps from base to head to it. 
+<p>
+The Connector's neighbor information is modified.<p>
+If the Connector's head is not GLOBALIZED, a copy is made and globalized. Once a globalized head is obtained, this method simply calls findOverlaps(const BoxLevel &amp;globalized_head).<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_width</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>parallel_state</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_self_overlap</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="4e31509736543b0a9ea202fcdbf99de1"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::findOverlapsWithTranspose" ref="4e31509736543b0a9ea202fcdbf99de1" args="(boost::shared_ptr&lt; Connector &gt; &amp;connector, const BoxLevel &amp;base_box_level, const BoxLevel &amp;head_box_level, const IntVector &amp;base_width, const IntVector &amp;transpose_base_width, const BoxLevel::ParallelState parallel_state=BoxLevel::DISTRIBUTED, const bool ignore_self_overlap=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::findOverlapsWithTranspose           </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>base_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>base_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transpose_base_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb4">BoxLevel::ParallelState</a>&nbsp;</td>
+          <td class="paramname"> <em>parallel_state</em> = <code>BoxLevel::DISTRIBUTED</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>ignore_self_overlap</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose then discover and add overlaps from base to head to it and overlaps from head to base to transpose. 
+<p>
+The Connector's neighbor information is modified.<p>
+If the Connector's head is not GLOBALIZED, a copy is made and globalized. Once a globalized head is obtained, this method simply calls findOverlaps(const BoxLevel &amp;globalized_head).<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>base_width</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transpose_base_width</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>parallel_state</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_self_overlap</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -337,21 +476,15 @@ for the box_id of each neighborhood base box in connector, connector.getBase().h
 
 </div>
 </div><p>
-<a class="anchor" name="36f9a1b95d0481440b4e3e6a0b47ae35"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridgeWithNesting" ref="36f9a1b95d0481440b4e3e6a0b47ae35" args="(Connector &amp;west_to_east, Connector &amp;east_to_west, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const Connector &amp;east_to_center, const Connector &amp;center_to_west, const IntVector &amp;center_growth_to_nest_west, const IntVector &amp;center_growth_to_nest_east, const IntVector &amp;connector_width_limit) const " -->
+<a class="anchor" name="29e80a211de4749ecc033596e4fe5c37"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridgeWithNesting" ref="29e80a211de4749ecc033596e4fe5c37" args="(boost::shared_ptr&lt; Connector &gt; &amp;west_to_east, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const IntVector &amp;center_growth_to_nest_west, const IntVector &amp;center_growth_to_nest_east, const IntVector &amp;connector_width_limit, bool compute_transpose) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::bridgeWithNesting           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>west_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_west</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -364,18 +497,6 @@ for the box_id of each neighborhood base box in connector, connector.getBase().h
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>center_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_west</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -393,7 +514,13 @@ for the box_id of each neighborhood base box in connector, connector.getBase().h
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector_width_limit</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>connector_width_limit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>compute_transpose</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -421,30 +548,24 @@ Let east, west and center be BoxLevels. Given overlap Connectors between center 
               v \    / v
                (center)
 </pre></div><p>
-The "bridge" is the Connectors between <code>west</code> and <code>east</code>. Bridging is an algorithm for finding their overlaps using existing overlaps incident from <code>center</code>. This is more efficient than <a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#e332c260d625389d3d7ce6140fbcf788">findOverlaps()</a> because it does not require acquiring, storing or searching globalized data.<p>
+The "bridge" is the Connectors between <code>west</code> and <code>east</code>. Bridging is an algorithm for finding their overlaps using existing overlaps incident from <code>center</code>. This is more efficient than <a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#3698546884e96887a1efb39a099701ed">findOverlaps()</a> because it does not require acquiring, storing or searching globalized data.<p>
 Preconditions:<p>
 <ul>
-<li>Four input Connectors refer to the center <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>, two refer to the west, and two refer to the east. The center, east and west BoxLevels must be the same regardless of what <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is used to get them. For example, <code> &amp;center_to_west.getHead() == &amp;west_to_center.getBase() </code> must be true.</li></ul>
-<p>
-<ul>
-<li><code>west_to_center</code> and <code>center_to_west</code> must be mutual transposes.</li></ul>
-<p>
-<ul>
-<li><code>east_to_center</code> and <code>center_to_east</code> must be mutual transposes.</li></ul>
+<li>Four input Connectors refer to the center <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>, two refer to the west, and two refer to the east. The center, east and west BoxLevels must be the same regardless of what <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is used to get them. For example, <code> &amp;west_to_center.getTranspose().getHead() == &amp;west_to_center.getBase() </code> must be true.</li></ul>
 <p>
 Postconditions:<p>
 <ul>
-<li><code>west</code> and <code>east</code>, as referenced by the output Connectors are heads of <code>center_to_west</code> and <code>center_to_east</code>.</li>
+<li><code>west</code> and <code>east</code>, as referenced by the output Connectors are heads of west_to_center's transpose and <code>center_to_east</code>.</li>
 </ul>
 <ul>
-<li>Widths of the output Connectors will be either <code>center_to_east's</code> width reduced by <code>center_growth_to_nest_west</code> or <code>center_to_west's</code> width reduced by <code>center_growth_to_nest_east</code>, which ever is greater. Output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths are still limited by the <code>connector_width_limit</code> argument. All comparisons are done after the appropriate index space conversions, of course.</li>
+<li>Widths of the output Connectors will be either <code>center_to_east's</code> width reduced by <code>center_growth_to_nest_west</code> or west_to_center's transpose's width reduced by <code>center_growth_to_nest_east</code>, which ever is greater. Output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths are still limited by the <code>connector_width_limit</code> argument. All comparisons are done after the appropriate index space conversions, of course.</li>
 </ul>
 <dl compact><dt><b>Note:</b></dt><dd></dd></dl>
 <ul>
 <li>Although <code>east</code>, <code>west</code> and <code>center</code> are not explicit parameters, they are specified implicitly through the input Connectors.</li>
 </ul>
 <ul>
-<li>The bridge operation works in the degenerate case where <code>east</code> and <code>west</code> are the same object. In that case, <code>west_to_east</code> and <code>east_to_west</code> should also be the same object.</li>
+<li>The bridge operation works in the degenerate case where <code>east</code> and <code>west</code> are the same object. In that case, <code>west_to_east</code> and its transpose should also be the same object.</li>
 </ul>
 <ul>
 <li>Bridging finds as many overlaps as it can, given the inputs, but can only guarantee that the output Connectors are complete overlap Connectors if there is nesting as specified by the arguments <code>center_growth_to_nest_west</code> and/or <code>center_growth_to_nest_east</code>. Nesting is not checked, because checking requires an iterative non-scalable computation. Nesting is best determined by the code that created the BoxLevels involved. Bridging is meant to be fast and scalable.</li>
@@ -455,34 +576,28 @@ Postconditions:<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>west_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>east_to_west</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>west_to_center</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>east_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_west</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>center_growth_to_nest_west</em>&nbsp;</td><td>The amount by which the center <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> must grow to nest the west <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Bridging guarantees completeness if the width of <b>center_to_east</b> exceeds this amount. If unknown, set to negative value if unknown so it won't be considered when computing the output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>center_growth_to_nest_east</em>&nbsp;</td><td>The amount by which the center <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> must grow to nest the east <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Bridging guarantees completeness if the width of <b>center_to_west</b> exceeds this amount. If unknown, set to negative value if unknown so it won't be considered when computing the output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>connector_width_limit</em>&nbsp;</td><td>specifies the maximum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width to compute overlaps for. The connector_width should be in the coarser of the east and west indices. If connector_width_limit is negative, use the default connector_width, which is the larger of the center_to_west and center_to_east Connectors', coarsened into the coarser of east and west indices. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>center_growth_to_nest_east</em>&nbsp;</td><td>The amount by which the center <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> must grow to nest the east <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Bridging guarantees completeness if the width of <b>west_to_center's</b> transpose exceeds this amount. If unknown, set to negative value if unknown so it won't be considered when computing the output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>connector_width_limit</em>&nbsp;</td><td>specifies the maximum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width to compute overlaps for. The connector_width should be in the coarser of the east and west indices. If connector_width_limit is negative, use the default connector_width, which is the larger of the west_to_center's transpose and center_to_east Connectors', coarsened into the coarser of east and west indices.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>compute_transpose</em>&nbsp;</td><td>true if west_to_east's transpose should be computed</td></tr>
   </table>
 </dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>west_to_cent.hasTranspose() <p>
+cent_to_east.hasTranspose() </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="ba9242be7ba1527ce47ea4fe89b48a9e"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="ba9242be7ba1527ce47ea4fe89b48a9e" args="(Connector &amp;west_to_east, Connector &amp;east_to_west, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const Connector &amp;east_to_center, const Connector &amp;center_to_west, const IntVector &amp;connector_width_limit) const " -->
+<a class="anchor" name="74e426410da5dfd3461c4ae7b268e4da"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="74e426410da5dfd3461c4ae7b268e4da" args="(boost::shared_ptr&lt; Connector &gt; &amp;west_to_east, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const IntVector &amp;connector_width_limit, bool compute_transpose) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::bridge           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>west_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_west</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -499,20 +614,14 @@ Postconditions:<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_west</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector_width_limit</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>connector_width_limit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>compute_transpose</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -531,26 +640,26 @@ The output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>west_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>east_to_west</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>west_to_center</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>east_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_west</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width_limit</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>compute_transpose</em>&nbsp;</td><td>true if west_to_east's transpose should be computed</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#36f9a1b95d0481440b4e3e6a0b47ae35">bridgeWithNesting( Connector&amp; west_to_east, Connector&amp; east_to_west, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const Connector&amp; east_to_center, const Connector&amp; center_to_west, const IntVector&amp; center_growth_to_nest_west, const IntVector&amp; center_growth_to_nest_east, const IntVector&amp; connector_width_limit) const</a>; </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>west_to_cent.hasTranspose() <p>
+cent_to_east.hasTranspose()</dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd>bridgeWithNesting( Connector&amp; west_to_east, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const IntVector&amp; center_growth_to_nest_west, const IntVector&amp; center_growth_to_nest_east, const IntVector&amp; connector_width_limit, bool compute_transpose) const; </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="9b94c1d6cb200300932ae2d6d0fdbd8a"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="9b94c1d6cb200300932ae2d6d0fdbd8a" args="(Connector &amp;west_to_east, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const Connector &amp;east_to_center, const Connector &amp;center_to_west, const IntVector &amp;connector_width_limit) const " -->
+<a class="anchor" name="ce6a5dbe88186e63811080f3734826e4"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="ce6a5dbe88186e63811080f3734826e4" args="(boost::shared_ptr&lt; Connector &gt; &amp;west_to_east, const Connector &amp;west_to_center, const Connector &amp;center_to_east, bool compute_transpose) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::bridge           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>west_to_east</em>, </td>
         </tr>
         <tr>
@@ -568,86 +677,8 @@ The output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_west</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector_width_limit</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-A version of bridge without computing the reverse bridge. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>west_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>west_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>east_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_west</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width_limit</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ba9242be7ba1527ce47ea4fe89b48a9e">bridge( Connector&amp; west_to_east, Connector&amp; east_to_west, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const Connector&amp; east_to_center, const Connector&amp; center_to_west, const IntVector&amp; connector_width_limit) const</a>; </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="88cdea100b05a06c35094f1d1f634b09"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="88cdea100b05a06c35094f1d1f634b09" args="(Connector &amp;west_to_east, Connector &amp;east_to_west, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const Connector &amp;east_to_center, const Connector &amp;center_to_west) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::bridge           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>west_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_west</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>west_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_west</em></td><td>&nbsp;</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>compute_transpose</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -664,77 +695,18 @@ A version of bridge without limiting the connector_width of the result.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>west_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>east_to_west</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>west_to_center</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>east_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_west</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>compute_transpose</em>&nbsp;</td><td>true if west_to_east's transpose should be computed</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ba9242be7ba1527ce47ea4fe89b48a9e">bridge( Connector&amp; west_to_east, Connector&amp; east_to_west, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const Connector&amp; east_to_center, const Connector&amp; center_to_west, const IntVector&amp; connector_width_limit) const</a>; </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>west_to_cent.hasTranspose() <p>
+cent_to_east.hasTranspose()</dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd>bridge( Connector&amp; west_to_east, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const IntVector&amp; connector_width_limit, bool compute_transpose) const; </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="62002e55ddb736796f75faf1363aeb30"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="62002e55ddb736796f75faf1363aeb30" args="(Connector &amp;west_to_east, const Connector &amp;west_to_center, const Connector &amp;center_to_east, const Connector &amp;east_to_center, const Connector &amp;center_to_west) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::bridge           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>west_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>west_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_west</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-A version of bridge without computing the reverse bridge and without limiting the connector_width of the result. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>west_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>west_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>east_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_west</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ba9242be7ba1527ce47ea4fe89b48a9e">bridge( Connector&amp; west_to_east, Connector&amp; east_to_west, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const Connector&amp; east_to_center, const Connector&amp; center_to_west, const IntVector&amp; connector_width_limit) const</a>; </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="6c1f4d3963f7f04460662340b4306dd0"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="6c1f4d3963f7f04460662340b4306dd0" args="(Connector &amp;west_to_center, const Connector &amp;center_to_east, const Connector &amp;east_to_center, Connector &amp;center_to_west, const IntVector &amp;connector_width_limit) const " -->
+<a class="anchor" name="2eee26beb8ea8bbc4977f5ac1eb45768"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::bridge" ref="2eee26beb8ea8bbc4977f5ac1eb45768" args="(Connector &amp;west_to_center, const Connector &amp;center_to_east, const IntVector &amp;connector_width_limit) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -749,18 +721,6 @@ A version of bridge without computing the reverse bridge and without limiting th
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>center_to_east</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>east_to_center</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>center_to_west</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -778,20 +738,48 @@ A version of bridge without computing the reverse bridge and without limiting th
 <div class="memdoc">
 
 <p>
-A version of bridge without any guarantee of nesting in which one pair of input connectors is modified to form the resulting bridge connectors. 
+A version of bridge without any guarantee of nesting in which an input connector and its transpose are modified to form the resulting bridge connectors. 
 <p>
 The east and west BoxLevels are assumed to nest in the center <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. If they do not, the results are not guaranteed to be complete.<p>
-The output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths are the greater of the widths of <code>center_to_east</code> and <code>center_to_west</code> (converted into the proper index space, of course).<p>
+The output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths are the greater of the widths of <code>center_to_east</code> and west_to_center's transpose (converted into the proper index space, of course).<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>west_to_center</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>center_to_east</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>east_to_center</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>center_to_west</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width_limit</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#36f9a1b95d0481440b4e3e6a0b47ae35">bridgeWithNesting( Connector&amp; west_to_east, Connector&amp; east_to_west, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const Connector&amp; east_to_center, const Connector&amp; center_to_west, const IntVector&amp; center_growth_to_nest_west, const IntVector&amp; center_growth_to_nest_east, const IntVector&amp; connector_width_limit) const</a>; </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>west_to_cent.hasTranspose() <p>
+cent_to_east.hasTranspose()</dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd>bridgeWithNesting( Connector&amp; west_to_east, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const IntVector&amp; center_growth_to_nest_west, const IntVector&amp; center_growth_to_nest_east, const IntVector&amp; connector_width_limit, bool compute_transpose) const; </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="99bf3a60edd92ad43916c7410c9d5129"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::setBarrierBeforeCommunication" ref="99bf3a60edd92ad43916c7410c9d5129" args="(bool do_barrier)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::setBarrierBeforeCommunication           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>do_barrier</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set whether to barrier before potential major communication. 
+<p>
+This developer feature makes sure all processes start major operations at the same time so that timers do not include the time waiting for slower processes to get to the starting point.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>do_barrier</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -805,7 +793,7 @@ The output <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector<
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>do_check</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -833,7 +821,7 @@ When <code>do_check</code> is true, turn on sanity checks for input parameters.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>do_check</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -851,172 +839,26 @@ When <code>do_check</code> is true, turn on sanity checks for outputs.
 
 </div>
 </div><p>
-<a class="anchor" name="0b02ac3cab3c458913a70a2d55ac707c"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::checkOverlapCorrectness" ref="0b02ac3cab3c458913a70a2d55ac707c" args="(const Connector &amp;connector, bool ignore_self_overlap=false, bool assert_completeness=true, bool ignore_periodic_images=false) const " -->
+<a class="anchor" name="8d69f7abe729ec94f3e4ca647116286e"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::setTimerPrefix" ref="8d69f7abe729ec94f3e4ca647116286e" args="(const std::string &amp;timer_prefix)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::hier::OverlapConnectorAlgorithm::checkOverlapCorrectness           </td>
+          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::setTimerPrefix           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>ignore_self_overlap</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>assert_completeness</em> = <code>true</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>ignore_periodic_images</em> = <code>false</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>timer_prefix</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Check that overlap data is correct (represents overlaps) for the given <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.<p>
-Checking is done as follows:<ul>
-<li>Find overlap errors using <code><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#e93ab6ff1829b5d3b8a3e9d95d40a318">findOverlapErrors()</a></code>.</li><li>Report overlap errors to <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#d72fd66574b63c87061563d2c66b5475">tbox::perr</a></code>.</li><li>Return number of local errors.</li></ul>
+Setup names of timers. 
 <p>
-<dl compact><dt><b>Note:</b></dt><dd>This is an expensive operation (it uses <b><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#e93ab6ff1829b5d3b8a3e9d95d40a318">findOverlapErrors()</a></b>) and should only be used for debugging.</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#e332c260d625389d3d7ce6140fbcf788">findOverlaps()</a></dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_self_overlap</em>&nbsp;</td><td>Ignore a box's overlap with itself </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>assert_completeness</em>&nbsp;</td><td>If false, ignore missing overlaps. This will still look for overlaps that should not be there. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_periodic_images</em>&nbsp;</td><td>If true, do not require neighbors that are periodic images.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>Number of overlap errors found locally.</dd></dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(connector.getBase().isInitialized()) &amp;&amp; (connector.getHead().isInitialized()) <p>
-!connector.hasPeriodicLocalNeighborhoodBaseBoxes() </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="ffbc9d6e16c0cf8515d71012afd275c0"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::assertOverlapCorrectness" ref="ffbc9d6e16c0cf8515d71012afd275c0" args="(const Connector &amp;connector, bool ignore_self_overlap=false, bool assert_completeness=true, bool ignore_periodic_images=false) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::assertOverlapCorrectness           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>ignore_self_overlap</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>assert_completeness</em> = <code>true</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>ignore_periodic_images</em> = <code>false</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Assert overlap correctness. 
-<p>
-<dl compact><dt><b>Assertions</b></dt><dd>if an error is found, the method will write out diagnostic information and throw an an error on all processes.</dd></dl>
-This is an expensive check.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#0b02ac3cab3c458913a70a2d55ac707c">checkOverlapCorrectness()</a>.</dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_self_overlap</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>assert_completeness</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_periodic_images</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(connector.getBase().isInitialized()) &amp;&amp; (connector.getHead().isInitialized()) </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="e93ab6ff1829b5d3b8a3e9d95d40a318"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::findOverlapErrors" ref="e93ab6ff1829b5d3b8a3e9d95d40a318" args="(const Connector &amp;connector, Connector &amp;missing, Connector &amp;extra, bool ignore_self_overlap=false) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::findOverlapErrors           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>missing</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>extra</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>ignore_self_overlap</em> = <code>false</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Find errors in overlap data of an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>. 
-<p>
-An error is either a missing overlap or an extra overlap.<p>
-This is an expensive operation and should only be used for debugging.<p>
-<dl compact><dt><b>Assertions</b></dt><dd>This version throws an assertion only if it finds inconsistent <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> data. Missing and extra overlaps are returned but do not cause an assertion.</dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>missing</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>extra</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ignore_self_overlap</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(connector.getBase().isInitialized()) &amp;&amp; (connector.getHead().isInitialized()) </dd></dl>
-
+By default, timers are named "hier::OverlapConnectorAlgorithm::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html">MappingConnectorAlgorithm</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". 
 </div>
 </div><p>
 <a class="anchor" name="8bb13003c85cb2ce6fbdc30488b9a6a4"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::getObjectName" ref="8bb13003c85cb2ce6fbdc30488b9a6a4" args="() const " -->
@@ -1042,7 +884,7 @@ Get the name of this object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="OverlapConnectorAlgorithm_8h.html">OverlapConnectorAlgorithm.h</a><li>source/SAMRAI/hier/<a class="el" href="OverlapConnectorAlgorithm_8C.html">OverlapConnectorAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

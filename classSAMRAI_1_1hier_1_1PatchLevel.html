@@ -39,6 +39,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#03f5a47850ff9e8e98083e66d272027d">PatchLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;(), bool defer_boundary_box_creation=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level given a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#03f5a47850ff9e8e98083e66d272027d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#645bd16af8f4dab30a69171684d4959d">PatchLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; box_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;(), bool defer_boundary_box_creation=false)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level given a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#645bd16af8f4dab30a69171684d4959d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#a15c1dbbb21c10b94520bb7818ae3b02">PatchLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_database, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector=*(new <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a>(false)), bool defer_boundary_box_creation=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level from the specified <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> restart database.  <a href="#a15c1dbbb21c10b94520bb7818ae3b02"></a><br></td></tr>
@@ -102,9 +105,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#f480f2ad7c577a0b85b662e50ec2474a">setBoundaryBoxes</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and store the boundary boxes for this level.  <a href="#f480f2ad7c577a0b85b662e50ec2474a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#dcea700178435d6fd764689a9604eece">getPhysicalDomainArray</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#b2c06a41ad6751bc65197ef1c7bfcf37">getPhysicalDomainArray</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the physical domain.  <a href="#dcea700178435d6fd764689a9604eece"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the physical domain.  <a href="#b2c06a41ad6751bc65197ef1c7bfcf37"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#7e9b1ac5feea148093f27a04c1e94935">getPhysicalDomain</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#d425bff9332a3eb2bbfb7509ccf13dc9">getBoxes</a> () const </td></tr>
@@ -167,6 +170,24 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#1cd7fb8d26f13d4c0a4531068fc6715a">setTime</a> (const double timestamp)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the simulation time for all allocated patch components.  <a href="#1cd7fb8d26f13d4c0a4531068fc6715a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#9b4c903e092ad83c6424714e71a69eea">findConnector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_connector_width, <a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a> not_found_action, bool exact_width_only=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with the given PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as its head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action.  <a href="#9b4c903e092ad83c6424714e71a69eea"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cd4cfb1fcc1e127b972c69cc1cd9f420">findConnectorWithTranspose</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_connector_width, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;transpose_min_connector_width, <a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a> not_found_action, bool exact_width_only=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose with the given PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as its head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action.  <a href="#cd4cfb1fcc1e127b972c69cc1cd9f420"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#d32ba4dc0e16606b0eff46c26cd1392a">createConnector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>, computing relationships by globalizing data.  <a href="#d32ba4dc0e16606b0eff46c26cd1392a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#423b7c4697fa29904aa568bbb3c44db5">createConnectorWithTranspose</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;transpose_connector_width) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose, computing relationships by globalizing data.  <a href="#423b7c4697fa29904aa568bbb3c44db5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#0f84183007b29d36126528442322f03d">cacheConnector</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;connector) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Cache the supplied overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> and its transpose if it exists.  <a href="#0f84183007b29d36126528442322f03d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cfd360bbe14237dfb3a70513b746bacb">hasConnector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_connector_width, bool exact_width_only=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns whether the object has overlap Connectors with the given PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as the head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width.  <a href="#cfd360bbe14237dfb3a70513b746bacb"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#19dacf0d08b26a5752c3aa8f7838bd67">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> restart database to set the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> and to create all patches on the local processor.  <a href="#19dacf0d08b26a5752c3aa8f7838bd67"></a><br></td></tr>
@@ -287,6 +308,73 @@ Default constructor. <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html"
 <p>
 Construct a new patch level given a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
+This constructor makes a COPY of the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. If the caller intends to modify the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for other purposes after creating this <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>, then this constructor must be used rather than the constructor taking a boost::shared_ptr&lt;BoxLevel&gt;.<p>
+The <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> provides refinement ratio information, establishing the ratio between the index space of the new level and some reference level (typically level zero) in some patch hierarchy.<p>
+The ratio information provided by the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is also used by the grid geometry instance to initialize geometry information of both the level and the patches on that level.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>descriptor</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> used to allocate patch data on the local processor </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>factory</em>&nbsp;</td><td>Optional <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>. If none specified, a default (standard) patch factory will be used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>defer_boundary_box_creation</em>&nbsp;</td><td>Flag to indicate suppressing construction of the boundary boxes.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>grid_geometry <p>
+descriptor <p>
+box_level.getDim() == grid_geometry-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#5200d3b0e8dcd338f04ff2004d35aaaa">getDim()</a> <p>
+box_level.getRefinementRatio() != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#178dc4477a52ff09e80a2c3e86944e7f">IntVector::getZero</a>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#5200d3b0e8dcd338f04ff2004d35aaaa">getDim()</a>) <p>
+all components of box_level's refinement ratio must be nonzero and, all components not equal to 1 must have the same sign </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="645bd16af8f4dab30a69171684d4959d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::PatchLevel" ref="645bd16af8f4dab30a69171684d4959d" args="(const boost::shared_ptr&lt; BoxLevel &gt; box_level, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;grid_geometry, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor, const boost::shared_ptr&lt; PatchFactory &gt; &amp;factory=boost::shared_ptr&lt; PatchFactory &gt;(), bool defer_boundary_box_creation=false)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::hier::PatchLevel::PatchLevel           </td>
+          <td>(</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt;&nbsp;</td>
+          <td class="paramname"> <em>box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>grid_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>descriptor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>&nbsp;&gt;()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>defer_boundary_box_creation</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct a new patch level given a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
+<p>
+This constructor ACQUIRES the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. If the caller will not modify the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for other purposes after creating this <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>, then this constructor may be used rather than the constructor taking a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>&amp;. Use of this constructor where permitted is more efficient as it avoids copying an entire <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Note that this constructor locks the supplied <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> so that any attempt by the caller to modify it after calling this constructor will result in an unrecoverable error.<p>
 The <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> provides refinement ratio information, establishing the ratio between the index space of the new level and some reference level (typically level zero) in some patch hierarchy.<p>
 The ratio information provided by the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is also used by the grid geometry instance to initialize geometry information of both the level and the patches on that level.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -926,12 +1014,12 @@ If boundary boxes have already been constructed, this function does nothing. <dl
 
 </div>
 </div><p>
-<a class="anchor" name="dcea700178435d6fd764689a9604eece"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPhysicalDomainArray" ref="dcea700178435d6fd764689a9604eece" args="() const " -->
+<a class="anchor" name="b2c06a41ad6751bc65197ef1c7bfcf37"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPhysicalDomainArray" ref="b2c06a41ad6751bc65197ef1c7bfcf37" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>&gt;&amp; SAMRAI::hier::PatchLevel::getPhysicalDomainArray           </td>
+          <td class="memname">const std::vector&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>&gt;&amp; SAMRAI::hier::PatchLevel::getPhysicalDomainArray           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -1536,6 +1624,293 @@ Set the simulation time for all allocated patch components.
 
 </div>
 </div><p>
+<a class="anchor" name="9b4c903e092ad83c6424714e71a69eea"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::findConnector" ref="9b4c903e092ad83c6424714e71a69eea" args="(const PatchLevel &amp;head, const IntVector &amp;min_connector_width, ConnectorNotFoundAction not_found_action, bool exact_width_only=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::PatchLevel::findConnector           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a>&nbsp;</td>
+          <td class="paramname"> <em>not_found_action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>exact_width_only</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with the given PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as its head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action. 
+<p>
+If multiple Connectors fit the criteria, the one with the smallest ghost cell width (based on the algebraic sum of the components) is selected.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with this PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_connector_width</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>not_found_action</em>&nbsp;</td><td>Action to take if <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> which matches the search criterion.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fce9d462f6678310b805c48d07bcbdc7">getBoxLevel()</a>-&gt;isInitialized() <p>
+head.getBoxLevel()-&gt;isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="cd4cfb1fcc1e127b972c69cc1cd9f420"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::findConnectorWithTranspose" ref="cd4cfb1fcc1e127b972c69cc1cd9f420" args="(const PatchLevel &amp;head, const IntVector &amp;min_connector_width, const IntVector &amp;transpose_min_connector_width, ConnectorNotFoundAction not_found_action, bool exact_width_only=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::PatchLevel::findConnectorWithTranspose           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transpose_min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a>&nbsp;</td>
+          <td class="paramname"> <em>not_found_action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>exact_width_only</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose with the given PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as its head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action. 
+<p>
+If multiple Connectors fit the criteria, the one with the smallest ghost cell width (based on the algebraic sum of the components) is selected.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with this PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_connector_width</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transpose_min_connector_width</em>&nbsp;</td><td>Find the transpose overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>not_found_action</em>&nbsp;</td><td>Action to take if <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> which matches the search criterion.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fce9d462f6678310b805c48d07bcbdc7">getBoxLevel()</a>-&gt;isInitialized() <p>
+head.getBoxLevel()-&gt;isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="d32ba4dc0e16606b0eff46c26cd1392a"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::createConnector" ref="d32ba4dc0e16606b0eff46c26cd1392a" args="(const PatchLevel &amp;head, const IntVector &amp;connector_width) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::PatchLevel::createConnector           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>, computing relationships by globalizing data. 
+<p>
+The base will be this PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Find <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> relationships using a (non-scalable) global search.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> <p>
+hier::Connector::initialize()</dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>This PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> will be the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A const reference to the newly created overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fce9d462f6678310b805c48d07bcbdc7">getBoxLevel()</a>-&gt;isInitialized() <p>
+head.getBoxLevel()-&gt;isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="423b7c4697fa29904aa568bbb3c44db5"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::createConnectorWithTranspose" ref="423b7c4697fa29904aa568bbb3c44db5" args="(const PatchLevel &amp;head, const IntVector &amp;connector_width, const IntVector &amp;transpose_connector_width) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::PatchLevel::createConnectorWithTranspose           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transpose_connector_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose, computing relationships by globalizing data. 
+<p>
+The base will be this PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Find <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> relationships using a (non-scalable) global search.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> <p>
+hier::Connector::initialize()</dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>This PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> will be the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transpose_connector_width</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A const reference to the newly created overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fce9d462f6678310b805c48d07bcbdc7">getBoxLevel()</a>-&gt;isInitialized() <p>
+head.getBoxLevel()-&gt;isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="0f84183007b29d36126528442322f03d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::cacheConnector" ref="0f84183007b29d36126528442322f03d" args="(boost::shared_ptr&lt; Connector &gt; &amp;connector) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::PatchLevel::cacheConnector           </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Cache the supplied overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> and its transpose if it exists. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>connector <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fce9d462f6678310b805c48d07bcbdc7">getBoxLevel()</a>-&gt;isInitialized() <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fce9d462f6678310b805c48d07bcbdc7">getBoxLevel()</a> == connector-&gt;getBase() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="cfd360bbe14237dfb3a70513b746bacb"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::hasConnector" ref="cfd360bbe14237dfb3a70513b746bacb" args="(const PatchLevel &amp;head, const IntVector &amp;min_connector_width, bool exact_width_only=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::hier::PatchLevel::hasConnector           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>exact_width_only</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns whether the object has overlap Connectors with the given PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as the head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. 
+<p>
+TODO: does the following comment mean that this must be called before the call to findConnector?<p>
+If this returns true, the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> fitting the specification exists and <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#9b4c903e092ad83c6424714e71a69eea">findConnector()</a> will not throw an assertion.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with this PatchLevel's <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> as the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_connector_width</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum ghost cell width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>True if a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is found, otherwise false. </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="19dacf0d08b26a5752c3aa8f7838bd67"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getFromRestart" ref="19dacf0d08b26a5752c3aa8f7838bd67" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db, const ComponentSelector &amp;component_selector)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1704,7 +2079,7 @@ Construct an iterator pointing to the last <a class="el" href="classSAMRAI_1_1hi
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8h.html">PatchLevel.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8C.html">PatchLevel.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

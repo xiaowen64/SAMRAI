@@ -26,8 +26,6 @@
 <a href="classSAMRAI_1_1hier_1_1BoxIterator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html#815f58303cceb5d48e67a10f96160c03">BoxIterator</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, bool begin)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html#eb6b48adaee867b38523f595d0166b68">BoxIterator</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> &amp;iterator)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html#86178f6f3ffa2358cf90791b297e2594">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> &amp;iterator)</td></tr>
@@ -46,12 +44,15 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html#793f94b9d02a3e32ee2766dbe7fbfad4">operator!=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> &amp;iterator) const </td></tr>
 
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html#3f229d41a6747c1fd12cbe102d06b13c">Box</a></td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> is an iterator that provides methods for stepping through the index space associated with a box. The indices are enumerated in column-major (e.g., Fortran) order. The iterator should be used as follows: <div class="fragment"><pre class="fragment"> * Box box;
  * ...
- * Box::iterator bend(box, false);
- * for (Box::iterator b(box, true); b != bend; ++b) {
+ * Box::iterator bend(box.end());
+ * for (Box::iterator b(box.begin()); b != bend; ++b) {
  *    // use index b of the box
  * }
  * </pre></div> Note that the box iterator may not compile to efficient code, depending on your compiler. Many compilers are not smart enough to optimize the looping constructs and indexing operations.<p>
@@ -60,35 +61,6 @@ Class <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="815f58303cceb5d48e67a10f96160c03"></a><!-- doxytag: member="SAMRAI::hier::BoxIterator::BoxIterator" ref="815f58303cceb5d48e67a10f96160c03" args="(const Box &amp;box, bool begin)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI::hier::BoxIterator::BoxIterator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>begin</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Constructor for the box iterator. The iterator will enumerate the indices in the argument box. 
-</div>
-</div><p>
 <a class="anchor" name="eb6b48adaee867b38523f595d0166b68"></a><!-- doxytag: member="SAMRAI::hier::BoxIterator::BoxIterator" ref="eb6b48adaee867b38523f595d0166b68" args="(const BoxIterator &amp;iterator)" -->
 <div class="memitem">
 <div class="memproto">
@@ -266,9 +238,25 @@ Test two iterators for equality (same index value).
 Test two iterators for inequality (different index values). 
 </div>
 </div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="3f229d41a6747c1fd12cbe102d06b13c"></a><!-- doxytag: member="SAMRAI::hier::BoxIterator::Box" ref="3f229d41a6747c1fd12cbe102d06b13c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a><code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="Box_8h.html">Box.h</a><li>source/SAMRAI/hier/<a class="el" href="Box_8C.html">Box.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -27,6 +27,7 @@
 <p><center><img src="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.png" usemap="#SAMRAI::mesh::BoxGeneratorStrategy_map" border="0" alt=""></center>
 <map name="SAMRAI::mesh::BoxGeneratorStrategy_map">
 <area href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html" alt="SAMRAI::mesh::BergerRigoutsos" shape="rect" coords="0,56,226,80">
+<area href="classSAMRAI_1_1mesh_1_1TileClustering.html" alt="SAMRAI::mesh::TileClustering" shape="rect" coords="236,56,462,80">
 </map>
 <a href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
@@ -35,9 +36,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#368ab115138f4b08e36109fc7a83c3da">~BoxGeneratorStrategy</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#f3864a9c67e44564a407fcec1fbea748">findBoxesContainingTags</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;new_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;tag_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;new_to_tag, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_gcw, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;first_local_id) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#93b5ad0e620615c8f0984373b803ebf3">findBoxesContainingTags</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;new_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;tag_to_new, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;tag_to_new_width)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Cluster tags using the DLBG interfaces.  <a href="#f3864a9c67e44564a407fcec1fbea748"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Cluster tags using the DLBG interfaces.  <a href="#93b5ad0e620615c8f0984373b803ebf3"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> is an abstract base class that defines a Strategy pattern interface for operations to build boxes that cover a collection of tagged cells on a single AMR patch hierarchy level.<p>
@@ -84,27 +85,21 @@ Virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="f3864a9c67e44564a407fcec1fbea748"></a><!-- doxytag: member="SAMRAI::mesh::BoxGeneratorStrategy::findBoxesContainingTags" ref="f3864a9c67e44564a407fcec1fbea748" args="(hier::BoxLevel &amp;new_box_level, hier::Connector &amp;tag_to_new, hier::Connector &amp;new_to_tag, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const hier::BoxContainer &amp;bound_boxes, const hier::IntVector &amp;min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_gcw, const hier::LocalId &amp;first_local_id) const =0" -->
+<a class="anchor" name="93b5ad0e620615c8f0984373b803ebf3"></a><!-- doxytag: member="SAMRAI::mesh::BoxGeneratorStrategy::findBoxesContainingTags" ref="93b5ad0e620615c8f0984373b803ebf3" args="(boost::shared_ptr&lt; hier::BoxLevel &gt; &amp;new_box_level, boost::shared_ptr&lt; hier::Connector &gt; &amp;tag_to_new, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const hier::BoxContainer &amp;bound_boxes, const hier::IntVector &amp;min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;tag_to_new_width)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::mesh::BoxGeneratorStrategy::findBoxesContainingTags           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>new_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>tag_to_new</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>new_to_tag</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -152,18 +147,12 @@ Virtual destructor.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>max_gcw</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>first_local_id</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>tag_to_new_width</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [pure virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -172,14 +161,29 @@ Virtual destructor.
 <p>
 Cluster tags using the DLBG interfaces. 
 <p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>tag_to_new_width</em>&nbsp;</td><td>[in] Width that tag_to_new should have. If implementation does not provide this width for tag_to_new, then it should set the width to zero.</td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>new_box_level</em>&nbsp;</td><td>BoxLevel containing Boxes of clustered tagged cells. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>tag_to_new</em>&nbsp;</td><td>Connector from the tagged to the new BoxLevels. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_level</em>&nbsp;</td><td>Tagged PatchLevel. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_data_index</em>&nbsp;</td><td>Index of PatchData used to denote tagging. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_val</em>&nbsp;</td><td>Value of PatchData indicating a tagged cell. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bound_boxes</em>&nbsp;</td><td>Collection of Boxes describing the bounding box of each block in the tag level. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_box</em>&nbsp;</td><td>Smallest box size resulting from clustering. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>efficiency_tol</em>&nbsp;</td><td>See description for efficiency_tol input parameter in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a>. Although this arg in defined in this abstract class interface it only applies to the <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html">BergerRigoutsos</a> clustering algorithm. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>combine_tol</em>&nbsp;</td><td>See description for combine_tol input parameter in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a>. Although this arg in defined in this abstract class interface it only applies to the <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html">BergerRigoutsos</a> clustering algorithm. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_to_new_width</em>&nbsp;</td><td>Width of tag_to_new Connector. </td></tr>
+  </table>
+</dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#04c2058f05e169a6dba7700d1b24120b">SAMRAI::mesh::BergerRigoutsos</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#b4a11119314a0e5527c432b2cf7870e0">SAMRAI::mesh::BergerRigoutsos</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TileClustering.html#6bb2ebcf0c518af8fc8acdafb520999d">SAMRAI::mesh::TileClustering</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="BoxGeneratorStrategy_8h.html">BoxGeneratorStrategy.h</a><li>source/SAMRAI/mesh/<a class="el" href="BoxGeneratorStrategy_8C.html">BoxGeneratorStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

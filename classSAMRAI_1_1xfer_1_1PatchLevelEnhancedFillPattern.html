@@ -40,9 +40,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#91cec87e3bb22e04a3abd236e82ba28e">~PatchLevelEnhancedFillPattern</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#91cec87e3bb22e04a3abd236e82ba28e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#54eaa343d067ff739217b8099dbd607c">computeFillBoxesAndNeighborhoodSets</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;fill_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_fill, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_src, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#08eec9abac67c3db2dc32082f451f586">computeFillBoxesAndNeighborhoodSets</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;fill_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;dst_to_fill, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width, bool data_on_patch_border)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the boxes representing the region that will be filled by a <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a>.  <a href="#54eaa343d067ff739217b8099dbd607c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the boxes representing the region that will be filled by a <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a>.  <a href="#08eec9abac67c3db2dc32082f451f586"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#5f667e9c752de50022efd089a8db0bae">needsToCommunicateDestinationFillBoxes</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true because source patch owner cannot compute fill boxes across block boundaries.  <a href="#5f667e9c752de50022efd089a8db0bae"></a><br></td></tr>
@@ -113,20 +113,20 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="54eaa343d067ff739217b8099dbd607c"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets" ref="54eaa343d067ff739217b8099dbd607c" args="(hier::BoxLevel &amp;fill_box_level, hier::Connector &amp;dst_to_fill, const hier::BoxLevel &amp;dst_box_level, const hier::Connector &amp;dst_to_dst, const hier::Connector &amp;dst_to_src, const hier::Connector &amp;src_to_dst, const hier::IntVector &amp;fill_ghost_width)" -->
+<a class="anchor" name="08eec9abac67c3db2dc32082f451f586"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets" ref="08eec9abac67c3db2dc32082f451f586" args="(boost::shared_ptr&lt; hier::BoxLevel &gt; &amp;fill_box_level, boost::shared_ptr&lt; hier::Connector &gt; &amp;dst_to_fill, const hier::BoxLevel &amp;dst_box_level, const hier::IntVector &amp;fill_ghost_width, bool data_on_patch_border)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::xfer::PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_to_fill</em>, </td>
         </tr>
         <tr>
@@ -138,26 +138,14 @@ Destructor.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dst_to_dst</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dst_to_src</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>src_to_dst</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>fill_ghost_width</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>fill_ghost_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>data_on_patch_border</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -177,16 +165,14 @@ The fill boxes will exist only for destination patches that touch a block bounda
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fill_box_level</em>&nbsp;</td><td>Output BoxLevel to be filled </td></tr>
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>dst_to_fill</em>&nbsp;</td><td>Output Connector between dst_box_level and fill_box_level </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_box_level</em>&nbsp;</td><td>destination level </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_to_dst</em>&nbsp;</td><td>Connector of destination to itself </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_to_src</em>&nbsp;</td><td>Connector of destination to source </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_to_dst</em>&nbsp;</td><td>Connector of source to destination </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_ghost_width</em>&nbsp;</td><td>Ghost width being filled by refine schedule</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_ghost_width</em>&nbsp;</td><td>Ghost width being filled by refine schedule </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_on_patch_border</em>&nbsp;</td><td>true if there is data living on patch borders</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>dst_box_level.getDim() == fill_ghost_width.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#622fbf53af32d93e35968254e1b0b8c5">SAMRAI::xfer::PatchLevelFillPattern</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#564b36b80384771fdb9c049adc90921a">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
 <a class="anchor" name="5f667e9c752de50022efd089a8db0bae"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes" ref="5f667e9c752de50022efd089a8db0bae" args="() const " -->
@@ -354,7 +340,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8h.html">PatchLevelEnhancedFillPattern.h</a><li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8C.html">PatchLevelEnhancedFillPattern.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

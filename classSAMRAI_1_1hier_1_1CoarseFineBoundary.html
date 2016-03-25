@@ -56,18 +56,18 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#8a59ca51277f4b6fbf122b3feb39429c">getDim</a> () const </td></tr>
 
 <tr><td colspan="2"><div class="groupHeader">Functions to get the computed coarse-fine boundaries.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#f3af0a757276fe9e27da8e5c0fb35dcb">getBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const int boundary_type, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#2d13d1fff050eea163d9bd0bc1c58d98">getBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const int boundary_type, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of boundary boxes of a given type for a specified patch.  <a href="#f3af0a757276fe9e27da8e5c0fb35dcb"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#f2ae83f85d9ebe1135eda26bdb863f76">getNodeBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a vector of boundary boxes of a given type for a specified patch.  <a href="#2d13d1fff050eea163d9bd0bc1c58d98"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#c504a7390c75d900e7271489f5a735b3">getNodeBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of node boundary boxes for a specified patch.  <a href="#f2ae83f85d9ebe1135eda26bdb863f76"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#e0d7b6e5f59881347bca1d1dc03525d9">getEdgeBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a vector of node boundary boxes for a specified patch.  <a href="#c504a7390c75d900e7271489f5a735b3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#0624bc8c8168f040de52c9eb993e9f19">getEdgeBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of edge boundary boxes for a specified patch.  <a href="#e0d7b6e5f59881347bca1d1dc03525d9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#6e26462724482ad2e8292326d63904c2">getFaceBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a vector of edge boundary boxes for a specified patch.  <a href="#0624bc8c8168f040de52c9eb993e9f19"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1CoarseFineBoundary.html#a79efbf52f36ff4f5e34cac36e34bed1">getFaceBoundaries</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;global_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get an array of face boundary boxes for a specified patch.  <a href="#6e26462724482ad2e8292326d63904c2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a vector of face boundary boxes for a specified patch.  <a href="#a79efbf52f36ff4f5e34cac36e34bed1"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Utility class to construct and maintain a description of the coarse-fine boundary between a patch level and a coarser level. 
@@ -274,12 +274,12 @@ Clear all boundary data.
 
 </div>
 </div><p>
-<a class="anchor" name="f3af0a757276fe9e27da8e5c0fb35dcb"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getBoundaries" ref="f3af0a757276fe9e27da8e5c0fb35dcb" args="(const GlobalId &amp;global_id, const int boundary_type, const BlockId &amp;block_id=BlockId::zero()) const " -->
+<a class="anchor" name="2d13d1fff050eea163d9bd0bc1c58d98"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getBoundaries" ref="2d13d1fff050eea163d9bd0bc1c58d98" args="(const GlobalId &amp;global_id, const int boundary_type, const BlockId &amp;block_id=BlockId::zero()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp; SAMRAI::hier::CoarseFineBoundary::getBoundaries           </td>
+          <td class="memname">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &gt; &amp; SAMRAI::hier::CoarseFineBoundary::getBoundaries           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>global_id</em>, </td>
@@ -306,7 +306,7 @@ Clear all boundary data.
 <div class="memdoc">
 
 <p>
-Get an array of boundary boxes of a given type for a specified patch. 
+Get a vector of boundary boxes of a given type for a specified patch. 
 <p>
 The specified patch must exist in the level used to compute the internal state or it is an error.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -320,12 +320,12 @@ The specified patch must exist in the level used to compute the internal state o
 
 </div>
 </div><p>
-<a class="anchor" name="f2ae83f85d9ebe1135eda26bdb863f76"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getNodeBoundaries" ref="f2ae83f85d9ebe1135eda26bdb863f76" args="(const GlobalId &amp;global_id, const BlockId &amp;block_id=BlockId::zero()) const " -->
+<a class="anchor" name="c504a7390c75d900e7271489f5a735b3"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getNodeBoundaries" ref="c504a7390c75d900e7271489f5a735b3" args="(const GlobalId &amp;global_id, const BlockId &amp;block_id=BlockId::zero()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&gt;&amp; SAMRAI::hier::CoarseFineBoundary::getNodeBoundaries           </td>
+          <td class="memname">const std::vector&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&gt;&amp; SAMRAI::hier::CoarseFineBoundary::getNodeBoundaries           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>global_id</em>, </td>
@@ -346,7 +346,7 @@ The specified patch must exist in the level used to compute the internal state o
 <div class="memdoc">
 
 <p>
-Get an array of node boundary boxes for a specified patch. 
+Get a vector of node boundary boxes for a specified patch. 
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> for more information.</dd></dl>
 The specified patch must exist in the level used to compute the internal state or it is an error.<p>
@@ -359,12 +359,12 @@ The specified patch must exist in the level used to compute the internal state o
 
 </div>
 </div><p>
-<a class="anchor" name="e0d7b6e5f59881347bca1d1dc03525d9"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getEdgeBoundaries" ref="e0d7b6e5f59881347bca1d1dc03525d9" args="(const GlobalId &amp;global_id, const BlockId &amp;block_id=BlockId::zero()) const " -->
+<a class="anchor" name="0624bc8c8168f040de52c9eb993e9f19"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getEdgeBoundaries" ref="0624bc8c8168f040de52c9eb993e9f19" args="(const GlobalId &amp;global_id, const BlockId &amp;block_id=BlockId::zero()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&gt;&amp; SAMRAI::hier::CoarseFineBoundary::getEdgeBoundaries           </td>
+          <td class="memname">const std::vector&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&gt;&amp; SAMRAI::hier::CoarseFineBoundary::getEdgeBoundaries           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>global_id</em>, </td>
@@ -385,7 +385,7 @@ The specified patch must exist in the level used to compute the internal state o
 <div class="memdoc">
 
 <p>
-Get an array of edge boundary boxes for a specified patch. 
+Get a vector of edge boundary boxes for a specified patch. 
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> for more information.</dd></dl>
 Note that edge boxes are only meaningful if the dimension is &gt; 1. The specified patch must exist in the level used to compute the internal state or it is an error.<p>
@@ -399,12 +399,12 @@ Note that edge boxes are only meaningful if the dimension is &gt; 1. The specifi
 
 </div>
 </div><p>
-<a class="anchor" name="6e26462724482ad2e8292326d63904c2"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getFaceBoundaries" ref="6e26462724482ad2e8292326d63904c2" args="(const GlobalId &amp;global_id, const BlockId &amp;block_id=BlockId::zero()) const " -->
+<a class="anchor" name="a79efbf52f36ff4f5e34cac36e34bed1"></a><!-- doxytag: member="SAMRAI::hier::CoarseFineBoundary::getFaceBoundaries" ref="a79efbf52f36ff4f5e34cac36e34bed1" args="(const GlobalId &amp;global_id, const BlockId &amp;block_id=BlockId::zero()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&gt;&amp; SAMRAI::hier::CoarseFineBoundary::getFaceBoundaries           </td>
+          <td class="memname">const std::vector&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&gt;&amp; SAMRAI::hier::CoarseFineBoundary::getFaceBoundaries           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>global_id</em>, </td>
@@ -425,7 +425,7 @@ Note that edge boxes are only meaningful if the dimension is &gt; 1. The specifi
 <div class="memdoc">
 
 <p>
-Get an array of face boundary boxes for a specified patch. 
+Get a vector of face boundary boxes for a specified patch. 
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> for more information.</dd></dl>
 Note that face boxes are only meaningful if the dimension is &gt; 2. The specified patch must exist in the level used to compute the internal state or it is an error.<p>
@@ -514,7 +514,7 @@ Assignment operator.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="CoarseFineBoundary_8h.html">CoarseFineBoundary.h</a><li>source/SAMRAI/hier/<a class="el" href="CoarseFineBoundary_8C.html">CoarseFineBoundary.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

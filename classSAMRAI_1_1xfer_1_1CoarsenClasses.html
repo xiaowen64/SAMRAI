@@ -29,9 +29,9 @@
 <a href="classSAMRAI_1_1xfer_1_1CoarsenClasses-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#e9051a20e94ff7f1ca7d01b918d44db1">CoarsenClasses</a> (bool fill_coarse_data)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#8cb98320073f2aecb4aafa570917c858">CoarsenClasses</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor creates an empty array of coarsen classes.  <a href="#e9051a20e94ff7f1ca7d01b918d44db1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default constructor creates an empty array of coarsen classes.  <a href="#8cb98320073f2aecb4aafa570917c858"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#91b080671d3bb56b6abbf4389db8bb06">~CoarsenClasses</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor destroys the coarsen data items owned by this object.  <a href="#91b080671d3bb56b6abbf4389db8bb06"></a><br></td></tr>
@@ -87,26 +87,24 @@ Maintain a collection of coarsen items and organize them into equivalence classe
 <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> is used by the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> and <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> classes to manage coarsen data items that describe coarsening of patch data between two levels in an AMR hierarchy. Specifically, this class organizes these items into equivalence clases, so that items are grouped together if they have the same data communication dependencies. See documentation for the method <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html#31134b35e98cc96ec1b0e6233df16854">itemsAreEquivalent()</a> for definition of equivalence. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="e9051a20e94ff7f1ca7d01b918d44db1"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::CoarsenClasses" ref="e9051a20e94ff7f1ca7d01b918d44db1" args="(bool fill_coarse_data)" -->
+<a class="anchor" name="8cb98320073f2aecb4aafa570917c858"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::CoarsenClasses" ref="8cb98320073f2aecb4aafa570917c858" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::xfer::CoarsenClasses::CoarsenClasses           </td>
           <td>(</td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>fill_coarse_data</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [explicit]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-The constructor creates an empty array of coarsen classes. 
+The default constructor creates an empty array of coarsen classes. 
 <p>
-<dl compact><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd>fill_coarse_data is no longer used. </dd></dl>
 
 </div>
 </div><p>
@@ -596,7 +594,7 @@ Print single coarsen item to the specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8h.html">CoarsenClasses.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8C.html">CoarsenClasses.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

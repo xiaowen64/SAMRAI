@@ -46,9 +46,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#9ceb85ea50daee60e793b11fc25721cb">makeCoarsenedGridGeometry</a> (const std::string &amp;coarse_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;coarsen_ratio) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#ee268dd0852dccda81c659f09a58d338">setGeometryDataOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio_to_level_zero, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_regular_bdry, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_periodic_bdry) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#6d5b435ceb1561f19ff7db2c11a246c2">setGeometryDataOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio_to_level_zero, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_regular_bdry) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute and set grid data for patch.  <a href="#ee268dd0852dccda81c659f09a58d338"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute and set grid data for patch.  <a href="#6d5b435ceb1561f19ff7db2c11a246c2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#927e1e7cf2dc3309de94fda79ec39f15">setGeometryData</a> (const double *x_lo, const double *x_up, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;domain)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#81edbc0886c02431cf03da059a2ab65c">getDx</a> () const </td></tr>
@@ -87,7 +87,7 @@ No values read in from a restart database may be overridden by input database va
 <tr>
 <th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
 <tr>
-<td>domain_boxes </td><td>Array&lt;DatabaseBox&gt; </td><td>none </td><td>all Boxes must be non-empty </td><td>req </td><td>May not be modified by input db on restart  </td></tr>
+<td>domain_boxes </td><td>array of DatabaseBoxes </td><td>none </td><td>all Boxes must be non-empty </td><td>req </td><td>May not be modified by input db on restart  </td></tr>
 <tr>
 <td>periodic_dimension </td><td>int[] </td><td>all values 0 </td><td>any int </td><td>opt </td><td>May not be modified by input db on restart  </td></tr>
 <tr>
@@ -344,7 +344,7 @@ coarsen_ratio &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#178
 Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#f7253bb0b1218ecb73f5e895ee568c17">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="ee268dd0852dccda81c659f09a58d338"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch" ref="ee268dd0852dccda81c659f09a58d338" args="(hier::Patch &amp;patch, const hier::IntVector &amp;ratio_to_level_zero, const TwoDimBool &amp;touches_regular_bdry, const TwoDimBool &amp;touches_periodic_bdry) const " -->
+<a class="anchor" name="6d5b435ceb1561f19ff7db2c11a246c2"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch" ref="6d5b435ceb1561f19ff7db2c11a246c2" args="(hier::Patch &amp;patch, const hier::IntVector &amp;ratio_to_level_zero, const TwoDimBool &amp;touches_regular_bdry) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -364,13 +364,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>touches_regular_bdry</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>touches_periodic_bdry</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>touches_regular_bdry</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -389,14 +383,13 @@ Virtual method -- should be overridden in specialized grid geometry classes<p>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>patch</em>&nbsp;</td><td>The patch on which to set grid data and the new concrete patch geometry object. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio_to_level_zero</em>&nbsp;</td><td>ratio to coarsest level </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_regular_bdry</em>&nbsp;</td><td>Array storing which patches touch non-periodic boundaries. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_periodic_bdry</em>&nbsp;</td><td>Array storing which patches touch periodic boundaries.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>touches_regular_bdry</em>&nbsp;</td><td>Array storing which patches touch non-periodic boundaries.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == patch.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == ratio_to_level_zero.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == touches_regular_bdry.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == touches_periodic_bdry.getDim()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == patch.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == ratio_to_level_zero.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#9d11d3bc88025b781369ec0868c7c1c3">getDim()</a> == touches_regular_bdry.getDim()) </dd></dl>
 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#19a471295763d5f72cdf8af12f6ec00b">SAMRAI::hier::BaseGridGeometry</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#d4e7b24f0759775fb22863a779a4388a">SAMRAI::hier::BaseGridGeometry</a>.
 </div>
 </div><p>
 <a class="anchor" name="927e1e7cf2dc3309de94fda79ec39f15"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::setGeometryData" ref="927e1e7cf2dc3309de94fda79ec39f15" args="(const double *x_lo, const double *x_up, const hier::BoxContainer &amp;domain)" -->
@@ -565,7 +558,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8h.html">CartesianGridGeometry.h</a><li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8C.html">CartesianGridGeometry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

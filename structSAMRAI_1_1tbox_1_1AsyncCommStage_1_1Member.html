@@ -70,10 +70,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Regurgitate the handler from <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#8209b3b5ea97ccc28f2714d720a04bad">setHandler()</a>.  <a href="#3f2b3dc679b69c323ed61d386863ad6c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#e6c1a0b33b53af30cab0d5ea08d64f2e">pushToCompletionQueue</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Push this onto the stage's list of completed Members.  <a href="#e6c1a0b33b53af30cab0d5ea08d64f2e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Push this onto its stage's list of completed Members.  <a href="#e6c1a0b33b53af30cab0d5ea08d64f2e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#bb365c714cc5d12ab03a78ec1d05b4cc">yankFromCompletionQueue</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Yank this member from the stage's list of completed Members.  <a href="#bb365c714cc5d12ab03a78ec1d05b4cc"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Yank this member from the stage's list of completed Members so it would not be returned by <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#bb8d37947f445f7b0d56d6f4ca2931f4">AsyncCommStage::popCompletionQueue()</a>.  <a href="#bb365c714cc5d12ab03a78ec1d05b4cc"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#38c3f9dfc9c43f649b62b7abc0bc8b44">hasStage</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if there is a stage associated with this member.  <a href="#38c3f9dfc9c43f649b62b7abc0bc8b44"></a><br></td></tr>
@@ -90,6 +90,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAI__MPI_1_1Status.html">SAMRAI_MPI::Status</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#a20616c1d5cdb8eede63a9a41b6492a8">getStatusPointer</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return MPI statuses for this <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> of the stage.  <a href="#a20616c1d5cdb8eede63a9a41b6492a8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#086ab72c8fa0fb0ef34937267b6332f0">getNumberOfRequests</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of requests for this stage <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.  <a href="#086ab72c8fa0fb0ef34937267b6332f0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#c7d59c29d44de64279b791d91ec3db91">AsyncCommStage</a></td></tr>
 
@@ -376,7 +379,7 @@ Regurgitate the handler from <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCo
 <div class="memdoc">
 
 <p>
-Push this onto the stage's list of completed Members. 
+Push this onto its stage's list of completed Members. 
 <p>
 This causes the member to be returned by a call to <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#bb8d37947f445f7b0d56d6f4ca2931f4">AsyncCommStage::popCompletionQueue()</a>, eventually.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#377ac960e58fbaa8c5d528c86c2d6100">isDone()</a> </dd></dl>
@@ -399,7 +402,7 @@ This causes the member to be returned by a call to <a class="el" href="classSAMR
 <div class="memdoc">
 
 <p>
-Yank this member from the stage's list of completed Members. 
+Yank this member from the stage's list of completed Members so it would not be returned by <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#bb8d37947f445f7b0d56d6f4ca2931f4">AsyncCommStage::popCompletionQueue()</a>. 
 <p>
 
 </div>
@@ -456,8 +459,8 @@ Associate the member with a stage.
 Specify the stage to use and the number of <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#c4f0d990b03eadfa60b081861dfa3748">SAMRAI_MPI::Request</a> objects needed from the stage.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>nreq</em>&nbsp;</td><td>Number of SAMRAI_MPI::Requests needed by the member.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>stage</em>&nbsp;</td><td>Register with this <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a>. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>nreq</em>&nbsp;</td><td>Number of SAMRAI_MPI::Requests needed by the member.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>stage</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a> to attach to. </td></tr>
   </table>
 </dl>
 
@@ -502,7 +505,7 @@ Disassociate the member from its stage (undo <a class="el" href="structSAMRAI_1_
 <p>
 Return the MPI requests provided by the stage for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>. 
 <p>
-To work on the stage, you must use these requests in your non-blocking MPI calls. The requests are a part of an array of requests for all Members on the stage. Use only getNumberOfRequests() requests. Terrible bugs will strike if you modify more than what was allocated for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.<p>
+To work on the stage, you must use these requests in your non-blocking MPI calls. The requests are a part of an array of requests for all Members on the stage. Use only <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#086ab72c8fa0fb0ef34937267b6332f0">getNumberOfRequests()</a> requests. Terrible bugs will strike if you modify more than what was allocated for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.<p>
 <b>Important:</b> Do not save the pointer returned by this method. The stage's dynamic memory actions may render old pointers invalid.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#38c3f9dfc9c43f649b62b7abc0bc8b44">hasStage()</a> </dd></dl>
 
@@ -526,9 +529,30 @@ To work on the stage, you must use these requests in your non-blocking MPI calls
 <p>
 Return MPI statuses for this <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> of the stage. 
 <p>
-To work on the stage, you must use these statuses in your MPI calls. The status attributes are set by the stage only for requests completed by the stage. The statuses are a part of an array of statuses for all Members on the stage. Use only getNumberOfRequests() statuses. Terrible bugs will strike if you modify more than what was allocated for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.<p>
+To work on the stage, you must use these statuses in your MPI calls. The status attributes are set by the stage only for requests completed by the stage. The statuses are a part of an array of statuses for all Members on the stage. Use only <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#086ab72c8fa0fb0ef34937267b6332f0">getNumberOfRequests()</a> statuses. Terrible bugs will strike if you modify more than what was allocated for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.<p>
 <b>Important:</b> Do not save the pointer returned by this method. The stage's dynamic memory actions may render old pointers invalid.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#38c3f9dfc9c43f649b62b7abc0bc8b44">hasStage()</a> </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="086ab72c8fa0fb0ef34937267b6332f0"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member::getNumberOfRequests" ref="086ab72c8fa0fb0ef34937267b6332f0" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::Member::getNumberOfRequests           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return the number of requests for this stage <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>. 
+<p>
 
 </div>
 </div><p>
@@ -552,7 +576,7 @@ To work on the stage, you must use these statuses in your MPI calls. The status 
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8h.html">AsyncCommStage.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8C.html">AsyncCommStage.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

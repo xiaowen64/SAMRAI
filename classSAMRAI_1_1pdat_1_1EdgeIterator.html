@@ -26,8 +26,6 @@
 <a href="classSAMRAI_1_1pdat_1_1EdgeIterator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html#92a36f67124b977250fb4161b875cc85">EdgeIterator</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const int axis, bool begin)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html#b496977dd6efa1ad44c2627ee2e1fa94">EdgeIterator</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> &amp;iterator)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html#af6735efdbdbbca4293d8c28ee0326f5">operator=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> &amp;iterator)</td></tr>
@@ -46,6 +44,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html#37a1da5f9546f6994bbaaff49b45a9b0">operator!=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> &amp;iterator) const </td></tr>
 
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html#eec5202bd2552dae8071e841d58f7410">EdgeGeometry::begin</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int axis)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html#9ce6a3a43f7d3662c44e9c03930a208c">EdgeGeometry::end</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int axis)</td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> is an iterator that provides methods for stepping through the index space associated with a edge centered box. The indices are enumerated in column-major (e.g., Fortran) order. The iterator should be used as follows: <div class="fragment"><pre class="fragment"> * hier::Box box;
@@ -61,41 +64,6 @@ Class <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="92a36f67124b977250fb4161b875cc85"></a><!-- doxytag: member="SAMRAI::pdat::EdgeIterator::EdgeIterator" ref="92a36f67124b977250fb4161b875cc85" args="(const hier::Box &amp;box, const int axis, bool begin)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI::pdat::EdgeIterator::EdgeIterator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>axis</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>begin</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Constructor for the edge iterator. The iterator will enumerate the indices in the argument box. 
-</div>
-</div><p>
 <a class="anchor" name="b496977dd6efa1ad44c2627ee2e1fa94"></a><!-- doxytag: member="SAMRAI::pdat::EdgeIterator::EdgeIterator" ref="b496977dd6efa1ad44c2627ee2e1fa94" args="(const EdgeIterator &amp;iterator)" -->
 <div class="memitem">
 <div class="memproto">
@@ -273,9 +241,68 @@ Test two iterators for equality (same index value).
 Test two iterators for inequality (different index values). 
 </div>
 </div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="eec5202bd2552dae8071e841d58f7410"></a><!-- doxytag: member="SAMRAI::pdat::EdgeIterator::EdgeGeometry::begin" ref="eec5202bd2552dae8071e841d58f7410" args="(const hier::Box &amp;box, int axis)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> EdgeGeometry::begin           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>axis</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9ce6a3a43f7d3662c44e9c03930a208c"></a><!-- doxytag: member="SAMRAI::pdat::EdgeIterator::EdgeGeometry::end" ref="9ce6a3a43f7d3662c44e9c03930a208c" args="(const hier::Box &amp;box, int axis)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a> EdgeGeometry::end           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>axis</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="EdgeIterator_8h.html">EdgeIterator.h</a><li>source/SAMRAI/pdat/<a class="el" href="EdgeIterator_8C.html">EdgeIterator.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

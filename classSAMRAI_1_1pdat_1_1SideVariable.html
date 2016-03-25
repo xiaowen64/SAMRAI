@@ -33,7 +33,10 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html#24c2fa2ad4f558b71ee0ffe0fba834d4">SideVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;directions, int depth=1, bool fine_boundary_represents_var=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an side-centered variable object with the given name and depth (i.e., number of data values at each edge index location). A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces.  <a href="#24c2fa2ad4f558b71ee0ffe0fba834d4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an side-centered variable object with the given name and depth (i.e., number of data values at each edge index location).  <a href="#24c2fa2ad4f558b71ee0ffe0fba834d4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html#4e1ef43b87e03244aca3a237b724fc46">SideVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor that will assume a directions vector of 1 in all coordinate directions.  <a href="#4e1ef43b87e03244aca3a237b724fc46"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html#5746a8c0b0cbd03d8f71462cf5a62445">~SideVariable</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for side variable objects.  <a href="#5746a8c0b0cbd03d8f71462cf5a62445"></a><br></td></tr>
@@ -110,9 +113,54 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-Create an side-centered variable object with the given name and depth (i.e., number of data values at each edge index location). A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces. 
+Create an side-centered variable object with the given name and depth (i.e., number of data values at each edge index location). 
 <p>
-The default data allocation scheme is that side data will be allocated for all side normal coordinate directions. If this is desired, then the direction argument may be omitted. If an integer direction argument is specified, the only data for the given side normal direction will be maintained and managed for this variable. 
+A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces. 
+</div>
+</div><p>
+<a class="anchor" name="4e1ef43b87e03244aca3a237b724fc46"></a><!-- doxytag: member="SAMRAI::pdat::SideVariable::SideVariable" ref="4e1ef43b87e03244aca3a237b724fc46" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TYPE&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html">SAMRAI::pdat::SideVariable</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html">SideVariable</a>           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>depth</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>fine_boundary_represents_var</em> = <code>true</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Constructor that will assume a directions vector of 1 in all coordinate directions. 
+<p>
+Constructs a <a class="el" href="classSAMRAI_1_1pdat_1_1SideVariable.html">SideVariable</a> the same as the first constructor, except there is no directions argument, meaning that data is expected to exist on the sides in all coordinate directions. 
 </div>
 </div><p>
 <a class="anchor" name="5746a8c0b0cbd03d8f71462cf5a62445"></a><!-- doxytag: member="SAMRAI::pdat::SideVariable::~SideVariable" ref="5746a8c0b0cbd03d8f71462cf5a62445" args="()" -->
@@ -237,7 +285,7 @@ Return the the depth (number of components).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="SideVariable_8h.html">SideVariable.h</a><li>source/SAMRAI/pdat/<a class="el" href="SideVariable_8C.html">SideVariable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

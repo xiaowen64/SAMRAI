@@ -68,6 +68,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#e9a57dba5ea24f10ad98c8212cd05e5d">finalizeCommunication</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Finish the communication and deliver the messages.  <a href="#e9a57dba5ea24f10ad98c8212cd05e5d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#31df5784f225a7dfd5f6f04cada0b6b2">setDeterministicUnpackOrderingFlag</a> (bool flag)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to unpack messages in a deterministic order.  <a href="#31df5784f225a7dfd5f6f04cada0b6b2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#d52aed60d8028a69e41a43cadd9a1e1f">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setup names of timers.  <a href="#d52aed60d8028a69e41a43cadd9a1e1f"></a><br></td></tr>
@@ -404,6 +407,34 @@ Finish the communication and deliver the messages.
 This method must follow a communication begun by <code><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#28a19e33d9ffef5262120c5bf47c0f4f">beginCommunication()</a></code> and communication is completed when this method returns. 
 </div>
 </div><p>
+<a class="anchor" name="31df5784f225a7dfd5f6f04cada0b6b2"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::setDeterministicUnpackOrderingFlag" ref="31df5784f225a7dfd5f6f04cada0b6b2" args="(bool flag)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::tbox::Schedule::setDeterministicUnpackOrderingFlag           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>flag</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set whether to unpack messages in a deterministic order. 
+<p>
+By default message unpacking is ordered by receive time, which is not deterministic. If your results are dependent on unpack ordering and you want deterministic results, set this flag to true.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>flag</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="d52aed60d8028a69e41a43cadd9a1e1f"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::setTimerPrefix" ref="d52aed60d8028a69e41a43cadd9a1e1f" args="(const std::string &amp;timer_prefix)" -->
 <div class="memitem">
 <div class="memproto">
@@ -471,7 +502,7 @@ Returns true if the communication objects have been allocated.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Schedule_8h.html">Schedule.h</a><li>source/SAMRAI/tbox/<a class="el" href="Schedule_8C.html">Schedule.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

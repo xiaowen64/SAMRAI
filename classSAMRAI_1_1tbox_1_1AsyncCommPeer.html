@@ -833,7 +833,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Set the send-timer. 
 <p>
-Set the timer for non-blocking sends. If the timer is null, revert to the default timer named ""tboxAsyncCommPeer::MPI_ISend".<p>
+Set the timer for non-blocking sends. If the timer is null, revert to the default timer named "tbox::AsyncCommPeer::MPI_Isend()".<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>send_timer</em>&nbsp;</td><td></td></tr>
@@ -863,7 +863,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Set the receive-timer. 
 <p>
-Set the timer for non-blocking receives. If the timer is null, revert to the default timer named ""tboxAsyncCommPeer::MPI_IRecv".<p>
+Set the timer for non-blocking receives. If the timer is null, revert to the default timer named "tbox::AsyncCommPeer::MPI_Irecv()".<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>recv_timer</em>&nbsp;</td><td></td></tr>
@@ -893,7 +893,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Set the wait-timer. 
 <p>
-Set the timer for blocking waits. If the timer is null, revert to the default timer named ""tboxAsyncCommPeer::wait_all()".<p>
+Set the timer for blocking waits. If the timer is null, revert to the default timer named "tbox::AsyncCommPeer::MPI_Waitall()".<p>
 This timer is used when in this class and is not the same as the timer given to <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a> (unless the user sets it up that way explicitly).<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -929,7 +929,7 @@ For use in debugging.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="AsyncCommPeer_8h.html">AsyncCommPeer.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommPeer_8C.html">AsyncCommPeer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

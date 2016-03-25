@@ -29,13 +29,13 @@
 <a href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#1519f1daa64483b8a4ab3cc1226857d4">getFromInput</a> (<a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *bdry_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;face_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;edge_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;node_conds, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;periodic)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#8fe85dc6938824b69c4c69f8f43f4f50">getFromInput</a> (<a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *bdry_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, std::vector&lt; int &gt; &amp;face_conds, std::vector&lt; int &gt; &amp;edge_conds, std::vector&lt; int &gt; &amp;node_conds, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;periodic)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#750ea83f3ae0341c963d4b17faf8a036">fillFaceBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_face_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#bc62365e181901f23d467b55c15a7b20">fillFaceBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const std::vector&lt; int &gt; &amp;bdry_face_conds, const std::vector&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#1ceb170578c47b064340bbe4b7076161">fillEdgeBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_edge_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#c3b8e078632b4ee4a68e32df4cc69b5c">fillEdgeBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const std::vector&lt; int &gt; &amp;bdry_edge_conds, const std::vector&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#1a21a077c68511f2192e44307120065d">fillNodeBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_node_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#a45e4fd1692a301caa211d8cecceb992">fillNodeBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const std::vector&lt; int &gt; &amp;bdry_node_conds, const std::vector&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#b98159d41eb1fe0152cd431ea4bb8d3d">getFaceLocationForEdgeBdry</a> (int edge_loc, int edge_btype)</td></tr>
 
@@ -83,7 +83,7 @@ See the include file <a class="el" href="CartesianBoundaryDefines_8h.html">Carte
 
 <p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="1519f1daa64483b8a4ab3cc1226857d4"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::getFromInput" ref="1519f1daa64483b8a4ab3cc1226857d4" args="(BoundaryUtilityStrategy *bdry_strategy, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, tbox::Array&lt; int &gt; &amp;face_conds, tbox::Array&lt; int &gt; &amp;edge_conds, tbox::Array&lt; int &gt; &amp;node_conds, const hier::IntVector &amp;periodic)" -->
+<a class="anchor" name="8fe85dc6938824b69c4c69f8f43f4f50"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::getFromInput" ref="8fe85dc6938824b69c4c69f8f43f4f50" args="(BoundaryUtilityStrategy *bdry_strategy, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, std::vector&lt; int &gt; &amp;face_conds, std::vector&lt; int &gt; &amp;edge_conds, std::vector&lt; int &gt; &amp;node_conds, const hier::IntVector &amp;periodic)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -102,19 +102,19 @@ See the include file <a class="el" href="CartesianBoundaryDefines_8h.html">Carte
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>face_conds</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>edge_conds</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>node_conds</em>, </td>
         </tr>
         <tr>
@@ -149,13 +149,13 @@ When assertion checking is active, assertions will result when any of the pointe
 <dl compact><dt><b>Precondition:</b></dt><dd>input_db <p>
 periodic.getDim() == tbox::Dimension(3) <p>
 bdry_strategy != 0 <p>
-face_conds.getSize() == NUM_3D_FACES <p>
-edge_conds.getSize() == NUM_3D_EDGES <p>
-node_conds.getSize() == NUM_3D_NODES </dd></dl>
+face_conds.size() == NUM_3D_FACES <p>
+edge_conds.size() == NUM_3D_EDGES <p>
+node_conds.size() == NUM_3D_NODES </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="750ea83f3ae0341c963d4b17faf8a036"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillFaceBoundaryData" ref="750ea83f3ae0341c963d4b17faf8a036" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_face_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
+<a class="anchor" name="bc62365e181901f23d467b55c15a7b20"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillFaceBoundaryData" ref="bc62365e181901f23d467b55c15a7b20" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const std::vector&lt; int &gt; &amp;bdry_face_conds, const std::vector&lt; double &gt; &amp;bdry_face_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -186,13 +186,13 @@ node_conds.getSize() == NUM_3D_NODES </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_face_conds</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_face_values</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -219,14 +219,14 @@ When assertion checking is active, assertions will result when any of the pointe
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
 vardata <p>
-bdry_face_conds.getSize() == NUM_3D_FACES <p>
-bdry_face_values.getSize() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
+bdry_face_conds.size() == NUM_3D_FACES <p>
+bdry_face_values.size() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
 ghost_fill_width.getDim() == tbox::Dimension(3) <p>
 (vardata-&gt;getDim() == patch.getDim()) &amp;&amp; (vardata-&gt;getDim() == ghost_fill_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="1ceb170578c47b064340bbe4b7076161"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillEdgeBoundaryData" ref="1ceb170578c47b064340bbe4b7076161" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_edge_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
+<a class="anchor" name="c3b8e078632b4ee4a68e32df4cc69b5c"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillEdgeBoundaryData" ref="c3b8e078632b4ee4a68e32df4cc69b5c" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const std::vector&lt; int &gt; &amp;bdry_edge_conds, const std::vector&lt; double &gt; &amp;bdry_face_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -257,13 +257,13 @@ ghost_fill_width.getDim() == tbox::Dimension(3) <p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_edge_conds</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_face_values</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -290,14 +290,14 @@ When assertion checking is active, assertions will result when any of the pointe
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
 vardata <p>
-bdry_edge_conds.getSize() == NUM_3D_EDGES <p>
-bdry_face_values.getSize() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
+bdry_edge_conds.size() == NUM_3D_EDGES <p>
+bdry_face_values.size() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
 ghost_fill_width.getDim() == tbox::Dimension(3) <p>
 (vardata-&gt;getDim() == patch.getDim()) &amp;&amp; (vardata-&gt;getDim() == ghost_fill_width.getDim()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="1a21a077c68511f2192e44307120065d"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillNodeBoundaryData" ref="1a21a077c68511f2192e44307120065d" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_node_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
+<a class="anchor" name="a45e4fd1692a301caa211d8cecceb992"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillNodeBoundaryData" ref="a45e4fd1692a301caa211d8cecceb992" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const std::vector&lt; int &gt; &amp;bdry_node_conds, const std::vector&lt; double &gt; &amp;bdry_face_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -328,13 +328,13 @@ ghost_fill_width.getDim() == tbox::Dimension(3) <p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_node_conds</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_face_values</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -361,8 +361,8 @@ When assertion checking is active, assertions will result when any of the pointe
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>!varname.empty() <p>
 vardata <p>
-bdry_node_conds.getSize() == NUM_3D_NODES <p>
-bdry_face_values.getSize() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
+bdry_node_conds.size() == NUM_3D_NODES <p>
+bdry_face_values.size() == NUM_3D_FACES * (vardata-&gt;getDepth()) <p>
 ghost_fill_width.getDim() == tbox::Dimension(3) <p>
 (vardata-&gt;getDim() == patch.getDim()) &amp;&amp; (vardata-&gt;getDim() == ghost_fill_width.getDim()) </dd></dl>
 
@@ -535,7 +535,7 @@ gcw_to_check.getDim() == tbox::Dimension(3) <p>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="CartesianBoundaryUtilities3_8h.html">CartesianBoundaryUtilities3.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

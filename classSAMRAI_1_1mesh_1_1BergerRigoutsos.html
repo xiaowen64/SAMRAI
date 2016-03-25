@@ -40,12 +40,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#ad317b5cf9b2ae09c549dbfbbcac6de0">~BergerRigoutsos</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#ad317b5cf9b2ae09c549dbfbbcac6de0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#b0e1d00ae91ba00f81503a4c73a213d4">setMPI</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#b4a11119314a0e5527c432b2cf7870e0">findBoxesContainingTags</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;new_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;tag_to_new, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;tag_to_new_width)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the MPI communication object.  <a href="#b0e1d00ae91ba00f81503a4c73a213d4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#04c2058f05e169a6dba7700d1b24120b">findBoxesContainingTags</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;new_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;tag_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;new_to_tag, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;bound_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_gcw, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;first_local_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implement the <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> interface method of the same name.  <a href="#b4a11119314a0e5527c432b2cf7870e0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#bae8d588e9798e8da53333862afb0d15">useDuplicateMPI</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implement the <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a> interface method of the same name.  <a href="#04c2058f05e169a6dba7700d1b24120b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Duplicate the MPI communication object for private internal use.  <a href="#bae8d588e9798e8da53333862afb0d15"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#a5fe7541da89b5b88ba2f1f0675a5a18">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setup names of timers.  <a href="#a5fe7541da89b5b88ba2f1f0675a5a18"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#1741ca7d64e70b035b6a1359da849b3e">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#1741ca7d64e70b035b6a1359da849b3e"></a><br></td></tr>
@@ -53,6 +56,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#50e60dd265a642318586706697340a52">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read parameters from input database.  <a href="#50e60dd265a642318586706697340a52"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#628a2ccf88fe8b593594bbd8d1596d5b">BergerRigoutsosNode</a></td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Asynchronous Berger-Rigoutsos implementation. This class is derived from the abstract base class <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a>. Thus, it serves as a concrete implementation of the box generator Strategy pattern interface. 
@@ -78,7 +84,7 @@ This class uses the <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNo
 <tr>
 <th>parameter </th><th>type </th><th>default </th><th>range </th><th>opt/req </th><th>behavior on restart  </th></tr>
 <tr>
-<td>max_box_size </td><td>int[] </td><td>all valules max int </td><td>all value &gt; 0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
+<td>max_box_size </td><td>int[] </td><td>all values max int </td><td>all values &gt; 0 </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
 <tr>
 <td>sort_output_nodes </td><td>bool </td><td>FALSE </td><td>TRUE, FALSE </td><td>opt </td><td>Not written to restart. Value in input db used.  </td></tr>
 <tr>
@@ -140,51 +146,21 @@ Deallocate internal data.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b0e1d00ae91ba00f81503a4c73a213d4"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::setMPI" ref="b0e1d00ae91ba00f81503a4c73a213d4" args="(const tbox::SAMRAI_MPI &amp;mpi)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::mesh::BergerRigoutsos::setMPI           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mpi</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Set the MPI communication object. 
-<p>
-Duplicate the communicator in the given for private use. A private communicator isolates the complex communications used by the asynchronous algorithm from other communications. Duplicating the communicator is expensive but should only be need once. All processes in the communicator must participate. The duplicate communicator is active until this object is destructed. Using a duplicated MPI communicator is optional but recommended. When a duplicate MPI communicator is in use, it must be congruent with the communicator associated with the tag level.<p>
-If the communicator is not set, the parallel clustering algorithm uses the communicator of the input tag box_level. If it is set, then the algorithm only works for input tag box_levels with a congruent communicator.<p>
-If communicator is SAMRAI_MPI::commNull, it is the same as not using a duplicate communicator. 
-</div>
-</div><p>
-<a class="anchor" name="04c2058f05e169a6dba7700d1b24120b"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::findBoxesContainingTags" ref="04c2058f05e169a6dba7700d1b24120b" args="(hier::BoxLevel &amp;new_box_level, hier::Connector &amp;tag_to_new, hier::Connector &amp;new_to_tag, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const hier::BoxContainer &amp;bound_boxes, const hier::IntVector &amp;min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_gcw, const hier::LocalId &amp;first_local_id) const " -->
+<a class="anchor" name="b4a11119314a0e5527c432b2cf7870e0"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::findBoxesContainingTags" ref="b4a11119314a0e5527c432b2cf7870e0" args="(boost::shared_ptr&lt; hier::BoxLevel &gt; &amp;new_box_level, boost::shared_ptr&lt; hier::Connector &gt; &amp;tag_to_new, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const int tag_data_index, const int tag_val, const hier::BoxContainer &amp;bound_boxes, const hier::IntVector &amp;min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;tag_to_new_width)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::BergerRigoutsos::findBoxesContainingTags           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>new_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>tag_to_new</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>new_to_tag</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -232,18 +208,12 @@ If communicator is SAMRAI_MPI::commNull, it is the same as not using a duplicate
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>max_gcw</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>first_local_id</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>tag_to_new_width</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -256,10 +226,56 @@ Create a set of boxes that covers all integer tags on the patch level that match
 The efficiency tolerance is a threshold value for the percentage of tagged cells in each box. If this percentage is below the tolerance, the box will continue to be split into smaller boxes.<p>
 The combine tolerance is a threshold value for the sum of the volumes of two boxes into which a box may be potentially split. If ratio of that sum and the volume of the original box, the box will not be split.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd>!bound_boxes.isEmpty() <p>
-(new_box_level.getDim() == tag_level-&gt;getDim()) &amp;&amp; (new_box_level.getDim() == (*(bound_boxes.begin())).getDim()) &amp;&amp; (new_box_level.getDim() == min_box.getDim()) &amp;&amp; (new_box_level.getDim() == max_gcw.getDim()) </dd></dl>
+(tag_level-&gt;getDim() == (*(bound_boxes.begin())).getDim()) &amp;&amp; (tag_level-&gt;getDim() == min_box.getDim()) &amp;&amp; (tag_level-&gt;getDim() == tag_to_new_width.getDim()) </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#f3864a9c67e44564a407fcec1fbea748">SAMRAI::mesh::BoxGeneratorStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html#93b5ad0e620615c8f0984373b803ebf3">SAMRAI::mesh::BoxGeneratorStrategy</a>.
+</div>
+</div><p>
+<a class="anchor" name="bae8d588e9798e8da53333862afb0d15"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::useDuplicateMPI" ref="bae8d588e9798e8da53333862afb0d15" args="(const tbox::SAMRAI_MPI &amp;mpi)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BergerRigoutsos::useDuplicateMPI           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>mpi</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Duplicate the MPI communication object for private internal use. 
+<p>
+A private communicator isolates the complex communications used by the asynchronous algorithm from other communications, protecting this algorithm from un-related communication bugs. Using a duplicated MPI communicator is optional but recommended.<p>
+Duplicating the communicator is expensive but need only be done once. All processes in the communicator must participate. The duplicate communicator is active until this object is destructed or you call this method with MPI_COMM_NULL.<p>
+When a duplicate MPI communicator is in use, the SAMRAI_MPI object from the tag level must be congruent with it. 
+</div>
+</div><p>
+<a class="anchor" name="a5fe7541da89b5b88ba2f1f0675a5a18"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::setTimerPrefix" ref="a5fe7541da89b5b88ba2f1f0675a5a18" args="(const std::string &amp;timer_prefix)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BergerRigoutsos::setTimerPrefix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>timer_prefix</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Setup names of timers. 
+<p>
+By default, timers are named "mesh::BergerRigoutsosNode::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". 
 </div>
 </div><p>
 <a class="anchor" name="1741ca7d64e70b035b6a1359da849b3e"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::getObjectName" ref="1741ca7d64e70b035b6a1359da849b3e" args="() const " -->
@@ -310,9 +326,25 @@ Read parameters from input database.
 
 </div>
 </div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="628a2ccf88fe8b593594bbd8d1596d5b"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsos::BergerRigoutsosNode" ref="628a2ccf88fe8b593594bbd8d1596d5b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a><code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsos_8h.html">BergerRigoutsos.h</a><li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsos_8C.html">BergerRigoutsos.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsos_8h.html">BergerRigoutsos.h</a><li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsos_8C.html">BergerRigoutsos.C</a><li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsosNode_8C.html">BergerRigoutsosNode.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

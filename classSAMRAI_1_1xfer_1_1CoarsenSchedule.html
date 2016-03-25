@@ -47,6 +47,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#0d2176e16dfe12af1ff6afdb2edffadb">getEquivalenceClasses</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the coarsen equivalence classes used in the schedule.  <a href="#0d2176e16dfe12af1ff6afdb2edffadb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#ad95e17cbf7470f114aeb185d0c6f9a7">setDeterministicUnpackOrderingFlag</a> (bool flag)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to unpack messages in a deterministic order.  <a href="#ad95e17cbf7470f114aeb185d0c6f9a7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#a77558acd00d2c15fc604870561e18df">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print the coarsen schedule state to the specified data stream.  <a href="#a77558acd00d2c15fc604870561e18df"></a><br></td></tr>
@@ -254,6 +257,34 @@ Return the coarsen equivalence classes used in the schedule.
 
 </div>
 </div><p>
+<a class="anchor" name="ad95e17cbf7470f114aeb185d0c6f9a7"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::setDeterministicUnpackOrderingFlag" ref="ad95e17cbf7470f114aeb185d0c6f9a7" args="(bool flag)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::xfer::CoarsenSchedule::setDeterministicUnpackOrderingFlag           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>flag</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set whether to unpack messages in a deterministic order. 
+<p>
+By default message unpacking is ordered by receive time, which is not deterministic. If your results are dependent on unpack ordering and you want deterministic results, set this flag to true.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>flag</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="268ca209495df78bed6b91043cb9e1b5"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::setScheduleGenerationMethod" ref="268ca209495df78bed6b91043cb9e1b5" args="(const std::string &amp;method)" -->
 <div class="memitem">
 <div class="memproto">
@@ -312,7 +343,7 @@ Print the coarsen schedule state to the specified data stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenSchedule_8h.html">CoarsenSchedule.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenSchedule_8C.html">CoarsenSchedule.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

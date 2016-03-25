@@ -159,6 +159,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b628547deec34171d6789ee70e8a075b">index</a> (const int offset) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given an offset, calculate the index of the offset into the box.  <a href="#b628547deec34171d6789ee70e8a075b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#667a2c86d45c2e82be659c6d08f2ce67">begin</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return an iterator pointing to the first index of this.  <a href="#667a2c86d45c2e82be659c6d08f2ce67"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#17332e67c8cb76ab58f730adea167737">end</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return an iterator pointing to the last index of this.  <a href="#17332e67c8cb76ab58f730adea167737"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#6dc369fca1c33ea02bda8319a7b9e3dc">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;p) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether an index lies within the bounds of the box.  <a href="#6dc369fca1c33ea02bda8319a7b9e3dc"></a><br></td></tr>
@@ -1480,6 +1486,48 @@ This function assumes column-major (e.g., Fortran) ordering of the indices withi
 
 </div>
 </div><p>
+<a class="anchor" name="667a2c86d45c2e82be659c6d08f2ce67"></a><!-- doxytag: member="SAMRAI::hier::Box::begin" ref="667a2c86d45c2e82be659c6d08f2ce67" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> SAMRAI::hier::Box::begin           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return an iterator pointing to the first index of this. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="17332e67c8cb76ab58f730adea167737"></a><!-- doxytag: member="SAMRAI::hier::Box::end" ref="17332e67c8cb76ab58f730adea167737" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> SAMRAI::hier::Box::end           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Return an iterator pointing to the last index of this. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="6dc369fca1c33ea02bda8319a7b9e3dc"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="6dc369fca1c33ea02bda8319a7b9e3dc" args="(const Index &amp;p) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -2149,7 +2197,7 @@ Rotate 90 degrees around origin.
     <tr><td valign="top"></td><td valign="top"><em>rotation_ident</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#577d9d6fd94c95508d0d20dbdf944e42">getDim()</a>.getValue() == 2) || (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#577d9d6fd94c95508d0d20dbdf944e42">getDim()</a>.getValue() == 3) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#577d9d6fd94c95508d0d20dbdf944e42">getDim()</a>.getValue() == 1) || (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#577d9d6fd94c95508d0d20dbdf944e42">getDim()</a>.getValue() == 2) || (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#577d9d6fd94c95508d0d20dbdf944e42">getDim()</a>.getValue() == 3) </dd></dl>
 
 </div>
 </div><p>
@@ -2681,7 +2729,7 @@ Output the box description in the form [L,U], where L and U are the lower and up
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="Box_8h.html">Box.h</a><li>source/SAMRAI/hier/<a class="el" href="Box_8C.html">Box.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

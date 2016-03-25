@@ -33,6 +33,10 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#a99d674df389fa8706bc3b93a49474f2">SideDataFactory</a> (int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts, bool fine_boundary_represents_var, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;directions)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for the side data factory class.  <a href="#a99d674df389fa8706bc3b93a49474f2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#64a3362a723d61e697ea033337f349d7">SideDataFactory</a> (int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts, bool fine_boundary_represents_var)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor for the side data factory class setting up allocation of data in all coordinate directions.  <a href="#64a3362a723d61e697ea033337f349d7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#5ea49b994a02c4275d80d4ed704bedd7">~SideDataFactory</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
@@ -109,10 +113,55 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-The constructor for the side data factory class. The ghost cell width, depth (number of components), and fine boundary representation arguments give the defaults for all edge data objects created with this factory. Also, the default data allocation scheme is to generate storage for sides in all coordinate directions (default integer vector of all 1's). To use this factory to manage side data objects for sides associated with a single direction only, provide the directions vector argument. A zero entry indicates that data for that direction is not wanted. Otherwise, data will be created for that direction. See the SideVariable&lt;TYPE&gt; class header file for more information.<p>
+The constructor for the side data factory class. 
+<p>
+The ghost cell width, depth (number of components), and fine boundary representation arguments give the defaults for all edge data objects created with this factory.<p>
+The directions vector describes the coordinate directions for which data will be allocated on the sides of cells in the grid. A value of 1 indicates that data will be allocated for that coordinate direction, while a value of zero means data for that direction is not wanted. To allocate data in all directions, provide an IntVector that is 1 in all directions, or use the other constructor, which assumes by default that all directions are desired. See the SideVariable&lt;TYPE&gt; class header file for more information.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 <p>
 ghosts.min() &gt;= 0 <p>
 directions.min() &gt;= 0 </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="64a3362a723d61e697ea033337f349d7"></a><!-- doxytag: member="SAMRAI::pdat::SideDataFactory::SideDataFactory" ref="64a3362a723d61e697ea033337f349d7" args="(int depth, const hier::IntVector &amp;ghosts, bool fine_boundary_represents_var)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TYPE&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SAMRAI::pdat::SideDataFactory</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html">SideDataFactory</a>           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>depth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>ghosts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>fine_boundary_represents_var</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Constructor for the side data factory class setting up allocation of data in all coordinate directions. 
+<p>
+This constructor works the same as the other constructor, but it takes no direcions argument, meaning that all directions are going to be allocated.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>depth &gt; 0 <p>
+ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
@@ -363,7 +412,7 @@ Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="SideDataFactory_8h.html">SideDataFactory.h</a><li>source/SAMRAI/pdat/<a class="el" href="SideDataFactory_8C.html">SideDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

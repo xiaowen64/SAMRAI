@@ -32,7 +32,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html#c97497fbae33781898a7983f7d133622">RankGroup</a> (const int min, const int max, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;samrai_mpi=<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a>(SAMRAI_MPI::getSAMRAIWorld()))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html#5fdb821349d8080d635926ea8b1d9ffc">RankGroup</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; int &gt; &amp;rank_group, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;samrai_mpi=<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a>(SAMRAI_MPI::getSAMRAIWorld()))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html#1a535c4b5176edf620cf503a78bc9cdc">RankGroup</a> (const std::vector&lt; int &gt; &amp;rank_group, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;samrai_mpi=<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a>(SAMRAI_MPI::getSAMRAIWorld()))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html#927b43ea8c1a066ea28b2bfda5547dd1">~RankGroup</a> ()</td></tr>
 
@@ -132,14 +132,14 @@ min &lt;= max </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="5fdb821349d8080d635926ea8b1d9ffc"></a><!-- doxytag: member="SAMRAI::tbox::RankGroup::RankGroup" ref="5fdb821349d8080d635926ea8b1d9ffc" args="(const Array&lt; int &gt; &amp;rank_group, const SAMRAI_MPI &amp;samrai_mpi=SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()))" -->
+<a class="anchor" name="1a535c4b5176edf620cf503a78bc9cdc"></a><!-- doxytag: member="SAMRAI::tbox::RankGroup::RankGroup" ref="1a535c4b5176edf620cf503a78bc9cdc" args="(const std::vector&lt; int &gt; &amp;rank_group, const SAMRAI_MPI &amp;samrai_mpi=SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()))" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::tbox::RankGroup::RankGroup           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>rank_group</em>, </td>
         </tr>
         <tr>
@@ -158,7 +158,7 @@ min &lt;= max </dd></dl>
 <div class="memdoc">
 
 <p>
-This constructor creates a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a> consisting of ranks corresponding to the integers in the array. Each member of the array must be &gt;= 0, less than the total number of available processors, and unique within the array. Due to the use of an array for storage, RankGroups created with this constructor should be expected to be less efficient than those created with the above min/max constructor.<p>
+This constructor creates a <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">RankGroup</a> consisting of ranks corresponding to the integers in the vector. Each member of the vector must be &gt;= 0, less than the total number of available processors, and unique within the vector. Due to the use of an vector for storage, RankGroups created with this constructor should be expected to be less efficient than those created with the above min/max constructor.<p>
 <dl compact><dt><b>Precondition:</b></dt><dd>!rank_group.empty() </dd></dl>
 
 </div>
@@ -314,7 +314,7 @@ This is the inverse function of getMappedRank. Given a rank that is contained in
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="RankGroup_8h.html">RankGroup.h</a><li>source/SAMRAI/tbox/<a class="el" href="RankGroup_8C.html">RankGroup.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

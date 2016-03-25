@@ -40,6 +40,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmConnectorWidthRequestor.html#b29d7f84b05926a980717646e7a16dae">computeRequiredConnectorWidths</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;self_connector_widths, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;fine_connector_widths, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &amp;patch_hierarchy) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute Connector widths that this class requires in order to work properly on a given hierarchy.  <a href="#b29d7f84b05926a980717646e7a16dae"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmConnectorWidthRequestor.html#ef3cc88590acfe15984b270fb52080d2">setTagToClusterWidth</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;tag_to_cluster_width)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Plan to specify enough Connector width to support the given width between tag and cluster levels.  <a href="#ef3cc88590acfe15984b270fb52080d2"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Implementation of the strategy class <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html">hier::PatchHierarchy::ConnectorWidthRequestorStrategy</a> to tell the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> how wide <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> needs Connectors between hierarchy levels to be. 
@@ -112,9 +115,31 @@ Implements the pure virtual method <a class="el" href="classSAMRAI_1_1hier_1_1Pa
 
 </div>
 </div><p>
+<a class="anchor" name="ef3cc88590acfe15984b270fb52080d2"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmConnectorWidthRequestor::setTagToClusterWidth" ref="ef3cc88590acfe15984b270fb52080d2" args="(std::vector&lt; hier::IntVector &gt; &amp;tag_to_cluster_width)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::GriddingAlgorithmConnectorWidthRequestor::setTagToClusterWidth           </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>tag_to_cluster_width</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Plan to specify enough Connector width to support the given width between tag and cluster levels. 
+<p>
+This is only used by the <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> that owns this object. 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmConnectorWidthRequestor_8h.html">GriddingAlgorithmConnectorWidthRequestor.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmConnectorWidthRequestor_8C.html">GriddingAlgorithmConnectorWidthRequestor.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

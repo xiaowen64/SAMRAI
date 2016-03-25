@@ -56,18 +56,18 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#01c0101c10011a41f25bd0bcfb4f5250">registerSingleNodeCoordinate</a> (const int coordinate_number, const int patch_data_index, const int depth_index=0, const double scale_factor=1.0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as above method, but allows registration of single coordinate for deformed structured AMR grids (moving grids).  <a href="#01c0101c10011a41f25bd0bcfb4f5250"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#b22f3e826a4720761ba501250471eea7">registerMaterialNames</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;material_names)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#4b1da68b0f276104f5e5a15b3e05f8a8">registerMaterialNames</a> (const std::vector&lt; std::string &gt; &amp;material_names)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers with the VisIt data writer the names of materials being used in the simulation.  <a href="#b22f3e826a4720761ba501250471eea7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#03c8fc745e3198534869baa78dcb9c19">registerSparseMaterialNames</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;material_names)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers with the VisIt data writer the names of materials being used in the simulation.  <a href="#4b1da68b0f276104f5e5a15b3e05f8a8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#58683e422a15f3263bcddc8841796e55">registerSparseMaterialNames</a> (const std::vector&lt; std::string &gt; &amp;material_names)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers with the VisIt data writer the names of materials being used in the simulation.  <a href="#03c8fc745e3198534869baa78dcb9c19"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#240bce76b8b14fdf49fbaa1f92fc0c94">registerSpeciesNames</a> (const std::string &amp;material_name, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;species_names)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers with the VisIt data writer the names of materials being used in the simulation.  <a href="#58683e422a15f3263bcddc8841796e55"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#895152bf4c8af5f0d3d20d43b8f63a4a">registerSpeciesNames</a> (const std::string &amp;material_name, const std::vector&lt; std::string &gt; &amp;species_names)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers the names of the species for a material_name with the VisIt data writer.  <a href="#240bce76b8b14fdf49fbaa1f92fc0c94"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#09bdc47db6b21aee735e807741517905">registerVisItExpressions</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expression_keys, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expressions, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expression_types)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers the names of the species for a material_name with the VisIt data writer.  <a href="#895152bf4c8af5f0d3d20d43b8f63a4a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#b9adaa4527f5028337efec539ae137c2">registerVisItExpressions</a> (const std::vector&lt; std::string &gt; &amp;expression_keys, const std::vector&lt; std::string &gt; &amp;expressions, const std::vector&lt; std::string &gt; &amp;expression_types)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers expressions that will be embedded in the VisIt datafiles.  <a href="#09bdc47db6b21aee735e807741517905"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers expressions that will be embedded in the VisIt datafiles.  <a href="#b9adaa4527f5028337efec539ae137c2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#bb8563ca251cb8fc5b1e7ae601730eee">writePlotData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int time_step, double simulation_time=0.0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method causes the VisIt data writer to dump all registered data. The appropriate packing methods will be invoked for material-related data and derived data.  <a href="#bb8563ca251cb8fc5b1e7ae601730eee"></a><br></td></tr>
@@ -106,10 +106,10 @@ A brief summary of the basic steps typically involved in using the VDW are:<p>
 <li>If using deformed structured AMR grids (moving grids), register the coordinates of the nodes using the <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a38f8fcfc3489f6bfdde1f05606ea43c">registerNodeCoordinates()</a> method.</li></ul>
 <p>
 <ul>
-<li>If using materials, set the user-defined data writer for material data using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#6c98c4d9c88136e523c8f44b662d0c26">setMaterialsDataWriter()</a>. Then register the names of the materials being used with <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#b22f3e826a4720761ba501250471eea7">registerMaterialNames()</a>.</li></ul>
+<li>If using materials, set the user-defined data writer for material data using <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#6c98c4d9c88136e523c8f44b662d0c26">setMaterialsDataWriter()</a>. Then register the names of the materials being used with <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#4b1da68b0f276104f5e5a15b3e05f8a8">registerMaterialNames()</a>.</li></ul>
 <p>
 <ul>
-<li>If using species of the materials, register the names of the species of each material using the <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#240bce76b8b14fdf49fbaa1f92fc0c94">registerSpeciesNames()</a> method.</li></ul>
+<li>If using species of the materials, register the names of the species of each material using the <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#895152bf4c8af5f0d3d20d43b8f63a4a">registerSpeciesNames()</a> method.</li></ul>
 <p>
 <ul>
 <li>The writer will generate VisIt dump files when the method <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#bb8563ca251cb8fc5b1e7ae601730eee">writePlotData()</a> is called. Minimally, only a hierarchy and the time step number is needed. A simulation time can also be specified which will be included as part of the file information in the dump</li></ul>
@@ -577,14 +577,14 @@ depth_index &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="b22f3e826a4720761ba501250471eea7"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerMaterialNames" ref="b22f3e826a4720761ba501250471eea7" args="(const tbox::Array&lt; std::string &gt; &amp;material_names)" -->
+<a class="anchor" name="4b1da68b0f276104f5e5a15b3e05f8a8"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerMaterialNames" ref="4b1da68b0f276104f5e5a15b3e05f8a8" args="(const std::vector&lt; std::string &gt; &amp;material_names)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::appu::VisItDataWriter::registerMaterialNames           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>material_names</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -601,27 +601,27 @@ In order to use materials with VisIt, the application class needs to inherit fro
 VisIt uses the material fractions to calculate interpolated material boundaries in cells with multiple materials. Therefore VisIt can display a material (or materials) as multiple colored contiguous regions. In addition, VisIt can intersect this volume field with a plane and get accurate 2D boundaries within cells. If desired, the material fractions for a material can be treated as a scalar field and the usual scalar field plot tools, such as pseudocolor and contour, can be applied.<p>
 Because species are a subset of materials, it is required that the material names be registered before any species names are registered. New materials may not be added during the simulation; that is, this method should only be called once.<p>
 An error results and the program will halt if:<ul>
-<li>this method is called more than once.</li><li>the new <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#03c8fc745e3198534869baa78dcb9c19">registerSparseMaterialNames()</a> method is called</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
+<li>this method is called more than once.</li><li>the new <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#58683e422a15f3263bcddc8841796e55">registerSparseMaterialNames()</a> method is called</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>material_names.getSize() &gt; 0 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>material_names.size() &gt; 0 <p>
 for each member of material_names, mn, !mn.empty() <p>
-d_materials_names.getSize() == 0 </dd></dl>
+d_materials_names.size() == 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="03c8fc745e3198534869baa78dcb9c19"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerSparseMaterialNames" ref="03c8fc745e3198534869baa78dcb9c19" args="(const tbox::Array&lt; std::string &gt; &amp;material_names)" -->
+<a class="anchor" name="58683e422a15f3263bcddc8841796e55"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerSparseMaterialNames" ref="58683e422a15f3263bcddc8841796e55" args="(const std::vector&lt; std::string &gt; &amp;material_names)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::appu::VisItDataWriter::registerSparseMaterialNames           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>material_names</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -637,20 +637,20 @@ When a mesh has materials defined over it, every cell will contain a fractional 
 In order to use materials with VisIt, the application class needs to inherit from <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a>, an abstract base class which defines an interface for writing out various materials related fields. A concrete object of this strategy must be registered with the VisIt data writer. That concrete object is responsible for providing a concrete implementation of the method packMaterialFractionsIntoSparseBuffers() which writes out the material fractions for each registered material over a given patch.<p>
 VisIt uses the material fractions to calculate interpolated material boundaries in cells with multiple materials. Therefore VisIt can display a material (or materials) as multiple colored contiguous regions. In addition, VisIt can intersect this volume field with a plane and get accurate 2D boundaries within cells. If desired, the material fractions for a material can be treated as a scalar field and the usual scalar field plot tools, such as pseudocolor and contour, can be applied.<p>
 An error results and the program will halt if:<ul>
-<li>this method is called more than once.</li><li>the legacy <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#b22f3e826a4720761ba501250471eea7">registerMaterialNames()</a> method is called</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
+<li>this method is called more than once.</li><li>the legacy <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#4b1da68b0f276104f5e5a15b3e05f8a8">registerMaterialNames()</a> method is called</li><li>when assertion checking is active, the number of names = 0, or any material name string is empty.</li></ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>material_names</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> of strings: the names of the materials.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>material_names.getSize() &gt; 0 <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>material_names.size() &gt; 0 <p>
 for each member of material_names, mn, !mn.empty() <p>
-d_materials_names.getSize() == 0 </dd></dl>
+d_materials_names.size() == 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="240bce76b8b14fdf49fbaa1f92fc0c94"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerSpeciesNames" ref="240bce76b8b14fdf49fbaa1f92fc0c94" args="(const std::string &amp;material_name, const tbox::Array&lt; std::string &gt; &amp;species_names)" -->
+<a class="anchor" name="895152bf4c8af5f0d3d20d43b8f63a4a"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerSpeciesNames" ref="895152bf4c8af5f0d3d20d43b8f63a4a" args="(const std::string &amp;material_name, const std::vector&lt; std::string &gt; &amp;species_names)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -663,7 +663,7 @@ d_materials_names.getSize() == 0 </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>species_names</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -682,7 +682,7 @@ Species are subcomponents of a material. For example, a simulation with 4 materi
 For each species name registered, there is an associated species fraction, which must be between 0 and 1.0 on each cell. The sum of the species fractions for all species of a given material must equal 1.0 in every cell in which that material appears. In VisIt, the species fractions for a species can be treated as a scalar field and the usual scalar plot operations applied to the field to show "concentrations". So, in the example described above, the percentage of nitrogen in the gas can be displayed in a pseudocolor plot.<p>
 In order to use species with VisIt, the application class needs to inherit from <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a>, an abstract base class which defines an interface for writing out species related fields. A concrete object of the materials data strategy class is responsible for providing an implementation of the method packSpeciesFractionsIntoDoubleBuffer() to write out the species fractions field for each registered species over a given patch.<p>
 An error results and the program will halt if:<ul>
-<li>this method is called before <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#b22f3e826a4720761ba501250471eea7">registerMaterialNames()</a> is called.</li><li>the supplied material name is not in the list of materials supplied in the <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#b22f3e826a4720761ba501250471eea7">registerMaterialNames()</a> method.</li><li>the method is called more than once for a given material</li><li>when assertion checking is active, the number of names = 0, or any name string is empty.</li></ul>
+<li>this method is called before <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#4b1da68b0f276104f5e5a15b3e05f8a8">registerMaterialNames()</a> is called.</li><li>the supplied material name is not in the list of materials supplied in the <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#4b1da68b0f276104f5e5a15b3e05f8a8">registerMaterialNames()</a> method.</li><li>the method is called more than once for a given material</li><li>when assertion checking is active, the number of names = 0, or any name string is empty.</li></ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -691,31 +691,31 @@ An error results and the program will halt if:<ul>
   </table>
 </dl>
 <dl compact><dt><b>Precondition:</b></dt><dd>!material_name.empty() <p>
-species_names.getSize() &gt; 0 <p>
-d_materials_names.getSize() &gt; 0 </dd></dl>
+species_names.size() &gt; 0 <p>
+d_materials_names.size() &gt; 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="09bdc47db6b21aee735e807741517905"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerVisItExpressions" ref="09bdc47db6b21aee735e807741517905" args="(const tbox::Array&lt; std::string &gt; &amp;expression_keys, const tbox::Array&lt; std::string &gt; &amp;expressions, const tbox::Array&lt; std::string &gt; &amp;expression_types)" -->
+<a class="anchor" name="b9adaa4527f5028337efec539ae137c2"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::registerVisItExpressions" ref="b9adaa4527f5028337efec539ae137c2" args="(const std::vector&lt; std::string &gt; &amp;expression_keys, const std::vector&lt; std::string &gt; &amp;expressions, const std::vector&lt; std::string &gt; &amp;expression_types)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::appu::VisItDataWriter::registerVisItExpressions           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>expression_keys</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>expressions</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>expression_types</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -832,7 +832,7 @@ Returns the object name.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8h.html">VisItDataWriter.h</a><li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8C.html">VisItDataWriter.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

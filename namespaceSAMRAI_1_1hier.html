@@ -110,9 +110,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generic identifier for identifying things on the local process.  <a href="classSAMRAI_1_1hier_1_1LocalId.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A container which holds overlap relationship connections between two BoxLevels.  <a href="classSAMRAI_1_1hier_1_1MappingConnector.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html">MappingConnectorAlgorithm</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Algorithms for using Connectors representing changes to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Algorithms for using MappingConnectors representing changes to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MultiblockBoxTree.html">MultiblockBoxTree</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Utility sorting Boxes into tree-like form for finding box overlaps. Boxes are sorted by <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> and then a <a class="el" href="classSAMRAI_1_1hier_1_1BoxTree.html">BoxTree</a> is constructed for each block in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>.  <a href="classSAMRAI_1_1hier_1_1MultiblockBoxTree.html#_details">More...</a><br></td></tr>
@@ -176,12 +179,19 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generates and manages mappings between Variables and/or (<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>,<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>) pairs and patch data indices.  <a href="classSAMRAI_1_1hier_1_1VariableDatabase.html#_details">More...</a><br></td></tr>
+<tr><td colspan="2"><br><h2>Enumerations</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a> { <a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101aad2ce1ba6d0e0a3fd6877ba7f45ce983">CONNECTOR_ERROR</a>, 
+<a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a544fdb3dc8b290ea8fbe0f5b3bcfc598">CONNECTOR_CREATE</a>, 
+<a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a358709ce9182ffe89b933f5b6bcd8870">CONNECTOR_IMPLICIT_CREATION_RULE</a>
+ }</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Action to take when Connectors between BoxLevels are not found.  <a href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::istream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#96908bbe9494aa74292d13972ee0d4f9">operator&gt;&gt;</a> (std::istream &amp;s, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#94bbae049793f3f0097e00d74888dd83">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#e2fa3ea63715279801abaaa4161e138d">BoxContainer::operator tbox::Array&lt; tbox::DatabaseBox &gt;</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#1abbf9580bd60c01ff4a222cd45c9dee">BoxContainer::operator std::vector&lt; tbox::DatabaseBox &gt;</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#86317125df6c2eb65553d25794c3b9d4">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer_1_1Outputter.html">BoxContainer::Outputter</a> &amp;format)</td></tr>
 
@@ -226,6 +236,34 @@
  <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#161d92c7bf87e87cc540d239d083a78f">t_constructor_compute_shifts</a></td></tr>
 
 </table>
+<hr><h2>Enumeration Type Documentation</h2>
+<a class="anchor" name="256cef944748f7494c84017f5829101a"></a><!-- doxytag: member="SAMRAI::hier::ConnectorNotFoundAction" ref="256cef944748f7494c84017f5829101a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">SAMRAI::hier::ConnectorNotFoundAction</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Action to take when Connectors between BoxLevels are not found. 
+<p>
+<dl compact><dt><b>Enumerator: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="256cef944748f7494c84017f5829101aad2ce1ba6d0e0a3fd6877ba7f45ce983"></a><!-- doxytag: member="CONNECTOR_ERROR" ref="256cef944748f7494c84017f5829101aad2ce1ba6d0e0a3fd6877ba7f45ce983" args="" -->CONNECTOR_ERROR</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="256cef944748f7494c84017f5829101a544fdb3dc8b290ea8fbe0f5b3bcfc598"></a><!-- doxytag: member="CONNECTOR_CREATE" ref="256cef944748f7494c84017f5829101a544fdb3dc8b290ea8fbe0f5b3bcfc598" args="" -->CONNECTOR_CREATE</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="256cef944748f7494c84017f5829101a358709ce9182ffe89b933f5b6bcd8870"></a><!-- doxytag: member="CONNECTOR_IMPLICIT_CREATION_RULE" ref="256cef944748f7494c84017f5829101a358709ce9182ffe89b933f5b6bcd8870" args="" -->CONNECTOR_IMPLICIT_CREATION_RULE</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dl>
+
+</div>
+</div><p>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="96908bbe9494aa74292d13972ee0d4f9"></a><!-- doxytag: member="SAMRAI::hier::operator&gt;&gt;" ref="96908bbe9494aa74292d13972ee0d4f9" args="(std::istream &amp;s, Box &amp;box)" -->
 <div class="memitem">
@@ -285,12 +323,12 @@
 
 </div>
 </div><p>
-<a class="anchor" name="e2fa3ea63715279801abaaa4161e138d"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::operator tbox::Array&lt; tbox::DatabaseBox &gt;" ref="e2fa3ea63715279801abaaa4161e138d" args="() const " -->
+<a class="anchor" name="1abbf9580bd60c01ff4a222cd45c9dee"></a><!-- doxytag: member="SAMRAI::hier::BoxContainer::operator std::vector&lt; tbox::DatabaseBox &gt;" ref="1abbf9580bd60c01ff4a222cd45c9dee" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI::hier::BoxContainer::operator <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &gt;           </td>
+          <td class="memname">SAMRAI::hier::BoxContainer::operator std::vector&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &gt;           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -706,7 +744,7 @@
 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

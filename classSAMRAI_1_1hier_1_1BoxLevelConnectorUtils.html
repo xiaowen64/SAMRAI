@@ -41,6 +41,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#2a2e2c35b5c00f2dfd9f6d39566d8554">computeBoxesAroundBoundary</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;boundary, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refinement_ratio, const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const bool simplify_boundary_boxes=true) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a set of Boxes, compute its boundary as a set of boxes located just outside it.  <a href="#2a2e2c35b5c00f2dfd9f6d39566d8554"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#7d59815e4dfdfaacd8a72c6f2bda8abd">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setup names of timers.  <a href="#7d59815e4dfdfaacd8a72c6f2bda8abd"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Comparing boxes of two BoxLevels</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#42f1f7020d108fbad46a7853910d0b18">baseNestsInHead</a> (bool *locally_nests, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_swell, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;head_swell, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;head_nesting_margin, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> *domain=0) const </td></tr>
 
@@ -48,24 +51,24 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#d603f2ccd20562a8020dca52e5f233bd">baseNestsInHead</a> (bool *locally_nests, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;base, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;base_swell, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;head_swell, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;head_margin, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> *domain=0) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given base and head BoxLevels, determine the extent to which the base nests in the head.  <a href="#d603f2ccd20562a8020dca52e5f233bd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#7c11e6190089b818f423649d1b3ff5ee">computeExternalParts</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;external, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_external, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_reference, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;nesting_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>()) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#82485b05ecc10f9ca99dd38e727ef9e7">computeExternalParts</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;external, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;input_to_external, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_reference, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;nesting_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are external to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#7c11e6190089b818f423649d1b3ff5ee"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#e25016804472dc78b24b06b03b0cd5fd">computeInternalParts</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;internal, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_internal, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_reference, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;nesting_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>()) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are external to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#82485b05ecc10f9ca99dd38e727ef9e7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#936a0a54222605b44e39ee306d8ba9a7">computeInternalParts</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;internal, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;input_to_internal, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;input_to_reference, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;nesting_width, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are internal to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#e25016804472dc78b24b06b03b0cd5fd"></a><br></td></tr>
-<tr><td colspan="2"><div class="groupHeader">Setting up common mapping Connectors</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#54b8b6bead51a573feacb64e927deb04">makeSortingMap</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;sorted_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;output_map, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;unsorted_box_level, bool sort_boxes_by_corner=true, bool sequentialize_global_indices=true, <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> initial_sequential_index=LocalId::getZero()) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are internal to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#936a0a54222605b44e39ee306d8ba9a7"></a><br></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Setting up common MappingConnectors</div></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#307c40943177d19883e736a4ac7c6430">makeSortingMap</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;sorted_box_level, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;output_map, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;unsorted_box_level, bool sort_boxes_by_corner=true, bool sequentialize_global_indices=true, <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> initial_sequential_index=LocalId::getZero()) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#387a0158721ef4ae3aec784de0d4c96f">makeRemainderMap</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;remainder, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;orig_to_remainder, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;orig_to_rejections) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#c089ec2d0ac153bd3e494ab46ee0a257">makeRemainderMap</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;remainder, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;orig_to_remainder, const <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &amp;orig_to_rejections) const </td></tr>
 
 <tr><td colspan="2"><div class="groupHeader">Adding periodic images</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#7cb54d1f23e65ddd4c74ae78d1d75b40">addPeriodicImages</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain_search_tree, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;threshold_distance) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add periodic images to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#7cb54d1f23e65ddd4c74ae78d1d75b40"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#986fc0b360c3cd2dd7df178dad6d2660">addPeriodicImagesAndRelationships</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;box_level_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain_search_tree, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_anchor) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html#c49fedc69a4c201ea8ac36631d8b93c8">addPeriodicImagesAndRelationships</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;box_level_to_anchor, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain_search_tree, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_anchor) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add periodic images to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and add new relationships to the periodic images.  <a href="#986fc0b360c3cd2dd7df178dad6d2660"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add periodic images to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and add new relationships to the periodic images.  <a href="#c49fedc69a4c201ea8ac36631d8b93c8"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Utilities for common operating on BoxLevels. 
@@ -310,20 +313,20 @@ head_nesting_margin &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.h
 
 </div>
 </div><p>
-<a class="anchor" name="7c11e6190089b818f423649d1b3ff5ee"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::computeExternalParts" ref="7c11e6190089b818f423649d1b3ff5ee" args="(BoxLevel &amp;external, Connector &amp;input_to_external, const Connector &amp;input_to_reference, const IntVector &amp;nesting_width, const BoxContainer &amp;domain=BoxContainer()) const " -->
+<a class="anchor" name="82485b05ecc10f9ca99dd38e727ef9e7"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::computeExternalParts" ref="82485b05ecc10f9ca99dd38e727ef9e7" args="(boost::shared_ptr&lt; BoxLevel &gt; &amp;external, boost::shared_ptr&lt; MappingConnector &gt; &amp;input_to_external, const Connector &amp;input_to_reference, const IntVector &amp;nesting_width, const BoxContainer &amp;domain=BoxContainer()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::BoxLevelConnectorUtils::computeExternalParts           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>external</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_to_external</em>, </td>
         </tr>
         <tr>
@@ -356,7 +359,7 @@ head_nesting_margin &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.h
 <p>
 Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are external to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
-Compare an input <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a "reference" <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Compute the parts of the input that are external to the reference. Build the "external" <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> representing the external parts. Build a mapping <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with the input as its base and the external as its head.<p>
+Compare an input <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a "reference" <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Compute the parts of the input that are external to the reference. Build the "external" <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> representing the external parts. Build a <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> with the input as its base and the external as its head.<p>
 A partially external input cell (possible when input is coarser than reference) is considered to be external.<p>
 For the purpose of defining what is external, the reference level can be grown by nesting_width before comparing. This feature can be used to determing which parts of the input does not nest in the reference comparison. A negative growth indicates shrinking of the reference level.<p>
 This method does not require any communication.<p>
@@ -373,20 +376,20 @@ This method does not require any communication.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="e25016804472dc78b24b06b03b0cd5fd"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::computeInternalParts" ref="e25016804472dc78b24b06b03b0cd5fd" args="(BoxLevel &amp;internal, Connector &amp;input_to_internal, const Connector &amp;input_to_reference, const IntVector &amp;nesting_width, const BoxContainer &amp;domain=BoxContainer()) const " -->
+<a class="anchor" name="936a0a54222605b44e39ee306d8ba9a7"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::computeInternalParts" ref="936a0a54222605b44e39ee306d8ba9a7" args="(boost::shared_ptr&lt; BoxLevel &gt; &amp;internal, boost::shared_ptr&lt; MappingConnector &gt; &amp;input_to_internal, const Connector &amp;input_to_reference, const IntVector &amp;nesting_width, const BoxContainer &amp;domain=BoxContainer()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::BoxLevelConnectorUtils::computeInternalParts           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>internal</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_to_internal</em>, </td>
         </tr>
         <tr>
@@ -419,7 +422,7 @@ This method does not require any communication.<p>
 <p>
 Compute the parts of one <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> that are internal to another <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
-Compare an input <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a "reference" box_level. Identify parts of the input that are internal to the reference <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>, and store the internal parts in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Set up a mapping <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> between the input and its internal parts.<p>
+Compare an input <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a "reference" box_level. Identify parts of the input that are internal to the reference <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>, and store the internal parts in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Set up a <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> between the input and its internal parts.<p>
 A partially internal input cell (possible when input is coarser than reference) is considered to be internal.<p>
 For the purpose of defining what is external, the reference level can be grown by nesting_width before comparing. This feature can be used to determing which parts of the input does not nest in the reference comparison. A negative growth indicates shrinking of the reference level.<p>
 This method does not require any communication.<p>
@@ -487,20 +490,20 @@ Given a set of Boxes, compute its boundary as a set of boxes located just outsid
 
 </div>
 </div><p>
-<a class="anchor" name="54b8b6bead51a573feacb64e927deb04"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::makeSortingMap" ref="54b8b6bead51a573feacb64e927deb04" args="(BoxLevel &amp;sorted_box_level, Connector &amp;output_map, const BoxLevel &amp;unsorted_box_level, bool sort_boxes_by_corner=true, bool sequentialize_global_indices=true, LocalId initial_sequential_index=LocalId::getZero()) const " -->
+<a class="anchor" name="307c40943177d19883e736a4ac7c6430"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::makeSortingMap" ref="307c40943177d19883e736a4ac7c6430" args="(boost::shared_ptr&lt; BoxLevel &gt; &amp;sorted_box_level, boost::shared_ptr&lt; MappingConnector &gt; &amp;output_map, const BoxLevel &amp;unsorted_box_level, bool sort_boxes_by_corner=true, bool sequentialize_global_indices=true, LocalId initial_sequential_index=LocalId::getZero()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::BoxLevelConnectorUtils::makeSortingMap           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>sorted_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>output_map</em>, </td>
         </tr>
         <tr>
@@ -540,26 +543,26 @@ Given a set of Boxes, compute its boundary as a set of boxes located just outsid
 
 </div>
 </div><p>
-<a class="anchor" name="387a0158721ef4ae3aec784de0d4c96f"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::makeRemainderMap" ref="387a0158721ef4ae3aec784de0d4c96f" args="(BoxLevel &amp;remainder, Connector &amp;orig_to_remainder, const Connector &amp;orig_to_rejections) const " -->
+<a class="anchor" name="c089ec2d0ac153bd3e494ab46ee0a257"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::makeRemainderMap" ref="c089ec2d0ac153bd3e494ab46ee0a257" args="(boost::shared_ptr&lt; BoxLevel &gt; &amp;remainder, boost::shared_ptr&lt; MappingConnector &gt; &amp;orig_to_remainder, const MappingConnector &amp;orig_to_rejections) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::BoxLevelConnectorUtils::makeRemainderMap           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>remainder</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>orig_to_remainder</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>orig_to_rejections</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -621,7 +624,7 @@ Any periodic image within a certain distance of the domain is added, Those farth
 
 </div>
 </div><p>
-<a class="anchor" name="986fc0b360c3cd2dd7df178dad6d2660"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::addPeriodicImagesAndRelationships" ref="986fc0b360c3cd2dd7df178dad6d2660" args="(BoxLevel &amp;box_level, Connector &amp;box_level_to_anchor, Connector &amp;anchor_to_box_level, const BoxContainer &amp;domain_search_tree, const Connector &amp;anchor_to_anchor) const " -->
+<a class="anchor" name="c49fedc69a4c201ea8ac36631d8b93c8"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::addPeriodicImagesAndRelationships" ref="c49fedc69a4c201ea8ac36631d8b93c8" args="(BoxLevel &amp;box_level, Connector &amp;box_level_to_anchor, const BoxContainer &amp;domain_search_tree, const Connector &amp;anchor_to_anchor) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -636,12 +639,6 @@ Any periodic image within a certain distance of the domain is added, Those farth
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box_level_to_anchor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>anchor_to_box_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -675,17 +672,38 @@ Preconditions: box_level&lt;==&gt;anchor must be transpose overlap Connectors (o
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>box_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> subject to the addition of periodic Boxes.</td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>box_level_to_anchor</em>&nbsp;</td><td>Overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> to be updated with new relationships.</td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>anchor_to_box_level</em>&nbsp;</td><td>Overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> to be updated with new relationships.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain_search_tree</em>&nbsp;</td><td>Domain description in the reference index space. This tree must NOT include periodic images.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>anchor_to_anchor</em>&nbsp;</td><td>Self overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> for anchor <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Must be a complete overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with periodic relationships. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>anchor_to_anchor</em>&nbsp;</td><td>Self overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> for anchor <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Must be a complete overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with periodic relationships. To guarantee complete periodic relationships, the anchor, grown by the width of this <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>, must nest box_level grown by the width of box_level_to_anchor. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
+<a class="anchor" name="7d59815e4dfdfaacd8a72c6f2bda8abd"></a><!-- doxytag: member="SAMRAI::hier::BoxLevelConnectorUtils::setTimerPrefix" ref="7d59815e4dfdfaacd8a72c6f2bda8abd" args="(const std::string &amp;timer_prefix)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::BoxLevelConnectorUtils::setTimerPrefix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>timer_prefix</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Setup names of timers. 
+<p>
+By default, timers are named "hier::BoxLevelConnectorUtils::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelConnectorUtils.html">BoxLevelConnectorUtils</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxLevelConnectorUtils_8h.html">BoxLevelConnectorUtils.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxLevelConnectorUtils_8C.html">BoxLevelConnectorUtils.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

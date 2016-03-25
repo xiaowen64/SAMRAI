@@ -132,7 +132,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#668201282a865fa2afe244a41944f172">registerSingletonSubclassInstance</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html">Statistician</a> *subclass_instance)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#992ca57fa34ecc04038eeba0902b4260">checkStatsForConsistency</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; int &gt; &amp;total_patches)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#a1c0bb85a79e063acc6ab09b8a5bf539">checkStatsForConsistency</a> (std::vector&lt; int &gt; &amp;total_patches)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d3b306111eebce5cd556d75be868082a">checkProcStatExists</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html">Statistic</a> &gt; &amp;stat, const std::string &amp;name) const </td></tr>
 
@@ -433,7 +433,7 @@ Return integer instance identifier for processor statistic with given name. If t
 
 <p>
 Return number of sequence entries for processor statistic with given integer identifier. For convenience, the routine <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#cb2c26a8b67c0a36692feb18206addd7">getProcStatId()</a> is provided to map the statistic string name to the proper integer identifier.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_state &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_data.getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_state &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_data.size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -470,7 +470,7 @@ Return number of sequence entries for processor statistic with given integer ide
 
 <p>
 Return statistic data value for processor statistic with given integer identifier, sequence number, and processor number. For convenience, the routine <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#cb2c26a8b67c0a36692feb18206addd7">getProcStatId()</a> is provided to map the statistic string name to the proper integer identifier. The function <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#4afa8f15ef37ba8a0afae6b422ed5ea5">getGlobalProcStatSequenceLength()</a> provides the sequence length for a given processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_state &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_proc_stat_data[proc_stat_id].getSize()) &amp;&amp; (proc_num &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_state &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_proc_stat_data[proc_stat_id].size())) &amp;&amp; (proc_num &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getSize())) </dd></dl>
 
 </div>
 </div><p>
@@ -501,7 +501,7 @@ Return statistic data value for processor statistic with given integer identifie
 
 <p>
 Return global sum of processor statistic with given integer identifier and sequence number. To identify the correct integer identifier and valid sequence numbers, the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#cb2c26a8b67c0a36692feb18206addd7">getProcStatId()</a> maps the statistic string name to its integer identifier and the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#4afa8f15ef37ba8a0afae6b422ed5ea5">getGlobalProcStatSequenceLength()</a> returns the maximum sequence length for the processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_sum.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_proc_stat_sum[proc_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_sum.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_proc_stat_sum[proc_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -532,7 +532,7 @@ Return global sum of processor statistic with given integer identifier and seque
 
 <p>
 Return global max of processor statistic with given integer identifier and sequence number. To identify the correct integer identifier and valid sequence numbers, the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#cb2c26a8b67c0a36692feb18206addd7">getProcStatId()</a> maps the statistic string name to its integer identifier and the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#4afa8f15ef37ba8a0afae6b422ed5ea5">getGlobalProcStatSequenceLength()</a> returns the maximum sequence length for the processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_max.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_proc_stat_max[proc_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_max.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_proc_stat_max[proc_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -563,7 +563,7 @@ Return global max of processor statistic with given integer identifier and seque
 
 <p>
 Returns rank of processor holding global max for the processor statistic specified by the given integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_imax.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_proc_stat_imax[proc_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_imax.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_proc_stat_imax[proc_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -594,7 +594,7 @@ Returns rank of processor holding global max for the processor statistic specifi
 
 <p>
 Return global min of processor statistic with given integer identifier and sequence number. To identify the correct integer identifier and valid sequence numbers, the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#cb2c26a8b67c0a36692feb18206addd7">getProcStatId()</a> maps the statistic string name to its integer identifier and the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#4afa8f15ef37ba8a0afae6b422ed5ea5">getGlobalProcStatSequenceLength()</a> returns the maximum sequence length for the processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_min.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_proc_stat_min[proc_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_min.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_proc_stat_min[proc_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -625,7 +625,7 @@ Return global min of processor statistic with given integer identifier and seque
 
 <p>
 Returns rank of processor holding global max for the processor statistic specified by the given integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; d_global_proc_stat_imin.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_proc_stat_imin[proc_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; (proc_stat_id &gt;= 0) &amp;&amp; (proc_stat_id &lt; static_cast&lt;int&gt;(d_global_proc_stat_imin.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_proc_stat_imin[proc_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -784,7 +784,7 @@ Return integer instance identifier for patch statistic with given name. If this 
 
 <p>
 Return number of sequence entries for patch statistic with given integer identifier. For convenience, the routine <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> is provided to map the statistic string name to the proper integer identifier.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -815,7 +815,7 @@ Return number of sequence entries for patch statistic with given integer identif
 
 <p>
 Return number of patch entries for patch statistic with given integer identifier, and sequence number. For convenience, the routine <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> is provided to map the statistic string name to the proper integer identifier. The function <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d505f91dae8dcb3d26814e512429c257">getGlobalPatchStatSequenceLength()</a> provides the sequence length for a given patch statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -852,7 +852,7 @@ Return number of patch entries for patch statistic with given integer identifier
 
 <p>
 Return global processor mapping for patch statistic with given integer identifier, sequence number, and patch number. For convenience, the routine <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> is provided to map the statistic string name to the proper integer identifier. The function <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d505f91dae8dcb3d26814e512429c257">getGlobalPatchStatSequenceLength()</a> provides the sequence length for a given patch statistic. The function <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#74c29762f5fa14536e89066ede4e667a">getGlobalPatchStatNumberPatches()</a> gives the number of patches associated with a patch statistic and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_mapping.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_mapping[patch_stat_id].getSize()) &amp;&amp; (patch_num &gt;= 0) &amp;&amp; (patch_num &lt; d_global_patch_stat_mapping[patch_stat_id][seq_num].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_mapping.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_mapping[patch_stat_id].size())) &amp;&amp; (patch_num &gt;= 0) &amp;&amp; (patch_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_mapping[patch_stat_id][seq_num].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -889,7 +889,7 @@ Return global processor mapping for patch statistic with given integer identifie
 
 <p>
 Return statistic data value for patch statistic with given integer identifier, sequence number, and patch number. For convenience, the routine <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> is provided to map the statistic string name to the proper integer identifier. The function <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d505f91dae8dcb3d26814e512429c257">getGlobalPatchStatSequenceLength()</a> provides the sequence length for a given patch statistic. The function <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#74c29762f5fa14536e89066ede4e667a">getGlobalPatchStatNumberPatches()</a> gives the number of patches associated with a patch statistic and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize()) &amp;&amp; (patch_num &gt;= 0) &amp;&amp; (patch_num &lt; d_global_patch_stat_data[patch_stat_id][seq_num].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size())) &amp;&amp; (patch_num &gt;= 0) &amp;&amp; (patch_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id][seq_num].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -920,7 +920,7 @@ Return statistic data value for patch statistic with given integer identifier, s
 
 <p>
 Return global sum of patch statistic with given integer identifier and sequence number. To identify the correct integer identifier and valid sequence numbers, the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> maps the statistic string name to its integer identifier and the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d505f91dae8dcb3d26814e512429c257">getGlobalPatchStatSequenceLength()</a> returns the maximum sequence length for the processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -951,7 +951,7 @@ Return global sum of patch statistic with given integer identifier and sequence 
 
 <p>
 Return global max of patch statistic with given integer identifier and sequence number. To identify the correct integer identifier and valid sequence numbers, the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> maps the statistic string name to its integer identifier and the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d505f91dae8dcb3d26814e512429c257">getGlobalPatchStatSequenceLength()</a> returns the maximum sequence length for the processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -982,7 +982,7 @@ Return global max of patch statistic with given integer identifier and sequence 
 
 <p>
 Returns ID of patch holding global max for the patch statistic specified by the given integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1013,7 +1013,7 @@ Returns ID of patch holding global max for the patch statistic specified by the 
 
 <p>
 Return global min of patch statistic with given integer identifier and sequence number. To identify the correct integer identifier and valid sequence numbers, the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#50e279600ca918a45b81e04a317e6303">getPatchStatId()</a> maps the statistic string name to its integer identifier and the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#d505f91dae8dcb3d26814e512429c257">getGlobalPatchStatSequenceLength()</a> returns the maximum sequence length for the processor statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1044,7 +1044,7 @@ Return global min of patch statistic with given integer identifier and sequence 
 
 <p>
 Returns patch ID of patch holding global min for the patch statistic specified by the given integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1081,7 +1081,7 @@ Returns patch ID of patch holding global min for the patch statistic specified b
 
 <p>
 Returns the sum of patch statistic information for a particular processor. The patch statistic is specified by its integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (processor_id &gt;= 0) &amp;&amp; (processor_id &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (processor_id &gt;= 0) &amp;&amp; (processor_id &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1112,7 +1112,7 @@ Returns the sum of patch statistic information for a particular processor. The p
 
 <p>
 Returns the maximum value of the patch statistic data summed on each processor. That is, patch statistic information is summed on each processor, and this method returns the maximum value, across all processors, of this summed data. The patch statistic is specified by its integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1143,7 +1143,7 @@ Returns the maximum value of the patch statistic data summed on each processor. 
 
 <p>
 Returns the processor ID which holds the maximum value of summed patch statistic information across processors. See the discussion for the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#157c298c7256ce165384a85e97ac68e8">getGlobalPatchStatProcessorSumMax()</a> for more information on the summed patch statistic information on processors.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1174,7 +1174,7 @@ Returns the processor ID which holds the maximum value of summed patch statistic
 
 <p>
 Returns the minimum value of the patch statistic data summed on each processor. That is, patch statistic information is summed on each processor, and this method returns the minimum value, across all processors, of this summed data. The patch statistic is specified by its integer identifyer and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1205,7 +1205,7 @@ Returns the minimum value of the patch statistic data summed on each processor. 
 
 <p>
 Returns the processor ID which holds the minimum value of summed patch statistic information across processors. See the discussion for the method <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#91f894f94335fe09881e857e2f8c5e66">getGlobalPatchStatProcessorSumMin()</a> for more information on the summed patch statistic information on processors.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1242,7 +1242,7 @@ Returns the processor ID which holds the minimum value of summed patch statistic
 
 <p>
 Return number of patches on the specified processor number for patch statistic with given identifier, and sequence number.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize()) &amp;&amp; (proc_id &gt;= 0 &amp;&amp; proc_id &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size())) &amp;&amp; (proc_id &gt;= 0 &amp;&amp; proc_id &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getSize())) </dd></dl>
 
 </div>
 </div><p>
@@ -1273,7 +1273,7 @@ Return number of patches on the specified processor number for patch statistic w
 
 <p>
 Returns the maximum number of patches per processor for the specified patch statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1304,7 +1304,7 @@ Returns the maximum number of patches per processor for the specified patch stat
 
 <p>
 Returns the processor ID holding the maximum number of patches per processor for the specified patch statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1335,7 +1335,7 @@ Returns the processor ID holding the maximum number of patches per processor for
 
 <p>
 Returns the minimum number of patches per processor for the specified patch statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize()) &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size())) &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1366,7 +1366,7 @@ Returns the minimum number of patches per processor for the specified patch stat
 
 <p>
 Returns the processor ID holding the minimum number of patches per processor for the specified patch statistic.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; d_global_patch_stat_proc_data.getSize()) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; d_global_patch_stat_proc_data[patch_stat_id].getSize())) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats &amp;&amp; (patch_stat_id &gt;= 0) &amp;&amp; (patch_stat_id &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data.size())) &amp;&amp; (seq_num &gt;= 0) &amp;&amp; (seq_num &lt; static_cast&lt;int&gt;(d_global_patch_stat_proc_data[patch_stat_id].size()))) </dd></dl>
 
 </div>
 </div><p>
@@ -1673,14 +1673,14 @@ Initialize Singleton instance with instance of subclass. This function is used t
 
 </div>
 </div><p>
-<a class="anchor" name="992ca57fa34ecc04038eeba0902b4260"></a><!-- doxytag: member="SAMRAI::tbox::Statistician::checkStatsForConsistency" ref="992ca57fa34ecc04038eeba0902b4260" args="(Array&lt; int &gt; &amp;total_patches)" -->
+<a class="anchor" name="a1c0bb85a79e063acc6ab09b8a5bf539"></a><!-- doxytag: member="SAMRAI::tbox::Statistician::checkStatsForConsistency" ref="a1c0bb85a79e063acc6ab09b8a5bf539" args="(std::vector&lt; int &gt; &amp;total_patches)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::Statistician::checkStatsForConsistency           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>total_patches</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [protected]</code></td>
@@ -1690,8 +1690,8 @@ Initialize Singleton instance with instance of subclass. This function is used t
 <div class="memdoc">
 
 <p>
-During <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#626679b85129cbc2745ecc2772e5bbdc">finalize()</a> check statistic information on all processors for consistency before generating arrays of data.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>total_patches.getSize() == 0 </dd></dl>
+During <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#626679b85129cbc2745ecc2772e5bbdc">finalize()</a> check statistic information on all processors for consistency before generating vectors of data.<p>
+<dl compact><dt><b>Precondition:</b></dt><dd>total_patches.size() == 0 </dd></dl>
 
 </div>
 </div><p>
@@ -1771,7 +1771,7 @@ Return true if a patch statistic whose name matches the argument string exists i
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Statistician_8h.html">Statistician.h</a><li>source/SAMRAI/tbox/<a class="el" href="Statistician_8C.html">Statistician.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

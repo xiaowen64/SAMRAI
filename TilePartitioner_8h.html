@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>SAMRAI: source/SAMRAI/mesh/TreeLoadBalancerOld.h File Reference</title>
+<title>SAMRAI: source/SAMRAI/mesh/TilePartitioner.h File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -18,23 +18,16 @@
     <li><a href="files.html"><span>File&nbsp;List</span></a></li>
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
-<h1>source/SAMRAI/mesh/TreeLoadBalancerOld.h File Reference</h1><code>#include &quot;SAMRAI/SAMRAI_config.h&quot;</code><br>
-<code>#include &quot;<a class="el" href="BalanceUtilities_8h.html">SAMRAI/mesh/BalanceUtilities.h</a>&quot;</code><br>
+<h1>source/SAMRAI/mesh/TilePartitioner.h File Reference</h1><code>#include &quot;SAMRAI/SAMRAI_config.h&quot;</code><br>
 <code>#include &quot;<a class="el" href="LoadBalanceStrategy_8h.html">SAMRAI/mesh/LoadBalanceStrategy.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="AsyncCommPeer_8h.html">SAMRAI/tbox/AsyncCommPeer.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="AsyncCommStage_8h.html">SAMRAI/tbox/AsyncCommStage.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BalancedDepthFirstTree_8h.html">SAMRAI/tbox/BalancedDepthFirstTree.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="TreeLoadBalancer_8h.html">SAMRAI/mesh/TreeLoadBalancer.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="ChopAndPackLoadBalancer_8h.html">SAMRAI/mesh/ChopAndPackLoadBalancer.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Database_8h.html">SAMRAI/tbox/Database.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="SAMRAI__MPI_8h.html">SAMRAI/tbox/SAMRAI_MPI.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="RankGroup_8h.html">SAMRAI/tbox/RankGroup.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Statistic_8h.html">SAMRAI/tbox/Statistic.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Statistician_8h.html">SAMRAI/tbox/Statistician.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Timer_8h.html">SAMRAI/tbox/Timer.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
 <code>#include &quot;boost/shared_ptr.hpp&quot;</code><br>
 <code>#include &lt;iostream&gt;</code><br>
 <code>#include &lt;vector&gt;</code><br>
-<code>#include &lt;set&gt;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
@@ -43,11 +36,11 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1mesh.html">SAMRAI::mesh</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html">SAMRAI::mesh::TreeLoadBalancerOld</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TilePartitioner.html">SAMRAI::mesh::TilePartitioner</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provides load balancing routines for AMR hierarchy by implemementing the LoadBalancerStrategy.  <a href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Load balance by cutting boxes along designated mesh lines defining a tile box grid. Implemementing the LoadBalancerStrategy. This is UNSUPPORTED, EXPERIMENTAL code not for general use.  <a href="classSAMRAI_1_1mesh_1_1TilePartitioner.html#_details">More...</a><br></td></tr>
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

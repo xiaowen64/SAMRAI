@@ -53,7 +53,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#c900e49b9cb97cd38c9fbd6afe751f60">getErrorCoarsenRatio</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#b8946fcbdcf2b7834f4eabfea3d77031">checkCoarsenRatios</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;ratio_to_coarser)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#f319c46f151789db160679aaa64b9f63">checkCoarsenRatios</a> (const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;ratio_to_coarser)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#58203fcd701433280821f37e7202c4eb">initializeLevelData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;(), const bool allocate_data=true)</td></tr>
 
@@ -73,6 +73,20 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#b68fd34ae965ff9b744734a72327c16d">resetRefineBoxes</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;refine_boxes, const int level_number)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#23a805e82aa89b07b723c7c004587299">turnOnRefineBoxes</a> (double time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#32933bb14164ff1c86f121d9c7fe8ba2">turnOffRefineBoxes</a> (double time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#ed3207a34dc2ca025c2921b8bb8f453c">turnOnGradientDetector</a> (double time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#96e96f040208230afffe267fcdabb280">turnOffGradientDetector</a> (double time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#be78497f2ae98766654c62bf2f183809">turnOnRichardsonExtrapolation</a> (double time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#5d86d0504e8cfb235c82f06225c7f785">turnOffRichardsonExtrapolation</a> (double time)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#b07fc50b4af1085bbf3d1a64e71d9143">processLevelBeforeRemoval</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;())</td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html">StandardTagAndInitialize</a> defines an implementation for level initialization and cell tagging routines needed by the <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> class. This class is derived from the abstract base class <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a>. It invokes problem-specific level initialization routines after AMR patch hierarchy levels change and routines for tagging cells for refinement using one (or more) of the following methods:<p>
@@ -86,32 +100,38 @@ Tagging methods may be activated at specific cycles and/or times. It is possible
 <ul>
 <li><b>at_0</b> input section describing a set of tagging methods to apply to a cycle or time<ul>
 <li><b>cycle</b> = integer cycle at which the set of tagging methods is activated one of cycle or time must be supplied</li><li><b>time</b> = double time at which the set of tagging methods is activated one of cycle or time must be supplied</li><li><b>tag_0</b> first tagging method in this set of tagging methods<ul>
-<li><b>tagging_method</b> = one of RICHARDSON_EXTRAPOLATION, GRADIENT_DETECTOR, REFINE_BOXES, NONE</li><li><b>level_0</b> required if tagging_method is REFINE_BOXES, the static boxes for one of the levels<ul>
-<li><b>level</b> = required integer level boxes are defined for</li><li><b>boxes</b> = required box array specifying refine boxes</li></ul>
+<li><b>tagging_method</b> = one of RICHARDSON_EXTRAPOLATION, GRADIENT_DETECTOR, REFINE_BOXES, NONE</li><li><b>level_m</b> required if tagging_method is REFINE_BOXES, the static boxes for the mth level<ul>
+<li><b>block_m</b> required description of refine boxes in the mth block of the level just specified<ul>
+<li><b>boxes</b> = required box array specifying refine boxes</li></ul>
+</li><li><b></b>. . .</li><li><b>block_n</b> </li></ul>
 </li><li><b></b>. . .</li><li><b>level_n</b> </li></ul>
 </li><li><b></b>. . .</li><li><b>tag_n</b> </li></ul>
 </li><li><b></b>. . .</li><li><b>at_n</b> </li></ul>
 <p>
 If both <b>time</b> or <b>cycle</b> entries are supplied, at any point where both a time and a cycle entry are active, the time entry takes precedence.<p>
+If the problem is single block one may omit the "block_0" database enclosing the boxes and simply include the boxes directly inside the "level_m" database.<p>
 It is possible to use a "shortcut" input syntax for extremely simple tagging criteria. If you only want RICHARDSON_EXTRAPOLATION or GRADIENT_DETECTOR on for the entire simulation then an input of the following form may be used:<p>
 <div class="fragment"><pre class="fragment">    tagging_method = RICHARDSON_EXTRAPOLATION
 </pre></div><p>
-A sample input file entry might look like:<p>
+A sample input file entry for a multi-block problem might look like:<p>
 <div class="fragment"><pre class="fragment">    at_0 {
        cycle = 0
        tag_0 {
           tagging_method = REFINE_BOXES
           level_0 {
-             level = 0
-             boxes = [(5,5),(9,9)],[(12,15),(18,19)]
+             block_1 {
+                boxes = [(5,5),(9,9)],[(12,15),(18,19)]
+             }
           }
           level_1 {
-             level = 1
-             boxes = [(25,30),(29,35)]
+             block_1 {
+                boxes = [(25,30),(29,35)]
+             }
           }
           level_2 {
-             level = 2
-             boxes = [(60,70),(70,80)]
+             block_1 {
+                boxes = [(60,70),(70,80)]
+             }
           }
        }
     }
@@ -121,8 +141,9 @@ A sample input file entry might look like:<p>
        tag_0 {
           tagging_method = REFINE_BOXES
           level_0 {
-             level = 0
-             boxes = [(7,7),(11,11)],[(14,17),(20,21)]
+             block_2 {
+                boxes = [(7,7),(11,11)],[(14,17),(20,21)]
+             }
           }
        }
     }
@@ -131,9 +152,10 @@ A sample input file entry might look like:<p>
        time = 0.05
        tag_0 {
           tagging_method = REFINE_BOXES
-          level_0 {
-             level = 1
-             boxes = [(30,35),(34,40)]
+          level_1 {
+             block_0 {
+                boxes = [(30,35),(34,40)]
+             }
           }
        }
     }
@@ -142,9 +164,10 @@ A sample input file entry might look like:<p>
        time = 0.10
        tag_0 {
           tagging_method = REFINE_BOXES
-          level_0 {
-             level = 1
-             boxes = [(35,40),(39,45)]
+          level_1 {
+             block_1 {
+                boxes = [(35,40),(39,45)]
+             }
           }
        }
     }
@@ -436,14 +459,14 @@ Return coarsen ratio used for applying cell tagging. An error coarsen ratio othe
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#bc0948d08ac24bb58fab8aae9428fa08">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="b8946fcbdcf2b7834f4eabfea3d77031"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::checkCoarsenRatios" ref="b8946fcbdcf2b7834f4eabfea3d77031" args="(const tbox::Array&lt; hier::IntVector &gt; &amp;ratio_to_coarser)" -->
+<a class="anchor" name="f319c46f151789db160679aaa64b9f63"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::checkCoarsenRatios" ref="f319c46f151789db160679aaa64b9f63" args="(const std::vector&lt; hier::IntVector &gt; &amp;ratio_to_coarser)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::checkCoarsenRatios           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>ratio_to_coarser</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -455,7 +478,7 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
 <p>
 Some restrictions may be placed on the coarsen ratio used for cell tagging. Check these here. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#3cd49ff5f8c41fb0992e6eace8b98093">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#200d85a2f21b0e7707b6b5a7c735d267">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="58203fcd701433280821f37e7202c4eb"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::initializeLevelData" ref="58203fcd701433280821f37e7202c4eb" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;(), const bool allocate_data=true)" -->
@@ -857,9 +880,214 @@ Reset the static refine boxes for the specified level number in the hierarchy. T
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#dcd8c213a5eea947f067e87fec50dcb6">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
+<a class="anchor" name="23a805e82aa89b07b723c7c004587299"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnRefineBoxes" ref="23a805e82aa89b07b723c7c004587299" args="(double time)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOnRefineBoxes           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Turn on refine boxes criteria at the specified time programmatically.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>time</em>&nbsp;</td><td>Time to turn refine boxes criteria on. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="32933bb14164ff1c86f121d9c7fe8ba2"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffRefineBoxes" ref="32933bb14164ff1c86f121d9c7fe8ba2" args="(double time)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOffRefineBoxes           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Turn off refine boxes criteria at the specified time programmatically.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>time</em>&nbsp;</td><td>Time to turn refine boxes criteria off. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ed3207a34dc2ca025c2921b8bb8f453c"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnGradientDetector" ref="ed3207a34dc2ca025c2921b8bb8f453c" args="(double time)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOnGradientDetector           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Turn on gradient detector criteria at the specified time programmatically.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>time</em>&nbsp;</td><td>Time to turn gradient detector criteria on.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_tag_strategy </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="96e96f040208230afffe267fcdabb280"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffGradientDetector" ref="96e96f040208230afffe267fcdabb280" args="(double time)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOffGradientDetector           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Turn off gradient detector criteria at the specified time programmatically.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>time</em>&nbsp;</td><td>Time to turn gradient detector criteria off. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="be78497f2ae98766654c62bf2f183809"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnRichardsonExtrapolation" ref="be78497f2ae98766654c62bf2f183809" args="(double time)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOnRichardsonExtrapolation           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Turn on Richardson extrapolation criteria at the specified time programmatically.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>time</em>&nbsp;</td><td>Time to turn Richardson extrapolation on.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>d_tag_strategy </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="5d86d0504e8cfb235c82f06225c7f785"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffRichardsonExtrapolation" ref="5d86d0504e8cfb235c82f06225c7f785" args="(double time)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOffRichardsonExtrapolation           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Turn off Richardson extrapolation criteria at the specified time programmatically.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>time</em>&nbsp;</td><td>Time to turn Richardson extrapolation off. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="b07fc50b4af1085bbf3d1a64e71d9143"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::processLevelBeforeRemoval" ref="b07fc50b4af1085bbf3d1a64e71d9143" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, int level_number, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;())" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::processLevelBeforeRemoval           </td>
+          <td>(</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>hierarchy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>level_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>old_level</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+In some cases user code may wish to process a PatchLevel before it is removed from the hierarchy. For example, data may exist only on a given PatchLevel such as the finest level. If that level were to be removed before this data is moved off of it then the data will be lost. This method is a user defined callback used by <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> when a PatchLevel is to be removed. The callback performs any user actions on the level about to be removed. It is implemented by classes derived from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The PatchHierarchy being modified. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>The number of the PatchLevel in hierarchy about to be removed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>old_level</em>&nbsp;</td><td>The level in hierarchy about to be removed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">mesh::GriddingAlgorithm</a> <p>
+<a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> </dd></dl>
+
+<p>
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#ec09aa831123ca92682bf9fb22818a6a">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitialize_8h.html">StandardTagAndInitialize.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

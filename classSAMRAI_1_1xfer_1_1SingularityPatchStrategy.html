@@ -40,9 +40,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1SingularityPatchStrategy.html#cffb87ca71d68aa234daad2ae2ce4f8d">~SingularityPatchStrategy</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#cffb87ca71d68aa234daad2ae2ce4f8d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1SingularityPatchStrategy.html#5df838529389848546401d801fef8383">fillSingularityBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;encon_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_encon, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;boundary_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;grid_geometry)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1SingularityPatchStrategy.html#5446e840554c08d250b6becb66363011">fillSingularityBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;encon_level, boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; dst_to_encon, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;boundary_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;grid_geometry)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ghost data at a multiblock singularity.  <a href="#5df838529389848546401d801fef8383"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ghost data at a multiblock singularity.  <a href="#5446e840554c08d250b6becb66363011"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class for setting ghost data when refining at a multiblock singularity. 
@@ -95,7 +95,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="5df838529389848546401d801fef8383"></a><!-- doxytag: member="SAMRAI::xfer::SingularityPatchStrategy::fillSingularityBoundaryConditions" ref="5df838529389848546401d801fef8383" args="(hier::Patch &amp;patch, const hier::PatchLevel &amp;encon_level, const hier::Connector &amp;dst_to_encon, const hier::Box &amp;fill_box, const hier::BoundaryBox &amp;boundary_box, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;grid_geometry)=0" -->
+<a class="anchor" name="5446e840554c08d250b6becb66363011"></a><!-- doxytag: member="SAMRAI::xfer::SingularityPatchStrategy::fillSingularityBoundaryConditions" ref="5446e840554c08d250b6becb66363011" args="(hier::Patch &amp;patch, const hier::PatchLevel &amp;encon_level, boost::shared_ptr&lt; const hier::Connector &gt; dst_to_encon, const hier::Box &amp;fill_box, const hier::BoundaryBox &amp;boundary_box, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;grid_geometry)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -114,7 +114,7 @@ Destructor.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt;&nbsp;</td>
           <td class="paramname"> <em>dst_to_encon</em>, </td>
         </tr>
         <tr>
@@ -161,12 +161,12 @@ The patches in encon level are in the coordinate system of the blocks where they
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#8c57e586d90d067571b44daee4af060a">SAMRAI::mesh::MultiblockGriddingTagger</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#ebd4b9445003b5df9bca46dccc0dd46b">SAMRAI::mesh::MultiblockGriddingTagger</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="SingularityPatchStrategy_8h.html">SingularityPatchStrategy.h</a><li>source/SAMRAI/xfer/<a class="el" href="SingularityPatchStrategy_8C.html">SingularityPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -47,9 +47,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#ddac72566ababdfd15eb95987b89fdb8">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Physical boundary fill.  <a href="#ddac72566ababdfd15eb95987b89fdb8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#8c57e586d90d067571b44daee4af060a">fillSingularityBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;encon_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_encon, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;boundary_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;grid_geometry)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#ebd4b9445003b5df9bca46dccc0dd46b">fillSingularityBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &amp;encon_level, boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt; dst_to_encon, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;boundary_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;grid_geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ghost data at a multiblock singularity.  <a href="#8c57e586d90d067571b44daee4af060a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ghost data at a multiblock singularity.  <a href="#ebd4b9445003b5df9bca46dccc0dd46b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#eafa7511570d3a84d7b6edc6532e7525">getRefineOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data interpolation operations. This is needed to determine the correct interpolation data dependencies.  <a href="#eafa7511570d3a84d7b6edc6532e7525"></a><br></td></tr>
@@ -62,7 +62,7 @@
 Class <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html">MultiblockGriddingTagger</a> is a concrete implementation of RefinePatchStrategy that is used for boundary filling of tag data. 
 <p>
 This class is needed for the calls to RefineSchedule in the <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a>.<p>
-This class implements the interface from SingularityPatchStrategy for <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#8c57e586d90d067571b44daee4af060a">fillSingularityBoundaryConditions()</a>, so that boundary conditions for tag data that abuts a singularity can be properly filled. Also implemented are the interfaces for <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>, needed primarily for physical boundary filling.<p>
+This class implements the interface from SingularityPatchStrategy for <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#ebd4b9445003b5df9bca46dccc0dd46b">fillSingularityBoundaryConditions()</a>, so that boundary conditions for tag data that abuts a singularity can be properly filled. Also implemented are the interfaces for <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>, needed primarily for physical boundary filling.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">mesh::GriddingAlgorithm</a> <p>
 <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> <p>
 <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> </dd></dl>
@@ -78,7 +78,7 @@ This class implements the interface from SingularityPatchStrategy for <a class="
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [explicit]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -181,7 +181,7 @@ Implementation of interface defined in <a class="el" href="classSAMRAI_1_1xfer_1
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#e6da055f3a0e95bb34761e76eda0744e">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="8c57e586d90d067571b44daee4af060a"></a><!-- doxytag: member="SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions" ref="8c57e586d90d067571b44daee4af060a" args="(hier::Patch &amp;patch, const hier::PatchLevel &amp;encon_level, const hier::Connector &amp;dst_to_encon, const hier::Box &amp;fill_box, const hier::BoundaryBox &amp;boundary_box, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;grid_geometry)" -->
+<a class="anchor" name="ebd4b9445003b5df9bca46dccc0dd46b"></a><!-- doxytag: member="SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions" ref="ebd4b9445003b5df9bca46dccc0dd46b" args="(hier::Patch &amp;patch, const hier::PatchLevel &amp;encon_level, boost::shared_ptr&lt; const hier::Connector &gt; dst_to_encon, const hier::Box &amp;fill_box, const hier::BoundaryBox &amp;boundary_box, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;grid_geometry)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -200,7 +200,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#e
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &gt;&nbsp;</td>
           <td class="paramname"> <em>dst_to_encon</em>, </td>
         </tr>
         <tr>
@@ -244,10 +244,11 @@ Implementation of interface defined in RefinePatchStrategy. Fills ghost cells of
     <tr><td valign="top"></td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(patch.getDim() == fill_box.getDim()) &amp;&amp; (patch.getDim() == boundary_box.getDim()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(patch.getDim() == fill_box.getDim()) &amp;&amp; (patch.getDim() == boundary_box.getDim()) <p>
+!grid_geometry-&gt;hasEnhancedConnectivity() || dst_to_encon </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1SingularityPatchStrategy.html#5df838529389848546401d801fef8383">SAMRAI::xfer::SingularityPatchStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1SingularityPatchStrategy.html#5446e840554c08d250b6becb66363011">SAMRAI::xfer::SingularityPatchStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="eafa7511570d3a84d7b6edc6532e7525"></a><!-- doxytag: member="SAMRAI::mesh::MultiblockGriddingTagger::getRefineOpStencilWidth" ref="eafa7511570d3a84d7b6edc6532e7525" args="(const tbox::Dimension &amp;dim) const " -->
@@ -381,7 +382,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#5
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="MultiblockGriddingTagger_8h.html">MultiblockGriddingTagger.h</a><li>source/SAMRAI/mesh/<a class="el" href="MultiblockGriddingTagger_8C.html">MultiblockGriddingTagger.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

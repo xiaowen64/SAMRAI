@@ -32,7 +32,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#6ea1196eeab517860bd6f565948f65a9">ProcessorMapping</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">ProcessorMapping</a> &amp;mapping)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#47ef1327fea4b4c06dbfaa746d2c7303">ProcessorMapping</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;mapping)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#65c156ea31019baad65f04265668fc03">ProcessorMapping</a> (const std::vector&lt; int &gt; &amp;mapping)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#3c3f4b155f51aecabe44cf93c75a6edb">~ProcessorMapping</a> ()</td></tr>
 
@@ -44,13 +44,13 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#252884616c15fe8c57db6a38db7f048b">setProcessorAssignment</a> (const int i, const int p)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#e5e99e47f4d122a497d12de8995e1985">getProcessorMapping</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#8eec4fdee40bef794d749d9a77c07a80">getProcessorMapping</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#4cf9eb851a3b27a103840e4472fdd297">setProcessorMapping</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;mapping)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#acbae77ec4a724a6c5cdcf2f6612b947">setProcessorMapping</a> (const std::vector&lt; int &gt; &amp;mapping)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#618031a3a3ac77988b59ba654c2ffd82">getNumberOfLocalIndices</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#242f9ecaa39e09cc107ab27e4f9fa2bc">getLocalIndices</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::vector&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#e70f73af5fa31420ed8c259cf8dccf2a">getLocalIndices</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#588c1b6da70ec3067ec185fee9b2808a">getSizeOfMappingArray</a> () const </td></tr>
 
@@ -120,14 +120,14 @@ Create a processor mapping array with enough space for n elements. All elements 
 Create a new processor mapping and copy the processor assignments from the argument. 
 </div>
 </div><p>
-<a class="anchor" name="47ef1327fea4b4c06dbfaa746d2c7303"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::ProcessorMapping" ref="47ef1327fea4b4c06dbfaa746d2c7303" args="(const tbox::Array&lt; int &gt; &amp;mapping)" -->
+<a class="anchor" name="65c156ea31019baad65f04265668fc03"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::ProcessorMapping" ref="65c156ea31019baad65f04265668fc03" args="(const std::vector&lt; int &gt; &amp;mapping)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::hier::ProcessorMapping::ProcessorMapping           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>mapping</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [explicit]</code></td>
@@ -137,7 +137,7 @@ Create a new processor mapping and copy the processor assignments from the argum
 <div class="memdoc">
 
 <p>
-Create a new processor mapping and get processor assignments from the the <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;int&gt;</a> argument. 
+Create a new processor mapping and get processor assignments from the the std::vector&lt;int&gt; argument. 
 </div>
 </div><p>
 <a class="anchor" name="3c3f4b155f51aecabe44cf93c75a6edb"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::~ProcessorMapping" ref="3c3f4b155f51aecabe44cf93c75a6edb" args="()" -->
@@ -218,7 +218,7 @@ Sets the number of boxes to n. IMPORTANT NOTE: This method should only be used f
 
 <p>
 Return the processor assignment for the specified patch index.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#e5e99e47f4d122a497d12de8995e1985">getProcessorMapping()</a>.getSize()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#8eec4fdee40bef794d749d9a77c07a80">getProcessorMapping()</a>.size()) </dd></dl>
 
 </div>
 </div><p>
@@ -249,17 +249,17 @@ Return the processor assignment for the specified patch index.<p>
 
 <p>
 Set the processor assignment (second argument) for the specified patch index (first argument).<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#e5e99e47f4d122a497d12de8995e1985">getProcessorMapping()</a>.getSize()) <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#8eec4fdee40bef794d749d9a77c07a80">getProcessorMapping()</a>.size()) <p>
 (p &gt;= 0) &amp;&amp; (p &lt; d_nodes) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="e5e99e47f4d122a497d12de8995e1985"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getProcessorMapping" ref="e5e99e47f4d122a497d12de8995e1985" args="() const " -->
+<a class="anchor" name="8eec4fdee40bef794d749d9a77c07a80"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getProcessorMapping" ref="8eec4fdee40bef794d749d9a77c07a80" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;int&gt; SAMRAI::hier::ProcessorMapping::getProcessorMapping           </td>
+          <td class="memname">const std::vector&lt;int&gt;&amp; SAMRAI::hier::ProcessorMapping::getProcessorMapping           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -270,17 +270,17 @@ Set the processor assignment (second argument) for the specified patch index (fi
 <div class="memdoc">
 
 <p>
-Return an <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;int&gt;</a> of the processor mappings. 
+Return an std::vector&lt;int&gt; of the processor mappings. 
 </div>
 </div><p>
-<a class="anchor" name="4cf9eb851a3b27a103840e4472fdd297"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::setProcessorMapping" ref="4cf9eb851a3b27a103840e4472fdd297" args="(const tbox::Array&lt; int &gt; &amp;mapping)" -->
+<a class="anchor" name="acbae77ec4a724a6c5cdcf2f6612b947"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::setProcessorMapping" ref="acbae77ec4a724a6c5cdcf2f6612b947" args="(const std::vector&lt; int &gt; &amp;mapping)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::ProcessorMapping::setProcessorMapping           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>mapping</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -290,7 +290,7 @@ Return an <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;
 <div class="memdoc">
 
 <p>
-Sets the processor mappings from an <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array&lt;int&gt;</a>. Remaps the processors so that patches are not accidentally mapped to non-existent boxes. 
+Sets the processor mappings from an std::vector&lt;int&gt;. Remaps the processors so that patches are not accidentally mapped to non-existent boxes. 
 </div>
 </div><p>
 <a class="anchor" name="618031a3a3ac77988b59ba654c2ffd82"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getNumberOfLocalIndices" ref="618031a3a3ac77988b59ba654c2ffd82" args="() const " -->
@@ -312,12 +312,12 @@ Sets the processor mappings from an <a class="el" href="classSAMRAI_1_1tbox_1_1A
 Return the number of local indices (that is, those indices mapped to the local processor). 
 </div>
 </div><p>
-<a class="anchor" name="242f9ecaa39e09cc107ab27e4f9fa2bc"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getLocalIndices" ref="242f9ecaa39e09cc107ab27e4f9fa2bc" args="() const " -->
+<a class="anchor" name="e70f73af5fa31420ed8c259cf8dccf2a"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getLocalIndices" ref="e70f73af5fa31420ed8c259cf8dccf2a" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;int&gt;&amp; SAMRAI::hier::ProcessorMapping::getLocalIndices           </td>
+          <td class="memname">const std::vector&lt;int&gt;&amp; SAMRAI::hier::ProcessorMapping::getLocalIndices           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -328,7 +328,7 @@ Return the number of local indices (that is, those indices mapped to the local p
 <div class="memdoc">
 
 <p>
-Return an array containing the local indices (that is, those indices mapped to the local processor). 
+Return a vector containing the local indices (that is, those indices mapped to the local processor). 
 </div>
 </div><p>
 <a class="anchor" name="588c1b6da70ec3067ec185fee9b2808a"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::getSizeOfMappingArray" ref="588c1b6da70ec3067ec185fee9b2808a" args="() const " -->
@@ -368,13 +368,13 @@ Return the total number of indices in the mapping array.
 
 <p>
 Check whether the specified index is a local index (that is, mapped to the local processor).<p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#e5e99e47f4d122a497d12de8995e1985">getProcessorMapping()</a>.getSize()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#8eec4fdee40bef794d749d9a77c07a80">getProcessorMapping()</a>.size()) </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="ProcessorMapping_8h.html">ProcessorMapping.h</a><li>source/SAMRAI/hier/<a class="el" href="ProcessorMapping_8C.html">ProcessorMapping.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

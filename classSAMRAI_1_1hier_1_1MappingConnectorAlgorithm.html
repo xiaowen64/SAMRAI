@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1hier.html">hier</a>::<a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html">MappingConnectorAlgorithm</a></div>
-<h1>SAMRAI::hier::MappingConnectorAlgorithm Class Reference</h1><!-- doxytag: class="SAMRAI::hier::MappingConnectorAlgorithm" --><!-- doxytag: inherits="SAMRAI::hier::BaseConnectorAlgorithm" -->Algorithms for using Connectors representing changes to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  
+<h1>SAMRAI::hier::MappingConnectorAlgorithm Class Reference</h1><!-- doxytag: class="SAMRAI::hier::MappingConnectorAlgorithm" --><!-- doxytag: inherits="SAMRAI::hier::BaseConnectorAlgorithm" -->Algorithms for using MappingConnectors representing changes to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/hier/MappingConnectorAlgorithm.h&gt;</code>
@@ -33,19 +33,6 @@
 </map>
 <a href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be86f1b766cfc33a92cd9c1b82b8a1980f">LOCAL</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be74a7794281b15e71205e4ae41eab8028">NOT_LOCAL</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be86848853be1148350403a8ac61efa80f">UNKNOWN</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">MappingType</a> { <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be86f1b766cfc33a92cd9c1b82b8a1980f">LOCAL</a>, 
-<a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be74a7794281b15e71205e4ae41eab8028">NOT_LOCAL</a>, 
-<a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be86848853be1148350403a8ac61efa80f">UNKNOWN</a>
- }</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Types of mappings for use in <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#2d133cad497df8f2937de13389cb09c3">findMappingErrors()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#100df1d0e25e05216561d748d40d5818">assertMappingValidity()</a>.  <a href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b3ff8d6c8ee7809aee4ddae75ebfcfb1">MappingConnectorAlgorithm</a> ()</td></tr>
 
@@ -56,64 +43,30 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#ba5869944d1e7db1eaf2adf70035f16a">getFromInput</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read extra debugging flag from input database.  <a href="#ba5869944d1e7db1eaf2adf70035f16a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b82049f0069edad8228c368be12a6a96">setBarrierBeforeCommunication</a> (bool do_barrier)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to barrier before potential major communication.  <a href="#b82049f0069edad8228c368be12a6a96"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#ad57b4f76b2d56c1d5b753e2392b4502">setSanityCheckMethodPreconditions</a> (bool do_check)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to run expensive sanity checks on input parameters when at the beginning of certain methods.  <a href="#ad57b4f76b2d56c1d5b753e2392b4502"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#77fffdbd32e453eb930e1ac9452d7899">setSanityCheckMethodPostconditions</a> (bool do_check)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to run expensive sanity checks on outputs before returning from certain methods.  <a href="#77fffdbd32e453eb930e1ac9452d7899"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#46b6e98ba9c84e7cadeb87fd99587f84">modify</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_mapped, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;mapped_to_anchor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;old_to_new, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;new_to_old, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_new=0, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_old=0) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#f136045187cb0ae70ad13d6853545a7f">modify</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_mapped, const <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &amp;old_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_new=0, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_old=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Most general version for modifying Connectors using mapping Connectors. Modification is the changing of existing Connectors when boxes in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> changes according to specified mapping connectors.  <a href="#46b6e98ba9c84e7cadeb87fd99587f84"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#7ab2c4961df1749a9893bf0fe9b65ff9">modify</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_mapped, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;mapped_to_anchor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;old_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_new=0, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_old=0) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Version of modify requiring only the forward map and allows only local mappings.  <a href="#7ab2c4961df1749a9893bf0fe9b65ff9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#0d96264b9cb1bbcff2145c18ae7025cd">modify</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;anchor_to_mapped, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;old_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_new=0, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *mutable_old=0) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Version of modify requiring only the forward map and does not set the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> from the mapped <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> back to the anchor <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#0d96264b9cb1bbcff2145c18ae7025cd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#2d133cad497df8f2937de13389cb09c3">findMappingErrors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">MappingType</a> map_type=UNKNOWN) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check if the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> has a valid mapping.  <a href="#2d133cad497df8f2937de13389cb09c3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#100df1d0e25e05216561d748d40d5818">assertMappingValidity</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">MappingType</a> map_type=UNKNOWN) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Run findMappingErrors and abort if any errors are found.  <a href="#100df1d0e25e05216561d748d40d5818"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Most general version for modifying Connectors using MappingConnectors. Modification is the changing of existing Connectors when boxes in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> changes according to specified MappingConnectors.  <a href="#f136045187cb0ae70ad13d6853545a7f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#7ebf08b6b559aecb837b7b4bf646cabe">getObjectName</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#7ebf08b6b559aecb837b7b4bf646cabe"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#ce4e137f748db628e280064c1d60e06e">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setup names of timers.  <a href="#ce4e137f748db628e280064c1d60e06e"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Algorithms for using Connectors representing changes to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
+Algorithms for using MappingConnectors representing changes to a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
 <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html">MappingConnectorAlgorithm</a> objects check and apply mappings. 
 <p>
-<hr><h2>Member Enumeration Documentation</h2>
-<a class="anchor" name="b0a37a5a550627eaaad19616d662c5be"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::MappingType" ref="b0a37a5a550627eaaad19616d662c5be" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">SAMRAI::hier::MappingConnectorAlgorithm::MappingType</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Types of mappings for use in <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#2d133cad497df8f2937de13389cb09c3">findMappingErrors()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#100df1d0e25e05216561d748d40d5818">assertMappingValidity()</a>. 
-<p>
-<dl compact><dt><b>Enumerator: </b></dt><dd>
-<table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="b0a37a5a550627eaaad19616d662c5be86f1b766cfc33a92cd9c1b82b8a1980f"></a><!-- doxytag: member="LOCAL" ref="b0a37a5a550627eaaad19616d662c5be86f1b766cfc33a92cd9c1b82b8a1980f" args="" -->LOCAL</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="b0a37a5a550627eaaad19616d662c5be74a7794281b15e71205e4ae41eab8028"></a><!-- doxytag: member="NOT_LOCAL" ref="b0a37a5a550627eaaad19616d662c5be74a7794281b15e71205e4ae41eab8028" args="" -->NOT_LOCAL</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="b0a37a5a550627eaaad19616d662c5be86848853be1148350403a8ac61efa80f"></a><!-- doxytag: member="UNKNOWN" ref="b0a37a5a550627eaaad19616d662c5be86848853be1148350403a8ac61efa80f" args="" -->UNKNOWN</em>&nbsp;</td><td>
-</td></tr>
-</table>
-</dl>
-
-</div>
-</div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="b3ff8d6c8ee7809aee4ddae75ebfcfb1"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::MappingConnectorAlgorithm" ref="b3ff8d6c8ee7809aee4ddae75ebfcfb1" args="()" -->
 <div class="memitem">
@@ -179,6 +132,34 @@ Read extra debugging flag from input database.
 
 </div>
 </div><p>
+<a class="anchor" name="b82049f0069edad8228c368be12a6a96"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::setBarrierBeforeCommunication" ref="b82049f0069edad8228c368be12a6a96" args="(bool do_barrier)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::MappingConnectorAlgorithm::setBarrierBeforeCommunication           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>do_barrier</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set whether to barrier before potential major communication. 
+<p>
+This developer feature makes sure all processes start major operations at the same time so that timers do not include the time waiting for slower processes to get to the starting point.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>do_barrier</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="ad57b4f76b2d56c1d5b753e2392b4502"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::setSanityCheckMethodPreconditions" ref="ad57b4f76b2d56c1d5b753e2392b4502" args="(bool do_check)" -->
 <div class="memitem">
 <div class="memproto">
@@ -189,7 +170,7 @@ Read extra debugging flag from input database.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>do_check</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -217,7 +198,7 @@ The checks are expensive and meant mainly for debugging.<p>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>do_check</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -235,7 +216,7 @@ The checks are expensive and meant mainly for debugging.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="46b6e98ba9c84e7cadeb87fd99587f84"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::modify" ref="46b6e98ba9c84e7cadeb87fd99587f84" args="(Connector &amp;anchor_to_mapped, Connector &amp;mapped_to_anchor, const Connector &amp;old_to_new, const Connector &amp;new_to_old, BoxLevel *mutable_new=0, BoxLevel *mutable_old=0) const " -->
+<a class="anchor" name="f136045187cb0ae70ad13d6853545a7f"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::modify" ref="f136045187cb0ae70ad13d6853545a7f" args="(Connector &amp;anchor_to_mapped, const MappingConnector &amp;old_to_new, BoxLevel *mutable_new=0, BoxLevel *mutable_old=0) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -248,20 +229,8 @@ The checks are expensive and meant mainly for debugging.<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_to_anchor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">MappingConnector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>old_to_new</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>new_to_old</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -285,9 +254,9 @@ The checks are expensive and meant mainly for debugging.<p>
 <div class="memdoc">
 
 <p>
-Most general version for modifying Connectors using mapping Connectors. Modification is the changing of existing Connectors when boxes in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> changes according to specified mapping connectors. 
+Most general version for modifying Connectors using MappingConnectors. Modification is the changing of existing Connectors when boxes in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> changes according to specified MappingConnectors. 
 <p>
-The change is represented by a the mapper <code>old_to_new</code> and its transpose <code>new_to_old</code>. The Connectors to be modified are <code>anchor_to_mapped</code> and <code>mapped_to_anchor</code>, which on input, go between a anchor (not mapped) <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. On output, these Connectors will go from the anchor box_level to the new box_level.<p>
+The change is represented by a the mapper <code>old_to_new</code> and its transpose, new_to_old. The Connectors to be modified are <code>anchor_to_mapped</code> and its transpose mapped_to_anchor, which on input, go between an anchor (not mapped) <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. On output, these Connectors will go from the anchor box_level to the new box_level.<p>
 <div class="fragment"><pre class="fragment"> Input:
 
                                     (anchor)
@@ -311,7 +280,7 @@ The change is represented by a the mapper <code>old_to_new</code> and its transp
                                               (<span class="keyword">new</span>)
 </pre></div><p>
 The BoxLevels before and after the mapping are represented by the base and head of the mapping. No <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is modified, other than the "mutable" BoxLevels in the argument.<p>
-An important constraint in the old_to_new Connectors is that this method cannot handle multiple maps at once. For example, it cannot map box J to box K and at the same time map box I to box J. <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> J in the old box_level and box J on the new box_level are considered entirely different boxes.<p>
+An important constraint in the old_to_new MappingConnectors is that this method cannot handle multiple maps at once. For example, it cannot map box J to box K and at the same time map box I to box J. <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> J in the old box_level and box J on the new box_level are considered entirely different boxes.<p>
 After modifying, the output Connectors that had referenced old BoxLevels will be reset to reference the new <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. This is the end of the modify operation.<p>
 The following "in-place" modification is provided for users' convenience. Often times, the "new" level is a temporary object and users often reset output equivalent to:<p>
 <ul>
@@ -328,268 +297,17 @@ If mutable_new points to the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxL
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>anchor_to_mapped</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> to be modified. On input, this points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mapped_to_anchor</em>&nbsp;</td><td>Reverse (transpose) of anchor_to_mapped. points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>old_to_new</em>&nbsp;</td><td>Mapping from the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to the new <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. The width of old--&gt;new should indicate the maximum amount of box growth caused by the change. A value of zero means no growth. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>new_to_old</em>&nbsp;</td><td>Reverse (transpose) of old_to_new. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_new</em>&nbsp;</td><td>See comments. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_old</em>&nbsp;</td><td>See comments.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(&amp;old_to_new.getBase() == &amp;new_to_old.getHead()) &amp;&amp; (&amp;old_to_new.getBase() == &amp;anchor_to_mapped.getHead()) &amp;&amp; (&amp;old_to_new.getBase() == &amp;mapped_to_anchor.getBase()) <p>
-&amp;anchor_to_mapped.getBase() == &amp;mapped_to_anchor.getHead() <p>
-&amp;old_to_new.getHead() == &amp;new_to_old.getBase() <p>
-anchor_to_mapped.isTransposeOf(mapped_to_anchor) <p>
-new_to_old.isTransposeOf(old_to_new) <p>
-anchor_to_mapped.getParallelState() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb450fcdd33dde8ec1597aa318dcb384578">BoxLevel::DISTRIBUTED</a> </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="7ab2c4961df1749a9893bf0fe9b65ff9"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::modify" ref="7ab2c4961df1749a9893bf0fe9b65ff9" args="(Connector &amp;anchor_to_mapped, Connector &amp;mapped_to_anchor, const Connector &amp;old_to_new, BoxLevel *mutable_new=0, BoxLevel *mutable_old=0) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::MappingConnectorAlgorithm::modify           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>anchor_to_mapped</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mapped_to_anchor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>old_to_new</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *&nbsp;</td>
-          <td class="paramname"> <em>mutable_new</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *&nbsp;</td>
-          <td class="paramname"> <em>mutable_old</em> = <code>0</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Version of modify requiring only the forward map and allows only local mappings. 
-<p>
-This version does not require the reverse mapping, but the mapping must be totally local, e.g. old_to_new must contain no remote neighbor.<p>
-<div class="fragment"><pre class="fragment"> Input:
-
-                                    (anchor)
-                                   ^ /
-                                  / /
-              mapped_to_anchor-&gt; / /
-                                / / &lt;--anchor_to_mapped
-                               / v
- mapped box_level:           (old) ---------&gt; (<span class="keyword">new</span>)
-
-
- Output:
-
-                                    (anchor)
-                                          \ ^
-                                           \ \
-                                            \ \ &lt;-mapped_to_anchor
-                        anchor_to_mapped --&gt; \ \
-                                              v \
-                                              (<span class="keyword">new</span>)
-</pre></div><p>
-The modify methods support these optional steps as follows: If mutable versions of some <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> are given, the output Connectors can be reset to reference these versions instead.<p>
-If mutable_new points to the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and mutable_old points to the new, then do an in-place switch as follows: <ul>
-<li>Swap the mutable_old and mutable_new BoxLevels. </li>
-<li>Use mutable_old (which actually the new <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> after the swap) as the mapped <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> in the output Connectors. Otherwise: </li>
-<li>If mutable_new is non-NULL, set it equal to new and use it as the mapped <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> in the output Connectors. </li>
-<li>If mutable_old is non-NULL, set it equal to the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.</li>
-</ul>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>anchor_to_mapped</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> to be modified. On input, this points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mapped_to_anchor</em>&nbsp;</td><td>Reverse (transpose) of anchor_to_mapped. points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>old_to_new</em>&nbsp;</td><td>Mapping from the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to the new <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. The width of old--&gt;new should indicate the maximum amount of box growth caused by the change. A value of zero means no growth. </td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_new</em>&nbsp;</td><td>See comments. </td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_old</em>&nbsp;</td><td>See comments.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>(&amp;old_to_new.getBase() == &amp;old_to_new.getBase()) &amp;&amp; (&amp;old_to_new.getBase() == &amp;anchor_to_mapped.getHead()) <p>
+<dl compact><dt><b>Precondition:</b></dt><dd>(!old_to_new.hasTranspose() || (&amp;old_to_new.getBase() == &amp;old_to_new.getTranspose().getHead())) &amp;&amp; (&amp;old_to_new.getBase() == &amp;anchor_to_mapped.getHead()) &amp;&amp; (&amp;old_to_new.getBase() == &amp;mapped_to_anchor.getBase()) <p>
 &amp;anchor_to_mapped.getBase() == &amp;mapped_to_anchor.getHead() <p>
+(!old_to_new.hasTranspose() || (&amp;old_to_new.getHead() == &amp;old_to_new.getTranspose().getBase())) <p>
 anchor_to_mapped.isTransposeOf(mapped_to_anchor) <p>
+(!old_to_new.hasTranspose() || (old_to_new.getTranspose().isTransposeOf(old_to_new))) <p>
 anchor_to_mapped.getParallelState() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb450fcdd33dde8ec1597aa318dcb384578">BoxLevel::DISTRIBUTED</a> </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="0d96264b9cb1bbcff2145c18ae7025cd"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::modify" ref="0d96264b9cb1bbcff2145c18ae7025cd" args="(Connector &amp;anchor_to_mapped, const Connector &amp;old_to_new, BoxLevel *mutable_new=0, BoxLevel *mutable_old=0) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::MappingConnectorAlgorithm::modify           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>anchor_to_mapped</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>old_to_new</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *&nbsp;</td>
-          <td class="paramname"> <em>mutable_new</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> *&nbsp;</td>
-          <td class="paramname"> <em>mutable_old</em> = <code>0</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Version of modify requiring only the forward map and does not set the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> from the mapped <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> back to the anchor <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
-<p>
-This version does not require the reverse mapping, but the forward mapping must be totally local, e.g. old_to_new must contain no remote neighbor.<p>
-This version does not update the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> from the mapped box_level back to the anchor box_level. (This is implicit in the fact that mapped_to_anchor is absent from the interface.)<p>
-<div class="fragment"><pre class="fragment"> Input:
-
-                                    (anchor)
-                                     /
-                                    /
-                                   /
-                                  / &lt;--anchor_to_mapped
-                                 v
- mapped box_level:           (old) ---------&gt; (<span class="keyword">new</span>)
-
-
- Output:
-
-                                    (anchor)
-                                          \
-                                           \
-                                            \
-                        anchor_to_mapped --&gt; \
-                                              v
-                                              (<span class="keyword">new</span>)
-</pre></div><p>
-If mutable_new points to the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and mutable_old points to the new, then do an in-place switch as follows: <ul>
-<li>Swap the mutable_old and mutable_new BoxLevels. </li>
-<li>Use mutable_old (which actually the new <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> after the swap) as the mapped <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> in the output Connectors. Otherwise: </li>
-<li>If mutable_new is non-NULL, set it equal to new and use it as the mapped <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> in the output Connectors. </li>
-<li>If mutable_old is non-NULL, set it equal to the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.</li>
-</ul>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>anchor_to_mapped</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> to be modified. On input, this points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>old_to_new</em>&nbsp;</td><td>Reverse (transpose) of anchor_to_mapped. points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_new</em>&nbsp;</td><td>See comments. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_old</em>&nbsp;</td><td>See comments.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Precondition:</b></dt><dd>&amp;anchor_to_mapped.getHead() == &amp;old_to_new.getBase() <p>
-anchor_to_mapped.getParallelState() == <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb450fcdd33dde8ec1597aa318dcb384578">BoxLevel::DISTRIBUTED</a> </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="2d133cad497df8f2937de13389cb09c3"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::findMappingErrors" ref="2d133cad497df8f2937de13389cb09c3" args="(const Connector &amp;connector, MappingType map_type=UNKNOWN) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t SAMRAI::hier::MappingConnectorAlgorithm::findMappingErrors           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">MappingType</a>&nbsp;</td>
-          <td class="paramname"> <em>map_type</em> = <code>UNKNOWN</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Check if the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> has a valid mapping. 
-<p>
-This function can be called prior to calling <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#46b6e98ba9c84e7cadeb87fd99587f84">modify()</a>. It is intended to check the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> that is the <code>old_to_new</code> argument in <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#46b6e98ba9c84e7cadeb87fd99587f84">modify()</a> to determine if it has a valid mapping. In other words, it checks to see if the mapping can be used in <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#46b6e98ba9c84e7cadeb87fd99587f84">modify()</a> without logic errors. It does no other checks.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>map_type</em>&nbsp;</td><td>LOCAL means assume the mapping is local. NOT_LOCAL means the mapping is not local. UNKNOWN means find out whether the map is local or not (communication required) and act accordingly.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>number of errors found. </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="100df1d0e25e05216561d748d40d5818"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::assertMappingValidity" ref="100df1d0e25e05216561d748d40d5818" args="(const Connector &amp;connector, MappingType map_type=UNKNOWN) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::MappingConnectorAlgorithm::assertMappingValidity           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>connector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html#b0a37a5a550627eaaad19616d662c5be">MappingType</a>&nbsp;</td>
-          <td class="paramname"> <em>map_type</em> = <code>UNKNOWN</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Run findMappingErrors and abort if any errors are found. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>map_type</em>&nbsp;</td><td>LOCAL means assume the mapping is local. NOT_LOCAL means the mapping is not local. UNKNOWN means find out whether the map is local or not (communication required) and act accordingly. </td></tr>
-  </table>
-</dl>
 
 </div>
 </div><p>
@@ -614,9 +332,31 @@ Get the name of this object.
 
 </div>
 </div><p>
+<a class="anchor" name="ce4e137f748db628e280064c1d60e06e"></a><!-- doxytag: member="SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix" ref="ce4e137f748db628e280064c1d60e06e" args="(const std::string &amp;timer_prefix)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>timer_prefix</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Setup names of timers. 
+<p>
+By default, timers are named "hier::MappingConnectorAlgorithm::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html">MappingConnectorAlgorithm</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="MappingConnectorAlgorithm_8h.html">MappingConnectorAlgorithm.h</a><li>source/SAMRAI/hier/<a class="el" href="MappingConnectorAlgorithm_8C.html">MappingConnectorAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

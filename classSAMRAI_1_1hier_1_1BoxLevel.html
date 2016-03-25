@@ -39,9 +39,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Names of parallel states.  <a href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb4">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#d9166134c943fb4651c4f8a9f0120ce6">BoxLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#35b7fce14d4b31de23aa5d5bdf1a472e">BoxLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;restart_db, const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geom)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct uninitialized object.  <a href="#d9166134c943fb4651c4f8a9f0120ce6"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> which will be initialized from the supplied restart database.  <a href="#35b7fce14d4b31de23aa5d5bdf1a472e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b8771dd90200a99a9e60cb6b356fcecf">BoxLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;rhs)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#b8771dd90200a99a9e60cb6b356fcecf"></a><br></td></tr>
@@ -63,12 +63,36 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#f26bd3d728ba0f8094ee6b9acb593040">invalidateGlobalData</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets d_global_data_up_to_date to false. Must be called after calls to addBox or eraseBox.  <a href="#f26bd3d728ba0f8094ee6b9acb593040"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b05bf78d870a47e2b10b4e699d905092">getPersistentOverlapConnectors</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ce8fadb18fcfcdd48f1b373a1b979a8">clearPersistentOverlapConnectors</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the collection of overlap Connectors dedicated to provide overlap neighbors for this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#b05bf78d870a47e2b10b4e699d905092"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deallocate persistent overlap Connectors, if there are any.  <a href="#8ce8fadb18fcfcdd48f1b373a1b979a8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#d4ef30985671aaeac06be82bf7a238cb">findConnector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_connector_width, <a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a> not_found_action, bool exact_width_only=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with the given head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action.  <a href="#d4ef30985671aaeac06be82bf7a238cb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#9ef122b8e4b1c02fa4850a6a81976110">findConnectorWithTranspose</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_connector_width, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;transpose_min_connector_width, <a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a> not_found_action, bool exact_width_only=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose with the given head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action.  <a href="#9ef122b8e4b1c02fa4850a6a81976110"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02aa235c3d2e5b9700a81e6853294fb7">createConnector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>, computing relationships by globalizing data.  <a href="#02aa235c3d2e5b9700a81e6853294fb7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#85bf92f1e262d7e182442aa09316640d">createConnectorWithTranspose</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;connector_width, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;transpose_connector_width) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose, computing relationships by globalizing data.  <a href="#85bf92f1e262d7e182442aa09316640d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#6caf4ac1f3c3b137a4bc890e3680c710">cacheConnector</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;connector) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Cache the supplied overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> and its transpose if it exists.  <a href="#6caf4ac1f3c3b137a4bc890e3680c710"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#5843797f8b24c016bb92eb4b963f65ac">hasConnector</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;head, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_connector_width, bool exact_width_only=false) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns whether the object has overlap Connectors with the given head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width.  <a href="#5843797f8b24c016bb92eb4b963f65ac"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevelHandle.html">BoxLevelHandle</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#d28ae9914fffcd6712061af51e0fbfef">getBoxLevelHandle</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the handle with which Connectors reference the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> instead of referencing the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> itself. Not for general use.  <a href="#d28ae9914fffcd6712061af51e0fbfef"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#dd9723ad7a88b27b00f7a691d6eb2e0c">lock</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Effectively makes a non-const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> const. Prevents any non-const method from executing.  <a href="#dd9723ad7a88b27b00f7a691d6eb2e0c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8f53858f6a358760477cbf8f42615b1c">locked</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is locked.  <a href="#8f53858f6a358760477cbf8f42615b1c"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Initialization and clearing methods</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#9b206530a59ce546b1bdbea4aa1dd5fc">initialize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio, const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geom, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi=tbox::SAMRAI_MPI::getSAMRAIWorld(), const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#02c34699888ab34b06f59a210247bcb4">ParallelState</a> parallel_state=DISTRIBUTED)</td></tr>
 
@@ -241,16 +265,13 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#8ec0ee23695893a76962ad8a8922f2a1">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to a restart database.  <a href="#8ec0ee23695893a76962ad8a8922f2a1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#c524245f63716ed2e6d0b89d8e22b215">getFromRestart</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;restart_db, const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geom)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> from a restart database.  <a href="#c524245f63716ed2e6d0b89d8e22b215"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Methods for outputs, error checking and debugging.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#7cb7c4570aa7f060a92d3fbbea965e1c">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border, int detail_depth=0) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#00c11404f06b3a72323cb3fc5d650309">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border, int detail_depth=2) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> info from this level.  <a href="#7cb7c4570aa7f060a92d3fbbea965e1c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel_1_1Outputter.html">Outputter</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#d834db8d9f5d1f1553ed9f87cd0732c0">format</a> (const std::string &amp;border=std::string(), int detail_depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> info from this level.  <a href="#00c11404f06b3a72323cb3fc5d650309"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel_1_1Outputter.html">Outputter</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#ef7ffb368ef636b78732ba7b64c51277">format</a> (const std::string &amp;border=std::string(), int detail_depth=2) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a object that can format the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for inserting into output streams.  <a href="#d834db8d9f5d1f1553ed9f87cd0732c0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a object that can format the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for inserting into output streams.  <a href="#ef7ffb368ef636b78732ba7b64c51277"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel_1_1Outputter.html">Outputter</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#0358ed57086330055c464956136feac8">formatStatistics</a> (const std::string &amp;border=std::string()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a object that can format the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for inserting its global statistics into output streams.  <a href="#0358ed57086330055c464956136feac8"></a><br></td></tr>
@@ -264,6 +285,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#3954367bd91545eb3936a247974550b0">finalizeCallback</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free static timers.  <a href="#3954367bd91545eb3936a247974550b0"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#e17fc1942f6de54c13321a9481366cd1">PersistentOverlapConnectors</a></td></tr>
+
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel_1_1Outputter.html">Outputter</a></td></tr>
 
@@ -330,7 +354,7 @@ Names of parallel states.
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="d9166134c943fb4651c4f8a9f0120ce6"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::BoxLevel" ref="d9166134c943fb4651c4f8a9f0120ce6" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="35b7fce14d4b31de23aa5d5bdf1a472e"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::BoxLevel" ref="35b7fce14d4b31de23aa5d5bdf1a472e" args="(const tbox::Dimension &amp;dim, tbox::Database &amp;restart_db, const boost::shared_ptr&lt; const BaseGridGeometry &gt; &amp;grid_geom)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -338,23 +362,37 @@ Names of parallel states.
           <td class="memname">SAMRAI::hier::BoxLevel::BoxLevel           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [explicit]</code></td>
+          <td class="paramname"> <em>dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>restart_db</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>grid_geom</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Construct uninitialized object. 
+Construct a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> which will be initialized from the supplied restart database. 
 <p>
-Uninitialized objects can be initialized by calling <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#9b206530a59ce546b1bdbea4aa1dd5fc">initialize()</a> or <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b1fd7baf5161fcdbbb830480f3f77293">swapInitialize()</a>.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#9b206530a59ce546b1bdbea4aa1dd5fc">initialize()</a> <p>
-<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b1fd7baf5161fcdbbb830480f3f77293">swapInitialize()</a></dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geom</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -858,7 +896,7 @@ Assignment operator duplicates all internal data, including parallel mode.
 <p>
 Assignment is a modifying operation, causing the <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> to be cleared.<p>
 Persistent Connectors are not duplicated. This decision was based on expected usage, which is that copies are either for short term usage or meant to be changed in some way (thus invalidating current Connectors anyway).<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b05bf78d870a47e2b10b4e699d905092">getPersistentOverlapConnectors()</a></dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd>getPersistentOverlapConnectors()</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rhs</em>&nbsp;</td><td></td></tr>
@@ -895,7 +933,7 @@ Persistent Connectors are not duplicated. This decision was based on expected us
 <p>
 Swap the contents of two <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> objects. 
 <p>
-Swapping is a modifying operation, so the PersistentOverlapConnectorss of the operands are cleared.<p>
+Swapping is a modifying operation, so the <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> of the operands are cleared.<p>
 Persistent Connectors are not swapped. This decision was based on expected usage, which is that copies are either for short term usage or meant to be changed in some way (thus invalidating current Connectors anyway).<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -1748,7 +1786,7 @@ Insert given periodic image of an existing <a class="el" href="classSAMRAI_1_1hi
 Unlike adding a regular <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, it is OK to add a periodic image <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that already exists. However, that is a no-op.<p>
 <dl compact><dt><b>CAUTION</b></dt><dd>To be efficient, no checks are made to make sure the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> representation is consistent across all processors. Setting inconsistent data leads to potentially elusive bugs.</dd></dl>
 <dl compact><dt><b>Errors</b></dt><dd>It is an error to add a periodic image of a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that does not exist.</dd></dl>
-FIXME: Should we prevent this operation if persistent overlap Connectors are attached to this object?<p>
+TODO: Should we prevent this operation if persistent overlap Connectors are attached to this object?<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>existing_box</em>&nbsp;</td><td>An existing <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> for reference. This <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> must be in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> added is an image of the reference <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> but shifted to another position. </td></tr>
@@ -1780,7 +1818,7 @@ Erase the existing <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> 
 <p>
 The given iterator <em>MUST</em> be a valid iterator pointing to a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> currently in this object. After erasing, the iterator is advanced to the next valid <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> (or the end of its <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>).<p>
 Erasing a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> also erases all of its periodic images.<p>
-FIXME: Should we prevent this operation if the object has persistent overlap Connectors?<p>
+TODO: Should we prevent this operation if the object has persistent overlap Connectors?<p>
 <dl compact><dt><b>Note:</b></dt><dd>It is imperative that applications which call eraseBox also call invalidateGlobalData. It is possible for some processes to erase Boxes and for others to not. Since the eraseBox method sets d_global_data_up_to_date to false, some processes in this situation will have this flag set to true and others will not. This will result in a hang in cacheGlobalReducedData when global data is accessed. We could have performed and allReduce of this flag to the top of cacheGlobalReducedData but this would have erased a costly call for every access of global data.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -1813,7 +1851,7 @@ Erase the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> matching 
 <p>
 The given <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> <em>MUST</em> match a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> currently in this object. Matching means that the BoxId's match (disregarding the spatial coordinates).<p>
 Erasing a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> also erases all of its periodic images.<p>
-FIXME: Should we prevent this operation if the object has persistent overlap Connectors?<p>
+TODO: Should we prevent this operation if the object has persistent overlap Connectors?<p>
 <dl compact><dt><b>Note:</b></dt><dd>It is imperative that applications which call eraseBox also call invalidateGlobalData. It is possible for some processes to erase Boxes and for others to not. Since the eraseBox method sets d_global_data_up_to_date to false, some processes in this situation will have this flag set to true and others will not. This will result in a hang in cacheGlobalReducedData when global data is accessed. We could have performed and allReduce of this flag to the top of cacheGlobalReducedData but this would have erased a costly call for every access of global data.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -2139,45 +2177,6 @@ Write only local parts regardless of parallel state (to avoid writing tons of re
 
 </div>
 </div><p>
-<a class="anchor" name="c524245f63716ed2e6d0b89d8e22b215"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getFromRestart" ref="c524245f63716ed2e6d0b89d8e22b215" args="(tbox::Database &amp;restart_db, const boost::shared_ptr&lt; const BaseGridGeometry &gt; &amp;grid_geom)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::hier::BoxLevel::getFromRestart           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>restart_db</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const boost::shared_ptr&lt; const <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>grid_geom</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Read the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> from a restart database. 
-<p>
-Put the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> in the DISTRIBUTED parallel state and read only local parts.<p>
-If the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is initialized, use its SAMRAI_MPI object and require its refinement ratio to match that in the database. If the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is uninitialized, it will be initialized to use <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#b77c546bbc19ae9bae5c6480fba8c53a">tbox::SAMRAI_MPI::getSAMRAIWorld()</a> for the SAMRAI_MPI object. Note that these behaviors have not been extensively discussed by the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers and may be subject to change.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>restart_db</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geom</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
 <a class="anchor" name="f26bd3d728ba0f8094ee6b9acb593040"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::invalidateGlobalData" ref="f26bd3d728ba0f8094ee6b9acb593040" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -2201,26 +2200,310 @@ Sets d_global_data_up_to_date to false. Must be called after calls to addBox or 
 
 </div>
 </div><p>
-<a class="anchor" name="b05bf78d870a47e2b10b4e699d905092"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::getPersistentOverlapConnectors" ref="b05bf78d870a47e2b10b4e699d905092" args="() const " -->
+<a class="anchor" name="8ce8fadb18fcfcdd48f1b373a1b979a8"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::clearPersistentOverlapConnectors" ref="8ce8fadb18fcfcdd48f1b373a1b979a8" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> &amp; SAMRAI::hier::BoxLevel::getPersistentOverlapConnectors           </td>
+          <td class="memname">void SAMRAI::hier::BoxLevel::clearPersistentOverlapConnectors           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Get the collection of overlap Connectors dedicated to provide overlap neighbors for this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. 
+Deallocate persistent overlap Connectors, if there are any. 
 <p>
-The <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> provides overlap neighbors for this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Its role is to create and manage persistent overlap Connectors based at this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> and persisting until the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> changes (so they should not be set up until the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is in its final state). This is the mechanism by which code that can efficiently generate the overlap Connectors (usually the code that generated the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>) provides overlap data to code using the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. The <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> are guaranteed to be correct, so any changes to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> will cause current Connectors to be deallocated.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a> for instructions on creating the Connectors. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="d4ef30985671aaeac06be82bf7a238cb"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::findConnector" ref="d4ef30985671aaeac06be82bf7a238cb" args="(const BoxLevel &amp;head, const IntVector &amp;min_connector_width, ConnectorNotFoundAction not_found_action, bool exact_width_only=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::BoxLevel::findConnector           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a>&nbsp;</td>
+          <td class="paramname"> <em>not_found_action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>exact_width_only</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with the given head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action. 
+<p>
+If multiple Connectors fit the criteria, the one with the smallest ghost cell width (based on the algebraic sum of the components) is selected.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with this specified head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_connector_width</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>not_found_action</em>&nbsp;</td><td>Action to take if <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> which matches the search criterion.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b5f4c8b090dbff0226e778e316b21920">isInitialized()</a> <p>
+head.isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="9ef122b8e4b1c02fa4850a6a81976110"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::findConnectorWithTranspose" ref="9ef122b8e4b1c02fa4850a6a81976110" args="(const BoxLevel &amp;head, const IntVector &amp;min_connector_width, const IntVector &amp;transpose_min_connector_width, ConnectorNotFoundAction not_found_action, bool exact_width_only=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::BoxLevel::findConnectorWithTranspose           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transpose_min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceSAMRAI_1_1hier.html#256cef944748f7494c84017f5829101a">ConnectorNotFoundAction</a>&nbsp;</td>
+          <td class="paramname"> <em>not_found_action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>exact_width_only</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Find an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose with the given head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths. If the specified <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found, take the specified action. 
+<p>
+If multiple Connectors fit the criteria, the one with the smallest ghost cell width (based on the algebraic sum of the components) is selected.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with this specified head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_connector_width</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transpose_min_connector_width</em>&nbsp;</td><td>Find the transpose overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>not_found_action</em>&nbsp;</td><td>Action to take if <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is not found. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> which matches the search criterion.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b5f4c8b090dbff0226e778e316b21920">isInitialized()</a> <p>
+head.isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="02aa235c3d2e5b9700a81e6853294fb7"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::createConnector" ref="02aa235c3d2e5b9700a81e6853294fb7" args="(const BoxLevel &amp;head, const IntVector &amp;connector_width) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::BoxLevel::createConnector           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>, computing relationships by globalizing data. 
+<p>
+The base will be this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Find <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> relationships using a (non-scalable) global search.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> <p>
+hier::Connector::initialize()</dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>This <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> will be the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A const reference to the newly created overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b5f4c8b090dbff0226e778e316b21920">isInitialized()</a> <p>
+head.isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="85bf92f1e262d7e182442aa09316640d"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::createConnectorWithTranspose" ref="85bf92f1e262d7e182442aa09316640d" args="(const BoxLevel &amp;head, const IntVector &amp;connector_width, const IntVector &amp;transpose_connector_width) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>&amp; SAMRAI::hier::BoxLevel::createConnectorWithTranspose           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>transpose_connector_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with its transpose, computing relationships by globalizing data. 
+<p>
+The base will be this <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. Find <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> relationships using a (non-scalable) global search.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> <p>
+hier::Connector::initialize()</dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>This <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> will be the head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector_width</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transpose_connector_width</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A const reference to the newly created overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a>.</dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b5f4c8b090dbff0226e778e316b21920">isInitialized()</a> <p>
+head.isInitialized() </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="6caf4ac1f3c3b137a4bc890e3680c710"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::cacheConnector" ref="6caf4ac1f3c3b137a4bc890e3680c710" args="(boost::shared_ptr&lt; Connector &gt; &amp;connector) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::BoxLevel::cacheConnector           </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Cache the supplied overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> and its transpose if it exists. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>connector</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#b5f4c8b090dbff0226e778e316b21920">isInitialized()</a> <p>
+connector </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="5843797f8b24c016bb92eb4b963f65ac"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::hasConnector" ref="5843797f8b24c016bb92eb4b963f65ac" args="(const BoxLevel &amp;head, const IntVector &amp;min_connector_width, bool exact_width_only=false) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::hier::BoxLevel::hasConnector           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>head</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>min_connector_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>exact_width_only</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns whether the object has overlap Connectors with the given head and minimum <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width. 
+<p>
+TODO: does the following comment mean that this must be called before the call to findConnector?<p>
+If this returns true, the <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> fitting the specification exists and <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#d4ef30985671aaeac06be82bf7a238cb">findConnector()</a> will not throw an assertion.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>head</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> with this specified head. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_connector_width</em>&nbsp;</td><td>Find the overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> satisfying this minimum ghost cell width. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>exact_width_only</em>&nbsp;</td><td>If true, reject Connectors that do not match the requested width exactly.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>True if a <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> is found, otherwise false. </dd></dl>
 
 </div>
 </div><p>
@@ -2260,7 +2543,49 @@ Operations that can invalidate <a class="el" href="classSAMRAI_1_1hier_1_1Connec
 
 </div>
 </div><p>
-<a class="anchor" name="7cb7c4570aa7f060a92d3fbbea965e1c"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::recursivePrint" ref="7cb7c4570aa7f060a92d3fbbea965e1c" args="(std::ostream &amp;os, const std::string &amp;border, int detail_depth=0) const " -->
+<a class="anchor" name="dd9723ad7a88b27b00f7a691d6eb2e0c"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::lock" ref="dd9723ad7a88b27b00f7a691d6eb2e0c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::BoxLevel::lock           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Effectively makes a non-const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> const. Prevents any non-const method from executing. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="8f53858f6a358760477cbf8f42615b1c"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::locked" ref="8f53858f6a358760477cbf8f42615b1c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::hier::BoxLevel::locked           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns true if the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> is locked. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="00c11404f06b3a72323cb3fc5d650309"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::recursivePrint" ref="00c11404f06b3a72323cb3fc5d650309" args="(std::ostream &amp;os, const std::string &amp;border, int detail_depth=2) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2280,7 +2605,7 @@ Operations that can invalidate <a class="el" href="classSAMRAI_1_1hier_1_1Connec
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>detail_depth</em> = <code>0</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>detail_depth</em> = <code>2</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -2304,7 +2629,7 @@ Print <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> info from thi
 
 </div>
 </div><p>
-<a class="anchor" name="d834db8d9f5d1f1553ed9f87cd0732c0"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::format" ref="d834db8d9f5d1f1553ed9f87cd0732c0" args="(const std::string &amp;border=std::string(), int detail_depth=0) const " -->
+<a class="anchor" name="ef7ffb368ef636b78732ba7b64c51277"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::format" ref="ef7ffb368ef636b78732ba7b64c51277" args="(const std::string &amp;border=std::string(), int detail_depth=2) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2318,7 +2643,7 @@ Print <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> info from thi
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>detail_depth</em> = <code>0</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>detail_depth</em> = <code>2</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -2332,8 +2657,7 @@ Print <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> info from thi
 <p>
 Return a object that can format the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> for inserting into output streams. 
 <p>
-Usage example: <div class="fragment"><pre class="fragment">    std::cout &lt;&lt; <span class="stringliteral">"my box_level:\n"</span>
-              &lt;&lt; box_level.format(<span class="stringliteral">"  "</span>, 2) &lt;&lt; std::endl;
+Usage example: <div class="fragment"><pre class="fragment">    <a class="code" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a> &lt;&lt; <span class="stringliteral">"my box_level:\n"</span> &lt;&lt; box_level.format() &lt;&lt; endl;
 </pre></div><p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -2416,9 +2740,25 @@ Free static timers.
 Only called by StartupShutdownManager. 
 </div>
 </div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="e17fc1942f6de54c13321a9481366cd1"></a><!-- doxytag: member="SAMRAI::hier::BoxLevel::PersistentOverlapConnectors" ref="e17fc1942f6de54c13321a9481366cd1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1hier_1_1PersistentOverlapConnectors.html">PersistentOverlapConnectors</a><code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxLevel_8h.html">BoxLevel.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxLevel_8C.html">BoxLevel.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

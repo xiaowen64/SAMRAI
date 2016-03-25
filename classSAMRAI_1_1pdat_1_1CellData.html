@@ -94,6 +94,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html#1bb304011ddc96a7cd1f1073a2948c6a">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack data from stream into this patch data object over the specified box overlap region. The overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">CellOverlap</a> of the same DIM.  <a href="#1bb304011ddc96a7cd1f1073a2948c6a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html#c90f55d55424ddac5d0286e01d901094">sum</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add data from source to destination (i.e., this) patch data object on the given overlap.  <a href="#c90f55d55424ddac5d0286e01d901094"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html#2449526230ddb43686315eb97aee0c4c">unpackStreamAndSum</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack data from stream and add into this patch data object over the specified box overlap region. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">CellOverlap</a> of the same DIM.  <a href="#2449526230ddb43686315eb97aee0c4c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html#fe62b44ee4a6c823dec81bd29895c290">fill</a> (const TYPE &amp;t, int d=0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all values at depth d with the value t.  <a href="#fe62b44ee4a6c823dec81bd29895c290"></a><br></td></tr>
@@ -801,6 +807,72 @@ Unpack data from stream into this patch data object over the specified box overl
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#da56faab0c403e0c8b2e95ad28515a00">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
+<a class="anchor" name="c90f55d55424ddac5d0286e01d901094"></a><!-- doxytag: member="SAMRAI::pdat::CellData::sum" ref="c90f55d55424ddac5d0286e01d901094" args="(const hier::PatchData &amp;src, const hier::BoxOverlap &amp;overlap)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TYPE&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">SAMRAI::pdat::CellData</a>&lt; TYPE &gt;::sum           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>overlap</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Add data from source to destination (i.e., this) patch data object on the given overlap. 
+<p>
+Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">CellData</a> of the same DIM and TYPE and the overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">CellOverlap</a> of the same DIM. If not, then an unrecoverable error results. 
+</div>
+</div><p>
+<a class="anchor" name="2449526230ddb43686315eb97aee0c4c"></a><!-- doxytag: member="SAMRAI::pdat::CellData::unpackStreamAndSum" ref="2449526230ddb43686315eb97aee0c4c" args="(tbox::MessageStream &amp;stream, const hier::BoxOverlap &amp;overlap)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TYPE&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">SAMRAI::pdat::CellData</a>&lt; TYPE &gt;::unpackStreamAndSum           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>overlap</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Unpack data from stream and add into this patch data object over the specified box overlap region. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1CellOverlap.html">CellOverlap</a> of the same DIM. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="fe62b44ee4a6c823dec81bd29895c290"></a><!-- doxytag: member="SAMRAI::pdat::CellData::fill" ref="fe62b44ee4a6c823dec81bd29895c290" args="(const TYPE &amp;t, int d=0)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1089,7 +1161,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#46f
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="CellData_8h.html">CellData.h</a><li>source/SAMRAI/pdat/<a class="el" href="CellData_8C.html">CellData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

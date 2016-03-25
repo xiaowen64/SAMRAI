@@ -54,6 +54,8 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#c7bfba6ff925d93abec9d5c48a876d8e">coarsenDataForRichardsonExtrapolation</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;coarser_level, const double coarsen_data_time, const bool before_advance)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#66796256568060135cbbf494d1d5eb40">processLevelBeforeRemoval</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;())</td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> is an abstract base class that defines a Strategy pattern interface for concrete cell tagging and level initialization operations that are needed by the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html">StandardTagAndInitialize</a> class. This base class insulates that algorithm class from routines for initializing a new level in the hierarchy and for tagging cells to be refined. Generally, these operations are specific to the problem being solved and the solution methods being employed. An object of this type is passed into the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html">StandardTagAndInitialize</a> constructor.<p>
@@ -543,9 +545,54 @@ This routine is only when Richardson extrapolation is being used. It is virtual 
 Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#cca15f011e7ce423fc574ee26ad56320">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
+<a class="anchor" name="66796256568060135cbbf494d1d5eb40"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitStrategy::processLevelBeforeRemoval" ref="66796256568060135cbbf494d1d5eb40" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, int level_number, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;())" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitStrategy::processLevelBeforeRemoval           </td>
+          <td>(</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>hierarchy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>level_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>old_level</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+In some cases user code may wish to process a PatchLevel before it is removed from the hierarchy. For example, data may exist only on a given PatchLevel such as the finest level. If that level were to be removed before this data is moved off of it then the data will be lost. This method is a user defined callback used by <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> when a PatchLevel is to be removed. The callback performs any user actions on the level about to be removed. It is implemented by classes derived from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The PatchHierarchy being modified. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>The number of the PatchLevel in hierarchy about to be removed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>old_level</em>&nbsp;</td><td>The level in hierarchy about to be removed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">mesh::GriddingAlgorithm</a> <p>
+<a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> </dd></dl>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitStrategy_8h.html">StandardTagAndInitStrategy.h</a><li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitStrategy_8C.html">StandardTagAndInitStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

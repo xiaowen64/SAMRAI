@@ -40,11 +40,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#d39ce6a467c7c65c174b64715e694e85">setNaN</a> (<a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;dc)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#7cc75527918a0946cfc9323e2f4580bf">initializeArrayToSignalingNaN</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; float &gt; &amp;array)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#5c1e77efac90bca7bcba33ce51a2c71a">initializeVectorToSignalingNaN</a> (std::vector&lt; float &gt; &amp;vector)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#a1e3e691f4ad256c8efe6b8efc414b18">initializeArrayToSignalingNaN</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; double &gt; &amp;array)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#b484c8fc00239c7c0981fc75f7450d92">initializeVectorToSignalingNaN</a> (std::vector&lt; double &gt; &amp;vector)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#de5f403a84c8d5b6fa0a730180ceb9ff">initializeArrayToSignalingNaN</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &amp;array)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#18c2472b5b946e53c735fad7db2c1b1f">initializeVectorToSignalingNaN</a> (std::vector&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &amp;vector)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1IEEE.html#91f368a2e97dd2346aa24c28dabdad1d">initializeArrayToSignalingNaN</a> (float *array, int n=1)</td></tr>
 
@@ -203,15 +203,15 @@ Set supplied double value to the signaling NaN.
 Set real and imaginary parts of supplied dcomplex value to the double signaling NaN. 
 </div>
 </div><p>
-<a class="anchor" name="7cc75527918a0946cfc9323e2f4580bf"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN" ref="7cc75527918a0946cfc9323e2f4580bf" args="(Array&lt; float &gt; &amp;array)" -->
+<a class="anchor" name="5c1e77efac90bca7bcba33ce51a2c71a"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeVectorToSignalingNaN" ref="5c1e77efac90bca7bcba33ce51a2c71a" args="(std::vector&lt; float &gt; &amp;vector)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static void SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN           </td>
+          <td class="memname">static void SAMRAI::tbox::IEEE::initializeVectorToSignalingNaN           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; float &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>array</em>          </td>
+          <td class="paramtype">std::vector&lt; float &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>vector</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline, static]</code></td>
         </tr>
@@ -220,18 +220,18 @@ Set real and imaginary parts of supplied dcomplex value to the double signaling 
 <div class="memdoc">
 
 <p>
-Initialize an array of floats to signaling NaNs. Before using this array in any operation, the NaN value should be reset. Otherwise, an unrecoverable exception will result (as long as floating point exception handling is supported by the compiler). 
+Initialize a vector of floats to signaling NaNs. Before using this array in any operation, the NaN value should be reset. Otherwise, an unrecoverable exception will result (as long as floating point exception handling is supported by the compiler). 
 </div>
 </div><p>
-<a class="anchor" name="a1e3e691f4ad256c8efe6b8efc414b18"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN" ref="a1e3e691f4ad256c8efe6b8efc414b18" args="(Array&lt; double &gt; &amp;array)" -->
+<a class="anchor" name="b484c8fc00239c7c0981fc75f7450d92"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeVectorToSignalingNaN" ref="b484c8fc00239c7c0981fc75f7450d92" args="(std::vector&lt; double &gt; &amp;vector)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static void SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN           </td>
+          <td class="memname">static void SAMRAI::tbox::IEEE::initializeVectorToSignalingNaN           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; double &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>array</em>          </td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>vector</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline, static]</code></td>
         </tr>
@@ -240,18 +240,18 @@ Initialize an array of floats to signaling NaNs. Before using this array in any 
 <div class="memdoc">
 
 <p>
-Initialize an array of doubles to signaling NaNs. Before using this array in any operation, the NaN value should be reset. Otherwise, an unrecoverable exception will result (as long as floating point exception handling is supported by the compiler). 
+Initialize a vector of doubles to signaling NaNs. Before using this array in any operation, the NaN value should be reset. Otherwise, an unrecoverable exception will result (as long as floating point exception handling is supported by the compiler). 
 </div>
 </div><p>
-<a class="anchor" name="de5f403a84c8d5b6fa0a730180ceb9ff"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN" ref="de5f403a84c8d5b6fa0a730180ceb9ff" args="(Array&lt; dcomplex &gt; &amp;array)" -->
+<a class="anchor" name="18c2472b5b946e53c735fad7db2c1b1f"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeVectorToSignalingNaN" ref="18c2472b5b946e53c735fad7db2c1b1f" args="(std::vector&lt; dcomplex &gt; &amp;vector)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static void SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN           </td>
+          <td class="memname">static void SAMRAI::tbox::IEEE::initializeVectorToSignalingNaN           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>array</em>          </td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="Complex_8h.html#a7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>vector</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline, static]</code></td>
         </tr>
@@ -260,7 +260,7 @@ Initialize an array of doubles to signaling NaNs. Before using this array in any
 <div class="memdoc">
 
 <p>
-Initialize an array of dcomplex to signaling NaNs. Before using this array in any operation, the NaN value should be reset. Otherwise, an unrecoverable exception will result (as long as floating point exception handling is supported by the compiler). 
+Initialize a vector of dcomplex to signaling NaNs. Before using this array in any operation, the NaN value should be reset. Otherwise, an unrecoverable exception will result (as long as floating point exception handling is supported by the compiler). 
 </div>
 </div><p>
 <a class="anchor" name="91f368a2e97dd2346aa24c28dabdad1d"></a><!-- doxytag: member="SAMRAI::tbox::IEEE::initializeArrayToSignalingNaN" ref="91f368a2e97dd2346aa24c28dabdad1d" args="(float *array, int n=1)" -->
@@ -412,7 +412,7 @@ Return true if if either real and imaginary part of the supplied dcomplex value 
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="IEEE_8h.html">IEEE.h</a><li>source/SAMRAI/tbox/<a class="el" href="IEEE_8C.html">IEEE.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

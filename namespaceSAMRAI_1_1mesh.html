@@ -33,7 +33,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Asynchronous Berger-Rigoutsos implementation. This class is derived from the abstract base class <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">mesh::BoxGeneratorStrategy</a>. Thus, it serves as a concrete implementation of the box generator Strategy pattern interface.  <a href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Node in the asynchronous Berger-Rigoutsos (BR) dendogram. Do not directly use this class; for clustering, use <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html">BergerRigoutsos</a> instead.  <a href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Node in the asynchronous Berger-Rigoutsos (BR) tree. Do not directly use this class; for clustering, use <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsos.html">BergerRigoutsos</a> instead.  <a href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html">ChopAndPackLoadBalancer</a></td></tr>
@@ -65,20 +65,21 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TileClustering.html">TileClustering</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tiled patch clustering algorithm. This is UNSUPPORTED, EXPERIMENTAL code not for general use.  <a href="classSAMRAI_1_1mesh_1_1TileClustering.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TilePartitioner.html">TilePartitioner</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Load balance by cutting boxes along designated mesh lines defining a tile box grid. Implemementing the LoadBalancerStrategy. This is UNSUPPORTED, EXPERIMENTAL code not for general use.  <a href="classSAMRAI_1_1mesh_1_1TilePartitioner.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html">TreeLoadBalancer</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provides load balancing routines for AMR hierarchy by implemementing the LoadBalancerStrategy.  <a href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html">TreeLoadBalancerOld</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provides load balancing routines for AMR hierarchy by implemementing the LoadBalancerStrategy.  <a href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1mesh.html#9c82905b5f96e24b85545ce47c3e18ff">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1mesh_1_1SpatialKey.html">SpatialKey</a> &amp;spatial_key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1mesh.html#e1fa4be093def34c110b92efdd8da30d">GCD</a> (const int a, const int b)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1mesh.html#50a6ce05b222e1b5814e2496d4415b0d">operator&lt;&lt;</a> (std::ostream &amp;co, const TreeLoadBalancer::BoxInTransit &amp;r)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1mesh.html#058d884ab298369bf59a6b043cce6145">operator&lt;&lt;</a> (std::ostream &amp;co, const TreeLoadBalancerOld::BoxInTransit &amp;r)</td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
@@ -170,36 +171,7 @@ Note that the proper functioning of this method depends on having 32 bits per in
 
 </div>
 </div><p>
-<a class="anchor" name="058d884ab298369bf59a6b043cce6145"></a><!-- doxytag: member="SAMRAI::mesh::operator&lt;&lt;" ref="058d884ab298369bf59a6b043cce6145" args="(std::ostream &amp;co, const TreeLoadBalancerOld::BoxInTransit &amp;r)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::ostream&amp; SAMRAI::mesh::operator&lt;&lt;           </td>
-          <td>(</td>
-          <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>co</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const TreeLoadBalancerOld::BoxInTransit &amp;&nbsp;</td>
-          <td class="paramname"> <em>r</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 5 Jul 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
