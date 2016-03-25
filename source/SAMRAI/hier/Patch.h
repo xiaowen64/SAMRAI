@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -22,11 +22,11 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -542,7 +542,7 @@ public:
    int
    numPatchData() const
    {
-      return d_patch_data.size();
+      return static_cast<int>(d_patch_data.size());
    }
 
 private:
@@ -569,7 +569,7 @@ private:
 
    boost::shared_ptr<PatchGeometry> d_patch_geometry;
 
-   tbox::Array<boost::shared_ptr<PatchData> > d_patch_data;
+   std::vector<boost::shared_ptr<PatchData> > d_patch_data;
 
    int d_patch_level_number;
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
@@ -18,7 +18,7 @@
 #include "SAMRAI/pdat/NodeDataFactory.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/OuternodeData.h"
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
+#include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 #include "SAMRAI/algs/OuternodeSumTransactionFactory.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
@@ -52,12 +52,10 @@ namespace algs {
 
 int MblkPatchBoundaryNodeSum::s_instance_counter = 0;
 
-tbox::Array<tbox::Array<int> >
-MblkPatchBoundaryNodeSum::s_onode_src_id_array =
-   tbox::Array<tbox::Array<int> >(0);
-tbox::Array<tbox::Array<int> >
-MblkPatchBoundaryNodeSum::s_onode_dst_id_array =
-   tbox::Array<tbox::Array<int> >(0);
+std::vector<std::vector<int> > MblkPatchBoundaryNodeSum::s_onode_src_id_array =
+   std::vector<std::vector<int> >(0);
+std::vector<std::vector<int> > MblkPatchBoundaryNodeSum::s_onode_dst_id_array =
+   std::vector<std::vector<int> >(0);
 
 /*
  *************************************************************************
@@ -101,10 +99,12 @@ MblkPatchBoundaryNodeSum::~MblkPatchBoundaryNodeSum()
 
    s_instance_counter--;
    if (s_instance_counter == 0) {
-      const int arr_length_depth = s_onode_src_id_array.size();
+      const int arr_length_depth =
+         static_cast<int>(s_onode_src_id_array.size());
 
       for (int id = 0; id < arr_length_depth; id++) {
-         const int arr_length_nvar = s_onode_src_id_array[id].size();
+         const int arr_length_nvar =
+            static_cast<int>(s_onode_src_id_array[id].size());
 
          for (int iv = 0; iv < arr_length_nvar; iv++) {
 
@@ -119,15 +119,15 @@ MblkPatchBoundaryNodeSum::~MblkPatchBoundaryNodeSum()
                   s_onode_dst_id_array[id][iv]);
             }
 
-            s_onode_src_id_array[id].resizeArray(0);
-            s_onode_dst_id_array[id].resizeArray(0);
+            s_onode_src_id_array[id].resize(0);
+            s_onode_dst_id_array[id].resize(0);
 
          }
 
       }
 
-      s_onode_src_id_array.resizeArray(0);
-      s_onode_dst_id_array.resizeArray(0);
+      s_onode_src_id_array.resize(0);
+      s_onode_dst_id_array.resize(0);
 
    }
 
@@ -179,25 +179,27 @@ MblkPatchBoundaryNodeSum::registerSum(
 
    d_num_reg_sum++;
 
-   d_user_node_data_id.resizeArray(d_num_reg_sum);
+   d_user_node_data_id.resize(d_num_reg_sum);
    d_user_node_data_id[reg_sum_id] = ID_UNDEFINED;
-   d_user_node_depth.resizeArray(d_num_reg_sum);
+   d_user_node_depth.resize(d_num_reg_sum);
    d_user_node_depth[reg_sum_id] = ID_UNDEFINED;
-   d_tmp_onode_src_variable.resizeArray(d_num_reg_sum);
-   d_tmp_onode_dst_variable.resizeArray(d_num_reg_sum);
-   d_onode_src_id.resizeArray(d_num_reg_sum);
+   d_tmp_onode_src_variable.resize(d_num_reg_sum);
+   d_tmp_onode_dst_variable.resize(d_num_reg_sum);
+   d_onode_src_id.resize(d_num_reg_sum);
    d_onode_src_id[reg_sum_id] = ID_UNDEFINED;
-   d_onode_dst_id.resizeArray(d_num_reg_sum);
+   d_onode_dst_id.resize(d_num_reg_sum);
    d_onode_dst_id[reg_sum_id] = ID_UNDEFINED;
 
    const int data_depth = node_factory->getDefaultDepth();
    const int array_by_depth_size = data_depth + 1;
 
-   if (d_num_registered_data_by_depth.size() < array_by_depth_size) {
-      const int old_size = d_num_registered_data_by_depth.size();
+   if (static_cast<int>(d_num_registered_data_by_depth.size()) <
+       array_by_depth_size) {
+      const int old_size =
+         static_cast<int>(d_num_registered_data_by_depth.size());
       const int new_size = array_by_depth_size;
 
-      d_num_registered_data_by_depth.resizeArray(new_size);
+      d_num_registered_data_by_depth.resize(new_size);
       for (int i = old_size; i < new_size; i++) {
          d_num_registered_data_by_depth[i] = 0;
       }
@@ -206,17 +208,19 @@ MblkPatchBoundaryNodeSum::registerSum(
    const int data_depth_id = d_num_registered_data_by_depth[data_depth];
    const int num_data_at_depth = data_depth_id + 1;
 
-   if (s_onode_src_id_array.size() < array_by_depth_size) {
-      s_onode_src_id_array.resizeArray(array_by_depth_size);
-      s_onode_dst_id_array.resizeArray(array_by_depth_size);
+   if (static_cast<int>(s_onode_src_id_array.size()) < array_by_depth_size) {
+      s_onode_src_id_array.resize(array_by_depth_size);
+      s_onode_dst_id_array.resize(array_by_depth_size);
    }
 
-   if (s_onode_src_id_array[data_depth].size() < num_data_at_depth) {
-      const int old_size = s_onode_src_id_array[data_depth].size();
+   if (static_cast<int>(s_onode_src_id_array[data_depth].size()) <
+       num_data_at_depth) {
+      const int old_size =
+         static_cast<int>(s_onode_src_id_array[data_depth].size());
       const int new_size = num_data_at_depth;
 
-      s_onode_src_id_array[data_depth].resizeArray(new_size);
-      s_onode_dst_id_array[data_depth].resizeArray(new_size);
+      s_onode_src_id_array[data_depth].resize(new_size);
+      s_onode_dst_id_array[data_depth].resize(new_size);
       for (int i = old_size; i < new_size; i++) {
          s_onode_src_id_array[data_depth][i] = ID_UNDEFINED;
          s_onode_dst_id_array[data_depth][i] = ID_UNDEFINED;
@@ -299,7 +303,7 @@ MblkPatchBoundaryNodeSum::setupSum(
 
       d_level = level;
 
-      d_single_level_sum_schedule.resizeArray(1);
+      d_single_level_sum_schedule.resize(1);
 
       // Communication algorithm for summing outernode values on a level
       boost::shared_ptr<xfer::RefineAlgorithm> single_level_sum_algorithm(
@@ -421,8 +425,8 @@ MblkPatchBoundaryNodeSum::doLevelSum(
 void
 MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    const boost::shared_ptr<hier::PatchLevel>& level,
-   const tbox::Array<int>& node_data_id,
-   const tbox::Array<int>& onode_data_id) const
+   const std::vector<int>& node_data_id,
+   const std::vector<int>& onode_data_id) const
 {
    TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
@@ -453,8 +457,8 @@ MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 void
 MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
    const boost::shared_ptr<hier::PatchLevel>& level,
-   const tbox::Array<int>& onode_data_id,
-   const tbox::Array<int>& node_data_id) const
+   const std::vector<int>& onode_data_id,
+   const std::vector<int>& node_data_id) const
 {
    TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());

@@ -2,13 +2,11 @@
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2013 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision$
 // Description:	Lex scanner description for the SAMRAI input database
 //
 
-
-#include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Parser.h"
@@ -86,7 +84,7 @@ S_STRING  (\"([^\n"])*\")
 
 {S_INTEGER} {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_integer = atol(yytext);
+   yylval.u_integer = atoi(yytext);
    return(T_INTEGER);
 }
 

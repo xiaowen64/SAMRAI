@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Support for coordinating multiple asynchronous communications
  *
  ************************************************************************/
@@ -62,8 +62,8 @@ namespace tbox {
  * To advance the communication operation of any of the allocated
  * Member objects, use advanceAny() or advanceSome().  In general,
  * advanceSome() has better performance than advanceAny() because it
- * gets around the "starvation" problem.  See the MPI documentation
- * for a discussion of starvation.
+ * avoids the "starvation" problem.  See the MPI documentation for a
+ * discussion of starvation.
  *
  * This class supports communication and uses MPI for message passing.
  * If MPI is disabled, the job of this class disappears and the class
@@ -216,7 +216,7 @@ public:
       }
 
       /*!
-       * @brief Push this onto the stage's list of completed Members.
+       * @brief Push this onto its stage's list of completed Members.
        *
        * This causes the member to be returned by a call to
        * AsyncCommStage::popCompletionQueue(), eventually.
@@ -228,7 +228,8 @@ public:
 
       /*!
        * @brief Yank this member from the stage's list of completed
-       * Members.
+       * Members so it would not be returned by
+       * AsyncCommStage::popCompletionQueue().
        */
       void
       yankFromCompletionQueue()
@@ -252,9 +253,9 @@ protected:
        * Specify the stage to use and the number of SAMRAI_MPI::Request
        * objects needed from the stage.
        *
-       * @param nreq Number of SAMRAI_MPI::Requests needed by the member.
+       * @param[in] nreq Number of SAMRAI_MPI::Requests needed by the member.
        *
-       * @param stage Register with this AsyncCommStage.
+       * @param[in] stage The AsyncCommStage to attach to.
        */
       void
       attachStage(
@@ -304,6 +305,13 @@ protected:
        */
       SAMRAI_MPI::Status *
       getStatusPointer() const;
+
+      /*!
+       * @brief Return the number of requests for this stage Member.
+       */
+      size_t getNumberOfRequests() const {
+         return d_nreq;
+      }
 
 private:
       /*!

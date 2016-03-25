@@ -3,13 +3,12 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevel.h"
@@ -17,6 +16,7 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
@@ -49,9 +49,8 @@ breakUpBoxes(
 
 void
 alterAndGenerateMapping(
-   hier::BoxLevel& box_level_c,
-   hier::Connector& b_to_c,
-   hier::Connector& c_to_b,
+   boost::shared_ptr<hier::BoxLevel>& box_level_c,
+   boost::shared_ptr<hier::MappingConnector>& b_to_c,
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database);
 
@@ -190,7 +189,6 @@ int main(
       boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(box_level_a, domain_box_level, a_db);
       box_level_a.cacheGlobalReducedData();
-      // tbox::pout << "box level a:\n" << box_level_a.format("A: ",2) << std::endl;
 
       /*
        * Generate BoxLevel B from the multiblock domain description
@@ -200,7 +198,6 @@ int main(
       boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(box_level_b, domain_box_level, b_db);
       box_level_b.cacheGlobalReducedData();
-      // tbox::pout << "box level b:\n" << box_level_b.format("B: ",2) << std::endl;
 
       /*
        * Generate Connector A<==>B, to be modified by the mapping
@@ -217,68 +214,64 @@ int main(
             box_level_a.getRefinementRatio(),
             base_width_a);
 
-      hier::Connector a_to_b(box_level_a,
-                             box_level_b,
-                             base_width_a);
-      hier::Connector b_to_a(box_level_b,
-                             box_level_a,
-                             base_width_b);
+      boost::shared_ptr<hier::Connector> a_to_b;
 
       hier::OverlapConnectorAlgorithm oca;
-      oca.findOverlaps(a_to_b);
-      oca.findOverlaps(b_to_a);
-      // tbox::pout << "a_to_b:\n" << a_to_b.format("AB: ",2) << std::endl;
+      oca.findOverlapsWithTranspose(a_to_b,
+         box_level_a,
+         box_level_b,
+         base_width_a,
+         base_width_b);
+      hier::Connector& b_to_a = a_to_b->getTranspose();
+      // tbox::pout << "a_to_b:\n" << a_to_b->format("AB: ",2) << std::endl;
       // tbox::pout << "b_to_a:\n" << b_to_a.format("BA: ",2) << std::endl;
 
-      a_to_b.checkConsistencyWithBase();
-      a_to_b.checkConsistencyWithHead();
+      a_to_b->checkConsistencyWithBase();
+      a_to_b->checkConsistencyWithHead();
       b_to_a.checkConsistencyWithBase();
       b_to_a.checkConsistencyWithHead();
 
-      oca.checkOverlapCorrectness(b_to_a);
-      oca.checkOverlapCorrectness(b_to_a);
+      a_to_b->checkOverlapCorrectness();
+      b_to_a.checkOverlapCorrectness();
 
       /*
        * Generate BoxLevel C by altering B based on a simple formula.
        * Generate the mapping Connectors B<==>C.
        */
 
-      hier::BoxLevel box_level_c(dim);
-      hier::Connector b_to_c(dim), c_to_b(dim);
+      boost::shared_ptr<hier::BoxLevel> box_level_c;
+      boost::shared_ptr<hier::MappingConnector> b_to_c;
       boost::shared_ptr<Database> alteration_db(
          main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
          box_level_c,
          b_to_c,
-         c_to_b,
          box_level_b,
          alteration_db);
-      box_level_c.cacheGlobalReducedData();
-      // tbox::pout << "box level c:\n" << box_level_c.format("C: ",2) << std::endl;
-      // tbox::pout << "b_to_c:\n" << b_to_c.format("BC: ",2) << std::endl;
-      // tbox::pout << "c_to_b:\n" << c_to_b.format("CB: ",2) << std::endl;
+      box_level_c->cacheGlobalReducedData();
+      // tbox::pout << "box level c:\n" << box_level_c->format("C: ",2) << std::endl;
+      // tbox::pout << "b_to_c:\n" << b_to_c->format("BC: ",2) << std::endl;
+      // tbox::pout << "c_to_b:\n" << b_to_c->getTranspose().format("CB: ",2) << std::endl;
 
       hier::MappingConnectorAlgorithm mca;
-      mca.modify(a_to_b,
-         b_to_a,
-         b_to_c,
-         c_to_b,
+      mca.modify(*a_to_b,
+         *b_to_c,
          &box_level_b,
-         &box_level_c);
+         box_level_c.get());
       // tbox::pout << "box level b after modify:\n" << box_level_b.format("B: ",2) << std::endl;
 
       // tbox::pout << "checking a--->b consistency with base:" << std::endl;
-      a_to_b.checkConsistencyWithBase();
+      a_to_b->checkConsistencyWithBase();
       // tbox::pout << "checking a--->b consistency with head:" << std::endl;
-      a_to_b.checkConsistencyWithHead();
+      a_to_b->checkConsistencyWithHead();
       // tbox::pout << "checking b--->a consistency with base:" << std::endl;
       b_to_a.checkConsistencyWithBase();
       // tbox::pout << "checking b--->a consistency with head:" << std::endl;
       b_to_a.checkConsistencyWithHead();
 
       tbox::pout << "Checking for a--->b overlap correctness:" << std::endl;
-      const int a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
+      const int a_to_b_errors = a_to_b->checkOverlapCorrectness();
       if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
       } else {
@@ -286,7 +279,7 @@ int main(
       }
 
       tbox::pout << "Checking for b--->a overlap correctness:" << std::endl;
-      const int b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
+      const int b_to_a_errors = b_to_a.checkOverlapCorrectness();
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {
@@ -365,11 +358,12 @@ void breakUpBoxes(
       database->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
    }
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim());
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
+                                        "TreeLoadBalancer");
 
    const int level_number(0);
 
-   hier::Connector dummy_connector(dim);
+   hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
@@ -377,11 +371,8 @@ void breakUpBoxes(
    load_balancer.loadBalanceBoxLevel(
       box_level,
       dummy_connector,
-      dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
       level_number,
-      dummy_connector,
-      dummy_connector,
       min_box_size,
       max_box_size,
       domain_box_level,
@@ -394,9 +385,8 @@ void breakUpBoxes(
  * Generate the mapping Connectors B<==>C.
  */
 void alterAndGenerateMapping(
-   hier::BoxLevel& box_level_c,
-   hier::Connector& b_to_c,
-   hier::Connector& c_to_b,
+   boost::shared_ptr<hier::BoxLevel>& box_level_c,
+   boost::shared_ptr<hier::MappingConnector>& b_to_c,
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database)
 {
@@ -411,16 +401,18 @@ void alterAndGenerateMapping(
 
    const hier::BoxContainer boxes_b(box_level_b.getBoxes());
 
-   box_level_c.initialize(box_level_b.getRefinementRatio(),
+   box_level_c.reset(new hier::BoxLevel(box_level_b.getRefinementRatio(),
       box_level_b.getGridGeometry(),
-      box_level_b.getMPI());
+      box_level_b.getMPI()));
 
-   b_to_c.setBase(box_level_b);
-   b_to_c.setHead(box_level_c);
-   b_to_c.setWidth(hier::IntVector::getZero(dim), true);
-   c_to_b.setBase(box_level_c);
-   c_to_b.setHead(box_level_b);
-   c_to_b.setWidth(hier::IntVector::getZero(dim), true);
+   b_to_c.reset(new hier::MappingConnector(box_level_b,
+      *box_level_c,
+      hier::IntVector::getZero(dim)));
+   hier::MappingConnector* c_to_b =
+      new hier::MappingConnector(*box_level_c,
+         box_level_b,
+         hier::IntVector::getZero(dim));
+   b_to_c->setTranspose(c_to_b, true);
    for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
         bi != boxes_b.end(); ++bi) {
       const hier::Box& box_b(*bi);
@@ -428,19 +420,18 @@ void alterAndGenerateMapping(
                       box_b.getLocalId() + local_id_increment,
                       box_b.getOwnerRank(),
                       box_b.getPeriodicId());
-      box_level_c.addBoxWithoutUpdate(box_c);
-      b_to_c.insertLocalNeighbor(box_c, box_b.getBoxId());
-      c_to_b.insertLocalNeighbor(box_b, box_c.getBoxId());
+      box_level_c->addBoxWithoutUpdate(box_c);
+      b_to_c->insertLocalNeighbor(box_c, box_b.getBoxId());
+      c_to_b->insertLocalNeighbor(box_b, box_c.getBoxId());
    }
 
-   box_level_c.finalize();
+   box_level_c->finalize();
 
-   b_to_c.checkConsistencyWithBase();
-   b_to_c.checkConsistencyWithHead();
-   c_to_b.checkConsistencyWithBase();
-   c_to_b.checkConsistencyWithHead();
+   b_to_c->checkConsistencyWithBase();
+   b_to_c->checkConsistencyWithHead();
+   c_to_b->checkConsistencyWithBase();
+   c_to_b->checkConsistencyWithHead();
 
-   hier::MappingConnectorAlgorithm mca;
-   mca.assertMappingValidity(b_to_c);
-   mca.assertMappingValidity(c_to_b);
+   b_to_c->assertMappingValidity();
+   c_to_b->assertMappingValidity();
 }

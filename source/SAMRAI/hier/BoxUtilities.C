@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Routines for processing boxes within a domain of index space.
  *
  ************************************************************************/
@@ -19,6 +19,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <vector>
 
 
 namespace SAMRAI {
@@ -38,7 +40,7 @@ namespace hier {
 void
 BoxUtilities::findBadCutPointsForBorderAndDirection(
    const int id,
-   tbox::Array<bool>& bad_cuts,
+   std::vector<bool>& bad_cuts,
    const Box& box,
    const Box& border,
    const int bad_interval)
@@ -46,7 +48,7 @@ BoxUtilities::findBadCutPointsForBorderAndDirection(
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, border);
 
    TBOX_ASSERT((0 <= id) && (id < box.getDim().getValue()));
-   TBOX_ASSERT(bad_cuts.getSize() == box.numberCells(id));
+   TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == box.numberCells(id));
    TBOX_ASSERT(bad_interval >= 0);
 
    if (bad_interval > 0) {
@@ -136,7 +138,7 @@ BoxUtilities::checkBoxConstraints(
    /*
     * Test box against minimum size constraint.
     */
-   tbox::Array<bool> min_is_bad(dim.getValue());
+   std::vector<bool> min_is_bad(dim.getValue());
    bool min_violation = false;
    for (id = 0; id < dim.getValue(); id++) {
       if (box.numberCells(id) < min_size(id)) {
@@ -162,7 +164,7 @@ BoxUtilities::checkBoxConstraints(
    /*
     * Test box against cut factor constraint.
     */
-   tbox::Array<bool> factor_is_bad(dim.getValue());
+   std::vector<bool> factor_is_bad(dim.getValue());
    bool factor_violation = false;
    for (id = 0; id < dim.getValue(); id++) {
       if ((box.numberCells(id) % cut_factor(id)) != 0) {
@@ -187,7 +189,7 @@ BoxUtilities::checkBoxConstraints(
 
    if (!physical_boxes.isEmpty()) {
 
-      tbox::Array<bool> cut_is_bad(dim.getValue());
+      std::vector<bool> cut_is_bad(dim.getValue());
       for (id = 0; id < dim.getValue(); id++) {
          cut_is_bad[id] = false;
       }
@@ -282,7 +284,7 @@ BoxUtilities::checkBoxConstraints(
                     << bad_interval << std::endl;
          tbox::perr << "Physical domain boxes ... " << std::endl;
          int ib = 0;
-         for (BoxContainer::const_iterator itr(physical_boxes);
+         for (BoxContainer::const_iterator itr = physical_boxes.begin();
               itr != physical_boxes.end(); ++itr, ++ib) {
             tbox::perr << "Box # " << ib << " -- " << *itr << std::endl;
          }
@@ -352,7 +354,7 @@ BoxUtilities::chopBoxes(
 
       BoxContainer tmp_boxes;
 
-      tbox::Array<std::list<int> > cut_points(dim.getValue());
+      std::vector<std::list<int> > cut_points(dim.getValue());
       bool chop_box = findBestCutPointsGivenMax(cut_points,
             box,
             max_size,
@@ -367,7 +369,7 @@ BoxUtilities::chopBoxes(
 
             if (!cut_points[id].empty()) {
 
-               tbox::Array<bool> bad_cut_points;
+               std::vector<bool> bad_cut_points;
 
                findBadCutPointsForDirection(id,
                   bad_cut_points,
@@ -415,11 +417,11 @@ void
 BoxUtilities::chopBox(
    BoxContainer& boxes,
    const Box& box,
-   const tbox::Array<std::list<int> > cut_points)
+   const std::vector<std::list<int> >& cut_points)
 {
    const tbox::Dimension& dim(box.getDim());
 
-   TBOX_ASSERT(cut_points.getSize() == dim.getValue());
+   TBOX_ASSERT(static_cast<int>(cut_points.size()) == dim.getValue());
 
    if (!box.empty()) {
 
@@ -833,7 +835,7 @@ BoxUtilities::growBoxWithinDomain(
 
 bool
 BoxUtilities::findBestCutPointsGivenMax(
-   tbox::Array<std::list<int> >& cut_points,
+   std::vector<std::list<int> >& cut_points,
    const Box& box,
    const IntVector& max_size,
    const IntVector& min_size,
@@ -850,7 +852,7 @@ BoxUtilities::findBestCutPointsGivenMax(
    int id;
    bool chop_ok = false;
 
-   cut_points.resizeArray(dim.getValue());
+   cut_points.resize(dim.getValue());
 
    for (id = 0; id < dim.getValue(); id++) {
       if (findBestCutPointsForDirectionGivenMax(id,
@@ -990,7 +992,7 @@ BoxUtilities::findBestCutPointsForDirectionGivenMax(
 
 bool
 BoxUtilities::findBestCutPointsGivenNumber(
-   tbox::Array<std::list<int> >& cut_points,
+   std::vector<std::list<int> >& cut_points,
    const Box& box,
    const IntVector& number_boxes,
    const IntVector& min_size,
@@ -1007,9 +1009,9 @@ BoxUtilities::findBestCutPointsGivenNumber(
 
    int id;
 
-   cut_points.resizeArray(dim.getValue());
+   cut_points.resize(dim.getValue());
 
-   tbox::Array<bool> chop_dir(dim.getValue());
+   std::vector<bool> chop_dir(dim.getValue());
    for (id = 0; id < dim.getValue(); id++) {
       cut_points[id].clear();
       chop_dir[id] = (((number_boxes(id) <= 1)
@@ -1277,7 +1279,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
 void
 BoxUtilities::findBadCutPoints(
-   tbox::Array<tbox::Array<bool> >& bad_cuts,
+   std::vector<std::vector<bool> >& bad_cuts,
    const Box& box,
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
@@ -1285,7 +1287,7 @@ BoxUtilities::findBadCutPoints(
    const tbox::Dimension& dim(box.getDim());
 
    TBOX_ASSERT(!box.empty());
-   TBOX_ASSERT(bad_cuts.getSize() == dim.getValue());
+   TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == dim.getValue());
 
    for (int id = 0; id < dim.getValue(); id++) {
       findBadCutPointsForDirection(id,
@@ -1318,7 +1320,7 @@ BoxUtilities::findBadCutPoints(
 void
 BoxUtilities::findBadCutPointsForDirection(
    const int id,
-   tbox::Array<bool>& bad_cuts,
+   std::vector<bool>& bad_cuts,
    const Box& box,
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
@@ -1336,7 +1338,7 @@ BoxUtilities::findBadCutPointsForDirection(
     * Initialize all bad cut points to false; i.e., all are good.
     */
    const int ncells = box.numberCells(id);
-   bad_cuts.resizeArray(ncells);
+   bad_cuts.resize(ncells);
    for (ic = 0; ic < ncells; ic++) {
       bad_cuts[ic] = false;
    }
@@ -1391,7 +1393,7 @@ BoxUtilities::findBadCutPointsForDirection(
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
 
-            for (BoxContainer::iterator bbox(border_boxes);
+            for (BoxContainer::iterator bbox = border_boxes.begin();
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
@@ -1430,7 +1432,7 @@ BoxUtilities::findBadCutPointsForDirection(
 
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
-            for (BoxContainer::iterator bbox(border_boxes);
+            for (BoxContainer::iterator bbox = border_boxes.begin();
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
@@ -1454,8 +1456,8 @@ BoxUtilities::findBadCutPointsForDirection(
 
 void
 BoxUtilities::fixBadCutPoints(
-   tbox::Array<std::list<int> >& cuts,
-   const tbox::Array<tbox::Array<bool> >& bad_cuts,
+   std::vector<std::list<int> >& cuts,
+   const std::vector<std::vector<bool> >& bad_cuts,
    const Box& box,
    const IntVector& min_size,
    const IntVector& cut_factor)
@@ -1465,12 +1467,12 @@ BoxUtilities::fixBadCutPoints(
    const tbox::Dimension& dim(box.getDim());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(cuts.getSize() == dim.getValue());
-   TBOX_ASSERT(bad_cuts.getSize() == dim.getValue());
+   TBOX_ASSERT(static_cast<int>(cuts.size()) == dim.getValue());
+   TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == dim.getValue());
    bool bad_cuts_ok = true;
    for (int id = 0; id < dim.getValue(); id++) {
       bad_cuts_ok = bad_cuts_ok &&
-         (bad_cuts[id].getSize() == box.numberCells(id));
+         (static_cast<int>(bad_cuts[id].size()) == box.numberCells(id));
    }
    TBOX_ASSERT(bad_cuts_ok);
    TBOX_ASSERT(!box.empty());
@@ -1508,14 +1510,14 @@ void
 BoxUtilities::fixBadCutPointsForDirection(
    const int id,
    std::list<int>& cuts,
-   const tbox::Array<bool>& bad_cuts,
+   const std::vector<bool>& bad_cuts,
    const Box& box,
    const int min_in,
    const int fact)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    std::list<int>::iterator cut = cuts.begin();
-   TBOX_ASSERT(bad_cuts.getSize() == box.numberCells(id));
+   TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == box.numberCells(id));
    bool cuts_strictly_increase = true;
    if (cut != cuts.end()) {
       int prev = *cut;
@@ -1644,7 +1646,9 @@ BoxUtilities::fixBadCutPointsForDirection(
 
                } else {
                   cutlo++;
-                  cuthi--;
+                  if (cuthi != cuts.begin()) {
+                     cuthi--;
+                  }
                }
 
             } else {
@@ -1749,27 +1753,28 @@ BoxUtilities::fixBadCutPointsForDirection(
 
 void
 BoxUtilities::makeNonOverlappingBoxContainers(
-   tbox::Array<BoxContainer>& box_list_array,
+   std::vector<BoxContainer>& box_list_array,
    const BoxContainer& boxes)
 {
    const int nb = boxes.size();
 
-   for (int i = 0; i < box_list_array.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(box_list_array.size()); i++) {
       box_list_array[i].clear();
    }
 
-   box_list_array.resizeArray(nb);
+   box_list_array.resize(nb);
 
    // Copy boxes into a list to preserve the original box array.
    BoxContainer box_list(boxes);
 
    // Remove portion of index space represented by array box from list.
    // Keep unique pieces on box list.
-   BoxContainer::const_iterator itr(boxes);
+   BoxContainer::const_iterator itr = boxes.begin();
    for (int ib = 0; ib < nb; ++ib, ++itr) {
       Box remove = *itr;
 
-      for (BoxContainer::iterator l(box_list); l != box_list.end(); ++l) {
+      for (BoxContainer::iterator l = box_list.begin();
+           l != box_list.end(); ++l) {
          Box intersection = remove * (*l);
          if (intersection.isSpatiallyEqual(*l)) {
             box_list_array[ib].pushBack(*l);

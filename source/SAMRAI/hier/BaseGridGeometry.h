@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
@@ -169,8 +169,6 @@ public:
     * @param[in]   ratio_to_level_zero ratio to the coarsest level.
     * @param[in]   touches_regular_bdry Array storing which patches touch
     *              non-periodic boundaries.
-    * @param[in]   touches_periodic_bdry Array storing which patches touch
-    *              periodic boundaries.
     * @param[in]   defer_boundary_box_creation Flag to indicate if boundary
     *              boxes should be created
     *
@@ -191,7 +189,6 @@ public:
       PatchLevel& level,
       const IntVector& ratio_to_level_zero,
       const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-      const std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
       const bool defer_boundary_box_creation);
 
    /*!
@@ -448,7 +445,6 @@ public:
    IntVector
    getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
    {
-      buildOperators();
       return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
 
@@ -497,13 +493,10 @@ public:
     * @param[in]        ratio_to_level_zero ratio to coarsest level
     * @param[in]        touches_regular_bdry Array storing which patches touch
     *                   non-periodic boundaries.
-    * @param[in]        touches_periodic_bdry Array storing which patches touch
-    *                   periodic boundaries.
     *
     * @pre (getDim() == patch.getDim()) && 
     *      (getDim() == ratio_to_level_zero.getDim()) &&
-    *      (getDim() == touches_regular_bdry.getDim()) &&
-    *      (getDim() == touches_periodic_bdry.getDim())
+    *      (getDim() == touches_regular_bdry.getDim())
     */
    /*
     * TODO:  See the second TODO item for the setGeometryOnPatches() method.
@@ -512,8 +505,7 @@ public:
    setGeometryDataOnPatch(
       Patch& patch,
       const IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry) const;
+      const TwoDimBool& touches_regular_bdry) const;
 
    /*!
     * @brief Compute boundary boxes for each patch in patch level.
@@ -569,7 +561,7 @@ public:
       const PatchLevel& level,
       const IntVector& periodic_shift,
       const IntVector& ghost_width,
-      const tbox::Array<BoxContainer>& domain,
+      const std::vector<BoxContainer>& domain,
       bool do_all_patches = false) const;
 
    /*!
@@ -692,7 +684,7 @@ public:
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupCoarsenOperator(
-         *this, var, op_name);
+         var, op_name);
    }
 
    /*!
@@ -713,7 +705,7 @@ public:
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupRefineOperator(
-         *this, var, op_name);
+         var, op_name);
    }
 
    /*!
@@ -736,7 +728,7 @@ public:
          "STD_LINEAR_TIME_INTERPOLATE")
    {
       return d_transfer_operator_registry->lookupTimeInterpolateOperator(
-         *this, var, op_name);
+         var, op_name);
    }
 
    /*!
@@ -1277,7 +1269,6 @@ private:
     * into account the full multiblock configuration.
     *
     * @param[in] patch
-    * @param[in] geometry
     * @param[in] pseudo_domain The full multiblock domain represented as if
     *            every block were in the index space where the patch exists
     * @param[in] gcw         The maximum patch data ghost width
@@ -1362,7 +1353,7 @@ private:
     * Boolean array telling for each block whether the domain of that block
     * can be represented by a single box.
     */
-   tbox::Array<bool> d_domain_is_single_box;
+   std::vector<bool> d_domain_is_single_box;
 
    /*!
     * @brief BoxContainer representation of the physical domain, including
@@ -1397,27 +1388,27 @@ private:
     * @brief Associated with each block is a list of Neighbors that
     * it shares a block boundary with.
     */
-   tbox::Array<std::list<Neighbor> > d_block_neighbors;
+   std::vector<std::list<Neighbor> > d_block_neighbors;
 
    /*!
     * @brief An array of BoxContainers defining the singularities of a multiblock
     * domain.  Each BoxContainer element defines the singularities that a single
     * block touches.
     */
-   tbox::Array<BoxContainer> d_singularity;
+   std::vector<BoxContainer> d_singularity;
 
    /*!
     * @brief An array of singularity indices of a multiblock
     * domain.  d_singularity_indices[bn] is a list of singularity indices
     * touched by block bn.
     */
-   tbox::Array<std::vector<int> > d_singularity_indices;
+   std::vector<std::vector<int> > d_singularity_indices;
 
    /*!
     * @brief Tell whether each block touches a reduced-connectivity
     * singularity.
     */
-   tbox::Array<bool> d_reduced_connect;
+   std::vector<bool> d_reduced_connect;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the

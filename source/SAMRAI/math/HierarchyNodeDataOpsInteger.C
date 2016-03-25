@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer node data on multiple levels.
  *
  ************************************************************************/
@@ -82,13 +82,13 @@ HierarchyNodeDataOpsInteger::resetLevels(
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   d_nonoverlapping_node_boxes.resizeArray(d_finest_level + 1);
+   d_nonoverlapping_node_boxes.resize(d_finest_level + 1);
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer node_boxes = level->getBoxes();
-      for (hier::BoxContainer::iterator i(node_boxes);
+      for (hier::BoxContainer::iterator i = node_boxes.begin();
            i != node_boxes.end(); ++i) {
          *i = pdat::NodeGeometry::toNodeBox(*i);
       }
@@ -139,7 +139,8 @@ HierarchyNodeDataOpsInteger::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 
-         TBOX_ASSERT(npatches == d_nonoverlapping_node_boxes[ln].getSize());
+         TBOX_ASSERT(npatches ==
+                     static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
 
          for (int il = 0; il < npatches; il++) {
             hier::BoxContainer::const_iterator lb =

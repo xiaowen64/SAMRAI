@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include "SAMRAI/math/HierarchyDataOpsReal.h"
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <algorithm>
@@ -671,7 +670,7 @@ private:
     * The convergence factor stack is reset for each solve
     * and contains the convergence factors for each FAC cycle.
     */
-   tbox::Array<double> d_convergence_factor;
+   std::vector<double> d_convergence_factor;
    /*!
     * The average convergence factor computed from the current
     * values in d_convergence_factor.
@@ -688,7 +687,7 @@ private:
     * @brief Objects facilitating operations over a specific range
     * of levels.
     */
-   tbox::Array<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
+   std::vector<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
    d_controlled_level_ops;
 
    /*!

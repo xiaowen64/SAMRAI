@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
@@ -263,7 +263,7 @@ c        min i min j min k node
          i = lower(0)
          j = lower(1)
          k = lower(2)
-	 data(i,j,k) = -data(i+1,j+1,k+1)
+         data(i,j,k) = -data(i+1,j+1,k+1)
      &               + 2./3.*( data(i,j+1,k+1) 
      &                       + data(i+1,j,k+1) 
      &                       + data(i+1,j+1,k) )
@@ -272,7 +272,7 @@ c        max i min j min k node
          i = upper(0)
          j = lower(1)
          k = lower(2)
-	 data(i,j,k) = -data(i-1,j+1,k+1)
+         data(i,j,k) = -data(i-1,j+1,k+1)
      &               + 2./3.*( data(i,j+1,k+1) 
      &                       + data(i-1,j,k+1) 
      &                       + data(i-1,j+1,k) )
@@ -281,7 +281,7 @@ c        min i max j min k node
          i = lower(0)
          j = upper(1)
          k = lower(2)
-	 data(i,j,k) = -data(i+1,j-1,k+1)
+         data(i,j,k) = -data(i+1,j-1,k+1)
      &               + 2./3.*( data(i,j-1,k+1) 
      &                       + data(i+1,j,k+1) 
      &                       + data(i+1,j-1,k) )
@@ -290,7 +290,7 @@ c        max i max j min k node
          i = upper(0)
          j = upper(1)
          k = lower(2)
-	 data(i,j,k) = -data(i-1,j-1,k+1)
+         data(i,j,k) = -data(i-1,j-1,k+1)
      &               + 2./3.*( data(i,j-1,k+1) 
      &                       + data(i-1,j,k+1) 
      &                       + data(i-1,j-1,k) )
@@ -299,7 +299,7 @@ c        min i min j max k node
          i = lower(0)
          j = lower(1)
          k = upper(2)
-	 data(i,j,k) = -data(i+1,j+1,k-1)
+         data(i,j,k) = -data(i+1,j+1,k-1)
      &               + 2./3.*( data(i,j+1,k-1) 
      &                       + data(i+1,j,k-1) 
      &                       + data(i+1,j+1,k) )
@@ -308,7 +308,7 @@ c        max i min j max k node
          i = upper(0)
          j = lower(1)
          k = upper(2)
-	 data(i,j,k) = -data(i-1,j+1,k-1)
+         data(i,j,k) = -data(i-1,j+1,k-1)
      &               + 2./3.*( data(i,j+1,k-1) 
      &                       + data(i-1,j,k-1) 
      &                       + data(i-1,j+1,k) )
@@ -317,7 +317,7 @@ c        min i max j max k node
          i = lower(0)
          j = upper(1)
          k = upper(2)
-	 data(i,j,k) = -data(i+1,j-1,k-1)
+         data(i,j,k) = -data(i+1,j-1,k-1)
      &               + 2./3.*( data(i,j-1,k-1) 
      &                       + data(i+1,j,k-1) 
      &                       + data(i+1,j-1,k) )
@@ -326,7 +326,7 @@ c        max i max j max k node
          i = upper(0)
          j = upper(1)
          k = upper(2)
-	 data(i,j,k) = -data(i-1,j-1,k-1)
+         data(i,j,k) = -data(i-1,j-1,k-1)
      &               + 2./3.*( data(i,j-1,k-1) 
      &                       + data(i-1,j,k-1) 
      &                       + data(i-1,j-1,k) )

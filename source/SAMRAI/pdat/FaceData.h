@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated face centered patch data type
  *
  ************************************************************************/
@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/FaceIndex.h"
 #include "SAMRAI/pdat/FaceIterator.h"
+#include "SAMRAI/pdat/FaceOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"

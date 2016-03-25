@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <cmath>
+#include <vector>
 
 #define POLY3(i, j, k, imin, jmin, kmin, nx, nxny) \
    ((i - imin) + (j - jmin) * (nx) + (k - kmin) * (nxny))
@@ -46,7 +47,7 @@ MblkGeometry::MblkGeometry(
 
    d_nblocks = nblocks;
 
-   d_metrics_set.resizeArray(10);
+   d_metrics_set.resize(10);
    for (int i = 0; i < 10; i++) {
       d_metrics_set[i] = false;
    }
@@ -100,8 +101,8 @@ bool MblkGeometry::getRefineBoxes(
    const int level_number)
 {
    bool boxes_exist = false;
-   if (block_number < d_refine_boxes.getSize()) {
-      if (level_number < d_refine_boxes[level_number].getSize()) {
+   if (block_number < static_cast<int>(d_refine_boxes.size())) {
+      if (level_number < static_cast<int>(d_refine_boxes[level_number].size())) {
          boxes_exist = true;
          refine_boxes = d_refine_boxes[block_number][level_number];
       }
@@ -196,8 +197,8 @@ void MblkGeometry::getFromInput(
       boost::shared_ptr<tbox::Database> cart_db(
          db->getDatabase("CartesianGeometry"));
 
-      d_cart_xlo.resizeArray(d_nblocks);
-      d_cart_xhi.resizeArray(d_nblocks);
+      d_cart_xlo.resize(d_nblocks);
+      d_cart_xhi.resize(d_nblocks);
 
       for (nb = 0; nb < d_nblocks; nb++) {
 
@@ -209,7 +210,7 @@ void MblkGeometry::getFromInput(
                                      << "' domain_xlo for block " << nb
                                      << " not found in input." << std::endl);
          }
-         d_cart_xlo[nb].resizeArray(d_dim.getValue());
+         d_cart_xlo[nb].resize(d_dim.getValue());
          cart_db->getDoubleArray(block_name, temp_domain, d_dim.getValue());
          for (i = 0; i < d_dim.getValue(); i++) {
             d_cart_xlo[nb][i] = temp_domain[i];
@@ -223,7 +224,7 @@ void MblkGeometry::getFromInput(
                                      << "' domain_xhi for block " << nb
                                      << " not found in input." << std::endl);
          }
-         d_cart_xhi[nb].resizeArray(d_dim.getValue());
+         d_cart_xhi[nb].resize(d_dim.getValue());
          cart_db->getDoubleArray(block_name, temp_domain, d_dim.getValue());
          for (i = 0; i < d_dim.getValue(); i++) {
             d_cart_xhi[nb][i] = temp_domain[i];
@@ -241,8 +242,8 @@ void MblkGeometry::getFromInput(
       boost::shared_ptr<tbox::Database> wedge_db(
          db->getDatabase("WedgeGeometry"));
 
-      d_wedge_rmin.resizeArray(d_nblocks);
-      d_wedge_rmax.resizeArray(d_nblocks);
+      d_wedge_rmin.resize(d_nblocks);
+      d_wedge_rmax.resize(d_nblocks);
 
       for (nb = 0; nb < d_nblocks; nb++) {
 
@@ -334,7 +335,7 @@ void MblkGeometry::getFromInput(
    /*
     * Block rotation
     */
-   d_block_rotation.resizeArray(d_nblocks);
+   d_block_rotation.resize(d_nblocks);
    for (nb = 0; nb < d_nblocks; nb++) {
       d_block_rotation[nb] = 0;
       sprintf(block_name, "rotation_%d", nb);
@@ -356,7 +357,7 @@ void MblkGeometry::getFromInput(
     * would specify the refinement region on block 2, level 0.
     *
     */
-   d_refine_boxes.resizeArray(d_nblocks);
+   d_refine_boxes.resize(d_nblocks);
    for (nb = 0; nb < d_nblocks; nb++) {
 
       // see what the max number of levels is
@@ -368,12 +369,14 @@ void MblkGeometry::getFromInput(
             max_ln++;
          }
       }
-      d_refine_boxes[nb].resizeArray(max_ln);
+      d_refine_boxes[nb].resize(max_ln);
 
       for (ln = 0; ln < max_ln; ln++) {
          sprintf(block_name, "refine_boxes_%d_%d", nb, ln);
          if (db->keyExists(block_name)) {
-            d_refine_boxes[nb][ln] = db->getDatabaseBoxArray(block_name);
+            std::vector<tbox::DatabaseBox> db_box_vector =
+               db->getDatabaseBoxVector(block_name);
+            d_refine_boxes[nb][ln] = db_box_vector;
          } else {
             TBOX_ERROR(
                d_object_name << ": input entry `"
@@ -526,9 +529,9 @@ void MblkGeometry::setCartesianMetrics(
    hier::Index upper(domain.upper());
    hier::Index diff(upper - lower + hier::Index(lower.getDim(), 1));
 
-   if (d_dx.getSize() < (level_number + 1)) {
-      d_dx.resizeArray(level_number + 1);
-      d_dx[level_number].resizeArray(d_dim.getValue());
+   if (static_cast<int>(d_dx.size()) < (level_number + 1)) {
+      d_dx.resize(level_number + 1);
+      d_dx[level_number].resize(d_dim.getValue());
    }
 
    /*
@@ -565,8 +568,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
 
    TBOX_ASSERT(xyz);
 
-   pdat::NodeIterator niend(patch.getBox(), false);
-   for (pdat::NodeIterator ni(patch.getBox(), true); ni != niend; ++ni) {
+   pdat::NodeIterator niend(pdat::NodeGeometry::end(patch.getBox()));
+   for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(patch.getBox()));
+        ni != niend; ++ni) {
       pdat::NodeIndex node = *ni;
       if (d_block_rotation[block_number] == 0) {
 
@@ -621,8 +625,8 @@ void MblkGeometry::setWedgeMetrics(
    //
    // Set dx (dr, dth, dz) for the level
    //
-   d_dx.resizeArray(level_number + 1);
-   d_dx[level_number].resizeArray(d_dim.getValue());
+   d_dx.resize(level_number + 1);
+   d_dx[level_number].resize(d_dim.getValue());
 
    double nr = (domain.upper(0) - domain.lower(0) + 1);
    double nth = (domain.upper(1) - domain.lower(1) + 1);
@@ -737,8 +741,8 @@ void MblkGeometry::setSShellMetrics(
    //
    // Set dx (drad, dth, dphi) for the level
    //
-   d_dx.resizeArray(level_number + 1);
-   d_dx[level_number].resizeArray(d_dim.getValue());
+   d_dx.resize(level_number + 1);
+   d_dx[level_number].resize(d_dim.getValue());
 
    double nrad = (domain.upper(0) - domain.lower(0) + 1);
    double nth = (domain.upper(1) - domain.lower(1) + 1);

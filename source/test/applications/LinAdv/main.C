@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -32,6 +32,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -374,7 +375,8 @@ int main(
             new mesh::TreeLoadBalancer(
                dim,
                "LoadBalancer",
-               input_db->getDatabase("LoadBalancer")));
+               input_db->getDatabase("LoadBalancer"),
+               boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
          load_balancer->setSAMRAI_MPI(
             tbox::SAMRAI_MPI::getSAMRAIWorld());
 
@@ -395,7 +397,7 @@ int main(
                hyp_level_integrator,
                gridding_algorithm));
 
-         // VisitDataWriter is only present if HDF is available
+         // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
          boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(

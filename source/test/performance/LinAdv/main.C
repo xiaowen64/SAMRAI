@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -25,6 +25,7 @@ using namespace std;
 // Headers for basic SAMRAI objects
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -39,11 +40,13 @@ using namespace std;
 // Headers for major algorithm/data structure objects
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
@@ -294,7 +297,6 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      Array<string> viz_writer(1);
       const string viz_dump_dirname = main_db->getStringWithDefault(
             "viz_dump_dirname", base_name + ".visit");
       int visit_number_procs_per_file = 1;
@@ -403,10 +405,34 @@ int main(
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<Database> abr_db(
-         input_db->getDatabase("BergerRigoutsos"));
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
-         new mesh::BergerRigoutsos(dim, abr_db));
+
+      // Set up the clustering.
+
+      const std::string clustering_type =
+         main_db->getStringWithDefault("clustering_type", "BergerRigoutsos");
+
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
+
+      if ( clustering_type == "BergerRigoutsos" ) {
+
+         boost::shared_ptr<Database> abr_db(
+            input_db->getDatabase("BergerRigoutsos"));
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> berger_rigoutsos(
+            new mesh::BergerRigoutsos(dim, abr_db));
+         box_generator = berger_rigoutsos;
+
+      }
+      else if ( clustering_type == "TileClustering" ) {
+
+         boost::shared_ptr<Database> tc_db(
+            input_db->getDatabase("TileClustering"));
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> tile_clustering(
+            new mesh::TileClustering(dim, tc_db));
+         box_generator = tile_clustering;
+
+      }
+
+
 
 
       // Set up the load balancer.
@@ -423,14 +449,16 @@ int main(
             new mesh::TreeLoadBalancer(
                dim,
                "mesh::TreeLoadBalancer",
-               input_db->getDatabase("TreeLoadBalancer")));
+               input_db->getDatabase("TreeLoadBalancer"),
+               boost::shared_ptr<tbox::RankTreeStrategy>(new BalancedDepthFirstTree)));
          tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer0(
             new mesh::TreeLoadBalancer(
                dim,
                "mesh::TreeLoadBalancer0",
-               input_db->getDatabase("TreeLoadBalancer")));
+               input_db->getDatabase("TreeLoadBalancer"),
+               boost::shared_ptr<tbox::RankTreeStrategy>(new BalancedDepthFirstTree)));
          tree_load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          load_balancer = tree_load_balancer;
@@ -446,6 +474,23 @@ int main(
 
          load_balancer = cap_load_balancer;
          load_balancer0 = cap_load_balancer;
+      }
+      else if ( load_balancer_type == "TilePartitioner" ) {
+
+         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer(
+            new mesh::TilePartitioner(
+               dim,
+               "mesh::TilePartitioner",
+               input_db->getDatabase("TilePartitioner")));
+
+         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer0(
+            new mesh::TilePartitioner(
+               dim,
+               "mesh::TilePartitioner0",
+               input_db->getDatabase("TilePartitioner")));
+
+         load_balancer = tile_load_balancer;
+         load_balancer0 = tile_load_balancer0;
       }
 
 
@@ -467,7 +512,7 @@ int main(
             hyp_level_integrator,
             gridding_algorithm));
 
-      // VisitDataWriter is only present if HDF is available
+      // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(
@@ -642,6 +687,17 @@ int main(
          TBOX_ASSERT(tree_load_balancer);
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
+      }
+      else if ( load_balancer_type == "TilePartitioner" ) {
+         /*
+          * Output load balancing results for TilePartitioner.
+          */
+         boost::shared_ptr<mesh::TilePartitioner> tile_partitioner(
+            BOOST_CAST<mesh::TilePartitioner, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(tile_partitioner);
+         tbox::plog << "\n\nLoad balancing results:\n";
+         tile_partitioner->printStatistics(tbox::plog);
       }
 
       /*

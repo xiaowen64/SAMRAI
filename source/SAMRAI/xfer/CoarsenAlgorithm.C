@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Coarsening algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -38,7 +38,7 @@ CoarsenAlgorithm::CoarsenAlgorithm(
    const tbox::Dimension& dim,
    bool fill_coarse_data):
    d_dim(dim),
-   d_coarsen_classes(boost::make_shared<CoarsenClasses>(d_fill_coarse_data)),
+   d_coarsen_classes(boost::make_shared<CoarsenClasses>()),
    d_fill_coarse_data(fill_coarse_data),
    d_schedule_created(false)
 {

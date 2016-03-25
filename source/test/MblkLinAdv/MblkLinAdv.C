@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -25,6 +25,8 @@
 #endif
 #endif
 
+#include <vector>
+
 using namespace std;
 
 #include <stdlib.h>
@@ -32,7 +34,6 @@ using namespace std;
 #include <math.h>
 #include <float.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"
@@ -179,45 +180,45 @@ MblkLinAdv::MblkLinAdv(
     */
 
    if (d_dim == tbox::Dimension(2)) {
-      d_scalar_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
+      d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
       for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
-      d_scalar_bdry_node_conds.resizeArray(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
 
-      d_bdry_edge_uval.resizeArray(NUM_2D_EDGES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_uval);
+      d_bdry_edge_uval.resize(NUM_2D_EDGES);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_uval);
    }
    else if (d_dim == tbox::Dimension(3)) {
-      d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
+      d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; fi++) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
-      d_scalar_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
-      d_scalar_bdry_node_conds.resizeArray(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
 
-      d_bdry_face_uval.resizeArray(NUM_3D_FACES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_uval);
+      d_bdry_face_uval.resize(NUM_3D_FACES);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_face_uval);
    }
 
    /*
@@ -346,7 +347,7 @@ MblkLinAdv::~MblkLinAdv() {
  *
  * Register conserved variable (u) (i.e., solution state variable) and
  * flux variable with hyperbolic integrator that manages storage for
- * those quantities.  Also, register plot data with Vizamrai or VisIt.
+ * those quantities.  Also, register plot data with VisIt.
  *
  *************************************************************************
  */
@@ -420,7 +421,7 @@ void MblkLinAdv::registerModelVariables(
    if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
-                       << "\nVisit data writer was"
+                       << "\nVisIt data writer was"
                        << "\nregistered.  Consequently, no plot data will"
                        << "\nbe written." << endl);
    }
@@ -1753,14 +1754,15 @@ void MblkLinAdv::tagGradientDetectorCells(
    // specified time interval.  If so, apply appropriate tagging for
    // the level.
    //
-   for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
+   for (int ncrit = 0;
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
       int size = 0;
       double tol = 0.;
 
       if (ref == "UVAL_GRADIENT") {
-         size = d_grad_tol.getSize();  // max depth of gradient tolerance
+         size = static_cast<int>(d_grad_tol.size());  // max depth of gradient tolerance
          tol = ((error_level_number < size)    // find the tolerance
                 ? d_grad_tol[error_level_number]
                 : d_grad_tol[size - 1]);
@@ -1927,7 +1929,7 @@ void MblkLinAdv::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
-            for (hier::BoxContainer::iterator b(refine_boxes);
+            for (hier::BoxContainer::iterator b = refine_boxes.begin();
                  b != refine_boxes.end(); ++b) {
                hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
@@ -1943,8 +1945,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    // Update tags
    //
-   pdat::CellIterator icend(pbox, false);
-   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+   pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+   for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+        ic != icend; ++ic) {
       (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
@@ -1962,7 +1965,7 @@ void MblkLinAdv::tagGradientDetectorCells(
 void MblkLinAdv::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   const hier::Connector& dst_to_encon,
+   boost::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
@@ -2086,7 +2089,7 @@ void MblkLinAdv::printClassData(
    os << "   Boundary condition data " << endl;
 
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
@@ -2095,7 +2098,7 @@ void MblkLinAdv::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
@@ -2103,7 +2106,7 @@ void MblkLinAdv::printClassData(
       }
    }
    else if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
@@ -2112,14 +2115,14 @@ void MblkLinAdv::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
@@ -2129,76 +2132,76 @@ void MblkLinAdv::printClassData(
 
    os << "   Refinement criteria parameters " << endl;
 
-   for (j = 0; j < d_refinement_criteria.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); j++) {
       os << "       d_refinement_criteria[" << j << "] = "
          << d_refinement_criteria[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_dev_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_tol.size()); j++) {
       os << "       d_dev_tol[" << j << "] = "
          << d_dev_tol[j] << endl;
    }
-   for (j = 0; j < d_dev.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev.size()); j++) {
       os << "       d_dev[" << j << "] = "
          << d_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_dev_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); j++) {
       os << "       d_dev_time_max[" << j << "] = "
          << d_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_dev_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); j++) {
       os << "       d_dev_time_min[" << j << "] = "
          << d_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_grad_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_tol.size()); j++) {
       os << "       d_grad_tol[" << j << "] = "
          << d_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_grad_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); j++) {
       os << "       d_grad_time_max[" << j << "] = "
          << d_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_grad_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); j++) {
       os << "       d_grad_time_min[" << j << "] = "
          << d_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_onset.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_onset.size()); j++) {
       os << "       d_shock_onset[" << j << "] = "
          << d_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_tol.size()); j++) {
       os << "       d_shock_tol[" << j << "] = "
          << d_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); j++) {
       os << "       d_shock_time_max[" << j << "] = "
          << d_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); j++) {
       os << "       d_shock_time_min[" << j << "] = "
          << d_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_rich_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_tol.size()); j++) {
       os << "       d_rich_tol[" << j << "] = "
          << d_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_rich_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); j++) {
       os << "       d_rich_time_max[" << j << "] = "
          << d_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_rich_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); j++) {
       os << "       d_rich_time_min[" << j << "] = "
          << d_rich_time_min[j] << endl;
    }
@@ -2277,12 +2280,11 @@ void MblkLinAdv::getFromInput(
    if (db->keyExists("Refinement_data")) {
       boost::shared_ptr<tbox::Database> refine_db(
          db->getDatabase("Refinement_data"));
-      tbox::Array<string> refinement_keys = refine_db->getAllKeys();
-      int num_keys = refinement_keys.getSize();
+      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
-         d_refinement_criteria =
-            refine_db->getStringArray("refine_criteria");
+         d_refinement_criteria = refine_db->getStringVector("refine_criteria");
       } else {
          TBOX_WARNING(
             d_object_name << ": "
@@ -2290,10 +2292,10 @@ void MblkLinAdv::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      tbox::Array<string> ref_keys_defined(num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < refinement_keys.getSize(); i++) {
+      for (int i = 0; i < num_keys; i++) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -2318,8 +2320,7 @@ void MblkLinAdv::getFromInput(
             if (error_db && error_key == "UVAL_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
-                  d_dev_tol =
-                     error_db->getDoubleArray("dev_tol");
+                  d_dev_tol = error_db->getDoubleVector("dev_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2328,8 +2329,7 @@ void MblkLinAdv::getFromInput(
                }
 
                if (error_db->keyExists("uval_dev")) {
-                  d_dev =
-                     error_db->getDoubleArray("uval_dev");
+                  d_dev = error_db->getDoubleVector("uval_dev");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2338,18 +2338,16 @@ void MblkLinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_dev_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_dev_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_dev_time_max.resizeArray(1);
+                  d_dev_time_max.resize(1);
                   d_dev_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_dev_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_dev_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_dev_time_min.resizeArray(1);
+                  d_dev_time_min.resize(1);
                   d_dev_time_min[0] = 0.;
                }
 
@@ -2358,8 +2356,7 @@ void MblkLinAdv::getFromInput(
             if (error_db && error_key == "UVAL_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
-                  d_grad_tol =
-                     error_db->getDoubleArray("grad_tol");
+                  d_grad_tol = error_db->getDoubleVector("grad_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2368,18 +2365,16 @@ void MblkLinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_grad_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_grad_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_grad_time_max.resizeArray(1);
+                  d_grad_time_max.resize(1);
                   d_grad_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_grad_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_grad_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_grad_time_min.resizeArray(1);
+                  d_grad_time_min.resize(1);
                   d_grad_time_min[0] = 0.;
                }
 
@@ -2388,8 +2383,7 @@ void MblkLinAdv::getFromInput(
             if (error_db && error_key == "UVAL_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
-                  d_shock_onset =
-                     error_db->getDoubleArray("shock_onset");
+                  d_shock_onset = error_db->getDoubleVector("shock_onset");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2398,8 +2392,7 @@ void MblkLinAdv::getFromInput(
                }
 
                if (error_db->keyExists("shock_tol")) {
-                  d_shock_tol =
-                     error_db->getDoubleArray("shock_tol");
+                  d_shock_tol = error_db->getDoubleVector("shock_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2408,18 +2401,16 @@ void MblkLinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_shock_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_shock_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_shock_time_max.resizeArray(1);
+                  d_shock_time_max.resize(1);
                   d_shock_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_shock_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_shock_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_shock_time_min.resizeArray(1);
+                  d_shock_time_min.resize(1);
                   d_shock_time_min[0] = 0.;
                }
 
@@ -2428,8 +2419,7 @@ void MblkLinAdv::getFromInput(
             if (error_db && error_key == "UVAL_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
-                  d_rich_tol =
-                     error_db->getDoubleArray("rich_tol");
+                  d_rich_tol = error_db->getDoubleVector("rich_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2438,18 +2428,16 @@ void MblkLinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_rich_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_rich_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_rich_time_max.resizeArray(1);
+                  d_rich_time_max.resize(1);
                   d_rich_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_rich_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_rich_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_rich_time_min.resizeArray(1);
+                  d_rich_time_min.resize(1);
                   d_rich_time_min[0] = 0.;
                }
 
@@ -2542,10 +2530,10 @@ void MblkLinAdv::getFromInput(
             }
          }
 
-         tbox::Array<string> init_data_keys = init_data_db->getAllKeys();
+         std::vector<string> init_data_keys = init_data_db->getAllKeys();
 
          if (init_data_db->keyExists("front_position")) {
-            d_front_position = init_data_db->getDoubleArray("front_position");
+            d_front_position = init_data_db->getDoubleVector("front_position");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`front_position' input required for "
@@ -2553,10 +2541,10 @@ void MblkLinAdv::getFromInput(
          }
 
          d_number_of_intervals =
-            tbox::MathUtilities<int>::Min(d_front_position.getSize() + 1,
-               init_data_keys.getSize() - 1);
+            tbox::MathUtilities<int>::Min(static_cast<int>(d_front_position.size()) + 1,
+               static_cast<int>(init_data_keys.size()) - 1);
 
-         d_interval_uval.resizeArray(d_number_of_intervals);
+         d_interval_uval.resize(d_number_of_intervals);
 
          int i = 0;
          int nkey = 0;
@@ -2564,7 +2552,7 @@ void MblkLinAdv::getFromInput(
 
          while (!found_interval_data
                 && (i < d_number_of_intervals)
-                && (nkey < init_data_keys.getSize())) {
+                && (nkey < static_cast<int>(init_data_keys.size()))) {
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
@@ -2709,49 +2697,49 @@ void MblkLinAdv::putToRestart(
        (d_data_problem == "SINE_CONSTANT_Z")) {
       restart_db->putInteger("d_number_of_intervals", d_number_of_intervals);
       if (d_number_of_intervals > 0) {
-         restart_db->putDoubleArray("d_front_position", d_front_position);
-         restart_db->putDoubleArray("d_interval_uval", d_interval_uval);
+         restart_db->putDoubleVector("d_front_position", d_front_position);
+         restart_db->putDoubleVector("d_interval_uval", d_interval_uval);
       }
    }
 
-   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
+   restart_db->putIntegerVector("d_scalar_bdry_edge_conds",
       d_scalar_bdry_edge_conds);
-   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
+   restart_db->putIntegerVector("d_scalar_bdry_node_conds",
       d_scalar_bdry_node_conds);
 
    if (d_dim == tbox::Dimension(2)) {
-      restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
+      restart_db->putDoubleVector("d_bdry_edge_uval", d_bdry_edge_uval);
    }
    else if (d_dim == tbox::Dimension(3)) {
-      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+      restart_db->putIntegerVector("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
-      restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
+      restart_db->putDoubleVector("d_bdry_face_uval", d_bdry_face_uval);
    }
 
-   if (d_refinement_criteria.getSize() > 0) {
-      restart_db->putStringArray("d_refinement_criteria",
+   if (d_refinement_criteria.size() > 0) {
+      restart_db->putStringVector("d_refinement_criteria",
          d_refinement_criteria);
    }
-   for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
-         restart_db->putDoubleArray("d_dev_tol", d_dev_tol);
-         restart_db->putDoubleArray("d_dev", d_dev);
-         restart_db->putDoubleArray("d_dev_time_max", d_dev_time_max);
-         restart_db->putDoubleArray("d_dev_time_min", d_dev_time_min);
+         restart_db->putDoubleVector("d_dev_tol", d_dev_tol);
+         restart_db->putDoubleVector("d_dev", d_dev);
+         restart_db->putDoubleVector("d_dev_time_max", d_dev_time_max);
+         restart_db->putDoubleVector("d_dev_time_min", d_dev_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_GRADIENT") {
-         restart_db->putDoubleArray("d_grad_tol", d_grad_tol);
-         restart_db->putDoubleArray("d_grad_time_max", d_grad_time_max);
-         restart_db->putDoubleArray("d_grad_time_min", d_grad_time_min);
+         restart_db->putDoubleVector("d_grad_tol", d_grad_tol);
+         restart_db->putDoubleVector("d_grad_time_max", d_grad_time_max);
+         restart_db->putDoubleVector("d_grad_time_min", d_grad_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_SHOCK") {
-         restart_db->putDoubleArray("d_shock_onset", d_shock_onset);
-         restart_db->putDoubleArray("d_shock_tol", d_shock_tol);
-         restart_db->putDoubleArray("d_shock_time_max", d_shock_time_max);
-         restart_db->putDoubleArray("d_shock_time_min", d_shock_time_min);
+         restart_db->putDoubleVector("d_shock_onset", d_shock_onset);
+         restart_db->putDoubleVector("d_shock_tol", d_shock_tol);
+         restart_db->putDoubleVector("d_shock_time_max", d_shock_time_max);
+         restart_db->putDoubleVector("d_shock_time_min", d_shock_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_RICHARDSON") {
-         restart_db->putDoubleArray("d_rich_tol", d_rich_tol);
-         restart_db->putDoubleArray("d_rich_time_max", d_rich_time_max);
-         restart_db->putDoubleArray("d_rich_time_min", d_rich_time_min);
+         restart_db->putDoubleVector("d_rich_tol", d_rich_tol);
+         restart_db->putDoubleVector("d_rich_time_max", d_rich_time_max);
+         restart_db->putDoubleVector("d_rich_time_min", d_rich_time_min);
       }
 
    }
@@ -2823,45 +2811,46 @@ void MblkLinAdv::getFromRestart()
        (d_data_problem == "SINE_CONSTANT_Z")) {
       d_number_of_intervals = db->getInteger("d_number_of_intervals");
       if (d_number_of_intervals > 0) {
-         d_front_position = db->getDoubleArray("d_front_position");
-         d_interval_uval = db->getDoubleArray("d_interval_uval");
+         d_front_position = db->getDoubleVector("d_front_position");
+         d_interval_uval = db->getDoubleVector("d_interval_uval");
       }
    }
 
-   d_scalar_bdry_edge_conds = db->getIntegerArray("d_scalar_bdry_edge_conds");
-   d_scalar_bdry_node_conds = db->getIntegerArray("d_scalar_bdry_node_conds");
+   d_scalar_bdry_edge_conds = db->getIntegerVector("d_scalar_bdry_edge_conds");
+   d_scalar_bdry_node_conds = db->getIntegerVector("d_scalar_bdry_node_conds");
 
    if (d_dim == tbox::Dimension(2)) {
-      d_bdry_edge_uval = db->getDoubleArray("d_bdry_edge_uval");
+      d_bdry_edge_uval = db->getDoubleVector("d_bdry_edge_uval");
    }
    else if (d_dim == tbox::Dimension(3)) {
-      d_scalar_bdry_face_conds = db->getIntegerArray("d_scalar_bdry_face_conds");
+      d_scalar_bdry_face_conds =
+         db->getIntegerVector("d_scalar_bdry_face_conds");
 
-      d_bdry_face_uval = db->getDoubleArray("d_bdry_face_uval");
+      d_bdry_face_uval = db->getDoubleVector("d_bdry_face_uval");
    }
 
    if (db->keyExists("d_refinement_criteria")) {
-      d_refinement_criteria = db->getStringArray("d_refinement_criteria");
+      d_refinement_criteria = db->getStringVector("d_refinement_criteria");
    }
-   for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
-         d_dev_tol = db->getDoubleArray("d_dev_tol");
-         d_dev_time_max = db->getDoubleArray("d_dev_time_max");
-         d_dev_time_min = db->getDoubleArray("d_dev_time_min");
+         d_dev_tol = db->getDoubleVector("d_dev_tol");
+         d_dev_time_max = db->getDoubleVector("d_dev_time_max");
+         d_dev_time_min = db->getDoubleVector("d_dev_time_min");
       } else if (d_refinement_criteria[i] == "UVAL_GRADIENT") {
-         d_grad_tol = db->getDoubleArray("d_grad_tol");
-         d_grad_time_max = db->getDoubleArray("d_grad_time_max");
-         d_grad_time_min = db->getDoubleArray("d_grad_time_min");
+         d_grad_tol = db->getDoubleVector("d_grad_tol");
+         d_grad_time_max = db->getDoubleVector("d_grad_time_max");
+         d_grad_time_min = db->getDoubleVector("d_grad_time_min");
       } else if (d_refinement_criteria[i] == "UVAL_SHOCK") {
-         d_shock_onset = db->getDoubleArray("d_shock_onset");
-         d_shock_tol = db->getDoubleArray("d_shock_tol");
-         d_shock_time_max = db->getDoubleArray("d_shock_time_max");
-         d_shock_time_min = db->getDoubleArray("d_shock_time_min");
+         d_shock_onset = db->getDoubleVector("d_shock_onset");
+         d_shock_tol = db->getDoubleVector("d_shock_tol");
+         d_shock_time_max = db->getDoubleVector("d_shock_time_max");
+         d_shock_time_min = db->getDoubleVector("d_shock_time_min");
       } else if (d_refinement_criteria[i] == "UVAL_RICHARDSON") {
-         d_rich_tol = db->getDoubleArray("d_rich_tol");
-         d_rich_time_max = db->getDoubleArray("d_rich_time_max");
-         d_rich_time_min = db->getDoubleArray("d_rich_time_min");
+         d_rich_tol = db->getDoubleVector("d_rich_tol");
+         d_rich_time_max = db->getDoubleVector("d_rich_time_max");
+         d_rich_time_min = db->getDoubleVector("d_rich_time_min");
       }
 
    }
@@ -2902,12 +2891,12 @@ void MblkLinAdv::readStateDataEntry(
    boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
-   tbox::Array<double>& uval)
+   std::vector<double>& uval)
 {
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
-   TBOX_ASSERT(uval.getSize() > array_indx);
+   TBOX_ASSERT(static_cast<int>(uval.size()) > array_indx);
 
    if (db->keyExists("uval")) {
       uval[array_indx] = db->getDouble("uval");
@@ -2941,7 +2930,7 @@ void MblkLinAdv::checkBoundaryData(
    int btype,
    const hier::Patch& patch,
    const hier::IntVector& ghost_width_to_check,
-   const tbox::Array<int>& scalar_bconds) const
+   const std::vector<int>& scalar_bconds) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim == tbox::Dimension(2)) {
@@ -2957,12 +2946,12 @@ void MblkLinAdv::checkBoundaryData(
 
    const boost::shared_ptr<hier::PatchGeometry> pgeom(
       patch.getPatchGeometry());
-   const tbox::Array<hier::BoundaryBox> bdry_boxes =
+   const std::vector<hier::BoundaryBox>& bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
-   for (int i = 0; i < bdry_boxes.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
@@ -2970,26 +2959,26 @@ void MblkLinAdv::checkBoundaryData(
       int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
       }
       else if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }

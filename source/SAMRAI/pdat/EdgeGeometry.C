@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,6 +12,7 @@
 #define included_pdat_EdgeGeometry_C
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
+#include "SAMRAI/pdat/EdgeIterator.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -99,7 +100,7 @@ EdgeGeometry::calculateOverlap(
 
 void
 EdgeGeometry::computeDestinationBoxes(
-   tbox::Array<hier::BoxContainer>& dst_boxes,
+   std::vector<hier::BoxContainer>& dst_boxes,
    const EdgeGeometry& src_geometry,
    const hier::Box& src_mask,
    const hier::Box& fill_box,
@@ -147,7 +148,7 @@ EdgeGeometry::computeDestinationBoxes(
 
          if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer edge_restrict_boxes;
-            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
                edge_restrict_boxes.pushBack(toEdgeBox(*b, d));
             }
@@ -217,7 +218,7 @@ EdgeGeometry::doOverlap(
 {
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
@@ -243,9 +244,10 @@ EdgeGeometry::setUpOverlap(
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(*b, d));
          dst_boxes[d].pushBack(edge_box);
@@ -621,6 +623,22 @@ EdgeGeometry::rotateAboutAxis(EdgeIndex& index,
       }
    }
    index.setAxis(new_axis_direction);
+}
+
+EdgeIterator
+EdgeGeometry::begin(
+   const hier::Box& box,
+   int axis)
+{
+   return EdgeIterator(box, axis, true);
+}
+
+EdgeIterator
+EdgeGeometry::end(
+   const hier::Box& box,
+   int axis)
+{
+   return EdgeIterator(box, axis, false);
 }
 
 }

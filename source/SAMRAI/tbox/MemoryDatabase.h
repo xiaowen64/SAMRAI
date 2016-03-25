@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
@@ -120,7 +120,7 @@ public:
    /**
     * Return all keys in the database.
     */
-   virtual Array<std::string>
+   virtual std::vector<std::string>
    getAllKeys();
 
    /**
@@ -187,14 +187,14 @@ public:
       const bool& data);
 
    /**
-    * Create a boolean array entry in the database with the specified
+    * Create a boolean vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putBoolArray(
+   putBoolVector(
       const std::string& key,
-      const Array<bool>& data);
+      const std::vector<bool>& data);
 
    /**
     * Create a boolean array entry in the database with the specified
@@ -231,11 +231,11 @@ public:
    /**
     * Get a boolean entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a boolean array, then an error message is printed and
+    * is not a boolean vector, then an error message is printed and
     * the program exits.
     */
-   virtual Array<bool>
-   getBoolArray(
+   virtual std::vector<bool>
+   getBoolVector(
       const std::string& key);
 
    /**
@@ -270,14 +270,14 @@ public:
       const DatabaseBox& data);
 
    /**
-    * Create a box array entry in the database with the specified
+    * Create a box vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putDatabaseBoxArray(
+   putDatabaseBoxVector(
       const std::string& key,
-      const Array<DatabaseBox>& data);
+      const std::vector<DatabaseBox>& data);
 
    /**
     * Create a box array entry in the database with the specified
@@ -314,11 +314,13 @@ public:
    /**
     * Get a box entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a box array, then an error message is printed and
+    * is not a box vector, then an error message is printed and
     * the program exits.
+    *
+    * @param key Key name in database.
     */
-   virtual Array<DatabaseBox>
-   getDatabaseBoxArray(
+   virtual std::vector<DatabaseBox>
+   getDatabaseBoxVector(
       const std::string& key);
 
    /**
@@ -353,14 +355,14 @@ public:
       const char& data);
 
    /**
-    * Create a character array entry in the database with the specified
+    * Create a character vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putCharArray(
+   putCharVector(
       const std::string& key,
-      const Array<char>& data);
+      const std::vector<char>& data);
 
    /**
     * Create a character array entry in the database with the specified
@@ -397,11 +399,11 @@ public:
    /**
     * Get a character entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a character array, then an error message is printed and
+    * is not a character vector, then an error message is printed and
     * the program exits.
     */
-   virtual Array<char>
-   getCharArray(
+   virtual std::vector<char>
+   getCharVector(
       const std::string& key);
 
    /**
@@ -437,14 +439,14 @@ public:
       const dcomplex& data);
 
    /**
-    * Create a complex array entry in the database with the specified
+    * Create a complex vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putComplexArray(
+   putComplexVector(
       const std::string& key,
-      const Array<dcomplex>& data);
+      const std::vector<dcomplex>& data);
 
    /**
     * Create a complex array entry in the database with the specified
@@ -483,12 +485,12 @@ public:
    /**
     * Get a complex entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a complex array, then an error message is printed and
+    * is not a complex vector, then an error message is printed and
     * the program exits.  Complex values may be promoted from integers,
     * floats, or doubles.
     */
-   virtual Array<dcomplex>
-   getComplexArray(
+   virtual std::vector<dcomplex>
+   getComplexVector(
       const std::string& key);
 
    /**
@@ -525,14 +527,14 @@ public:
       const double& data);
 
    /**
-    * Create a double array entry in the database with the specified
+    * Create a double vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putDoubleArray(
+   putDoubleVector(
       const std::string& key,
-      const Array<double>& data);
+      const std::vector<double>& data);
 
    /**
     * Create a double array entry in the database with the specified
@@ -570,12 +572,12 @@ public:
    /**
     * Get a double entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a double array, then an error message is printed and
+    * is not a double vector, then an error message is printed and
     * the program exits.  Double values may be promoted from integers
     * or floats.
     */
-   virtual Array<double>
-   getDoubleArray(
+   virtual std::vector<double>
+   getDoubleVector(
       const std::string& key);
 
    /**
@@ -612,14 +614,14 @@ public:
       const float& data);
 
    /**
-    * Create a float array entry in the database with the specified
+    * Create a float vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putFloatArray(
+   putFloatVector(
       const std::string& key,
-      const Array<float>& data);
+      const std::vector<float>& data);
 
    /**
     * Create a float array entry in the database with the specified
@@ -658,12 +660,12 @@ public:
    /**
     * Get a float entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a float array, then an error message is printed and
+    * is not a float vector, then an error message is printed and
     * the program exits.  Float values may be promoted from integers
     * or silently truncated from doubles.
     */
-   virtual Array<float>
-   getFloatArray(
+   virtual std::vector<float>
+   getFloatVector(
       const std::string& key);
 
    /**
@@ -700,14 +702,14 @@ public:
       const int& data);
 
    /**
-    * Create an integer array entry in the database with the specified
+    * Create an integer vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putIntegerArray(
+   putIntegerVector(
       const std::string& key,
-      const Array<int>& data);
+      const std::vector<int>& data);
 
    /**
     * Create an integer array entry in the database with the specified
@@ -744,11 +746,11 @@ public:
    /**
     * Get an integer entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not an integer array, then an error message is printed and
+    * is not an integer vector, then an error message is printed and
     * the program exits.
     */
-   virtual Array<int>
-   getIntegerArray(
+   virtual std::vector<int>
+   getIntegerVector(
       const std::string& key);
 
    /**
@@ -783,14 +785,14 @@ public:
       const std::string& data);
 
    /**
-    * Create a string array entry in the database with the specified
+    * Create a string vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     */
    virtual void
-   putStringArray(
+   putStringVector(
       const std::string& key,
-      const Array<std::string>& data);
+      const std::vector<std::string>& data);
 
    /**
     * Create a string array entry in the database with the specified
@@ -827,11 +829,11 @@ public:
    /**
     * Get a string entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a string array, then an error message is printed and
+    * is not a string vector, then an error message is printed and
     * the program exits.
     */
-   virtual Array<std::string>
-   getStringArray(
+   virtual std::vector<std::string>
+   getStringVector(
       const std::string& key);
 
    /**
@@ -924,14 +926,14 @@ private:
       bool d_accessed;                                  // whether accessed
       bool d_from_default;                              // from default key
       boost::shared_ptr<Database> d_database;           // sub-database
-      Array<bool> d_boolean;                    // boolean array value
-      Array<DatabaseBox> d_box;                 // box array value
-      Array<char> d_char;                       // char array value
-      Array<dcomplex> d_complex;                // complex array value
-      Array<double> d_double;                   // double array value
-      Array<float> d_float;                     // float array value
-      Array<int> d_integer;                     // integer array value
-      Array<std::string> d_string;              // string array value
+      std::vector<bool> d_boolean;              // boolean vector value
+      std::vector<DatabaseBox> d_box;           // box vector value
+      std::vector<char> d_char;                 // char vector value
+      std::vector<dcomplex> d_complex;          // complex vector value
+      std::vector<double> d_double;             // double vector value
+      std::vector<float> d_float;               // float vector value
+      std::vector<int> d_integer;               // integer vector value
+      std::vector<std::string> d_string;        // string vector value
    };
 
    /*

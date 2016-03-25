@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
@@ -14,6 +14,8 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <vector>
 
 using namespace SAMRAI;
 
@@ -37,13 +39,12 @@ PatchMultiblockTestStrategy::PatchMultiblockTestStrategy(
    const tbox::Dimension& dim):
    d_dim(dim)
 {
-   d_variable_src_name.resizeArray(0);
-   d_variable_dst_name.resizeArray(0);
-   d_variable_depth.resizeArray(0);
-   d_variable_src_ghosts.resizeArray(0, hier::IntVector(d_dim));
-   d_variable_dst_ghosts.resizeArray(0, hier::IntVector(d_dim));
-   d_variable_coarsen_op.resizeArray(0);
-   d_variable_refine_op.resizeArray(0);
+   d_variable_src_name.resize(0);
+   d_variable_dst_name.resize(0);
+   d_variable_depth.resize(0);
+   d_variable_src_ghosts.resize(0, hier::IntVector(d_dim));
+   d_variable_dst_ghosts.resize(0, hier::IntVector(d_dim));
+   d_variable_refine_op.resize(0);
 }
 
 PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
@@ -63,16 +64,15 @@ void PatchMultiblockTestStrategy::readVariableInput(
 {
    TBOX_ASSERT(db);
 
-   tbox::Array<string> var_keys = db->getAllKeys();
-   int nkeys = var_keys.getSize();
+   std::vector<string> var_keys = db->getAllKeys();
+   int nkeys = static_cast<int>(var_keys.size());
 
-   d_variable_src_name.resizeArray(nkeys);
-   d_variable_dst_name.resizeArray(nkeys);
-   d_variable_depth.resizeArray(nkeys);
-   d_variable_src_ghosts.resizeArray(nkeys, hier::IntVector(d_dim, 0));
-   d_variable_dst_ghosts.resizeArray(nkeys, hier::IntVector(d_dim, 0));
-   d_variable_coarsen_op.resizeArray(nkeys);
-   d_variable_refine_op.resizeArray(nkeys);
+   d_variable_src_name.resize(nkeys);
+   d_variable_dst_name.resize(nkeys);
+   d_variable_depth.resize(nkeys);
+   d_variable_src_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
+   d_variable_dst_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
+   d_variable_refine_op.resize(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
 
@@ -108,12 +108,6 @@ void PatchMultiblockTestStrategy::readVariableInput(
          var_db->getIntegerArray("dst_ghosts", tmp_ghosts, d_dim.getValue());
       }
 
-      if (var_db->keyExists("coarsen_operator")) {
-         d_variable_coarsen_op[i] = var_db->getString("coarsen_operator");
-      } else {
-         d_variable_coarsen_op[i] = "NO_COARSEN";
-      }
-
       if (var_db->keyExists("refine_operator")) {
          d_variable_refine_op[i] = var_db->getString("refine_operator");
       } else {
@@ -129,12 +123,14 @@ void PatchMultiblockTestStrategy::readRefinementInput(
 {
    TBOX_ASSERT(db);
 
-   tbox::Array<string> box_keys = db->getAllKeys();
-   int nkeys = box_keys.getSize();
+   std::vector<string> box_keys = db->getAllKeys();
+   int nkeys = static_cast<int>(box_keys.size());
 
-   d_refine_level_boxes.resizeArray(nkeys);
+   d_refine_level_boxes.resize(nkeys);
    for (int i = 0; i < nkeys; i++) {
-      d_refine_level_boxes[i] = db->getDatabaseBoxArray(box_keys[i]);
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         db->getDatabaseBoxVector(box_keys[i]);
+      d_refine_level_boxes[i] = db_box_vector;
    }
 
 }
@@ -153,7 +149,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
    int tag_index)
 {
 
-   if (level_number < d_refine_level_boxes.getSize()) {
+   if (level_number < static_cast<int>(d_refine_level_boxes.size())) {
 
       boost::shared_ptr<pdat::CellData<int> > tags(
          patch.getPatchData(tag_index),
@@ -163,7 +159,8 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
       const hier::Box pbox = patch.getBox();
 
-      for (hier::BoxContainer::iterator k(d_refine_level_boxes[level_number]);
+      for (hier::BoxContainer::iterator k =
+              d_refine_level_boxes[level_number].begin();
            k != d_refine_level_boxes[level_number].end(); ++k) {
          tags->fill(1, *k * pbox, 0);
       }
@@ -175,7 +172,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 /*
  *************************************************************************
  *
- * Blank physical boundary and pre/postprocess coarsen/refine operations
+ * Blank physical boundary and pre/postprocess 
  * so tester isn't required to implement them when not needed.
  *
  *************************************************************************
@@ -219,30 +216,3 @@ void PatchMultiblockTestStrategy::postprocessRefine(
    NULL_USE(ratio);
 }
 
-void PatchMultiblockTestStrategy::preprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const boost::shared_ptr<hier::VariableContext>& context,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio) const
-{
-   NULL_USE(coarse);
-   NULL_USE(fine);
-   NULL_USE(context);
-   NULL_USE(coarse_box);
-   NULL_USE(ratio);
-}
-
-void PatchMultiblockTestStrategy::postprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const boost::shared_ptr<hier::VariableContext>& context,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio) const
-{
-   NULL_USE(coarse);
-   NULL_USE(fine);
-   NULL_USE(context);
-   NULL_USE(coarse_box);
-   NULL_USE(ratio);
-}

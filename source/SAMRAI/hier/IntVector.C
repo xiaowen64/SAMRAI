@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
@@ -57,8 +57,8 @@ IntVector::IntVector(
 }
 
 IntVector::IntVector(
-   const tbox::Array<int>& a):
-   d_dim(static_cast<unsigned short>(a.getSize()))
+   const std::vector<int>& a):
+   d_dim(static_cast<unsigned short>(a.size()))
 {
    for (int i = 0; i < d_dim.getValue(); ++i) {
       d_vector[i] = a[i];

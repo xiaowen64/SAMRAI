@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -24,7 +24,6 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Schedule.h"
 #include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
@@ -262,6 +261,18 @@ public:
    }
 
    /*!
+    * @brief Set whether to unpack messages in a deterministic order.
+    *
+    * By default message unpacking is ordered by receive time, which
+    * is not deterministic.  If your results are dependent on unpack
+    * ordering and you want deterministic results, set this flag to
+    * true.
+    *
+    * @param [in] flag
+    */
+   void setDeterministicUnpackOrderingFlag( bool flag );
+
+   /*!
     * @brief Print the refine schedule data to the specified data stream.
     *
     * @param[out] stream Output data stream.
@@ -320,6 +331,7 @@ private:
     *                                the coarsest level), this value should be
     *                                less than zero.
     * @param[in] hierarchy   boost::shared_ptr to patch hierarchy.
+    * @param[in] dst_to_src
     * @param[in] src_growth_to_nest_dst  The minimum amount that src_level has
     *                                    to grow in order to nest dst.
     * @param[in] refine_classes  Holds refine equivalence classes to be used
@@ -331,12 +343,14 @@ private:
     *                            boundary filling operations.  This pointer
     *                            may be null, in which case no boundary filling
     *                            or user-defined refine operations will occur.
+    * @param[in] top_refine_schedule
     *
     * @pre dst_level
     * @pre src_level
     * @pre (next_coarser_level == -1) || hierarchy
+    * @pre dst_to_src.hasTranspose()
     * @pre refine_classes
-    * @pre !src_level || (dst_level->getDim() == src_level.getDim())
+    * @pre dst_level->getDim() == src_level.getDim()
     * @pre !hierarchy || (dst_level->getDim() == hierarchy.getDim())
     * @pre dst_to_src.getBase() == *dst_level->getBoxLevel()
     * @pre src_to_dst.getHead() == *dst_level->getBoxLevel()
@@ -347,7 +361,6 @@ private:
       int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
@@ -371,10 +384,6 @@ private:
     *                             the destination level
     * @param[in] hierarchy  A patch hierarchy to be used to provide coarser
     *                       levels that may be used for interpolation.
-    * @param[in] dst_to_src  Connector between dst and src levels given
-    *                        in constructor.
-    * @param[in] src_to_dst  Connector between src and dst levels given
-    *                        in constructor.
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
     *                                    destination level.
@@ -393,15 +402,15 @@ private:
     *                                    source level to destination level
     *                                    will be skipped.
     *
+    * @pre d_dst_to_src
+    * @pre d_dst_to_src->hasTranspose()
     * @pre (next_coarser_ln == -1) || hierarchy
-    * !d_src_level || dst_to_src.isFinalized()
+    * @pre !d_src_level || d_dst_to_src->isFinalized()
     */
    void
    finishScheduleConstruction(
       int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& dst_to_fill,
       const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
@@ -478,6 +487,7 @@ private:
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
     *                                boxes that need to be filled.
+    * @param[in] overlaps
     */
    void
    refineScratchData(
@@ -485,7 +495,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
       const hier::Connector& coarse_to_unfilled,
-      const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
+      const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
       overlaps) const;
 
    /*!
@@ -494,7 +504,7 @@ private:
     */
    void
    computeRefineOverlaps(
-      std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
@@ -522,10 +532,6 @@ private:
     *                                      enhanced connectivity on the
     *                                      destination level to
     *                                      unfilled_encon_box_level
-    * @param[in] dst_to_src  Connector between dst_level and src_level
-    *                        passed into the constructor
-    * @param[in] src_to_dst  Connector between src_level and dst_level
-    *                        passed into the constructor
     * @param[in] dst_to_fill  Connector between dst_level and a level
     *                         representing the boxes that need to be filled.
     * @param[in] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
@@ -536,6 +542,11 @@ private:
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
+    *
+    * @param[in] create_transactions
+    *
+    * @pre d_dst_to_src
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    generateCommunicationSchedule(
@@ -543,8 +554,6 @@ private:
       boost::shared_ptr<hier::Connector>& dst_to_unfilled,
       boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
       boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const hier::Connector& dst_to_fill,
       const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const bool use_time_interpolation,
@@ -571,16 +580,18 @@ private:
     *                                    a collection of boxes that indicates
     *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
-    * @param[in] dst_to_src  Connector from dst_level to src_level.
-    * @param[in] src_to_dst  Connector from src_level to dst_level.
+    *
+    * @pre (d_dst_level->getDim() == dst_box_level.getDim()) &&
+    *      (d_dst_level->getDim() == fill_ghost_width.getDim())
+    *
+    * @pre d_dst_to_src
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    setDefaultFillBoxLevel(
-      hier::BoxLevel& fill_box_level,
-      hier::Connector& dst_to_fill,
-      hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const hier::Connector* dst_to_src,
-      const hier::Connector* src_to_dst);
+      boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+      boost::shared_ptr<hier::Connector>& dst_to_fill,
+      hier::BoxNeighborhoodCollection& src_owner_dst_to_fill);
 
    /*
     * @brief Set up level to represent ghost regions at enhanced
@@ -619,7 +630,7 @@ private:
     * level_encon_unfilled_boxes, and edges are added to
     * encon_to_unfilled_encon_nbrhood_set.
     *
-    * The source level is the head level from the connector dst_to_src.
+    * The source level is the head level from the connector d_dst_to_src.
     *
     * @param[out]  unfilled_encon_box_level  encon unfilled boxes for the dst
     *                                        level
@@ -628,8 +639,9 @@ private:
     * @param[in,out]  last_unfilled_local_id a unique LocalId not already
     *                                        used in level_encon_unfilled_boxes
     * @param[in]  dst_box  The destination box
-    * @param[in]  dst_to_src
     * @param[in]  encon_fill_boxes
+    *
+    * @pre d_dst_to_src
     */
    void
    findEnconUnfilledBoxes(
@@ -637,7 +649,6 @@ private:
       const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_box,
-      const hier::Connector& dst_to_src,
       const hier::BoxContainer& encon_fill_boxes);
 
    /*
@@ -668,15 +679,14 @@ private:
     *                                    can be filled by that source box.
     * @param[in] dst_to_fill  Mapping from the dst_level to boxes it needs
     *                         need to have filled.
-    * @param[in] dst_to_src  Mapping from the dst_level to src_level
-    * @param[in] src_to_dst  Mapping from the src_level to dst_level
+    *
+    * @pre d_dst_to_src
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    communicateFillBoxes(
       hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const hier::Connector& dst_to_fill,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst);
+      const hier::Connector& dst_to_fill);
 
    /*!
     * @brief Shear off parts of unfilled boxes that lie outside non-periodic
@@ -685,6 +695,8 @@ private:
     * @param[in,out] unfilled
     *
     * @param[in,out] dst_to_unfilled
+    *
+    * @param[in] hierarchy
     */
    void
    shearUnfilledBoxesOutsideNonperiodicBoundaries(
@@ -702,8 +714,6 @@ private:
     *
     * @param[out] dst_to_coarse_interp
     *
-    * @param[out] coarse_interp_to_dst
-    *
     * @param[out] coarse_interp_to_unfilled
     *
     * @param[in] hiercoarse_box_level The BoxLevel on the
@@ -713,10 +723,9 @@ private:
     */
    void
    setupCoarseInterpBoxLevel(
-      hier::BoxLevel &coarse_interp_box_level,
-      hier::Connector &dst_to_coarse_interp,
-      hier::Connector &coarse_interp_to_dst,
-      hier::Connector &coarse_interp_to_unfilled,
+      boost::shared_ptr<hier::BoxLevel> &coarse_interp_box_level,
+      boost::shared_ptr<hier::Connector> &dst_to_coarse_interp,
+      boost::shared_ptr<hier::Connector> &coarse_interp_to_unfilled,
       const hier::BoxLevel &hiercoarse_box_level,
       const hier::Connector &dst_to_unfilled);
 
@@ -732,8 +741,6 @@ private:
     *
     * @param[in] coarse_interp_to_hiercoarse
     *
-    * @param[in] hiercoarse_to_coarse_interp
-    *
     * @param[in] next_coarser_ln Level number of hiercoarse (the
     * coarser level on the hierarchy
     *
@@ -741,25 +748,21 @@ private:
     *
     * @param[in] dst_to_src
     *
-    * @param[in] src_to_dst
-    *
-    * @param[in] coarse_interp_to_dst
-    *
     * @param[in] dst_to_coarse_interp
     *
     * @param[in] dst_level
+    *
+    * @pre dst_to_src.hasTranspose()
+    * @pre dst_to_coarse_interp.hasTranspose()
     */
    void
    createCoarseInterpPatchLevel(
       boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
-      hier::BoxLevel& coarse_interp_box_level,
-      hier::Connector &coarse_interp_to_hiercoarse,
-      hier::Connector &hiercoarse_to_coarse_interp,
+      boost::shared_ptr<hier::BoxLevel>& coarse_interp_box_level,
+      boost::shared_ptr<hier::Connector>& coarse_interp_to_hiercoarse,
       const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector &dst_to_src,
-      const hier::Connector &src_to_dst,
-      const hier::Connector &coarse_interp_to_dst,
       const hier::Connector &dst_to_coarse_interp,
       const boost::shared_ptr<hier::PatchLevel> &dst_level );
 
@@ -773,8 +776,7 @@ private:
    sanityCheckCoarseInterpAndHiercoarseLevels(
       const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const hier::Connector& coarse_interp_to_hiercoarse,
-      const hier::Connector& hiercoarse_to_coarse_interp);
+      const hier::Connector& coarse_interp_to_hiercoarse);
 
    /*!
     * @brief Get whether there is data living on patch borders.
@@ -853,12 +855,13 @@ private:
     * The reordered neighboorhood sets are added to the output parameter.
     *
     * @param[out] full_inverted_edges
-    * @param[in]  src_to_dst
+    *
+    * @pre d_dst_to_src
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    reorderNeighborhoodSetsByDstNodes(
-      FullNeighborhoodSet& full_inverted_edges,
-      const hier::Connector& src_to_dst) const;
+      FullNeighborhoodSet& full_inverted_edges) const;
 
    /*!
     * @brief Cache local copies of hierarchy information and compute
@@ -976,7 +979,7 @@ private:
     * @brief Boolean flag indicating whether physical domain
     * can be represented as a single box region.
     */
-   tbox::Array<bool> d_domain_is_one_box;
+   std::vector<bool> d_domain_is_one_box;
 
    /*!
     * @brief Number of non-zero entries in periodic shift vector.
@@ -1091,44 +1094,38 @@ private:
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
-   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
+   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_refine_overlaps;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData() for
     * unfilled boxes at enhanced connectivity
     */
-   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
+   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
-
-   /*!
-    * @brief Connector from the coarse interpolation level to the destination.
-    */
-   hier::Connector d_coarse_interp_to_dst;
 
    /*!
     * @brief Connector from the destination level to the coarse interpolation.
     */
-   hier::Connector d_dst_to_coarse_interp;
+   boost::shared_ptr<hier::Connector> d_dst_to_coarse_interp;
 
    /*!
     * @brief Connector from d_encon_level to d_coarse_interp_encon_level.
     */
-   hier::Connector d_encon_to_coarse_interp_encon;
+   boost::shared_ptr<hier::Connector> d_encon_to_coarse_interp_encon;
 
    /*!
     * @brief Connector d_coarse_interp_level to d_unfilled_box_level.
     *
     * Cached for use during schedule filling.
     */
-   hier::Connector d_coarse_interp_to_unfilled;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_to_unfilled;
 
-   hier::Connector d_coarse_interp_encon_to_unfilled_encon;
-   hier::Connector d_coarse_interp_encon_to_encon;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
 
-   hier::Connector d_dst_to_encon;
-   hier::Connector d_src_to_encon;
-   hier::Connector d_encon_to_src;
+   boost::shared_ptr<hier::Connector> d_dst_to_encon;
+   boost::shared_ptr<hier::Connector> d_encon_to_src;
+   const hier::Connector* d_dst_to_src;
 
    //@{
 
@@ -1144,7 +1141,7 @@ private:
     *
     * The size of the array is controlled by d_max_fill_boxes.
     */
-   tbox::Array<boost::shared_ptr<hier::BoxOverlap> > d_overlaps;
+   std::vector<boost::shared_ptr<hier::BoxOverlap> > d_overlaps;
 
    /*!
     * @brief Source mask boxes used in construction of transactions.
@@ -1206,26 +1203,20 @@ private:
    /*!
     * @name Timer objects for performance measurement.
     */
+   static boost::shared_ptr<tbox::Timer> t_refine_schedule;
    static boost::shared_ptr<tbox::Timer> t_fill_data;
-   static boost::shared_ptr<tbox::Timer> t_recursive_fill;
+   static boost::shared_ptr<tbox::Timer> t_fill_data_nonrecursive;
+   static boost::shared_ptr<tbox::Timer> t_fill_data_recursive;
    static boost::shared_ptr<tbox::Timer> t_refine_scratch_data;
    static boost::shared_ptr<tbox::Timer> t_finish_sched_const;
    static boost::shared_ptr<tbox::Timer> t_finish_sched_const_recurse;
    static boost::shared_ptr<tbox::Timer> t_gen_comm_sched;
-   static boost::shared_ptr<tbox::Timer> t_bridge_connector;
-   static boost::shared_ptr<tbox::Timer> t_modify_connector;
-   static boost::shared_ptr<tbox::Timer> t_make_seq_map;
    static boost::shared_ptr<tbox::Timer> t_shear;
-   static boost::shared_ptr<tbox::Timer> t_misc1;
-   static boost::shared_ptr<tbox::Timer> t_barrier_and_time;
    static boost::shared_ptr<tbox::Timer> t_get_global_box_count;
    static boost::shared_ptr<tbox::Timer> t_coarse_shear;
    static boost::shared_ptr<tbox::Timer> t_setup_coarse_interp_box_level;
-   static boost::shared_ptr<tbox::Timer> t_misc2;
    static boost::shared_ptr<tbox::Timer> t_bridge_coarse_interp_hiercoarse;
    static boost::shared_ptr<tbox::Timer> t_bridge_dst_hiercoarse;
-   static boost::shared_ptr<tbox::Timer> t_make_coarse_interp_level;
-   static boost::shared_ptr<tbox::Timer> t_make_coarse_interp_to_unfilled;
    static boost::shared_ptr<tbox::Timer> t_invert_edges;
    static boost::shared_ptr<tbox::Timer> t_construct_send_trans;
    static boost::shared_ptr<tbox::Timer> t_construct_recv_trans;

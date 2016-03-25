@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for data copies during data coarsening
  *
  ************************************************************************/
@@ -181,10 +181,12 @@ CoarsenCopyTransaction::printClassData(
    stream << "   source patch_rank:            " << d_src_patch_rank
           << std::endl;
    stream << "   coarsen item id:        " << d_coarsen_item_id << std::endl;
-   stream << "   destination patch data id: "
-          << s_coarsen_items[d_coarsen_item_id]->d_dst << std::endl;
-   stream << "   source patch data id:      "
-          << s_coarsen_items[d_coarsen_item_id]->d_src << std::endl;
+   if (s_coarsen_items) {
+      stream << "   destination patch data id: "
+             << s_coarsen_items[d_coarsen_item_id]->d_dst << std::endl;
+      stream << "   source patch data id:      "
+             << s_coarsen_items[d_coarsen_item_id]->d_src << std::endl;
+   }
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "

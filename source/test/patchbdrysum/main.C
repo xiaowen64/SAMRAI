@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for test of hierarchy sum
  *
  ************************************************************************/
@@ -12,6 +12,7 @@
 
 // Headers for basic SAMRAI objects
 #include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -281,7 +282,7 @@ int main(
 
       double loop_time = 0.;
       int loop_cycle = 0;
-      tbox::Array<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = 1;
       }

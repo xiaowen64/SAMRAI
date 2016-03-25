@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
 ## Description:   makefile for the applications directory 
 ##
 #########################################################################
@@ -36,8 +36,15 @@ check2d:
 check3d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checkcompile:
+	(cd $(OBJECT)/source/test/testlib && $(MAKE) $@)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checktest:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+examples:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+perf:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+everything:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

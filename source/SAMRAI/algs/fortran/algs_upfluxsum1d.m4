@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI algorithms
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: F77 routines for updating 1d flux sums from fluxes.
 c

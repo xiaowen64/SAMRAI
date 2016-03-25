@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -20,8 +20,9 @@
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -191,7 +192,7 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>efficiency_tolerance</td>
- *     <td>Array<double></td>
+ *     <td>array of doubles</td>
  *     <td>0.8 for each level</td>
  *     <td>all values > 0.0 && < 1.0</td>
  *     <td>opt</td>
@@ -199,7 +200,7 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>combine_efficiency</td>
- *     <td>Array<double></td>
+ *     <td>array of doubles</td>
  *     <td>0.8 for each level</td>
  *     <td>all values > 0.0 && < 1.0</td>
  *     <td>opt</td>
@@ -427,16 +428,16 @@ public:
     * @pre (level_number >= 0) &&
     *      (level_number <= d_hierarchy->getFinestLevelNumber())
     * @pre d_hierarchy->getPatchLevel(level_number)
-    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre tag_buffer.size() >= level_number + 1
     * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
    regridAllFinerLevels(
       const int level_number,
-      const tbox::Array<int>& tag_buffer,
+      const std::vector<int>& tag_buffer,
       const int cycle,
       const double level_time,
-      tbox::Array<double> regrid_start_time = tbox::Array<double>(),
+      const std::vector<double>& regrid_start_time = std::vector<double>(),
       const bool level_is_coarsest_to_sync = true);
 
    /*!
@@ -505,7 +506,7 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
                   (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      int size = d_efficiency_tolerance.getSize();
+      int size = static_cast<int>(d_efficiency_tolerance.size());
       return (level_number < size) ?
          d_efficiency_tolerance[level_number] :
          d_efficiency_tolerance[size - 1];
@@ -546,11 +547,17 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
                   (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      int size = d_combine_efficiency.getSize();
+      int size = static_cast<int>(d_combine_efficiency.size());
       return (level_number < size) ?
          d_combine_efficiency[level_number] :
          d_combine_efficiency[size - 1];
    }
+
+   /*!
+    * @brief Return pointer to PatchHierarchy data member.
+    */
+   boost::shared_ptr<hier::PatchHierarchy>
+   getPatchHierarchy() const;
 
    /*!
     * @brief Print all data members of the class instance to given output stream.
@@ -638,7 +645,7 @@ private:
     * @pre d_hierarchy->getPatchLevel(level_number)
     * @pre (finest_level_not_regridded >= 0) &&
     *      (finest_level_not_regridded <= level_number)
-    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre tag_buffer.size() >= level_number + 1
     * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
@@ -648,8 +655,8 @@ private:
       const int regrid_cycle,
       const int finest_level_not_regridded,
       const bool level_is_coarsest_to_sync,
-      const tbox::Array<int>& tag_buffer,
-      const tbox::Array<double>& regrid_start_time = tbox::Array<double>(0));
+      const std::vector<int>& tag_buffer,
+      const std::vector<double>& regrid_start_time = std::vector<double>(0));
 
    /*!
     * @brief Tagging stuff before recursive regrid, called from regridFinerLevel.
@@ -658,7 +665,7 @@ private:
    regridFinerLevel_doTaggingBeforeRecursiveRegrid(
       const int tag_ln,
       const bool level_is_coarsest_sync_level,
-      const tbox::Array<double>& regrid_start_time,
+      const std::vector<double>& regrid_start_time,
       const double regrid_time,
       const int regrid_cycle);
 
@@ -671,30 +678,33 @@ private:
     */
    void
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
-      hier::Connector& tag_to_finer,
-      hier::Connector& finer_to_tag,
+      boost::shared_ptr<hier::Connector>& tag_to_finer,
       const int tag_ln,
-      const tbox::Array<int>& tag_buffer);
+      const std::vector<int>& tag_buffer);
 
    /*!
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
+    *
+    * @pre tag_to_new && tag_to_new->hasTranspose()
+    * @pre new_box_level
+    * @pre !d_hierarchy->levelExists(tag_ln + 2) || tag_to_finer
+    * @pre !d_hierarchy->levelExists(tag_ln + 2) || tag_to_finer->hasTranspose()
     */
    void
    regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
-      hier::Connector* tag_to_new,
-      hier::Connector* new_to_tag,
-      const hier::Connector& tag_to_finer,
-      const hier::Connector& finer_to_tag);
+      boost::shared_ptr<hier::Connector>& tag_to_new,
+      boost::shared_ptr<const hier::Connector> tag_to_finer,
+      boost::shared_ptr<hier::BoxLevel> new_box_level);
 
    /*!
     * @brief Set all tags on a level to a given value.
     *
     * @param[in] tag_value
     *
-    * @param[in] level
+    * @param[in] tag_level
     *
     * @param[in] tag_index
     *
@@ -719,11 +729,11 @@ private:
     *
     * @param[in] tag_value
     *
-    * @param[in] level
+    * @param[in] tag_level
     *
     * @param[in] index
     *
-    * @param[in] level_to_fill_box_level Connector from the
+    * @param[in] tag_level_to_fill_box_level Connector from the
     * level with the tags to the BoxLevel describing where to
     * fill.
     *
@@ -746,6 +756,22 @@ private:
       const bool interior_only,
       const hier::IntVector& fill_box_growth) const;
 
+
+   /*!
+    * @brief Enforce proper nesting.
+    *
+    * @param[in/out] new_box_level
+    *
+    * @param[in,out] tag_to_new
+    *
+    * @param[in] tag_ln
+    */
+   void
+   enforceProperNesting(
+      hier::BoxLevel& new_box_level,
+      hier::Connector& tag_to_new,
+      int tag_ln) const;
+
    /*!
     * @brief Make a map that, when applied to an improperly nested
     * BoxLevel, removes the nonnesting parts.
@@ -761,23 +787,35 @@ private:
     * @param[in] tag_to_unnested  Overlap Connector from the tag level
     * to unnested_box_level.
     *
-    * @param[in] unnested_to_tag  Transpose of tag_to_unnested.
-    *
     * @param[in] unnested_ln Level number of PatchLevel being
     * generated (one more than the tag level number).
     *
-    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
-    *      (d_hierarchy->getDim() == nested_box_level.getDim()) &&
-    *      (d_hierarchy->getDim() == nested_box_level.getDim())
+    * @param[in] oca
+    *
+    * @pre tag_to_unnested.hasTranspose()
+    * @pre d_hierarchy->getDim() == unnested_box_level.getDim()
     */
    void
    makeProperNestingMap(
-      hier::BoxLevel& nested_box_level,
-      hier::Connector& unnested_to_nested,
+      boost::shared_ptr<hier::BoxLevel>& nested_box_level,
+      boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
-      const hier::Connector& unnested_to_tag,
-      const int unnested_ln) const;
+      const int unnested_ln,
+      const hier::OverlapConnectorAlgorithm &oca) const;
+
+
+   /*!
+    * @brief Enforce overflow nesting.
+    *
+    * @param[in/out] new_box_level
+    *
+    * @param[in,out] tag_to_new
+    */
+   void
+   enforceOverflowNesting(
+      hier::BoxLevel& new_box_level,
+      hier::Connector& tag_to_new) const;
 
    /*!
     * @brief Make a map that, when applied to a BoxLevel that
@@ -793,13 +831,12 @@ private:
     *
     * @param[in] unnested_to_reference
     *
-    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
-    *      (d_hierarchy->getDim() == nested_box_level.getDim())
+    * @pre d_hierarchy->getDim() == unnested_box_level.getDim()
     */
    void
    makeOverflowNestingMap(
-      hier::BoxLevel& nested_box_level,
-      hier::Connector& unnested_to_nested,
+      boost::shared_ptr<hier::BoxLevel>& nested_box_level,
+      boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& unnested_to_reference) const;
 
@@ -807,31 +844,32 @@ private:
     * @brief Make a map from a BoxLevel to parts of that BoxLevel
     * that violate proper nesting.
     *
-    * @param[in] candidate BoxLevel being examined for nesting violation.
-    *
     * @param[out] violator BoxLevel containing violating parts of candidate.
     *
-    * @param[in] tag_ln Level number of the level that candidate should nest in.
+    * @param[in] candidate_to_violator Connector between candidate and violator.
+    *
+    * @param[in] candidate BoxLevel being examined for nesting violation.
     *
     * @param[in] candidate_to_hierarchy Connector to box_level number
     *       tag_ln in the hierarchy.
     *
-    * @param[in] hierarchy_to_candidate Connector from box_level number
-    *       tag_ln in the hierarchy.
+    * @param[in] tag_ln Level number of the level that candidate should nest in.
     *
-    * @pre (d_hierarchy->getDim() == candidate.getDim()) &&
-    *      (d_hierarchy->getDim() == violator.getDim())
+    * @param[in] oca
+    *
+    * @pre candidate_to_hierarchy.hasTranspose()
+    * @pre d_hierarchy->getDim() == candidate.getDim()
     * @pre candidate_to_hierarchy.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
-    * @pre hierarchy_to_candidate.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
+    * @pre candidate_to_hierarchy.getTranspose().getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
     */
    void
    computeNestingViolator(
-      hier::BoxLevel& violator,
-      hier::Connector& candidate_to_violator,
+      boost::shared_ptr<hier::BoxLevel>& violator,
+      boost::shared_ptr<hier::MappingConnector>& candidate_to_violator,
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
-      const hier::Connector& hierarchy_to_candidate,
-      const int tag_ln) const;
+      const int tag_ln,
+      const hier::OverlapConnectorAlgorithm &oca) const;
 
    /*!
     * @brief Extend Boxes to domain boundary if they they are too close.
@@ -842,19 +880,18 @@ private:
     *
     * @param[in,out] tag_to_new
     *
-    * @param[in,out] new_to_tag
-    *
-    * @param[in] physical_domain_array  Array holding domain for each block
+    * @param[in] physical_domain_array  Vector holding domain for each block
     *
     * @param[in] extend_ghosts Extend the boxes to the boundary if
     * they less than extend_ghosts cells from the boundary.
+    *
+    * @pre tag_to_new.hasTranspose()
     */
    void
    extendBoxesToDomainBoundary(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
-      const tbox::Array<hier::BoxContainer>& physical_domain_array,
+      const std::vector<hier::BoxContainer>& physical_domain_array,
       const hier::IntVector& extend_ghosts) const;
 
    /*!
@@ -865,12 +902,15 @@ private:
     *
     * @param[in] ln
     *
+    * @param[in] oca
+    *
     * @pre (d_base_ln >= 0) && (ln >= d_base_ln)
-    * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1].isFinalized())
+    * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1]->isFinalized())
     */
    void
    computeProperNestingData(
-      const int ln);
+      const int ln,
+      const hier::OverlapConnectorAlgorithm &oca);
 
    /*!
     * @brief Attempt to fix boxes that are too small by growing them
@@ -881,12 +921,11 @@ private:
     *
     * @param[in,out] tag_to_new  Connector to be updated.
     *
-    * @param[in,out] new_to_tag  Connector to be updated.
-    *
     * @param[in] min_size
     *
     * @param[in] tag_ln Level number of the tag level.
     *
+    * @pre tag_no_new.hasTranspose()
     * @pre (d_hierarchy->getDim() == new_box_level.getDim()) &&
     *      (d_hierarchy->getDim() == min_size.getDim())
     */
@@ -894,7 +933,6 @@ private:
    growBoxesWithinNestingDomain(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       const hier::IntVector& min_size,
       const int tag_ln) const;
 
@@ -907,15 +945,14 @@ private:
     *
     * @param[in,out] tag_to_new  Connector to be updated.
     *
-    * @param[in,out] new_to_tag  Connector to be updated.
-    *
     * @param[in] ratio
+    *
+    * @pre tag_to_new.hasTranspose()
     */
    void
    refineNewBoxLevel(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       const hier::IntVector& ratio) const;
 
    /*!
@@ -932,11 +969,12 @@ private:
     *
     * @param[in,out] tag_to_new
     *
-    * @param[in,out] new_to_tag
-    *
     * @param[in] sort_by_corners
     *
     * @param[in] sequentialize_global_indices
+    *
+    * @param[in] mca MappingConnectorAlgorithm with timer set
+    * in the calling context.
     *
     * @pre d_hierarchy->getDim() == new_box_level.getDim()
     */
@@ -944,9 +982,9 @@ private:
    renumberBoxes(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       bool sort_by_corners,
-      bool sequentialize_global_indices) const;
+      bool sequentialize_global_indices,
+      const hier::MappingConnectorAlgorithm &mca) const;
 
    /*!
     * @brief Buffer each integer tag on patch level matching given tag
@@ -980,9 +1018,8 @@ private:
     */
    void
    readLevelBoxes(
-      hier::BoxLevel& new_box_level,
-      hier::Connector& coarser_to_new,
-      hier::Connector& new_to_coarser,
+      boost::shared_ptr<hier::BoxLevel>& new_box_level,
+      boost::shared_ptr<hier::Connector>& coarser_to_new,
       const int level_number,
       const double regrid_time,
       const int regrid_cycle,
@@ -1004,9 +1041,8 @@ private:
     */
    void
    findRefinementBoxes(
-      hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
+      boost::shared_ptr<hier::BoxLevel>& new_box_level,
+      boost::shared_ptr<hier::Connector>& tag_to_new,
       const int tag_ln) const;
 
    /*!
@@ -1048,6 +1084,13 @@ private:
       hier::IntVector& extend_ghosts,
       const int level_number,
       const bool for_building_finer) const;
+
+
+   /*!
+    * @brief Compute d_tag_to_cluster_width.
+    */
+   void
+   computeTagToClusterWidths();
 
    /*!
     * @brief Check domain boxes for violations of certain constraints.
@@ -1102,12 +1145,15 @@ private:
     *
     * @param tag_ln  Tag level number
     *
+    * @param oca
+    *
     * @pre d_hierarchy->getDim() == tag_level.getDim()
     */
    void
    checkNonrefinedTags(
       const hier::PatchLevel& tag_level,
-      int tag_ln) const;
+      int tag_ln,
+      const hier::OverlapConnectorAlgorithm &oca) const;
 
    /*!
     * @brief Reset data that handles tag buffering.
@@ -1121,13 +1167,22 @@ private:
    resetTagBufferingData(const int tag_buffer);
 
    /*!
-    * @brief Check for overlapping patches within a level.
+    * @brief Check for overlapping patches within a level when you
+    * have the self Connector for the level.
     *
     * @param[in] box_level_to_self
     */
    void
    checkOverlappingPatches(
       const hier::Connector& box_level_to_self) const;
+
+   /*!
+    * @brief Check for overlapping patches within the level when you
+    * do not have the self Connector for the level.
+    */
+   void
+   checkOverlappingPatches(
+      const hier::BoxLevel& box_level) const;
 
    /*!
     * @brief Warn if the domain is too small any periodic direction.
@@ -1158,10 +1213,10 @@ private:
    static void
    startupCallback()
    {
-      s_tag_indx = new tbox::Array<int>(
+      s_tag_indx = new std::vector<int>(
          SAMRAI::MAX_DIM_VAL,
          -1);
-      s_buf_tag_indx = new tbox::Array<int>(
+      s_buf_tag_indx = new std::vector<int>(
          SAMRAI::MAX_DIM_VAL,
          -1);
    }
@@ -1220,8 +1275,8 @@ private:
     * Static members for managing shared tag data among multiple
     * GriddingAlgorithm objects.
     */
-   static tbox::Array<int> * s_tag_indx;
-   static tbox::Array<int> * s_buf_tag_indx;
+   static std::vector<int> * s_tag_indx;
+   static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
 
@@ -1264,7 +1319,7 @@ private:
    int d_buf_tag_indx;
 
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
    /*
     * True and false integer tag values set in constructor and used to
@@ -1289,14 +1344,19 @@ private:
     *
     * See input parameter efficiency_tolerance.
     */
-   tbox::Array<double> d_efficiency_tolerance;
+   std::vector<double> d_efficiency_tolerance;
 
    /*
     * @brief Combine efficiency during clustering.
     *
     * See input parameter combine_efficiency.
     */
-   tbox::Array<double> d_combine_efficiency;
+   std::vector<double> d_combine_efficiency;
+
+   /*!
+    * @brief Connector widths to use when clustering.
+    */
+   std::vector<hier::IntVector> d_tag_to_cluster_width;
 
    /*
     * @brief When regridding level ln+1, the new level ln must not flow into
@@ -1305,7 +1365,7 @@ private:
     * Has length d_hierarchy->getMaxNumberOfLevels().  The objects are
     * initialized only during gridding/regridding.
     */
-   std::vector<hier::BoxLevel> d_proper_nesting_complement;
+   std::vector<boost::shared_ptr<hier::BoxLevel> > d_proper_nesting_complement;
 
    /*
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
@@ -1313,15 +1373,7 @@ private:
     * d_to_nesting_complement[ln] goes from level ln to
     * d_proper_nesting_complelemt[ln].
     */
-   std::vector<hier::Connector> d_to_nesting_complement;
-
-   /*
-    * @brief Connectors from d_proper_nesting_complement to the hierarchy.
-    *
-    * d_from_nesting_complement[ln] goes from
-    * d_proper_nesting_complement[ln] to level ln.
-    */
-   std::vector<hier::Connector> d_from_nesting_complement;
+   std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
 
    /*!
     * @brief How to resolve user tags that violate nesting requirements.
@@ -1366,6 +1418,30 @@ private:
     */
    bool d_log_metadata_statistics;
 
+   /*!
+    * @brief OverlapConnectorAlgorithm object used for regrid.
+    */
+   mutable hier::OverlapConnectorAlgorithm d_oca;
+
+   /*!
+    * @brief MappingConnectorAlgorithm object used for regrid.
+    */
+   mutable hier::MappingConnectorAlgorithm d_mca;
+
+   /*!
+    * @brief OverlapConnectorAlgorithm object used for initial mesh
+    * construction, sanity checks and other operations that are not
+    * expected to scale well.
+    */
+   mutable hier::OverlapConnectorAlgorithm d_oca0;
+
+   /*!
+    * @brief MappingConnectorAlgorithm object used for initial mesh
+    * construction, sanity checks and other operations that are not
+    * expected to scale well.
+    */
+   mutable hier::MappingConnectorAlgorithm d_mca0;
+
    /*
     * Switches for massaging boxes after clustering.  Should be on for
     * most AMR applications.  Turning off is mainly for debugging
@@ -1386,18 +1462,17 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_domain_complement;
    boost::shared_ptr<tbox::Timer> t_load_balance;
    boost::shared_ptr<tbox::Timer> t_load_balance0;
-   boost::shared_ptr<tbox::Timer> t_load_balance_setup;
    boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_create;
    boost::shared_ptr<tbox::Timer> t_make_coarsest;
    boost::shared_ptr<tbox::Timer> t_make_finer;
-   boost::shared_ptr<tbox::Timer> t_make_finer_setup;
-   boost::shared_ptr<tbox::Timer> t_make_finer_tagging;
-   boost::shared_ptr<tbox::Timer> t_make_finer_create;
    boost::shared_ptr<tbox::Timer> t_regrid_all_finer;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_before;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_after;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_create_and_install;
    boost::shared_ptr<tbox::Timer> t_regrid_finer_create;
-   boost::shared_ptr<tbox::Timer> t_bridge_links;
    boost::shared_ptr<tbox::Timer> t_fill_tags;
    boost::shared_ptr<tbox::Timer> t_tag_cells_for_refinement;
+   boost::shared_ptr<tbox::Timer> t_initialize_level_data;
    boost::shared_ptr<tbox::Timer> t_buffer_tags;
    boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_comm;
    boost::shared_ptr<tbox::Timer> t_second_finer_tagging;
@@ -1408,14 +1483,12 @@ private:
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
-   boost::shared_ptr<tbox::Timer> t_enforce_nesting;
+   boost::shared_ptr<tbox::Timer> t_fix_zero_width_clustering;
+   boost::shared_ptr<tbox::Timer> t_enforce_proper_nesting;
+   boost::shared_ptr<tbox::Timer> t_compute_proper_nesting_data;
    boost::shared_ptr<tbox::Timer> t_make_nesting_map;
-   boost::shared_ptr<tbox::Timer> t_make_nesting_map_compute;
-   boost::shared_ptr<tbox::Timer> t_make_nesting_map_convert;
    boost::shared_ptr<tbox::Timer> t_use_nesting_map;
    boost::shared_ptr<tbox::Timer> t_make_overflow_map;
-   boost::shared_ptr<tbox::Timer> t_make_overflow_map_compute;
-   boost::shared_ptr<tbox::Timer> t_make_overflow_map_convert;
    boost::shared_ptr<tbox::Timer> t_use_overflow_map;
    boost::shared_ptr<tbox::Timer> t_compute_external_parts;
    boost::shared_ptr<tbox::Timer> t_compute_nesting_violator;
@@ -1423,28 +1496,19 @@ private:
    boost::shared_ptr<tbox::Timer> t_extend_within_domain;
    boost::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
    boost::shared_ptr<tbox::Timer> t_sort_nodes;
-   boost::shared_ptr<tbox::Timer> t_modify_connector;
-   boost::shared_ptr<tbox::Timer> t_misc1;
-   boost::shared_ptr<tbox::Timer> t_misc2;
-   boost::shared_ptr<tbox::Timer> t_misc3;
-   boost::shared_ptr<tbox::Timer> t_misc4;
-   boost::shared_ptr<tbox::Timer> t_misc5;
    boost::shared_ptr<tbox::Timer> t_make_domain;
-   boost::shared_ptr<tbox::Timer> t_get_balance;
-   boost::shared_ptr<tbox::Timer> t_use_balance;
    boost::shared_ptr<tbox::Timer> t_make_new;
    boost::shared_ptr<tbox::Timer> t_process_error;
-   boost::shared_ptr<tbox::Timer> t_limit_overflow;
+   boost::shared_ptr<tbox::Timer> t_enforce_overflow_nesting;
    boost::shared_ptr<tbox::Timer> t_reset_hier;
-   boost::shared_ptr<tbox::Timer> t_box_massage;
 
 #ifdef GA_RECORD_STATS
    /*
     * Statistics on number of cells and patches generated.
     */
-   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_boxes_stat;
-   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_cells_stat;
-   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_timestamp_stat;
+   std::vector<boost::shared_ptr<tbox::Statistic> > d_boxes_stat;
+   std::vector<boost::shared_ptr<tbox::Statistic> > d_cells_stat;
+   std::vector<boost::shared_ptr<tbox::Statistic> > d_timestamp_stat;
 #endif
 
    // The following are not yet implemented:

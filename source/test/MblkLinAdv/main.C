@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -24,6 +24,7 @@ using namespace std;
 
 // Headers for basic SAMRAI objects
 
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/RestartManager.h"
@@ -233,7 +234,7 @@ int main(
 
       /*
        * Retrieve "Main" section of the input database.  First, read dump
-       * information, which is used for writing vizamrai plot files.  Second,
+       * information, which is used for writing VisIt plot files.  Second,
        * if proper restart information was given on command line, and the restart
        * interval is non-zero, create a restart database.
        */
@@ -243,7 +244,7 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string log_file_name = "linadv.log";
+      string log_file_name = "MblkLinAdv.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }
@@ -390,7 +391,8 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer")));
+            input_db->getDatabase("TreeLoadBalancer"),
+            boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
@@ -415,7 +417,7 @@ int main(
       /*
        * Set up Visualization plot file writer(s).
        */
-      // VisitDataWriter is only present if HDF is available
+      // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       bool is_multiblock = true;
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(

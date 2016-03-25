@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test node-centered complex patch data ops
  *
  ************************************************************************/
@@ -163,30 +163,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -739,8 +742,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::NodeData<double> > cvdata = patch->getPatchData(cwgt_id);
  *
- *   pdat::NodeIterator cend(cvdata->getBox(), false);
- *   for (pdat::NodeIterator c(cvdata->getBox(), true); c != cend && vol_test_passed; ++c) {
+ *   pdat::NodeIterator cend(pdat::NodeGeometry::end(cvdata->getBox()));
+ *   for (pdat::NodeIterator c(pdat::NodeGeometry::begin(cvdata->getBox())); c != cend && vol_test_passed; ++c) {
  *   pdat::NodeIndex cell_index = *c;
  *
  *   if (ln == 0) {
@@ -1032,8 +1035,8 @@ int main(
          pdat::NodeIndex index0(idx0, corner0);
          pdat::NodeIndex index1(idx1, corner1);
 
-         pdat::NodeIterator cend(ndata->getBox(), false);
-         for (pdat::NodeIterator c(ndata->getBox(), true);
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(ndata->getBox()));
+         for (pdat::NodeIterator c(pdat::NodeGeometry::begin(ndata->getBox()));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::NodeIndex node_index = *c;
 
@@ -1252,8 +1255,8 @@ complexDataSameAsValue(
 
          TBOX_ASSERT(nvdata);
 
-         pdat::NodeIterator cend(nvdata->getBox(), false);
-         for (pdat::NodeIterator c(nvdata->getBox(), true);
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(nvdata->getBox()));
+         for (pdat::NodeIterator c(pdat::NodeGeometry::begin(nvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::NodeIndex node_index = *c;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*nvdata)(node_index),
@@ -1292,8 +1295,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(nvdata);
 
-         pdat::NodeIterator cend(nvdata->getBox(), false);
-         for (pdat::NodeIterator c(nvdata->getBox(), true);
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(nvdata->getBox()));
+         for (pdat::NodeIterator c(pdat::NodeGeometry::begin(nvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::NodeIndex node_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*nvdata)(node_index),

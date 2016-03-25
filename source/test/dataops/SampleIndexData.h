@@ -3,8 +3,9 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Boundary cell struct for embedded boundary implementations
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   Example user defined index data type used in indx_dataops
+ *                test.
  *
  ************************************************************************/
 
@@ -67,10 +68,10 @@ public:
       const SampleIndexData& src_item);
 
    /**
-    * The following functions enable parallel communication with SampleIndexDatas.
-    * They are used in SAMRAI communication infrastructure to
-    * specify the number of bytes of data stored in each SampleIndexData object,
-    * and to pack and unpack the data to the specified stream.
+    * The following functions enable parallel communication with
+    * SampleIndexDatas.  They are used in SAMRAI communication infrastructure
+    * to specify the number of bytes of data stored in each SampleIndexData
+    * object, and to pack and unpack the data to the specified stream.
     */
    size_t
    getDataStreamSize();

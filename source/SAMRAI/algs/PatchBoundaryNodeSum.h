@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
@@ -264,8 +264,8 @@ private:
     *
     * @param fine_level            Level where data will be modified
     * @param coarsened_fine_level  Coarsened version of fine_level
-    * @param node_data_id   Array of data ids specifying data to modify
-    * @param onode_data_id  Array of data ids specifying data to use in sums
+    * @param node_data_id   Vector of data ids specifying data to modify
+    * @param onode_data_id  Vector of data ids specifying data to use in sums
     * @param fill_hanging_nodes    Tells whether to fill fine data on
     *                              intermediate fine nodes.
     *
@@ -280,8 +280,8 @@ private:
    doLocalCoarseFineBoundarySum(
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
-      const tbox::Array<int>& node_data_id,
-      const tbox::Array<int>& onode_data_id,
+      const std::vector<int>& node_data_id,
+      const std::vector<int>& onode_data_id,
       bool fill_hanging_nodes) const;
 
    /*
@@ -291,14 +291,14 @@ private:
     * specified by the onode_data_id array on all patches.
     *
     * @param level
-    * @param node_data_id   Array of data ids for NodeData source
-    * @param onode_data_id  Array of data ids for OuternodeData destination
+    * @param node_data_id   Vector of data ids for NodeData source
+    * @param onode_data_id  Vector of data ids for OuternodeData destination
     */
    void
    copyNodeToOuternodeOnLevel(
       const boost::shared_ptr<hier::PatchLevel>& level,
-      const tbox::Array<int>& node_data_id,
-      const tbox::Array<int>& onode_data_id) const;
+      const std::vector<int>& node_data_id,
+      const std::vector<int>& onode_data_id) const;
 
    /*
     * @brief Copy outernode data to node data on all patches of level
@@ -307,14 +307,14 @@ private:
     * specified by the node_data_id array on all patches.
     *
     * @param level
-    * @param onode_data_id Array of data ids for OuternodeData source
-    * @param node_data_id  Array of data ids for NodeData destination
+    * @param onode_data_id Vector of data ids for OuternodeData source
+    * @param node_data_id  Vector of data ids for NodeData destination
     */
    void
    copyOuternodeToNodeOnLevel(
       const boost::shared_ptr<hier::PatchLevel>& level,
-      const tbox::Array<int>& onode_data_id,
-      const tbox::Array<int>& node_data_id) const;
+      const std::vector<int>& onode_data_id,
+      const std::vector<int>& node_data_id) const;
 
    /*
     * Static members for managing shared temporary data among multiple
@@ -322,8 +322,8 @@ private:
     */
    static int s_instance_counter;
    // These arrays are indexed [data depth][number of variables with depth]
-   static tbox::Array<tbox::Array<int> > s_onode_src_id_array;
-   static tbox::Array<tbox::Array<int> > s_onode_dst_id_array;
+   static std::vector<std::vector<int> > s_onode_src_id_array;
+   static std::vector<std::vector<int> > s_onode_dst_id_array;
 
    enum PATCH_BDRY_NODE_SUM_DATA_ID { ID_UNDEFINED = -1 };
 
@@ -333,23 +333,23 @@ private:
    int d_num_reg_sum;
 
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<int> d_user_node_data_id;
-   tbox::Array<int> d_user_node_depth;
+   std::vector<int> d_user_node_data_id;
+   std::vector<int> d_user_node_depth;
 
    // These arrays are indexed [data depth]
-   tbox::Array<int> d_num_registered_data_by_depth;
+   std::vector<int> d_num_registered_data_by_depth;
 
    /*
     * Node-centered variables and patch data indices used as internal work
     * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
+   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
+   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<int> d_onode_src_id;
-   tbox::Array<int> d_onode_dst_id;
+   std::vector<int> d_onode_src_id;
+   std::vector<int> d_onode_dst_id;
 
    /*
     * Sets of indices for temporary variables to expedite allocation and
@@ -369,16 +369,17 @@ private:
 
    boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
       d_single_level_sum_schedule;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
       d_cfbdry_copy_schedule;
-   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> >
+   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> >
       d_sync_coarsen_schedule;
 
-   tbox::Array<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
+   // A coarsened version of each fine level.
+   std::vector<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
 
-   tbox::Array<boost::shared_ptr<hier::CoarseFineBoundary> >
+   std::vector<boost::shared_ptr<hier::CoarseFineBoundary> >
       d_coarse_fine_boundary;
 
 };

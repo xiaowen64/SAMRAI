@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -72,10 +72,10 @@ FirstLayerSideVariableFillPattern::calculateOverlap(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
 
    const tbox::Dimension& dim = dst_patch_box.getDim();
-   tbox::Array<hier::BoxContainer> stencil_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> stencil_boxes(dim.getValue());
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    const SideGeometry* t_dst =
       dynamic_cast<const SideGeometry *>(&dst_geometry);
@@ -134,11 +134,11 @@ FirstLayerSideVariableFillPattern::getPatternName() const
 
 void
 FirstLayerSideVariableFillPattern::computeStencilBoxes(
-   tbox::Array<hier::BoxContainer>& stencil_boxes,
+   std::vector<hier::BoxContainer>& stencil_boxes,
    const hier::Box& dst_box) const
 {
    const tbox::Dimension& dim = dst_box.getDim();
-   TBOX_ASSERT(stencil_boxes.size() == dim.getValue());
+   TBOX_ASSERT(static_cast<int>(stencil_boxes.size()) == dim.getValue());
 
    for (int d = 0; d < dim.getValue(); ++d) {
       hier::Box dst_side_box(SideGeometry::toSideBox(dst_box, d));
@@ -171,10 +171,10 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   tbox::Array<hier::BoxContainer> stencil_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> stencil_boxes(dim.getValue());
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   tbox::Array<hier::BoxContainer> overlap_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> overlap_boxes(dim.getValue());
    for (int d = 0; d < dim.getValue(); ++d) {  
 
       /*

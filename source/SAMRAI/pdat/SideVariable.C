@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -46,6 +46,24 @@ SideVariable<TYPE>::SideVariable(
    d_directions(directions)
 {
    TBOX_ASSERT(directions.getDim() == getDim());
+}
+
+template<class TYPE>
+SideVariable<TYPE>::SideVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   int depth,
+   bool fine_boundary_represents_var):
+   hier::Variable(name,
+                  boost::make_shared<SideDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var,
+                     hier::IntVector::getOne(dim))),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(hier::IntVector::getOne(dim))
+{
 }
 
 template<class TYPE>

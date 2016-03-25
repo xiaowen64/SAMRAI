@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Singleton timer manager class.
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Serializable.h"
@@ -214,7 +213,7 @@ namespace tbox {
  *   </tr>
  *   <tr>
  *     <td>timer_list</td>
- *     <td>Array<string></td>
+ *     <td>array of strings</td>
  *     <td>none</td>
  *     <td>N/A</td>
  *     <td>opt</td>
@@ -415,8 +414,8 @@ private:
    void
    printTable(
       const std::string& table_title,
-      const Array<std::string> column_titles,
-      const Array<std::string> timer_names,
+      const std::vector<std::string>& column_titles,
+      const std::vector<std::string>& timer_names,
       const int column_ids[],
       const double timer_values[][18],
       std::ostream& os);
@@ -430,8 +429,8 @@ private:
    void
    printTable(
       const std::string& table_title,
-      const Array<std::string> column_titles,
-      const Array<std::string> timer_names,
+      const std::vector<std::string>& column_titles,
+      const std::vector<std::string>& timer_names,
       const int max_processor_id[][2],
       const int max_array_id,
       const int column_ids[],
@@ -443,7 +442,7 @@ private:
     */
    void
    printOverhead(
-      const Array<std::string> timer_names,
+      const std::vector<std::string>& timer_names,
       const double timer_values[][18],
       std::ostream& os);
 
@@ -461,7 +460,7 @@ private:
    buildTimerArrays(
       double timer_values[][18],
       int max_processor_id[][2],
-      Array<std::string> timer_names);
+      std::vector<std::string>& timer_names);
 
    /*
     * Build an ordered list array, organizing timers largest to smallest.
@@ -510,7 +509,7 @@ private:
     * C++", 3rd Edition, Sedgewick.
     */
    static void
-   quicksort(const Array<double>&a,
+   quicksort(const std::vector<double>&a,
       int index[],
       int lo, int hi);
 

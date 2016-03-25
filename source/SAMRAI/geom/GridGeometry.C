@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
@@ -17,7 +17,7 @@
 #include "SAMRAI/pdat/NodeDoubleInjection.h"
 #include "SAMRAI/pdat/NodeFloatInjection.h"
 #include "SAMRAI/pdat/NodeIntegerInjection.h"
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
+#include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 #include "SAMRAI/pdat/CellComplexConstantRefine.h"
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellFloatConstantRefine.h"
@@ -101,6 +101,7 @@ GridGeometry::GridGeometry(
    bool allow_multiblock):
    hier::BaseGridGeometry(dim, object_name, input_db, allow_multiblock)
 {
+   buildOperators();
 }
 
 /*
@@ -117,6 +118,7 @@ GridGeometry::GridGeometry(
    hier::BoxContainer& domain):
    hier::BaseGridGeometry(object_name, domain)
 {
+   buildOperators();
 }
 
 GridGeometry::GridGeometry(
@@ -125,6 +127,7 @@ GridGeometry::GridGeometry(
    const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
    hier::BaseGridGeometry(object_name, domain, op_reg)
 {
+   buildOperators();
 }
 
 /*
@@ -170,8 +173,8 @@ GridGeometry::makeCoarsenedGridGeometry(
     */
    const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   hier::BoxContainer::const_iterator coarse_domain_itr(coarse_domain);
-   hier::BoxContainer::const_iterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::const_iterator coarse_domain_itr = coarse_domain.begin();
+   hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
    for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -242,10 +245,6 @@ GridGeometry::makeRefinedGridGeometry(
 void
 GridGeometry::buildOperators()
 {
-   if (d_transfer_operator_registry->hasOperators()) {
-      return;
-   }
-
    // Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::NodeVariable<dcomplex>).name(),
@@ -261,7 +260,7 @@ GridGeometry::buildOperators()
       boost::make_shared<pdat::NodeIntegerInjection>());
    addCoarsenOperator(
       typeid(pdat::OuternodeVariable<double>).name(),
-      boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>());
+      boost::make_shared<pdat::OuternodeDoubleInjection>());
 
    // Refinement Operators
    addRefineOperator(

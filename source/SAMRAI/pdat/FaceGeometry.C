@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,6 +12,7 @@
 #define included_pdat_FaceGeometry_C
 
 #include "SAMRAI/pdat/FaceGeometry.h"
+#include "SAMRAI/pdat/FaceIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -132,7 +133,7 @@ FaceGeometry::toFaceBox(
 
 void
 FaceGeometry::computeDestinationBoxes(
-   tbox::Array<hier::BoxContainer>& dst_boxes,
+   std::vector<hier::BoxContainer>& dst_boxes,
    const FaceGeometry& src_geometry,
    const hier::Box& src_mask,
    const hier::Box& fill_box,
@@ -181,7 +182,7 @@ FaceGeometry::computeDestinationBoxes(
 
          if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer face_restrict_boxes;
-            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                   b != dst_restrict_boxes.end(); ++b) {
               face_restrict_boxes.pushBack(toFaceBox(*b, d));
             }
@@ -218,7 +219,7 @@ FaceGeometry::doOverlap(
 {
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
@@ -246,9 +247,10 @@ FaceGeometry::setUpOverlap(
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
          hier::Box face_box(FaceGeometry::toFaceBox(*b, d));
          dst_boxes[d].pushBack(face_box);
@@ -633,6 +635,22 @@ FaceGeometry::rotateAboutAxis(FaceIndex& index,
       }
    }
    index.setAxis(new_normal_direction);
+}
+
+FaceIterator
+FaceGeometry::begin(
+   const hier::Box& box,
+   int axis)
+{
+   return FaceIterator(box, axis, true);
+}
+
+FaceIterator
+FaceGeometry::end(
+   const hier::Box& box,
+   int axis)
+{
+   return FaceIterator(box, axis, false);
 }
 
 }

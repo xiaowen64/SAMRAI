@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for example FAC Poisson solver
  *
  ************************************************************************/
@@ -347,8 +347,8 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
 {
    NULL_USE(depth_id);
 
-   pdat::CellData<double>::iterator icell(region, true);
-   pdat::CellData<double>::iterator icellend(region, false);
+   pdat::CellData<double>::iterator icell(pdat::CellGeometry::begin(region));
+   pdat::CellData<double>::iterator icellend(pdat::CellGeometry::end(region));
 
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(

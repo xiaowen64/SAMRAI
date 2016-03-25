@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -155,7 +155,7 @@ FACPreconditioner::deallocateSolverState()
          d_tmp_residual.reset();
       }
 
-      d_controlled_level_ops.setNull();
+      d_controlled_level_ops.clear();
       d_fac_operator->deallocateOperatorState();
    }
 }
@@ -195,7 +195,7 @@ FACPreconditioner::initializeSolverState(
    math::HierarchyDataOpsManager* ops_manager =
       math::HierarchyDataOpsManager::getManager();
    int num_components = solution.getNumberOfComponents();
-   d_controlled_level_ops.resizeArray(num_components);
+   d_controlled_level_ops.resize(num_components);
    for (int i = 0; i < num_components; ++i) {
       d_controlled_level_ops[i] =
          ops_manager->getOperationsDouble(
@@ -331,8 +331,8 @@ FACPreconditioner::solveSystem(
             tmp;
    }
 
-   if (d_convergence_factor.getSize() < d_max_iterations)
-      d_convergence_factor.resizeArray(d_max_iterations);
+   if (static_cast<int>(d_convergence_factor.size()) < d_max_iterations)
+      d_convergence_factor.resize(d_max_iterations);
    d_number_iterations = 0;
    /*
     * Use a do loop instead of a while loop until convergence.

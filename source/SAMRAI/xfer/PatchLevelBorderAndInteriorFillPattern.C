@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -53,19 +53,35 @@ PatchLevelBorderAndInteriorFillPattern::~PatchLevelBorderAndInteriorFillPattern(
  */
 void
 PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxLevel& fill_box_level,
-   hier::Connector& dst_to_fill,
+   boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+   boost::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
-   const hier::Connector& dst_to_dst,
-   const hier::Connector& dst_to_src,
-   const hier::Connector& src_to_dst,
-   const hier::IntVector& fill_ghost_width)
+   const hier::IntVector& fill_ghost_width,
+   bool data_on_patch_border)
 {
-   NULL_USE(dst_to_src);
-   NULL_USE(src_to_dst);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
+   fill_box_level.reset(new hier::BoxLevel(
+      dst_box_level.getRefinementRatio(),
+      dst_box_level.getGridGeometry(),
+      dst_box_level.getMPI()));
+
+   dst_to_fill.reset(new hier::Connector(dst_box_level,
+                                         *fill_box_level,
+                                         fill_ghost_width));
+
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
+
+   hier::IntVector dst_to_dst_width(fill_ghost_width);
+   if (data_on_patch_border) {
+      dst_to_dst_width += hier::IntVector::getOne(fill_ghost_width.getDim());
+   }
+
+   const hier::Connector& dst_to_dst =
+      dst_box_level.findConnector(dst_box_level,
+         dst_to_dst_width,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+         true);
 
    /*
     * Grow each patch box and remove the level from it, except the
@@ -125,19 +141,19 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.size());
 
          hier::Connector::NeighborhoodIterator base_box_itr =
-            dst_to_fill.makeEmptyLocalNeighborhood(gid);
-         for (hier::BoxContainer::iterator li(fill_boxes);
+            dst_to_fill->makeEmptyLocalNeighborhood(gid);
+         for (hier::BoxContainer::iterator li = fill_boxes.begin();
               li != fill_boxes.end(); ++li) {
             hier::Box fill_box(*li,
                                ++last_id,
                                dst_box.getOwnerRank());
             TBOX_ASSERT(fill_box.getBlockId() == dst_box.getBlockId());
-            fill_box_level.addBoxWithoutUpdate(fill_box);
-            dst_to_fill.insertLocalNeighbor(fill_box, base_box_itr);
+            fill_box_level->addBoxWithoutUpdate(fill_box);
+            dst_to_fill->insertLocalNeighbor(fill_box, base_box_itr);
          }
       }
    }
-   fill_box_level.finalize();
+   fill_box_level->finalize();
 }
 
 void

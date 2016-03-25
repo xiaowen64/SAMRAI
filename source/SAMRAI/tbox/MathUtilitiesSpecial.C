@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   MathUtilities routines to set up handlers and get
  *                signaling NaNs
  *
@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include "SAMRAI/tbox/Complex.h"
+#include "Utilities.h"
 
 /*
  * The following lines setup assertion handling headers on the Sun.  If we

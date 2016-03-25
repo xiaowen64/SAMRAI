@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Database.h"
@@ -192,25 +191,25 @@ private:
     * up a multiblock mesh.
     */
    int d_nblocks;
-   tbox::Array<bool> d_metrics_set;
+   std::vector<bool> d_metrics_set;
 
    /*
     * The grid spacing.  For cartesian, d_dx = (dx,dy,dz).  For wedge,
     * d_dx = (dr, dth, dz). For spherical shell, d_dx = (dr, dth, dphi)
     */
-   tbox::Array<tbox::Array<double> > d_dx;
+   std::vector<std::vector<double> > d_dx;
 
    /*
     * Cartesian inputs
     */
-   tbox::Array<tbox::Array<double> > d_cart_xlo;
-   tbox::Array<tbox::Array<double> > d_cart_xhi;
+   std::vector<std::vector<double> > d_cart_xlo;
+   std::vector<std::vector<double> > d_cart_xhi;
 
    /*
     * Wedge inputs
     */
-   tbox::Array<double> d_wedge_rmin;
-   tbox::Array<double> d_wedge_rmax;
+   std::vector<double> d_wedge_rmin;
+   std::vector<double> d_wedge_rmax;
    double d_wedge_thmin;
    double d_wedge_thmax;
    double d_wedge_zmin;
@@ -238,12 +237,12 @@ private:
    /*
     * Specify block rotation.
     */
-   tbox::Array<int> d_block_rotation;
+   std::vector<int> d_block_rotation;
 
    /*
     * Refine boxes for different blocks/levels
     */
-   tbox::Array<tbox::Array<hier::BoxContainer> > d_refine_boxes;
+   std::vector<std::vector<hier::BoxContainer> > d_refine_boxes;
 
 };
 

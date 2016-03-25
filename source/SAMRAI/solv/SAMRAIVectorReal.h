@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Vector class for real data on SAMRAI hierarchy.
  *
  ************************************************************************/
@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/PIO.h"
 
 #include "boost/shared_ptr.hpp"
@@ -726,15 +725,15 @@ private:
    int d_number_components;
 
    // arrays for component information whose size is the number of components
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_component_variable;
-   tbox::Array<int> d_component_data_id;
-   tbox::Array<boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > >
+   std::vector<boost::shared_ptr<hier::Variable> > d_component_variable;
+   std::vector<int> d_component_data_id;
+   std::vector<boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > >
    d_component_operations;
-   tbox::Array<int> d_control_volume_data_id;
+   std::vector<int> d_control_volume_data_id;
 
    // map from variable instance id to vector component index:
    // size = largest instance id over all variables in vector.
-   tbox::Array<int> d_variableid_2_vectorcomponent_map;
+   std::vector<int> d_variableid_2_vectorcomponent_map;
 
    // output stream for vector data
    std::ostream* d_output_stream;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
@@ -211,7 +212,9 @@ int main(
        */
       hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
       if (main_db->isInteger("max_box_size")) {
-         main_db->getIntegerArray("max_box_size", &max_box_size[0], dim.getValue());
+         main_db->getIntegerArray("max_box_size",
+            &max_box_size[0],
+            dim.getValue());
       }
       breakUpBoxes(box_level, max_box_size);
 
@@ -229,10 +232,7 @@ int main(
          /*
           * Get the baselined BoxLevel and compare.
           */
-         hier::BoxLevel baseline_box_level(dim);
-         baseline_box_level.getFromRestart(
-            *box_level_db,
-            grid_geometry);
+         hier::BoxLevel baseline_box_level(dim, *box_level_db, grid_geometry);
          if (box_level != baseline_box_level) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the BoxLevel generated is different\n"
@@ -257,7 +257,9 @@ int main(
        */
       hier::IntVector connector_width(dim, 1);
       if (main_db->isInteger("connector_width")) {
-         main_db->getIntegerArray("connector_width", &connector_width[0], dim.getValue());
+         main_db->getIntegerArray("connector_width",
+            &connector_width[0],
+            dim.getValue());
       }
 
       hier::Connector connector(
@@ -299,7 +301,7 @@ int main(
             box_level,
             connector_width);
          for (hier::BoxContainer::const_iterator bi =
-              box_level.getBoxes().begin();
+                 box_level.getBoxes().begin();
               bi != box_level.getBoxes().end(); ++bi) {
 
             const hier::Box& box(*bi);
@@ -330,8 +332,8 @@ int main(
                        << connector_from_exhaustive_search.format("EXHAUSTIVE: ", 2)
                        << std::endl;
 
-            hier::Connector exhaustive_minus_tree(dim),
-                            tree_minus_exhaustive(dim);
+            boost::shared_ptr<hier::Connector> exhaustive_minus_tree,
+                                               tree_minus_exhaustive;
             hier::Connector::computeNeighborhoodDifferences(
                exhaustive_minus_tree,
                connector_from_exhaustive_search,
@@ -341,9 +343,9 @@ int main(
                connector,
                connector_from_exhaustive_search);
             tbox::perr << "What's found by exhaustive search but not by tree search:\n"
-                       << exhaustive_minus_tree.format("", 2)
+                       << exhaustive_minus_tree->format("", 2)
                        << "\nWhat's found by tree search but not by exhaustive search:\n"
-                       << tree_minus_exhaustive.format("", 2)
+                       << tree_minus_exhaustive->format("", 2)
                        << std::endl;
 
             tbox::perr << "Baseline was NOT generated due to the above problem!"
@@ -365,8 +367,7 @@ int main(
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
-         hier::Connector baseline_connector(dim);
-         baseline_connector.getFromRestart(*connector_db);
+         hier::Connector baseline_connector(dim, *connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"
@@ -438,9 +439,10 @@ void breakUpBoxes(
    hier::BoxLevel domain_box_level(box_level);
    domain_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim());
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
+                                        "TreeLoadBalancer");
 
-   hier::Connector dummy_connector(dim);
+   hier::Connector* dummy_connector = 0;
 
    const hier::IntVector min_size(dim, 2);
    const hier::IntVector bad_interval(dim, 1);
@@ -449,11 +451,8 @@ void breakUpBoxes(
    load_balancer.loadBalanceBoxLevel(
       box_level,
       dummy_connector,
-      dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
       0,
-      dummy_connector,
-      dummy_connector,
       min_size,
       max_box_size,
       domain_box_level,

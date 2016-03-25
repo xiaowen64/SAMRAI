@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Test program for asynchronous BR implementation
  *
  ************************************************************************/
@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -24,7 +25,6 @@
  * Headers for basic SAMRAI objects used in this code.
  */
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -53,6 +53,8 @@
 #include "get-input-filename.h"
 
 #include "boost/shared_ptr.hpp"
+
+#include <vector>
 
 using namespace SAMRAI;
 
@@ -179,13 +181,6 @@ int main(
       tbox::plog << "Running on " << mpi.getSize()
                  << " processes.\n";
 
-      /*
-       * Choose which BR implementation to use.
-       */
-      char which_br = 'o';
-      which_br = main_db->getCharWithDefault("which_br", which_br);
-      tbox::plog << "which_br is " << which_br << endl;
-
       int plot_step = main_db->getIntegerWithDefault("plot_step", 0);
 
       /*
@@ -226,7 +221,7 @@ int main(
             input_db->isDatabase("BergerRigoutsos") ?
             input_db->getDatabase("BergerRigoutsos") :
             boost::shared_ptr<tbox::Database>()));
-      new_br->setMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      new_br->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       tbox::plog << "Creating grid algorithm.\n";
       /*
@@ -358,8 +353,10 @@ int main(
       /*
        * Adapt the grid.
        */
-      tbox::Array<int> tag_buffer(10);
-      for (int i = 0; i < tag_buffer.size(); ++i) tag_buffer[i] = 1;
+      std::vector<int> tag_buffer(10);
+      for (int i = 0; i < static_cast<int>(tag_buffer.size()); ++i) {
+         tag_buffer[i] = 1;
+      }
 
       for (int istep = 0; istep < num_steps; ++istep) {
 
@@ -369,9 +366,10 @@ int main(
          abrtest.computeHierarchyData(*patch_hierarchy,
             double(istep + 1));
 
-         tbox::Array<double> regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
-         for (int i = 0; i < regrid_start_time.size(); ++i)
+         std::vector<double> regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
+         for (int i = 0; i < static_cast<int>(regrid_start_time.size()); ++i) {
             regrid_start_time[i] = istep;
+         }
 
          gridding_algorithm->regridAllFinerLevels(
             0,

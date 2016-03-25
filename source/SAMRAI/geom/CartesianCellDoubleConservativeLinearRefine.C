@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                double data on a Cartesian mesh.
  *
@@ -19,7 +19,6 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 /*
@@ -121,7 +120,8 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       refine(fine,
          coarse,
          dst_component,
@@ -177,7 +177,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(dim, 0);
-   tbox::Array<double> diff0(cgbox.numberCells(0) + 1);
+   std::vector<double> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<double> slope0(cgbox, 1, tmp_ghosts);
 
    for (int d = 0; d < fdata->getDepth(); d++) {
@@ -192,10 +192,10 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer());
+            &diff0[0], slope0.getPointer());
       } else if ((dim == tbox::Dimension(2))) {
 
-         tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
+         std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
          SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (ifirstc(0),
@@ -208,14 +208,14 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer(),
-            diff1.getPointer(), slope1.getPointer());
+            &diff0[0], slope0.getPointer(),
+            &diff1[0], slope1.getPointer());
       } else if ((dim == tbox::Dimension(3))) {
 
-         tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
+         std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
-         tbox::Array<double> diff2(cgbox.numberCells(2) + 1);
+         std::vector<double> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<double> slope2(cgbox, 1, tmp_ghosts);
 
          SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (ifirstc(0),
@@ -232,9 +232,9 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer(),
-            diff1.getPointer(), slope1.getPointer(),
-            diff2.getPointer(), slope2.getPointer());
+            &diff0[0], slope0.getPointer(),
+            &diff1[0], slope1.getPointer(),
+            &diff2[0], slope2.getPointer());
       } else {
          TBOX_ERROR("CartesianCellDoubleConservativeLinearRefine error...\n"
             << "dim > 3 not supported." << std::endl);

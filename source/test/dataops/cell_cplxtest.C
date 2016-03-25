@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test cell-centered complex patch data ops
  *
  ************************************************************************/
@@ -162,30 +162,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -287,8 +290,8 @@ int main(
 
             TBOX_ASSERT(cvdata);
 
-            pdat::CellIterator cend(cvdata->getBox(), false);
-            for (pdat::CellIterator c(cvdata->getBox(), true);
+            pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+            for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
                  c != cend && vol_test_passed; ++c) {
                pdat::CellIndex cell_index = *c;
 
@@ -570,8 +573,8 @@ int main(
          hier::Index index1(dim, 3);
          index1(0) = 5;
 
-         pdat::CellIterator cend(cdata->getBox(), false);
-         for (pdat::CellIterator c(cdata->getBox(), true);
+         pdat::CellIterator cend(pdat::CellGeometry::end(cdata->getBox()));
+         for (pdat::CellIterator c(pdat::CellGeometry::begin(cdata->getBox()));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
 
@@ -797,8 +800,8 @@ complexDataSameAsValue(
 
          TBOX_ASSERT(cvdata);
 
-         pdat::CellIterator cend(cvdata->getBox(), false);
-         for (pdat::CellIterator c(cvdata->getBox(), true);
+         pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+         for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*cvdata)(cell_index),
@@ -837,8 +840,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(cvdata);
 
-         pdat::CellIterator cend(cvdata->getBox(), false);
-         for (pdat::CellIterator c(cvdata->getBox(), true);
+         pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+         for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*cvdata)(cell_index),

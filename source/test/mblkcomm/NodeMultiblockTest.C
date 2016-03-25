@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -16,21 +16,18 @@
 
 #include "MultiblockTester.h"
 
+#include <vector>
+
 using namespace SAMRAI;
 
 NodeMultiblockTest::NodeMultiblockTest(
    const string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> main_input_db,
-   bool do_refine,
-   bool do_coarsen,
    const string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
 {
-   NULL_USE(do_refine);
-   NULL_USE(do_coarsen);
-
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
@@ -84,9 +81,9 @@ void NodeMultiblockTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables.resizeArray(nvars);
+   d_variables.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables[i].reset(
@@ -119,7 +116,7 @@ void NodeMultiblockTest::initializeDataOnPatch(
        || ((d_refine_option == "INTERIOR_FROM_COARSER_LEVEL")
            && (level_number < d_finest_level_number))) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -158,25 +155,22 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   const tbox::Array<hier::BoundaryBox> node_bdry =
+   const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
-   const int num_node_bdry_boxes = node_bdry.getSize();
+   const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> edge_bdry;
-   int num_edge_bdry_boxes = 0;
-   if (d_dim > tbox::Dimension(1)) {
-      edge_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 1);
-      num_edge_bdry_boxes = edge_bdry.getSize();
-   }
+   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
+   const std::vector<hier::BoundaryBox>& edge_bdry =
+      d_dim > tbox::Dimension(1) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+   const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> face_bdry;
-   int num_face_bdry_boxes = 0;
-   if (d_dim == tbox::Dimension(3)) {
-      face_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 2);
-      num_face_bdry_boxes = face_bdry.getSize();
-   }
+   const std::vector<hier::BoundaryBox>& face_bdry =
+      d_dim == tbox::Dimension(3) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+   const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
@@ -195,8 +189,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
          hier::Box patch_node_box =
             pdat::NodeGeometry::toNodeBox(patch.getBox());
          if (!node_bdry[nb].getIsMultiblockSingularity()) {
-            pdat::NodeIterator niend(fill_box, false);
-            for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+            pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+            for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
+                 ni != niend; ++ni) {
                if (!patch_node_box.contains(*ni)) {
                   for (int d = 0; d < node_data->getDepth(); d++) {
                      (*node_data)(*ni, d) =
@@ -223,8 +218,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Index pupper(patch_node_box.upper());
 
             if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-               pdat::NodeIterator niend(fill_box, false);
-               for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+               pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+               for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
+                    ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
@@ -265,8 +261,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Index pupper(patch_node_box.upper());
 
             if (!face_bdry[fb].getIsMultiblockSingularity()) {
-               pdat::NodeIterator niend(fill_box, false);
-               for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+               pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+               for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
+                    ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
@@ -298,7 +295,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 void NodeMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   const hier::Connector& dst_to_encon,
+   boost::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
@@ -311,7 +308,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
@@ -327,8 +324,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       hier::Index plower(pbox.lower());
       hier::Index pupper(pbox.upper());
 
-      pdat::NodeIterator niend(sing_fill_box, false);
-      for (pdat::NodeIterator ni(sing_fill_box, true); ni != niend; ++ni) {
+      pdat::NodeIterator niend(pdat::NodeGeometry::end(sing_fill_box));
+      for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sing_fill_box));
+           ni != niend; ++ni) {
          bool use_index = true;
          for (int n = 0; n < d_dim.getValue(); n++) {
             if (bbox.getBox().numberCells(n) == 1) {
@@ -350,12 +348,12 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       if (grid_geometry->hasEnhancedConnectivity()) {
 
          hier::Connector::ConstNeighborhoodIterator ni =
-            dst_to_encon.findLocal(dst_mb_id);
+            dst_to_encon->findLocal(dst_mb_id);
 
-         if (ni != dst_to_encon.end()) {
+         if (ni != dst_to_encon->end()) {
 
-            for (hier::Connector::ConstNeighborIterator ei = dst_to_encon.begin(ni);
-                 ei != dst_to_encon.end(ni); ++ei) {
+            for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
+                 ei != dst_to_encon->end(ni); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                boost::shared_ptr<hier::Patch> encon_patch(
@@ -404,8 +402,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                      BOOST_CAST_TAG);
                   TBOX_ASSERT(sing_data);
 
-                  pdat::NodeIterator ciend(sing_fill_box, false);
-                  for (pdat::NodeIterator ci(sing_fill_box, true);
+                  pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+                  for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
                        ci != ciend; ++ci) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
@@ -431,8 +429,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         pdat::NodeIterator ciend(sing_fill_box, false);
-         for (pdat::NodeIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
+              ci != ciend; ++ci) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (bbox.getBox().numberCells(n) == 1) {
@@ -456,8 +455,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
           * from which to acquire data.
           */
 
-         pdat::NodeIterator ciend(sing_fill_box, false);
-         for (pdat::NodeIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
+              ci != ciend; ++ci) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (bbox.getBox().numberCells(n) == 1) {
@@ -498,7 +498,7 @@ bool NodeMultiblockTest::verifyResults(
    tbox::plog << "Patch box = " << patch.getBox() << endl;
 
    hier::IntVector tgcw(d_dim, 0);
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
       tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
          getGhostCellWidth());
    }
@@ -522,7 +522,7 @@ bool NodeMultiblockTest::verifyResults(
 
    bool test_failed = false;
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       double correct = (double)block_id.getBlockValue();
 
@@ -535,8 +535,9 @@ bool NodeMultiblockTest::verifyResults(
       hier::Box interior_box(pbox);
       interior_box.grow(hier::IntVector(d_dim, -1));
 
-      pdat::NodeIterator ciend(interior_box, false);
-      for (pdat::NodeIterator ci(interior_box, true); ci != ciend; ++ci) {
+      pdat::NodeIterator ciend(pdat::NodeGeometry::end(interior_box));
+      for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior_box));
+           ci != ciend; ++ci) {
          for (int d = 0; d < depth; d++) {
             double result = (*node_data)(*ci, d);
 
@@ -560,7 +561,7 @@ bool NodeMultiblockTest::verifyResults(
          pdat::NodeGeometry::toNodeBox(pbox);
 
       hier::BoxContainer sing_node_boxlist;
-      for (hier::BoxContainer::iterator si(singularity);
+      for (hier::BoxContainer::iterator si = singularity.begin();
            si != singularity.end(); ++si) {
          sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(*si));
       }
@@ -575,7 +576,7 @@ bool NodeMultiblockTest::verifyResults(
          hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
 
          hier::BoxContainer neighbor_node_ghost;
-         for (hier::BoxContainer::iterator nn(neighbor_ghost);
+         for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
               nn != neighbor_ghost.end(); ++nn) {
             hier::Box neighbor_ghost_interior(
                pdat::NodeGeometry::toNodeBox(*nn));
@@ -591,11 +592,11 @@ bool NodeMultiblockTest::verifyResults(
          neighbor_node_ghost.removeIntersections(sing_node_boxlist);
          neighbor_node_ghost.removeIntersections(tested_neighbors);
 
-         for (hier::BoxContainer::iterator ng(neighbor_node_ghost);
+         for (hier::BoxContainer::iterator ng = neighbor_node_ghost.begin();
               ng != neighbor_node_ghost.end(); ++ng) {
 
-            hier::Box::iterator ciend(*ng, false);
-            for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(ng->end());
+               for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
                pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; d++) {
@@ -619,10 +620,10 @@ bool NodeMultiblockTest::verifyResults(
       }
 
       for (int b = 0; b < d_dim.getValue(); b++) {
-         tbox::Array<hier::BoundaryBox> bdry =
+         const std::vector<hier::BoundaryBox>& bdry =
             pgeom->getCodimensionBoundaries(b + 1);
 
-         for (int k = 0; k < bdry.size(); k++) {
+         for (int k = 0; k < static_cast<int>(bdry.size()); k++) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bdry[k],
                   patch.getBox(),
                   tgcw);
@@ -660,8 +661,9 @@ bool NodeMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            pdat::NodeIterator ciend(fill_box, false);
-            for (pdat::NodeIterator ci(fill_box, true); ci != ciend; ++ci) {
+            pdat::NodeIterator ciend(pdat::NodeGeometry::end(fill_box));
+            for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(fill_box));
+                 ci != ciend; ++ci) {
 
                if (!patch_node_box.contains(*ci)) {
 

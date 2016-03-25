@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A N-dimensional integer vector
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -57,7 +56,7 @@ public:
     * Dimension inferred from array size.
     */
    explicit IntVector(
-      const tbox::Array<int>& a);
+      const std::vector<int>& a);
 
    /**
     * @brief Construct a n-dimensional integer vector with

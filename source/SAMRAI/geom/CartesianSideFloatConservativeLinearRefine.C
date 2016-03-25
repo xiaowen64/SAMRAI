@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for side-centered
  *                float data on a Cartesian mesh.
  *
@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/SideVariable.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 /*
@@ -184,7 +183,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
 
          hier::Box fine_box(*b);
@@ -199,7 +198,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
          const hier::Index ilastf = fine_box.upper();
 
          const hier::IntVector tmp_ghosts(dim, 0);
-         tbox::Array<float> diff0(cgbox.numberCells(0) + 2);
+         std::vector<float> diff0(cgbox.numberCells(0) + 2);
          pdat::SideData<float> slope0(cgbox, 1, tmp_ghosts,
                                       directions);
 
@@ -216,10 +215,10 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     diff0.getPointer(), slope0.getPointer(0));
+                     &diff0[0], slope0.getPointer(0));
                }
             } else if ((dim == tbox::Dimension(2))) {
-               tbox::Array<float> diff1(cgbox.numberCells(1) + 2);
+               std::vector<float> diff1(cgbox.numberCells(1) + 2);
                pdat::SideData<float> slope1(cgbox, 1, tmp_ghosts,
                                             directions);
 
@@ -234,8 +233,8 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     diff0.getPointer(), slope0.getPointer(0),
-                     diff1.getPointer(), slope1.getPointer(0));
+                     &diff0[0], slope0.getPointer(0),
+                     &diff1[0], slope1.getPointer(0));
                }
                if (axis == 1 && directions(1)) {
                   SAMRAI_F77_FUNC(cartclinrefsideflot2d1, CARTCLINREFSIDEFLOT2D1) (
@@ -248,15 +247,15 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d),
-                     diff1.getPointer(), slope1.getPointer(1),
-                     diff0.getPointer(), slope0.getPointer(1));
+                     &diff1[0], slope1.getPointer(1),
+                     &diff0[0], slope0.getPointer(1));
                }
             } else if ((dim == tbox::Dimension(3))) {
-               tbox::Array<float> diff1(cgbox.numberCells(1) + 2);
+               std::vector<float> diff1(cgbox.numberCells(1) + 2);
                pdat::SideData<float> slope1(cgbox, 1, tmp_ghosts,
                                             directions);
 
-               tbox::Array<float> diff2(cgbox.numberCells(2) + 2);
+               std::vector<float> diff2(cgbox.numberCells(2) + 2);
                pdat::SideData<float> slope2(cgbox, 1, tmp_ghosts,
                                             directions);
 
@@ -275,9 +274,9 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     diff0.getPointer(), slope0.getPointer(0),
-                     diff1.getPointer(), slope1.getPointer(0),
-                     diff2.getPointer(), slope2.getPointer(0));
+                     &diff0[0], slope0.getPointer(0),
+                     &diff1[0], slope1.getPointer(0),
+                     &diff2[0], slope2.getPointer(0));
                }
                if (axis == 1 && directions(1)) {
                   SAMRAI_F77_FUNC(cartclinrefsideflot3d1, CARTCLINREFSIDEFLOT3D1) (
@@ -294,9 +293,9 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d),
-                     diff1.getPointer(), slope1.getPointer(1),
-                     diff2.getPointer(), slope2.getPointer(1),
-                     diff0.getPointer(), slope0.getPointer(1));
+                     &diff1[0], slope1.getPointer(1),
+                     &diff2[0], slope2.getPointer(1),
+                     &diff0[0], slope0.getPointer(1));
                }
                if (axis == 2 && directions(2)) {
                   SAMRAI_F77_FUNC(cartclinrefsideflot3d2, CARTCLINREFSIDEFLOT3D2) (
@@ -313,9 +312,9 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(2, d),
                      fdata->getPointer(2, d),
-                     diff2.getPointer(), slope2.getPointer(2),
-                     diff0.getPointer(), slope0.getPointer(2),
-                     diff1.getPointer(), slope1.getPointer(2));
+                     &diff2[0], slope2.getPointer(2),
+                     &diff0[0], slope0.getPointer(2),
+                     &diff1[0], slope1.getPointer(2));
                }
             } else {
                TBOX_ERROR(

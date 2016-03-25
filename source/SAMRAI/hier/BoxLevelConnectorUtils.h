@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 
 namespace SAMRAI {
@@ -185,7 +185,7 @@ public:
     * Compare an input BoxLevel to a "reference" BoxLevel.
     * Compute the parts of the input that are external to the
     * reference.  Build the "external" BoxLevel representing the
-    * external parts.  Build a mapping Connector with the input as its
+    * external parts.  Build a MappingConnector with the input as its
     * base and the external as its head.
     *
     * A partially external input cell (possible when input is coarser
@@ -224,13 +224,13 @@ public:
     */
    void
    computeExternalParts(
-      BoxLevel& external,
-      Connector& input_to_external,
+      boost::shared_ptr<BoxLevel>& external,
+      boost::shared_ptr<MappingConnector>& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
    {
-      t_compute_external_parts->start();
+      d_object_timers->t_compute_external_parts->start();
       computeInternalOrExternalParts(
          external,
          input_to_external,
@@ -238,7 +238,7 @@ public:
          input_to_reference,
          nesting_width,
          domain);
-      t_compute_external_parts->stop();
+      d_object_timers->t_compute_external_parts->stop();
    }
 
    /*!
@@ -248,7 +248,7 @@ public:
     * Compare an input BoxLevel to a "reference" box_level.
     * Identify parts of the input that are internal to the reference
     * BoxLevel, and store the internal parts in a
-    * BoxLevel.  Set up a mapping Connector between the input
+    * BoxLevel.  Set up a MappingConnector between the input
     * and its internal parts.
     *
     * A partially internal input cell (possible when input is coarser
@@ -287,13 +287,13 @@ public:
     */
    void
    computeInternalParts(
-      BoxLevel& internal,
-      Connector& input_to_internal,
+      boost::shared_ptr<BoxLevel>& internal,
+      boost::shared_ptr<MappingConnector>& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
    {
-      t_compute_internal_parts->start();
+      d_object_timers->t_compute_internal_parts->start();
       computeInternalOrExternalParts(
          internal,
          input_to_internal,
@@ -301,7 +301,7 @@ public:
          input_to_reference,
          nesting_width,
          domain);
-      t_compute_internal_parts->stop();
+      d_object_timers->t_compute_internal_parts->stop();
    }
 
    //@}
@@ -329,15 +329,15 @@ public:
 
    //@{
 
-   //! @name Setting up common mapping Connectors
+   //! @name Setting up common MappingConnectors
 
    /*
-    * @brief Sort the Boxes in BoxLevel and make a mapping
-    * Connector from the unsorted BoxLevel to the sorted one.
+    * @brief Sort the Boxes in BoxLevel and make a MappingConnector
+    * from the unsorted BoxLevel to the sorted one.
     * The sorting can renumber the LocalIndices of the Boxes
     * or put the Boxes in spatial ordering, or both.
     *
-    * The Connector map created is local (no Box is mapped to a new
+    * The MappingConnector created is local (no Box is mapped to a new
     * owner).
     *
     * If @c sort_boxes_by_corner is true, the map will reorder
@@ -352,7 +352,7 @@ public:
     * @c initial_sequential_index can specify the first index of first
     * Box of the lowest rank processor.
     *
-    * For more information on mapping Connectors, see
+    * For more information on MappingConnectors, see
     * MappingConnectorAlgorithm.
     *
     * @param[out] sorted_box_level Sorted version of the input
@@ -376,8 +376,8 @@ public:
     */
    void
    makeSortingMap(
-      BoxLevel& sorted_box_level,
-      Connector& output_map,
+      boost::shared_ptr<BoxLevel>& sorted_box_level,
+      boost::shared_ptr<MappingConnector>& output_map,
       const BoxLevel& unsorted_box_level,
       bool sort_boxes_by_corner = true,
       bool sequentialize_global_indices = true,
@@ -404,9 +404,9 @@ public:
     */
    void
    makeRemainderMap(
-      BoxLevel& remainder,
-      Connector& orig_to_remainder,
-      const Connector& orig_to_rejections) const;
+      boost::shared_ptr<BoxLevel>& remainder,
+      boost::shared_ptr<MappingConnector>& orig_to_remainder,
+      const MappingConnector& orig_to_rejections) const;
 
    //@}
 
@@ -465,38 +465,49 @@ public:
     * @param[in,out] box_level_to_anchor Overlap Connector to
     * be updated with new relationships.
     *
-    * @param[in,out] anchor_to_box_level Overlap Connector to
-    * be updated with new relationships.
-    *
     * @param[in] domain_search_tree Domain description in the
     * reference index space.  This tree must NOT include periodic
     * images.
     *
     * @param[in] anchor_to_anchor Self overlap Connector for anchor
-    * BoxLevel.  Must be a complete overlap Connector with
-    * periodic relationships.
+    * BoxLevel.  Must be a complete overlap Connector with periodic
+    * relationships.  To guarantee complete periodic relationships,
+    * the anchor, grown by the width of this Connector, must nest
+    * box_level grown by the width of box_level_to_anchor.
     */
    void
    addPeriodicImagesAndRelationships(
       BoxLevel& box_level,
       Connector& box_level_to_anchor,
-      Connector& anchor_to_box_level,
       const BoxContainer& domain_search_tree,
       const Connector& anchor_to_anchor) const;
 
    //@}
 
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named
+    * "hier::BoxLevelConnectorUtils::*", where the third field is
+    * the specific steps performed by the BoxLevelConnectorUtils.
+    * You can override the first two fields with this method.
+    * Conforming to the timer naming convention, timer_prefix should
+    * have the form "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
+
 private:
    /*!
-    * @brief Delegated work of computeInternalParts and
-    * computeExternalParts.
+    * @brief Delegated work of computeInternalParts and computeExternalParts.
     *
     * @post input_to_parts.isLocal()
     */
    void
    computeInternalOrExternalParts(
-      BoxLevel& parts,
-      Connector& input_to_parts,
+      boost::shared_ptr<BoxLevel>& parts,
+      boost::shared_ptr<MappingConnector>& input_to_parts,
       char internal_or_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
@@ -510,54 +521,59 @@ private:
       const void* v,
       const void* w);
 
-   /*!
-    * @brief Allocate statics
+
+   //@{
+   //! @name Timer data for this class.
+
+   /*
+    * @brief Structure of timers used by this class.
     *
-    * Only called by StartupShutdownManager.
+    * Each object can set its own timer names through
+    * setTimerPrefix().  This leads to many timer look-ups.  Because
+    * it is expensive to look up timers, this class caches the timers
+    * that has been looked up.  Each TimerStruct stores the timers
+    * corresponding to a prefix.
     */
-   static void
-   initializeCallback()
-   {
-      t_make_sorting_map = tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::makeSortingMap()");
-      t_compute_external_parts = tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeExternalParts()");
-      t_compute_external_parts_intersection =
-         tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeExternalParts()_intersection");
-      t_compute_internal_parts = tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeInternalParts()");
-      t_compute_internal_parts_intersection =
-         tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeInternalParts()_intersection");
-   }
+   struct TimerStruct {
+      boost::shared_ptr<tbox::Timer> t_make_sorting_map;
+      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary;
+      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_singularity;
+      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_simplify;
+      boost::shared_ptr<tbox::Timer> t_compute_external_parts;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_manip_reference;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_simplify;
+   };
+
+   //! @brief Default prefix for Timers.
+   static const std::string s_default_timer_prefix;
 
    /*!
-    * @brief Delete statics.
-    *
-    * Only called by StartupShutdownManager.
+    * @brief Static container of timers that have been looked up.
+    */
+   static std::map<std::string, TimerStruct> s_static_timers;
+
+   /*!
+    * @brief Structure of timers in s_static_timers, matching this
+    * object's timer prefix.
+    */
+   TimerStruct* d_object_timers;
+
+   /*!
+    * @brief Get all the timers defined in TimerStruct.  The timers
+    * are named with the given prefix.
     */
    static void
-   finalizeCallback()
-   {
-      t_make_sorting_map.reset();
-      t_compute_external_parts.reset();
-      t_compute_external_parts_intersection.reset();
-      t_compute_internal_parts.reset();
-      t_compute_internal_parts_intersection.reset();
-   }
+   getAllTimers(
+      const std::string& timer_prefix,
+      TimerStruct& timers);
 
-   static boost::shared_ptr<tbox::Timer> t_make_sorting_map;
-   static boost::shared_ptr<tbox::Timer> t_compute_external_parts;
-   static boost::shared_ptr<tbox::Timer> t_compute_external_parts_intersection;
-   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
-   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts_intersection;
+   //@}
+
 
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
-
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
 
 };
 

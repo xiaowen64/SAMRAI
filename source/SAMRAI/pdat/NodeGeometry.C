@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,6 +12,7 @@
 #define included_pdat_NodeGeometry_C
 
 #include "SAMRAI/pdat/NodeGeometry.h"
+#include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -136,7 +137,7 @@ NodeGeometry::computeDestinationBoxes(
 
    if (!dst_restrict_boxes.isEmpty() && !dst_boxes.isEmpty()) {
       hier::BoxContainer node_restrict_boxes;
-      for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
+      for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
            b != dst_restrict_boxes.end(); ++b) {
          node_restrict_boxes.pushBack(toNodeBox(*b));
       }
@@ -158,7 +159,8 @@ NodeGeometry::setUpOverlap(
 {
    hier::BoxContainer dst_boxes;
 
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       hier::Box node_box(NodeGeometry::toNodeBox(*b));
       dst_boxes.pushBack(node_box);
    }
@@ -215,8 +217,22 @@ NodeGeometry::transform(
 
    const hier::Transformation::RotationIdentifier& rotation =
       transformation.getRotation();
-   if (dim.getValue() == 2) {
+   if (dim.getValue() == 1) {
       const int rotation_num = static_cast<int>(rotation);
+      if (rotation_num > 1) {
+         TBOX_ERROR("NodeGeometry::transform invalid 1D RotationIdentifier.");
+      }
+
+      if (rotation_num) {
+         NodeIndex tmp_index(index);
+         index(0) = -tmp_index(0);
+      }
+   }
+   else if (dim.getValue() == 2) {
+      const int rotation_num = static_cast<int>(rotation);
+      if (rotation_num > 3) {
+         TBOX_ERROR("NodeGeometry::transform invalid 2D RotationIdentifier.");
+      }
 
       if (rotation_num) {
          NodeIndex tmp_index(dim);
@@ -364,6 +380,20 @@ NodeGeometry::rotateAboutAxis(NodeIndex& index,
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);
    }
+}
+
+NodeIterator
+NodeGeometry::begin(
+   const hier::Box& box)
+{
+   return NodeIterator(box, true);
+}
+
+NodeIterator
+NodeGeometry::end(
+   const hier::Box& box)
+{
+   return NodeIterator(box, false);
 }
 
 }

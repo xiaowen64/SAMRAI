@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all transfer operators.
  *
  ************************************************************************/
@@ -130,8 +130,6 @@ public:
     * pointer to it will be returned.  Otherwise, an unrecoverable error
     * will result and the program will abort.
     *
-    * @param[in]  grid_geometry The grid geometry with which the operator
-    *                           being looked up is associated.
     * @param[in]  var The Variable for which the corresponding coarsening
     *                 operator should match.
     * @param[in]  op_name The string identifier of the coarsening operator.
@@ -141,7 +139,6 @@ public:
     */
    boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      BaseGridGeometry& grid_geometry,
       const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
@@ -153,8 +150,6 @@ public:
     * pointer to it will be returned.  Otherwise, an unrecoverable
     * error will result and the program will abort.
     *
-    * @param[in]  grid_geometry The grid geometry with which the operator
-    *                           being looked up is associated.
     * @param[in]  var The Variable for which the corresponding refinement
     *                 operator should match.
     * @param[in]  op_name The string identifier of the refinement operator.
@@ -164,7 +159,6 @@ public:
     */
    boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      BaseGridGeometry& grid_geometry,
       const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
@@ -176,8 +170,6 @@ public:
     * pointer to it will be returned.  Otherwise, an unrecoverable
     * error will result and the program will abort.
     *
-    * @param[in]  grid_geometry The grid geometry with which the operator
-    *                           being looked up is associated.
     * @param[in]  var The Variable for which the corresponding time
     *                 interpolation operator should match.
     * @param[in]  op_name The string identifier of the time interpolation
@@ -188,7 +180,6 @@ public:
     */
    boost::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      BaseGridGeometry& grid_geometry,
       const boost::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE");

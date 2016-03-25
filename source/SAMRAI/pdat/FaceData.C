@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated face centered patch data type
  *
  ************************************************************************/
@@ -329,7 +329,7 @@ FaceData<TYPE>::copyWithRotation(
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
-      for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+      for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
            bi != overlap_boxes.end(); ++bi) {
          const hier::Box& overlap_box = *bi;
 
@@ -339,8 +339,9 @@ FaceData<TYPE>::copyWithRotation(
             const int depth = ((getDepth() < src.getDepth()) ?
                                getDepth() : src.getDepth());
 
-            hier::Box::iterator ciend(copybox, false);
-            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+            hier::Box::iterator ciend(copybox.end());
+            for (hier::Box::iterator ci(copybox.begin());
+                 ci != ciend; ++ci) {
 
                FaceIndex dst_index(*ci, 0, 0);
                dst_index.setAxis(i);
@@ -506,12 +507,12 @@ FaceData<TYPE>::packWithRotation(
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-      tbox::Array<TYPE> buffer(size);
+      std::vector<TYPE> buffer(size);
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
       int buf_count = 0;
-      for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+      for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
            bi != overlap_boxes.end(); ++bi) {
          const hier::Box& overlap_box = *bi;
 
@@ -521,8 +522,9 @@ FaceData<TYPE>::packWithRotation(
 
             for (int d = 0; d < depth; d++) {
 
-               hier::Box::iterator ciend(copybox, false);
-               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(copybox.end());
+               for (hier::Box::iterator ci(copybox.begin());
+                    ci != ciend; ++ci) {
 
                   FaceIndex src_index(*ci, 0, 0);
                   src_index.setAxis(i);
@@ -534,7 +536,7 @@ FaceData<TYPE>::packWithRotation(
             }
          }
       }
-      stream.pack(buffer.getPointer(), size);
+      stream.pack(&buffer[0], size);
    }
 }
 
@@ -725,8 +727,8 @@ FaceData<TYPE>::printAxis(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 
    os.precision(prec);
-   FaceIterator iend(box, face_normal, false);
-   for (FaceIterator i(box, face_normal, true); i != iend; ++i) {
+   FaceIterator iend(FaceGeometry::end(box, face_normal));
+   for (FaceIterator i(FaceGeometry::begin(box, face_normal)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal]))(*i, depth) << std::endl << std::flush;
    }

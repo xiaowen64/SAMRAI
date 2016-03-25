@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test side-centered patch data ops
  *
  ************************************************************************/
@@ -159,30 +159,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -198,26 +201,21 @@ int main(
       // Make some dummy variables and data on the hierarchy
       boost::shared_ptr<pdat::SideVariable<double> > fvar[NVARS];
       int svindx[NVARS];
-      fvar[0].reset(new pdat::SideVariable<double>(dim, "fvar0",
-         hier::IntVector::getOne(dim), 1));
+      fvar[0].reset(new pdat::SideVariable<double>(dim, "fvar0", 1));
       svindx[0] = variable_db->registerVariableAndContext(
             fvar[0], dummy, no_ghosts);
-      fvar[1].reset(new pdat::SideVariable<double>(dim, "fvar1",
-         hier::IntVector::getOne(dim), 1));
+
+      fvar[1].reset(new pdat::SideVariable<double>(dim, "fvar1", 1));
       svindx[1] = variable_db->registerVariableAndContext(
             fvar[1], dummy, no_ghosts);
-      fvar[2].reset(new pdat::SideVariable<double>(dim, "fvar2",
-         hier::IntVector::getOne(dim), 1));
+      fvar[2].reset(new pdat::SideVariable<double>(dim, "fvar2", 1));
       svindx[2] = variable_db->registerVariableAndContext(
             fvar[2], dummy, no_ghosts);
-      fvar[3].reset(new pdat::SideVariable<double>(dim, "fvar3",
-         hier::IntVector::getOne(dim), 1));
+      fvar[3].reset(new pdat::SideVariable<double>(dim, "fvar3", 1));
       svindx[3] = variable_db->registerVariableAndContext(
             fvar[3], dummy, no_ghosts);
-
       boost::shared_ptr<pdat::SideVariable<double> > swgt(
-         new pdat::SideVariable<double>(dim, "swgt",
-            hier::IntVector::getOne(dim), 1));
+         new pdat::SideVariable<double>(dim, "swgt", 1));
       int swgt_id = variable_db->registerVariableAndContext(
             swgt, dummy, no_ghosts);
 
@@ -578,8 +576,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::SideData<double> > cvdata = patch->getPatchData(cwgt_id);
  *
- *   pdat::SideIterator cend(cvdata->getBox(), 1, false);
- *   for (pdat::SideIterator c(cvdata->getBox(), 1, true); c != cend && vol_test_passed; ++c) {
+ *   pdat::SideIterator cend(pdat::SideGeometry::end(cvdata->getBox(), 1);
+ *   for (pdat::SideIterator c(pdat::SideGeometry::begin(cvdata->getBox(), 1)); c != cend && vol_test_passed; ++c) {
  *   pdat::SideIndex side_index = *c;
  *
  *   if (ln == 0) {
@@ -876,8 +874,8 @@ int main(
                                 pdat::SideIndex::Upper);
 
          // check X axis data
-         pdat::SideIterator cend(cdata->getBox(), pdat::SideIndex::X, false);
-         for (pdat::SideIterator c(cdata->getBox(), pdat::SideIndex::X, true);
+         pdat::SideIterator cend(pdat::SideGeometry::end(cdata->getBox(), pdat::SideIndex::X));
+         for (pdat::SideIterator c(pdat::SideGeometry::begin(cdata->getBox(), pdat::SideIndex::X));
               c != cend && bogus_value_test_passed;
               ++c) {
             pdat::SideIndex side_index = *c;
@@ -889,8 +887,8 @@ int main(
          }
 
          // check Y axis data
-         pdat::SideIterator ccend(cdata->getBox(), pdat::SideIndex::Y, false);
-         for (pdat::SideIterator cc(cdata->getBox(), pdat::SideIndex::Y, true);
+         pdat::SideIterator ccend(pdat::SideGeometry::end(cdata->getBox(), pdat::SideIndex::Y));
+         for (pdat::SideIterator cc(pdat::SideGeometry::begin(cdata->getBox(), pdat::SideIndex::Y));
               cc != ccend && bogus_value_test_passed;
               ++cc) {
             pdat::SideIndex side_index = *cc;
@@ -917,8 +915,8 @@ int main(
 
          if (dim.getValue() == 3) {
             // check Z axis data
-            pdat::SideIterator cend(cdata->getBox(), pdat::SideIndex::Z, false);
-            for (pdat::SideIterator c(cdata->getBox(), pdat::SideIndex::Z, true);
+            pdat::SideIterator cend(pdat::SideGeometry::end(cdata->getBox(), pdat::SideIndex::Z));
+            for (pdat::SideIterator c(pdat::SideGeometry::begin(cdata->getBox(), pdat::SideIndex::Z));
                  c != cend && bogus_value_test_passed;
                  ++c) {
                pdat::SideIndex side_index = *c;
@@ -1148,8 +1146,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(cvdata);
 
-         pdat::SideIterator cend(cvdata->getBox(), 1, false);
-         for (pdat::SideIterator c(cvdata->getBox(), 1, true);
+         pdat::SideIterator cend(pdat::SideGeometry::end(cvdata->getBox(), 1));
+         for (pdat::SideIterator c(pdat::SideGeometry::begin(cvdata->getBox(), 1));
               c != cend && test_passed;
               ++c) {
             pdat::SideIndex side_index = *c;

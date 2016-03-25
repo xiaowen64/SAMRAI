@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                double data on a Skeleton mesh.
  *
@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 /*
@@ -72,9 +71,9 @@ SkeletonCellDoubleConservativeLinearRefine(
    d_dim(dim)
 {
    const int max_levels = 10;
-   d_dx.resizeArray(max_levels);
+   d_dx.resize(max_levels);
    for (int n = 0; n < max_levels; n++) {
-      d_dx[n].resizeArray(dim.getValue());
+      d_dx[n].resize(dim.getValue());
       for (int i = 0; i < dim.getValue(); i++) {
          d_dx[n][i] = 1.;
       }
@@ -112,7 +111,8 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       refine(fine,
          coarse,
          dst_component,
@@ -155,7 +155,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Index ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(fine.getDim(), 0);
-   tbox::Array<double> diff0(cgbox.numberCells(0) + 1);
+   std::vector<double> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<double> slope0(cgbox, 1, tmp_ghosts);
 
    int flev_num = fine.getPatchLevelNumber();
@@ -182,10 +182,10 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             fdx,
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer());
+            &diff0[0], slope0.getPointer());
       } else if (fine.getDim() == tbox::Dimension(2)) {
 
-         tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
+         std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
          SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
@@ -198,14 +198,14 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             fdx,
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer(),
-            diff1.getPointer(), slope1.getPointer());
+            &diff0[0], slope0.getPointer(),
+            &diff1[0], slope1.getPointer());
       } else if (fine.getDim() == tbox::Dimension(3)) {
 
-         tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
+         std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
-         tbox::Array<double> diff2(cgbox.numberCells(2) + 1);
+         std::vector<double> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<double> slope2(cgbox, 1, tmp_ghosts);
 
          SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (
@@ -222,9 +222,9 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             fdx,
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer(),
-            diff1.getPointer(), slope1.getPointer(),
-            diff2.getPointer(), slope2.getPointer());
+            &diff0[0], slope0.getPointer(),
+            &diff1[0], slope1.getPointer(),
+            &diff2[0], slope2.getPointer());
       } else {
          TBOX_ERROR("SkeletonCellDoubleConservativeLinearRefine error...\n"
             << "dimension > 3 not supported." << endl);
@@ -237,9 +237,9 @@ void SkeletonCellDoubleConservativeLinearRefine::setDx(
    const int level_number,
    const double* dx)
 {
-   if (level_number >= d_dx.getSize()) {
-      d_dx.resizeArray(level_number + 1);
-      d_dx[level_number].resizeArray(d_dim.getValue());
+   if (level_number >= static_cast<int>(d_dx.size())) {
+      d_dx.resize(level_number + 1);
+      d_dx[level_number].resize(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_dx[level_number][i] = dx[i];
       }

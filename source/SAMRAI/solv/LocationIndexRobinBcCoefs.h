@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition problem-dependent interfaces
  *
  ************************************************************************/
@@ -71,7 +71,7 @@ namespace solv {
  *   </tr>
  *   <tr>
  *     <td>boundary_N</td>
- *     <td>Array<string></td>
+ *     <td>array of strings</td>
  *     <td>none</td>
  *     <td>"value", "gval"; "slope", "gval"; "coefficients", "aVal", "bVal"</td>
  *     <td>req</td>

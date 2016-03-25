@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -12,13 +12,13 @@
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/hier/CoarseFineBoundary.h"
-#include "SAMRAI/hier/CoarsenOperator.h"
 #include "PatchMultiblockTestStrategy.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 #include "SAMRAI/hier/RefineOperator.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
@@ -38,17 +38,12 @@ MultiblockTester::MultiblockTester(
    boost::shared_ptr<tbox::Database>& main_input_db,
    boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    PatchMultiblockTestStrategy* data_test,
-   bool do_refine,
-   bool do_coarsen,
    const string& refine_option):
-   xfer::CoarsenPatchStrategy(),
    xfer::RefinePatchStrategy(),
    xfer::SingularityPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_data_test_strategy(data_test),
-   d_do_refine(do_refine),
-   d_do_coarsen(false),
    d_refine_option(refine_option),
    d_patch_hierarchy(hierarchy),
    d_fake_time(0.0),
@@ -66,17 +61,12 @@ MultiblockTester::MultiblockTester(
    d_reset_refine_scratch(
       hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH")),
    d_reset_refine_algorithm(),
-   d_reset_coarsen_algorithm(dim),
    d_is_reset(false)
 {
    NULL_USE(main_input_db);
 
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(data_test != 0);
-
-   if (!do_refine) {
-      d_do_coarsen = do_coarsen;
-   }
 
    if (!((d_refine_option == "INTERIOR_FROM_SAME_LEVEL")
          || (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL"))) {
@@ -133,41 +123,30 @@ void MultiblockTester::registerVariable(
    d_patch_data_components.setFlag(dst_id);
 
    boost::shared_ptr<hier::RefineOperator> refine_operator;
-   boost::shared_ptr<hier::CoarsenOperator> coarsen_operator;
 
-   if (d_do_refine) {
-      refine_operator = xfer_geom->lookupRefineOperator(src_variable,
-            operator_name);
+   refine_operator = xfer_geom->lookupRefineOperator(src_variable,
+         operator_name);
 
-      d_mblk_refine_alg.reset(new xfer::RefineAlgorithm());
+   d_mblk_refine_alg.reset(new xfer::RefineAlgorithm());
 
-      hier::IntVector scratch_ghosts =
-         hier::IntVector::max(src_ghosts, dst_ghosts);
-      scratch_ghosts.max(hier::IntVector(d_dim, 1));
-      if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
-      }
-      int scratch_id =
-         variable_db->registerVariableAndContext(src_variable,
-            d_refine_scratch,
-            scratch_ghosts);
-      TBOX_ASSERT(scratch_id != -1);
-
-      d_patch_data_components.setFlag(scratch_id);
-
-      d_mblk_refine_alg->registerRefine(dst_id,
-         src_id,
-         scratch_id,
-         refine_operator);
-
-   } else if (d_do_coarsen) {
-      coarsen_operator = xfer_geom->lookupCoarsenOperator(src_variable,
-            operator_name);
-      d_coarsen_algorithm->registerCoarsen(dst_id,
-         src_id,
-         coarsen_operator);
-
+   hier::IntVector scratch_ghosts =
+      hier::IntVector::max(src_ghosts, dst_ghosts);
+   scratch_ghosts.max(hier::IntVector(d_dim, 1));
+   if (refine_operator) {
+      scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
    }
+   int scratch_id =
+      variable_db->registerVariableAndContext(src_variable,
+         d_refine_scratch,
+         scratch_ghosts);
+   TBOX_ASSERT(scratch_id != -1);
+
+   d_patch_data_components.setFlag(scratch_id);
+
+   d_mblk_refine_alg->registerRefine(dst_id,
+      src_id,
+      scratch_id,
+      refine_operator);
 
    registerVariableForReset(src_variable, dst_variable,
       src_ghosts, dst_ghosts, xfer_geom,
@@ -203,45 +182,35 @@ void MultiblockTester::registerVariableForReset(
    d_patch_data_components.setFlag(dst_id);
 
    boost::shared_ptr<hier::RefineOperator> refine_operator;
-   boost::shared_ptr<hier::CoarsenOperator> coarsen_operator;
 
-   if (d_do_refine) {
-      refine_operator = xfer_geom->lookupRefineOperator(src_variable,
-            operator_name);
+   refine_operator = xfer_geom->lookupRefineOperator(src_variable,
+         operator_name);
 
-      hier::IntVector scratch_ghosts =
-         hier::IntVector::max(src_ghosts, dst_ghosts);
+   hier::IntVector scratch_ghosts =
+      hier::IntVector::max(src_ghosts, dst_ghosts);
 
-      scratch_ghosts.max(hier::IntVector(d_dim, 1));
-      if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
-      }
-      int scratch_id =
-         variable_db->registerVariableAndContext(src_variable,
-            d_reset_refine_scratch,
-            scratch_ghosts);
-
-      d_patch_data_components.setFlag(scratch_id);
-
-      d_reset_refine_algorithm.registerRefine(dst_id,
-         src_id,
-         scratch_id,
-         refine_operator);
-
-   } else if (d_do_coarsen) {
-      coarsen_operator = xfer_geom->lookupCoarsenOperator(src_variable,
-            operator_name);
-      d_reset_coarsen_algorithm.registerCoarsen(dst_id,
-         src_id,
-         coarsen_operator);
+   scratch_ghosts.max(hier::IntVector(d_dim, 1));
+   if (refine_operator) {
+      scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
    }
+   int scratch_id =
+      variable_db->registerVariableAndContext(src_variable,
+         d_reset_refine_scratch,
+         scratch_ghosts);
+
+   d_patch_data_components.setFlag(scratch_id);
+
+   d_reset_refine_algorithm.registerRefine(dst_id,
+      src_id,
+      scratch_id,
+      refine_operator);
 
 }
 
 /*
  *************************************************************************
  *
- * Create refine and coarsen communication schedules for hierarchy.
+ * Create refine communication schedules for hierarchy.
  *
  *************************************************************************
  */
@@ -255,31 +224,27 @@ void MultiblockTester::createRefineSchedule(
    boost::shared_ptr<hier::PatchLevel> level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
-   if (d_do_refine) {
+   d_refine_schedule.resize(
+      d_patch_hierarchy->getFinestLevelNumber() + 1);
+   d_refine_schedule[level_number].reset();
 
-      d_refine_schedule.resizeArray(
-         d_patch_hierarchy->getFinestLevelNumber() + 1);
-      d_refine_schedule[level_number].reset();
-
-      if (level_number == 0) {
-         d_refine_schedule[level_number] =
-            d_mblk_refine_alg->createSchedule(level,
-               this);
-      } else if (d_refine_option == "INTERIOR_FROM_SAME_LEVEL") {
-         d_refine_schedule[level_number] =
-            d_mblk_refine_alg->createSchedule(level,
-               level_number - 1,
-               d_patch_hierarchy,
-               this);
-      } else if (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL") {
-         d_refine_schedule[level_number] =
-            d_mblk_refine_alg->createSchedule(level,
-               boost::shared_ptr<hier::PatchLevel>(),
-               level_number - 1,
-               d_patch_hierarchy,
-               this);
-      }
-
+   if (level_number == 0) {
+      d_refine_schedule[level_number] =
+         d_mblk_refine_alg->createSchedule(level,
+            this);
+   } else if (d_refine_option == "INTERIOR_FROM_SAME_LEVEL") {
+      d_refine_schedule[level_number] =
+         d_mblk_refine_alg->createSchedule(level,
+            level_number - 1,
+            d_patch_hierarchy,
+            this);
+   } else if (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL") {
+      d_refine_schedule[level_number] =
+         d_mblk_refine_alg->createSchedule(level,
+            boost::shared_ptr<hier::PatchLevel>(),
+            level_number - 1,
+            d_patch_hierarchy,
+            this);
    }
 
 }
@@ -290,81 +255,18 @@ void MultiblockTester::resetRefineSchedule(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   if (d_do_refine) {
 
-      d_reset_refine_algorithm.resetSchedule(d_refine_schedule[level_number]);
+   d_reset_refine_algorithm.resetSchedule(d_refine_schedule[level_number]);
 
-   }
 
    d_is_reset = true;
 }
 
-void MultiblockTester::createCoarsenSchedule(
-   const int level_number)
-{
-   NULL_USE(level_number);
-/*
- * if (d_do_coarsen && (level_number > 0)) {
- *
- *    d_coarsen_schedule.resizeArray(
- *       d_patch_hierarchy->getFinestLevelNumber()+1);
- *    d_coarsen_schedule[level_number].reset();
- *
- *
- *
- *    boost::shared_ptr<hier::PatchLevel > level =
- *       d_patch_hierarchy->getPatchLevel(level_number);
- *    boost::shared_ptr<hier::PatchLevel > coarser_level =
- *       d_patch_hierarchy->getPatchLevel(level_number-1);
- *
- *    tbox::Array< boost::shared_ptr< hier::Connector > > fine_to_coarse;
- *    tbox::Array< boost::shared_ptr< hier::Connector > > coarse_to_fine;
- *
- *    const hier::Connector *fine_to_coarse =
- *       &lh.getConnector(level_number, level_number-1);
- *    const hier::Connector *coarse_to_fine =
- *       &lh.getConnector(level_number-1, level_number);
- *    const hier::Connector::TransposePair
- *       coarse_fine_pair( coarse_to_fine, fine_to_coarse );
- *
- *    if ( dlbg_schedule ) {
- *       d_coarsen_schedule[level_number] =
- *          d_coarsen_algorithm.createSchedule(coarser_level,
- *                                             level,
- *                                             coarse_fine_pair,
- *                                             this);
- *    } else {
- *       TBOX_ERROR("The following must be replaced with the DLBG version.");
- * #if 0
- *    d_coarsen_schedule[level_number] =
- *       d_coarsen_algorithm->createSchedule(coarser_level, level, this);
- * #endif
- *    }
- *
- * }
- */
-}
-
-void MultiblockTester::resetCoarsenSchedule(
-   const int level_number)
-{
-   TBOX_ASSERT((level_number >= 0)
-      && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-
-   if (d_do_coarsen && (level_number > 0)) {
-
-      d_reset_coarsen_algorithm.resetSchedule(
-         d_coarsen_schedule[level_number]);
-
-   }
-
-   d_is_reset = true;
-}
 
 /*
  *************************************************************************
  *
- * Perform data refine and coarsen operations.
+ * Perform data refine operations.
  *
  *************************************************************************
  */
@@ -372,33 +274,15 @@ void MultiblockTester::resetCoarsenSchedule(
 void MultiblockTester::performRefineOperations(
    const int level_number)
 {
-   if (d_do_refine) {
-      if (d_is_reset) {
-         d_data_test_strategy->setDataContext(d_reset_refine_scratch);
-      } else {
-         d_data_test_strategy->setDataContext(d_destination);
-      }
-      if (d_refine_schedule[level_number]) {
-         d_refine_schedule[level_number]->fillData(d_fake_time);
-      }
-      d_data_test_strategy->clearDataContext();
+   if (d_is_reset) {
+      d_data_test_strategy->setDataContext(d_reset_refine_scratch);
+   } else {
+      d_data_test_strategy->setDataContext(d_destination);
    }
-}
-
-void MultiblockTester::performCoarsenOperations(
-   const int level_number)
-{
-   if (d_do_coarsen) {
-      if (d_is_reset) {
-         d_data_test_strategy->setDataContext(d_reset_source);
-      } else {
-         d_data_test_strategy->setDataContext(d_source);
-      }
-      if (d_coarsen_schedule[level_number]) {
-         d_coarsen_schedule[level_number]->coarsenData();
-      }
-      d_data_test_strategy->clearDataContext();
+   if (d_refine_schedule[level_number]) {
+      d_refine_schedule[level_number]->fillData(d_fake_time);
    }
+   d_data_test_strategy->clearDataContext();
 }
 
 /*
@@ -491,23 +375,6 @@ void MultiblockTester::initializeLevelData(
          's');
       d_data_test_strategy->clearDataContext();
 
-      if (d_do_coarsen) {
-
-         d_data_test_strategy->setDataContext(d_destination);
-         d_data_test_strategy->initializeDataOnPatch(*patch,
-            mblk_hierarchy,
-            level_num, block_id,
-            'd');
-         d_data_test_strategy->clearDataContext();
-
-         d_data_test_strategy->setDataContext(d_reset_destination);
-         d_data_test_strategy->initializeDataOnPatch(*patch,
-            mblk_hierarchy,
-            level_num, block_id,
-            'd');
-         d_data_test_strategy->clearDataContext();
-
-      }
    }
 
 }
@@ -559,8 +426,8 @@ void MultiblockTester::applyGradientDetector(
 /*
  *************************************************************************
  *
- * Physical boundary condition and user-defined coarsen and refine
- * operations declared in RefinePatchStrategy and CoarsenPatchStrategy.
+ * Physical boundary condition and user-defined refine
+ * operations declared in RefinePatchStrategy.
  * They are passed off to patch data test object.
  *
  *************************************************************************
@@ -588,7 +455,7 @@ void MultiblockTester::setPhysicalBoundaryConditions(
 void MultiblockTester::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   const hier::Connector& dst_to_encon,
+   boost::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
@@ -636,33 +503,6 @@ void MultiblockTester::postprocessRefine(
 {
    d_data_test_strategy->postprocessRefine(fine, coarse, d_refine_scratch,
       fine_box, ratio);
-}
-
-hier::IntVector MultiblockTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
-{
-   return hier::IntVector(dim, 0);
-}
-
-void MultiblockTester::preprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio)
-{
-   d_data_test_strategy->preprocessCoarsen(coarse, fine,
-      boost::shared_ptr<hier::VariableContext>(),
-      coarse_box, ratio);
-}
-
-void MultiblockTester::postprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio)
-{
-   d_data_test_strategy->postprocessCoarsen(coarse, fine,
-      boost::shared_ptr<hier::VariableContext>(),
-      coarse_box, ratio);
 }
 
 /*

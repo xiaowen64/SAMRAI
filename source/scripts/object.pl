@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
 ## Description:   perl script to create Makefile.objects.tmp files from .C files 
 ##
 #########################################################################
@@ -35,7 +35,7 @@ if ($TARGET eq "libdefault") {
     print OUTFILE "##\n";
     print OUTFILE "## File:\tMakefile.objects\n";
     print OUTFILE "## Package:\tSAMRAI\n";
-    print OUTFILE "## Copyright:\t(c) 1997-2012 Lawrence Livermore National Security, LLC\n";
+    print OUTFILE "## Copyright:\t(c) 1997-2013 Lawrence Livermore National Security, LLC\n";
     print OUTFILE "## Release:\t\$N${EMPTY}ame:  \$\n";
     print OUTFILE "## Revision:\t\$R${EMPTY}evision: \$\n";
     print OUTFILE "## Modified:\t\$D${EMPTY}ate: \$\n";

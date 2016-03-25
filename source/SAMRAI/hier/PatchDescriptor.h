@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -16,13 +16,13 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -248,8 +248,8 @@ private:
       const PatchDescriptor&);                  // not implemented
 
    int d_max_number_registered_components;
-   tbox::Array<std::string> d_names;
-   tbox::Array<boost::shared_ptr<PatchDataFactory> > d_factories;
+   std::vector<std::string> d_names;
+   std::vector<boost::shared_ptr<PatchDataFactory> > d_factories;
    std::list<int> d_free_indices;
 
    /*!

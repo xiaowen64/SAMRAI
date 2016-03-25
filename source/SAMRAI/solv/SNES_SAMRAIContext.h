@@ -3,13 +3,15 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
 
 #ifndef included_solv_SNES_SAMRAIContext
 #define included_solv_SNES_SAMRAIContext
+
+#include "SAMRAI/SAMRAI_config.h"
 
 /*
  ************************************************************************
@@ -23,19 +25,13 @@
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
-extern "C" {
-#ifdef PETSC2028
-#include "snes.h"
-#else
-#include "petscsnes.h"
+#ifdef OMPI_SKIP_MPICXX
+#undef OMPI_SKIP_MPICXX
 #endif
+extern "C" {
+#include "petscsnes.h"
 }
 #endif
-#endif
-
-#include "SAMRAI/SAMRAI_config.h"
-
-#ifdef HAVE_PETSC
 
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
 #include "SAMRAI/solv/SNESAbstractFunctions.h"
@@ -1040,10 +1036,13 @@ private:
 
    static int
    SNESsetupPreconditioner(
-      void* ctx)                                   // input vector
+      PC pc)
    {
+      int ierr = 0;
       Vec current_solution;
-      int ierr = SNESGetSolution(((SNES_SAMRAIContext *)ctx)->getSNESSolver(),
+      void *ctx;
+      PCShellGetContext(pc,&ctx);
+      ierr = SNESGetSolution(((SNES_SAMRAIContext *)ctx)->getSNESSolver(),
             &current_solution);
       PETSC_SAMRAI_ERROR(ierr);
       return ((SNES_SAMRAIContext *)ctx)->
@@ -1052,10 +1051,12 @@ private:
 
    static int
    SNESapplyPreconditioner(
-      void* ctx,                                  // user-defined context
+      PC pc,
       Vec xin,                                    // input vector
       Vec xout)                                   // output vector
    {
+      void *ctx;
+      PCShellGetContext(pc,&ctx);
       return ((SNES_SAMRAIContext *)ctx)->
              getSNESFunctions()->applyPreconditioner(xin, xout);
    }

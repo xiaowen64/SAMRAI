@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated node centered patch data type
  *
  ************************************************************************/
@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -266,7 +267,7 @@ NodeData<TYPE>::copyWithRotation(
                                    node_rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
@@ -276,8 +277,8 @@ NodeData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         hier::Box::iterator ciend(copybox, false);
-         for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+         hier::Box::iterator ciend(copybox.end());
+         for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
             NodeIndex dst_index(*ci, hier::IntVector::getZero(dim));
             NodeIndex src_index(dst_index);
@@ -410,10 +411,10 @@ NodeData<TYPE>::packWithRotation(
    const int depth = getDepth();
 
    const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-   tbox::Array<TYPE> buffer(size);
+   std::vector<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
@@ -422,8 +423,8 @@ NodeData<TYPE>::packWithRotation(
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            hier::Box::iterator ciend(copybox, false);
-            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+            hier::Box::iterator ciend(copybox.end());
+            for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
                NodeIndex src_index(*ci, hier::IntVector::getZero(dim));
                NodeGeometry::transform(src_index, back_trans);
@@ -435,7 +436,7 @@ NodeData<TYPE>::packWithRotation(
       }
    }
 
-   stream.pack(buffer.getPointer(), size);
+   stream.pack(&buffer[0], size);
 }
 
 template<class TYPE>
@@ -554,8 +555,8 @@ NodeData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   NodeIterator iend(box, false);
-   for (NodeIterator i(box, true); i != iend; ++i) {
+   NodeIterator iend(NodeGeometry::end(box));
+   for (NodeIterator i(NodeGeometry::begin(box)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*d_data)(*i, depth) << std::endl << std::flush;
    }

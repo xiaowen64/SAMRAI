@@ -1,7 +1,7 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
@@ -16,8 +16,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 5
-#define SAMRAI_VERSION_PATCHLEVEL 2
+#define SAMRAI_VERSION_MINOR 6
+#define SAMRAI_VERSION_PATCHLEVEL 1
 ])
 AH_BOTTOM([
 
@@ -1256,11 +1256,11 @@ if test "${PETSC_DIR+set}" = set; then
   LIB_NAME="$petsc_LIB_NAME $LIB_NAME"
   INC_PATH="$petsc_INCLUDES $INC_PATH"
   AC_DEFINE(HAVE_PETSC,1,PETSC library is available so use it)
-  if test $PETSC_VERSION_MAJOR -ne 2 || \
-     test $PETSC_VERSION_MINOR -ne 3 || \
-     test $PETSC_VERSION_SUBMINOR -ne 3 ; then
+  if test $PETSC_VERSION_MAJOR -ne 3 || \
+     test $PETSC_VERSION_MINOR -ne 2 || \
+     test $PETSC_VERSION_SUBMINOR -ne 0 ; then
      AC_MSG_WARN([
-SAMRAI requires PETSc-2.3.3.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
+SAMRAI requires PETSc-3.2.0.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
 which may not work properly!
 ])
   fi
@@ -1582,11 +1582,6 @@ then
      define(samrai_test_inputs,[ '(' -type d -name '*inputs*' '!' -path '*/*inputs*/*' ')' ])
      SAMRAI_LINK_FILES([ esyscmd(find source/test samrai_test_inputs | sort --ignore-case) ])
 
-     dnl
-     dnl Special directories in test that are not caught as part of the previous fined.
-     dnl 
-     SAMRAI_LINK_FILES([ source/test/applications/Euler/RP_test ])
-
 fi
 
 dnl Undefine the m4 symbols not needed anymore.
@@ -1630,7 +1625,6 @@ then
      $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
      $MKDIR_P source/test/testtools
      $INSTALL  $srcdir/source/test/testtools/* source/test/testtools
-     $INSTALL  $srcdir/source/test/inputdb/*.input  source/test/inputdb
 
      dnl
      dnl Copy README files

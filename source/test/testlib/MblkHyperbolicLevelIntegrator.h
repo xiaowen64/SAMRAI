@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -360,7 +360,7 @@ public:
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
-      const tbox::Array<double>& old_times);
+      const std::vector<double>& old_times);
 
    /**
     * This overloaded version of standardLevelSynchronization implements
@@ -857,7 +857,7 @@ private:
     * will be filled with CURRENT_VAR values.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
       d_mblk_bdry_sched_advance;
 
    /*
@@ -876,7 +876,7 @@ private:
     * accompanying MblkHyperbolicLevelIntegrator::advanceLevel.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_new;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
       d_mblk_bdry_sched_advance_new;
 
    /*

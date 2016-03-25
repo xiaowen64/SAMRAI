@@ -1,0 +1,47 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Utility for building efficient communication tree.
+ *
+ ************************************************************************/
+#ifndef included_tbox_RankTreeStrategy_C
+#define included_tbox_RankTreeStrategy_C
+
+#include "SAMRAI/tbox/RankTreeStrategy.h"
+
+#include "SAMRAI/tbox/MathUtilities.h"
+
+#if !defined(__BGL_FAMILY__) && defined(__xlC__)
+/*
+ * Suppress XLC warnings
+ */
+#pragma report(disable, CPPC5334)
+#pragma report(disable, CPPC5328)
+#endif
+
+namespace SAMRAI {
+namespace tbox {
+
+const int RankTreeStrategy::s_invalid_rank(-1);
+const unsigned int RankTreeStrategy::s_invalid_child_number(tbox::MathUtilities<int>::getMax()/2);
+
+RankTreeStrategy::~RankTreeStrategy()
+{
+}
+
+
+}
+}
+
+#if !defined(__BGL_FAMILY__) && defined(__xlC__)
+/*
+ * Unsuppress XLC warnings
+ */
+#pragma report(enable, CPPC5334)
+#pragma report(enable, CPPC5328)
+#endif
+
+#endif

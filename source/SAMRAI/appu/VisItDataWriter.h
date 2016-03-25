@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
@@ -28,13 +28,13 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace appu {
@@ -518,13 +518,13 @@ public:
     *
     * @param material_names tbox::Array of strings: the names of the materials.
     *
-    * @pre material_names.getSize() > 0
+    * @pre material_names.size() > 0
     * @pre for each member of material_names, mn, !mn.empty()
-    * @pre d_materials_names.getSize() == 0
+    * @pre d_materials_names.size() == 0
     */
    void
    registerMaterialNames(
-      const tbox::Array<std::string>& material_names);
+      const std::vector<std::string>& material_names);
 
    /*!
     * @brief This method registers with the VisIt data writer the
@@ -564,13 +564,13 @@ public:
     *
     * @param material_names tbox::Array of strings: the names of the materials.
     *
-    * @pre material_names.getSize() > 0
+    * @pre material_names.size() > 0
     * @pre for each member of material_names, mn, !mn.empty()
-    * @pre d_materials_names.getSize() == 0
+    * @pre d_materials_names.size() == 0
     */
    void
    registerSparseMaterialNames(
-      const tbox::Array<std::string>& material_names);
+      const std::vector<std::string>& material_names);
 
    /*!
     * @brief This method registers the names of the species for a
@@ -617,13 +617,13 @@ public:
     *    for material_name.
     *
     * @pre !material_name.empty()
-    * @pre species_names.getSize() > 0
-    * @pre d_materials_names.getSize() > 0
+    * @pre species_names.size() > 0
+    * @pre d_materials_names.size() > 0
     */
    void
    registerSpeciesNames(
       const std::string& material_name,
-      const tbox::Array<std::string>& species_names);
+      const std::vector<std::string>& species_names);
 
    /*!
     * @brief This method registers expressions that will be embedded in the
@@ -636,9 +636,9 @@ public:
     */
    void
    registerVisItExpressions(
-      const tbox::Array<std::string>& expression_keys,
-      const tbox::Array<std::string>& expressions,
-      const tbox::Array<std::string>& expression_types);
+      const std::vector<std::string>& expression_keys,
+      const std::vector<std::string>& expressions,
+      const std::vector<std::string>& expression_types);
 
    /*!
     * @brief This method causes the VisIt data writer to dump all
@@ -909,18 +909,18 @@ private:
        */
       int d_depth;
       variable_data_type d_var_data_type;
-      tbox::Array<std::string> d_visit_var_name;
+      std::vector<std::string> d_visit_var_name;
       struct patchMinMaxStruct *
       d_master_min_max[VISIT_MAX_NUMBER_COMPONENTS];
-      tbox::Array<int> d_level_patch_data_index;
-      tbox::Array<double> d_coord_scale_factor;
+      std::vector<int> d_level_patch_data_index;
+      std::vector<double> d_coord_scale_factor;
 
       /*
        * Material information
        */
       bool d_isa_material;
       std::string d_material_name;
-      tbox::Array<std::string> d_species_names;
+      std::vector<std::string> d_species_names;
       VisMaterialsDataStrategy* d_materials_writer;
       /*
        * Species information
@@ -1210,7 +1210,7 @@ private:
     * tbox::Array of mesh-scaling ratios from each level to reference level
     * (i.e., coarsest level).
     */
-   tbox::Array<hier::IntVector> d_scaling_ratios;
+   std::vector<hier::IntVector> d_scaling_ratios;
 
    /*
     * Default data writer for user defined data.
@@ -1253,7 +1253,7 @@ private:
     */
    int d_number_file_clusters;
    int d_my_file_cluster_number;
-   tbox::Array<int> d_processor_in_file_cluster_number;
+   std::vector<int> d_processor_in_file_cluster_number;
    bool d_file_cluster_leader;
    int d_file_cluster_size;
    int d_my_rank_in_file_cluster;
@@ -1277,7 +1277,7 @@ private:
     */
    int d_number_visit_variables;
    int d_number_visit_variables_plus_depth;
-   tbox::Array<std::string> d_materials_names;
+   std::vector<std::string> d_materials_names;
    int d_number_species;
 
    /*
@@ -1304,9 +1304,9 @@ private:
     * brief Storage for strings defining VisIt expressions to be embedded in
     * the plot dump.
     */
-   tbox::Array<std::string> d_visit_expression_keys;
-   tbox::Array<std::string> d_visit_expressions;
-   tbox::Array<std::string> d_visit_expression_types;
+   std::vector<std::string> d_visit_expression_keys;
+   std::vector<std::string> d_visit_expressions;
+   std::vector<std::string> d_visit_expression_types;
 
    //! @brief Timer for writePlotData().
    static boost::shared_ptr<tbox::Timer> t_write_plot_data;

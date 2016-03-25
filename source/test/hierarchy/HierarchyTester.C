@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch hierarchy refine/coarsen tests.
  *
  ************************************************************************/
@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 
 using namespace geom;
 
@@ -208,8 +209,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
    const int npdboxes = init_phys_domain.size();
 
    // Test #0b:
-   hier::BoxContainer::const_iterator ipditr(init_phys_domain);
-   hier::BoxContainer::const_iterator tpditr(test_phys_domain);
+   hier::BoxContainer::const_iterator ipditr = init_phys_domain.begin();
+   hier::BoxContainer::const_iterator tpditr = test_phys_domain.begin();
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ib++, ++ipditr, ++tpditr) {
          if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
@@ -339,8 +340,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
       const int nboxes = init_domain.size();
 
       // Test #8:
-      hier::BoxContainer::const_iterator iditr(init_domain);
-      hier::BoxContainer::const_iterator tditr(test_domain);
+      hier::BoxContainer::const_iterator iditr = init_domain.begin();
+      hier::BoxContainer::const_iterator tditr = test_domain.begin();
       if (d_do_refine_test) {
          for (int ib = 0; ib < nboxes; ib++, ++iditr, ++tditr) {
             if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
@@ -380,14 +381,16 @@ int HierarchyTester::runHierarchyTestAndVerify()
          init_connector_width = test_connector_width * d_ratio;
       }
       const Connector& init_connector =
-         init_level->getBoxLevel()->getPersistentOverlapConnectors().findOrCreateConnector(
+         init_level->getBoxLevel()->findConnector(
             d_initial_patch_hierarchy->getDomainBoxLevel(),
             init_connector_width,
+            hier::CONNECTOR_CREATE,
             true /* exact width only */);
       const Connector& test_connector =
-         test_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         test_level->getBoxLevel()->findConnector(
             d_test_patch_hierarchy->getDomainBoxLevel(),
             test_connector_width,
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true /* exact width only */);
 
       for (hier::PatchLevel::iterator ip(test_level->begin());
@@ -551,8 +554,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #18c:
          for (int id = 1; id <= d_dim.getValue(); id++) {
-            if ((init_patch_geom->getCodimensionBoundaries(id)).getSize() !=
-                (test_patch_geom->getCodimensionBoundaries(id)).getSize()) {
+            if ((init_patch_geom->getCodimensionBoundaries(id)).size() !=
+                (test_patch_geom->getCodimensionBoundaries(id)).size()) {
                fail_count++;
                tbox::perr << "FAILED: - Test #18c: for level number " << ln
                           << " number of codimension " << id

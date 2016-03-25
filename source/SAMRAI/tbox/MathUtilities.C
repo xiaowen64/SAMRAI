@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Utilities class to access common POSIX constants and math ops
  *
  ************************************************************************/
@@ -19,24 +19,24 @@ namespace tbox {
 /*
  *************************************************************************
  *
- * Routines to initialize arrays to signaling NaNs.
+ * Routines to initialize vectors and arrays to signaling NaNs.
  *
  *************************************************************************
  */
+
+template<class TYPE>
+void
+MathUtilities<TYPE>::setVectorToSignalingNaN(
+   std::vector<TYPE>& vector)
+{
+   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+      vector[i] = getSignalingNaN();
+   }
+}
 
 template<class TYPE>
 void
 MathUtilities<TYPE>::setArrayToSignalingNaN(
-   Array<TYPE>& array)
-{
-   for (int i = 0; i < array.getSize(); i++) {
-      array[i] = getSignalingNaN();
-   }
-}
-
-template<class TYPE>
-void
-MathUtilities<TYPE>::setArrayToSignalingNaN(
    TYPE* array,
    int n)
 {
@@ -48,18 +48,18 @@ MathUtilities<TYPE>::setArrayToSignalingNaN(
 /*
  *************************************************************************
  *
- * Routines to initialize arrays to max value for type.
+ * Routines to initialize vectors and arrays to max value for type.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-MathUtilities<TYPE>::setArrayToMax(
-   Array<TYPE>& array)
+MathUtilities<TYPE>::setVectorToMax(
+   std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < array.getSize(); i++) {
-      array[i] = getMax();
+   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+      vector[i] = getMax();
    }
 }
 
@@ -77,18 +77,18 @@ MathUtilities<TYPE>::setArrayToMax(
 /*
  *************************************************************************
  *
- * Routines to initialize arrays to min value for type.
+ * Routines to initialize vectors and arrays to min value for type.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-MathUtilities<TYPE>::setArrayToMin(
-   Array<TYPE>& array)
+MathUtilities<TYPE>::setVectorToMin(
+   std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < array.getSize(); i++) {
-      array[i] = getMin();
+   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+      vector[i] = getMin();
    }
 }
 
@@ -106,18 +106,18 @@ MathUtilities<TYPE>::setArrayToMin(
 /*
  *************************************************************************
  *
- * Routines to initialize arrays to epsilon value for type.
+ * Routines to initialize vectors and arrays to epsilon value for type.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-MathUtilities<TYPE>::setArrayToEpsilon(
-   Array<TYPE>& array)
+MathUtilities<TYPE>::setVectorToEpsilon(
+   std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < array.getSize(); i++) {
-      array[i] = getEpsilon();
+   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+      vector[i] = getEpsilon();
    }
 }
 

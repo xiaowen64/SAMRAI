@@ -90,7 +90,7 @@ c (first-order upwind)
 c***********************************************************************
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!" 
-	stop
+         stop
       endif
 c*********************************************************************** 
 c     write(6,*) "in init_trace_flux"

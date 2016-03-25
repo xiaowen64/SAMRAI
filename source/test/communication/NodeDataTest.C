@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -22,6 +22,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+
+#include <vector>
 
 namespace SAMRAI {
 
@@ -114,7 +116,6 @@ void NodeDataTest::readTestInput(
     */
 
    readVariableInput(db->getDatabase("VariableData"));
-   readRefinementInput(db->getDatabase("RefinementData"));
 }
 
 void NodeDataTest::registerVariables(
@@ -122,9 +123,9 @@ void NodeDataTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables.resizeArray(nvars);
+   d_variables.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables[i].reset(
@@ -173,8 +174,9 @@ void NodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator ciend(sbox, false);
-   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(sbox));
+   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sbox));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
@@ -224,8 +226,9 @@ void NodeDataTest::setPeriodicData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator niend(sbox, false);
-   for (pdat::NodeIterator ni(sbox, true); ni != niend; ++ni) {
+   pdat::NodeIterator niend(pdat::NodeGeometry::end(sbox));
+   for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sbox));
+        ni != niend; ++ni) {
 
       double val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -258,7 +261,7 @@ void NodeDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -277,7 +280,7 @@ void NodeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -322,8 +325,9 @@ void NodeDataTest::checkPatchInteriorData(
       setLinearData(correct_data, correct_data->getGhostBox(), patch);
    }
 
-   pdat::NodeIterator niend(interior, false);
-   for (pdat::NodeIterator ni(interior, true); ni != niend; ++ni) {
+   pdat::NodeIterator niend(pdat::NodeGeometry::end(interior));
+   for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(interior));
+        ni != niend; ++ni) {
       for (int d = 0; d < depth; d++) {
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ni, d),
                   (*correct_data)(*ni, d)))) {
@@ -351,23 +355,22 @@ void NodeDataTest::setPhysicalBoundaryConditions(
       BOOST_CAST_TAG);
    TBOX_ASSERT(pgeom);
 
-   const tbox::Array<hier::BoundaryBox> node_bdry =
+   const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
-   const int num_node_bdry_boxes = node_bdry.getSize();
+   const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> edge_bdry;
-   if (d_dim > tbox::Dimension(1)) {
-      edge_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 1);
-   }
-   const int num_edge_bdry_boxes = d_dim > tbox::Dimension(1) ? edge_bdry.getSize() : -1;
+   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
+   const std::vector<hier::BoundaryBox>& edge_bdry =
+      d_dim > tbox::Dimension(1) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+   const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> face_bdry;
-   if (d_dim == tbox::Dimension(3)) {
-      face_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 2);
-   }
-   const int num_face_bdry_boxes = d_dim == tbox::Dimension(3) ? face_bdry.getSize() : -1;
+   const std::vector<hier::BoundaryBox>& face_bdry =
+      d_dim == tbox::Dimension(3) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+   const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
@@ -461,7 +464,7 @@ bool NodeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(periodic_shift.getDim(), 0);
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -487,7 +490,7 @@ bool NodeDataTest::verifyResults(
          }
       }
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -496,8 +499,9 @@ bool NodeDataTest::verifyResults(
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         pdat::NodeIterator ciend(dbox, false);
-         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
+              ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
                double result = (*node_data)(*ci, d);

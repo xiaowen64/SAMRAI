@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -91,15 +91,15 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    d_use_refined_timestepping = level_integrator->usingRefinedTimestepping();
 
    const int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
-   d_regrid_interval.resizeArray(max_levels);
+   d_regrid_interval.resize(max_levels);
 
-   d_level_old_old_time.resizeArray(max_levels);
-   d_level_old_time.resizeArray(max_levels);
-   d_level_sim_time.resizeArray(max_levels);
-   d_dt_max_level.resizeArray(max_levels);
-   d_dt_actual_level.resizeArray(max_levels);
-   d_step_level.resizeArray(max_levels);
-   d_max_steps_level.resizeArray(max_levels);
+   d_level_old_old_time.resize(max_levels);
+   d_level_old_time.resize(max_levels);
+   d_level_sim_time.resize(max_levels);
+   d_dt_max_level.resize(max_levels);
+   d_dt_actual_level.resize(max_levels);
+   d_step_level.resize(max_levels);
+   d_max_steps_level.resize(max_levels);
 
    int level_number;
 
@@ -933,13 +933,14 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
              * to throw an assertion if it is accessed.
              */
 
-            tbox::Array<double> regrid_start_time;
+            std::vector<double> regrid_start_time;
             if (!d_gridding_algorithm->getTagAndInitializeStrategy()->
                 usesTimeIntegration(d_step_level[0], d_integrator_time)) {
 
                int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
-               regrid_start_time.resizeArray(max_levels);
-               for (int i = 0; i < regrid_start_time.getSize(); i++) {
+               regrid_start_time.resize(max_levels);
+               int array_size = static_cast<int>(regrid_start_time.size());
+               for (int i = 0; i < array_size; i++) {
                   regrid_start_time[i] = 0.;
                }
 
@@ -1112,7 +1113,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
                  << " to " << finest_level_number << std::endl;
 #endif
-      tbox::Array<double> old_times(finest_level_number+1,
+      std::vector<double> old_times(finest_level_number+1,
                                     d_integrator_time-dt);
 
       d_refine_level_integrator->standardLevelSynchronization(
@@ -1204,13 +1205,14 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        * to throw an assertion if it is accessed.
        */
 
-      tbox::Array<double> regrid_start_time;
+      std::vector<double> regrid_start_time;
       if (!d_gridding_algorithm->getTagAndInitializeStrategy()->
           usesTimeIntegration(d_step_level[0], d_integrator_time)) {
 
          int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
-         regrid_start_time.resizeArray(max_levels);
-         for (int i = 0; i < regrid_start_time.getSize(); i++) {
+         regrid_start_time.resize(max_levels);
+         int array_size = static_cast<int>(regrid_start_time.size());
+         for (int i = 0; i < array_size; i++) {
             regrid_start_time[i] = 0.;
          }
 
@@ -1549,14 +1551,14 @@ TimeRefinementIntegrator::putToRestart(
    restart_db->putDouble("end_time", d_end_time);
    restart_db->putDouble("grow_dt", d_grow_dt);
    restart_db->putInteger("max_integrator_steps", d_max_steps_level[0]);
-   restart_db->putIntegerArray("regrid_interval", d_regrid_interval);
-   restart_db->putIntegerArray("tag_buffer", d_tag_buffer);
+   restart_db->putIntegerVector("regrid_interval", d_regrid_interval);
+   restart_db->putIntegerVector("tag_buffer", d_tag_buffer);
    restart_db->putBool("DEV_barrier_and_time", d_barrier_and_time);
    restart_db->putDouble("d_integrator_time", d_integrator_time);
    restart_db->putInteger("d_integrator_step", d_step_level[0]);
    restart_db->putInteger("d_last_finest_level", d_last_finest_level);
-   restart_db->putDoubleArray("d_dt_max_level", d_dt_max_level);
-   restart_db->putDoubleArray("d_dt_actual_level", d_dt_actual_level);
+   restart_db->putDoubleVector("d_dt_max_level", d_dt_max_level);
+   restart_db->putDoubleVector("d_dt_actual_level", d_dt_actual_level);
 }
 
 /*
@@ -1619,18 +1621,18 @@ TimeRefinementIntegrator::getFromInput(
       }
 
       if (input_db->keyExists("tag_buffer")) {
-         d_tag_buffer = input_db->getIntegerArray("tag_buffer");
-         if (d_tag_buffer.getSize() <
+         d_tag_buffer = input_db->getIntegerVector("tag_buffer");
+         if (static_cast<int>(d_tag_buffer.size()) <
              (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
-            int tsize = d_tag_buffer.getSize();
-            d_tag_buffer.resizeArray(
+            int tsize = static_cast<int>(d_tag_buffer.size());
+            d_tag_buffer.resize(
                d_patch_hierarchy->getMaxNumberOfLevels() - 1,
                d_tag_buffer[tsize - 1]);
          }
       } else {
          int level_number;
 
-         d_tag_buffer.resizeArray(d_patch_hierarchy->getMaxNumberOfLevels());
+         d_tag_buffer.resize(d_patch_hierarchy->getMaxNumberOfLevels());
          for (level_number = 0;
               level_number < d_patch_hierarchy->getMaxNumberOfLevels();
               level_number++) {
@@ -1699,19 +1701,14 @@ TimeRefinementIntegrator::getFromInput(
          }
 
          if (input_db->keyExists("tag_buffer")) {
-            tbox::Array<int> temp_tag_buffer =
-               input_db->getIntegerArray("tag_buffer");
-            if (temp_tag_buffer.getSize() <
+            d_tag_buffer = input_db->getIntegerVector("tag_buffer");
+            if (static_cast<int>(d_tag_buffer.size()) <
                 (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
-               int tsize = temp_tag_buffer.getSize();
-               temp_tag_buffer.resizeArray(
-                  d_patch_hierarchy->getMaxNumberOfLevels() - 1);
-               for (int i = tsize;
-                    i < temp_tag_buffer.getSize(); i++) {
-                  temp_tag_buffer[i] = temp_tag_buffer[tsize - 1];
-               }
+               int tsize = static_cast<int>(d_tag_buffer.size());
+               d_tag_buffer.resize(
+                  d_patch_hierarchy->getMaxNumberOfLevels() - 1,
+                  d_tag_buffer[tsize - 1]);
             }
-            d_tag_buffer = temp_tag_buffer;
          }
 
          d_barrier_and_time =
@@ -1763,14 +1760,14 @@ TimeRefinementIntegrator::getFromRestart()
    d_end_time = db->getDouble("end_time");
    d_grow_dt = db->getDouble("grow_dt");
    d_max_steps_level[0] = db->getInteger("max_integrator_steps");
-   d_regrid_interval = db->getIntegerArray("regrid_interval");
-   d_tag_buffer = db->getIntegerArray("tag_buffer");
+   d_regrid_interval = db->getIntegerVector("regrid_interval");
+   d_tag_buffer = db->getIntegerVector("tag_buffer");
    d_barrier_and_time = db->getBool("DEV_barrier_and_time");
    d_integrator_time = db->getDouble("d_integrator_time");
    d_step_level[0] = db->getInteger("d_integrator_step");
    d_last_finest_level = db->getInteger("d_last_finest_level");
-   d_dt_max_level = db->getDoubleArray("d_dt_max_level");
-   d_dt_actual_level = db->getDoubleArray("d_dt_actual_level");
+   d_dt_max_level = db->getDoubleVector("d_dt_max_level");
+   d_dt_actual_level = db->getDoubleVector("d_dt_actual_level");
 }
 
 /*

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -482,7 +482,7 @@ CellPoissonHypreSolver::allocateHypreData()
       const hier::BoxContainer& level_domain =
          level->getPhysicalDomain(hier::BlockId::zero());
       hier::Box domain_bound(level_domain.front());
-      for (hier::BoxContainer::const_iterator i(level_domain);
+      for (hier::BoxContainer::const_iterator i = level_domain.begin();
            i != level_domain.end(); ++i) {
          domain_bound.lower().min(i->lower());
          domain_bound.upper().max(i->upper());
@@ -684,8 +684,8 @@ CellPoissonHypreSolver::copyToHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, src, box);
 
-   pdat::CellIterator cend(box, false);
-   for (pdat::CellIterator c(box, true); c != cend; ++c) {
+   pdat::CellIterator cend(pdat::CellGeometry::end(box));
+   for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
       hier::IntVector ic = *c;
       HYPRE_StructVectorSetValues(vector, &ic[0], src(*c, depth));
    }
@@ -708,8 +708,8 @@ CellPoissonHypreSolver::copyFromHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, dst, box);
 
-   pdat::CellIterator cend(box, false);
-   for (pdat::CellIterator c(box, true); c != cend; ++c) {
+   pdat::CellIterator cend(pdat::CellGeometry::end(box));
+   for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
       double value;
       hier::IntVector ic = *c;
       HYPRE_StructVectorGetValues(vector, &ic[0], &value);
@@ -879,9 +879,9 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        * and rhs contribution (k0).
        */
       {
-         const tbox::Array<hier::BoundaryBox>& surface_boxes =
+         const std::vector<hier::BoundaryBox>& surface_boxes =
             pg->getCodimensionBoundaries(1);
-         const int n_bdry_boxes = surface_boxes.getSize();
+         const int n_bdry_boxes = static_cast<int>(surface_boxes.size());
          for (int n = 0; n < n_bdry_boxes; ++n) {
 
             const hier::BoundaryBox& boundary_box = surface_boxes[n];
@@ -933,17 +933,14 @@ CellPoissonHypreSolver::setMatrixCoefficients(
           * There are potentially coarse-fine boundaries to deal with.
           */
 
-         tbox::Array<hier::BoundaryBox> surface_boxes;
+         std::vector<hier::BoundaryBox> empty_vector(0,
+            hier::BoundaryBox(d_dim));
+         const std::vector<hier::BoundaryBox>& surface_boxes =
+            d_dim == tbox::Dimension(2) ? d_cf_boundary->getEdgeBoundaries(pi->getGlobalId()) :
+            (d_dim == tbox::Dimension(3) ? d_cf_boundary->getFaceBoundaries(pi->getGlobalId()) : empty_vector);
 
-         if (d_dim == tbox::Dimension(2)) {
-            surface_boxes =
-               d_cf_boundary->getEdgeBoundaries(pi->getGlobalId());
-         } else if (d_dim == tbox::Dimension(3)) {
-            surface_boxes =
-               d_cf_boundary->getFaceBoundaries(pi->getGlobalId());
-         }
+         const int n_bdry_boxes = static_cast<int>(surface_boxes.size());
 
-         const int n_bdry_boxes = surface_boxes.getSize();
          for (int n = 0; n < n_bdry_boxes; ++n) {
 
             const hier::BoundaryBox& boundary_box = surface_boxes[n];
@@ -1001,8 +998,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       for (i = 0; i < stencil_size; i++) stencil_indices[i] = i;
 
-      pdat::CellIterator ic(patch_box, true);
-      pdat::CellIterator icend(patch_box, false);
+      pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
+      pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));
 
       /*
        * To do: This loop uses inefficient high-level syntax.
@@ -1068,7 +1065,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 void
 CellPoissonHypreSolver::add_gAk0_toRhs(
    const hier::Patch& patch,
-   const tbox::Array<hier::BoundaryBox>& bdry_boxes,
+   const std::vector<hier::BoundaryBox>& bdry_boxes,
    const RobinBcCoefStrategy* robin_bc_coef,
    pdat::CellData<double>& rhs)
 {
@@ -1087,7 +1084,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
 
    TBOX_ASSERT(Ak0);
 
-   const int n_bdry_boxes = bdry_boxes.getSize();
+   const int n_bdry_boxes = static_cast<int>(bdry_boxes.size());
    for (int n = 0; n < n_bdry_boxes; ++n) {
 
       const hier::BoundaryBox& boundary_box = bdry_boxes[n];

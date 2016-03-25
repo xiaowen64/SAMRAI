@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -19,15 +19,15 @@ namespace SAMRAI {
 namespace pdat {
 
 EdgeOverlap::EdgeOverlap(
-   const tbox::Array<hier::BoxContainer>& boxes,
+   const std::vector<hier::BoxContainer>& boxes,
    const hier::Transformation& transformation):
    d_is_overlap_empty(true),
    d_transformation(transformation)
 {
    const tbox::Dimension dim(transformation.getOffset().getDim());
-   d_dst_boxes.resizeArray(boxes.size());
+   d_dst_boxes.resize(boxes.size());
 
-   for (int d = 0; d < boxes.size(); d++) {
+   for (int d = 0; d < static_cast<int>(boxes.size()); d++) {
       d_dst_boxes[d] = boxes[d];
       if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
    }
@@ -47,7 +47,7 @@ const hier::BoxContainer&
 EdgeOverlap::getDestinationBoxContainer(
    const int axis) const
 {
-   TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.size()));
+   TBOX_ASSERT((axis >= 0) && (axis < static_cast<int>(d_dst_boxes.size())));
 
    return d_dst_boxes[axis];
 }
@@ -58,7 +58,7 @@ EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 {
    TBOX_ASSERT(src_boxes.isEmpty());
    TBOX_ASSERT(axis_direction >= 0 &&
-               axis_direction < d_dst_boxes.size());
+               axis_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[axis_direction];
    int transform_direction = axis_direction;
@@ -77,7 +77,7 @@ EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
    axis_direction = transform_direction;
 
    TBOX_ASSERT(axis_direction >= 0 &&
-               axis_direction < d_dst_boxes.size());
+               axis_direction < static_cast<int>(d_dst_boxes.size()));
 
 }
 

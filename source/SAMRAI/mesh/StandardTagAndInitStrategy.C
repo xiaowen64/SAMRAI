@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for Richardson extrapolation error detection.
  *
  ************************************************************************/
@@ -156,6 +156,17 @@ StandardTagAndInitStrategy::resetDataToPreadvanceState(
    TBOX_ERROR("StandardTagAndInitStrategy::resetDataToPreadvanceState()"
       << "\nNo class derived supplies a concrete implementation for "
       << "\nthis method." << std::endl);
+}
+
+void
+StandardTagAndInitStrategy::processLevelBeforeRemoval(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   int level_number,
+   const boost::shared_ptr<hier::PatchLevel>& old_level)
+{
+   NULL_USE(hierarchy);
+   NULL_USE(level_number);
+   NULL_USE(old_level);
 }
 
 }

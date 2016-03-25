@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
@@ -261,7 +261,7 @@ AsyncCommGroup::completeCurrentOperation()
    while (d_next_task_op != none) {
 
       t_wait_all->start();
-      int errf = d_mpi.Waitall(static_cast<int>(d_nchild),
+      int errf = SAMRAI_MPI::Waitall(static_cast<int>(d_nchild),
             req,
             mpi_stat);
       t_wait_all->stop();
@@ -360,7 +360,7 @@ AsyncCommGroup::checkBcast()
       case recv_check:
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
-            d_mpi_err = d_mpi.Test(&req[0], &flag, &d_mpi_status);
+            d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
             if (d_mpi_err != MPI_SUCCESS) {
                TBOX_ERROR("Error in MPI_Test.\n"
                   << "Error-in-status is "
@@ -370,10 +370,11 @@ AsyncCommGroup::checkBcast()
                   << "mpi_communicator = " << d_mpi.getCommunicator()
                   << "mpi_tag = " << d_mpi_tag);
             }
+            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
             if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                int count = -1;
-               d_mpi_err = d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+               d_mpi_err = SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Get_count.\n"
                      << "Error-in-status is "
@@ -393,7 +394,6 @@ AsyncCommGroup::checkBcast()
                TBOX_ASSERT(count <= d_external_size);
                TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
                TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_parent_rank);
-               TBOX_ASSERT(req[0] == MPI_REQUEST_NULL);
 #endif
             } else {
                d_next_task_op = recv_check;
@@ -437,7 +437,7 @@ AsyncCommGroup::checkBcast()
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
-               d_mpi_err = d_mpi.Test(&req[ic], &flag, &d_mpi_status);
+               d_mpi_err = SAMRAI_MPI::Test(&req[ic], &flag, &d_mpi_status);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Test.\n"
                      << "Error-in-status is "
@@ -447,17 +447,14 @@ AsyncCommGroup::checkBcast()
                      << "mpi_communicator = " << d_mpi.getCommunicator()
                      << "mpi_tag = " << d_mpi_tag);
                }
-#ifdef DEBUG_CHECK_ASSERTIONS
-               if (req[ic] == MPI_REQUEST_NULL) {
-                  int count = -1;
-                  d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
+               if (req[ic] == MPI_REQUEST_NULL) {
                   plog << "tag-" << d_mpi_tag
                        << " sent unknown size (MPI convention)"
                        << " to " << d_child_data[ic].rank
                        << " in checkBcast"
                        << std::endl;
-#endif
                }
 #endif
             }
@@ -648,7 +645,7 @@ AsyncCommGroup::checkGather()
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
-               d_mpi_err = d_mpi.Test(&req[ic], &flag, &d_mpi_status);
+               d_mpi_err = SAMRAI_MPI::Test(&req[ic], &flag, &d_mpi_status);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Test.\n"
                      << "Error-in-status is "
@@ -658,13 +655,13 @@ AsyncCommGroup::checkGather()
                      << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
+               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
 #ifdef DEBUG_CHECK_ASSERTIONS
                if (flag == 1) {
                   TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
                   TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_child_data[ic].rank);
-                  TBOX_ASSERT(req[ic] == MPI_REQUEST_NULL);
                   int count = -1;
-                  d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+                  SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   plog << "tag-" << d_mpi_tag
                        << " received " << count
@@ -755,7 +752,7 @@ AsyncCommGroup::checkGather()
       case send_check:
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
-            d_mpi_err = d_mpi.Test(&req[0], &flag, &d_mpi_status);
+            d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
             if (d_mpi_err != MPI_SUCCESS) {
                TBOX_ERROR("Error in MPI_Test.\n"
                   << "Error-in-status is "
@@ -765,6 +762,7 @@ AsyncCommGroup::checkGather()
                   << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
+            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
          }
          if (req[0] != MPI_REQUEST_NULL) {
             d_next_task_op = send_check;
@@ -968,7 +966,7 @@ AsyncCommGroup::checkReduce()
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
-               d_mpi_err = d_mpi.Test(&req[ic], &flag, &d_mpi_status);
+               d_mpi_err = SAMRAI_MPI::Test(&req[ic], &flag, &d_mpi_status);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Test.\n"
                      << "Error-in-status is "
@@ -978,13 +976,13 @@ AsyncCommGroup::checkReduce()
                      << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
+               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
                if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
                   TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_child_data[ic].rank);
-                  TBOX_ASSERT(req[ic] == MPI_REQUEST_NULL);
                   int count = -1;
-                  d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+                  SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   plog << " child-" << ic << " tag-" << d_mpi_tag
                        << " received " << count
@@ -1075,7 +1073,7 @@ AsyncCommGroup::checkReduce()
       case send_check:
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
-            d_mpi_err = d_mpi.Test(&req[0], &flag, &d_mpi_status);
+            d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
             if (d_mpi_err != MPI_SUCCESS) {
                TBOX_ERROR("Error in MPI_Test.\n"
                   << "Error-in-status is "
@@ -1085,18 +1083,15 @@ AsyncCommGroup::checkReduce()
                   << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
+            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
          }
          if (req[0] != MPI_REQUEST_NULL) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            int count = -1;
-            d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
             plog << "tag-" << d_mpi_tag
-                 << " sent " << count
+                 << " sent unknown size (MPI convention)"
                  << " to " << d_parent_rank
                  << " in checkReduce"
                  << std::endl;
-#endif
 #endif
             d_next_task_op = send_check;
          } else {

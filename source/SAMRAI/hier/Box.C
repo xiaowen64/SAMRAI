@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -952,9 +952,22 @@ Box::rotate(
    if (rotation_ident == Transformation::NO_ROTATE)
       return;
 
-   TBOX_ASSERT(getDim().getValue() == 2 || getDim().getValue() == 3);
+   TBOX_ASSERT(getDim().getValue() == 1 || getDim().getValue() == 2 ||
+               getDim().getValue() == 3);
 
-   if (getDim().getValue() == 2) {
+   if (getDim().getValue() == 1) {
+      int rotation_number = static_cast<int>(rotation_ident);
+      if (rotation_number > 1) {
+         TBOX_ERROR("Box::rotate invalid 1D RotationIdentifier.");
+      }
+      if (rotation_number) {
+         Index tmp_lo(d_lo);
+         Index tmp_hi(d_hi);
+         d_lo(0) = -tmp_hi(0) - 1;
+         d_hi(0) = -tmp_lo(0) - 1;
+      }
+   }
+   else if (getDim().getValue() == 2) {
       int rotation_number = static_cast<int>(rotation_ident);
       if (rotation_number > 3) {
          TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");
@@ -1074,6 +1087,26 @@ Box::finalizeCallback()
       delete s_emptys[d];
       delete s_universes[d];
    }
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+BoxIterator
+Box::begin() const
+{
+   return iterator(*this, true);
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+BoxIterator
+Box::end() const
+{
+   return iterator(*this, false);
 }
 
 BoxIterator::BoxIterator(

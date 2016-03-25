@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Test driver for the SAMRAI input database
  *
  ************************************************************************/
@@ -12,7 +12,6 @@
 
 //#include <stdlib.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Complex.h"
@@ -25,6 +24,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 using namespace SAMRAI;
 using namespace std;
@@ -135,13 +135,13 @@ int main(
       boost::shared_ptr<tbox::Database> smart_array_db(
          input_db->getDatabase("SmartArrays"));
 
-      tbox::Array<int> i1_correct(5);
-      tbox::Array<float> f1_correct(5);
-      tbox::Array<double> d1_correct(5);
-      tbox::Array<bool> b1_correct(5);
-      tbox::Array<dcomplex> c1_correct(5);
-      tbox::Array<std::string> s1_correct(5);
-      tbox::Array<tbox::DatabaseBox> box1_correct(5);
+      std::vector<int> i1_correct(5);
+      std::vector<float> f1_correct(5);
+      std::vector<double> d1_correct(5);
+      std::vector<bool> b1_correct(5);
+      std::vector<dcomplex> c1_correct(5);
+      std::vector<std::string> s1_correct(5);
+      std::vector<tbox::DatabaseBox> box1_correct(5);
 
       for (int i = 0; i < nsize; i++) {
          i1_correct[i] = i0_correct;
@@ -153,14 +153,14 @@ int main(
          box1_correct[i] = box0_correct;
       }
 
-      tbox::Array<int> i1 = smart_array_db->getIntegerArray("i1");
-      tbox::Array<float> f1 = smart_array_db->getFloatArray("f1");
-      tbox::Array<double> d1 = smart_array_db->getDoubleArray("d1");
-      tbox::Array<bool> b1 = smart_array_db->getBoolArray("b1");
-      tbox::Array<dcomplex> c1 = smart_array_db->getComplexArray("c1");
-      tbox::Array<std::string> s1 = smart_array_db->getStringArray("s1");
-      tbox::Array<tbox::DatabaseBox> box1 = smart_array_db->getDatabaseBoxArray(
-            "box1");
+      std::vector<int> i1 = smart_array_db->getIntegerVector("i1");
+      std::vector<float> f1 = smart_array_db->getFloatVector("f1");
+      std::vector<double> d1 = smart_array_db->getDoubleVector("d1");
+      std::vector<bool> b1 = smart_array_db->getBoolVector("b1");
+      std::vector<dcomplex> c1 = smart_array_db->getComplexVector("c1");
+      std::vector<std::string> s1 = smart_array_db->getStringVector("s1");
+      std::vector<tbox::DatabaseBox> box1 =
+         smart_array_db->getDatabaseBoxVector("box1");
 
       for (int i = 0; i < nsize; i++) {
          if (i1[i] != i1_correct[i]) {

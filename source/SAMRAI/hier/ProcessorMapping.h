@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   tbox
  *
  ************************************************************************/
@@ -12,8 +12,9 @@
 #define included_hier_ProcessorMapping
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -53,10 +54,10 @@ public:
 
    /**
     * Create a new processor mapping and get processor assignments
-    * from the the tbox::Array<int> argument.
+    * from the the std::vector<int> argument.
     */
    explicit ProcessorMapping(
-      const tbox::Array<int>& mapping);
+      const std::vector<int>& mapping);
 
    /**
     * The destructor simply releases the storage for the mapping.
@@ -88,13 +89,13 @@ public:
    /**
     * Return the processor assignment for the specified patch index.
     *
-    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
+    * @pre (i >= 0) && (i < getProcessorMapping().size())
     */
    int
    getProcessorAssignment(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
+      TBOX_ASSERT((i >= 0) && (i < static_cast<int>(d_mapping.size())));
       return d_mapping[i];
    }
 
@@ -102,7 +103,7 @@ public:
     * Set the processor assignment (second argument) for the specified
     * patch index (first argument).
     *
-    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
+    * @pre (i >= 0) && (i < getProcessorMapping().size())
     * @pre (p >= 0) && (p < d_nodes)
     */
    void
@@ -110,28 +111,28 @@ public:
       const int i,
       const int p)
    {
-      TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
+      TBOX_ASSERT((i >= 0) && (i < static_cast<int>(d_mapping.size())));
       TBOX_ASSERT((p >= 0) && (p < d_nodes));
       d_mapping[i] = p % d_nodes;
    }
 
    /**
-    * Return an tbox::Array<int> of the processor mappings.
+    * Return an std::vector<int> of the processor mappings.
     */
-   tbox::Array<int>
+   const std::vector<int>&
    getProcessorMapping() const
    {
       return d_mapping;
    }
 
    /**
-    * Sets the processor mappings from an tbox::Array<int>.  Remaps the
+    * Sets the processor mappings from an std::vector<int>.  Remaps the
     * processors so that patches are not accidentally mapped to
     * non-existent boxes.
     */
    void
    setProcessorMapping(
-      const tbox::Array<int>& mapping);
+      const std::vector<int>& mapping);
 
    /**
     * Return the number of local indices (that is, those indices mapped to
@@ -145,10 +146,10 @@ public:
    }
 
    /**
-    * Return an array containing the local indices (that is,
+    * Return a vector containing the local indices (that is,
     * those indices mapped to the local processor).
     */
-   const tbox::Array<int>&
+   const std::vector<int>&
    getLocalIndices() const
    {
       computeLocalIndices();
@@ -161,20 +162,20 @@ public:
    int
    getSizeOfMappingArray() const
    {
-      return d_mapping.getSize();
+      return static_cast<int>(d_mapping.size());
    }
 
    /**
     * Check whether the specified index is a local index (that is, mapped
     * to the local processor).
     *
-    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
+    * @pre (i >= 0) && (i < getProcessorMapping().size())
     */
    bool
    isMappingLocal(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
+      TBOX_ASSERT((i >= 0) && (i < static_cast<int>(d_mapping.size())));
       return d_mapping[i] == d_my_rank;
    }
 
@@ -191,9 +192,9 @@ private:
 
    int d_my_rank;
    int d_nodes;
-   tbox::Array<int> d_mapping;
+   std::vector<int> d_mapping;
    mutable int d_local_id_count;
-   mutable tbox::Array<int> d_local_indices;
+   mutable std::vector<int> d_local_indices;
 };
 
 }

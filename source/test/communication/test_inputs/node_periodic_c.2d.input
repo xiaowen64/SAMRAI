@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   input file for testing communication of SAMRAI node data. 
  *
  ************************************************************************/
@@ -121,9 +121,6 @@ NodePatchDataTest {
 
    }
 
-   RefinementData {
-   }
-
 }
 
 CartesianGridGeometry {
@@ -165,7 +162,6 @@ StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
 
 //   level_0 {
-//     level = 0
 //     boxes = [ (0,0) , (5,5) ],
 //             [ (0,6) , (5,10) ],
 //             [ (24,5) , (29,9) ],
@@ -175,15 +171,13 @@ StandardTaggingAndInitializer {
 //             [ (11,5) , (17,11) ]
 //   }
 //   level_1 {
-//      level = 1
 //      boxes = [ (0,4) , (9,15) ],
 //              [ (50,12) , (59,24) ],
 //              [ (44,30) , (59,39) ],
 //              [ (0,30) , (9,39) ],
 //              [ (24,12) , (33,21) ]
-//      }
+//   }
    level_0 {
-      level = 0
       boxes = [ (0,0) , (5,5) ],
               [ (0,6) , (5,12) ],
               [ (24,6) , (29,10) ],
@@ -194,7 +188,6 @@ StandardTaggingAndInitializer {
               [ (11,5) , (17,11) ]
    }
    level_1 {
-      level = 1
       boxes = [ (0,4) , (9,15) ],
               [ (50,14) , (59,23) ],
               [ (44,30) , (59,39) ],
@@ -202,11 +195,11 @@ StandardTaggingAndInitializer {
    }
 }
 
-OverlapConnectorUtil {
+OverlapConnectorAlgorithm {
    DEV_print_bridge_steps = 'n'
 }
 
-MappingConnectorUtil {
+MappingConnectorAlgorithm {
    DEV_print_modify_steps = 'n'
 }
 

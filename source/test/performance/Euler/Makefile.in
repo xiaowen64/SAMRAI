@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
 ## Description:   makefile for Euler gas dynamics sample application 
 ##
 #########################################################################
@@ -19,11 +19,9 @@ default:	main
 
 include $(OBJECT)/config/Makefile.config
 
-AUTOTEST      = $(SAMRAI)/source/test/applications
-CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=0
-FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
+CPPFLAGS_EXTRA= -DTESTING=0
 
-NUM_TESTS = 1
+NUM_TESTS = 0
 
 TEST_NPROCS = @TEST_NPROCS@
 
@@ -36,15 +34,39 @@ F_OBJS      = \
 
 main:		$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)     \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
+		$(LIBSAMRAI) $(LDLIBS) -o main
 
 clean:
 		$(SAMCLEAN)
-		$(RM) *.f main2d main3d
+		$(RM) *.f main
 
 redo:
-		$(RM) main2d main3d core *.ii *.int.c
-		$(RM) -r ti_files ii_files
+		$(RM) main core *.ii *.int.c
+		$(RM) ti_files ii_files
+
+check:
+
+checkcompile:	main
+
+checktest:
+		rm -f makecheck.logfile
+		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+		rm -f makecheck.logfile
+
+examples:
+
+perf: main
+	@for i in performance_inputs/mEuler/*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 include $(SRCDIR)/Makefile.depend
 

@@ -3,10 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Input file for FAC solver tests.
  *
  ************************************************************************/
+
+// Refer to allneumann2d.input for full description of all input parameters
+// specific to this problem.
 
 Main {
   dim = 3
@@ -35,21 +38,10 @@ hypre_solver {
 
 AdaptivePoisson {
   problem_name = "multigauss"
-    // finest_dbg_plot_ln = 0
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10
-    smoothing_choice = "redblack"
-    cf_discretization = "Ewing"
-    prolongation_method = "LINEAR_REFINE"
-  }
   multigaussian_solution {
     GaussianFcnControl_0 = "{ lambda=-50 cx=0.5 cy=0.5 cz=0.0 }"
     GaussianFcnControl_1 = "{ lambda=-20 cx=0.0 cy=0.0 cz=1.0 }"
   }
-  // finest_plot_level = 0
   adaption_threshold = .0200
 }
 
@@ -68,7 +60,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = TRUE
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
-  n_root_cycles = 1
 }
 
 PatchHierarchy {

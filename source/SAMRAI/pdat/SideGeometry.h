@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -21,9 +21,12 @@
 #include "SAMRAI/hier/IntVector.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 namespace SAMRAI {
 namespace pdat {
+
+class SideIterator;
 
 /*!
  * Class SideGeometry manages the mapping between the AMR index space
@@ -91,6 +94,16 @@ public:
       SideIndex& index,
       const hier::Transformation& transformation);
 
+   static SideIterator
+   begin(
+      const hier::Box& box,
+      int axis);
+
+   static SideIterator
+   end(
+      const hier::Box& box,
+      int axis);
+
    /*!
     * @brief Construct the side geometry object given an AMR index
     * space box, ghost cell width and directions vector indicating
@@ -104,6 +117,20 @@ public:
       const hier::Box& box,
       const hier::IntVector& ghosts,
       const hier::IntVector& directions);
+
+   /*!
+    * @brief Construct the side geometry object given an AMR index
+    * space box and ghost cell width.
+    *
+    * No directions vector is provided, so it is assumed that all
+    * coordinate directions are allocated.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
+    */
+   SideGeometry(
+      const hier::Box& box,
+      const hier::IntVector& ghosts);
 
    /*!
     * @brief The virtual destructor does nothing interesting.
@@ -136,7 +163,7 @@ public:
     */
    void
    computeDestinationBoxes(
-      tbox::Array<hier::BoxContainer>& dst_boxes,
+      std::vector<hier::BoxContainer>& dst_boxes,
       const SideGeometry& src_geometry,
       const hier::Box& src_mask,
       const hier::Box& fill_box,

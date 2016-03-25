@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   SinusoidalFrontTagger class declaration
  *
  ************************************************************************/
@@ -27,6 +27,7 @@
 #include "SAMRAI/tbox/Timer.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 using namespace SAMRAI;
 
@@ -118,7 +119,6 @@ public:
    setTime(
       double time);
 
-public:
    /*!
     * @brief Deallocate internally managed patch data on level.
     */
@@ -171,6 +171,7 @@ public:
       const hier::Patch& patch,
       const double time,
       pdat::NodeData<double>* dist_data,
+      pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data) const;
 
    /*!
@@ -182,7 +183,9 @@ public:
     */
    void computeFrontsData(
       pdat::NodeData<double>* dist_data,
+      pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
+      const hier::Box &fill_box,
       const hier::IntVector &buffer,
       const double xlo[],
       const double dx[],
@@ -198,7 +201,7 @@ private:
 
    /*!
     * @brief PatchHierarchy for use in implementations of some
-    * abstract interfaces that do not specify a hierarch.
+    * abstract interfaces that do not specify a hierarchy.
     */
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
@@ -239,7 +242,7 @@ private:
     *
     * d_buffer_space[ln*d_dim + d] is the buffer size for level ln in direction d.
     */
-   tbox::Array<double> d_buffer_space;
+   std::vector<double> d_buffer_space;
 
    boost::shared_ptr<hier::VariableContext> d_context;
 
@@ -265,9 +268,10 @@ private:
    boost::shared_ptr<tbox::Timer> t_setup;
    boost::shared_ptr<tbox::Timer> t_node_pos;
    boost::shared_ptr<tbox::Timer> t_distance;
+   boost::shared_ptr<tbox::Timer> t_uval;
    boost::shared_ptr<tbox::Timer> t_tag_cells;
    boost::shared_ptr<tbox::Timer> t_copy;
 
 };
 
-#endif  // included_ssup_SinusoidalFrontTagger
+#endif  // included_SinusoidalFrontTagger

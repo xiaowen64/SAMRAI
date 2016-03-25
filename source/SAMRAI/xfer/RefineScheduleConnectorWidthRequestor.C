@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -145,7 +145,7 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
    const hier::PatchHierarchy& patch_hierarchy,
    int initial_dst_ln) const
 {
-  if ( (int)fine_connector_widths.size() < initial_dst_ln ) {
+   if ( static_cast<int>(fine_connector_widths.size()) < initial_dst_ln ) {
       fine_connector_widths.insert(
          fine_connector_widths.end(),
          initial_dst_ln - fine_connector_widths.size(),

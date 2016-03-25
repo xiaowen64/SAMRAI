@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test edge-centered complex patch data ops
  *
  ************************************************************************/
@@ -162,30 +162,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -1092,8 +1095,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
  *
- *   pdat::CellIterator cend(svdata->getBox(), false);
- *   for (pdat::CellIterator c(svdata->getBox(), true); c != cend && vol_test_passed; ++c) {
+ *   pdat::CellIterator cend(pdat::CellGeometry::end(svdata->getBox()));
+ *   for (pdat::CellIterator c(pdat::CellGeometry::begin(svdata->getBox())); c != cend && vol_test_passed; ++c) {
  *   pdat::CellIndex cell_index = *c;
  *
  *   if (ln == 0) {
@@ -1395,8 +1398,8 @@ int main(
          pdat::EdgeIndex index1(idx1, pdat::EdgeIndex::Y, corner1);
 
          // check X axis data
-         pdat::EdgeIterator cend(sdata->getBox(), pdat::EdgeIndex::X, false);
-         for (pdat::EdgeIterator c(sdata->getBox(), pdat::EdgeIndex::X, true);
+         pdat::EdgeIterator cend(pdat::EdgeGeometry::end(sdata->getBox(), pdat::EdgeIndex::X));
+         for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(sdata->getBox(), pdat::EdgeIndex::X));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::EdgeIndex edge_index = *c;
 
@@ -1407,8 +1410,8 @@ int main(
          }
 
          // check Y axis data
-         pdat::EdgeIterator ccend(sdata->getBox(), pdat::EdgeIndex::Y, false);
-         for (pdat::EdgeIterator cc(sdata->getBox(), pdat::EdgeIndex::Y, true);
+         pdat::EdgeIterator ccend(pdat::EdgeGeometry::end(sdata->getBox(), pdat::EdgeIndex::Y));
+         for (pdat::EdgeIterator cc(pdat::EdgeGeometry::begin(sdata->getBox(), pdat::EdgeIndex::Y));
               cc != ccend && bogus_value_test_passed; ++cc) {
             pdat::EdgeIndex edge_index = *cc;
 
@@ -1436,8 +1439,8 @@ int main(
 
          if (dim.getValue() == 3) {
             // check Z axis data
-            pdat::EdgeIterator cend(sdata->getBox(), pdat::EdgeIndex::Z, false);
-            for (pdat::EdgeIterator c(sdata->getBox(), pdat::EdgeIndex::Z, true);
+            pdat::EdgeIterator cend(pdat::EdgeGeometry::end(sdata->getBox(), pdat::EdgeIndex::Z));
+            for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(sdata->getBox(), pdat::EdgeIndex::Z));
                  c != cend && bogus_value_test_passed; ++c) {
                pdat::EdgeIndex edge_index = *c;
 
@@ -1672,8 +1675,8 @@ complexDataSameAsValue(
 
          TBOX_ASSERT(svdata);
 
-         pdat::EdgeIterator cend(svdata->getBox(), 1, false);
-         for (pdat::EdgeIterator c(svdata->getBox(), 1, true);
+         pdat::EdgeIterator cend(pdat::EdgeGeometry::end(svdata->getBox(), 1));
+         for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(svdata->getBox(), 1));
               c != cend && test_passed; ++c) {
             pdat::EdgeIndex edge_index = *c;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*svdata)(edge_index),
@@ -1712,8 +1715,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(svdata);
 
-         pdat::EdgeIterator cend(svdata->getBox(), 1, false);
-         for (pdat::EdgeIterator c(svdata->getBox(), 1, true);
+         pdat::EdgeIterator cend(pdat::EdgeGeometry::end(svdata->getBox(), 1));
+         for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(svdata->getBox(), 1));
               c != cend && test_passed; ++c) {
             pdat::EdgeIndex edge_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*svdata)(edge_index),

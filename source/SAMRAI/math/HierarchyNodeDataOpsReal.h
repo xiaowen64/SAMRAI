@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real node data on multiple levels.
  *
  ************************************************************************/
@@ -17,7 +17,6 @@
 #include "SAMRAI/math/PatchNodeDataOpsReal.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
@@ -634,7 +633,7 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
-   tbox::Array<tbox::Array<hier::BoxContainer> > d_nonoverlapping_node_boxes;
+   std::vector<std::vector<hier::BoxContainer> > d_nonoverlapping_node_boxes;
 
    PatchNodeDataOpsReal<TYPE> d_patch_ops;
 

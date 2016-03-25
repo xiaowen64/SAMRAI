@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -76,7 +76,7 @@ namespace geom {
  *   </tr>
  *   <tr>
  *     <td>domain_boxes</td>
- *     <td>Array<DatabaseBox></td>
+ *     <td>array of DatabaseBoxes</td>
  *     <td>none</td>
  *     <td>all Boxes must be non-empty</td>
  *     <td>req</td>
@@ -125,7 +125,7 @@ namespace geom {
  */
 
 class CartesianGridGeometry:
-   public geom::GridGeometry
+   public GridGeometry
 {
    typedef hier::PatchGeometry::TwoDimBool TwoDimBool;
 
@@ -234,8 +234,7 @@ public:
    setGeometryDataOnPatch(
       hier::Patch& patch,
       const hier::IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry) const;
+      const TwoDimBool& touches_regular_bdry) const;
 
    /**
     * Set data members for this CartesianGridGeometry object.

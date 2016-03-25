@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed
  *                box graph.
  *
@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -41,6 +42,7 @@ const int Connector::HIER_CONNECTOR_VERSION = 0;
 
 boost::shared_ptr<tbox::Timer> Connector::t_acquire_remote_relationships;
 boost::shared_ptr<tbox::Timer> Connector::t_cache_global_reduced_data;
+boost::shared_ptr<tbox::Timer> Connector::t_find_overlaps_rbbt;
 
 tbox::StartupShutdownManager::Handler
 Connector::s_initialize_finalize_handler(
@@ -70,8 +72,38 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(false)
+   d_global_data_up_to_date(false),
+   d_transpose(0),
+   d_owns_transpose(false)
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+Connector::Connector(
+   const tbox::Dimension& dim,
+   tbox::Database& restart_db):
+   d_base_handle(),
+   d_head_handle(),
+   d_base_width(dim),
+   d_ratio(dim),
+   d_ratio_is_exact(false),
+   d_head_coarser(false),
+   d_relationships(),
+   d_global_relationships(),
+   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_parallel_state(BoxLevel::DISTRIBUTED),
+   d_finalized(false),
+   d_global_number_of_neighbor_sets(0),
+   d_global_number_of_relationships(0),
+   d_global_data_up_to_date(false),
+   d_transpose(0),
+   d_owns_transpose(false)
+{
+   getFromRestart(restart_db);
 }
 
 /*
@@ -94,7 +126,9 @@ Connector::Connector(
    d_finalized(other.d_finalized),
    d_global_number_of_neighbor_sets(other.d_global_number_of_neighbor_sets),
    d_global_number_of_relationships(other.d_global_number_of_relationships),
-   d_global_data_up_to_date(other.d_global_data_up_to_date)
+   d_global_data_up_to_date(other.d_global_data_up_to_date),
+   d_transpose(other.d_transpose),
+   d_owns_transpose(false)
 {
 }
 
@@ -118,7 +152,9 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(true)
+   d_global_data_up_to_date(true),
+   d_transpose(0),
+   d_owns_transpose(false)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(base_box_level,
       head_box_level,
@@ -137,6 +173,9 @@ Connector::Connector(
 Connector::~Connector()
 {
    clear();
+   if (d_transpose && d_owns_transpose && d_transpose != this) {
+      delete d_transpose;
+   }
 }
 
 /*
@@ -161,6 +200,8 @@ Connector::operator = (
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
       d_finalized = rhs.d_finalized;
+      d_transpose = rhs.d_transpose;
+      d_owns_transpose = false;
    }
    return *this;
 }
@@ -421,7 +462,7 @@ Connector::acquireRemoteNeighborhoods()
       proc_offset[n] = totl_size;
       totl_size += recv_mesg_size[n];
    }
-   recv_mesg.resize(totl_size, BAD_INT);
+   recv_mesg.resize(totl_size, tbox::MathUtilities<int>::getMax());
    mpi.Allgatherv(&send_mesg[0],
       send_mesg_size,
       MPI_INT,
@@ -448,7 +489,9 @@ Connector::acquireRemoteNeighborhoods_pack(
    std::vector<int>& send_mesg) const
 {
    const tbox::Dimension& dim = getBase().getDim();
-   d_relationships.putToIntBuffer(send_mesg, dim, BAD_INT);
+   d_relationships.putToIntBuffer(send_mesg,
+      dim,
+      tbox::MathUtilities<int>::getMax());
    return;
 }
 
@@ -717,7 +760,8 @@ Connector::writeNeighborhoodsToErrorStream(
  ***********************************************************************
  */
 void
-Connector::writeNeighborhoodToErrorStream(
+Connector::writeNeighborhoodToStream(
+   std::ostream &os,
    const BoxId& box_id) const
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
@@ -730,9 +774,7 @@ Connector::writeNeighborhoodToErrorStream(
    for (ConstNeighborIterator bi = relationships.begin(ei);
         bi != relationships.end(ei); ++bi) {
       const Box& box = *bi;
-      tbox::perr << "    "
-                 << box << "   "
-                 << box.numberCells() << '\n';
+      os << "    " << box << "   " << box.numberCells() << '\n';
    }
    return;
 }
@@ -742,46 +784,53 @@ Connector::writeNeighborhoodToErrorStream(
  ***********************************************************************
  */
 
-void
-Connector::initializeToLocalTranspose(
-   const Connector& connector)
+Connector*
+Connector::createLocalTranspose() const
 {
-   const IntVector my_gcw = convertHeadWidthToBase(
-         connector.getHead().getRefinementRatio(),
-         connector.getBase().getRefinementRatio(),
-         connector.getConnectorWidth());
+   const IntVector transpose_gcw = convertHeadWidthToBase(
+         getHead().getRefinementRatio(),
+         getBase().getRefinementRatio(),
+         getConnectorWidth());
 
-   clearNeighborhoods();
-   setBase(connector.d_head_handle->getBoxLevel());
-   setHead(connector.d_base_handle->getBoxLevel());
-   setWidth(my_gcw, true);
-   TBOX_ASSERT(isTransposeOf(connector));
+   Connector* transpose = new Connector(getHead(), getBase(), transpose_gcw);
+   doLocalTransposeWork(transpose);
+   return transpose;
+}
 
-   const tbox::Dimension dim(my_gcw.getDim());
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+Connector::doLocalTransposeWork(
+   Connector* transpose) const
+{
+   TBOX_ASSERT(transpose);
+   TBOX_ASSERT(isTransposeOf(*transpose));
+
    const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(dim);
+      PeriodicShiftCatalog::getCatalog(getConnectorWidth().getDim());
 
-   for (ConstNeighborhoodIterator ci = connector.begin();
-        ci != connector.end(); ++ci) {
+   for (ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
 
       const BoxId& box_id = *ci;
-      const BoxContainer::const_iterator ni = getHead().getBox(box_id);
-      if (ni == getHead().getBoxes().end()) {
+      const BoxContainer::const_iterator ni = transpose->getHead().getBox(box_id);
+      if (ni == transpose->getHead().getBoxes().end()) {
          TBOX_ERROR(
-            "Connector::initializeToLocalTranspose: box index\n"
+            "Connector::createLocalTranspose: box index\n"
             << box_id
             << " not found in local part of head box_level.\n"
-            << "This means that the incoming Connector data was not a\n"
+            << "This means that the Connector data was not a\n"
             << "self-consistent local mapping.\n");
       }
       const Box& my_head_box = *ni;
 
-      for (ConstNeighborIterator na = connector.begin(ci);
-           na != connector.end(ci); ++na) {
+      for (ConstNeighborIterator na = begin(ci); na != end(ci); ++na) {
          const Box& my_base_box = *na;
-         if (my_base_box.getOwnerRank() != getMPI().getRank()) {
+         if (my_base_box.getOwnerRank() != transpose->getMPI().getRank()) {
             TBOX_ERROR(
-               "Connector::initializeToLocalTranspose: base box "
+               "Connector::createLocalTranspose: base box "
                << my_head_box << "\n"
                << "has remote neighbor " << my_base_box
                << " which is disallowed.\n"
@@ -792,17 +841,17 @@ Connector::initializeToLocalTranspose(
                my_head_box,
                shift_catalog->getOppositeShiftNumber(
                   my_base_box.getPeriodicId()),
-               getHead().getRefinementRatio());
-            if (getHead().hasBox(my_shifted_head_box)) {
+               transpose->getHead().getRefinementRatio());
+            if (transpose->getHead().hasBox(my_shifted_head_box)) {
                BoxId base_non_per_id(
                   my_base_box.getGlobalId(),
                   PeriodicId::zero());
-               d_relationships.insert(
+               transpose->d_relationships.insert(
                   base_non_per_id,
                   my_shifted_head_box);
             }
          } else {
-            d_relationships.insert(
+            transpose->d_relationships.insert(
                my_base_box.getBoxId(),
                my_head_box);
          }
@@ -811,15 +860,15 @@ Connector::initializeToLocalTranspose(
    }
 
    if (0) {
-      tbox::perr << "end of initializeToLocalTranspose:\n"
-                 << "base:\n" << getBase().format("BASE->", 3)
-                 << "head:\n" << getHead().format("HEAD->", 3)
-                 << "this:\n" << format("THIS->", 3)
-                 << "r:\n" << connector.format("RRRR->", 3)
+      tbox::perr << "end of createLocalTranspose:\n"
+                 << "base:\n" << transpose->getBase().format("BASE->", 3)
+                 << "head:\n" << transpose->getHead().format("HEAD->", 3)
+                 << "this:\n" << transpose->format("RRRR->", 3)
+                 << "r:\n" << format("THIS->", 3)
                  << "Checking this transpose correctness:" << std::endl;
-      assertTransposeCorrectness(connector, false);
+      transpose->assertTransposeCorrectness(*this, false);
       tbox::perr << "Checking r's transpose correctness:" << std::endl;
-      connector.assertTransposeCorrectness(*this, false);
+      assertTransposeCorrectness(*transpose, false);
    }
 }
 
@@ -992,7 +1041,7 @@ Connector::recursivePrint(
       << " (" << getLocalNumberOfNeighborSets() << " with neighbor lists)\n"
    ;
    if (detail_depth > 0) {
-      os << border << "Bboxes with neighbors:\n";
+      os << border << "Boxes with neighbors:\n";
       for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& box_id = *ei;
          BoxContainer::const_iterator ni = getBase().getBox(box_id);
@@ -1383,7 +1432,7 @@ Connector::checkConsistencyWithBase() const
       if (!getBase().hasBox(box_id)) {
          ++num_errors;
          tbox::plog << "ERROR->"
-         << "Connector::assertConsistencyWithBase: Neighbor data given "
+         << "Connector::checkConsistencyWithBase: Neighbor data given "
          << "\nfor box " << box_id
          << " but the box does not exist.\n";
       }
@@ -1413,7 +1462,7 @@ Connector::assertConsistencyWithBase() const
 
 void
 Connector::computeNeighborhoodDifferences(
-   Connector& left_minus_right,
+   boost::shared_ptr<Connector>& left_minus_right,
    const Connector& left,
    const Connector& right)
 {
@@ -1421,11 +1470,10 @@ Connector::computeNeighborhoodDifferences(
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
    }
-   left_minus_right.clearNeighborhoods();
-   left_minus_right.d_parallel_state = left.getParallelState();
-   left_minus_right.setBase(left.d_base_handle->getBoxLevel());
-   left_minus_right.setHead(left.d_head_handle->getBoxLevel());
-   left_minus_right.setWidth(left.d_base_width, true);
+   left_minus_right.reset(new Connector(left.d_base_handle->getBoxLevel(),
+      left.d_head_handle->getBoxLevel(),
+      left.d_base_width,
+      left.getParallelState()));
 
    for (ConstNeighborhoodIterator ai = left.begin(); ai != left.end(); ++ai) {
 
@@ -1452,17 +1500,17 @@ Connector::computeNeighborhoodDifferences(
                         ii, Box::id_less());
          if ( !diff.empty() ) {
             NeighborhoodIterator base_box_itr =
-               left_minus_right.makeEmptyLocalNeighborhood(box_id);
+               left_minus_right->makeEmptyLocalNeighborhood(box_id);
             for ( std::set<Box,Box::id_less>::const_iterator ii=diff.begin(); ii!=diff.end(); ++ii ) {
-               left_minus_right.insertLocalNeighbor(*ii, base_box_itr);
+               left_minus_right->insertLocalNeighbor(*ii, base_box_itr);
             }
          }
       } else if (left.numLocalNeighbors(box_id) != 0) {
          NeighborhoodIterator base_box_itr =
-            left_minus_right.makeEmptyLocalNeighborhood(box_id);
+            left_minus_right->makeEmptyLocalNeighborhood(box_id);
          for (ConstNeighborIterator na = left.begin(ai);
               na != left.end(ai); ++na) {
-            left_minus_right.insertLocalNeighbor(*na, base_box_itr);
+            left_minus_right->insertLocalNeighbor(*na, base_box_itr);
          }
       }
 
@@ -1551,6 +1599,558 @@ Connector::checkConsistencyWithHead() const
    }
 
    return number_of_inconsistencies;
+}
+
+/*
+ ***********************************************************************
+ * Checking is done as follows:
+ *   - Rebuild the overlap containers using findOverlaps().
+ *     Note that the rebuilt overlap set is complete.
+ *   - Check the current overlap set against the rebuilt overlap set
+ *     to find missing overlaps and extra overlaps.
+ *
+ * Currently, the rebuilt overlaps are rebuilt using findOverlaps().
+ * Thus, it may be pointless to use this method as a check for that
+ * method.
+ ***********************************************************************
+ */
+
+void
+Connector::findOverlapErrors(
+   boost::shared_ptr<Connector>& missing,
+   boost::shared_ptr<Connector>& extra,
+   bool ignore_self_overlap) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!getBase().isInitialized() || !getHead().isInitialized()) {
+      TBOX_ERROR(
+         "Connector::findOverlapErrors: Cannot check overlaps\n"
+         << "when base or head box_level is uninitialized.");
+   }
+#endif
+
+   /*
+    * Obtain a globalized version of the head for checking.
+    */
+   const BoxLevel& head = getHead().getGlobalizedVersion();
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   /*
+    * Before checking on overlap errors, make sure the user gave a
+    * valid Connector.
+    *
+    * Each neighbor set should correspond to a base box.
+    *
+    * Each referenced neighbor should exist in the head.
+    */
+   size_t num_base_consistency_errors = checkConsistencyWithBase();
+   size_t num_head_consistency_errors = checkConsistencyWithHead();
+   if (num_base_consistency_errors > 0) {
+      tbox::perr
+      << "Connector::findOverlapErrors: cannot check overlap errors\n"
+      << "for inconsistent base data.\n";
+   }
+   if (num_head_consistency_errors > 0) {
+      tbox::perr
+      << "Connector::findOverlapErrors: cannot check overlap errors\n"
+      << "for inconsistent head data.\n";
+   }
+   if (num_base_consistency_errors || num_head_consistency_errors) {
+      TBOX_ERROR(
+         "Connector::findOverlapErrors exiting due to\n"
+         << "inconsistent data.\n"
+         << "Base:\n" << getBase().format("B->", 2)
+         << "Head:\n" << getHead().format("H->", 2)
+         << "Connector:\n" << format("C->", 3));
+   }
+#endif
+
+   /*
+    * Rebuild the overlap Connector for checking.
+    */
+   Connector rebuilt(getBase(), getHead(), getConnectorWidth());
+   rebuilt.findOverlaps_rbbt(head, ignore_self_overlap);
+
+   /*
+    * Check that the rebuilt overlaps match the existing overlaps.
+    *
+    * Currently, we use findOverlaps to rebuild the overlaps.
+    * Thus, it may be pointless to use this method
+    * as a check for that method.
+    */
+   computeNeighborhoodDifferences(extra, *this, rebuilt);
+   TBOX_ASSERT(&extra->getBase() == &getBase());
+   TBOX_ASSERT(&extra->getHead() == &getHead());
+   computeNeighborhoodDifferences(missing, rebuilt, *this);
+   TBOX_ASSERT(&missing->getBase() == &getBase());
+   TBOX_ASSERT(&missing->getHead() == &getHead());
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+Connector::assertOverlapCorrectness(
+   bool ignore_self_overlap,
+   bool assert_completeness,
+   bool ignore_periodic_images) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!getBase().isInitialized() || !getHead().isInitialized()) {
+      TBOX_ERROR(
+         "Connector::assertOverlapCorrectness: Cannot check overlaps\n"
+         << "when base or head box_level is uninitialized.");
+
+   }
+#endif
+
+   int local_error_count = checkOverlapCorrectness(ignore_self_overlap,
+      assert_completeness,
+      ignore_periodic_images);
+
+   const tbox::SAMRAI_MPI& mpi(getMPI());
+   int max_error_count = local_error_count;
+   int rank_of_max = mpi.getRank();
+   if (mpi.getSize() > 1) {
+      IntIntStruct send, recv;
+      send.rank = recv.rank = mpi.getRank();
+      send.i = local_error_count;
+      mpi.Allreduce(&send, &recv, 1, MPI_2INT, MPI_MAXLOC);
+      max_error_count = recv.i;
+      rank_of_max = recv.rank;
+   }
+   if (max_error_count > 0) {
+      std::string dbgbord;
+      TBOX_ERROR(
+         "Connector::assertOverlapCorrectness found missing and/or extra overlaps."
+         << "Error in connector, " << local_error_count
+         << " local errors, "
+         << max_error_count << " max errors on proc " << rank_of_max
+         << ":\n"
+         << format(dbgbord, 2)
+         << "base box_level:\n" << getBase().format(dbgbord, 2)
+         << "head box_level:\n" << getHead().format(dbgbord, 2));
+   }
+}
+
+/*
+ ***********************************************************************
+ * Return number of missing and number of extra overlaps.
+ ***********************************************************************
+ */
+
+int
+Connector::checkOverlapCorrectness(
+   bool ignore_self_overlap,
+   bool assert_completeness,
+   bool ignore_periodic_images) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!getBase().isInitialized() || !getHead().isInitialized()) {
+      TBOX_ERROR(
+         "Connector::checkOverlapCorrectness: Cannot check overlaps when\n"
+         << "base or head box_level is uninitialized.");
+
+   }
+#endif
+   TBOX_ASSERT(!hasPeriodicLocalNeighborhoodBaseBoxes());
+
+   boost::shared_ptr<Connector> missing, extra;
+   findOverlapErrors(missing, extra, ignore_self_overlap);
+
+   if (!assert_completeness) {
+      // Disregard missing overlaps by resetting missing to empty.
+      missing->clearNeighborhoods();
+   } else if (ignore_periodic_images) {
+      // Disregard missing overlaps if they are incident on a periodic box.
+      missing->removePeriodicLocalNeighbors();
+      missing->eraseEmptyNeighborSets();
+   }
+
+   const BoxId dummy_box_id;
+
+   /*
+    * Report the errors found, ordered by the Box where the
+    * error appears.  In order to do this, we have to loop through
+    * the neighborhoods of missing and extra at the same time.
+    */
+
+   Connector::ConstNeighborhoodIterator im = missing->begin();
+   Connector::ConstNeighborhoodIterator ie = extra->begin();
+   for (; im != missing->end() || ie != extra->end();
+        /* incremented in loop */) {
+
+      const BoxId& global_id_missing =
+         im == missing->end() ? dummy_box_id : *im;
+      const BoxId& global_id_extra =
+         ie == extra->end() ? dummy_box_id : *ie;
+
+      if (im != missing->end() && ie != extra->end() &&
+          *im == *ie) {
+
+         /*
+          * im and ie are pointing at the same Box.  Report the
+          * error for this Box.
+          */
+
+         const Box& box = *getBase().getBoxStrict(global_id_missing);
+         tbox::perr << "Found " << missing->numLocalNeighbors(*im)
+                    << " missing and "
+                    << extra->numLocalNeighbors(*ie)
+                    << " extra overlaps for "
+                    << box << std::endl;
+         Connector::ConstNeighborhoodIterator it = findLocal(global_id_missing);
+         if (it == end()) {
+            tbox::perr << "  Current Neighbors (no neighbor set)." << std::endl;
+         } else {
+            tbox::perr << "  Current Neighbors ("
+                       << numLocalNeighbors(*it) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = begin(it);
+                 na != end(it); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  getBase().getGridGeometry()->transformBox(nabr_box,
+                     getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         {
+            tbox::perr << "  Missing Neighbors ("
+                       << missing->numLocalNeighbors(*im) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = missing->begin(im);
+                 na != missing->end(im); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  getBase().getGridGeometry()->transformBox(nabr_box,
+                     getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         {
+            tbox::perr << "  Extra Neighbors ("
+                       << extra->numLocalNeighbors(*ie) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = extra->begin(ie);
+                 na != extra->end(ie); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  getBase().getGridGeometry()->transformBox(nabr_box,
+                     getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         ++im;
+         ++ie;
+
+      } else if ((ie == extra->end()) ||
+                 (im != missing->end() && *im < *ie)) {
+
+         /*
+          * im goes before ie (or ie has reached the end).  Report the
+          * errors for the Box at im.
+          */
+
+         const Box& box = *getBase().getBoxStrict(global_id_missing);
+         tbox::perr << "Found " << missing->numLocalNeighbors(*im)
+                    << " missing overlaps for " << box << std::endl;
+         Connector::ConstNeighborhoodIterator it = findLocal(global_id_missing);
+         if (it == end()) {
+            tbox::perr << "    Current Neighbors (no neighbor set)."
+                       << std::endl;
+         } else {
+            tbox::perr << "  Current Neighbors ("
+                       << numLocalNeighbors(*it) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = begin(it);
+                 na != end(it); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         {
+            tbox::perr << "  Missing Neighbors ("
+                       << missing->numLocalNeighbors(*im) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = missing->begin(im);
+                 na != missing->end(im); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  getBase().getGridGeometry()->transformBox(nabr_box,
+                     getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         ++im;
+      } else if ((im == missing->end()) ||
+                 (ie != extra->end() && *ie < *im)) {
+
+         /*
+          * ie goes before im (or im has reached the end).  Report the
+          * errors for the Box at ie.
+          */
+
+         const Box& box = *getBase().getBoxStrict(
+               global_id_extra);
+         tbox::perr << "Found " << extra->numLocalNeighbors(*ie)
+                    << " extra overlaps for " << box << std::endl;
+         Connector::ConstNeighborhoodIterator it = findLocal(global_id_extra);
+         if (it == end()) {
+            tbox::perr << "  Current Neighbors (no neighbor set)." << std::endl;
+         } else {
+            tbox::perr << "  Current Neighbors ("
+                       << numLocalNeighbors(*it) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = begin(it);
+                 na != end(it); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  getBase().getGridGeometry()->transformBox(nabr_box,
+                     getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         {
+            tbox::perr << "  Extra Neighbors ("
+                       << extra->numLocalNeighbors(*ie) << "):"
+                       << std::endl;
+            Box ghost_box = box;
+            ghost_box.grow(getConnectorWidth());
+            for (Connector::ConstNeighborIterator na = extra->begin(ie);
+                 na != extra->end(ie); ++na) {
+               const Box& nabr = *na;
+               Box nabr_box = nabr;
+               if (getHeadCoarserFlag()) {
+                  nabr_box.refine(getRatio());
+               } else if (getRatio() != 1) {
+                  nabr_box.coarsen(getRatio());
+               }
+               if ( nabr_box.getBlockId() != box.getBlockId() ) {
+                  getBase().getGridGeometry()->transformBox(nabr_box,
+                     getBase().getRefinementRatio(),
+                     box.getBlockId(),
+                     nabr.getBlockId() );
+               }
+               Box ovlap = nabr_box * ghost_box;
+               tbox::perr << "    " << nabr << '_' << nabr.numberCells()
+                          << "\tov" << ovlap << '_' << ovlap.numberCells()
+                          << std::endl;
+            }
+         }
+         ++ie;
+      }
+
+   }
+
+   return missing->getLocalNumberOfNeighborSets() +
+          extra->getLocalNumberOfNeighborSets();
+}
+
+/*
+ ***********************************************************************
+ * ignore_self_overlap should be set to true only if
+ * - the base and head box_levels represent the same box_level.
+ *   Two different box_level objects may represent the same
+ *   box_level if they are of the same refinement ratio.
+ * - you want to ignore overlaps between a box and itself.
+ ***********************************************************************
+ */
+
+void
+Connector::findOverlaps_rbbt(
+   const BoxLevel& head,
+   bool ignore_self_overlap,
+   bool sanity_check_method_postconditions)
+{
+   const tbox::Dimension dim(head.getDim());
+
+   t_find_overlaps_rbbt->start();
+
+   /*
+    * Finding overlaps for this object, using
+    * an externally provided head BoxLevel
+    * meant to represent d_head.  We allow the
+    * substitution of an external head because
+    * we require the head is GLOBALIZED.  The
+    * user may have a GLOBALIZED version already,
+    * in which case we want to avoid the expense
+    * of creating a temporary GLOBALIZED version.
+    *
+    * Global boxes provided by head are sorted in a BoxContainer
+    * so they can be quickly searched to see which intersects the
+    * boxes in this object.
+    */
+   if (head.getParallelState() != BoxLevel::GLOBALIZED) {
+      TBOX_ERROR("Connector::findOverlaps_rbbt() requires given head\n"
+         << "to be GLOBALIZED.\n");
+   }
+
+   /*
+    * The nomenclature "base" refers to the *this box_level
+    * and "head" refer to the box_level in the argument.
+    */
+   const BoxLevel& base(getBase());
+
+   /*
+    * Determine relationship between base and head index spaces.
+    */
+   const bool head_is_finer =
+      head.getRefinementRatio() >= base.getRefinementRatio() &&
+      head.getRefinementRatio() != base.getRefinementRatio();
+   const bool base_is_finer =
+      base.getRefinementRatio() >= head.getRefinementRatio() &&
+      base.getRefinementRatio() != head.getRefinementRatio();
+
+   /*
+    * Create single container of visible head boxes
+    * to generate the search tree.
+    */
+   const BoxContainer& rbbt = head.getGlobalBoxes();
+   rbbt.makeTree(head.getGridGeometry().get());
+
+   /*
+    * A neighbor of a Box would be discarded if
+    * - ignore_self_overlap is true,
+    * - the two are equal by comparison, and
+    * - they are from box_levels with the same refinement ratio
+    *   (we cannot compare box box_level pointers because that
+    *   does not work when a box box_level is a temporary globalized object)
+    */
+   const bool discard_self_overlap =
+      ignore_self_overlap &&
+      (base.getRefinementRatio() == head.getRefinementRatio());
+
+   /*
+    * Discard current overlaps (if any).
+    */
+   clearNeighborhoods();
+
+   /*
+    * Use BoxTree to find local base Boxes intersecting head Boxes.
+    */
+   NeighborSet nabrs_for_box;
+   const BoxContainer& base_boxes = base.getBoxes();
+   for (RealBoxConstIterator ni(base_boxes.realBegin());
+        ni != base_boxes.realEnd(); ++ni) {
+
+      const Box& base_box = *ni;
+
+      // Grow the base_box and put it in the head refinement ratio.
+      Box box = base_box;
+      box.grow(getConnectorWidth());
+      if (head_is_finer) {
+         box.refine(getRatio());
+      } else if (base_is_finer) {
+         box.coarsen(getRatio());
+      }
+
+      // Add found overlaps to neighbor set for box.
+      rbbt.findOverlapBoxes(nabrs_for_box,
+         box,
+                            // base_box.getBlockId(),
+         head.getRefinementRatio(),
+         true);
+      if (discard_self_overlap) {
+         nabrs_for_box.order();
+         nabrs_for_box.erase(base_box);
+      }
+      if (!nabrs_for_box.isEmpty()) {
+         insertNeighbors(nabrs_for_box, base_box.getBoxId());
+         nabrs_for_box.clear();
+      }
+
+   }
+
+   if (sanity_check_method_postconditions) {
+      assertConsistencyWithBase();
+      assertConsistencyWithHead();
+   }
+
+   t_find_overlaps_rbbt->stop();
 }
 
 }

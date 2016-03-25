@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated outeredge centered patch data type
  *
  ************************************************************************/
@@ -611,7 +611,7 @@ OuteredgeData<TYPE>::packStream(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
 
          const hier::Box src_box = hier::Box::shift(*dst_box,
@@ -665,7 +665,7 @@ OuteredgeData<TYPE>::unpackStream(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -723,7 +723,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -1352,8 +1352,8 @@ OuteredgeData<TYPE>::printAxisSide(
       const hier::Box edgebox = EdgeGeometry::toEdgeBox(box, axis);
       const hier::Box region =
          edgebox * d_data[axis][face_normal][side]->getBox();
-      hier::Box::iterator iiend(region, false);
-      for (hier::Box::iterator ii(region, true); ii != iiend; ++ii) {
+      hier::Box::iterator iiend(region.end());
+      for (hier::Box::iterator ii(region.begin()); ii != iiend; ++ii) {
          os << "array" << *ii << " = "
             << (*(d_data[axis][face_normal][side]))(*ii, depth) << std::endl;
          os << std::flush;

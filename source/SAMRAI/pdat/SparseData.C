@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -332,7 +332,7 @@ SparseData<BOX_GEOMETRY>::copy(
    const hier::BoxContainer& box_list = tmp_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
 
-   for (hier::BoxContainer::const_iterator overlap_box(box_list);
+   for (hier::BoxContainer::const_iterator overlap_box = box_list.begin();
         overlap_box != box_list.end(); ++overlap_box) {
 
       const hier::Box& dst_box = *overlap_box;
@@ -353,7 +353,7 @@ SparseData<BOX_GEOMETRY>::copy(
 
          } // if (src_ghost_box.contains(...
       } // for (; src_index_map_iter != ...
-   } // for (hier::BoxContainer::const_iterator overlap_box(...
+   } // for (hier::BoxContainer::const_iterator overlap_box = ...
 }
 
 /**********************************************************************
@@ -400,7 +400,7 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
 
    // first count up the number of items that we'll need to deal
    // with
-   for (hier::BoxContainer::const_iterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box = boxes.begin();
         overlap_box != boxes.end(); ++overlap_box) {
 
       const hier::Box& box = hier::PatchData::getBox()
@@ -493,7 +493,7 @@ SparseData<BOX_GEOMETRY>::packStream(
    int num_items = 0;
    int num_attributes = 0;
 
-   for (hier::BoxContainer::const_iterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box = boxes.begin();
         overlap_box != boxes.end(); ++overlap_box) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*overlap_box, -(tmp_overlap->getSourceOffset()));
@@ -557,7 +557,7 @@ SparseData<BOX_GEOMETRY>::packStream(
    }
 
    // pack the individual items
-   for (hier::BoxContainer::const_iterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box = boxes.begin();
         overlap_box != boxes.end(); ++overlap_box) {
 
       hier::Box box = hier::PatchData::getBox()
@@ -606,7 +606,7 @@ SparseData<BOX_GEOMETRY>::packStream(
             }
          } //  if (box.contains(...
       } // for (; index_map_iter
-   } // for (hier::BoxContainer::const_iterator overlap_box(...
+   } // for (hier::BoxContainer::const_iterator overlap_box = ...
 }
 
 /**********************************************************************
@@ -675,7 +675,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
    }
 
    const hier::BoxContainer& boxes = tmp_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box = boxes.begin();
         overlap_box != boxes.end(); ++overlap_box) {
 
       _removeInsideBox(*overlap_box);
@@ -698,8 +698,8 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 
       // unpack the number of attributes
       stream >> num_attrs;
-      double dvals[d_dbl_attr_size];
-      int ivals[d_int_attr_size];
+      double dvals[static_cast<unsigned int>(d_dbl_attr_size)];
+      int ivals[static_cast<unsigned int>(d_int_attr_size)];
       for (int count = 0; count < num_attrs; ++count) {
          stream.unpack<double>(dvals, d_dbl_attr_size);
          stream.unpack<int>(ivals, d_int_attr_size);
@@ -785,8 +785,8 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
             restart_db->getDatabase(index_keyword));
 
          // unpack the index
-         tbox::Array<int> index_array =
-            item_db->getIntegerArray(index_keyword);
+         std::vector<int> index_array =
+            item_db->getIntegerVector(index_keyword);
          hier::Index index(d_dim);
          for (int j = 0; j < d_dim.getValue(); ++j) {
             index(j) = index_array[j];
@@ -808,10 +808,10 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
             + tbox::Utilities::intToString(curr_item, 6);
 
          int dbl_ary_size = d_dbl_attr_size * list_size;
-         double dvalues[dbl_ary_size];
+         double dvalues[static_cast<unsigned int>(dbl_ary_size)];
 
          int int_ary_size = d_int_attr_size * list_size;
-         int ivalues[int_ary_size];
+         int ivalues[static_cast<unsigned int>(int_ary_size)];
 
          item_db->getDoubleArray(dvalues_keyword, dvalues,
             (dbl_ary_size));
@@ -919,7 +919,7 @@ SparseData<BOX_GEOMETRY>::putToRestart(
 
       // First deal with the Index
       const hier::Index& index = index_iter->first;
-      tbox::Array<int> index_array(d_dim.getValue());
+      std::vector<int> index_array(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); ++i) {
          index_array[i] = index(i);
       }
@@ -927,7 +927,7 @@ SparseData<BOX_GEOMETRY>::putToRestart(
       boost::shared_ptr<tbox::Database> item_db(
          restart_db->putDatabase(index_keyword));
 
-      item_db->putIntegerArray(index_keyword, index_array);
+      item_db->putIntegerVector(index_keyword, index_array);
 
       // Next get the node and record the double attribute data
       typename SparseData<BOX_GEOMETRY>::AttributeIterator attributes(
@@ -941,8 +941,8 @@ SparseData<BOX_GEOMETRY>::putToRestart(
          + tbox::Utilities::intToString(curr_item, 6);
       item_db->putInteger(list_size_keyword, list_size);
 
-      double dvalues[d_dbl_attr_size * list_size];
-      int ivalues[d_int_attr_size * list_size];
+      double dvalues[static_cast<unsigned int>(d_dbl_attr_size * list_size)];
+      int ivalues[static_cast<unsigned int>(d_int_attr_size * list_size)];
 
       // pack all the data together.
       int doffset(0), ioffset(0);

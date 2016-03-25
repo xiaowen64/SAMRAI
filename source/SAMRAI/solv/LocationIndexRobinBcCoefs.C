@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include IOMANIP_HEADER_FILE
 
@@ -76,7 +75,7 @@ LocationIndexRobinBcCoefs::getFromInput(
       if (input_db->isString(name)) {
          d_a_map[i] = 1.0;
          d_g_map[i] = 0.0;
-         tbox::Array<std::string> specs = input_db->getStringArray(name);
+         std::vector<std::string> specs = input_db->getStringVector(name);
          if (specs[0] == "value") {
             d_a_map[i] = 1.0;
             d_b_map[i] = 0.0;

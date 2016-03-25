@@ -1,10 +1,10 @@
 #########################################################################
 ##
-## This file is part of the SAMRAI distribution.  For full copyright 
-## information, see COPYRIGHT and COPYING.LESSER. 
+## This file is part of the SAMRAI distribution.  For full copyright
+## information, see COPYRIGHT and COPYING.LESSER.
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
-## Description:   makefile for linear advection sample application 
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Description:   Multiblock performance tests.
 ##
 #########################################################################
 
@@ -24,7 +24,7 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=0
 
-NUM_TESTS     = 8
+NUM_TESTS     = 0
 
 TEST_NPROCS   = @TEST_NPROCS@
 
@@ -33,53 +33,56 @@ CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
 
 F_OBJS      = stufprobc.o trace1d.o trace2d.o trace3d.o grad2d.o grad3d.o flux2d.o flux3d.o fluxcorner3d.o stable2d.o stable3d.o init2d.o init3d.o
 
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
-	$(MAKE) testlib
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 check:
-	$(MAKE) check3d
-
-check2d:
-
-check3d:       main
-	@for i in test_inputs/*.input ; do \
-	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-	       ./main $${i}; \
-	done
 
 checkcompile: main
 
 checktest:
 	rm -f makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 	rm -f makecheck.logfile
 
-examples2d: 
+examples:
 
-examples3d: main
-	@for i in $(SRCDIR)/example_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+perf2d:       main
+	@for i in performance_inputs/*.2d.*input ; do \
+	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	       ./main $${i}; \
 	done
 
-examples:
-	$(MAKE) examples2d
-	$(MAKE) examples3d
+perf3d:       main
+	@for i in performance_inputs/*.3d.*input ; do \
+	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	       ./main $${i}; \
+	done
+
+perf:
+	$(MAKE) perf2d
+	$(MAKE) perf3d
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 clean-check:
 	$(SAMCLEAN)
 
-clean: 
+clean:
 	$(SAMCLEAN)
 	$(RM) *.f main viz*
 
-redo: 
+redo:
 	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

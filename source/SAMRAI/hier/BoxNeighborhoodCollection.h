@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A class describing the adjacency of Boxes.
  *
  ************************************************************************/
@@ -556,6 +556,12 @@ class BoxNeighborhoodCollection
          friend class BoxNeighborhoodCollection;
 
          public:
+            typedef std::forward_iterator_tag iterator_category;
+            typedef Box value_type;
+            typedef ptrdiff_t difference_type;
+            typedef Box* pointer;
+            typedef Box& reference;
+
             // Constructors
 
             /*!

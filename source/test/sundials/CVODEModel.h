@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Example demonstrating use of CVODE vectors.
  *
  ************************************************************************/
@@ -43,7 +43,6 @@ using namespace std;
 /*
  * Header file for SAMRAI classes referenced in this class.
  */
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
@@ -73,6 +72,8 @@ using namespace std;
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
 
 #include "boost/shared_ptr.hpp"
+
+#include <vector>
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -429,7 +430,7 @@ public:
     */
    void
    getCounters(
-      Array<int>& counters);
+      std::vector<int>& counters);
 
    /**
     * Writes state of CVODEModel object to the specified restart database.
@@ -491,7 +492,7 @@ private:
       boost::shared_ptr<Database> db,
       const string& db_name,
       int array_indx,
-      Array<double>& uval);
+      std::vector<double>& uval);
 
    /*
     * Object name used for error/warning reporting and as a label
@@ -538,8 +539,6 @@ private:
    bool d_level_solver_allocated;
    bool d_use_neumann_bcs;
 
-   int d_max_hypre_its;
-   double d_hypre_tol;
    double d_current_soln_time;
 #endif
 
@@ -575,24 +574,24 @@ private:
     *
     * Input file values are read into these arrays.
     */
-   Array<int> d_scalar_bdry_edge_conds;
-   Array<int> d_scalar_bdry_node_conds;
-   Array<int> d_scalar_bdry_face_conds; // Only used for 3D.
+   std::vector<int> d_scalar_bdry_edge_conds;
+   std::vector<int> d_scalar_bdry_node_conds;
+   std::vector<int> d_scalar_bdry_face_conds; // Only used for 3D.
 
    /*
     * Boundary condition cases for scalar and vector (i.e., depth > 1)
     * variables.  These are post-processed input values and are passed
     * to the boundary routines.
     */
-   Array<int> d_node_bdry_edge; // Only used for 2D.
-   Array<int> d_edge_bdry_face; // Only used for 3D.
-   Array<int> d_node_bdry_face; // Only used for 3D.
+   std::vector<int> d_node_bdry_edge; // Only used for 2D.
+   std::vector<int> d_edge_bdry_face; // Only used for 3D.
+   std::vector<int> d_node_bdry_face; // Only used for 3D.
 
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-   Array<double> d_bdry_edge_val; // Only used for 2D
-   Array<double> d_bdry_face_val; // Only used for 3D
+   std::vector<double> d_bdry_edge_val; // Only used for 2D
+   std::vector<double> d_bdry_face_val; // Only used for 3D
 
 };
 #endif // HAVE_SUNDIALS

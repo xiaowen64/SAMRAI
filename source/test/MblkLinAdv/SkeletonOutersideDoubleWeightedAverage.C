@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerside double data on
  *                a Skeleton mesh.
  *
@@ -226,9 +226,9 @@ void SkeletonOutersideDoubleWeightedAverage::setDx(
    const int level_number,
    const double* dx)
 {
-   if (level_number >= d_dx.getSize()) {
-      d_dx.resizeArray(level_number + 1);
-      d_dx[level_number].resizeArray(d_dim.getValue());
+   if (level_number >= static_cast<int>(d_dx.size())) {
+      d_dx.resize(level_number + 1);
+      d_dx[level_number].resize(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_dx[level_number][i] = dx[i];
       }

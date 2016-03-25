@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing edge data at patch boundaries
  *
  ************************************************************************/
@@ -37,12 +37,10 @@ namespace algs {
 
 int PatchBoundaryEdgeSum::s_instance_counter = 0;
 
-tbox::Array<tbox::Array<int> >
-PatchBoundaryEdgeSum::s_oedge_src_id_array =
-   tbox::Array<tbox::Array<int> >(0);
-tbox::Array<tbox::Array<int> >
-PatchBoundaryEdgeSum::s_oedge_dst_id_array =
-   tbox::Array<tbox::Array<int> >(0);
+std::vector<std::vector<int> > PatchBoundaryEdgeSum::s_oedge_src_id_array =
+   std::vector<std::vector<int> >(0);
+std::vector<std::vector<int> > PatchBoundaryEdgeSum::s_oedge_dst_id_array =
+   std::vector<std::vector<int> >(0);
 
 /*
  *************************************************************************
@@ -80,9 +78,11 @@ PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
 
    s_instance_counter--;
    if (s_instance_counter == 0) {
-      const int arr_length_depth = s_oedge_src_id_array.size();
+      const int arr_length_depth =
+         static_cast<int>(s_oedge_src_id_array.size());
       for (int id = 0; id < arr_length_depth; id++) {
-         const int arr_length_nvar = s_oedge_src_id_array[id].size();
+         const int arr_length_nvar =
+            static_cast<int>(s_oedge_src_id_array[id].size());
 
          for (int iv = 0; iv < arr_length_nvar; iv++) {
 
@@ -97,14 +97,14 @@ PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
                   s_oedge_dst_id_array[id][iv]);
             }
 
-            s_oedge_src_id_array[id].resizeArray(0);
-            s_oedge_dst_id_array[id].resizeArray(0);
+            s_oedge_src_id_array[id].resize(0);
+            s_oedge_dst_id_array[id].resize(0);
 
          }
       }
 
-      s_oedge_src_id_array.resizeArray(0);
-      s_oedge_dst_id_array.resizeArray(0);
+      s_oedge_src_id_array.resize(0);
+      s_oedge_dst_id_array.resize(0);
    }
 
 }
@@ -156,25 +156,27 @@ PatchBoundaryEdgeSum::registerSum(
 
    d_num_reg_sum++;
 
-   d_user_edge_data_id.resizeArray(d_num_reg_sum);
+   d_user_edge_data_id.resize(d_num_reg_sum);
    d_user_edge_data_id[reg_sum_id] = ID_UNDEFINED;
-   d_user_edge_depth.resizeArray(d_num_reg_sum);
+   d_user_edge_depth.resize(d_num_reg_sum);
    d_user_edge_depth[reg_sum_id] = ID_UNDEFINED;
-   d_tmp_oedge_src_variable.resizeArray(d_num_reg_sum);
-   d_tmp_oedge_dst_variable.resizeArray(d_num_reg_sum);
-   d_oedge_src_id.resizeArray(d_num_reg_sum);
+   d_tmp_oedge_src_variable.resize(d_num_reg_sum);
+   d_tmp_oedge_dst_variable.resize(d_num_reg_sum);
+   d_oedge_src_id.resize(d_num_reg_sum);
    d_oedge_src_id[reg_sum_id] = ID_UNDEFINED;
-   d_oedge_dst_id.resizeArray(d_num_reg_sum);
+   d_oedge_dst_id.resize(d_num_reg_sum);
    d_oedge_dst_id[reg_sum_id] = ID_UNDEFINED;
 
    const int data_depth = edge_factory->getDepth();
    const int array_by_depth_size = data_depth + 1;
 
-   if (d_num_registered_data_by_depth.size() < array_by_depth_size) {
-      const int old_size = d_num_registered_data_by_depth.size();
+   if (static_cast<int>(d_num_registered_data_by_depth.size()) <
+       array_by_depth_size) {
+      const int old_size =
+         static_cast<int>(d_num_registered_data_by_depth.size());
       const int new_size = array_by_depth_size;
 
-      d_num_registered_data_by_depth.resizeArray(new_size);
+      d_num_registered_data_by_depth.resize(new_size);
       for (int i = old_size; i < new_size; i++) {
          d_num_registered_data_by_depth[i] = 0;
       }
@@ -183,17 +185,19 @@ PatchBoundaryEdgeSum::registerSum(
    const int data_depth_id = d_num_registered_data_by_depth[data_depth];
    const int num_data_at_depth = data_depth_id + 1;
 
-   if (s_oedge_src_id_array.size() < array_by_depth_size) {
-      s_oedge_src_id_array.resizeArray(array_by_depth_size);
-      s_oedge_dst_id_array.resizeArray(array_by_depth_size);
+   if (static_cast<int>(s_oedge_src_id_array.size()) < array_by_depth_size) {
+      s_oedge_src_id_array.resize(array_by_depth_size);
+      s_oedge_dst_id_array.resize(array_by_depth_size);
    }
 
-   if (s_oedge_src_id_array[data_depth].size() < num_data_at_depth) {
-      const int old_size = s_oedge_src_id_array[data_depth].size();
+   if (static_cast<int>(s_oedge_src_id_array[data_depth].size()) <
+       num_data_at_depth) {
+      const int old_size =
+         static_cast<int>(s_oedge_src_id_array[data_depth].size());
       const int new_size = num_data_at_depth;
 
-      s_oedge_src_id_array[data_depth].resizeArray(new_size);
-      s_oedge_dst_id_array[data_depth].resizeArray(new_size);
+      s_oedge_src_id_array[data_depth].resize(new_size);
+      s_oedge_dst_id_array[data_depth].resize(new_size);
       for (int i = old_size; i < new_size; i++) {
          s_oedge_src_id_array[data_depth][i] = ID_UNDEFINED;
          s_oedge_dst_id_array[data_depth][i] = ID_UNDEFINED;
@@ -332,7 +336,8 @@ PatchBoundaryEdgeSum::doLevelSum(
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      for (int i = 0; i < d_user_edge_data_id.size(); i++) {
+      int array_size = static_cast<int>(d_user_edge_data_id.size());
+      for (int i = 0; i < array_size; i++) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch->getPatchData(d_user_edge_data_id[i]),
             BOOST_CAST_TAG);
@@ -354,7 +359,8 @@ PatchBoundaryEdgeSum::doLevelSum(
         ip2 != level->end(); ++ip2) {
       const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
-      for (int i = 0; i < d_user_edge_data_id.size(); i++) {
+      int array_size = static_cast<int>(d_user_edge_data_id.size());
+      for (int i = 0; i < array_size; i++) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch->getPatchData(d_user_edge_data_id[i]),
             BOOST_CAST_TAG);

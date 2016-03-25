@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
+#include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -315,6 +316,29 @@ public:
     */
    virtual void
    unpackStream(
+      tbox::MessageStream& stream,
+      const hier::BoxOverlap& overlap);
+
+   /*!
+    * @brief Add data from source to destination (i.e., this)
+    * patch data object on the given overlap.
+    *
+    * Currently, source data must be CellData of the same DIM and
+    * TYPE and the overlap must be an CellOverlap of the same DIM.
+    * If not, then an unrecoverable error results.
+    */
+   virtual void
+   sum(
+      const hier::PatchData& src,
+      const hier::BoxOverlap& overlap);
+
+   /*!
+    * @brief Unpack data from stream and add into this patch data object 
+    * over the specified box overlap region.  The overlap must be an
+    * CellOverlap of the same DIM.
+    */
+   virtual void
+   unpackStreamAndSum(
       tbox::MessageStream& stream,
       const hier::BoxOverlap& overlap);
 

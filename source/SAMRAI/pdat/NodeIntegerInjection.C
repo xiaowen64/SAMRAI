@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered integer data on
  *                a  mesh.
  *
@@ -129,7 +129,7 @@ NodeIntegerInjection::coarsen(
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if (fine.getDim() == tbox::Dimension(3)) {
-         SAMRAI_F77_FUNC(conavgnodeintg3d, conavgnodeintg3d) (ifirstc(0), ifirstc(1),
+         SAMRAI_F77_FUNC(conavgnodeintg3d, CONAVGNODEINTG3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),

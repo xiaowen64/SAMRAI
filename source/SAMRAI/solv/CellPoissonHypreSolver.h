@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -44,6 +44,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace solv {
@@ -499,7 +500,7 @@ private:
    void
    add_gAk0_toRhs(
       const hier::Patch& patch,
-      const tbox::Array<hier::BoundaryBox>& bdry_boxes,
+      const std::vector<hier::BoundaryBox>& bdry_boxes,
       const RobinBcCoefStrategy* robin_bc_coef,
       pdat::CellData<double>& rhs);
 

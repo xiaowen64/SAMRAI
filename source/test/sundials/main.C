@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for testing Sundials/SAMRAI interface.
  *
  ************************************************************************/
@@ -27,7 +27,7 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -155,21 +155,8 @@ int main(
       int stepping_method = main_db->getInteger("stepping_method");
       bool uses_preconditioning =
          main_db->getBoolWithDefault("uses_preconditioning", false);
-      int viz_dump_interval =
-         main_db->getIntegerWithDefault("viz_dump_interval", 0);
       bool solution_logging =
          main_db->getBoolWithDefault("solution_logging", false);
-
-      string viz_dump_filename;
-      string viz_dump_dirname;
-      if (viz_dump_interval > 0) {
-         if (main_db->keyExists("viz_dump_filename")) {
-            viz_dump_filename = main_db->getString("viz_dump_filename");
-         }
-         if (main_db->keyExists("viz_dump_dirname")) {
-            viz_dump_dirname = main_db->getString("viz_dump_dirname");
-         }
-      }
 
       /*
        * Create geometry and hierarchy objects.
@@ -280,7 +267,7 @@ int main(
        */
       gridding_algorithm->makeCoarsestLevel(init_time);
 
-      tbox::Array<int> tag_buffer_array(hierarchy->getMaxNumberOfLevels());
+      std::vector<int> tag_buffer_array(hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = 1;
       }
@@ -331,7 +318,7 @@ int main(
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
-      for (hier::BoxContainer::const_iterator i(level_0_boxes);
+      for (hier::BoxContainer::const_iterator i = level_0_boxes.begin();
            i != level_0_boxes.end(); ++i) {
          neq += i->size();
       }
@@ -397,10 +384,10 @@ int main(
       * Start time-stepping.
       **************************************************************************/
 
-      tbox::Array<double> time(num_print_intervals);
-      tbox::Array<double> maxnorm(num_print_intervals);
-      tbox::Array<double> l1norm(num_print_intervals);
-      tbox::Array<double> l2norm(num_print_intervals);
+      std::vector<double> time(num_print_intervals);
+      std::vector<double> maxnorm(num_print_intervals);
+      std::vector<double> l1norm(num_print_intervals);
+      std::vector<double> l2norm(num_print_intervals);
 
       double final_time = init_time;
       int interval;
@@ -472,7 +459,7 @@ int main(
       /*
        * Write CVODEModel stats
        */
-      tbox::Array<int> counters;
+      std::vector<int> counters;
       cvode_model->getCounters(counters);
 
 #if (TESTING == 1)

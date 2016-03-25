@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Class to manage different timer objects used throughout the
  *                library.
  *
@@ -739,7 +739,7 @@ TimerManager::print(
     */
    double(*timer_values)[18] = new double[d_timers.size() + 1][18];
    int(*max_processor_id)[2] = new int[d_timers.size() + 1][2];
-   Array<std::string> timer_names(static_cast<int>(d_timers.size()) + 1);
+   std::vector<std::string> timer_names(static_cast<int>(d_timers.size()) + 1);
 
    /*
     * Fill in timer_values and timer_names arrays, based on values of
@@ -801,7 +801,7 @@ TimerManager::print(
    }
 
    std::string table_title;
-   Array<std::string> column_titles(4);
+   std::vector<std::string> column_titles(4);
    int column_ids[3] = { 0, 0, 0 };
    int j, k;
 
@@ -1162,8 +1162,8 @@ TimerManager::print(
 void
 TimerManager::printTable(
    const std::string& table_title,
-   const Array<std::string> column_titles,
-   const Array<std::string> timer_names,
+   const std::vector<std::string>& column_titles,
+   const std::vector<std::string>& timer_names,
    const int column_ids[],
    const double timer_values[][18],
    std::ostream& os)
@@ -1192,7 +1192,7 @@ TimerManager::printTable(
     */
    int maxlen = 10;
    for (unsigned int n = 0; n < d_timers.size() + 1; n++) {
-      i = int(timer_names[n].size());
+      i = static_cast<int>(timer_names[n].size());
       if (i > maxlen) maxlen = i;
    }
 
@@ -1312,8 +1312,8 @@ TimerManager::printTable(
 void
 TimerManager::printTable(
    const std::string& table_title,
-   const Array<std::string> column_titles,
-   const Array<std::string> timer_names,
+   const std::vector<std::string>& column_titles,
+   const std::vector<std::string>& timer_names,
    const int max_processor_id[][2],
    const int max_array_id,
    const int column_ids[],
@@ -1342,7 +1342,7 @@ TimerManager::printTable(
     */
    int maxlen = 10;
    for (unsigned int n = 0; n < d_timers.size() + 1; n++) {
-      i = int(timer_names[n].size());
+      i = static_cast<int>(timer_names[n].size());
       if (i > maxlen) maxlen = i;
    }
 
@@ -1460,7 +1460,7 @@ TimerManager::printTable(
 
 void
 TimerManager::printOverhead(
-   const Array<std::string> timer_names,
+   const std::vector<std::string>& timer_names,
    const double timer_values[][18],
    std::ostream& os)
 {
@@ -1484,7 +1484,7 @@ TimerManager::printOverhead(
     */
    int maxlen = 10;
    for (unsigned int n = 0; n < d_timers.size(); n++) {
-      int i = int(timer_names[n].size());
+      int i = static_cast<int>(timer_names[n].size());
       if (i > maxlen) maxlen = i;
    }
 
@@ -1714,7 +1714,7 @@ TimerManager::checkConsistencyAcrossProcessors()
       mpi.Allreduce(&i, &max_num_timers, 1, MPI_INT, MPI_MAX);
    }
 
-   Array<int> max_timer_lengths(max_num_timers);
+   std::vector<int> max_timer_lengths(max_num_timers);
    std::vector<int> rank_of_max(max_num_timers, mpi.getRank());
 
    for (unsigned int i = 0; i < max_num_timers; ++i) {
@@ -1724,7 +1724,7 @@ TimerManager::checkConsistencyAcrossProcessors()
    }
 
    if (mpi.getSize() > 1) {
-      mpi.AllReduce(max_timer_lengths.getPointer(),
+      mpi.AllReduce(&max_timer_lengths[0],
          max_num_timers,
          MPI_MAXLOC,
          &rank_of_max[0]);
@@ -1792,7 +1792,7 @@ void
 TimerManager::buildTimerArrays(
    double timer_values[][18],
    int max_processor_id[][2],
-   Array<std::string> timer_names)
+   std::vector<std::string>& timer_names)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -2051,8 +2051,7 @@ TimerManager::buildOrderedList(
    /*
     * initialize the arrays
     */
-   Array<double> timer_vals;
-   timer_vals.resizeArray(array_size);
+   std::vector<double> timer_vals(array_size);
    for (int i = 0; i < array_size; i++) {
       index[i] = i;
       timer_vals[i] = timer_values[i][column];
@@ -2075,7 +2074,7 @@ TimerManager::buildOrderedList(
  */
 void
 TimerManager::quicksort(
-   const Array<double>& a,
+   const std::vector<double>& a,
    int index[],
    int lo,
    int hi)
@@ -2207,9 +2206,9 @@ TimerManager::getFromInput(
       d_print_threshold =
          input_db->getDoubleWithDefault("print_threshold", 0.25);
 
-      Array<std::string> timer_list;
+      std::vector<std::string> timer_list;
       if (input_db->keyExists("timer_list")) {
-         timer_list = input_db->getStringArray("timer_list");
+         timer_list = input_db->getStringVector("timer_list");
       }
 
       /*
@@ -2217,7 +2216,7 @@ TimerManager::getFromInput(
        *  the input file entry to the d_package_names,
        *  d_class_names, and d_class_method_names lists.
        */
-      for (int i = 0; i < timer_list.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(timer_list.size()); i++) {
          std::string entry = timer_list[i];
          addTimerToNameLists(entry);
       }

@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
 ## Description:   makefile for linear advection sample application 
 ##
 #########################################################################
@@ -31,13 +31,13 @@ TEST_NPROCS = @TEST_NPROCS@
 CXX_OBJS      = main.o LinAdv.o
 F_OBJS        = flux2d.o grad2d.o init2d.o stable2d.o stufprobc.o trace1d.o trace2d.o flux3d.o init3d.o grad3d.o trace3d.o stable3d.o fluxcorner3d.o
 
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
-	$(MAKE) testlib
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 check:
 		$(MAKE) check2d
@@ -47,8 +47,10 @@ check:
 #          to have been done.  So remove the old stuff.
 check2d:	main
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input;
-		$(RM) -rf  test.2d.restart/restore.000003/nodes.*[2-9]
-		$(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
+		$(RM) test.2d.restart/restore.000003/nodes.*1;
+		$(RM) test.2d.restart/restore.000003/nodes.*4;
+		$(OBJECT)/config/serpa-run 2 $(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
+		$(OBJECT)/config/serpa-run 4 ./main test_inputs/test.2d.input test_restart_redistribute_2d 3;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input test.2d.restart 5;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input test_sync.2d.restart 5;
@@ -66,16 +68,40 @@ checkcompile: main
 checktest:
 		rm -f makecheck.logfile
 		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 1 makecheck.logfile
 		rm -f makecheck.logfile
+
+examples2d:	main
+	@for i in example_inputs/*.2d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples3d:	main
+	@for i in example_inputs/*.3d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples:
+	$(MAKE) examples2d
+	$(MAKE) examples3d
+
+perf:
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 clean-check:
 		$(SAMCLEAN)
 
 clean:		clean-check
 		$(RM) *.f *main* 
-		$(RM) -rf test*restart*
-		$(RM) -rf viz*
+		$(RM) test*restart*
+		$(RM) viz*
 
 include $(SRCDIR)/Makefile.depend
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
@@ -67,7 +67,7 @@ public:
     * The constructor will register the constructed object with a static
     * set that manages all CoarsenPatchStrategy objects in an application.
     */
-   explicit CoarsenPatchStrategy();
+   CoarsenPatchStrategy();
 
    /*!
     * @brief Destructor.

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Set of boxes in a box_level of a distributed box graph.
  *
  ************************************************************************/
@@ -53,9 +53,11 @@ BoxLevel::s_initialize_finalize_handler(
    tbox::StartupShutdownManager::priorityTimers);
 
 BoxLevel::BoxLevel(
-   const tbox::Dimension& dim):
+   const tbox::Dimension& dim,
+   tbox::Database& restart_db,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom):
 
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
    d_ratio(dim, 0),
 
    d_local_number_of_cells(0),
@@ -82,8 +84,10 @@ BoxLevel::BoxLevel(
    d_globalized_version(0),
    d_persistent_overlap_connectors(0),
    d_handle(),
-   d_grid_geometry()
+   d_grid_geometry(),
+   d_locked(false)
 {
+   getFromRestart(restart_db, grid_geom);
 }
 
 BoxLevel::BoxLevel(
@@ -117,7 +121,8 @@ BoxLevel::BoxLevel(
    d_globalized_version(0),
    d_persistent_overlap_connectors(0),
    d_handle(),
-   d_grid_geometry(rhs.d_grid_geometry)
+   d_grid_geometry(rhs.d_grid_geometry),
+   d_locked(false)
 {
    // This cannot be the first constructor call, so no need to set timers.
 }
@@ -154,13 +159,15 @@ BoxLevel::BoxLevel(
    d_globalized_version(0),
    d_persistent_overlap_connectors(0),
    d_handle(),
-   d_grid_geometry()
+   d_grid_geometry(),
+   d_locked(false)
 {
    initialize(ratio, grid_geom, mpi, parallel_state);
 }
 
 BoxLevel::~BoxLevel()
 {
+   d_locked = false;
    clear();
    if (d_persistent_overlap_connectors != 0) {
       delete d_persistent_overlap_connectors;
@@ -177,6 +184,10 @@ BoxLevel&
 BoxLevel::operator = (
    const BoxLevel& rhs)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::operator =: operating on locked BoxLevel."
+         << std::endl);
+   }
    if (&rhs != this) {
       /*
        * Protect this block from assignment to self because it is
@@ -220,6 +231,11 @@ BoxLevel::initialize(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::initialize(): operating on locked BoxLevel."
+         << std::endl);
+   }
+
    d_boxes.clear();
    d_boxes.order();
    initializePrivate(
@@ -237,6 +253,10 @@ BoxLevel::swapInitialize(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::swapInitialize(): operating on locked BoxLevel."
+         << std::endl);
+   }
    TBOX_ASSERT(&boxes != &d_boxes);   // Library error if this fails.
    d_boxes.swap(boxes);
    initializePrivate(ratio,
@@ -248,6 +268,10 @@ BoxLevel::swapInitialize(
 void
 BoxLevel::finalize()
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::finalize(): operating on locked BoxLevel."
+         << std::endl);
+   }
 
    // Erase non-local Boxes, if any, from d_boxes.
    for (BoxContainer::iterator mbi = d_boxes.begin();
@@ -285,7 +309,7 @@ BoxLevel::initializePrivate(
    }
 
    // Erase non-local Boxes, if any, from d_boxes.
-   for (BoxContainer::iterator mbi(d_boxes.begin());
+   for (BoxContainer::iterator mbi = d_boxes.begin();
         mbi != d_boxes.end(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_boxes.erase(mbi++);
@@ -362,6 +386,10 @@ BoxLevel::operator != (
 void
 BoxLevel::removePeriodicImageBoxes()
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::removePeriodicImageBoxes(): operating on locked BoxLevel."
+         << std::endl);
+   }
    if (isInitialized()) {
       clearForBoxChanges();
       d_boxes.removePeriodicImageBoxes();
@@ -382,6 +410,10 @@ BoxLevel::removePeriodicImageBoxes()
 void
 BoxLevel::clear()
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::clear(): operating on locked BoxLevel."
+         << std::endl);
+   }
    if (isInitialized()) {
       clearForBoxChanges();
       d_mpi = tbox::SAMRAI_MPI(tbox::SAMRAI_MPI::commNull);
@@ -410,6 +442,10 @@ BoxLevel::swap(
    BoxLevel& level_a,
    BoxLevel& level_b)
 {
+   if (level_a.locked() || level_b.locked()) {
+      TBOX_ERROR("BoxLevel::initialize(): operating on locked BoxLevel."
+         << std::endl);
+   }
 
    if (&level_a != &level_b) {
       if (level_a.isInitialized() && level_b.isInitialized()) {
@@ -738,6 +774,10 @@ void
 BoxLevel::setParallelState(
    const ParallelState parallel_state)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::setParallelState(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!isInitialized()) {
       TBOX_ERROR(
@@ -953,6 +993,10 @@ BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
    const tbox::Dimension& dim(getDim());
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
@@ -967,7 +1011,7 @@ BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxContainer::iterator new_iterator(d_boxes);
+   BoxContainer::iterator new_iterator = d_boxes.begin();
 
    if (d_boxes.isEmpty()) {
       Box new_box(
@@ -1011,6 +1055,10 @@ BoxLevel::addPeriodicBox(
    const Box& ref_box,
    const PeriodicId& shift_number)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::addPeriodicBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (shift_number ==
        PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()) {
@@ -1062,6 +1110,10 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
    clearForBoxChanges(false);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1105,6 +1157,13 @@ BoxLevel::addBox(
          d_local_min_box_size[box.getBlockId().getBlockValue()].min(box_size);
          d_global_data_up_to_date = false;
       }
+      d_global_data_up_to_date = false;
+      /*
+       * TODO: bug: if some procs add a real Box and others do not,
+       * their d_global_data_up_to_date flags will be inconsistent
+       * resulting in incomplete participation in future collective
+       * communication to compute that parameter.
+       */
    }
 
    if (d_parallel_state == GLOBALIZED) {
@@ -1124,6 +1183,10 @@ void
 BoxLevel::eraseBox(
    BoxContainer::iterator& ibox)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::eraseBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing boxes is a local process\n"
@@ -1172,6 +1235,10 @@ void
 BoxLevel::eraseBox(
    const Box& box)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::eraseBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing Boxes is a local process\n"
@@ -1402,8 +1469,9 @@ BoxLevel::putToRestart(
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
-   restart_db->putIntegerArray(
-      "d_ratio", &d_ratio[0], d_ratio.getDim().getValue());
+   restart_db->putIntegerArray("d_ratio",
+      &d_ratio[0],
+      d_ratio.getDim().getValue());
    getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 
@@ -1430,29 +1498,11 @@ BoxLevel::getFromRestart(
    const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    const int nproc = restart_db.getInteger("d_nproc");
    const int rank = restart_db.getInteger("d_rank");
+#endif
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
    TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
-#endif
 
-   /*
-    * If the communicator is already set, use it.  Otherwise, use the
-    * one in tbox::SAMRAI_MPI::getSAMRAIWorld().
-    *
-    * There must be a better way to handle the communicator than this.
-    */
-   if (isInitialized()) {
-      TBOX_ASSERT(ratio == d_ratio);
-      if (d_parallel_state != DISTRIBUTED) {
-         setParallelState(DISTRIBUTED);
-         d_boxes.clear();
-      }
-   } else {
-      TBOX_WARNING(
-         "BoxLevel::getFromRestart: Uninitialized MPI communicator.\n"
-         << "Using tbox::SAMRAI_MPI::getSAMRAIWorld()." << std::endl);
-      initialize(ratio, grid_geom,
-         tbox::SAMRAI_MPI::getSAMRAIWorld(), DISTRIBUTED);
-   }
+   initialize(ratio, grid_geom);
 
    /*
     * Failing these asserts means that we don't have a compatible

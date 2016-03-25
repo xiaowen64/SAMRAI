@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Interface for the AMR Index object
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
@@ -68,7 +67,7 @@ public:
     *        from the integer tbox::Array i of size n.
     */
    explicit Index(
-      const tbox::Array<int>& i);
+      const std::vector<int>& i);
 
    /**
     * @brief The copy constructor creates an index equal to the argument.

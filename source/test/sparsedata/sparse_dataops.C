@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -129,31 +129,34 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_domain.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_domain_itr,
-                     hier::LocalId(ib), layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_domain_itr,
+                     hier::LocalId(ib), layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_domain_itr,
+            layer0->addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_domain_itr(fine_domain);
+      hier::BoxContainer::iterator fine_domain_itr = fine_domain.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_domain_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_domain_itr,
-                     hier::LocalId(ib), layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_domain_itr,
+                     hier::LocalId(ib), layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_domain_itr,
+            layer1->addBox(hier::Box(*fine_domain_itr,
                   hier::LocalId(ib), 0));
          }
       }
@@ -222,8 +225,8 @@ int main(
             TBOX_ASSERT(sample2);
 
             // add items to the sparse data objects.
-            pdat::CellIterator ic(patch->getBox(), true);
-            pdat::CellIterator icend(patch->getBox(), false);
+            pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
+            pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
             for ( ; ic != icend; ++ic) {
                const hier::Index* idx = &(*ic);
                LSparseData::iterator iter1 = sample1->registerIndex(*idx);
@@ -361,8 +364,8 @@ checkIterators(
             << std::endl;
          }
 
-         pdat::CellIterator ic(patch->getBox(), true);
-         pdat::CellIterator icend(patch->getBox(), false);
+         pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
+         pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
          for ( ; ic != icend; ++ic) {
             const hier::Index& idx = *ic;
             LSparseData::AttributeIterator it = sample->begin(idx);

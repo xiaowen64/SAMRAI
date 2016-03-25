@@ -3,8 +3,9 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   SampleIndexData example demonstrating IndexData type.
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   Example user defined index data type used in indx_dataops
+ *                test.
  *
  ************************************************************************/
 
@@ -149,7 +150,6 @@ void SampleIndexData::getFromRestart(
  */
 
 //#include "SampleIndexData.h"
-//#include "SAMRAI/tbox/Array.C"
 //#include "SAMRAI/pdat/IndexData.C"
 //#include "SAMRAI/pdat/IndexDataFactory.C"
 //#include "SAMRAI/pdat/IndexVariable.C"
@@ -161,13 +161,13 @@ void SampleIndexData::getFromRestart(
 //template class pdat::SparseDataFactory<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexData<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexDataFactory<SampleIndexData, pdat::CellGeometry>;
-//template class pdat::IndexDataNode<NDIM, SampleIndexData, pdat::CellGeometry>;
-//template class pdat::IndexIterator<NDIM, SampleIndexData, pdat::CellGeometry>;
+//template class pdat::IndexDataNode<SampleIndexData, pdat::CellGeometry>;
+//template class pdat::IndexIterator<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexVariable<SampleIndexData, pdat::CellGeometry>;
-//template class tbox::Array<SampleIndexData>;
-//template class tbox::Array<pdat::IndexDataNode<NDIM, SampleIndexData,
+//template class std::vector<SampleIndexData>;
+//template class std::vector<pdat::IndexDataNode<SampleIndexData,
 //                                               pdat::CellGeometry> >;
-//template class boost::shared_ptr<pdat::IndexData<NDIM, SampleIndexData,
+//template class boost::shared_ptr<pdat::IndexData<SampleIndexData,
 //                                                 pdat::CellGeometry> >;
 //template class boost::shared_ptr<pdat::IndexVariable<SampleIndexData,
 //                                                     pdat::CellGeometry> >;

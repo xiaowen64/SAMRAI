@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Iterator for face centered patch data types
  *
  ************************************************************************/
@@ -45,15 +45,6 @@ namespace pdat {
 class FaceIterator
 {
 public:
-   /**
-    * Constructor for the face iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   FaceIterator(
-      const hier::Box& box,
-      const int axis,
-      bool begin);
-
    /**
     * Copy constructor for the face iterator
     */
@@ -116,6 +107,8 @@ public:
    operator == (
       const FaceIterator& iterator) const
    {
+      TBOX_ASSERT(d_box.isSpatiallyEqual(iterator.d_box));
+      TBOX_ASSERT(d_box.isIdEqual(iterator.d_box));
       return d_index == iterator.d_index;
    }
 
@@ -126,10 +119,27 @@ public:
    operator != (
       const FaceIterator& iterator) const
    {
+      TBOX_ASSERT(d_box.isSpatiallyEqual(iterator.d_box));
+      TBOX_ASSERT(d_box.isIdEqual(iterator.d_box));
       return d_index != iterator.d_index;
    }
 
 private:
+   friend FaceIterator FaceGeometry::begin(const hier::Box& box, int axis);
+   friend FaceIterator FaceGeometry::end(const hier::Box& box, int axis);
+
+   /**
+    * Constructor for the face iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   FaceIterator(
+      const hier::Box& box,
+      const int axis,
+      bool begin);
+
+   // Unimplemented default constructor.
+   FaceIterator();
+
    FaceIndex d_index;
    hier::Box d_box;
 };

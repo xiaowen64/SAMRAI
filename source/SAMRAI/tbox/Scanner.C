@@ -42,7 +42,9 @@
 #define YY_FLEX_MINOR_VERSION 5
 
 #include <stdio.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
@@ -488,7 +490,7 @@ char *yytext;
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2013 Lawrence Livermore National Security, LLC
 
 // Description:	Lex scanner description for the SAMRAI input database
 //
@@ -671,7 +673,7 @@ YY_MALLOC_DECL
 YY_DECL
 	{
 	register yy_state_type yy_current_state;
-	register char *yy_cp = 0, *yy_bp = 0;
+	register char *yy_cp = NULL, *yy_bp = NULL;
 	register int yy_act;
 
 
@@ -909,7 +911,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   SAMRAI_yylval.u_integer = atol(yytext);
+   SAMRAI_yylval.u_integer = atoi(yytext);
    return(T_INTEGER);
 }
 	YY_BREAK

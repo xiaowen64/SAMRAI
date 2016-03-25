@@ -3,20 +3,18 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AdaptivePoisson class implementation
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "printObject.h"
 #include "SAMRAI/pdat/MDA_Access.h"
 #include "SAMRAI/pdat/ArrayDataAccess.h"
 #include "patchFcns.h"
 #include "AdaptivePoisson.h"
 #include "SAMRAI/solv/CellPoissonFACOps.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Database.h"
@@ -98,7 +96,6 @@ AdaptivePoisson::AdaptivePoisson(
    d_robin_refine_patch(d_dim, object_name + "Refine patch implementation"),
    d_physical_bc_coef(0),
    d_adaption_threshold(0.5),
-   d_finest_plot_level(9999999),
    d_finest_dbg_plot_ln(database.getIntegerWithDefault("finest_dbg_plot_ln", 99))
 {
 
@@ -173,10 +170,6 @@ AdaptivePoisson::AdaptivePoisson(
             );
    }
 
-   d_finest_plot_level =
-      database.getIntegerWithDefault("finest_plot_level",
-         d_finest_plot_level);
-
    /*
     * Experiment with algorithm choices in solv::FACPreconditioner.
     */
@@ -226,10 +219,8 @@ AdaptivePoisson::AdaptivePoisson(
    d_problem_name =
       database.getStringWithDefault("problem_name", d_problem_name);
    if (d_problem_name != "sine"
-       && d_problem_name != "sine-neumann"
        && d_problem_name != "gauss"
        && d_problem_name != "multigauss"
-       && d_problem_name != "pernice"
        && d_problem_name != "poly"
        && d_problem_name != "gauss-coef"
        ) {
@@ -518,8 +509,8 @@ void AdaptivePoisson::applyGradientDetector(
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);
-      hier::Box::iterator iend(patch.getBox(), false);
-      for (hier::Box::iterator i(patch.getBox(), true); i != iend; ++i) {
+      hier::Box::iterator iend(patch.getBox().end());
+      for (hier::Box::iterator i(patch.getBox().begin()); i != iend; ++i) {
          const pdat::CellIndex cell_index(*i);
          if (maxestimate < estimate_data(cell_index)) maxestimate =
                estimate_data(cell_index);
@@ -559,23 +550,19 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       1.0,
       "CELL");
 
-   // This code has memory leaks but is not critical to the test.
-   if (1) {
-      tbox::Array<string> expression_keys(1);
-      tbox::Array<string> expressions(1);
-      tbox::Array<string> expression_types(1);
+   std::vector<std::string> expression_keys(1);
+   std::vector<std::string> expressions(1);
+   std::vector<std::string> expression_types(1);
 
-      {
-         expression_keys[0] = "Error";
-         expression_types[0] = "scalar";
-         expressions[0] = "<Computed solution> - <Exact solution>";
-      }
-
-      visit_writer.registerVisItExpressions(expression_keys,
-         expressions,
-         expression_types);
-
+   {
+      expression_keys[0] = "Error";
+      expression_types[0] = "scalar";
+      expressions[0] = "<Computed solution> - <Exact solution>";
    }
+
+   visit_writer.registerVisItExpressions(expression_keys,
+      expressions,
+      expression_types);
 
    return 0;
 }
@@ -721,8 +708,8 @@ int AdaptivePoisson::computeError(
    const hier::PatchHierarchy& hierarchy,
    double* l2norm,
    double* linorm,
-   tbox::Array<double>& l2norms,
-   tbox::Array<double>& linorms) const
+   std::vector<double>& l2norms,
+   std::vector<double>& linorms) const
 {
 
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -739,7 +726,7 @@ int AdaptivePoisson::computeError(
     * parallel overhead.
     */
    const int nlevels = hierarchy.getNumberOfLevels();
-   tbox::Array<double> wtsums(2 * nlevels);
+   std::vector<double> wtsums(2 * nlevels);
    for (ln = nlevels - 1; ln >= 0; --ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy.getPatchLevel(ln));
 
@@ -837,10 +824,10 @@ int AdaptivePoisson::computeError(
        * in one shot, saving some parallel overhead.
        */
       if (mpi.getSize() > 1) {
-         mpi.AllReduce(wtsums.getPointer(), 2 * nlevels, MPI_SUM);
+         mpi.AllReduce(&wtsums[0], 2 * nlevels, MPI_SUM);
       }
       if (mpi.getSize() > 1) {
-         mpi.AllReduce(linorms.getPointer(), nlevels, MPI_SUM);
+         mpi.AllReduce(&linorms[0], nlevels, MPI_SUM);
       }
    }
 

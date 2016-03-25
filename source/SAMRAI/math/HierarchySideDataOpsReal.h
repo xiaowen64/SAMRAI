@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real side data on multiple levels.
  *
  ************************************************************************/
@@ -635,7 +635,7 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
-   tbox::Array<tbox::Array<hier::BoxContainer> >
+   std::vector<std::vector<hier::BoxContainer> >
       d_nonoverlapping_side_boxes[SAMRAI::MAX_DIM_VAL];
 
    PatchSideDataOpsReal<TYPE> d_patch_ops;

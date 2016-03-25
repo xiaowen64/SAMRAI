@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -52,7 +52,9 @@ private:
    /*!
     * @brief Constructs a MultiblockBoxTree from set of Boxes.
     *
-    * @param[in] boxes.  No empty boxes are allowed.
+    * @param[in] boxes  No empty boxes are allowed.
+    *
+    * @param[in] grid_geometry GridGeometry associated with boxes in tree.
     *
     * @param[in] min_number Split up sets of boxes while the number of
     * boxes in a subset is greater than this value.  Setting to a

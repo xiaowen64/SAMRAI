@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
@@ -46,7 +46,7 @@ using namespace SAMRAI;
  * input file information and invokes the communcation operations
  * specified in the input file.  The implementation of data type
  * specific operations (defining variables, initializing data,
- * defining coarsen/refine operations, and verifying the results)
+ * defining refine operations, and verifying the results)
  * are provided in a class implemented for the test to be performed.
  * This test-specific class is derived from the PatchMultiblockTestStrategy
  * base class which declares the interface between the MultiblockTester
@@ -72,12 +72,6 @@ using namespace SAMRAI;
  *               "OuterodeMultiblockTest"
  *               "SideMultiblockTest"
  *               "MultiVariableMultiblockTest"
- *         do_refine      = <bool> [test refine operation?]
- *                          (optional - FALSE is default)
- *         do_coarsen     = <bool> [test coarsen operation?]
- *                          (optional - FALSE is default)
- *         NOTE: Only refine or coarsen test can be run, but not both.
- *               If both are TRUE, only refine operations will execute.
  *         refine_option  = <string> [how interior of destination
  *                                    level is filled during refine]
  *            Options are:
@@ -93,8 +87,6 @@ using namespace SAMRAI;
  *            Available timers are:
  *               "test::main::createRefineSchedule"
  *               "test::main::performRefineOperations"
- *               "test::main::createCoarsenSchedule"
- *               "test::main::performCoarsenOperations"
  *      }
  *
  *    o Patch data tests...
@@ -121,10 +113,9 @@ using namespace SAMRAI;
  *                                  source data (opt. - def is 0,0,0)
  *            dst_ghosts = 1,1,1 // <int array> for ghost width of
  *                                  dest data (opt. - def is 0,0,0)
- *            coarsen_operator = "CONSERVATIVE_COARSEN"
  *            refine_operator = "LINEAR_REFINE"
  *            // Interlevel transfer operator name strings are optional
- *            // Default are "NO_COARSEN", and "NO_REFINE", resp.
+ *            // Default is "NO_REFINE"
  *         }
  *
  *         // data for other variables as needed...
@@ -214,7 +205,7 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string log_file_name = "component_test.log";
+      string log_file_name = "mblkcomm.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }
@@ -240,15 +231,9 @@ int main(
          TBOX_ERROR("Error in Main input: no test specified." << endl);
       }
 
-      bool do_refine = true;
-      bool do_coarsen = false;
-
       string refine_option = "INTERIOR_FROM_SAME_LEVEL";
 
       tbox::plog << "\nPerforming refine data test..." << endl;
-      if (main_db->keyExists("refine_option")) {
-         refine_option = main_db->getString("refine_option");
-      }
 
 #if 1
       if (0) {
@@ -276,37 +261,27 @@ int main(
          patch_data_test = new CellMultiblockTest("CellMultiblockTest",
                dim,
                input_db,
-               do_refine,
-               do_coarsen,
                refine_option);
 
       } else if (test_to_run == "EdgeMultiblockTest") {
          patch_data_test = new EdgeMultiblockTest("EdgeMultiblockTest",
                dim,
                input_db,
-               do_refine,
-               do_coarsen,
                refine_option);
       } else if (test_to_run == "FaceMultiblockTest") {
          patch_data_test = new FaceMultiblockTest("FaceMultiblockTest",
                dim,
                input_db,
-               do_refine,
-               do_coarsen,
                refine_option);
       } else if (test_to_run == "NodeMultiblockTest") {
          patch_data_test = new NodeMultiblockTest("NodeMultiblockTest",
                dim,
                input_db,
-               do_refine,
-               do_coarsen,
                refine_option);
       } else if (test_to_run == "SideMultiblockTest") {
          patch_data_test = new SideMultiblockTest("SideMultiblockTest",
                dim,
                input_db,
-               do_refine,
-               do_coarsen,
                refine_option);
       } else if (test_to_run == "MultiVariableMultiblockTest") {
          TBOX_ERROR("Error in Main input: no multi-variable test yet." << endl);
@@ -331,8 +306,6 @@ int main(
             base_db,
             hierarchy,
             patch_data_test,
-            do_refine,
-            do_coarsen,
             refine_option));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
@@ -363,11 +336,6 @@ int main(
          time_man->getTimer("test::main::createRefineSchedule"));
       boost::shared_ptr<tbox::Timer> refine_comm_time(
          time_man->getTimer("test::main::performRefineOperations"));
-
-      boost::shared_ptr<tbox::Timer> coarsen_create_time(
-         time_man->getTimer("test::main::createCoarsenSchedule"));
-      boost::shared_ptr<tbox::Timer> coarsen_comm_time(
-         time_man->getTimer("test::main::performCoarsenOperations"));
 
       tbox::TimerManager::getManager()->resetAllTimers();
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
@@ -501,7 +501,7 @@ OuternodeData<TYPE>::packStream(
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+   for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
         dst_box != dst_boxes.end(); ++dst_box) {
       const hier::Box src_box =
          hier::Box::shift(*dst_box, -src_offset);
@@ -530,7 +530,7 @@ OuternodeData<TYPE>::unpackStream(
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+   for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
         dst_box != dst_boxes.end(); ++dst_box) {
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int f = 0; f < 2; f++) {
@@ -566,7 +566,7 @@ OuternodeData<TYPE>::unpackStreamAndSum(
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =
@@ -1022,8 +1022,8 @@ OuternodeData<TYPE>::printAxisSide(
    const hier::Box nodebox = NodeGeometry::toNodeBox(box);
    const hier::Box region = nodebox * d_data[face_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator iend(region, false);
-   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+   hier::Box::iterator iend(region.end());
+   for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal][side]))(*i, depth) << std::endl
          << std::flush;

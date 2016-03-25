@@ -1,5 +1,5 @@
 ****************************************************************************
-*  Copyright 1997-2012                                                     *
+*  Copyright 1997-2013                                                     *
 *  Lawrence Livermore National Security, LLC.                            *
 *  All rights reserved.                                                    *
 ****************************************************************************
@@ -71,9 +71,10 @@ SAMRAI version numbers are of the form X.Y.Z, where X is the major release
 number, Y is the minor release number, and Z is the bug fix patch number.
 To unpack the distribution as described above, do:
 
-	(a) mkdir SAMRAI-vX.Y.Z (substitue appropriate version numbers)
+        (a) gunzip SAMRAI-vX.Y.Z.tar.gz
+	(b) mkdir SAMRAI-vX.Y.Z (substitue appropriate version numbers)
 	(b) cd SAMRAI-vX.Y.Z
-	(c) zcat ../SAMRAI-vX.Y.Z.tar | tar xfov -
+        (e) tar xvf ../SAMRAI-vX.Y.Z.tar
 
 You may need to use the GNU tar (often named gtar) due to name length
 problems with some of the native tar implementations.
@@ -330,13 +331,13 @@ MPICH2          1.3.2    (MPICH1 is no longer supported and
 
 OpenMPI	        1.5
 
-PETSc 	        2.3.3    (this version is required if PETSc is used)
+PETSc 	        3.2    (this version is required if PETSc is used)
 
 Sundials        2.3.0
 
 hypre           2.6.0b
 
-Visit		1.8.0
+VisIt		1.8.0
 
 doxygen	        1.6.1
 

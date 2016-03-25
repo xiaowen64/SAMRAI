@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real face data on multiple levels.
  *
  ************************************************************************/
@@ -88,7 +88,7 @@ HierarchyFaceDataOpsReal<TYPE>::resetLevels(
    d_finest_level = finest_level;
 
    for (int d = 0; d < dimVal; d++) {
-      d_nonoverlapping_face_boxes[d].resizeArray(d_finest_level + 1);
+      d_nonoverlapping_face_boxes[d].resize(d_finest_level + 1);
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
@@ -98,7 +98,7 @@ HierarchyFaceDataOpsReal<TYPE>::resetLevels(
 
       for (int nd = 0; nd < dimVal; nd++) {
          face_boxes = level->getBoxes();
-         for (hier::BoxContainer::iterator i(face_boxes);
+         for (hier::BoxContainer::iterator i = face_boxes.begin();
               i != face_boxes.end(); ++i) {
             *i = pdat::FaceGeometry::toFaceBox(*i, nd);
          }
@@ -783,7 +783,7 @@ HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int nd = 0; nd < dimVal; nd++) {
-            TBOX_ASSERT(npatches == d_nonoverlapping_face_boxes[nd][ln].getSize());
+            TBOX_ASSERT(npatches == static_cast<int>(d_nonoverlapping_face_boxes[nd][ln].size()));
          }
 #endif
          for (int il = 0; il < npatches; il++) {

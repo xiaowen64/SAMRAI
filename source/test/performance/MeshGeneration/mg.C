@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance and quality of TreeLoadBalancer.
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   Test for performance and quality of mesh generation.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -27,11 +27,15 @@
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/mesh/TreeLoadBalancerOld.h"
+#include "SAMRAI/mesh/TilePartitioner.h"
+#include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
+#include "SAMRAI/tbox/BreadthFirstRankTree.h"
+#include "SAMRAI/tbox/CenteredRankTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -42,6 +46,7 @@
 #include "DerivedVisOwnerData.h"
 #include "SinusoidalFrontGenerator.h"
 #include "SphericalShellGenerator.h"
+#include "ShrunkenLevelGenerator.h"
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -56,7 +61,6 @@ using namespace tbox;
 void enforceNesting(
    hier::BoxLevel& L1,
    hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln);
 
@@ -64,7 +68,6 @@ void
 sortNodes(
    hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag,
    bool sort_by_corners,
    bool sequentialize_global_indices);
 
@@ -72,8 +75,7 @@ void
 refineHead(
    hier::BoxLevel& head,
    hier::Connector& ref_to_head,
-   hier::Connector& head_to_ref,
-   const hier::IntVector &refinement_ratio );
+   const hier::IntVector &refinement_ratio);
 
 void outputPostcluster(
    const hier::BoxLevel &cluster,
@@ -93,12 +95,61 @@ void outputPostbalance(
    const hier::IntVector &post_width,
    const std::string &border );
 
+boost::shared_ptr<mesh::BoxGeneratorStrategy>
+createBoxGenerator(
+   const boost::shared_ptr<tbox::Database> &input_db,
+   const std::string &bg_type,
+   const tbox::Dimension &dim );
+
 boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
-   boost::shared_ptr<tbox::Database> &input_db,
+   const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &lb_type,
+   const std::string &rank_tree_type,
    int ln,
    const tbox::Dimension &dim );
+
+boost::shared_ptr<RankTreeStrategy>
+getRankTree(
+   Database &input_db,
+   const std::string &rank_tree_type);
+
+/*!
+ * @brief Implementation to tell PatchHierarchy about the request
+ * for Connector widths used in enforcing nesting.
+ *
+ * This is not essential, but we chose to go through the hierarchy to
+ * determine how big a Connector width to compute during the level
+ * generation.  This more closely resembles what real aplications do.
+ * This step is typically done in the mesh generator, and what we are
+ * writing here is essentially a mesh generator.
+ */
+class NestingLevelConnectorWidthRequestor :
+   public hier::PatchHierarchy::ConnectorWidthRequestorStrategy
+{
+public:
+   virtual void
+   computeRequiredConnectorWidths(
+      std::vector<hier::IntVector>& self_connector_widths,
+      std::vector<hier::IntVector>& fine_connector_widths,
+      const hier::PatchHierarchy& patch_hierarchy) const
+      {
+         self_connector_widths.clear();
+         self_connector_widths.reserve(patch_hierarchy.getMaxNumberOfLevels());
+         const hier::IntVector &one = hier::IntVector::getOne((patch_hierarchy.getDim()));
+         for ( int ln=0; ln<patch_hierarchy.getMaxNumberOfLevels(); ++ln ) {
+            self_connector_widths.push_back(
+               one * patch_hierarchy.getProperNestingBuffer(ln));
+         }
+         // fine_connector_widths is same, but doesn't need last level's.
+         fine_connector_widths = self_connector_widths;
+         fine_connector_widths.pop_back();
+      }
+};
+NestingLevelConnectorWidthRequestor nesting_level_connector_width_requestor;
+
+static boost::shared_ptr<tbox::CommGraphWriter> comm_graph_writer;
+size_t num_records_written = 0;
 
 
 /*
@@ -136,7 +187,6 @@ int main(
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const int rank = mpi.getRank();
-   int fail_count = 0;
 
    /*
     * Process command line arguments.  For each run, the input
@@ -159,6 +209,8 @@ int main(
       case_name = argv[2];
    }
 
+   int error_count = 0;
+
    {
       /*
        * Scope to force destruction of objects that would otherwise
@@ -170,7 +222,6 @@ int main(
        */
 
       boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
-      boost::shared_ptr<Database> base_db(input_db);
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -235,38 +286,27 @@ int main(
        * Whether to perform certain steps in mesh generation.
        */
 
-      tbox::Array<bool> enforce_nesting(1, true);
+      std::vector<bool> enforce_nesting(1, true);
       if ( main_db->isBool("enforce_nesting") ) {
-         enforce_nesting = main_db->getBoolArray("enforce_nesting");
+         enforce_nesting = main_db->getBoolVector("enforce_nesting");
       }
 
-      tbox::Array<bool> load_balance(1, true);
+      std::vector<bool> load_balance(1, true);
       if ( main_db->isBool("load_balance") ) {
-         load_balance = main_db->getBoolArray("load_balance");
+         load_balance = main_db->getBoolVector("load_balance");
       }
 
-
-
-      /*
-       * Parameters.  Some of these can be specified by input deck.
-       */
-      hier::IntVector ghost_cell_width(dim, 2);
-      if (main_db->isInteger("ghost_cell_width")) {
-         main_db->getIntegerArray("ghost_cell_width", &ghost_cell_width[0], dim.getValue());
-      }
-
-      hier::IntVector bad_interval(dim, 2);
-      hier::IntVector cut_factor(dim, 1);
 
       hier::OverlapConnectorAlgorithm oca;
-
 
 
       /*
        * Set up the domain from input.
        */
 
-      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         main_db->getDatabaseBoxVector("domain_boxes");
+      hier::BoxContainer domain_boxes(db_box_vector);
 
       for (hier::BoxContainer::iterator itr = domain_boxes.begin();
            itr != domain_boxes.end(); ++itr) {
@@ -280,10 +320,10 @@ int main(
          xhi[i] = 1.0;
       }
       if (main_db->isDouble("xlo")) {
-         main_db->getDoubleArray("xlo", &xlo[0], dim.getValue());
+         xlo = main_db->getDoubleVector("xlo");
       }
       if (main_db->isDouble("xhi")) {
-         main_db->getDoubleArray("xhi", &xhi[0], dim.getValue());
+         xhi = main_db->getDoubleVector("xhi");
       }
 
 
@@ -309,6 +349,14 @@ int main(
                main_db->getDatabaseWithDefault("SphericalShellGenerator",
                                                boost::shared_ptr<tbox::Database>())));
       }
+      else if (mesh_generator_name == "ShrunkenLevelGenerator") {
+         mesh_gen.reset(
+            new ShrunkenLevelGenerator(
+               "ShrunkenLevelGenerator",
+               dim,
+               main_db->getDatabaseWithDefault("ShrunkenLevelGenerator",
+                                               boost::shared_ptr<tbox::Database>())));
+      }
       else {
          TBOX_ERROR("Unrecognized MeshGeneratorStrategy " << mesh_generator_name);
       }
@@ -330,37 +378,17 @@ int main(
 
       hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
-      {
-         /*
-          * Add a dummy PatchData with a big ghost width.
-          * GridGeometry forbids increasing the max data ghost width
-          * after it starts computing boundary boxes for a patch.  We
-          * force it to accept a big ghost width here so that the
-          * methods below (particularly those registering tag
-          * data) won't crash by asking for more ghost width than what
-          * was registered when the first boundary boxes were
-          * computed.
-          */
-
-      boost::shared_ptr<pdat::CellVariable<int> > dummy_variable(
-         new pdat::CellVariable<int>(dim, "DummyVariable"));
-
-      boost::shared_ptr<hier::VariableContext> dummy_context =
-         vdb->getContext("DUMMY");
-
-      vdb->registerVariableAndContext(
-         dummy_variable,
-         dummy_context,
-         hier::IntVector(dim,10));
-      }
-
 
       /*
        * Clustering algorithm.
        */
-      mesh::BergerRigoutsos abr(
-         dim,
-         main_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) );
+
+      std::string box_generator_type =
+         main_db->getStringWithDefault("box_generator_type", "BergerRigoutsos");
+
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
+         createBoxGenerator( input_db, box_generator_type, dim );
+
       double efficiency_tol = main_db->getDoubleWithDefault("efficiency_tol", 0.7);
       double combine_tol = main_db->getDoubleWithDefault("combine_tol", 0.7);
 
@@ -368,6 +396,7 @@ int main(
        * Create hierarchy.
        */
 
+      tbox::plog << "Building domain with boxes " << domain_boxes.format() << std::endl;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",
@@ -381,13 +410,15 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy") ));
 
+      hierarchy->registerConnectorWidthRequestor(nesting_level_connector_width_requestor);
+
       mesh_gen->resetHierarchyConfiguration(hierarchy, 0, 1);
 
-      enforce_nesting.resizeArray( hierarchy->getMaxNumberOfLevels(),
-                                   bool(enforce_nesting.back()) );
+      enforce_nesting.resize( hierarchy->getMaxNumberOfLevels(),
+                              bool(enforce_nesting.back()) );
 
-      load_balance.resizeArray( hierarchy->getMaxNumberOfLevels(),
-                                bool(load_balance.back()) );
+      load_balance.resize( hierarchy->getMaxNumberOfLevels(),
+                           bool(load_balance.back()) );
 
 
       const int max_levels = hierarchy->getMaxNumberOfLevels();
@@ -397,7 +428,8 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
-      for (hier::BoxContainer::const_iterator bi=grid_geometry->getPhysicalDomain().begin();
+      for (hier::BoxContainer::const_iterator bi =
+              grid_geometry->getPhysicalDomain().begin();
            bi!=grid_geometry->getPhysicalDomain().end(); ++bi) {
          domain_box_level.addBox(*bi);
       }
@@ -426,6 +458,15 @@ int main(
       std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
 
+      std::string rank_tree_type =
+         main_db->getStringWithDefault("rank_tree_type", "CenteredRankTree");
+
+
+      const bool write_comm_graph = main_db->getBoolWithDefault("write_comm_graph", false);
+      if ( write_comm_graph ) {
+         comm_graph_writer.reset( new CommGraphWriter );
+      }
+
 
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
@@ -438,26 +479,29 @@ int main(
       tbox::pout << "\n==================== Generating L0 ====================" << std::endl;
 
 
-      {
+      boost::shared_ptr<hier::BoxLevel> L0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), grid_geometry));
 
-         hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
+      {
 
          hier::BoxContainer L0_boxes(
             grid_geometry->getPhysicalDomain() );
          const int boxes_per_proc =
-            (L0_boxes.size() + L0.getMPI().getSize()
-             - 1) / L0.getMPI().getSize();
-         const int my_boxes_start = L0.getMPI().getRank()
-            * boxes_per_proc;
+            (L0_boxes.size() + L0->getMPI().getSize() - 1) /
+            L0->getMPI().getSize();
+         const int my_boxes_start = L0->getMPI().getRank() * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                L0_boxes.size());
-         hier::BoxContainer::iterator L0_boxes_itr(L0_boxes);
+         hier::BoxContainer::iterator L0_boxes_itr = L0_boxes.begin();
          for (int i = 0; i < my_boxes_start; ++i) {
-            ++L0_boxes_itr;
+            if (L0_boxes_itr != L0_boxes.end()) {
+               ++L0_boxes_itr;
+            }
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, L0_boxes_itr++) {
-            L0.addBox(*L0_boxes_itr, hier::BlockId::zero());
+            L0->addBox(*L0_boxes_itr, hier::BlockId::zero());
          }
 
          /*
@@ -467,81 +511,78 @@ int main(
           * reflect the load balancer use in real apps.  We just neeed a
           * distributed L0 for the real load balancing performance test.
           */
-         hier::Connector L0_to_domain(
-            L0,
+         boost::shared_ptr<hier::Connector> domain_to_L0;
+         oca.findOverlapsWithTranspose(domain_to_L0,
             domain_box_level,
+            *L0,
+            hier::IntVector(dim, 2),
             hier::IntVector(dim, 2));
-         hier::Connector domain_to_L0(
-            domain_box_level,
-            L0,
-            hier::IntVector(dim, 2));
-         oca.findOverlaps(L0_to_domain);
-         oca.findOverlaps(domain_to_L0);
+         hier::Connector* L0_to_domain = &domain_to_L0->getTranspose();
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
-            createLoadBalancer( base_db, load_balancer_type, 0, dim );
+            createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 0, dim );
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
-            L0.getMPI());
+            (double)L0->getLocalNumberOfCells(),
+            L0->getMPI());
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
-         outputPrebalance( L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPrebalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          if ( load_balance[0] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb0->loadBalanceBoxLevel(
-               L0,
+               *L0,
                L0_to_domain,
-               domain_to_L0,
                hierarchy,
                0,
-               hier::Connector(dim),
-               hier::Connector(dim),
                hierarchy->getSmallestPatchSize(0),
                hierarchy->getLargestPatchSize(0),
                domain_box_level,
-               bad_interval,
-               cut_factor);
+               hier::IntVector::getOne(dim),
+               hier::IntVector::getOne(dim));
          }
 
-         sortNodes(L0,
-            domain_to_L0,
-            L0_to_domain,
+         sortNodes(*L0,
+            *domain_to_L0,
             false,
             true);
 
          tbox::plog << "\n\tL0 postbalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
-            L0.getMPI());
+            (double)L0->getLocalNumberOfCells(),
+            L0->getMPI());
 
-         outputPostbalance( L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPostbalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
-         L0.cacheGlobalReducedData();
+         if ( comm_graph_writer ) {
+            tbox::plog << "\nCommunication Graph for balancing L0:\n";
+            for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
+               comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
+            }
+            tbox::plog << "\n";
+         }
+
+         L0->cacheGlobalReducedData();
 
          hierarchy->makeNewPatchLevel(0, L0);
       }
 
-      const hier::BoxLevel &L0 = *hierarchy->getPatchLevel(0)->getBoxLevel();
+
+
+      boost::shared_ptr<hier::Connector> L0_to_L1;
+      boost::shared_ptr<hier::Connector> L1_to_L1;
 
 
 
-      hier::Connector L1_to_L0(dim);
-      hier::Connector L0_to_L1(dim);
-      hier::Connector L1_to_L1(dim);
-
-
+      boost::shared_ptr<hier::BoxLevel> L1;
 
       if ( max_levels > 1 ) {
          /*
           * Step 2: Build L1.
           */
          tbox::pout << "\n==================== Generating L1 ====================" << std::endl;
-
-         hier::BoxLevel L1(dim);
 
          const int coarser_ln = 0;
          const int finer_ln = coarser_ln + 1;
@@ -550,7 +591,8 @@ int main(
          const hier::IntVector required_connector_width =
             hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
          const hier::IntVector min_size = hier::IntVector::ceilingDivide(
-            hierarchy->getSmallestPatchSize(finer_ln), hierarchy->getRatioToCoarserLevel(finer_ln) );
+            hierarchy->getSmallestPatchSize(finer_ln),
+            hierarchy->getRatioToCoarserLevel(finer_ln) );
 
 
          /*
@@ -566,106 +608,104 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
-         abr.setMPI(L0.getMPI());
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         abr.findBoxesContainingTags(
+         box_generator->findBoxesContainingTags(
             L1,
             L0_to_L1,
-            L1_to_L0,
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L0.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L0->getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
-            required_connector_width,
-            hier::LocalId(0));
+            required_connector_width);
 
-         outputPostcluster( L1, L0, required_connector_width, "L1: " );
+         outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
+
+         if ( L1->getGlobalNumberOfBoxes() == 0 ) {
+            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         }
 
          /*
           * Enforce nesting.
           */
-         if ( enforce_nesting[1] ) {
+         if ( enforce_nesting[finer_ln] ) {
             enforceNesting(
-               L1,
-               L0_to_L1,
-               L1_to_L0,
+               *L1,
+               *L0_to_L1,
                hierarchy,
                coarser_ln);
+
+            if ( L1->getGlobalNumberOfBoxes() == 0 ) {
+               TBOX_WARNING("Level " << finer_ln << " box generator has no box after proper nesting.");
+            }
          }
 
-         if ( L1.getGlobalNumberOfBoxes() == 0 ) {
-            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         if ( hierarchy->getRatioToCoarserLevel(finer_ln) != zero_vec ) {
+            refineHead(
+               *L1,
+               *L0_to_L1,
+               hierarchy->getRatioToCoarserLevel(finer_ln) );
          }
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( base_db, load_balancer_type, 1 , dim);
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
-         outputPrebalance( L1, L0, required_connector_width, "L1: " );
+         outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1.getLocalNumberOfCells(),
-            L1.getMPI());
+            (double)L1->getLocalNumberOfCells(),
+            L1->getMPI());
 
-         if ( load_balance[1] ) {
+         if ( load_balance[finer_ln] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb1->loadBalanceBoxLevel(
-               L1,
-               L1_to_L0,
-               L0_to_L1,
+               *L1,
+               &L0_to_L1->getTranspose(),
                hierarchy,
-               1,
-               hier::Connector(dim),
-               hier::Connector(dim),
-               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
-               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+               coarser_ln,
+               hierarchy->getSmallestPatchSize(finer_ln),
+               hierarchy->getLargestPatchSize(finer_ln),
                domain_box_level,
-               bad_interval,
-               cut_factor);
+               hierarchy->getRatioToCoarserLevel(finer_ln),
+               hierarchy->getRatioToCoarserLevel(finer_ln));
          }
 
-         sortNodes(L1,
-                   L0_to_L1,
-                   L1_to_L0,
+         sortNodes(*L1,
+                   *L0_to_L1,
                    false,
                    true);
 
-         outputPostbalance( L1, L0, required_connector_width, "L1: " );
+         outputPostbalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 postbalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1.getLocalNumberOfCells(),
-            L1.getMPI());
+            (double)L1->getLocalNumberOfCells(),
+            L1->getMPI());
 
-         if ( hierarchy->getRatioToCoarserLevel(1) != zero_vec ) {
-            refineHead(
-               L1,
-               L0_to_L1,
-               L1_to_L0,
-               hierarchy->getRatioToCoarserLevel(1) );
+         if ( comm_graph_writer ) {
+            tbox::plog << "\nCommunication Graph for balancing L1:\n";
+            for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
+               comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
+            }
+            tbox::plog << "\n";
          }
 
          // Get the L1_to_L1 for edge statistics.
          oca.bridge(
             L1_to_L1,
-            L1_to_L0,
-            L0_to_L1,
-            L1_to_L0,
-            L0_to_L1);
+            L0_to_L1->getTranspose(),
+            *L0_to_L1,
+            false);
 
-         hierarchy->makeNewPatchLevel(1, L1);
+         hierarchy->makeNewPatchLevel(finer_ln, L1);
       }
 
-      const hier::BoxLevel &L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
-
-      hier::Connector L2_to_L1(dim);
-      hier::Connector L1_to_L2(dim);
-      hier::Connector L2_to_L2(dim);
+      boost::shared_ptr<hier::Connector> L1_to_L2;
+      boost::shared_ptr<hier::Connector> L2_to_L2;
 
       if ( max_levels > 2 ) {
          /*
@@ -673,7 +713,9 @@ int main(
           */
          tbox::pout << "\n==================== Generating L2 ====================" << std::endl;
 
-         hier::BoxLevel L2(dim);
+         const hier::BoxLevel &L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
+
+         boost::shared_ptr<hier::BoxLevel> L2;
 
          const int coarser_ln = 1;
          const int finer_ln = coarser_ln + 1;
@@ -682,7 +724,8 @@ int main(
          const hier::IntVector required_connector_width =
             hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
          const hier::IntVector min_size = hier::IntVector::ceilingDivide(
-            hierarchy->getSmallestPatchSize(finer_ln), hierarchy->getRatioToCoarserLevel(finer_ln) );
+            hierarchy->getSmallestPatchSize(finer_ln),
+            hierarchy->getRatioToCoarserLevel(finer_ln) );
 
 
          /*
@@ -698,12 +741,10 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
-         abr.setMPI(L0.getMPI());
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         abr.findBoxesContainingTags(
+         box_generator->findBoxesContainingTags(
             L2,
             L1_to_L2,
-            L2_to_L1,
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
@@ -711,90 +752,92 @@ int main(
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
-            required_connector_width,
-            hier::LocalId(0));
+            required_connector_width);
 
-         outputPostcluster( L2, L1, required_connector_width, "L2: " );
+         outputPostcluster( *L2, L1, required_connector_width, "L2: " );
+
+         if ( L2->getGlobalNumberOfBoxes() == 0 ) {
+            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         }
 
          /*
           * Enforce nesting.
           */
-         if ( enforce_nesting[2] ) {
+         if ( enforce_nesting[finer_ln] ) {
             enforceNesting(
-               L2,
-               L1_to_L2,
-               L2_to_L1,
+               *L2,
+               *L1_to_L2,
                hierarchy,
                coarser_ln);
+
+            if ( L2->getGlobalNumberOfBoxes() == 0 ) {
+               TBOX_WARNING("Level " << finer_ln << " box generator has no box after proper nesting.");
+            }
          }
 
-         if ( L2.getGlobalNumberOfBoxes() == 0 ) {
-            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         if ( hierarchy->getRatioToCoarserLevel(finer_ln) != zero_vec ) {
+            refineHead(
+               *L2,
+               *L1_to_L2,
+               hierarchy->getRatioToCoarserLevel(finer_ln) );
          }
 
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( base_db, load_balancer_type, 2 , dim);
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
-         outputPrebalance( L2, L1, required_connector_width, "L2: " );
+         outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2.getLocalNumberOfCells(),
-            L2.getMPI());
+            (double)L2->getLocalNumberOfCells(),
+            L2->getMPI());
 
-         if ( load_balance[2] ) {
+         if ( load_balance[finer_ln] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb2->loadBalanceBoxLevel(
-               L2,
-               L2_to_L1,
-               L1_to_L2,
+               *L2,
+               &L1_to_L2->getTranspose(),
                hierarchy,
-               1,
-               hier::Connector(dim),
-               hier::Connector(dim),
-               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
-               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+               coarser_ln,
+               hierarchy->getSmallestPatchSize(finer_ln),
+               hierarchy->getLargestPatchSize(finer_ln),
                domain_box_level,
-               bad_interval,
-               cut_factor);
+               hierarchy->getRatioToCoarserLevel(finer_ln),
+               hierarchy->getRatioToCoarserLevel(finer_ln));
          }
 
-         sortNodes(L2,
-                   L1_to_L2,
-                   L2_to_L1,
+         sortNodes(*L2,
+                   *L1_to_L2,
                    false,
                    true);
 
-         outputPostbalance( L2, L1, required_connector_width, "L2: " );
+         outputPostbalance( *L2, L1, required_connector_width, "L2: " );
 
-         tbox::plog << "\n\tL2 postalance loads:\n";
+         tbox::plog << "\n\tL2 postbalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2.getLocalNumberOfCells(),
-            L2.getMPI());
+            (double)L2->getLocalNumberOfCells(),
+            L2->getMPI());
 
-         if ( hierarchy->getRatioToCoarserLevel(2) != zero_vec ) {
-            refineHead(
-               L2,
-               L1_to_L2,
-               L2_to_L1,
-               hierarchy->getRatioToCoarserLevel(2) );
+         if ( comm_graph_writer ) {
+            tbox::plog << "\nCommunication Graph for balancing L2:\n";
+            for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
+               comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
+            }
+            tbox::plog << "\n\n";
          }
 
          // Get the L2_to_L2 for edge statistics.
          oca.bridge(
             L2_to_L2,
-            L2_to_L1,
-            L1_to_L2,
-            L2_to_L1,
-            L1_to_L2);
+            L1_to_L2->getTranspose(),
+            *L1_to_L2,
+            false);
 
-         hierarchy->makeNewPatchLevel(2, L2);
+         hierarchy->makeNewPatchLevel(finer_ln, L2);
       }
 
-      // const hier::BoxLevel &L2 = *hierarchy->getPatchLevel(2)->getBoxLevel();
 
 
       tbox::plog << "\n==================== Final hierarchy ====================" << std::endl;
@@ -806,6 +849,7 @@ int main(
                     << hierarchy->getPatchLevel(ln)->getBoxLevel()->formatStatistics("\t\t");
       }
       tbox::plog << "\n\n";
+
 
 
       bool write_visit =
@@ -849,7 +893,10 @@ int main(
    plog << "Input database after running..." << std::endl;
    tbox::InputManager::getManager()->getInputDatabase()->printClassData(plog);
 
-   tbox::pout << "\nPASSED:  MeshGeneration" << std::endl;
+
+   if (error_count == 0) {
+      tbox::pout << "\nPASSED:  MeshGeneration" << std::endl;
+   }
 
    /*
     * Exit properly by shutting down services in correct order.
@@ -862,7 +909,7 @@ int main(
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
 
-   if (fail_count == 0) {
+   if (error_count == 0) {
       SAMRAI_MPI::finalize();
    } else {
       std::cout << "Process " << std::setw(5) << rank << " aborting."
@@ -871,7 +918,7 @@ int main(
          __FILE__, __LINE__);
    }
 
-   return fail_count;
+   return error_count;
 }
 
 
@@ -887,15 +934,18 @@ void outputPostcluster(
    const hier::IntVector &ref_to_cluster_width,
    const std::string &border )
 {
+   cluster.cacheGlobalReducedData();
+
    const hier::IntVector cluster_to_ref_width =
       hier::Connector::convertHeadWidthToBase(
          cluster.getRefinementRatio(),
          ref.getRefinementRatio(),
          ref_to_cluster_width);
 
-   const hier::Connector &cluster_to_ref =
-      cluster.getPersistentOverlapConnectors().findOrCreateConnector(
-         ref, ref_to_cluster_width, true );
+   const hier::Connector &cluster_to_ref = cluster.findConnector(ref,
+      ref_to_cluster_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    cluster.cacheGlobalReducedData();
    cluster_to_ref.cacheGlobalReducedData();
@@ -932,15 +982,18 @@ void outputPrebalance(
    const hier::IntVector &pre_width,
    const std::string &border )
 {
+   pre.cacheGlobalReducedData();
+
    const hier::IntVector ref_width =
       hier::Connector::convertHeadWidthToBase(
          ref.getRefinementRatio(),
          pre.getRefinementRatio(),
          pre_width);
 
-   const hier::Connector &pre_to_pre =
-      pre.getPersistentOverlapConnectors().findOrCreateConnector(
-         pre, pre_width, true );
+   const hier::Connector &pre_to_pre = pre.findConnector(pre,
+      pre_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    tbox::plog << "\n\n"
               << border << "Prebalance summary:\n"
@@ -974,23 +1027,26 @@ void outputPostbalance(
    const hier::IntVector &post_width,
    const std::string &border )
 {
+   post.cacheGlobalReducedData();
+
    const hier::IntVector ref_width =
       hier::Connector::convertHeadWidthToBase(
          ref.getRefinementRatio(),
          post.getRefinementRatio(),
          post_width);
 
-   const hier::Connector &post_to_post =
-      post.getPersistentOverlapConnectors().findOrCreateConnector(
-         post, post_width, true );
+   const hier::Connector &post_to_post = post.findConnector(post,
+      post_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
-   const hier::Connector &post_to_ref =
-      post.getPersistentOverlapConnectors().findOrCreateConnector(
-         ref, post_width, true );
+   const hier::Connector &post_to_ref = post.findConnectorWithTranspose(ref,
+      post_width,
+      ref_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
-   const hier::Connector &ref_to_post =
-      ref.getPersistentOverlapConnectors().findOrCreateConnector(
-         post, ref_width, true );
+   const hier::Connector &ref_to_post = post_to_ref.getTranspose();
 
    tbox::plog << "\n\n"
               << border << "Postbalance summary:\n"
@@ -1028,15 +1084,14 @@ void outputPostbalance(
 void sortNodes(
    hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag,
    bool sort_by_corners,
    bool sequentialize_global_indices)
 {
-   const hier::MappingConnectorAlgorithm mca;
-
-   hier::Connector sorting_map(new_box_level.getDim());
-   hier::BoxLevel seq_box_level(new_box_level.getDim());
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
+   dlbg_edge_utils.setTimerPrefix("apps::sortNodes");
+
+   boost::shared_ptr<hier::MappingConnector> sorting_map;
+   boost::shared_ptr<hier::BoxLevel> seq_box_level;
    dlbg_edge_utils.makeSortingMap(
       seq_box_level,
       sorting_map,
@@ -1044,9 +1099,11 @@ void sortNodes(
       sort_by_corners,
       sequentialize_global_indices);
 
+   hier::MappingConnectorAlgorithm mca;
+   mca.setTimerPrefix("apps::sortNodes");
+
    mca.modify(tag_to_new,
-      new_to_tag,
-      sorting_map,
+      *sorting_map,
       &new_box_level);
 
    return;
@@ -1062,9 +1119,10 @@ void sortNodes(
 void refineHead(
    hier::BoxLevel& head,
    hier::Connector& ref_to_head,
-   hier::Connector& head_to_ref,
    const hier::IntVector &refinement_ratio )
 {
+   hier::Connector& head_to_ref = ref_to_head.getTranspose();
+
    head.refineBoxes(
       head,
       refinement_ratio,
@@ -1086,13 +1144,17 @@ void refineHead(
 
 boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
-   boost::shared_ptr<tbox::Database> &input_db,
+   const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &lb_type,
+   const std::string &rank_tree_type,
    int ln,
    const tbox::Dimension &dim )
 {
 
    if (lb_type == "TreeLoadBalancer") {
+
+      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
+                                                                        rank_tree_type);
 
       boost::shared_ptr<mesh::TreeLoadBalancer>
          tree_lb(new mesh::TreeLoadBalancer(
@@ -1101,18 +1163,18 @@ createLoadBalancer(
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
                                              boost::shared_ptr<tbox::Database>())));
       tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      tree_lb->setCommGraphWriter(comm_graph_writer);
       return tree_lb;
 
-   }else if (lb_type == "TreeLoadBalancerOld") {
+   } else if (lb_type == "TilePartitioner") {
 
-      boost::shared_ptr<mesh::TreeLoadBalancerOld>
-         tree_lb(new mesh::TreeLoadBalancerOld(
+      boost::shared_ptr<mesh::TilePartitioner>
+         tile_lb(new mesh::TilePartitioner(
             dim,
-            std::string("mesh::TreeLoadBalancerOld") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("TreeLoadBalancerOld",
+            std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
+            input_db->getDatabaseWithDefault("TilePartitioner",
                                              boost::shared_ptr<tbox::Database>())));
-      tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      return tree_lb;
+      return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
@@ -1137,6 +1199,111 @@ createLoadBalancer(
 
 
 
+boost::shared_ptr<mesh::BoxGeneratorStrategy>
+createBoxGenerator(
+   const boost::shared_ptr<tbox::Database> &input_db,
+   const std::string &bg_type,
+   const tbox::Dimension &dim )
+{
+
+   if (bg_type == "BergerRigoutsos") {
+
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      berger_rigoutsos(
+         new mesh::BergerRigoutsos(
+            dim,
+            input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) ) );
+      berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+      return berger_rigoutsos;
+
+   } else if (bg_type == "TileClustering") {
+
+      boost::shared_ptr<mesh::TileClustering>
+      tiled(
+         new mesh::TileClustering(
+            dim,
+            input_db->getDatabaseWithDefault("TileClustering", boost::shared_ptr<tbox::Database>()) ) );
+
+      return tiled;
+
+   }
+   else {
+      TBOX_ERROR(
+         "Missing or box generator specification in Main database.\n"
+         << "Specify load_balancer_type = STRING, where STRING can be\n"
+         << "\"BergerRigoutsos\" or \"TileClustering\".");
+   }
+
+   return boost::shared_ptr<mesh::BoxGeneratorStrategy>();
+}
+
+
+
+/*
+****************************************************************************
+* Get the RankTreeStrategy implementation for TreeLoadBalancer
+****************************************************************************
+*/
+boost::shared_ptr<RankTreeStrategy> getRankTree(
+   Database &input_db,
+   const std::string &rank_tree_type )
+{
+   tbox::plog << "Rank tree type is " << rank_tree_type << '\n';
+
+   boost::shared_ptr<tbox::RankTreeStrategy> rank_tree;
+
+   if (rank_tree_type == "BalancedDepthFirstTree") {
+
+      BalancedDepthFirstTree *bdfs( new BalancedDepthFirstTree() );
+
+      if ( input_db.isDatabase("BalancedDepthFirstTree") ) {
+         boost::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("BalancedDepthFirstTree");
+         bool do_left_leaf_switch = tmp_db->getBoolWithDefault("do_left_leaf_switch", true);
+         bdfs->setLeftLeafSwitching(do_left_leaf_switch);
+      }
+
+      rank_tree.reset(bdfs);
+
+   }
+
+   else if (rank_tree_type == "CenteredRankTree") {
+
+      CenteredRankTree *crt( new tbox::CenteredRankTree() );
+
+      if ( input_db.isDatabase("CenteredRankTree") ) {
+         boost::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("CenteredRankTree");
+         bool make_first_rank_the_root = tmp_db->getBoolWithDefault("make_first_rank_the_root", true);
+         crt->makeFirstRankTheRoot(make_first_rank_the_root);
+      }
+
+      rank_tree.reset(crt);
+
+   }
+
+   else if (rank_tree_type == "BreadthFirstRankTree") {
+
+      BreadthFirstRankTree *dft( new tbox::BreadthFirstRankTree() );
+
+      if ( input_db.isDatabase("BreadthFirstRankTree") ) {
+         boost::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("BreadthFirstRankTree");
+         const int tree_degree = tmp_db->getIntegerWithDefault("tree_degree", true);
+         dft->setTreeDegree(static_cast<unsigned short>(tree_degree));
+      }
+
+      rank_tree.reset(dft);
+
+   }
+
+   else {
+      TBOX_ERROR("Unrecognized RankTreeStrategy " << rank_tree_type);
+   }
+
+   return rank_tree;
+}
+
+
+
 
 /*
 ************************************************************************
@@ -1145,7 +1312,6 @@ createLoadBalancer(
 void enforceNesting(
    hier::BoxLevel& L1,
    hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln)
 {
@@ -1153,40 +1319,46 @@ void enforceNesting(
 
    const tbox::Dimension dim(hierarchy->getDim());
 
+   const hier::BoxLevel &L0 = L0_to_L1.getBase();
+
    const int cell_count = L1.getGlobalNumberOfCells();
 
    /*
     * Make L1 nest inside L0 by nesting_width.
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
-   hier::BoxLevel L1nested(dim);
-   hier::Connector L1_to_L1nested(dim);
+   const hier::IntVector nesting_width_transpose = hier::Connector::convertHeadWidthToBase(L0.getRefinementRatio(),
+                                                                                           L1.getRefinementRatio(),
+                                                                                           nesting_width);
+   boost::shared_ptr<hier::BoxLevel> L1nested;
+   boost::shared_ptr<hier::MappingConnector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
-                              L1_to_L0,
+                              L1.findConnectorWithTranspose(L0,
+                                 nesting_width,
+                                 nesting_width_transpose,
+                                 hier::CONNECTOR_CREATE),
                               -nesting_width,
                               hierarchy->getGridGeometry()->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;
    mca.modify( L0_to_L1,
-               L1_to_L0,
-               L1_to_L1nested,
+               *L1_to_L1nested,
                &L1,
-               &L1nested );
+               L1nested.get() );
 
    /*
     * Remove overflow nesting.
     */
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
-                              L1_to_L0,
+                              L0_to_L1.getTranspose(),
                               hier::IntVector::getZero(dim),
                               hierarchy->getGridGeometry()->getDomainSearchTree() );
    mca.modify( L0_to_L1,
-               L1_to_L0,
-               L1_to_L1nested,
+               *L1_to_L1nested,
                &L1,
-               &L1nested );
+               L1nested.get() );
 
    if ( cell_count != L1.getGlobalNumberOfCells() ) {
       tbox::plog << "\t\tWarning: enforceNesting changed number of cells from " << cell_count

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test SAMRAI-PETSc vector interface.
  *
  ************************************************************************/
@@ -161,64 +161,67 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim3d, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
       if (nproc > 1) {
-         if (layer0.getMPI().getRank() == 0) {
+         if (layer0->getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++, ++coarse_domain_itr) {
-               layer0.addBox(hier::Box(*coarse_domain_itr,
+               layer0->addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
-                     layer0.getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++) {
                ++coarse_domain_itr;
             }
             for (int ib = n_coarse_boxes / 2; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
-               layer0.addBox(hier::Box(*coarse_domain_itr,
+               layer0->addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
-                     layer0.getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          }
 
       } else {
 
          for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
-            layer0.addBox(hier::Box(*coarse_domain_itr,
+            layer0->addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+                  layer0->getMPI().getRank()));
          }
 
       }
 
-      hier::BoxContainer::iterator fine_boxes_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_boxes_itr = fine_boxes.begin();
       if (nproc > 1) {
 
-         if (layer1.getMPI().getRank() == 0) {
+         if (layer1->getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++, ++fine_boxes_itr) {
-               layer1.addBox(hier::Box(*fine_boxes_itr,
+               layer1->addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
-                     layer1.getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++) {
                ++fine_boxes_itr;
             }
             for (int ib = n_fine_boxes / 2; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
-               layer1.addBox(hier::Box(*fine_boxes_itr,
+               layer1->addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
-                     layer1.getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          }
 
       } else {
 
          for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
-            layer1.addBox(hier::Box(*fine_boxes_itr,
+            layer1->addBox(hier::Box(*fine_boxes_itr,
                   hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+                  layer1->getMPI().getRank()));
          }
 
       }
@@ -1015,6 +1018,8 @@ int main(
             my_vec0);
       Vec pvec1 = solv::PETSc_SAMRAIVectorReal<double>::createPETScVector(
             my_vec1);
+      Vec result = solv::PETSc_SAMRAIVectorReal<double>::createPETScVector(
+            my_vec0);
 
       double zero = 0.0;
       double half = 0.5;
@@ -1320,13 +1325,13 @@ int main(
       tbox::plog << "pvec1 = 6.5 + 12 * 2 = 30.5?" << endl;
       VecView(pvec1, 0);
 
-      VecWAXPY(pvec0, zero, pvec0, pvec0);
+      VecWAXPY(result, zero, pvec0, pvec0);
       tbox::plog << "pvec0 = 0 * 6.5 + 6.5 = 6.5?" << endl;
-      VecView(pvec0, 0);
+      VecView(result, 0);
 
       // No more tests....Destroy vectors and data...
 
-      VecDestroy(pvec3);
+      VecDestroy(&pvec3);
 
       tbox::plog
       << "\n\nPRINTING VARIABLE DATABASE after freeing new vector" << endl;
@@ -1336,6 +1341,7 @@ int main(
       solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(pvec0);
       solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(pvec1);
       solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(pvec2);
+      solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(result);
 
       // Deallocate vector data and control volumes
       my_vec0->freeVectorComponents();

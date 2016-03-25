@@ -3,8 +3,8 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
-## Description:   Test program for performance of load balancers. 
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Description:   Test for performance and quality of mesh generation.
 ##
 #########################################################################
 
@@ -21,27 +21,40 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
+NUM_TESTS = 17
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
-
-NUM_TESTS = 4
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = mg.o MeshGenerationStrategy.o SinusoidalFrontGenerator.o SphericalShellGenerator.o
+CXX_OBJS      = mg.o
 
-INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
-		test_inputs/small_front.2d.treelb.input
+INPUTS2D =	test_inputs/front.2d.caplb.input	\
+		test_inputs/front.2d.tilelb.input	\
+		test_inputs/front.2d.treelb.input	\
+		test_inputs/lss.2d.caplb.input	\
+		test_inputs/lss.2d.tilelb.input	\
+		test_inputs/lss.2d.treelb.input
 
-INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
-		test_inputs/small_front.3d.treelb.input
 
-main: $(CXX_OBJS) $(LIBSAMRAI)
-	$(MAKE) testlib
+INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
+		performance_inputs/single_sphere.3d.caplb.input	\
+		performance_inputs/single_sphere.3d.treelb.input	\
+		performance_inputs/lsphere_weak.3d.treelb.input	\
+		performance_inputs/lsphere_weak.3d.tilelb.input	\
+		test_inputs/front.3d.caplb.input	\
+		test_inputs/front.3d.tilelb.input	\
+		test_inputs/front.3d.treelb.input	\
+		test_inputs/lss.3d.caplb.input	\
+		test_inputs/lss.3d.tilelb.input	\
+		test_inputs/lss.3d.treelb.input
+
+main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 
 check:
@@ -65,14 +78,30 @@ checkcompile: main
 checktest:
 		rm -f makecheck.logfile
 		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 		rm -f makecheck.logfile
+
+examples:
+
+perf:	main
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.caplb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.tilelb.input;
+		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
+		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 clean-check:
 		$(SAMCLEAN)
 
 clean:
 		$(SAMCLEAN)
-		$(RM) -rf *.f main *visit
+		$(RM) *.f main *visit
 
 include $(SRCDIR)/Makefile.depend

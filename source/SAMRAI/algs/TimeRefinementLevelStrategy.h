@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Interface to level routines for time-refinement integrator.
  *
  ************************************************************************/
@@ -12,7 +12,6 @@
 #define included_algs_TimeRefinementLevelStrategy
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
@@ -20,6 +19,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
+
+#include <vector>
 
 namespace SAMRAI {
 namespace algs {
@@ -211,7 +212,7 @@ public:
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
-      const tbox::Array<double>& old_times) = 0;
+      const std::vector<double>& old_times) = 0;
 
    /**
     * Synchronize specified levels after regridding has occurred or during

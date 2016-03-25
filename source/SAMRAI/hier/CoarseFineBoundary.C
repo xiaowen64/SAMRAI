@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
@@ -62,16 +62,13 @@ CoarseFineBoundary::CoarseFineBoundary(
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
    IntVector connector_width(max_ghost_width);
    connector_width.max(IntVector::getOne(d_dim));
-   const Connector& level_to_level =
-      level.getBoxLevel()->getPersistentOverlapConnectors().
-      findOrCreateConnector(
-         *level.getBoxLevel(),
-         connector_width);
+   const Connector& level_to_level = level.findConnector(level,
+      connector_width,
+      CONNECTOR_CREATE);
    const Connector& level_to_domain =
-      level.getBoxLevel()->getPersistentOverlapConnectors().
-      findOrCreateConnector(
-         hierarchy.getDomainBoxLevel(),
-         connector_width);
+      level.getBoxLevel()->findConnector(hierarchy.getDomainBoxLevel(),
+         connector_width,
+         CONNECTOR_CREATE);
 
    if (hierarchy.getGridGeometry()->getNumberBlocks() == 1) {
       computeFromLevel(
@@ -168,7 +165,7 @@ CoarseFineBoundary::computeFromLevel(
     * the fake domain be everywhere there is NOT a coarse-fine boundary--or
     * everywhere there IS a physical boundary or a fine-boundary.
     */
-   tbox::Array<BoxContainer> fake_domain(1);
+   std::vector<BoxContainer> fake_domain(1);
    BoxContainer& fake_domain_list = fake_domain[0];
 
    // Every box should connect to the domain box_level.
@@ -264,7 +261,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
    boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
    int nblocks = grid_geometry->getNumberBlocks();
 
-   tbox::Array<BoxContainer> fake_domain(nblocks);
+   std::vector<BoxContainer> fake_domain(nblocks);
 
    // Every box should connect to the domain box_level.
    TBOX_ASSERT(level_to_domain.getLocalNumberOfNeighborSets() ==
@@ -364,7 +361,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
 
 }
 
-const tbox::Array<BoundaryBox>&
+const std::vector<BoundaryBox>&
 CoarseFineBoundary::getBoundaries(
    const GlobalId& global_id,
    const int boundary_type,
@@ -391,9 +388,8 @@ CoarseFineBoundary::printClassData(
       os << "\n         patch " << (*mi).first;
       for (unsigned int btype = 0; btype < d_dim.getValue(); ++btype) {
          os << "\n                type " << btype;
-         const tbox::Array<BoundaryBox>
-         & array_of_boxes = (*mi).second[btype];
-         int num_boxes = array_of_boxes.getSize();
+         const std::vector<BoundaryBox>& array_of_boxes = (*mi).second[btype];
+         int num_boxes = static_cast<int>(array_of_boxes.size());
          int bn;
          for (bn = 0; bn < num_boxes; ++bn) {
             os << "\n                           box "

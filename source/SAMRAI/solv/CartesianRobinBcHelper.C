@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/math/PatchCellDataOpsReal.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -26,6 +25,7 @@
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
 
 #include "boost/make_shared.hpp"
+#include <vector>
 
 extern "C" {
 
@@ -209,10 +209,10 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
 
       TBOX_ASSERT(pg);
 
-      const tbox::Array<hier::BoundaryBox>& codim1_boxes =
+      const std::vector<hier::BoundaryBox>& codim1_boxes =
          pg->getCodimensionBoundaries(1);
 
-      const int n_codim1_boxes = codim1_boxes.getSize();
+      const int n_codim1_boxes = static_cast<int>(codim1_boxes.size());
 
       const hier::Box& ghost_box = data.getGhostBox();
       const double* h = pg->getDx();
@@ -515,9 +515,9 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
           * This data may be used by refinement operators to do interpolation.
           */
 
-         const tbox::Array<hier::BoundaryBox>& node_boxes =
+         const std::vector<hier::BoundaryBox>& node_boxes =
             pg->getNodeBoundaries();
-         const int n_node_boxes = node_boxes.getSize();
+         const int n_node_boxes = static_cast<int>(node_boxes.size());
          for (int n = 0; n < n_node_boxes; ++n) {
             const hier::BoundaryBox& bb = node_boxes[n];
             TBOX_ASSERT(bb.getBoundaryType() == 2);        // Must be a node boundary.
@@ -536,9 +536,9 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
           * through the nearest interior cell and the two nearest side values.
           * This data may be used by refinement operators to do interpolation.
           */
-         const tbox::Array<hier::BoundaryBox>& edge_boxes =
+         const std::vector<hier::BoundaryBox>& edge_boxes =
             pg->getEdgeBoundaries();
-         const int n_edge_boxes = edge_boxes.getSize();
+         const int n_edge_boxes = static_cast<int>(edge_boxes.size());
          for (int n = 0; n < n_edge_boxes; ++n) {
             const int location_index = edge_boxes[n].getLocationIndex();
             const int edge_dir = 2 - (location_index / 4);
@@ -563,8 +563,9 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
           * through the nearest interior cell and the three nearest edge values.
           * This data may be used by refinement operators to do interpolation.
           */
-         const tbox::Array<hier::BoundaryBox>& node_boxes = pg->getNodeBoundaries();
-         const int n_node_boxes = node_boxes.getSize();
+         const std::vector<hier::BoundaryBox>& node_boxes =
+            pg->getNodeBoundaries();
+         const int n_node_boxes = static_cast<int>(node_boxes.size());
          for (int n = 0; n < n_node_boxes; ++n) {
             const hier::BoundaryBox& bb = node_boxes[n];
             TBOX_ASSERT(bb.getBoundaryType() == 3); // Must be an node boundary.

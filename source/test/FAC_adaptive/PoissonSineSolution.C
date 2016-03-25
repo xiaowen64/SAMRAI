@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   PoissonSineSolution class implementation
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include STL_SSTREAM_HEADER_FILE
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
-#include "SAMRAI/tbox/Array.h"
 
 using namespace SAMRAI;
 
@@ -64,15 +63,15 @@ void PoissonSineSolution::setFromDatabase(
    std::istringstream ist(istr);
    ist >> d_exact;
    if (database.isBool("neumann_locations")) {
-      tbox::Array<bool> neumann_locations =
-         database.getBoolArray("neumann_locations");
-      if (neumann_locations.getSize() > 2 * d_dim.getValue()) {
+      std::vector<bool> neumann_locations =
+         database.getBoolVector("neumann_locations");
+      if (static_cast<int>(neumann_locations.size()) > 2 * d_dim.getValue()) {
          TBOX_ERROR(
             "'neumann_locations' should have at most " << 2 * d_dim.getValue()
                                                        << " entries in " << d_dim << "D.\n");
       }
       int i;
-      for (i = 0; i < neumann_locations.getSize(); ++i) {
+      for (i = 0; i < static_cast<int>(neumann_locations.size()); ++i) {
          d_neumann_location[i] = neumann_locations[i];
       }
    }
@@ -184,8 +183,8 @@ void PoissonSineSolution::setBcCoefs(
 
    if (gcoef_data) {
       if (d_dim == tbox::Dimension(2)) {
-         hier::Box::iterator boxit(gcoef_data->getBox(), true);
-         hier::Box::iterator boxitend(gcoef_data->getBox(), false);
+         hier::Box::iterator boxit(gcoef_data->getBox().begin());
+         hier::Box::iterator boxitend(gcoef_data->getBox().end());
          int i, j;
          double x, y;
          switch (location_index) {

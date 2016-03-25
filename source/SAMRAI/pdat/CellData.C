@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -257,8 +257,7 @@ CellData<TYPE>::copyOnBox(
    const hier::Box& box)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
-   const hier::Box cell_box = CellGeometry::toCellBox(box);
-   d_data->copy(src.getArrayData(), cell_box);
+   d_data->copy(src.getArrayData(), box);
 }
 
 template<class TYPE>
@@ -288,7 +287,7 @@ CellData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
@@ -298,8 +297,8 @@ CellData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         CellData<double>::iterator ciend(copybox, false);
-         for (CellData<double>::iterator ci(copybox, true);
+         CellData<double>::iterator ciend(CellGeometry::end(copybox));
+         for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
               ci != ciend; ++ci) {
 
             const CellIndex& dst_index = *ci;
@@ -428,10 +427,10 @@ CellData<TYPE>::packWithRotation(
    const int depth = getDepth();
 
    const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-   tbox::Array<TYPE> buffer(size);
+   std::vector<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
@@ -440,8 +439,8 @@ CellData<TYPE>::packWithRotation(
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            CellData<double>::iterator ciend(copybox, false);
-            for (CellData<double>::iterator ci(copybox, true);
+            CellData<double>::iterator ciend(CellGeometry::end(copybox));
+            for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
                  ci != ciend; ++ci) {
 
                CellIndex src_index(*ci);
@@ -455,7 +454,7 @@ CellData<TYPE>::packWithRotation(
       }
    }
 
-   stream.pack(buffer.getPointer(), size);
+   stream.pack(&buffer[0], size);
 }
 
 template<class TYPE>
@@ -470,6 +469,82 @@ CellData<TYPE>::unpackStream(
 
    d_data->unpackStream(stream, t_overlap->getDestinationBoxContainer(),
       t_overlap->getSourceOffset());
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Add source data to the destination according to overlap descriptor.   *
+*                                                                       *
+*************************************************************************
+*/
+
+template<class TYPE>
+void CellData<TYPE>::sum(
+   const hier::PatchData& src,
+   const hier::BoxOverlap& overlap)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
+
+   const CellOverlap *t_overlap =
+      dynamic_cast<const CellOverlap *>(&overlap);
+
+   TBOX_ASSERT(t_overlap != NULL);
+
+   const CellData<TYPE> *t_onode_src =
+      dynamic_cast<const CellData<TYPE> *>(&src);
+
+   // NOTE:  We assume this operation is only needed to
+   //        copy and add data to another cell data
+   //        object.  If we ever need to provide this for node
+   //        data or other flavors of the copy operation, we
+   //        should refactor the routine similar to the way
+   //        the regular copy operations are implemented.
+   if ( t_onode_src == NULL ) {
+      TBOX_ERROR("CellData<dim>::sum error!\n"
+                 << "Can copy and add only from CellData<TYPE> "
+                 << "of the same dim and TYPE.");
+   } else {
+
+      const hier::IntVector& src_offset( t_overlap->getSourceOffset() );
+      const hier::BoxContainer& box_container(
+         t_overlap->getDestinationBoxContainer() );
+      const ArrayData<TYPE>& src_array( *t_onode_src->d_data );
+      if (d_data->isInitialized()) {
+         d_data->sum( src_array, box_container, src_offset );
+      }
+   }
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Unpack data from the message stream and add to this cell data         *
+* object using the index space in the overlap descriptor.               *
+*                                                                       *
+*************************************************************************
+*/
+
+template<class TYPE>
+void CellData<TYPE>::unpackStreamAndSum(
+   tbox::MessageStream& stream,
+   const hier::BoxOverlap& overlap)
+{
+   const CellOverlap *t_overlap =
+      dynamic_cast<const CellOverlap *>(&overlap);
+
+   TBOX_ASSERT(t_overlap != NULL);
+
+   const hier::BoxContainer& dst_boxes(
+      t_overlap->getDestinationBoxContainer() );
+   const hier::IntVector& src_offset( t_overlap->getSourceOffset() );
+   for (hier::BoxContainer::const_iterator dst_box(dst_boxes.begin());
+        dst_box != dst_boxes.end(); dst_box++) {
+      const hier::Box intersect( *dst_box * d_data->getBox() );
+      if (!intersect.empty()) {
+         d_data->unpackStreamAndSum( stream, intersect, src_offset );
+      }
+   }
 }
 
 template<class TYPE>
@@ -551,8 +626,8 @@ CellData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   CellIterator iend(box, false);
-   for (CellIterator i(box, true); i != iend; ++i) {
+   CellIterator iend(CellGeometry::end(box));
+   for (CellIterator i(CellGeometry::begin(box)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*d_data)(*i, depth) << std::endl << std::flush;
       os << std::flush;

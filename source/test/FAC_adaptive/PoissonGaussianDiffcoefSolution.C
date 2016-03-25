@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   PoissonGaussianDiffcoefSolution class implementation
  *
  ************************************************************************/
@@ -196,8 +196,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
          for (j = 0; j < d_dim.getValue(); ++j) {
             sl[j] = j != axis ? xl[j] + 0.5 * h[j] : xl[j];
          }
-         pdat::SideData<double>::iterator iter(patch.getBox(), axis, true);
-         pdat::SideData<double>::iterator iterend(patch.getBox(), axis, false);
+         pdat::SideData<double>::iterator iter(pdat::SideGeometry::begin(patch.getBox(), axis));
+         pdat::SideData<double>::iterator iterend(pdat::SideGeometry::end(patch.getBox(), axis));
          if (d_dim == tbox::Dimension(2)) {
             double x, y;
             for ( ; iter != iterend; ++iter) {
@@ -225,8 +225,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::iterator iter(patch.getBox(), true);
-      pdat::CellData<double>::iterator iterend(patch.getBox(), false);
+      pdat::CellData<double>::iterator iter(pdat::CellGeometry::begin(patch.getBox()));
+      pdat::CellData<double>::iterator iterend(pdat::CellGeometry::end(patch.getBox()));
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
          for ( ; iter != iterend; ++iter) {

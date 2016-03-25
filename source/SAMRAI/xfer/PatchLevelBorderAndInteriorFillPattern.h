@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -56,23 +56,20 @@ public:
     * @param[out] dst_to_fill          Output Connector between
     *                                  dst_box_level and fill_box_level
     * @param[in] dst_box_level         destination level
-    * @param[in] dst_to_dst            Connector of destination to itself
-    * @param[in] dst_to_src            Connector of destination to source
-    * @param[in] src_to_dst            Connector of source to destination
     * @param[in] fill_ghost_width      Ghost width being filled by refine
     *                                  schedule
+    * @param[in] data_on_patch_border  true if there is data living on patch
+    *                                  borders
     *
     * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxLevel& fill_box_level,
-      hier::Connector& dst_to_fill,
+      boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+      boost::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
-      const hier::Connector& dst_to_dst,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
-      const hier::IntVector& fill_ghost_width);
+      const hier::IntVector& fill_ghost_width,
+      bool data_on_patch_border);
 
    /*!
     * @brief Return true to indicate source patch owners cannot compute

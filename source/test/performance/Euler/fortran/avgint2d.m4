@@ -1,7 +1,7 @@
 c
 c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/examples/Euler/fortran/2d/avgint.m4 $
 c  Package:     SAMRAI applications
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision: 1917 $
 c  Description: F77 routines for interlevel transfer of velocity and 
 c               pressure for 2d euler equations.
@@ -306,7 +306,7 @@ c    &         if0,if1,velf(if0,if1,1)
 c          enddo
 c       enddo
 c        call flush(6)
-	stop
+        stop
       endif
 c
       return
@@ -376,7 +376,7 @@ c
 
          do ic1=ifirstc1,ilastc1
             do ic0=ifirstc0,ilastc0
-	       velc(ic0,ic1,id) = zero
+               velc(ic0,ic1,id) = zero
             enddo
          enddo
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Test program for asynchronous BR implementation
  *
  ************************************************************************/
@@ -18,7 +18,7 @@
  * Headers for basic SAMRAI objects used in this code.
  */
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -227,7 +227,7 @@ int main(
             input_db->isDatabase("BergerRigoutsos") ?
             input_db->getDatabase("BergerRigoutsos") :
             boost::shared_ptr<tbox::Database>()));
-      new_br->setMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      new_br->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       tbox::plog << "Creating grid algorithm.\n";
       /*
@@ -282,10 +282,12 @@ int main(
       tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-      tbox::Array<int> tag_buffer(10);
-      for (int i = 0; i < tag_buffer.size(); ++i) tag_buffer[i] = 0;
+      std::vector<int> tag_buffer(10);
+      for (int i = 0; i < static_cast<int>(tag_buffer.size()); ++i) {
+         tag_buffer[i] = 0;
+      }
       if (main_db->isInteger("tag_buffer")) {
-         tag_buffer = main_db->getIntegerArray("tag_buffer");
+         tag_buffer = main_db->getIntegerVector("tag_buffer");
       }
 
       /*
@@ -372,9 +374,9 @@ int main(
          dlbgtest.computeHierarchyData(*patch_hierarchy,
             double(istep + 1));
 
-         tbox::Array<double>
-         regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
-         for (int i = 0; i < regrid_start_time.size(); ++i)
+         std::vector<double> regrid_start_time(
+            patch_hierarchy->getMaxNumberOfLevels());
+         for (int i = 0; i < static_cast<int>(regrid_start_time.size()); ++i)
             regrid_start_time[i] = istep;
 
          gridding_algorithm->regridAllFinerLevels(
@@ -452,7 +454,7 @@ static int createAndTestDLBG(
       main_db.getBoolWithDefault("build_peer_edge", false);
 
    const bool globalize_box_levels =
-      main_db.getBoolWithDefault("globalize_mapped_box_levels", false);
+      main_db.getBoolWithDefault("globalize_box_levels", false);
 
    const int node_log_detail =
       main_db.getIntegerWithDefault("node_log_detail", -1);
@@ -461,23 +463,14 @@ static int createAndTestDLBG(
 
    pout << "Generating boxgraph in parallel." << std::endl;
 
-   std::vector<Connector> crse_connectors;
-   std::vector<Connector> fine_connectors;
-   std::vector<Connector> peer_connectors;
+   std::vector<boost::shared_ptr<Connector> > crse_connectors;
+   std::vector<boost::shared_ptr<Connector> > fine_connectors;
+   std::vector<boost::shared_ptr<Connector> > peer_connectors;
 
    int ln;
 
-   tbox::Array<BoxLevel> box_levels(
-      patch_hierarchy.getNumberOfLevels(), BoxLevel(dim));
-   for (int conn = 0; conn < patch_hierarchy.getNumberOfLevels(); ++conn) {
-      if (build_peer_edge) {
-         peer_connectors.push_back(Connector(dim));
-      }
-      if (build_cross_edge) {
-         crse_connectors.push_back(Connector(dim));
-         fine_connectors.push_back(Connector(dim));
-      }
-   }
+   std::vector<boost::shared_ptr<BoxLevel> > box_levels(
+      patch_hierarchy.getNumberOfLevels());
 
    /*
     * Set the box_level nodes.
@@ -486,14 +479,14 @@ static int createAndTestDLBG(
       boost::shared_ptr<PatchLevel> level_ptr(
          patch_hierarchy.getPatchLevel(ln));
       PatchLevel& level = *level_ptr;
-      box_levels[ln] = *level.getBoxLevel();
+      box_levels[ln].reset(new BoxLevel(*level.getBoxLevel()));
       plog << "****************************************\n";
       plog << "box_levels[" << ln << "]:\n";
       plog << "****************************************\n";
-      box_levels[ln].recursivePrint(plog, "", node_log_detail);
+      box_levels[ln]->recursivePrint(plog, "", node_log_detail);
       if (globalize_box_levels) {
          pout << "Globalizing BoxLevel " << ln << ".\n";
-         box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
+         box_levels[ln]->setParallelState(BoxLevel::GLOBALIZED);
       }
       pout << "BoxLevel " << ln << " done.\n";
    }
@@ -503,30 +496,32 @@ static int createAndTestDLBG(
     */
    hier::OverlapConnectorAlgorithm oca;
    if (build_cross_edge) {
+      crse_connectors.resize(patch_hierarchy.getNumberOfLevels());
+      fine_connectors.resize(patch_hierarchy.getNumberOfLevels());
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
          boost::shared_ptr<PatchLevel> level_ptr(
             patch_hierarchy.getPatchLevel(ln));
          PatchLevel& level = *level_ptr;
          if (ln < patch_hierarchy.getNumberOfLevels() - 1) {
-            fine_connectors[ln].setBase(box_levels[ln]);
-            fine_connectors[ln].setHead(box_levels[ln + 1]);
-            fine_connectors[ln].setWidth(IntVector(dim, 1), true);
-            oca.findOverlaps(fine_connectors[ln]);
+            oca.findOverlaps(fine_connectors[ln],
+               *box_levels[ln],
+               *box_levels[ln + 1],
+               IntVector(dim, 1));
          }
          if (ln > 0) {
-            crse_connectors[ln].setBase(box_levels[ln]);
-            crse_connectors[ln].setHead(box_levels[ln - 1]);
-            crse_connectors[ln].setWidth(level.getRatioToCoarserLevel(), true);
-            oca.findOverlaps(crse_connectors[ln]);
+            oca.findOverlaps(crse_connectors[ln],
+               *box_levels[ln],
+               *box_levels[ln - 1],
+               level.getRatioToCoarserLevel());
             if (edge_log_detail >= 0) {
                plog << "****************************************\n";
                plog << "fine_connectors[" << ln - 1 << "]:\n";
                plog << "****************************************\n";
-               fine_connectors[ln - 1].recursivePrint(plog, "", edge_log_detail);
+               fine_connectors[ln - 1]->recursivePrint(plog, "", edge_log_detail);
                plog << "****************************************\n";
                plog << "crse_connectors[" << ln << "]:\n";
                plog << "****************************************\n";
-               crse_connectors[ln].recursivePrint(plog, "", edge_log_detail);
+               crse_connectors[ln]->recursivePrint(plog, "", edge_log_detail);
             }
          }
       }
@@ -538,25 +533,24 @@ static int createAndTestDLBG(
     */
    if (build_peer_edge) {
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-         peer_connectors[ln].setBase(box_levels[ln]);
-         peer_connectors[ln].setHead(box_levels[ln]);
-         peer_connectors[ln].setWidth(IntVector(dim, 1), true);
          if (build_cross_edge && ln > 0) {
             // plog << " Bridging for level " << ln << std::endl;
             oca.bridge(
                peer_connectors[ln],
-               crse_connectors[ln],
-               fine_connectors[ln - 1],
-               crse_connectors[ln],
-               fine_connectors[ln - 1]);
+               *crse_connectors[ln],
+               *fine_connectors[ln - 1],
+               false);
          } else {
-            oca.findOverlaps(peer_connectors[ln]);
+            oca.findOverlaps(peer_connectors[ln],
+               *box_levels[ln],
+               *box_levels[ln],
+               IntVector(dim, 1));
          }
          if (edge_log_detail >= 0) {
             plog << "****************************************\n";
             plog << "peer_connectors[" << ln << "]:\n";
             plog << "****************************************\n";
-            peer_connectors[ln].recursivePrint(plog, "", edge_log_detail);
+            peer_connectors[ln]->recursivePrint(plog, "", edge_log_detail);
          }
       }
    }
@@ -567,22 +561,22 @@ static int createAndTestDLBG(
 
    if (build_cross_edge) {
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels() - 1; ++ln) {
-         fine_connectors[ln].assertConsistencyWithBase();
+         fine_connectors[ln]->assertConsistencyWithBase();
          plog << "fine_connectors[" << ln
               << "] passed assertConsistencyWithBase().\n";
-         fine_connectors[ln].assertConsistencyWithHead();
+         fine_connectors[ln]->assertConsistencyWithHead();
          plog << "fine_connectors[" << ln
               << "] passed assertConsistencyWithHead().\n";
-         crse_connectors[ln + 1].assertConsistencyWithBase();
+         crse_connectors[ln + 1]->assertConsistencyWithBase();
          plog << "crse_connectors[" << ln + 1
               << "] passed assertConsistencyWithBase().\n";
-         crse_connectors[ln + 1].assertConsistencyWithHead();
+         crse_connectors[ln + 1]->assertConsistencyWithHead();
          plog << "crse_connectors[" << ln + 1
               << "] passed assertConsistencyWithHead().\n";
-         oca.assertOverlapCorrectness(fine_connectors[ln]);
+         fine_connectors[ln]->assertOverlapCorrectness();
          plog << "fine_connectors[" << ln
               << "] passed assertOverlapCorrectness().\n";
-         oca.assertOverlapCorrectness(crse_connectors[ln + 1]);
+         crse_connectors[ln + 1]->assertOverlapCorrectness();
          plog << "crse_connectors[" << ln + 1
               << "] passed assertOverlapCorrectness().\n";
       }
@@ -590,13 +584,13 @@ static int createAndTestDLBG(
 
    if (build_peer_edge) {
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-         peer_connectors[ln].assertConsistencyWithBase();
+         peer_connectors[ln]->assertConsistencyWithBase();
          plog << "peer_connectors[" << ln
               << "] passed assertConsistencyWithBase().\n";
-         peer_connectors[ln].assertConsistencyWithHead();
+         peer_connectors[ln]->assertConsistencyWithHead();
          plog << "peer_connectors[" << ln
               << "] passed assertConsistencyWithHead().\n";
-         oca.assertOverlapCorrectness(peer_connectors[ln]);
+         peer_connectors[ln]->assertOverlapCorrectness();
          plog << "peer_connectors[" << ln
               << "] passed assertOverlapCorrectness().\n";
       }

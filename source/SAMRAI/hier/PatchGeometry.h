@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/LocalId.h"
@@ -22,6 +21,7 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -108,16 +108,14 @@ private:
    /**
     * The constructor for the patch geometry base class.
     *
-    * @pre (ratio_to_level_zero.getDim() == touches_regular_bdry.getDim()) &&
-    *      (ratio_to_level_zero.getDim() == touches_periodic_bdry.getDim())
+    * @pre (ratio_to_level_zero.getDim() == touches_regular_bdry.getDim())
     * @pre all components of ratio_to_level_zero must be nonzero and all
     *      components of ratio_to_level_zero not equal to 1 must have the same
     *      sign
     */
    PatchGeometry(
       const IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry);
+      const TwoDimBool& touches_regular_bdry);
 
    /**
     * The virtual destructor for the patch geometry base class.
@@ -127,23 +125,23 @@ private:
    /**
     * Return const reference to patch boundary information.
     */
-   const tbox::Array<tbox::Array<BoundaryBox> >
+   const std::vector<std::vector<BoundaryBox> >&
    getPatchBoundaries() const
    {
-      return d_patch_boundaries.getArrays();
+      return d_patch_boundaries.getVectors();
    }
 
    /*!
-    * @brief Set the boundary box arrays for this patch geometry.
+    * @brief Set the boundary box vectors for this patch geometry.
     *
-    * An array of length DIM of tbox::Array< BoundaryBox > is passed
+    * A vector of length DIM of std::vector<BoundaryBox> is passed
     * in to be stored as the boundary boxes for this patch geometry.
     *
-    * @param bdry The array of BoundaryBox arrays.
+    * @param bdry The vector of BoundaryBox vectors.
     */
    void
    setBoundaryBoxesOnPatch(
-      const tbox::Array<tbox::Array<BoundaryBox> > bdry);
+      const std::vector<std::vector<BoundaryBox> >& bdry);
 
    /**
     * Return const reference to ratio to level zero index space.
@@ -171,27 +169,27 @@ private:
    }
 
    /**
-    * Return array of boundary box components for patch each of which
+    * Return vector of boundary box components for patch each of which
     * intersects the patch at a single point (i.e., 0-dim intersection
     * between cells in patch and cells in boundary box).
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getNodeBoundaries() const
    {
-     return d_patch_boundaries[getDim().getValue() - 1];
+      return d_patch_boundaries[getDim().getValue() - 1];
    }
 
    /**
-    * Return array of boundary box components for patch each of which
+    * Return vector of boundary box components for patch each of which
     * intersects the patch along a 1-dim edge (i.e., 1-dim intersection
     * between cells in patch and cells in boundary box).
     *
     * @pre getDim().getValue() >= 2
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getEdgeBoundaries() const
    {
-     if (getDim().getValue() < 2) {
+      if (getDim().getValue() < 2) {
          TBOX_ERROR("PatchGeometry error in getEdgeBoundary...\n"
             << "DIM < 2 not supported." << std::endl);
       }
@@ -203,16 +201,16 @@ private:
    }
 
    /**
-    * Return array of boundary box components for patch each of which
+    * Return vector of boundary box components for patch each of which
     * intersects the patch along a 2-dim face (i.e., 2-dim intersection
     * between cells in patch and cells in boundary box).
     *
     * @pre getDim().getValue() >= 3
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getFaceBoundaries() const
    {
-     if (getDim().getValue() < 3) {
+      if (getDim().getValue() < 3) {
          TBOX_ERROR("PatchGeometry error in getFaceBoundary...\n"
             << "DIM < 3 not supported." << std::endl);
       }
@@ -224,7 +222,7 @@ private:
    }
 
    /**
-    * Return array of boundary box components for patch each of which
+    * Return vector of boundary box components for patch each of which
     * intersects the patch as a (DIM - codim)-dimensional object.
     * That is,
     *
@@ -240,16 +238,16 @@ private:
     * @pre (codim > 0) && (codim <= getDim().getValue())
     * when codim < 0 or codim > DIM.
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getCodimensionBoundaries(
       const int codim) const
    {
-     TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
+      TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
       return d_patch_boundaries[codim - 1];
    }
 
    /**
-    * Set the array of boundary box components of the given codimension
+    * Set the vector of boundary box components of the given codimension
     * for a patch.
     *
     * @pre (codim > 0) && (codim <= getDim().getValue())
@@ -257,7 +255,7 @@ private:
     */
    void
    setCodimensionBoundaries(
-      const tbox::Array<BoundaryBox>& bdry_boxes,
+      const std::vector<BoundaryBox>& bdry_boxes,
       const int codim);
 
    /*!

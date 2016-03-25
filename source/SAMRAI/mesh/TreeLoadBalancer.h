@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -14,12 +14,14 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
-#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
+#include "SAMRAI/tbox/CommGraphWriter.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/RankGroup.h"
+#include "SAMRAI/tbox/RankTreeStrategy.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -52,19 +54,19 @@ namespace mesh {
  * <b> Input Parameters </b>
  *
  * <b> Definitions: </b>
- *    - \b    n_root_cycles
- *       Number of steps over which to smoothly spread out work load.  This
- *       helps scalability when initial work load is grossly unbalanced.
- *       Usually 1 step is sufficient.  Can be set higher (2 or 3) to reduce
- *       negative performance effects of extremely poor initial load balance.
- *       Set to -1, the default, or any negative number to compute the number
- *       of cycles by a simple heuristic.  Set to zero to effectively bypass
- *       load balancing.
  *
- *    - \b    min_load_fraction_per_box
- *       Additional restriction on box size.  Will not generate a box that
- *       has less than this fraction of the global average work load in
- *       order to move work load.
+ *   - \b flexible_load_tolerance
+ *   Fraction of ideal load a process can take on in order to avoid excessive
+ *   box cutting and load movement.  This is not a hard limit and some
+ *   processes can still exceed this amount.  Higher values help the load
+ *   balancer run faster but produces less balanced work loads.
+ *
+ *   - \b max_cycle_spread_ratio
+ *   This parameter limits how many processes may receive the load of one
+ *   process in a load fan-out cycle.  If a process has too much initial load,
+ *   this limit causes the load to fan out the load over multiple cycles.  It
+ *   alleviates the bottle-neck of one process having to work with too many
+ *   other processes in any cycle.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -77,22 +79,30 @@ namespace mesh {
  *     <th>behavior on restart</th>
  *   </tr>
  *   <tr>
- *     <td>n_root_cycles</td>
- *     <td>int</td>
- *     <td>-1</td>
- *     <td>any int</td>
+ *     <td>flexible_load_tolerance</td>
+ *     <td>double</td>
+ *     <td>0.0</td>
+ *     <td>0-1</td>
  *     <td>opt</td>
- *     <td>Not written to restart.  Value in input db used.</td>
+ *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
- *     <td>min_load_fraction_per_box</td>
- *     <td>double</td>
- *     <td>0.03</td>
- *     <td>>=0 && <=1.0</td>
+ *     <td>max_cycle_spread_ratio</td>
+ *     <td>int</td>
+ *     <td>1000000</td>
+ *     <td> > 1</td>
  *     <td>opt</td>
- *     <td>Not written to restart.  Value in input db used.</td>
+ *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  * </table>
+ *
+ * @internal The following are developer inputs.  Defaults listed
+ * in parenthesis:
+ *
+ * @internal DEV_allow_box_breaking (true)
+ * bool
+ * Whether to allow box-breaking.  Set to false when boxes have
+ * been pre-cut.
  *
  * @see mesh::LoadBalanceStrategy
  */
@@ -111,6 +121,9 @@ public:
     * reporting and timer names.  If omitted, "TreeLoadBalancer"
     * is used.
     *
+    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
+    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
+    *
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
@@ -119,9 +132,11 @@ public:
     */
    TreeLoadBalancer(
       const tbox::Dimension& dim,
-      const std::string& name = std::string("TreeLoadBalancer"),
+      const std::string& name,
       const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+         boost::shared_ptr<tbox::Database>(),
+      const boost::shared_ptr<tbox::RankTreeStrategy> &rank_tree =
+         boost::shared_ptr<tbox::RankTreeStrategy>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.
@@ -191,24 +206,6 @@ public:
       int level_number = -1);
 
    /*!
-    * @brief Configure the load balancer to load balance boxes by
-    * assuming all cells on the specified level or all hierarchy
-    * levels are weighted equally.
-    *
-    * @param level_number
-    * Optional integer number for level on which uniform
-    * workload estimate will be used.  If the level
-    * number is not specified, a uniform workload
-    * estimate will be used on all levels.
-    */
-   void
-   setUniformWorkload(
-      int level_number = -1)
-   {
-      d_workload_data_id[level_number] = -1;
-   }
-
-   /*!
     * @brief Return true if load balancing procedure for given level
     * depends on patch data on mesh; otherwise return false.
     *
@@ -224,8 +221,8 @@ public:
     * Note: This implementation does not yet support non-uniform load
     * balancing.
     *
-    * @pre anchor_to_balance.isFinalized() == balance_to_anchor.isFinalized()
-    * @pre !anchor_to_balance.isFinalized() || anchor_to_balance.isTransposeOf(balance_to_anchor)
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || balance_to_anchor->isTransposeOf(balance_to_anchor->getTranspose())
     * @pre (d_dim == balance_box_level.getDim()) &&
     *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
     *      (d_dim == domain_box_level.getDim()) &&
@@ -237,12 +234,9 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector& balance_to_anchor,
-      hier::Connector& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const hier::Connector& unbalanced_to_attractor,
-      const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,
@@ -275,6 +269,22 @@ public:
          output_stream);
    }
 
+
+   /*!
+    * @brief Enable or disable saving of tree data for diagnostics.
+    *
+    * @param [in] comm_graph_writer
+    * External CommGraphWriter to save tree data to.
+    * Use NULL to disable saving.
+    */
+   void
+   setCommGraphWriter(
+      const boost::shared_ptr<tbox::CommGraphWriter> &comm_graph_writer )
+   {
+      d_comm_graph_writer = comm_graph_writer;
+   }
+
+
    /*!
     * @brief Get the name of this object.
     */
@@ -286,7 +296,7 @@ public:
 
 private:
 
-   typedef int LoadType;
+   typedef double LoadType;
 
    /*!
     * @brief Data to save for each Box that gets passed along the tree
@@ -309,7 +319,7 @@ private:
       /*!
        * @brief Construct a new BoxInTransit from an originating box.
        *
-       * @param[in] other
+       * @param[in] origin
        */
       BoxInTransit(const hier::Box& origin);
 
@@ -444,7 +454,7 @@ private:
    static const int TreeLoadBalancer_EDGETAG1 = 4;
    static const int TreeLoadBalancer_PREBALANCE0 = 5;
    static const int TreeLoadBalancer_PREBALANCE1 = 6;
-   static const int TreeLoadBalancer_FIRSTDATALEN = 1000;
+   static const int TreeLoadBalancer_FIRSTDATALEN = 500;
 
    static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
 
@@ -460,17 +470,101 @@ private:
 
    /*!
     * @brief A set of BoxInTransit, sorted from highest load to lowest load.
+    *
+    * This class is identical to std::set<BoxInTransit,BoxInTransitMoreLoad>
+    * and adds tracking of the sum of loads in the set.
     */
-   typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
+   // typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
+   class TransitSet {
+   public:
+      //@{
+      //! @name Duplicated set interfaces.
+      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
+      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
+      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
+      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
+      TransitSet() : d_set(), d_sumload(0) {}
+      template<class InputIterator>
+      TransitSet( InputIterator first, InputIterator last ) :
+         d_set(first,last), d_sumload(0) {
+         for ( const_iterator bi=d_set.begin(); bi!=d_set.end(); ++bi )
+         { d_sumload += bi->d_boxload; };
+      }
+      iterator begin() { return d_set.begin(); }
+      iterator end() { return d_set.end(); }
+      const_iterator begin() const { return d_set.begin(); }
+      const_iterator end() const { return d_set.end(); }
+      size_t size() const { return d_set.size(); }
+      std::pair<iterator, bool> insert( const value_type &x ) {
+         std::pair<iterator,bool> rval = d_set.insert(x);
+         if ( rval.second ) d_sumload += x.d_boxload;
+         return rval;
+      }
+      template<class InputIterator>
+      void insert( InputIterator first, InputIterator last ) {
+         size_t tmp_size = size();
+         d_set.insert(first,last);
+         for ( InputIterator i=first; i!=last; ++i ) {
+            d_sumload += i->d_boxload;
+            ++tmp_size;
+         };
+         if ( tmp_size != size() ) {
+            TBOX_ERROR("TransitSet's range insert currently can't weed out duplicates.");
+         }
+      }
+      void erase(iterator pos) { d_sumload -= pos->d_boxload; d_set.erase(pos); }
+      size_t erase(const key_type &k) {
+         const size_t num_erased = d_set.erase(k);
+         if ( num_erased ) d_sumload -= k.d_boxload;
+         return num_erased;
+      }
+      bool empty() const { return d_set.empty(); }
+      void clear() { d_sumload = 0; d_set.clear(); }
+      void swap( TransitSet &other ) {
+         const LoadType tl = d_sumload;
+         d_sumload = other.d_sumload;
+         other.d_sumload = tl;
+         d_set.swap(other.d_set);
+      }
+      iterator lower_bound( const key_type &k ) const { return d_set.lower_bound(k); }
+      iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
+      //@}
+      LoadType getSumLoad() const { return d_sumload; }
+   private:
+      std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
+      LoadType d_sumload;
+   };
 
 
    /*!
     * @brief Data to save for each sending/receiving process and the
     * subtree at that process.
     */
-   struct SubtreeLoadData {
-      // @brief Constructor.
-      SubtreeLoadData();
+   struct SubtreeData {
+      //! @brief Constructor.
+      SubtreeData();
+
+      // surplus and deficit are current load compared to ideal.
+      LoadType surplus() const { return d_subtree_load_current - d_subtree_load_ideal; }
+      LoadType deficit() const { return d_subtree_load_ideal - d_subtree_load_current; }
+      LoadType effSurplus() const { return d_eff_load_current - d_eff_load_ideal; }
+      LoadType effDeficit() const { return d_eff_load_ideal - d_eff_load_current; }
+      // excess and margin are current load compared to upper limit.
+      LoadType excess() const { return d_subtree_load_current - d_subtree_load_upperlimit; }
+      LoadType margin() const { return d_subtree_load_upperlimit - d_subtree_load_current; }
+      LoadType effExcess() const { return d_eff_load_current - d_eff_load_upperlimit; }
+      LoadType effMargin() const { return d_eff_load_upperlimit - d_eff_load_current; }
+
+      //! @brief Incorporate child's data into the subtree.
+      void addChild( const SubtreeData &child );
+
+      //! @brief Diagnostic printing.
+      void printClassData( const std::string &border, std::ostream &os ) const;
+
+      /*!
+       * @brief Rank of the subtree (rank of its root).
+       */
+      int d_subtree_rank;
 
       /*!
        * @brief Number of processes in subtree
@@ -478,38 +572,54 @@ private:
       int d_num_procs;
 
       /*!
-       * @brief Current total work amount in the subtree
+       * @brief Current amount of work in the subtree, including local unassigned
        */
-      LoadType d_total_work;
+      LoadType d_subtree_load_current;
 
       /*!
-       * @brief Load exported (or to be exported) to nonlocal process.
+       * @brief Ideal amount of work for the subtree
+       */
+      LoadType d_subtree_load_ideal;
+
+      /*!
+       * @brief Amount of work the subtree is willing to have, based
+       * on the load tolerance and upper limit of children.
+       */
+      LoadType d_subtree_load_upperlimit;
+
+      /*!
+       * @brief Number of processes in subtree after pruning independent descendants
+       */
+      int d_eff_num_procs;
+
+      /*!
+       * @brief Current amount of work in the pruned subtree, including local unassigned
+       */
+      LoadType d_eff_load_current;
+
+      /*!
+       * @brief Ideal amount of work for the pruned subtree
+       */
+      LoadType d_eff_load_ideal;
+
+      /*!
+       * @brief Amount of work the pruned subtree is willing to have, based
+       * on the load tolerance and upper limit of dependent children.
+       */
+      LoadType d_eff_load_upperlimit;
+
+      /*!
+       * @brief Work to traded (or to be traded).
        *
-       * If the object is for the local process, load_exported means
-       * the load exported to the process's *parent*.
+       * If the object is for the local process, work_traded means
+       * traded with the process's *parent*.
        */
-      LoadType d_load_exported;
+      TransitSet d_work_traded;
 
       /*!
-       * @brief Load imported from nonlocal process.
-       *
-       * If the object is for the local process, load_imported means
-       * the load imported from the process's *parent*.
+       * @brief Whether subtree expects its parent to send work down.
        */
-      LoadType d_load_imported;
-
-      /*!
-       * @brief Ideal work amount for the subtree
-       */
-      LoadType d_ideal_work;
-
-      /*!
-       * @brief Work to export.
-       *
-       * If the object is for the local process, for_export means for
-       * exporting to the process's *parent*.
-       */
-      TransitSet d_for_export;
+      bool d_wants_work_from_parent;
    };
 
    /*
@@ -531,126 +641,165 @@ private:
     * rank_group to ranks inside rank_group.  Modify the given connectors
     * to make them correct following this moving of boxes.
     *
-    * @pre !balance_to_anchor.isFinalized() || (anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0)
-    * @pre !balance_to_anchor.isFinalized() || (balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0)
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
+    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
     */
    void
    prebalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector& balance_to_anchor,
-      hier::Connector& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group) const;
 
+
    /*!
-    * @brief Reassign loads from one TransitSet to another.
+    * @brief Adjust the load in a TransitSet by moving work between it
+    * and another TransitSet.
     *
-    * @param[i] ideal_transfer Amount of load to reassign from src to
-    * dst.  If negative, reassign the load from dst to src.
+    * @param[in,out] main_bin
     *
-    * @param[io] next_available_index Index for guaranteeing new
+    * @param[in,out] hold_bin
+    *
+    * @param[in,out] next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
-    * @return Amount of load transfered.  If positive, work went from
-    * src to dst (if negative, from dst to src).
+    * @param[in] ideal_load The load that main_bin should have.
     *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Net load transfered into main_bin.  If negative, net
+    * load went out of main_bin.
     */
    LoadType
-   reassignLoads(
-      TransitSet& src,
-      TransitSet& dst,
+   adjustLoad(
+      TransitSet& main_bin,
+      TransitSet& hold_bin,
       hier::LocalId& next_available_index,
-      LoadType ideal_transfer ) const;
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
 
    /*!
     * @brief Shift load from src to dst by swapping BoxInTransit
     * between them.
     *
-    * @param[io] src Source of work, for a positive ideal_transfer.
+    * @param[in,out] main_bin
     *
-    * @param[io] dst Destination of work, for a positive ideal_transfer.
+    * @param[in,out] hold_bin
     *
-    * @param[i] ideal_transfer Amount of load to reassign from src to
-    * dst.  If negative, reassign the load from dst to src.
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
     *
     * @return Amount of load transfered.  If positive, load went
-    * from src to dst (if negative, from dst to src).
+    * from main_bin to hold_bin.
     */
    LoadType
-   shiftLoadsBySwapping(
-      TransitSet& src,
-      TransitSet& dst,
-      LoadType ideal_transfer ) const;
+   adjustLoadBySwapping(
+      TransitSet& main_bin,
+      TransitSet& hold_bin,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
 
    /*!
-    * @brief Shift load from src to dst by various box breaking strategies.
-    * choosing the break that gives the best overall penalty.
+    * @brief Shift load from src to dst by swapping BoxInTransit
+    * between them.
     *
-    * @param[io] src Source of work, for a positive ideal_transfer.
+    * @param[in,out] main_bin
     *
-    * @param[io] dst Destination of work, for a positive ideal_transfer.
+    * @param[in,out] hold_bin
     *
-    * @param next_available_index Index for guaranteeing new
+    * @param[in,out] next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
-    * @param ideal_transfer Amount of load to reassign from src to
-    * dst.  If negative, reassign the load from dst to src.
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
     *
     * @return Amount of load transfered.  If positive, load went
-    * from src to dst (if negative, from dst to src).
+    * from main_bin to hold_bin.
     */
    LoadType
-   shiftLoadsByBreaking(
-      TransitSet& src,
-      TransitSet& dst,
-      hier::LocalId& next_available_index,
-      LoadType ideal_transfer ) const;
+   adjustLoadByBreaking(
+      TransitSet& main_bin,
+      TransitSet& hold_bin,
+      hier::LocalId &next_available_index,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
     * containers that, when swapped, effects a transfer of the given
     * amount of work from the source to the destination.  Swap the boxes.
+    *
+    * @param [in,out] src
+    *
+    * @param [in,out] dst
+    *
+    * @param actual_transfer [out] Amount of work transfered from src to
+    * dst.
+    *
+    * @param ideal_transfer [in] Amount of work to be transfered from
+    * src to dst.
+    *
+    * @param low_transfer
+    *
+    * @param high_transfer
     */
    bool
    swapLoadPair(
       TransitSet& src,
       TransitSet& dst,
       LoadType& actual_transfer,
-      LoadType ideal_transfer ) const;
+      LoadType ideal_transfer,
+      LoadType low_transfer,
+      LoadType high_transfer ) const;
 
    /*!
-    * @brief Pack load/boxes for sending.
+    * @brief Pack load/boxes for sending up.
     */
    void
-   packSubtreeLoadData(
-      std::vector<int>& msg,
-      const SubtreeLoadData& load_data) const;
-
-   /*!
-    * @brief Unpack load/boxes received.
-    */
-   void
-   unpackSubtreeLoadData(
-      SubtreeLoadData& proc_data,
-      TransitSet& receiving_bin,
-      hier::LocalId& next_available_index,
-      const int* received_data,
-      int received_data_length ) const;
-
-   /*!
-    * @brief Pack load/boxes for sending.
-    */
-   void
-   packSubtreeLoadData(
+   packSubtreeDataUp(
       tbox::MessageStream &msg,
-      const SubtreeLoadData& load_data) const;
+      const SubtreeData& subtree_data) const;
 
    /*!
-    * @brief Unpack load/boxes received.
+    * @brief Unpack load/boxes received from send-up.
     */
    void
-   unpackSubtreeLoadData(
-      SubtreeLoadData& proc_data,
-      TransitSet& receiving_bin,
+   unpackSubtreeDataUp(
+      SubtreeData& subtree_data,
+      hier::LocalId& next_available_index,
+      tbox::MessageStream &msg ) const;
+
+   /*!
+    * @brief Pack load/boxes for sending down.
+    */
+   void
+   packSubtreeDataDown(
+      tbox::MessageStream &msg,
+      const SubtreeData& subtree_data) const;
+
+   /*!
+    * @brief Unpack load/boxes received from send-down.
+    */
+   void
+   unpackSubtreeDataDown(
+      SubtreeData& subtree_data,
       hier::LocalId& next_available_index,
       tbox::MessageStream &msg ) const;
 
@@ -663,28 +812,34 @@ private:
     * This methods does the necessary communication and constructs
     * these relationship in the given Connector.
     *
-    * @param [o] unbalanced_to_balanced Connector to store
+    * @param [out] unbalanced_to_balanced Connector to store
     * relationships in.
     *
-    * @param [i] kept_imports Work that was imported and locally kept.
+    * @param [in] kept_imports Work that was imported and locally kept.
     */
    void
    constructSemilocalUnbalancedToBalanced(
-      hier::Connector &unbalanced_to_balanced,
+      hier::MappingConnector &unbalanced_to_balanced,
       const TreeLoadBalancer::TransitSet &kept_imports ) const;
 
    /*!
     * @brief Break off a given load size from a given Box.
     *
-    * @param[i] box Box to break.
+    * @param[out] breakoff Boxes broken off (usually just one).
     *
-    * @param[i] ideal_load_to_break Ideal load to break.
+    * @param[out] leftover Remainder of Box after breakoff is gone.
     *
-    * @param[o] breakoff Boxes broken off (usually just one).
+    * @param[out] brk_load The load broken off.
     *
-    * @param[o] leftover Remainder of Box after breakoff is gone.
+    * @param[in] box Box to break.
     *
-    * @param[o] brk_load The load broken off.
+    * @param[in] ideal_load Ideal load to break.
+    *
+    * @param[in] low_load
+    *
+    * @param[in] high_load
+    *
+    * @return whether a successful break was made.
     *
     * @pre ideal_load_to_break > 0
     */
@@ -694,7 +849,24 @@ private:
       std::vector<hier::Box>& leftover,
       double& brk_load,
       const hier::Box& box,
-      double ideal_load_to_break ) const;
+      double ideal_load,
+      double low_load,
+      double high_load ) const;
+
+   /*!
+    * @brief Evaluate a trial box-break.
+    *
+    * Return whether new_load is an improvement over current_load.
+    * This should be renamed compareLoads or checkLoads.
+    */
+   bool
+   evaluateBreak(
+      int flags[],
+      LoadType current_load,
+      LoadType new_load,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
 
    /*!
     * @brief Computes surface area of a list of boxes.
@@ -788,8 +960,10 @@ private:
       std::vector<hier::Box>& leftover,
       double& brk_load,
       const hier::Box& box,
-      double ideal_load_to_break,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
+      double ideal_load,
+      double low_load,
+      double high_load,
+      const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    bool
    breakOffLoad_cubic(
@@ -797,8 +971,10 @@ private:
       std::vector<hier::Box>& leftover,
       double& brk_load,
       const hier::Box& box,
-      double ideal_load_to_give,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
+      double ideal_load,
+      double low_load,
+      double high_load,
+      const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    void
    burstBox(
@@ -814,7 +990,7 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < d_workload_data_id.getSize() ?
+      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
          d_workload_data_id[level_number] :
          d_master_workload_data_id);
    }
@@ -853,10 +1029,25 @@ private:
       return double((box * restriction).size());
    }
 
+   /*!
+    * @brief Compute the load for a TransitSet.
+    */
+   LoadType
+   computeLoad(
+      const TransitSet &transit_set) const
+   {
+      LoadType load = 0;
+      for ( TransitSet::const_iterator bi=transit_set.begin();
+            bi!=transit_set.end(); ++bi ) {
+         load += bi->d_boxload;
+      }
+      return load;
+   }
+
    /*
     * Count the local workload.
     */
-   double
+   LoadType
    computeLocalLoads(
       const hier::BoxLevel& box_level) const;
 
@@ -865,13 +1056,13 @@ private:
     * is load-balanced within the given rank_group and compute the
     * mapping between the unbalanced and balanced BoxLevels.
     *
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
     * @pre d_dim == balance_box_level.getDim()
     */
    void
    loadBalanceWithinRankGroup(
       hier::BoxLevel& balance_box_level,
-      hier::Connector &balance_to_anchor,
-      hier::Connector &anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group,
       const double group_sum_load ) const;
 
@@ -879,13 +1070,24 @@ private:
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     *
+    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
     * @pre d_dim == box_level.getDim()
     */
    void
    constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
-      hier::Connector &anchor_to_level,
-      hier::Connector &level_to_anchor ) const;
+      hier::Connector* anchor_to_level) const;
+
+   /*!
+    * @brief Compute surplus load per descendent who is still waiting
+    * for load from parents.
+    */
+   LoadType
+   computeSurplusPerEffectiveDescendent(
+      const TransitSet &unassigned,
+      const LoadType group_avg_load,
+      const std::vector<SubtreeData> &child_subtrees,
+      int first_child ) const;
 
    /*!
     * @brief Create the cycle-based RankGroups the local process
@@ -895,11 +1097,11 @@ private:
     * number such that for the last cycle the rank group includes
     * all processes in d_mpi.
     *
-    * @param [o] rank_group
-    * @param [o] num_groups
-    * @param [o] group_num
-    * @param [i] cycle_number
-    * @param [i] number_of_cycles
+    * @param [out] rank_group
+    * @param [out] num_groups
+    * @param [out] group_num
+    * @param [in] cycle_number
+    * @param [in] number_of_cycles
     */
    void
    createBalanceRankGroupBasedOnCycles(
@@ -917,12 +1119,11 @@ private:
     * set the AsyncCommPeer objects for communication with children
     * and parent.
     *
-    * @param [o] child_stage
-    * @param [o] child_comms
-    * @param [o] parent_stage
-    * @param [o] parent_comm
-    * @param [i] rank_group
-    * @param [i] bdfs
+    * @param [out] child_stage
+    * @param [out] child_comms
+    * @param [out] parent_stage
+    * @param [out] parent_comm
+    * @param [in] rank_group
     */
    void
    setupAsyncCommObjects(
@@ -930,8 +1131,7 @@ private:
       tbox::AsyncCommPeer<char> *& child_comms,
       tbox::AsyncCommStage& parent_stage,
       tbox::AsyncCommPeer<char> *& parent_comm,
-      const tbox::RankGroup &rank_group,
-      const tbox::BalancedDepthFirstTree &bdfs ) const;
+      const tbox::RankGroup &rank_group ) const;
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.
@@ -942,23 +1142,6 @@ private:
    destroyAsyncCommObjects(
       tbox::AsyncCommPeer<char> *& child_comms,
       tbox::AsyncCommPeer<char> *& parent_comm) const;
-
-   /*!
-    * @brief Sum up the work in a sequence of boxes.
-    *
-    * @return Sum of work in [first,last)
-    */
-   LoadType
-   sumWorkInBoxes(
-      const TransitSet::const_iterator &first,
-      const TransitSet::const_iterator &last ) const
-   {
-      LoadType sum = 0;
-      for ( TransitSet::const_iterator itr=first; itr!=last; ++itr ) {
-         sum += itr->d_boxload;
-      }
-      return sum;
-   }
 
    /*!
     * @brief Set up timers for the object.
@@ -982,25 +1165,35 @@ private:
    //! @brief Whether d_mpi is an internal duplicate.  See setSAMRAI_MPI().
    bool d_mpi_is_dupe;
 
-   int d_n_root_cycles;
+   //! @brief Max number of processes the a single process may spread its load onto per root cycle.
+   int d_max_cycle_spread_ratio;
 
-   //! @brief Degree of the tree.  Two means binary tree.
-   const int d_degree;
+   //! @brief Whether to allow box breaking.
+   bool d_allow_box_breaking;
+
+   //! @brief How to arange a contiguous range of MPI ranks in a tree.
+   const boost::shared_ptr<tbox::RankTreeStrategy> d_rank_tree;
+
+   /*!
+    * @brief Utility to save data for communication graph output.
+    */
+   boost::shared_ptr<tbox::CommGraphWriter> d_comm_graph_writer;
 
    /*
     * Values for workload estimate data, workload factor, and bin pack method
     * used on individual levels when specified as such.
     */
-   tbox::Array<int> d_workload_data_id;
+   std::vector<int> d_workload_data_id;
 
    int d_master_workload_data_id;
 
    /*!
-    * @brief Additional minimum box size restriction.
+    * @brief Fraction of ideal load a process can accept over and above
+    * the ideal it should have.
     *
-    * See input parameter "min_load_fraction_per_box".
+    * See input parameter "flexible_load_tol".
     */
-   double d_min_load_fraction_per_box;
+   double d_flexible_load_tol;
 
    /*!
     * @brief Weighting factor for penalizing imbalance.
@@ -1043,11 +1236,10 @@ private:
    mutable std::vector<hier::BoxContainer> d_block_domain_boxes;
    mutable hier::IntVector d_bad_interval;
    mutable hier::IntVector d_cut_factor;
-   mutable double d_global_avg_load;
+   mutable LoadType d_global_avg_load;
+   mutable LoadType d_min_load;
    //@}
 
-   mutable tbox::Array<int> d_output_procs;
-   bool d_using_all_procs;
 
    /*!
     * @brief Whether to immediately report the results of the load balancing cycles
@@ -1077,12 +1269,13 @@ private:
    boost::shared_ptr<tbox::Timer> t_constrain_size;
    boost::shared_ptr<tbox::Timer> t_map_big_boxes;
    boost::shared_ptr<tbox::Timer> t_load_distribution;
+   boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
    boost::shared_ptr<tbox::Timer> t_compute_local_load;
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
    std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
-   boost::shared_ptr<tbox::Timer> t_reassign_loads;
-   boost::shared_ptr<tbox::Timer> t_shift_loads_by_swapping;
+   boost::shared_ptr<tbox::Timer> t_adjust_load;
+   boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
    boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
    boost::shared_ptr<tbox::Timer> t_find_swap_pair;
    boost::shared_ptr<tbox::Timer> t_break_off_load;
@@ -1093,10 +1286,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
    boost::shared_ptr<tbox::Timer> t_construct_semilocal;
    boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
-   boost::shared_ptr<tbox::Timer> t_send_edge_to_children;
-   boost::shared_ptr<tbox::Timer> t_send_edge_to_parent;
-   boost::shared_ptr<tbox::Timer> t_get_edge_from_children;
-   boost::shared_ptr<tbox::Timer> t_get_edge_from_parent;
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_balancing;
    boost::shared_ptr<tbox::Timer> t_finish_sends;

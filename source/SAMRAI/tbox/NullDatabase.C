@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   An input database structure that stores (key,value) pairs
  *
  ************************************************************************/
@@ -96,15 +96,15 @@ NullDatabase::keyExists(
 /*
  *************************************************************************
  *
- * Return an empty Array<std::string>.
+ * Return an empty std::vector<std::string>.
  *
  *************************************************************************
  */
 
-Array<std::string>
+std::vector<std::string>
 NullDatabase::getAllKeys()
 {
-   Array<std::string> keys(0);
+   std::vector<std::string> keys(0);
    return keys;
 }
 
@@ -199,12 +199,12 @@ NullDatabase::putBoolArray(
    NULL_USE(nelements);
 }
 
-Array<bool>
-NullDatabase::getBoolArray(
+std::vector<bool>
+NullDatabase::getBoolVector(
    const std::string& key)
 {
    NULL_USE(key);
-   Array<bool> empty(0);
+   std::vector<bool> empty(0);
    return empty;
 }
 
@@ -235,13 +235,13 @@ NullDatabase::putDatabaseBoxArray(
    NULL_USE(nelements);
 }
 
-Array<DatabaseBox>
-NullDatabase::getDatabaseBoxArray(
+std::vector<DatabaseBox>
+NullDatabase::getDatabaseBoxVector(
    const std::string& key)
 {
    NULL_USE(key);
 
-   Array<DatabaseBox> empty(0);
+   std::vector<DatabaseBox> empty(0);
    return empty;
 }
 
@@ -272,13 +272,13 @@ NullDatabase::putCharArray(
    NULL_USE(nelements);
 }
 
-Array<char>
-NullDatabase::getCharArray(
+std::vector<char>
+NullDatabase::getCharVector(
    const std::string& key)
 {
    NULL_USE(key);
 
-   Array<char> empty(0);
+   std::vector<char> empty(0);
    return empty;
 }
 
@@ -311,13 +311,13 @@ NullDatabase::putComplexArray(
    NULL_USE(nelements);
 }
 
-Array<dcomplex>
-NullDatabase::getComplexArray(
+std::vector<dcomplex>
+NullDatabase::getComplexVector(
    const std::string& key)
 {
    NULL_USE(key);
 
-   Array<dcomplex> empty(0);
+   std::vector<dcomplex> empty(0);
    return empty;
 }
 
@@ -349,12 +349,12 @@ NullDatabase::putDoubleArray(
    NULL_USE(nelements);
 }
 
-Array<double>
-NullDatabase::getDoubleArray(
+std::vector<double>
+NullDatabase::getDoubleVector(
    const std::string& key)
 {
    NULL_USE(key);
-   Array<double> empty(0);
+   std::vector<double> empty(0);
    return empty;
 }
 
@@ -387,13 +387,13 @@ NullDatabase::putFloatArray(
    NULL_USE(nelements);
 }
 
-Array<float>
-NullDatabase::getFloatArray(
+std::vector<float>
+NullDatabase::getFloatVector(
    const std::string& key)
 {
    NULL_USE(key);
 
-   Array<float> empty(0);
+   std::vector<float> empty(0);
    return empty;
 }
 
@@ -424,13 +424,13 @@ NullDatabase::putIntegerArray(
    NULL_USE(nelements);
 }
 
-Array<int>
-NullDatabase::getIntegerArray(
+std::vector<int>
+NullDatabase::getIntegerVector(
    const std::string& key)
 {
    NULL_USE(key);
 
-   Array<int> empty(0);
+   std::vector<int> empty(0);
    return empty;
 }
 
@@ -461,12 +461,12 @@ NullDatabase::putStringArray(
    NULL_USE(nelements);
 }
 
-Array<std::string>
-NullDatabase::getStringArray(
+std::vector<std::string>
+NullDatabase::getStringVector(
    const std::string& key)
 {
    NULL_USE(key);
-   Array<std::string> empty(0);
+   std::vector<std::string> empty(0);
    return empty;
 }
 

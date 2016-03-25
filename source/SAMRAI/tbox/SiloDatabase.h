@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -21,7 +21,6 @@
 #ifdef HAVE_SILO
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -86,14 +85,14 @@ public:
       const std::string& key);
 
    /**
-    * Return an array of all keys in the current database.  Note that
+    * Return a vector of all keys in the current database.  Note that
     * no keys from subdatabases contained in the current database
     * will appear in the array.  To get the keys of any other
     * database, you must call this routine for that database.
     *
     * @pre hasDirectory()
     */
-   virtual Array<std::string>
+   virtual std::vector<std::string>
    getAllKeys();
 
    /**
@@ -180,7 +179,7 @@ public:
    /**
     * Get a boolean entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a boolean array, then an error message is printed and
+    * is not a boolean vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
@@ -188,8 +187,8 @@ public:
     * @pre !key.empty()
     * @pre isBool(key)
     */
-   virtual Array<bool>
-   getBoolArray(
+   virtual std::vector<bool>
+   getBoolVector(
       const std::string& key);
 
    /**
@@ -223,8 +222,8 @@ public:
     *
     * @pre !key.empty()
     */
-   virtual Array<DatabaseBox>
-   getDatabaseBoxArray(
+   virtual std::vector<DatabaseBox>
+   getDatabaseBoxVector(
       const std::string& key);
 
    /**
@@ -259,8 +258,8 @@ public:
     * @pre !key.empty()
     * @pre isChar(key)
     */
-   virtual Array<char>
-   getCharArray(
+   virtual std::vector<char>
+   getCharVector(
       const std::string& key);
 
    /**
@@ -295,8 +294,8 @@ public:
     * @pre !key.empty()
     * @pre isComplex(key)
     */
-   virtual Array<dcomplex>
-   getComplexArray(
+   virtual std::vector<dcomplex>
+   getComplexVector(
       const std::string& key);
 
    /**
@@ -331,8 +330,8 @@ public:
     * @pre !key.empty()
     * @pre isDouble(key)
     */
-   virtual Array<double>
-   getDoubleArray(
+   virtual std::vector<double>
+   getDoubleVector(
       const std::string& key);
 
    /**
@@ -367,8 +366,8 @@ public:
     * @pre !key.empty()
     * @pre isFloat(key)
     */
-   virtual Array<float>
-   getFloatArray(
+   virtual std::vector<float>
+   getFloatVector(
       const std::string& key);
 
    /**
@@ -403,8 +402,8 @@ public:
     * @pre !key.empty()
     * @pre isInteger(key)
     */
-   virtual Array<int>
-   getIntegerArray(
+   virtual std::vector<int>
+   getIntegerVector(
       const std::string& key);
 
    /**
@@ -439,8 +438,8 @@ public:
     * @pre !key.empty()
     * @pre isString(key)
     */
-   virtual Array<std::string>
-   getStringArray(
+   virtual std::vector<std::string>
+   getStringVector(
       const std::string& key);
 
    /**
@@ -536,6 +535,7 @@ public:
    using Database::getBoolArray;
    using Database::putDatabaseBoxArray;
    using Database::getDatabaseBoxArray;
+   using Database::getDatabaseBoxVector;
    using Database::putCharArray;
    using Database::getCharArray;
    using Database::putComplexArray;

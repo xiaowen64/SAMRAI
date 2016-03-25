@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for cell-centered complex data on
  *                a Cartesian mesh.
  *
@@ -58,6 +58,16 @@ void SAMRAI_F77_FUNC(cartwgtavgcellcplx3d, CARTWGTAVGCELLCPLX3D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
+   const int *, const double *, const double *,
+   const dcomplex *, dcomplex *);
+// in cartcoarsen4d.f:
+void SAMRAI_F77_FUNC(cartwgtavgcellcplx4d, CARTWGTAVGCELLCPLX4D) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 }
@@ -139,8 +149,7 @@ CartesianCellComplexWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(d),
             cdata->getPointer(d));
-      }
-      if ((dim == tbox::Dimension(2))) {
+      } else if ((dim == tbox::Dimension(2))) {
          SAMRAI_F77_FUNC(cartwgtavgcellcplx2d, CARTWGTAVGCELLCPLX2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
@@ -150,8 +159,7 @@ CartesianCellComplexWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(d),
             cdata->getPointer(d));
-      }
-      if ((dim == tbox::Dimension(3))) {
+      } else if ((dim == tbox::Dimension(3))) {
          SAMRAI_F77_FUNC(cartwgtavgcellcplx3d, CARTWGTAVGCELLCPLX3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
@@ -164,9 +172,22 @@ CartesianCellComplexWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(d),
             cdata->getPointer(d));
+      } else if ((dim == tbox::Dimension(4))) {
+         SAMRAI_F77_FUNC(cartwgtavgcellcplx4d, CARTWGTAVGCELLCPLX4D) (ifirstc(0),
+            ifirstc(1), ifirstc(2), ifirstc(3),
+            ilastc(0), ilastc(1), ilastc(2), ilastc(3),
+            filo(0), filo(1), filo(2), filo(3),
+            fihi(0), fihi(1), fihi(2), fihi(3),
+            cilo(0), cilo(1), cilo(2), cilo(3),
+            cihi(0), cihi(1), cihi(2), cihi(3),
+            &ratio[0],
+            fgeom->getDx(),
+            cgeom->getDx(),
+            fdata->getPointer(d),
+            cdata->getPointer(d));
       } else {
-         TBOX_ERROR("CartesianEdgeComplexWeightedAverage error...\n"
-            << "dim > 3 not supported." << std::endl);
+         TBOX_ERROR("CartesianCellComplexWeightedAverage error...\n"
+            << "dim > 4 not supported." << std::endl);
       }
    }
 }

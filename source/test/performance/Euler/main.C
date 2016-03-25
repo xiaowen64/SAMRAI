@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Euler gas dynamics sample application
  *
  ************************************************************************/
@@ -39,7 +39,6 @@
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -288,38 +287,25 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      tbox::Array<string> viz_writer(1);
-      viz_writer[0] = "VisIt";
-      string viz_dump_filename;
       string visit_dump_dirname = base_name + ".visit";
       bool uses_visit = false;
       int visit_number_procs_per_file = 1;
       if (viz_dump_interval > 0) {
-         if (main_db->keyExists("viz_writer")) {
-            viz_writer = main_db->getStringArray("viz_writer");
-         }
-         if (main_db->keyExists("viz_dump_filename")) {
-            viz_dump_filename = main_db->getString("viz_dump_filename");
-         }
+         uses_visit = true;
          string viz_dump_dirname = base_name;
          if (main_db->keyExists("viz_dump_dirname")) {
             viz_dump_dirname = main_db->getString("viz_dump_dirname");
          }
-         for (int i = 0; i < viz_writer.getSize(); i++) {
-            if (viz_writer[i] == "VisIt") uses_visit = true;
-         }
          visit_dump_dirname = viz_dump_dirname + ".visit";
-         if (uses_visit) {
-            if (viz_dump_dirname.empty()) {
-               TBOX_ERROR("main(): "
-                  << "\nviz_dump_dirname is null ... "
-                  << "\nThis must be specified for use with VisIt"
-                  << endl);
-            }
-            if (main_db->keyExists("visit_number_procs_per_file")) {
-               visit_number_procs_per_file =
-                  main_db->getInteger("visit_number_procs_per_file");
-            }
+         if (viz_dump_dirname.empty()) {
+            TBOX_ERROR("main(): "
+               << "\nviz_dump_dirname is null ... "
+               << "\nThis must be specified for use with VisIt"
+               << endl);
+         }
+         if (main_db->keyExists("visit_number_procs_per_file")) {
+            visit_number_procs_per_file =
+               main_db->getInteger("visit_number_procs_per_file");
          }
       }
 
@@ -485,7 +471,6 @@ int main(
        * Then, close restart file and write initial state for visualization.
        */
 
-      hier::Connector dummy(dim); // Cause communicator set-up before performance timings.
       tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // Synchronize for the sake of accurate timings.
       double dt_now = time_integrator->initializeHierarchy();
 

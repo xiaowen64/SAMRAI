@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Iterator for cell centered patch data types
  *
  ************************************************************************/
@@ -45,14 +45,6 @@ namespace pdat {
 class CellIterator
 {
 public:
-   /**
-    * Constructor for the cell iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   explicit CellIterator(
-      const hier::Box& box,
-      bool begin);
-
    /**
     * Copy constructor for the cell iterator
     */
@@ -115,6 +107,8 @@ public:
    operator == (
       const CellIterator& iterator) const
    {
+      TBOX_ASSERT(d_box.isSpatiallyEqual(iterator.d_box));
+      TBOX_ASSERT(d_box.isIdEqual(iterator.d_box));
       return d_index == iterator.d_index;
    }
 
@@ -125,10 +119,26 @@ public:
    operator != (
       const CellIterator& iterator) const
    {
+      TBOX_ASSERT(d_box.isSpatiallyEqual(iterator.d_box));
+      TBOX_ASSERT(d_box.isIdEqual(iterator.d_box));
       return d_index != iterator.d_index;
    }
 
 private:
+   friend CellIterator CellGeometry::begin(const hier::Box& box);
+   friend CellIterator CellGeometry::end(const hier::Box& box);
+
+   /**
+    * Constructor for the cell iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   CellIterator(
+      const hier::Box& box,
+      bool begin);
+
+   // Unimplemented default constructor.
+   CellIterator();
+
    CellIndex d_index;
    hier::Box d_box;
 };

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -331,14 +331,14 @@ SiloDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string>
+std::vector<std::string>
 SiloDatabase::getAllKeys()
 {
    TBOX_ASSERT(hasDirectory());
 
    std::string path = nameMangle(d_directory);
 
-   Array<std::string> tmp_keys;
+   std::vector<std::string> tmp_keys;
 
    DBObjectType var_type = DBInqVarType(d_file, path.c_str());
    if (var_type == DB_DIR) {
@@ -350,7 +350,7 @@ SiloDatabase::getAllKeys()
 
       DBtoc* toc = DBGetToc(d_file);
 
-      tmp_keys.resizeArray(toc->nvar + toc->ndir);
+      tmp_keys.resize(toc->nvar + toc->ndir);
 
       for (int i = 0; i < toc->nvar; i++) {
          tmp_keys[i] = toc->var_names[i];
@@ -626,7 +626,7 @@ SiloDatabase::putBoolArray(
 /*
  ************************************************************************
  *
- * Two routines to get boolean arrays from the database with the
+ * Two routines to get boolean vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a boolean type.
@@ -634,19 +634,19 @@ SiloDatabase::putBoolArray(
  ************************************************************************
  */
 
-Array<bool>
-SiloDatabase::getBoolArray(
+std::vector<bool>
+SiloDatabase::getBoolVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isBool(key)) {
-      TBOX_ERROR("SiloDatabase::getBoolArray() error in database "
+      TBOX_ERROR("SiloDatabase::getBoolVector() error in database "
          << d_database_name << std::endl
          << "    Key = " << key << " is not a bool array." << std::endl);
    }
 
-   Array<bool> boolArray(getSiloSimpleTypeLength(key));
+   std::vector<bool> boolArray(getSiloSimpleTypeLength(key));
 
    short temp_array[getSiloSimpleTypeLength(key)];
 
@@ -731,7 +731,7 @@ SiloDatabase::putDatabaseBoxArray(
    elemlengths[1] = size;
    elemlengths[2] = size;
 
-   Array<int> values(nelements + size * 2);
+   std::vector<int> values(nelements + size * 2);
 
    int offset = nelements;
    for (int i = 0; i < nelements; i++) {
@@ -756,7 +756,7 @@ SiloDatabase::putDatabaseBoxArray(
 
    err = DBPutCompoundarray(d_file, path.c_str(),
          const_cast<char **>(elemnames), elemlengths,
-         3, values.getPointer(), values.size(),
+         3, &values[0], static_cast<int>(values.size()),
          DB_INT, 0);
    if (err < 0) {
       TBOX_ERROR(
@@ -769,7 +769,7 @@ SiloDatabase::putDatabaseBoxArray(
 /*
  ************************************************************************
  *
- * Two routines to get box arrays from the database with the
+ * A routine to get box vectors from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a box type.
@@ -777,8 +777,8 @@ SiloDatabase::putDatabaseBoxArray(
  ************************************************************************
  */
 
-Array<DatabaseBox>
-SiloDatabase::getDatabaseBoxArray(
+std::vector<DatabaseBox>
+SiloDatabase::getDatabaseBoxVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -788,27 +788,27 @@ SiloDatabase::getDatabaseBoxArray(
 
    DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-   Array<DatabaseBox> boxArray(ca->elemlengths[0]);
+   std::vector<DatabaseBox> boxVector(ca->elemlengths[0]);
 
    int* values = static_cast<int *>(ca->values);
    int offset = ca->elemlengths[0];
    for (int i = 0; i < (ca->elemlengths[0]); i++) {
-      boxArray[i].d_data.d_dimension = values[i];
+      boxVector[i].d_data.d_dimension = values[i];
       /*
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.
        */
-      boxArray[i].setDim(Dimension((unsigned short)values[i]));
-      for (int d = 0; d < boxArray[i].d_data.d_dimension; d++) {
-         boxArray[i].d_data.d_lo[d] = values[offset];
-         boxArray[i].d_data.d_hi[d] = values[offset + ca->elemlengths[1]];
+      boxVector[i].setDim(Dimension((unsigned short)values[i]));
+      for (int d = 0; d < boxVector[i].d_data.d_dimension; d++) {
+         boxVector[i].d_data.d_lo[d] = values[offset];
+         boxVector[i].d_data.d_hi[d] = values[offset + ca->elemlengths[1]];
          offset++;
       }
    }
 
    DBFreeCompoundarray(ca);
 
-   return boxArray;
+   return boxVector;
 }
 
 /*
@@ -853,7 +853,7 @@ SiloDatabase::putCharArray(
 /*
  ************************************************************************
  *
- * Two routines to get char arrays from the database with the
+ * Two routines to get char vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a char type.
@@ -861,21 +861,21 @@ SiloDatabase::putCharArray(
  ************************************************************************
  */
 
-Array<char>
-SiloDatabase::getCharArray(
+std::vector<char>
+SiloDatabase::getCharVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isChar(key)) {
-      TBOX_ERROR("SiloDatabase::getCharArray() error in database "
+      TBOX_ERROR("SiloDatabase::getCharVector() error in database "
          << d_database_name << std::endl
          << "    Key = " << key << " is not a char array." << std::endl);
    }
 
-   Array<char> charArray(getSiloSimpleTypeLength(key));
+   std::vector<char> charArray(getSiloSimpleTypeLength(key));
 
-   getSiloSimpleType(key, charArray.getPointer());
+   getSiloSimpleType(key, &charArray[0]);
 
    return charArray;
 }
@@ -939,7 +939,7 @@ SiloDatabase::putComplexArray(
    TBOX_ASSERT(data != 0);
 
    const char* elemnames[2];
-   Array<double> values(nelements * 2);
+   std::vector<double> values(nelements * 2);
    int elemlengths[2];
 
    elemnames[0] = "real";
@@ -966,7 +966,7 @@ SiloDatabase::putComplexArray(
 
    err = DBPutCompoundarray(d_file, path.c_str(),
          const_cast<char **>(elemnames), elemlengths, 2,
-         values.getPointer(), values.size(),
+         &values[0], static_cast<int>(values.size()),
          DB_DOUBLE, 0);
    if (err < 0) {
       TBOX_ERROR(
@@ -978,7 +978,7 @@ SiloDatabase::putComplexArray(
 /*
  ************************************************************************
  *
- * Two routines to get complex arrays from the database with the
+ * Two routines to get complex vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a complex type.
@@ -986,14 +986,14 @@ SiloDatabase::putComplexArray(
  ************************************************************************
  */
 
-Array<dcomplex>
-SiloDatabase::getComplexArray(
+std::vector<dcomplex>
+SiloDatabase::getComplexVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isComplex(key)) {
-      TBOX_ERROR("SiloDatabase::getComplexArray() error in database "
+      TBOX_ERROR("SiloDatabase::getComplexVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a complex array." << std::endl);
    }
@@ -1003,7 +1003,7 @@ SiloDatabase::getComplexArray(
 
    DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-   Array<dcomplex> complexArray(ca->elemlengths[0]);
+   std::vector<dcomplex> complexArray(ca->elemlengths[0]);
 
    for (int i = 0; i < ca->elemlengths[0]; i++) {
       complexArray[i] = dcomplex(static_cast<double *>(ca->values)[i],
@@ -1057,7 +1057,7 @@ SiloDatabase::putDoubleArray(
 /*
  ************************************************************************
  *
- * Two routines to get double arrays from the database with the
+ * Two routines to get double vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a double type.
@@ -1065,21 +1065,21 @@ SiloDatabase::putDoubleArray(
  ************************************************************************
  */
 
-Array<double>
-SiloDatabase::getDoubleArray(
+std::vector<double>
+SiloDatabase::getDoubleVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isDouble(key)) {
-      TBOX_ERROR("SiloDatabase::getDoubleArray() error in database "
+      TBOX_ERROR("SiloDatabase::getDoubleVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a double array." << std::endl);
    }
 
-   Array<double> doubleArray(getSiloSimpleTypeLength(key));
+   std::vector<double> doubleArray(getSiloSimpleTypeLength(key));
 
-   getSiloSimpleType(key, doubleArray.getPointer());
+   getSiloSimpleType(key, &doubleArray[0]);
 
    return doubleArray;
 }
@@ -1126,7 +1126,7 @@ SiloDatabase::putFloatArray(
 /*
  ************************************************************************
  *
- * Two routines to get float arrays from the database with the
+ * Two routines to get float vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a float type.
@@ -1134,21 +1134,21 @@ SiloDatabase::putFloatArray(
  ************************************************************************
  */
 
-Array<float>
-SiloDatabase::getFloatArray(
+std::vector<float>
+SiloDatabase::getFloatVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isFloat(key)) {
-      TBOX_ERROR("SiloDatabase::getFloatArray() error in database "
+      TBOX_ERROR("SiloDatabase::getFloatVector() error in database "
          << d_database_name << std::endl
          << "    Key = " << key << " is not a float array." << std::endl);
    }
 
-   Array<float> floatArray(getSiloSimpleTypeLength(key));
+   std::vector<float> floatArray(getSiloSimpleTypeLength(key));
 
-   getSiloSimpleType(key, floatArray.getPointer());
+   getSiloSimpleType(key, &floatArray[0]);
 
    return floatArray;
 
@@ -1196,7 +1196,7 @@ SiloDatabase::putIntegerArray(
 /*
  ************************************************************************
  *
- * Two routines to get integer arrays from the database with the
+ * Two routines to get integer vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a integer type.
@@ -1204,21 +1204,21 @@ SiloDatabase::putIntegerArray(
  ************************************************************************
  */
 
-Array<int>
-SiloDatabase::getIntegerArray(
+std::vector<int>
+SiloDatabase::getIntegerVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isInteger(key)) {
-      TBOX_ERROR("SiloDatabase::getIntegerArray() error in database "
+      TBOX_ERROR("SiloDatabase::getIntegerVector() error in database "
          << d_database_name << std::endl
          << "    Key = " << key << " is not a integer array." << std::endl);
    }
 
-   Array<int> intArray(getSiloSimpleTypeLength(key));
+   std::vector<int> intArray(getSiloSimpleTypeLength(key));
 
-   getSiloSimpleType(key, intArray.getPointer());
+   getSiloSimpleType(key, &intArray[0]);
 
    return intArray;
 }
@@ -1322,7 +1322,7 @@ SiloDatabase::putStringArray(
 /*
  ************************************************************************
  *
- * Two routines to get string arrays from the database with the
+ * Two routines to get string vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a string type.
@@ -1330,14 +1330,14 @@ SiloDatabase::putStringArray(
  ************************************************************************
  */
 
-Array<std::string>
-SiloDatabase::getStringArray(
+std::vector<std::string>
+SiloDatabase::getStringVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isString(key)) {
-      TBOX_ERROR("SiloDatabase::getStringArray() error in database "
+      TBOX_ERROR("SiloDatabase::getStringVector() error in database "
          << d_database_name << std::endl
          << "    Key = " << key << " is not a string array." << std::endl);
    }
@@ -1347,7 +1347,7 @@ SiloDatabase::getStringArray(
 
    DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-   Array<std::string> stringArray(ca->nelems);
+   std::vector<std::string> stringArray(ca->nelems);
 
    std::string values = static_cast<char *>(ca->values);
 
@@ -1377,9 +1377,9 @@ SiloDatabase::printClassData(
    std::ostream& os)
 {
 
-   Array<std::string> keys = getAllKeys();
+   std::vector<std::string> keys = getAllKeys();
 
-   if (keys.getSize() == 0) {
+   if (keys.size() == 0) {
       os << "Database named `" << d_database_name
          << "' has zero keys..." << std::endl;
    } else {
@@ -1387,7 +1387,7 @@ SiloDatabase::printClassData(
          << d_database_name << "'..." << std::endl;
    }
 
-   for (int i = 0; i < keys.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(keys.size()); i++) {
       switch (getArrayType(keys[i])) {
          case Database::SAMRAI_INVALID: {
             os << "   Data entry `" << keys[i] << "' is"

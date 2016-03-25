@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
@@ -21,6 +21,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <map>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -59,6 +60,11 @@ public:
    /*!
     * @brief Construct a new patch level given a BoxLevel.
     *
+    * This constructor makes a COPY of the supplied BoxLevel.  If the caller
+    * intends to modify the supplied BoxLevel for other purposes after creating
+    * this PatchLevel, then this constructor must be used rather than the
+    * constructor taking a boost::shared_ptr<BoxLevel>.
+    *
     * The BoxLevel provides refinement ratio information, establishing
     * the ratio between the index space of the new level and some reference
     * level (typically level zero) in some patch hierarchy.
@@ -85,6 +91,50 @@ public:
     */
    PatchLevel(
       const BoxLevel& box_level,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
+      const boost::shared_ptr<PatchFactory>& factory =
+         boost::shared_ptr<PatchFactory>(),
+      bool defer_boundary_box_creation = false);
+
+   /*!
+    * @brief Construct a new patch level given a BoxLevel.
+    *
+    * This constructor ACQUIRES the supplied BoxLevel.  If the caller will not
+    * modify the supplied BoxLevel for other purposes after creating this
+    * PatchLevel, then this constructor may be used rather than the constructor
+    * taking a BoxLevel&.  Use of this constructor where permitted is more
+    * efficient as it avoids copying an entire BoxLevel.  Note that this
+    * constructor locks the supplied BoxLevel so that any attempt by the caller
+    * to modify it after calling this constructor will result in an
+    * unrecoverable error.
+    *
+    * The BoxLevel provides refinement ratio information, establishing
+    * the ratio between the index space of the new level and some reference
+    * level (typically level zero) in some patch hierarchy.
+    *
+    * The ratio information provided by the BoxLevel is also used
+    * by the grid geometry instance to initialize geometry information
+    * of both the level and the patches on that level.
+    *
+    * @param[in]  box_level
+    * @param[in]  grid_geometry
+    * @param[in]  descriptor The PatchDescriptor used to allocate patch data
+    *             on the local processor
+    * @param[in]  factory Optional PatchFactory.  If none specified, a default
+    *             (standard) patch factory will be used.
+    * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
+    *             construction of the boundary boxes.
+    *
+    * @pre grid_geometry
+    * @pre descriptor
+    * @pre box_level.getDim() == grid_geometry->getDim()
+    * @pre box_level.getRefinementRatio() != IntVector::getZero(getDim())
+    * @pre all components of box_level's refinement ratio must be nonzero and,
+    *      all components not equal to 1 must have the same sign
+    */
+   PatchLevel(
+      const boost::shared_ptr<BoxLevel> box_level,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =
@@ -484,7 +534,7 @@ public:
     * @return A const reference to the box array that defines
     * the extent of the index space on the level.
     */
-   const tbox::Array<BoxContainer>&
+   const std::vector<BoxContainer>&
    getPhysicalDomainArray() const
    {
       return d_physical_domain;
@@ -828,6 +878,184 @@ public:
    }
 
    /*!
+    * @brief Find an overlap Connector with the given PatchLevel's BoxLevel as
+    * its head and minimum Connector width.  If the specified Connector is not
+    * found, take the specified action.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * @param[in] head Find the overlap Connector with this PatchLevel's
+    *      BoxLevel as the head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   findConnector(
+      const PatchLevel& head,
+      const IntVector& min_connector_width,
+      ConnectorNotFoundAction not_found_action,
+      bool exact_width_only = false) const
+   {
+      return getBoxLevel()->findConnector(*head.getBoxLevel(),
+         min_connector_width,
+         not_found_action,
+         exact_width_only);
+   }
+
+   /*!
+    * @brief Find an overlap Connector with its transpose with the given
+    * PatchLevel's BoxLevel as its head and minimum Connector widths.  If the
+    * specified Connector is not found, take the specified action.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * @param[in] head Find the overlap Connector with this PatchLevel's
+    *      BoxLevel as the head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] transpose_min_connector_width Find the transpose overlap
+    *      Connector satisfying this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   findConnectorWithTranspose(
+      const PatchLevel& head,
+      const IntVector& min_connector_width,
+      const IntVector& transpose_min_connector_width,
+      ConnectorNotFoundAction not_found_action,
+      bool exact_width_only = false) const
+   {
+      return getBoxLevel()->findConnectorWithTranspose(*head.getBoxLevel(),
+         min_connector_width,
+         transpose_min_connector_width,
+         not_found_action,
+         exact_width_only);
+   }
+
+   /*!
+    * @brief Create an overlap Connector, computing relationships by
+    * globalizing data.
+    *
+    * The base will be this PatchLevel's BoxLevel.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head This PatchLevel's BoxLevel will be the head.
+    * @param[in] connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   createConnector(
+      const PatchLevel& head,
+      const IntVector& connector_width) const
+   {
+      return getBoxLevel()->createConnector(*head.getBoxLevel(),
+         connector_width);
+   }
+
+   /*!
+    * @brief Create an overlap Connector with its transpose, computing
+    * relationships by globalizing data.
+    *
+    * The base will be this PatchLevel's BoxLevel.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head This PatchLevel's BoxLevel will be the head.
+    * @param[in] connector_width
+    * @param[in] transpose_connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   createConnectorWithTranspose(
+      const PatchLevel& head,
+      const IntVector& connector_width,
+      const IntVector& transpose_connector_width) const
+   {
+      return getBoxLevel()->createConnectorWithTranspose(*head.getBoxLevel(),
+         connector_width,
+         transpose_connector_width);
+   }
+
+   /*!
+    * @brief Cache the supplied overlap Connector and its transpose
+    * if it exists.
+    *
+    * @param[in] connector
+    *
+    * @pre connector
+    * @pre getBoxLevel()->isInitialized()
+    * @pre getBoxLevel() == connector->getBase()
+    */
+   void
+   cacheConnector(
+      boost::shared_ptr<Connector>& connector) const
+   {
+      return getBoxLevel()->cacheConnector(connector);
+   }
+
+   /*!
+    * @brief Returns whether the object has overlap Connectors with the given
+    * PatchLevel's BoxLevel as the head and minimum Connector width.
+    *
+    * TODO:  does the following comment mean that this must be called
+    * before the call to findConnector?
+    *
+    * If this returns true, the Connector fitting the specification
+    * exists and findConnector() will not throw an assertion.
+    *
+    * @param[in] head Find the overlap Connector with this PatchLevel's
+    *      BoxLevel as the head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum ghost cell width.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return True if a Connector is found, otherwise false.
+    */
+   bool
+   hasConnector(
+      const PatchLevel& head,
+      const IntVector& min_connector_width,
+      bool exact_width_only = false) const
+   {
+      return getBoxLevel()->hasConnector(*head.getBoxLevel(),
+         min_connector_width,
+         exact_width_only);
+   }
+
+   /*!
     * @brief Use the PatchLevel restart database to set the state of the
     * PatchLevel and to create all patches on the local processor.
     *
@@ -997,7 +1225,7 @@ private:
        * @param[in]  patch_level
        * @param[in]  begin
        */
-      explicit Iterator(
+      Iterator(
          const PatchLevel* patch_level,
          bool begin);
 
@@ -1117,7 +1345,7 @@ private:
    /*
     * Extent of the index space.
     */
-   tbox::Array<BoxContainer> d_physical_domain;
+   std::vector<BoxContainer> d_physical_domain;
 
    /*
     * The ratio to coarser level applies only when the level resides

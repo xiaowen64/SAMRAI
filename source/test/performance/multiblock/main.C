@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Main program for SAMRAI Linear Advection example problem.
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   Multiblock performance tests.
  *
  ************************************************************************/
 
@@ -230,7 +230,7 @@ int main(
 
       /*
        * Retrieve "Main" section of the input database.  First, read dump
-       * information, which is used for writing vizamrai plot files.  Second,
+       * information, which is used for writing VisIt plot files.  Second,
        * if proper restart information was given on command line, and the restart
        * interval is non-zero, create a restart database.
        */
@@ -387,7 +387,8 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer")));
+            input_db->getDatabaseWithDefault("TreeLoadBalancer",
+                                             boost::shared_ptr<tbox::Database>())));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
@@ -411,7 +412,7 @@ int main(
       /*
        * Set up Visualization plot file writer(s).
        */
-      // VisitDataWriter is only present if HDF is available
+      // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       bool is_multiblock = true;
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
@@ -607,7 +608,7 @@ void setupHierarchy(
 
    char geom_name[32];
 
-   sprintf(geom_name, "BlockGeometry");
+   sprintf(geom_name, "GridGeometry");
    if (main_input_db->keyExists(geom_name)) {
       geometry.reset(
          new geom::GridGeometry(

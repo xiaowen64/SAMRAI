@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated outerside centered patch data type
  *
  ************************************************************************/
@@ -364,7 +364,7 @@ OutersideData<TYPE>::packStream(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
          const hier::Box src_box = hier::Box::shift(*b, -src_offset);
          for (int f = 0; f < 2; f++) {
@@ -392,7 +392,7 @@ OutersideData<TYPE>::unpackStream(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = (*b) * d_data[d][f]->getBox();
@@ -577,8 +577,8 @@ OutersideData<TYPE>::printAxisSide(
    const hier::Box region =
       sidebox * d_data[side_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator iend(region, false);
-   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+   hier::Box::iterator iend(region.end());
+   for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[side_normal][side]))(*i, depth) << std::endl;
       os << std::flush;

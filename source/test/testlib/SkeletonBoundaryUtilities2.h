@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating Skeleton 2d boundary data
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/CellData.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include "boost/shared_ptr.hpp"
@@ -23,6 +22,8 @@
 #include <string>
 #define included_String
 #endif
+
+#include <vector>
 
 /*!
  * @brief Class SkeletonBoundaryUtilities2 is a utility class that
@@ -120,10 +121,10 @@ public:
     * @param bdry_strategy user-defined object that reads DIRICHLET or NEUMANN
     *                      conditions
     * @param input_db      input database containing all boundary data
-    * @param edge_conds    array into which integer edge boundary condition types
-    *                      are read
-    * @param node_conds    array into which integer node boundary condition types
-    *                      are read
+    * @param edge_conds    vector into which integer edge boundary condition
+    *                      types are read
+    * @param node_conds    vector into which integer node boundary condition
+    *                      types are read
     * @param periodic      integer vector specifying which coordinate
     *                      directions are periodic (e.g., value returned from
     *                      GridGeometry2::getPeriodicShift())
@@ -132,8 +133,8 @@ public:
    getFromInput(
       BoundaryUtilityStrategy* bdry_strategy,
       const boost::shared_ptr<tbox::Database>& input_db,
-      tbox::Array<int>& edge_conds,
-      tbox::Array<int>& node_conds,
+      std::vector<int>& edge_conds,
+      std::vector<int>& node_conds,
       const hier::IntVector& periodic);
 
    /*!
@@ -147,8 +148,9 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_edge_conds     tbox::Array of boundary condition types for patch edges.
-    * @param bdry_edge_values    tbox::Array of boundary values for patch edges.
+    * @param bdry_edge_conds     std::vector of boundary condition types for
+    *                            patch edges.
+    * @param bdry_edge_values    std::vector of boundary values for patch edges.
     */
    static void
    fillEdgeBoundaryData(
@@ -156,8 +158,8 @@ public:
       boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_edge_conds,
-      const tbox::Array<double>& bdry_edge_values);
+      const std::vector<int>& bdry_edge_conds,
+      const std::vector<double>& bdry_edge_values);
 
    /*!
     * Function to fill 2d node boundary values for a patch.
@@ -170,8 +172,9 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_node_conds     tbox::Array of boundary condition types for patch nodes.
-    * @param bdry_edge_values    tbox::Array of boundary values for patch edges.
+    * @param bdry_node_conds     std::vector of boundary condition types for
+    *                            patch nodes.
+    * @param bdry_edge_values    std::vector of boundary values for patch edges.
     */
    static void
    fillNodeBoundaryData(
@@ -179,8 +182,8 @@ public:
       boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_node_conds,
-      const tbox::Array<double>& bdry_edge_values);
+      const std::vector<int>& bdry_node_conds,
+      const std::vector<double>& bdry_edge_values);
 
    /*!
     * Function that returns the integer edge boundary location
@@ -239,14 +242,14 @@ private:
    read2dBdryEdges(
       BoundaryUtilityStrategy* bdry_strategy,
       boost::shared_ptr<tbox::Database> input_db,
-      tbox::Array<int>& edge_conds,
+      std::vector<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read2dBdryNodes(
       boost::shared_ptr<tbox::Database> input_db,
-      const tbox::Array<int>& edge_conds,
-      tbox::Array<int>& node_conds,
+      const std::vector<int>& edge_conds,
+      std::vector<int>& node_conds,
       const hier::IntVector& periodic);
 
    static void

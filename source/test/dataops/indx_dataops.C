@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
+#include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/pdat/IndexData.h"
 #include "SAMRAI/pdat/IndexVariable.h"
@@ -142,30 +143,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_domain.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_itr(fine_domain);
+      hier::BoxContainer::iterator fine_itr = fine_domain.begin();
       for (int ib = 0; ib < n_fine_boxes; ++ib) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -224,8 +228,8 @@ int main(
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).
-            pdat::CellIterator icend(patch->getBox(), false);
-            for (pdat::CellIterator ic(patch->getBox(), true);
+            pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
                  ic != icend; ++ic) {
                SampleIndexData sd;
                sd.setInt(counter);
@@ -236,7 +240,7 @@ int main(
             // iterate over the "SampleIndexData" index data stored on the patch
             // and dump the integer stored on it.
             int currData = counter - 1;
-	    pdat::IndexData<SampleIndexData, pdat::CellGeometry>::iterator idend(*sample, false);
+            pdat::IndexData<SampleIndexData, pdat::CellGeometry>::iterator idend(*sample, false);
             for (pdat::IndexData<SampleIndexData,
                                  pdat::CellGeometry>::iterator id(*sample, true);
                  id != idend;

@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   (c) 1997-2013 Lawrence Livermore National Security, LLC
  *                Description:   Class used for auto testing applications
  *
  ************************************************************************/
@@ -33,7 +33,7 @@ AutoTester::AutoTester(
 
    d_write_patch_boxes = false;
    d_read_patch_boxes = false;
-   d_test_patch_boxes_at_steps.resizeArray(0);
+   d_test_patch_boxes_at_steps.resize(0);
    d_test_patch_boxes_step_count = 0;
 
    getFromInput(input_db);
@@ -105,7 +105,7 @@ int AutoTester::evalTestData(
        * Test 0: Time Refinement Integrator
        */
       double time = tri->getIntegratorTime();
-      if (d_correct_result.getSize() > 0) {
+      if (d_correct_result.size() > 0) {
          if (d_output_correct) {
             tbox::plog << "Test 0: Time Refinement Integrator "
                        << "\n   computed result: " << time;
@@ -130,7 +130,7 @@ int AutoTester::evalTestData(
        * Test 1: Time Refinement Integrator
        */
       double dt = tri->getLevelDtMax(nlevels);
-      if (d_correct_result.getSize() > 1) {
+      if (d_correct_result.size() > 1) {
          if (d_output_correct) {
             tbox::plog << "Test 1: Time Refinement Integrator "
                        << "\n   computed result: " << dt;
@@ -153,7 +153,7 @@ int AutoTester::evalTestData(
        * Test 2: Hyperbolic Level Integrator
        */
       dt = hli->getLevelDt(level, time, false);
-      if (d_correct_result.getSize() > 2) {
+      if (d_correct_result.size() > 2) {
          if (d_output_correct) {
             tbox::plog << "Test 2: Hyperbolic Level Integrator "
                        << "\n   computed result: " << dt;
@@ -193,7 +193,7 @@ int AutoTester::evalTestData(
 
    }
 
-   if ((d_test_patch_boxes_at_steps.getSize() >
+   if ((static_cast<int>(d_test_patch_boxes_at_steps.size()) >
         d_test_patch_boxes_step_count) &&
        (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] == iter)) {
 
@@ -215,7 +215,7 @@ int AutoTester::evalTestData(
             d_hdf_db.getDatabase(step_name));
 
          /*
-          * FIXME: This check give false positives!!!!!
+          * TODO: This check give false positives!!!!!
           * It writes the same file regardless of the number of processors.
           * We should be checking against base runs with the same number of processors,
           * compare different data.
@@ -224,12 +224,11 @@ int AutoTester::evalTestData(
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
-            boost::shared_ptr<tbox::Database> level_db(
-               step_db->getDatabase(level_name));
-            hier::BoxLevel correct_box_level(d_dim);
             boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            correct_box_level.getFromRestart(*level_db, grid_geometry);
+            boost::shared_ptr<tbox::Database> level_db(
+               step_db->getDatabase(level_name));
+            hier::BoxLevel correct_box_level(d_dim, *level_db, grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
                   ln,
@@ -313,41 +312,46 @@ int AutoTester::evalTestData(
       /*
        * Test 0: Time test
        */
-      if (d_output_correct) {
-         tbox::plog << "Test 0: Simulation Time: "
-                    << "\n   computed result: " << time;
-         if (d_correct_result.getSize() > 0) {
+      if (d_correct_result.size() > 0) {
+         if (d_output_correct) {
+            tbox::plog << "Test 0: Simulation Time: "
+                       << "\n   computed result: " << time;
             tbox::plog << "\n   specified result = "
                        << d_correct_result[0];
          }
          tbox::plog << std::endl;
-      }
-      if (tbox::MathUtilities<double>::equalEps(time, d_correct_result[0])) {
-         tbox::plog << "Test 0: Simulation Time check successful" << std::endl;
-      } else {
-         tbox::perr << "Test 0 FAILED: Simulation time incorrect" << std::endl;
-         num_failures++;
+
+         if (tbox::MathUtilities<double>::equalEps(time,
+                d_correct_result[0])) {
+            tbox::plog << "Test 0: Simulation Time check successful"
+                       << std::endl;
+         } else {
+            tbox::perr << "Test 0 FAILED: Simulation time incorrect"
+                       << std::endl;
+            num_failures++;
+         }
       }
 
       /*
        * Test 1: MethodOfLinesIntegrator
        */
       double dt = mol->getTimestep(hierarchy, time);
-      if (d_output_correct) {
-         tbox::plog << "Test 1: Method of Lines Integrator "
-                    << "\n   computed result: " << dt;
-         if (d_correct_result.getSize() > 1) {
+      if (d_correct_result.size() > 1) {
+         if (d_output_correct) {
+            tbox::plog << "Test 1: Method of Lines Integrator "
+                       << "\n   computed result: " << dt;
             tbox::plog << "\n   specified result = "
                        << d_correct_result[1];
          }
          tbox::plog << std::endl;
-      }
-      if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[1])) {
-         tbox::plog << "Test 1: MOL Int check successful" << std::endl;
-      } else {
-         tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
-                    << std::endl;
-         num_failures++;
+
+         if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[1])) {
+            tbox::plog << "Test 1: MOL Int check successful" << std::endl;
+         } else {
+            tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
+                       << std::endl;
+            num_failures++;
+         }
       }
 
       /*
@@ -369,7 +373,7 @@ int AutoTester::evalTestData(
 
    }
 
-   if ((d_test_patch_boxes_at_steps.getSize() > 0) &&
+   if ((static_cast<int>(d_test_patch_boxes_at_steps.size()) > 0) &&
        (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] == iter)) {
 
       int num_levels = hierarchy->getNumberOfLevels();
@@ -393,12 +397,11 @@ int AutoTester::evalTestData(
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
-            boost::shared_ptr<tbox::Database> level_db(
-               step_db->getDatabase(level_name));
-            hier::BoxLevel correct_box_level(d_dim);
             boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            correct_box_level.getFromRestart(*level_db, grid_geometry);
+            boost::shared_ptr<tbox::Database> level_db(
+               step_db->getDatabase(level_name));
+            hier::BoxLevel correct_box_level(d_dim, *level_db, grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
                   ln,
@@ -486,7 +489,7 @@ void AutoTester::getFromInput(
                     << std::endl;
       } else {
          d_test_patch_boxes_at_steps =
-            tester_db->getIntegerArray("test_patch_boxes_at_steps");
+            tester_db->getIntegerVector("test_patch_boxes_at_steps");
       }
       if (!tester_db->keyExists("test_patch_boxes_filename")) {
          tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
@@ -515,7 +518,7 @@ void AutoTester::getFromInput(
        * Read correct_result array for timestep test...
        */
       if (tester_db->keyExists("correct_result")) {
-         d_correct_result = tester_db->getDoubleArray("correct_result");
+         d_correct_result = tester_db->getDoubleVector("correct_result");
       } else {
          TBOX_WARNING("main.C: TESTING is on but no `correct_result' array"
             << "is given in input file." << std::endl);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -124,7 +124,6 @@ void OuternodeDataTest::readTestInput(
     */
 
    readVariableInput(db->getDatabase("VariableData"));
-   readRefinementInput(db->getDatabase("RefinementData"));
 }
 
 void OuternodeDataTest::registerVariables(
@@ -132,10 +131,10 @@ void OuternodeDataTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables_src.resizeArray(nvars);
-   d_variables_dst.resizeArray(nvars);
+   d_variables_src.resize(nvars);
+   d_variables_dst.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables_src[i].reset(
@@ -190,8 +189,9 @@ void OuternodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator ciend(sbox, false);
-   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(sbox));
+   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sbox));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
@@ -247,8 +247,8 @@ void OuternodeDataTest::setLinearData(
    for (n = 0; n < d_dim.getValue(); ++n) {
       for (s = 0; s < 2; ++s) {
          const hier::Box databox = data->getDataBox(n, s);
-         hier::Box::iterator biend(databox, false);
-         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(databox.end());
+         for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of node center and
@@ -286,12 +286,12 @@ void OuternodeDataTest::initializeDataOnPatch(
    NULL_USE(level_number);
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+   std::vector<boost::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -317,7 +317,7 @@ void OuternodeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -358,8 +358,9 @@ void OuternodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   pdat::NodeIterator ciend(interior, false);
-   for (pdat::NodeIterator ci(interior, true); ci != ciend; ++ci) {
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(interior));
+   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of edge and
@@ -424,7 +425,7 @@ bool OuternodeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -443,7 +444,7 @@ bool OuternodeDataTest::verifyResults(
             patch);                 //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),
@@ -452,8 +453,9 @@ bool OuternodeDataTest::verifyResults(
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         pdat::NodeIterator ciend(dbox, false);
-         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
+              ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
                double result = (*node_data)(*ci, d);

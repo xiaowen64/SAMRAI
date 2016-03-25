@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Gridding routines and params for Richardson Extrapolation.
  *
  ************************************************************************/
@@ -17,6 +17,8 @@
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 
 #include "boost/shared_ptr.hpp"
+
+#include <vector>
 
 namespace SAMRAI {
 namespace mesh {
@@ -61,11 +63,16 @@ namespace mesh {
  *           first tagging method in this set of tagging methods
  *              - \b tagging_method = one of RICHARDSON_EXTRAPOLATION,
  *                                    GRADIENT_DETECTOR, REFINE_BOXES, NONE
- *              - \b level_0
+ *              - \b level_m
  *                required if tagging_method is REFINE_BOXES, the static boxes
- *                for one of the levels
- *                   - \b level = required integer level boxes are defined for
- *                   - \b boxes = required box array specifying refine boxes
+ *                for the mth level
+ *                   - \b block_m
+ *                     required description of refine boxes in the mth block
+ *                     of the level just specified
+ *                        - \b boxes = required box array specifying refine
+ *                                     boxes
+ *                   - \b . . .
+ *                   - \b block_n
  *              - \b . . .
  *              - \b level_n
  *         - \b . . .
@@ -77,6 +84,10 @@ namespace mesh {
  *       where both a time and a cycle entry are active, the time entry
  *       takes precedence.
  *
+ *       If the problem is single block one may omit the "block_0" database
+ *       enclosing the boxes and simply include the boxes directly inside the
+ *       "level_m" database.
+ *
  *       It is possible to use a "shortcut" input syntax for extremely
  *       simple tagging criteria.  If you only want RICHARDSON_EXTRAPOLATION
  *       or GRADIENT_DETECTOR on for the entire simulation then an input
@@ -86,7 +97,7 @@ namespace mesh {
  *    tagging_method = RICHARDSON_EXTRAPOLATION
  * @endcode
  *
- * A sample input file entry might look like:
+ * A sample input file entry for a multi-block problem might look like:
  *
  * @code
  *    at_0 {
@@ -94,16 +105,19 @@ namespace mesh {
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
  *          level_0 {
- *             level = 0
- *             boxes = [(5,5),(9,9)],[(12,15),(18,19)]
+ *             block_1 {
+ *                boxes = [(5,5),(9,9)],[(12,15),(18,19)]
+ *             }
  *          }
  *          level_1 {
- *             level = 1
- *             boxes = [(25,30),(29,35)]
+ *             block_1 {
+ *                boxes = [(25,30),(29,35)]
+ *             }
  *          }
  *          level_2 {
- *             level = 2
- *             boxes = [(60,70),(70,80)]
+ *             block_1 {
+ *                boxes = [(60,70),(70,80)]
+ *             }
  *          }
  *       }
  *    }
@@ -113,8 +127,9 @@ namespace mesh {
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
  *          level_0 {
- *             level = 0
- *             boxes = [(7,7),(11,11)],[(14,17),(20,21)]
+ *             block_2 {
+ *                boxes = [(7,7),(11,11)],[(14,17),(20,21)]
+ *             }
  *          }
  *       }
  *    }
@@ -123,9 +138,10 @@ namespace mesh {
  *       time = 0.05
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
- *          level_0 {
- *             level = 1
- *             boxes = [(30,35),(34,40)]
+ *          level_1 {
+ *             block_0 {
+ *                boxes = [(30,35),(34,40)]
+ *             }
  *          }
  *       }
  *    }
@@ -134,9 +150,10 @@ namespace mesh {
  *       time = 0.10
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
- *          level_0 {
- *             level = 1
- *             boxes = [(35,40),(39,45)]
+ *          level_1 {
+ *             block_1 {
+ *                boxes = [(35,40),(39,45)]
+ *             }
  *          }
  *       }
  *    }
@@ -258,7 +275,7 @@ public:
     */
    void
    checkCoarsenRatios(
-      const tbox::Array<hier::IntVector>& ratio_to_coarser);
+      const std::vector<hier::IntVector>& ratio_to_coarser);
 
    /*!
     * Pass the request to initialize the data on a new level in the
@@ -411,6 +428,93 @@ public:
       const hier::BoxContainer& refine_boxes,
       const int level_number);
 
+   /*!
+    * Turn on refine boxes criteria at the specified time programmatically.
+    *
+    * @param time Time to turn refine boxes criteria on.
+    */
+   void
+   turnOnRefineBoxes(
+      double time);
+
+   /*!
+    * Turn off refine boxes criteria at the specified time programmatically.
+    *
+    * @param time Time to turn refine boxes criteria off.
+    */
+   void
+   turnOffRefineBoxes(
+      double time);
+
+   /*!
+    * Turn on gradient detector criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn gradient detector criteria on.
+    *
+    * @pre d_tag_strategy
+    */
+   void
+   turnOnGradientDetector(
+      double time);
+
+   /*!
+    * Turn off gradient detector criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn gradient detector criteria off.
+    */
+   void
+   turnOffGradientDetector(
+      double time);
+
+   /*!
+    * Turn on Richardson extrapolation criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn Richardson extrapolation on.
+    *
+    * @pre d_tag_strategy
+    */
+   void
+   turnOnRichardsonExtrapolation(
+      double time);
+
+   /*!
+    * Turn off Richardson extrapolation criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn Richardson extrapolation off.
+    */
+   void
+   turnOffRichardsonExtrapolation(
+      double time);
+
+   /**
+    * In some cases user code may wish to process a PatchLevel before it is
+    * removed from the hierarchy.  For example, data may exist only on a given
+    * PatchLevel such as the finest level.  If that level were to be removed
+    * before this data is moved off of it then the data will be lost.  This
+    * method is a user defined callback used by GriddingAlgorithm when a
+    * PatchLevel is to be removed.  The callback performs any user actions on
+    * the level about to be removed.  It is implemented by classes derived from
+    * StandardTagAndInitStrategy.
+    *
+    * @param hierarchy The PatchHierarchy being modified.
+    * @param level_number The number of the PatchLevel in hierarchy about to be
+    *                     removed.
+    * @param old_level The level in hierarchy about to be removed.
+    *
+    * @see mesh::GriddingAlgorithm
+    * @see mesh::StandardTagAndInitStrategy
+    */
+   void
+   processLevelBeforeRemoval(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      int level_number,
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>());
+
 private:
    /*
     * Apply preprocessing for Richardson extrapolation.
@@ -473,7 +577,7 @@ private:
     * tbox::Array of patch levels containing coarsened versions of the patch
     * levels, for use with Richardson extrapolation.
     */
-   tbox::Array<boost::shared_ptr<hier::PatchLevel> > d_rich_extrap_coarsened_levels;
+   std::vector<boost::shared_ptr<hier::PatchLevel> > d_rich_extrap_coarsened_levels;
 
    StandardTagAndInitializeConnectorWidthRequestor d_staicwri;
 
@@ -483,8 +587,8 @@ private:
     * have been reset while the box array specifies the new set of refine
     * boxes for the level.
     */
-   tbox::Array<bool> d_refine_boxes_reset;
-   tbox::Array<hier::BoxContainer> d_reset_refine_boxes;
+   std::vector<bool> d_refine_boxes_reset;
+   std::vector<hier::BoxContainer> d_reset_refine_boxes;
 
    struct TagCriteria
    {

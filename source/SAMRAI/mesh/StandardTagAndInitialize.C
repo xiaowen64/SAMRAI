@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Routines for performing cell-tagging and initializing
  *                a new level.
  *
@@ -303,9 +303,11 @@ StandardTagAndInitialize::tagCellsForRefinement(
 
          TBOX_ASSERT(tag_data);
 
-         for (hier::BoxContainer::iterator ib(refine_boxes);
-              ib != refine_boxes.end(); ++ib) {
-            hier::Box intersection = *ib * tag_data->getBox();
+         const hier::Box& tag_data_box = tag_data->getBox();
+         const hier::BlockId& tag_data_block_id = tag_data_box.getBlockId();
+         for (hier::BoxContainerSingleBlockIterator ib = refine_boxes.begin(tag_data_block_id);
+              ib != refine_boxes.end(tag_data_block_id); ++ib) {
+            hier::Box intersection = *ib * tag_data_box;
             if (!(intersection.empty())) {
                tag_data->fill(1, intersection);
             }
@@ -743,81 +745,74 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    /*
     * Generate Connector patch_level<==>coarsened_level and
     * coarsened_level--->coarsened_level.  To support recursive data
-    * transfer, these Connectors should have gcw equivalent to
+    * transfer, these Connectors should have widths equivalent to
     * patch_level<==>patch_level.
     */
-   const hier::IntVector level_to_level_gcw =
+   const hier::IntVector level_to_level_width =
       hierarchy->getRequiredConnectorWidth(level_number,
          level_number);
 
-   const hier::Connector level_to_level =
-      patch_level->getBoxLevel()->getPersistentOverlapConnectors().
-      findConnector(
-         *patch_level->getBoxLevel(),
-         level_to_level_gcw);
+   const hier::Connector& level_to_level =
+      patch_level->findConnector(*patch_level,
+         level_to_level_width,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE);
 
-   hier::Connector coarsened_to_level = level_to_level;
-   coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
-   coarsened_to_level.setHead(*patch_level->getBoxLevel());
-   coarsened_to_level.setWidth(
-      hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
-      true);
+   boost::shared_ptr<hier::Connector> tmp_coarsened(
+      boost::make_shared<hier::Connector>(level_to_level));
+   tmp_coarsened->setBase(*coarsened_level->getBoxLevel());
+   tmp_coarsened->setHead(*coarsened_level->getBoxLevel());
+   tmp_coarsened->setWidth(
+      hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio), true);
+   tmp_coarsened->coarsenLocalNeighbors(coarsen_ratio);
+   tmp_coarsened->setTranspose(0, false);
 
-   hier::Connector tmp_coarsened(level_to_level);
-   tmp_coarsened.setBase( *patch_level->getBoxLevel());
-   tmp_coarsened.setHead(*coarsened_level->getBoxLevel(), true);
-   tmp_coarsened.coarsenLocalNeighbors(coarsen_ratio);
+   boost::shared_ptr<hier::Connector> level_to_coarsened(
+      boost::make_shared<hier::Connector>(*tmp_coarsened));
+   level_to_coarsened->setBase(*patch_level->getBoxLevel());
+   level_to_coarsened->setHead(*coarsened_level->getBoxLevel());
+   level_to_coarsened->setWidth(level_to_level_width, true);
+   level_to_coarsened->setTranspose(0, false);
 
-   const hier::Connector& level_to_coarsened =
-      patch_level->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector(
-         *coarsened_level->getBoxLevel(),
-         level_to_level_gcw,
-         tmp_coarsened);
-
-   coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
-   createConnector(
-      *coarsened_level->getBoxLevel(),
-      hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
-      tmp_coarsened);
+   coarsened_level->cacheConnector(tmp_coarsened);
 
    if (level_number > 0) {
       /*
        * Get Connectors coarsened<==>coarser, which are used for recursive
        * refinement filling of the coarsened level's ghosts.
        */
-      hier::Connector* coarsened_to_coarser = new hier::Connector(dim);
-      hier::Connector* coarser_to_coarsened = new hier::Connector(dim);
+      boost::shared_ptr<hier::Connector> coarser_to_coarsened;
       boost::shared_ptr<hier::PatchLevel> coarser_level(
          hierarchy->getPatchLevel(level_number - 1));
-      const hier::Connector& level_to_coarser =
-         patch_level->getBoxLevel()->getPersistentOverlapConnectors().
-         findConnector(
-            *coarser_level->getBoxLevel(),
-            hierarchy->getRequiredConnectorWidth(
-               level_number, level_number - 1));
       const hier::Connector& coarser_to_level =
-         coarser_level->getBoxLevel()->getPersistentOverlapConnectors()
-         .findConnector(
-            *patch_level->getBoxLevel(),
+         coarser_level->findConnectorWithTranspose(*patch_level,
             hierarchy->getRequiredConnectorWidth(
-               level_number - 1, level_number));
+               level_number - 1, level_number, true),
+            hierarchy->getRequiredConnectorWidth(
+               level_number, level_number - 1, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+
+      // level_to_coarsened only needs its transpose set temporarily for this
+      // call to bridge.  When it is cached later we don't want to also cache
+      // its transpose which is why the tranpose is set to a null shared_ptr a
+      // few lines below.
+      hier::Connector coarsened_to_level(level_to_level);
+      coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
+      coarsened_to_level.setHead(*patch_level->getBoxLevel());
+      coarsened_to_level.setWidth(
+         hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio),
+         true);
+      level_to_coarsened->setTranspose(&coarsened_to_level, false);
+
       hier::OverlapConnectorAlgorithm oca;
-      oca.bridge(*coarsened_to_coarser,
-         *coarser_to_coarsened,
-         coarsened_to_level,
-         level_to_coarser,
+      oca.bridge(coarser_to_coarsened,
          coarser_to_level,
-         level_to_coarsened);
-      coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
-         *coarser_level->getBoxLevel(),
-         coarsened_to_coarser);
-      coarser_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
-         *coarsened_level->getBoxLevel(),
-         coarser_to_coarsened);
+         *level_to_coarsened,
+         true);
+      coarser_level->cacheConnector(coarser_to_coarsened);
+
+      level_to_coarsened->setTranspose(0, false);
    }
+   patch_level->cacheConnector(level_to_coarsened);
 
    bool before_advance = true;
    d_tag_strategy->coarsenDataForRichardsonExtrapolation(hierarchy,
@@ -874,8 +869,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * Add the constructed coarsened level to the array of maintained
     * coarsened levels for Richardson extrapolation.
     */
-   if (d_rich_extrap_coarsened_levels.getSize() < level_number + 1) {
-      d_rich_extrap_coarsened_levels.resizeArray(level_number + 1);
+   if (static_cast<int>(d_rich_extrap_coarsened_levels.size()) < level_number + 1) {
+      d_rich_extrap_coarsened_levels.resize(level_number + 1);
    }
 
    d_rich_extrap_coarsened_levels[level_number] = coarsened_level;
@@ -903,7 +898,7 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
 
       const tbox::Dimension& dim = boxes.begin()->getDim();
 
-      for (hier::BoxContainer::const_iterator ib(boxes);
+      for (hier::BoxContainer::const_iterator ib = boxes.begin();
            ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib->numberCells();
          for (int i = 0; i < dim.getValue(); i++) {
@@ -937,7 +932,7 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
 
 void
 StandardTagAndInitialize::checkCoarsenRatios(
-   const tbox::Array<hier::IntVector>& ratio_to_coarser)
+   const std::vector<hier::IntVector>& ratio_to_coarser)
 {
    if (everUsesRichardsonExtrapolation()) {
       const tbox::Dimension& dim = ratio_to_coarser[1].getDim();
@@ -962,7 +957,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
        * level are between the supported 2 or 3, and that the error coarsen
        * ratios are constant over the hierarchy.
        */
-      for (int ln = 1; ln < ratio_to_coarser.getSize(); ln++) {
+      for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ln++) {
 
          for (int d = 0; d < dim.getValue(); d++) {
             int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
@@ -1223,29 +1218,71 @@ StandardTagAndInitialize::getFromInput(
          this_tag_crit.d_tagging_method = tagging_method;
          if (tagging_method == "REFINE_BOXES") {
             d_ever_uses_refine_boxes = true;
-            int n_level_keys = input_db->getAllKeys().getSize() - 1;
-            if (n_level_keys <= 0) {
+            std::vector<std::string> level_keys = input_db->getAllKeys();
+            int n_level_keys = static_cast<int>(level_keys.size());
+            if (n_level_keys <= 1) {
                TBOX_ERROR(
                   getObjectName() << "::getFromInput \n"
                                   << "No refine boxes supplied."
                                   << std::endl);
             }
             for (int k = 0; k < n_level_keys; ++k) {
-               std::string level_name =
-                  "level_" + tbox::Utilities::intToString(k);
-               if (!input_db->keyExists(level_name)) {
+               hier::BoxContainer level_boxes;
+               if (level_keys[k] == "tagging_method") {
+                  continue;
+               }
+               if (level_keys[k].find("level_") != 0) {
                   TBOX_ERROR(
                      getObjectName() << "::getFromInput \n"
-                                     << "Missing level refine boxes."
+                                     << "Invalid syntax for level refine boxes."
                                      << std::endl);
                }
+               int level = atoi(level_keys[k].substr(6).c_str());
                boost::shared_ptr<tbox::Database> level_db(
-                  input_db->getDatabase(level_name));
-               int level = level_db->getInteger("level");
-               hier::BoxContainer boxes(
-                  level_db->getDatabaseBoxArray("boxes"));
+                  input_db->getDatabase(level_keys[k]));
+               std::vector<std::string> block_keys = level_db->getAllKeys();
+               int n_block_keys = static_cast<int>(block_keys.size());
+               if (n_block_keys <= 0) {
+                  TBOX_ERROR(
+                     getObjectName() << "::getFromInput \n"
+                                     << "No refine boxes supplied."
+                                     << std::endl);
+               }
+               if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
+                  std::vector<tbox::DatabaseBox> db_box_vector =
+                     level_db->getDatabaseBoxVector("boxes");
+                  hier::BoxContainer boxes(db_box_vector);
+                  for (hier::BoxContainer::iterator b = boxes.begin();
+                       b != boxes.end(); ++b) {
+                     b->setBlockId(hier::BlockId(0));
+                  }
+                  level_boxes.spliceBack(boxes);
+               }
+               else {
+                  for (int l = 0; l < n_block_keys; ++l) {
+                     if (block_keys[l].find("block_") != 0) {
+                        TBOX_ERROR(
+                           getObjectName() << "::getFromInput \n"
+                                           << "Invalid syntax for level refine boxes."
+                                           << std::endl);
+                     }
+                     int block = atoi(block_keys[l].substr(6).c_str());
+                     boost::shared_ptr<tbox::Database> block_db(
+                        level_db->getDatabase(block_keys[l]));
+                     std::vector<tbox::DatabaseBox> db_box_vector =
+                        block_db->getDatabaseBoxVector("boxes");
+                     hier::BoxContainer boxes(db_box_vector);
+                     for (hier::BoxContainer::iterator b = boxes.begin();
+                          b != boxes.end(); ++b) {
+                        b->setBlockId(hier::BlockId(block));
+                     }
+                     level_boxes.spliceBack(boxes);
+                     boxes.clear();
+                  }
+               }
                this_tag_crit.d_level_refine_boxes.insert(
-                  std::make_pair(level, boxes));
+                  std::make_pair(level, level_boxes));
+               level_boxes.clear();
             }
          }
          else if (tagging_method == "RICHARDSON_EXTRAPOLATION") {
@@ -1269,7 +1306,7 @@ StandardTagAndInitialize::getFromInput(
 
          // Read the set of criteria for each cycle or time having tagging
          // criteria.
-         int n_at_commands = input_db->getAllKeys().getSize();
+         int n_at_commands = static_cast<int>(input_db->getAllKeys().size());
          for (int i = 0; i < n_at_commands; ++i) {
             std::string at_name = "at_" + tbox::Utilities::intToString(i);
             if (!input_db->keyExists(at_name)) {
@@ -1316,7 +1353,7 @@ StandardTagAndInitialize::getFromInput(
             /*
              * Read info common to cycle and time tagging criteria.
              */
-            int n_tag_keys = at_db->getAllKeys().getSize() - 1;
+            int n_tag_keys = static_cast<int>(at_db->getAllKeys().size()) - 1;
             if (n_tag_keys <= 0) {
                TBOX_ERROR(
                   getObjectName() << "::getFromInput \n"
@@ -1353,8 +1390,9 @@ StandardTagAndInitialize::getFromInput(
                // need to be read.
                if (tagging_method == "REFINE_BOXES") {
                   d_ever_uses_refine_boxes = true;
-                  int n_level_keys = this_tag_db->getAllKeys().getSize() - 1;
-                  if (n_level_keys <= 0) {
+                  std::vector<std::string> level_keys = this_tag_db->getAllKeys();
+                  int n_level_keys = static_cast<int>(level_keys.size());
+                  if (n_level_keys <= 1) {
                      TBOX_ERROR(
                         getObjectName() << "::getFromInput \n"
                                         << "No refine boxes supplied."
@@ -1363,21 +1401,63 @@ StandardTagAndInitialize::getFromInput(
 
                   // For each level specified, read the refine boxes.
                   for (int k = 0; k < n_level_keys; ++k) {
-                     std::string level_name =
-                        "level_" + tbox::Utilities::intToString(k);
-                     if (!this_tag_db->keyExists(level_name)) {
+                     hier::BoxContainer level_boxes;
+                     if (level_keys[k] == "tagging_method") {
+                        continue;
+                     }
+                     if (level_keys[k].find("level_") != 0) {
                         TBOX_ERROR(
                            getObjectName() << "::getFromInput \n"
-                                           << "Missing level refine boxes."
+                                           << "Invalid syntax for level refine boxes."
                                            << std::endl);
                      }
+                     int level = atoi(level_keys[k].substr(6).c_str());
                      boost::shared_ptr<tbox::Database> level_db(
-                        this_tag_db->getDatabase(level_name));
-                     int level = level_db->getInteger("level");
-                     hier::BoxContainer boxes(
-                        level_db->getDatabaseBoxArray("boxes"));
+                        this_tag_db->getDatabase(level_keys[k]));
+                     std::vector<std::string> block_keys =
+                        level_db->getAllKeys();
+                     int n_block_keys = static_cast<int>(block_keys.size());
+                     if (n_block_keys <= 0) {
+                        TBOX_ERROR(
+                           getObjectName() << "::getFromInput \n"
+                                           << "No refine boxes supplied."
+                                           << std::endl);
+                     }
+                     if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
+                        std::vector<tbox::DatabaseBox> db_box_vector =
+                           level_db->getDatabaseBoxVector("boxes");
+                        hier::BoxContainer boxes(db_box_vector);
+                        for (hier::BoxContainer::iterator b = boxes.begin();
+                             b != boxes.end(); ++b) {
+                           b->setBlockId(hier::BlockId(0));
+                        }
+                        level_boxes.spliceBack(boxes);
+                     }
+                     else {
+                        for (int l = 0; l < n_block_keys; ++l) {
+                           if (block_keys[l].find("block_") != 0) {
+                              TBOX_ERROR(
+                                 getObjectName() << "::getFromInput \n"
+                                                 << "Invalid syntax for level refine boxes."
+                                                 << std::endl);
+                           }
+                           int block = atoi(block_keys[l].substr(6).c_str());
+                           boost::shared_ptr<tbox::Database> block_db(
+                              level_db->getDatabase(block_keys[l]));
+                           std::vector<tbox::DatabaseBox> db_box_vector =
+                              block_db->getDatabaseBoxVector("boxes");
+                           hier::BoxContainer boxes(db_box_vector);
+                           for (hier::BoxContainer::iterator b = boxes.begin();
+                                b != boxes.end(); ++b) {
+                              b->setBlockId(hier::BlockId(block));
+                           }
+                           level_boxes.spliceBack(boxes);
+                           boxes.clear();
+                        }
+                     }
                      this_tag_crit.d_level_refine_boxes.insert(
-                        std::make_pair(level, boxes));
+                        std::make_pair(level, level_boxes));
+                     level_boxes.clear();
                   }
                }
                else if (tagging_method == "RICHARDSON_EXTRAPOLATION") {
@@ -1499,25 +1579,25 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
       }
    }
 
-   if (refine_boxes.isEmpty()) {
-      TBOX_WARNING(
-         getObjectName() << ": getRefineBoxes\n"
-                         << "No refine boxes specified on level " << level_num
-                         << ".\n No refinement will be performed."
-                         << std::endl);
-   }
-
    /*
     * If the user has requested their own particular set of refine
     * boxes (i.e. by calling resetRefineBoxes()), overwrite any previously
     * determined refine boxes with their requested set.
     */
    bool use_reset = false;
-   if (d_refine_boxes_reset.getSize() > level_num) {
+   if (static_cast<int>(d_refine_boxes_reset.size()) > level_num) {
       if (d_refine_boxes_reset[level_num]) {
          use_reset = true;
          refine_boxes = d_reset_refine_boxes[level_num];
       }
+   }
+
+   if (refine_boxes.isEmpty()) {
+      TBOX_WARNING(
+         getObjectName() << ": getRefineBoxes\n"
+                         << "No refine boxes specified on level " << level_num
+                         << ".\n No refinement will be performed."
+                         << std::endl);
    }
 
    /*
@@ -1548,11 +1628,11 @@ StandardTagAndInitialize::resetRefineBoxes(
 {
    TBOX_ASSERT(level_num >= 0);
 
-   int i = d_reset_refine_boxes.getSize();
+   int i = static_cast<int>(d_reset_refine_boxes.size());
    if (i <= level_num) {
-      d_reset_refine_boxes.resizeArray(level_num + 1);
-      d_refine_boxes_reset.resizeArray(level_num + 1);
-      for ( ; i < d_reset_refine_boxes.getSize(); ++i) {
+      d_reset_refine_boxes.resize(level_num + 1);
+      d_refine_boxes_reset.resize(level_num + 1);
+      for ( ; i < static_cast<int>(d_reset_refine_boxes.size()); ++i) {
          d_refine_boxes_reset[i] = false;
       }
    }
@@ -1560,6 +1640,182 @@ StandardTagAndInitialize::resetRefineBoxes(
    d_refine_boxes_reset[level_num] = true;
    d_reset_refine_boxes[level_num] = refine_boxes;
 
+}
+
+void
+StandardTagAndInitialize::turnOnRefineBoxes(
+   double time)
+{
+   TimeTagCriteria search_for;
+   search_for.d_time = time;
+   std::set<TimeTagCriteria, time_tag_criteria_less>::iterator existing =
+      d_time_criteria.find(search_for);
+   if (existing == d_time_criteria.end()) {
+      TimeTagCriteria this_time_crit;
+      TagCriteria this_tag_crit;
+      this_tag_crit.d_tagging_method = "REFINE_BOXES";
+      this_time_crit.d_time = time;
+      this_time_crit.d_tag_criteria.push_back(this_tag_crit);
+      d_cur_time_criteria = d_time_criteria.insert(this_time_crit).first;
+   }
+   else {
+      bool refine_boxes_already_on = false;
+      for (std::vector<TagCriteria>::const_iterator i = existing->d_tag_criteria.begin();
+           i != existing->d_tag_criteria.end(); ++i) {
+         if (i->d_tagging_method == "REFINE_BOXES") {
+            refine_boxes_already_on = true;
+            break;
+         }
+      }
+      if (!refine_boxes_already_on) {
+         TagCriteria this_tag_crit;
+         this_tag_crit.d_tagging_method = "REFINE_BOXES";
+         std::vector<TagCriteria>& this_tag_criteria =
+            const_cast<std::vector<TagCriteria>& >(existing->d_tag_criteria);
+         this_tag_criteria.push_back(this_tag_crit);
+      }
+   }
+}
+
+void
+StandardTagAndInitialize::turnOffRefineBoxes(
+   double time)
+{
+   for (std::set<TimeTagCriteria, time_tag_criteria_less>::iterator i = d_time_criteria.begin();
+        i != d_time_criteria.end(); ++i) {
+      if (i->d_time <= time) {
+         std::vector<TagCriteria>& tag_crits =
+            const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
+         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
+              j != tag_crits.end(); ++j) {
+            if (j->d_tagging_method == "REFINE_BOXES") {;
+               tag_crits.erase(j);
+            }
+         }
+         break;
+      }
+   }
+}
+
+void
+StandardTagAndInitialize::turnOnGradientDetector(
+   double time)
+{
+   if (!d_tag_strategy) {
+      TBOX_ERROR("StandardTagAndInitialize::turnOnGradientDetector\n" <<
+         "A tagging strategy must be defined if graient detector is used.\n");
+   }
+
+   TimeTagCriteria search_for;
+   search_for.d_time = time;
+   std::set<TimeTagCriteria, time_tag_criteria_less>::iterator existing =
+      d_time_criteria.find(search_for);
+   if (existing == d_time_criteria.end()) {
+      TimeTagCriteria this_time_crit;
+      TagCriteria this_tag_crit;
+      this_tag_crit.d_tagging_method = "GRADIENT_DETECTOR";
+      this_time_crit.d_time = time;
+      this_time_crit.d_tag_criteria.push_back(this_tag_crit);
+      d_cur_time_criteria = d_time_criteria.insert(this_time_crit).first;
+   }
+   else {
+      bool grad_detect_already_on = false;
+      for (std::vector<TagCriteria>::const_iterator i = existing->d_tag_criteria.begin();
+           i != existing->d_tag_criteria.end(); ++i) {
+         if (i->d_tagging_method == "GRADIENT_DETECTOR") {
+            grad_detect_already_on = true;
+            break;
+         }
+      }
+      if (!grad_detect_already_on) {
+         TagCriteria this_tag_crit;
+         this_tag_crit.d_tagging_method = "GRADIENT_DETECTOR";
+         std::vector<TagCriteria>& this_tag_criteria =
+            const_cast<std::vector<TagCriteria>& >(existing->d_tag_criteria);
+         this_tag_criteria.push_back(this_tag_crit);
+      }
+   }
+}
+
+void
+StandardTagAndInitialize::turnOffGradientDetector(
+   double time)
+{
+   for (std::set<TimeTagCriteria, time_tag_criteria_less>::iterator i = d_time_criteria.begin();
+        i != d_time_criteria.end(); ++i) {
+      if (i->d_time <= time) {
+         std::vector<TagCriteria>& tag_crits =
+            const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
+         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
+              j != tag_crits.end(); ++j) {
+            if (j->d_tagging_method == "GRADIENT_DETECTOR") {
+               tag_crits.erase(j);
+            }
+         }
+         break;
+      }
+   }
+}
+
+void
+StandardTagAndInitialize::turnOnRichardsonExtrapolation(
+   double time)
+{
+   if (!d_tag_strategy) {
+      TBOX_ERROR("StandardTagAndInitialize::turnOnRichardsonExtrapolation\n" <<
+         "A tagging strategy must be defined if\n" <<
+         "Richardson extrapolation is used.\n");
+   }
+
+   TimeTagCriteria search_for;
+   search_for.d_time = time;
+   std::set<TimeTagCriteria, time_tag_criteria_less>::iterator existing =
+      d_time_criteria.find(search_for);
+   if (existing == d_time_criteria.end()) {
+      TimeTagCriteria this_time_crit;
+      TagCriteria this_tag_crit;
+      this_tag_crit.d_tagging_method = "RICHARDSON_EXTRAPOLATION";
+      this_time_crit.d_time = time;
+      this_time_crit.d_tag_criteria.push_back(this_tag_crit);
+      d_cur_time_criteria = d_time_criteria.insert(this_time_crit).first;
+   }
+   else {
+      bool rich_extrap_already_on = false;
+      for (std::vector<TagCriteria>::const_iterator i = existing->d_tag_criteria.begin();
+           i != existing->d_tag_criteria.end(); ++i) {
+         if (i->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
+            rich_extrap_already_on = true;
+            break;
+         }
+      }
+      if (!rich_extrap_already_on) {
+         TagCriteria this_tag_crit;
+         this_tag_crit.d_tagging_method = "RICHARDSON_EXTRAPOLATION";
+         std::vector<TagCriteria>& this_tag_criteria =
+            const_cast<std::vector<TagCriteria>& >(existing->d_tag_criteria);
+         this_tag_criteria.push_back(this_tag_crit);
+      }
+   }
+}
+
+void
+StandardTagAndInitialize::turnOffRichardsonExtrapolation(
+   double time)
+{
+   for (std::set<TimeTagCriteria, time_tag_criteria_less>::iterator i = d_time_criteria.begin();
+        i != d_time_criteria.end(); ++i) {
+      if (i->d_time <= time) {
+         std::vector<TagCriteria>& tag_crits =
+            const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
+         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
+              j != tag_crits.end(); ++j) {
+            if (j->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
+               tag_crits.erase(j);
+            }
+         }
+         break;
+      }
+   }
 }
 
 /*
@@ -1587,9 +1843,9 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
       // in tagging criteria.
       bool old_use_cycle_criteria = d_use_cycle_criteria;
       bool old_use_time_criteria = d_use_time_criteria;
-      std::set<CycleTagCriteria>::iterator old_cur_cycle_criteria =
+      std::set<CycleTagCriteria, cycle_tag_criteria_less>::iterator old_cur_cycle_criteria =
          d_cur_cycle_criteria;
-      std::set<TimeTagCriteria>::iterator old_cur_time_criteria =
+      std::set<TimeTagCriteria, time_tag_criteria_less>::iterator old_cur_time_criteria =
          d_cur_time_criteria;
       bool old_use_re = false;
       bool old_use_gd = false;
@@ -1630,7 +1886,7 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          // Find the cycle criteria for the supplied cycle, if any.
          for (; d_cur_cycle_criteria != d_cycle_criteria.end();
               ++d_cur_cycle_criteria) {
-            std::set<CycleTagCriteria>::iterator next_cycle_criteria =
+            std::set<CycleTagCriteria, cycle_tag_criteria_less>::iterator next_cycle_criteria =
                d_cur_cycle_criteria;
             ++next_cycle_criteria;
             if (next_cycle_criteria == d_cycle_criteria.end()) {
@@ -1662,7 +1918,7 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          // Find the time criteria for the supplied time, if any.
          for (; d_cur_time_criteria != d_time_criteria.end();
               ++d_cur_time_criteria) {
-            std::set<TimeTagCriteria>::iterator next_time_criteria =
+            std::set<TimeTagCriteria, time_tag_criteria_less>::iterator next_time_criteria =
                d_cur_time_criteria;
             ++next_time_criteria;
             if (next_time_criteria == d_time_criteria.end()) {
@@ -1770,6 +2026,17 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          }
       }
    }
+}
+
+void
+StandardTagAndInitialize::processLevelBeforeRemoval(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   int level_number,
+   const boost::shared_ptr<hier::PatchLevel>& old_level)
+{
+   d_tag_strategy->processLevelBeforeRemoval(hierarchy,
+      level_number,
+      old_level);
 }
 
 static int GCD(

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -18,6 +18,8 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <vector>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -104,10 +106,10 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    for (int d = 0; d < dim.getValue(); d++) {
 
-      tbox::Array<hier::BoundaryBox> bbox =
+      const std::vector<hier::BoundaryBox>& bbox =
          pgeom->getCodimensionBoundaries(d + 1);
 
-      for (int b = 0; b < bbox.size(); b++) {
+      for (int b = 0; b < static_cast<int>(bbox.size()); b++) {
          if (!bbox[b].getIsMultiblockSingularity()) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bbox[b],
                   patch.getBox(),
@@ -123,7 +125,7 @@ void
 MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   const hier::Connector& dst_to_encon,
+   boost::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
@@ -131,6 +133,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);
 
+   TBOX_ASSERT(!grid_geometry->hasEnhancedConnectivity() || dst_to_encon);
    TBOX_ASSERT_OBJDIM_EQUALITY3(patch, fill_box, boundary_box);
 
    const tbox::Dimension& dim = fill_box.getDim();
@@ -154,12 +157,12 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
          grid_geometry->getNeighbors(patch_blk_id);
 
       hier::Connector::ConstNeighborhoodIterator ni =
-         dst_to_encon.findLocal(dst_mb_id);
+         dst_to_encon->findLocal(dst_mb_id);
 
-      if (ni != dst_to_encon.end()) {
+      if (ni != dst_to_encon->end()) {
 
-         for (hier::Connector::ConstNeighborIterator ei = dst_to_encon.begin(ni);
-              ei != dst_to_encon.end(ni); ++ei) {
+         for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
+              ei != dst_to_encon->end(ni); ++ei) {
 
             boost::shared_ptr<hier::Patch> encon_patch(
                encon_level.getPatch(ei->getBoxId()));
@@ -209,8 +212,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
                TBOX_ASSERT(sing_data);
 
-               pdat::CellIterator ciend(encon_fill_box, false);
-               for (pdat::CellIterator ci(encon_fill_box, true);
+               pdat::CellIterator ciend(pdat::CellGeometry::end(encon_fill_box));
+               for (pdat::CellIterator ci(pdat::CellGeometry::begin(encon_fill_box));
                     ci != ciend; ++ci) {
                   pdat::CellIndex src_index(*ci);
                   pdat::CellGeometry::transform(src_index, back_trans);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -395,8 +395,8 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
 
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
-   d_mblk_bdry_sched_advance.resizeArray(finest_hiera_level + 1);
-   d_mblk_bdry_sched_advance_new.resizeArray(finest_hiera_level + 1);
+   d_mblk_bdry_sched_advance.resize(finest_hiera_level + 1);
+   d_mblk_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> mblk_level(
@@ -1221,7 +1221,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
    const double sync_time,
    const double old_time)
 {
-   tbox::Array<double> old_times(finest_level - coarsest_level + 1);
+   std::vector<double> old_times(finest_level - coarsest_level + 1);
    for (int i = coarsest_level; i <= finest_level; i++) {
       old_times[i] = old_time;
    }
@@ -1235,13 +1235,13 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
-   const tbox::Array<double>& old_times)
+   const std::vector<double>& old_times)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(old_times.getSize() >= finest_level);
+   TBOX_ASSERT(static_cast<int>(old_times.size()) >= finest_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln = coarsest_level; ln < finest_level; ln++) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));

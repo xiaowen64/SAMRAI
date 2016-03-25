@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   $Description
  *
  ************************************************************************/
@@ -13,8 +13,6 @@
 
 #include "SAMRAI/pdat/IndexVariable.h"
 #include "SAMRAI/pdat/IndexVariable.C"
-#include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Array.C"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -281,8 +279,8 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         hier::Box::iterator biend(box1, false);
-         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(box1.end());
+         for (Box::iterator bi(box1.begin()); bi != biend; ++bi) {
 
             Index idx = *bi;
 
@@ -309,8 +307,8 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         hier::Box::iterator biend(box1, false);
-         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(box1.end());
+         for (Box::iterator bi(box1.begin()); bi != biend; ++bi) {
 
             Index idx = *bi;
 
@@ -340,8 +338,8 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         hier::Box::iterator biend(box1, false);
-         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(box1.end());
+         for (Box::iterator bi(box1.begin()); bi != biend; ++bi) {
             src.addItemPointer(*bi, new Item);
          }
 

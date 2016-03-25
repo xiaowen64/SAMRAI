@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated side centered patch data type
  *
  ************************************************************************/
@@ -365,7 +365,7 @@ SideData<TYPE>::copyWithRotation(
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
-         for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+         for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
               bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = *bi;
 
@@ -375,8 +375,9 @@ SideData<TYPE>::copyWithRotation(
                const int depth = ((getDepth() < src.getDepth()) ?
                                   getDepth() : src.getDepth());
 
-               hier::Box::iterator ciend(copybox, false);
-               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(copybox.end());
+               for (hier::Box::iterator ci(copybox.begin());
+                    ci != ciend; ++ci) {
 
                   SideIndex dst_index(*ci, 0, 0);
                   dst_index.setAxis(i);
@@ -534,12 +535,12 @@ SideData<TYPE>::packWithRotation(
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
          const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-         tbox::Array<TYPE> buffer(size);
+         std::vector<TYPE> buffer(size);
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          int buf_count = 0;
-         for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+         for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
               bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = *bi;
 
@@ -549,8 +550,9 @@ SideData<TYPE>::packWithRotation(
 
                for (int d = 0; d < depth; d++) {
 
-                  hier::Box::iterator ciend(copybox, false);
-                  for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+                  hier::Box::iterator ciend(copybox.end());
+                  for (hier::Box::iterator ci(copybox.begin());
+                       ci != ciend; ++ci) {
 
                      SideIndex src_index(*ci, 0, 0);
                      src_index.setAxis(i);
@@ -562,7 +564,7 @@ SideData<TYPE>::packWithRotation(
                }
             }
          }
-         stream.pack(buffer.getPointer(), size);
+         stream.pack(&buffer[0], size);
       }
    }
 }
@@ -760,8 +762,9 @@ SideData<TYPE>::printAxis(
 
    os.precision(prec);
    if (d_directions(side_normal)) {
-      SideIterator iend(box, side_normal, false);
-      for (SideIterator i(box, side_normal, true); i != iend; ++i) {
+      SideIterator iend(SideGeometry::end(box, side_normal));
+      for (SideIterator i(SideGeometry::begin(box, side_normal));
+           i != iend; ++i) {
          os << "array" << *i << " = "
             << (*(d_data[side_normal]))(*i, depth) << std::endl << std::flush;
       }

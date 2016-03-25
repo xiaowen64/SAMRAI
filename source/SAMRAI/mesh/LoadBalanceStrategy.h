@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for box load balancing routines.
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/RankGroup.h"
 
 #include "boost/shared_ptr.hpp"
@@ -75,21 +74,11 @@ public:
     *  This must be accurate on input.  On putput, connects the newly
     *  balanced balance_box_level to the anchor box_level.
     *
-    * @param[in,out] anchor_to_balance Transpose of balance_to_anchor.
-    *
     * @param[in] hierarchy The hierarchy where the work distribution
     * data lives.
     *
     * @param[in] level_number The number of the level where the work
     * distribution data lives.
-    *
-    * @param[in] unbalanced_to_attractor Connector between the
-    * balance_box_level and an "attractor" BoxLevel.
-    * This data may be used to indicate preference for data locality.
-    * The implementation should try to maximize overlaps between
-    * attractor and balance cells owned by the same process.
-    *
-    * @param[in] attractor_to_unbalanced Transpose of unbalanced_to_attractor.
     *
     * @param[in] min_size hier::IntVector representing mimimum box size.
     *
@@ -128,12 +117,9 @@ public:
    virtual void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector& balance_to_anchor,
-      hier::Connector& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const hier::Connector& unbalanced_to_attractor,
-      const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,

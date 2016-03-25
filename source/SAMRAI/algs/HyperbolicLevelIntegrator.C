@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -174,9 +174,9 @@ boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_sync_comm;
 /*
  * Statistics on number of cells and patches generated.
  */
-tbox::Array<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_boxes_stat;
-tbox::Array<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_cells_stat;
-tbox::Array<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_timestamp_stat;
+std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_boxes_stat;
+std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_cells_stat;
+std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_timestamp_stat;
 #endif
 
 /*
@@ -409,8 +409,8 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
 
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
-   d_bdry_sched_advance.resizeArray(finest_hiera_level + 1);
-   d_bdry_sched_advance_new.resizeArray(finest_hiera_level + 1);
+   d_bdry_sched_advance.resize(finest_hiera_level + 1);
+   d_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
@@ -585,25 +585,22 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
 #if 1
    /*
-    * Compute the gcw needed for Connectors.  The peer GCW for
-    * coarse<==>fine can be equivalent to the GCW for fine<==>fine in
+    * Compute the width needed for Connectors.  The peer width for
+    * coarse<==>fine can be equivalent to the width for fine<==>fine in
     * the hierarcy, because the coarse level is just the coarsened fine
-    * level.  We just have to convert the GCW to the correct refinement
+    * level.  We just have to convert the width to the correct refinement
     * ratio before initializing the Connectors.
     */
-   const hier::IntVector peer_gcw =
+   const hier::IntVector peer_connector_width =
       hierarchy->getRequiredConnectorWidth(
          level_number,
-         level_number);
+         level_number, true);
 
-   coarse_level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
-      *hier_level->getBoxLevel(),
-      hier::IntVector::ceilingDivide(peer_gcw, coarsen_ratio));
-   hier_level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
-      *coarse_level->getBoxLevel(),
-      peer_gcw);
+   coarse_level->findConnectorWithTranspose(
+      *hier_level,
+      hier::IntVector::ceilingDivide(peer_connector_width, coarsen_ratio),
+      peer_connector_width,
+      hier::CONNECTOR_CREATE);
 #endif
 
    if (before_advance) {
@@ -1268,7 +1265,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
 {
    TBOX_ASSERT(hierarchy);
 
-   tbox::Array<double> old_times(finest_level - coarsest_level + 1);
+   std::vector<double> old_times(finest_level - coarsest_level + 1);
    for (int i = coarsest_level; i <= finest_level; i++) {
       old_times[i] = old_time;
    }
@@ -1282,13 +1279,13 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
-   const tbox::Array<double>& old_times)
+   const std::vector<double>& old_times)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(old_times.getSize() >= finest_level);
+   TBOX_ASSERT(static_cast<int>(old_times.size()) >= finest_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln = coarsest_level; ln < finest_level; ln++) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
@@ -2409,10 +2406,10 @@ HyperbolicLevelIntegrator::recordStatistics(
 
    const int ln = patch_level.getLevelNumber();
 
-   if (ln >= s_boxes_stat.size()) {
-      s_boxes_stat.resizeArray(ln + 1);
-      s_cells_stat.resizeArray(ln + 1);
-      s_timestamp_stat.resizeArray(ln + 1);
+   if (ln >= static_cast<int>(s_boxes_stat.size())) {
+      s_boxes_stat.resize(ln + 1);
+      s_cells_stat.resize(ln + 1);
+      s_timestamp_stat.resize(ln + 1);
    }
 
    if (ln >= 0 /* Don't record work on non-hierarchy levels */) {
@@ -2468,7 +2465,7 @@ HyperbolicLevelIntegrator::printStatistics(
       // statn->printAllGlobalStatData(s);
       double n_cell_updates = 0; // Number of cell updates.
       double n_patch_updates = 0; // Number of patch updates.
-      for (int ln = 0; ln < s_cells_stat.size(); ++ln) {
+      for (int ln = 0; ln < static_cast<int>(s_cells_stat.size()); ++ln) {
          tbox::Statistic& cstat = *s_cells_stat[ln];
          tbox::Statistic& bstat = *s_boxes_stat[ln];
          tbox::Statistic& tstat = *s_timestamp_stat[ln];

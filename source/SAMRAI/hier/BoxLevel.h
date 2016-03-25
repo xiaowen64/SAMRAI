@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Set of Boxes in the same "level".
  *
  ************************************************************************/
@@ -27,6 +27,19 @@
 
 namespace SAMRAI {
 namespace hier {
+
+/*
+ *****************************************************************************
+ * IMPORTANT
+ * IF YOU ARE ADDING A NON-CONST METHOD IT MUST BE PREFACED WITH THE FOLLOWING
+ * CODE AS LOCKED BOX_LEVELS MAY NOT BE MODIFIED IN ANY WAY
+ * if (locked()) {
+ *    TBOX_ERROR("BoxLevel::newMethodName(): operating on locked BoxLevel."
+ *       << std::endl);
+ * }
+ *****************************************************************************
+ */
+ 
 
 /*!
  * @brief A distributed set of Box objects which reside in the
@@ -92,18 +105,17 @@ public:
    enum ParallelState { DISTRIBUTED, GLOBALIZED };
 
    /*!
-    * @brief Construct uninitialized object.
-    *
-    * Uninitialized objects can be initialized by calling initialize()
-    * or swapInitialize().
-    *
-    * @see initialize()
-    * @see swapInitialize()
+    * @brief Construct a BoxLevel which will be initialized from the supplied
+    * restart database.
     *
     * @param[in] dim
+    * @param[in] restart_db
+    * @param[in] grid_geom
     */
-   explicit BoxLevel(
-      const tbox::Dimension& dim);
+   BoxLevel(
+      const tbox::Dimension& dim,
+      tbox::Database& restart_db,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    /*!
     * @brief Copy constructor.
@@ -252,6 +264,10 @@ public:
    clearForBoxChanges(
       bool isInvalid = true)
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::clearForBoxChanges(): operating on locked BoxLevel."
+            << std::endl);
+      }
       deallocateGlobalizedVersion();
       clearPersistentOverlapConnectors();
       if (isInvalid) {
@@ -391,7 +407,7 @@ public:
     * @brief Swap the contents of two BoxLevel objects.
     *
     * Swapping is a modifying operation, so the
-    * PersistentOverlapConnectorss of the operands are cleared.
+    * PersistentOverlapConnectors of the operands are cleared.
     *
     * Persistent Connectors are not swapped.  This decision
     * was based on expected usage, which is that
@@ -977,6 +993,10 @@ public:
    addBoxWithoutUpdate(
       const Box& box)
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::addBoxWithoutUpdate(): operating on locked BoxLevel."
+            << std::endl);
+      }
      if (getParallelState() == GLOBALIZED) {
          d_global_boxes.insert(box);
       }
@@ -1000,7 +1020,7 @@ public:
     * It is an error to add a periodic image of a Box that does
     * not exist.
     *
-    * FIXME: Should we prevent this operation if persistent overlap
+    * TODO: Should we prevent this operation if persistent overlap
     * Connectors are attached to this object?
     *
     * @param[in] existing_box  An existing Box for reference.
@@ -1027,7 +1047,7 @@ public:
     *
     * Erasing a Box also erases all of its periodic images.
     *
-    * FIXME: Should we prevent this operation if the object has
+    * TODO: Should we prevent this operation if the object has
     * persistent overlap Connectors?
     *
     * @note It is imperative that applications which call eraseBox also call
@@ -1058,7 +1078,7 @@ public:
     *
     * Erasing a Box also erases all of its periodic images.
     *
-    * FIXME: Should we prevent this operation if the object has
+    * TODO: Should we prevent this operation if the object has
     * persistent overlap Connectors?
     *
     * @note It is imperative that applications which call eraseBox also call
@@ -1093,6 +1113,10 @@ public:
    eraseBoxWithoutUpdate(
       const Box& box)
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::eraseBoxWithoutUpdate(): operating on locked BoxLevel."
+            << std::endl);
+      }
       d_boxes.erase(box);
       return;
    }
@@ -1122,7 +1146,7 @@ public:
          return d_boxes.find(box);
       } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-	if (getParallelState() != GLOBALIZED) {
+         if (getParallelState() != GLOBALIZED) {
             TBOX_ERROR(
                "BoxLevel::getBox: cannot get remote box "
                << box << " without being in globalized state." << std::endl);
@@ -1284,27 +1308,6 @@ public:
    putToRestart(
       const boost::shared_ptr<tbox::Database>& restart_db) const;
 
-   /*!
-    * @brief Read the BoxLevel from a restart database.
-    *
-    * Put the BoxLevel in the DISTRIBUTED parallel state and
-    * read only local parts.
-    *
-    * If the BoxLevel is initialized, use its SAMRAI_MPI object
-    * and require its refinement ratio to match that in the database.
-    * If the BoxLevel is uninitialized, it will be initialized
-    * to use tbox::SAMRAI_MPI::getSAMRAIWorld() for the SAMRAI_MPI
-    * object.  Note that these behaviors have not been extensively
-    * discussed by the SAMRAI developers and may be subject to change.
-    *
-    * @param[in,out] restart_db
-    * @param[in] grid_geom
-    */
-   void
-   getFromRestart(
-      tbox::Database& restart_db,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
-
    //@}
 
    /*!
@@ -1317,30 +1320,198 @@ public:
    void
    invalidateGlobalData()
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::invalidateGlobalData(): operating on locked BoxLevel."
+            << std::endl);
+      }
       d_global_data_up_to_date = false;
    }
 
    /*!
-    * @brief Get the collection of overlap Connectors dedicated to
-    * provide overlap neighbors for this BoxLevel.
-    *
-    * The PersistentOverlapConnectors provides overlap neighbors for
-    * this BoxLevel.  Its role is to create and manage
-    * persistent overlap Connectors based at this BoxLevel and
-    * persisting until the BoxLevel changes (so they should not
-    * be set up until the BoxLevel is in its final state).  This
-    * is the mechanism by which code that can efficiently generate the
-    * overlap Connectors (usually the code that generated the
-    * BoxLevel) provides overlap data to code using the
-    * BoxLevel.  The PersistentOverlapConnectors are guaranteed
-    * to be correct, so any changes to the BoxLevel will cause
-    * current Connectors to be deallocated.
-    *
-    * @see PersistentOverlapConnectors for instructions on creating
-    * the Connectors.
+    * @brief Deallocate persistent overlap Connectors, if there are any.
     */
-   PersistentOverlapConnectors&
-   getPersistentOverlapConnectors() const;
+   void
+   clearPersistentOverlapConnectors()
+   {
+      if (d_persistent_overlap_connectors != 0) {
+         d_persistent_overlap_connectors->clear();
+      }
+   }
+
+   /*!
+    * @brief Find an overlap Connector with the given head and minimum
+    * Connector width.  If the specified Connector is not found, take the
+    * specified action.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * @param[in] head Find the overlap Connector with this specified head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   findConnector(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      ConnectorNotFoundAction not_found_action,
+      bool exact_width_only = false) const
+   {
+      return getPersistentOverlapConnectors().findConnector(head,
+         min_connector_width,
+         not_found_action,
+         exact_width_only);
+   }
+
+   /*!
+    * @brief Find an overlap Connector with its transpose with the given head
+    * and minimum Connector widths.  If the specified Connector is not found,
+    * take the specified action.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * @param[in] head Find the overlap Connector with this specified head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] transpose_min_connector_width Find the transpose overlap
+    *      Connector satisfying this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   findConnectorWithTranspose(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      const IntVector& transpose_min_connector_width,
+      ConnectorNotFoundAction not_found_action,
+      bool exact_width_only = false) const
+   {
+      return getPersistentOverlapConnectors().findConnectorWithTranspose(head,
+         min_connector_width,
+         transpose_min_connector_width,
+         not_found_action,
+         exact_width_only);
+   }
+
+   /*!
+    * @brief Create an overlap Connector, computing relationships by
+    * globalizing data.
+    *
+    * The base will be this BoxLevel.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head This BoxLevel will be the head.
+    * @param[in] connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   createConnector(
+      const BoxLevel& head,
+      const IntVector& connector_width) const
+   {
+      return getPersistentOverlapConnectors().createConnector(head,
+         connector_width);
+   }
+
+   /*!
+    * @brief Create an overlap Connector with its transpose, computing
+    * relationships by globalizing data.
+    *
+    * The base will be this BoxLevel.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head This BoxLevel will be the head.
+    * @param[in] connector_width
+    * @param[in] transpose_connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   createConnectorWithTranspose(
+      const BoxLevel& head,
+      const IntVector& connector_width,
+      const IntVector& transpose_connector_width) const
+   {
+      return getPersistentOverlapConnectors().createConnectorWithTranspose(head,
+         connector_width,
+         transpose_connector_width);
+   }
+
+   /*!
+    * @brief Cache the supplied overlap Connector and its transpose
+    * if it exists.
+    *
+    * @param[in] connector
+    *
+    * @pre isInitialized()
+    * @pre connector
+    */
+   void
+   cacheConnector(
+      boost::shared_ptr<Connector>& connector) const
+   {
+      return getPersistentOverlapConnectors().cacheConnector(connector);
+   }
+
+   /*!
+    * @brief Returns whether the object has overlap
+    * Connectors with the given head and minimum Connector
+    * width.
+    *
+    * TODO:  does the following comment mean that this must be called
+    * before the call to findConnector?
+    *
+    * If this returns true, the Connector fitting the specification
+    * exists and findConnector() will not throw an assertion.
+    *
+    * @param[in] head Find the overlap Connector with this specified head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum ghost cell width.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return True if a Connector is found, otherwise false.
+    */
+   bool
+   hasConnector(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      bool exact_width_only = false) const
+   {
+      return getPersistentOverlapConnectors().hasConnector(head,
+         min_connector_width,
+         exact_width_only);
+   }
 
    /*
     * TODO: The following method is "not for general use" and indeed
@@ -1403,6 +1574,25 @@ public:
       return d_handle;
    }
 
+   /*!
+    * @brief Effectively makes a non-const BoxLevel const.  Prevents any
+    * non-const method from executing.
+    */
+   void
+   lock()
+   {
+      d_locked = true;
+   }
+
+   /*!
+    * @brief Returns true if the BoxLevel is locked.
+    */
+   bool
+   locked()
+   {
+      return d_locked;
+   }
+
    //@{
 
    /*!
@@ -1420,7 +1610,7 @@ public:
    recursivePrint(
       std::ostream& os,
       const std::string& border,
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    /*!
     * @brief A class for outputting BoxLevel.
@@ -1456,7 +1646,7 @@ private:
       Outputter(
          const BoxLevel& box_level,
          const std::string& border,
-         int detail_depth = 0,
+         int detail_depth = 2,
          bool output_statistics = false);
       void
       operator = (
@@ -1473,8 +1663,7 @@ private:
     *
     * Usage example:
     * @code
-    *    std::cout << "my box_level:\n"
-    *              << box_level.format("  ", 2) << std::endl;
+    *    tbox::plog << "my box_level:\n" << box_level.format() << endl;
     * @endcode
     *
     * @param[in] border
@@ -1483,7 +1672,7 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    /*!
     * @brief Return a object that can format the BoxLevel for
@@ -1533,6 +1722,8 @@ private:
    }
 
 private:
+   friend class PersistentOverlapConnectors;
+
    /*
     * Static integer constant describing class's version number.
     */
@@ -1615,15 +1806,26 @@ private:
    //@}
 
    /*!
-    * @brief Deallocate persistent overlap Connectors, if there are any.
+    * @brief Get the collection of overlap Connectors dedicated to
+    * provide overlap neighbors for this BoxLevel.
+    *
+    * The PersistentOverlapConnectors provides overlap neighbors for
+    * this BoxLevel.  Its role is to create and manage
+    * persistent overlap Connectors based at this BoxLevel and
+    * persisting until the BoxLevel changes (so they should not
+    * be set up until the BoxLevel is in its final state).  This
+    * is the mechanism by which code that can efficiently generate the
+    * overlap Connectors (usually the code that generated the
+    * BoxLevel) provides overlap data to code using the
+    * BoxLevel.  The PersistentOverlapConnectors are guaranteed
+    * to be correct, so any changes to the BoxLevel will cause
+    * current Connectors to be deallocated.
+    *
+    * @see PersistentOverlapConnectors for instructions on creating
+    * the Connectors.
     */
-   void
-   clearPersistentOverlapConnectors()
-   {
-      if (d_persistent_overlap_connectors != 0) {
-         d_persistent_overlap_connectors->clear();
-      }
-   }
+   PersistentOverlapConnectors&
+   getPersistentOverlapConnectors() const;
 
    /*!
     * @brief Detach this object from the handle it has been using.
@@ -1653,6 +1855,27 @@ private:
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
+
+   /*!
+    * @brief Read the BoxLevel from a restart database.
+    *
+    * Put the BoxLevel in the DISTRIBUTED parallel state and
+    * read only local parts.
+    *
+    * If the BoxLevel is initialized, use its SAMRAI_MPI object
+    * and require its refinement ratio to match that in the database.
+    * If the BoxLevel is uninitialized, it will be initialized
+    * to use tbox::SAMRAI_MPI::getSAMRAIWorld() for the SAMRAI_MPI
+    * object.  Note that these behaviors have not been extensively
+    * discussed by the SAMRAI developers and may be subject to change.
+    *
+    * @param[in,out] restart_db
+    * @param[in] grid_geom
+    */
+   void
+   getFromRestart(
+      tbox::Database& restart_db,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    /*!
     * @brief BoxLevel is a parallel object,
@@ -1741,17 +1964,14 @@ private:
    /*!
     * @brief Bounding box of local Boxes, excluding periodic images.
     * One for each block.
-    *
-    * This is mutable because it depends on the Boxes and may be
-    * saved by a const object if computed.
     */
-   mutable std::vector<Box> d_local_bounding_box;
+   std::vector<Box> d_local_bounding_box;
 
    /*!
     * @brief Whether d_local_bounding_box is up to date (or needs
     * recomputing.
     */
-   mutable bool d_local_bounding_box_up_to_date;
+   bool d_local_bounding_box_up_to_date;
 
    /*!
     * @brief Bounding box of global Boxes, excluding periodic images.
@@ -1829,6 +2049,8 @@ private:
     * object.
     */
    boost::shared_ptr<const BaseGridGeometry> d_grid_geometry;
+
+   bool d_locked;
 
    /*!
     * @brief A LocalId object with value of -1.

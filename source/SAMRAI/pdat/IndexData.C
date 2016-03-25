@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -296,7 +296,7 @@ IndexData<TYPE, BOX_GEOMETRY>::copy(
    const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = t_src->getGhostBox();
 
-   for (hier::BoxContainer::const_iterator b(box_list);
+   for (hier::BoxContainer::const_iterator b = box_list.begin();
         b != box_list.end(); ++b) {
       const hier::Box& dst_box = *b;
       const hier::Box src_box(hier::Box::shift(*b, -src_offset));
@@ -357,11 +357,13 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    size_t bytes = 0;
    int num_items = 0;
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
-      hier::Box::iterator indexend(box, false);
-      for (hier::Box::iterator index(box, true); index != indexend; ++index) {
+      hier::Box::iterator indexend(box.end());
+      for (hier::Box::iterator index(box.begin());
+           index != indexend; ++index) {
          TYPE* item = getItem(*index);
          if (item) {
             num_items++;
@@ -395,7 +397,8 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    int num_items = 0;
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
       typename IndexData<TYPE, BOX_GEOMETRY>::iterator send(*this, false);
@@ -409,7 +412,8 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    stream << num_items;
 
-   for (hier::BoxContainer::const_iterator c(boxes); c != boxes.end(); ++c) {
+   for (hier::BoxContainer::const_iterator c = boxes.begin();
+        c != boxes.end(); ++c) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*c, -(t_overlap->getSourceOffset()));
       typename IndexData<TYPE, BOX_GEOMETRY>::iterator tend(*this, false);
@@ -445,7 +449,8 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    stream >> num_items;
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       removeInsideBox(*b);
    }
 
@@ -903,8 +908,8 @@ IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
          boost::shared_ptr<tbox::Database> item_db(
             restart_db->getDatabase(index_keyword));
 
-         tbox::Array<int> index_array =
-            item_db->getIntegerArray(index_keyword);
+         std::vector<int> index_array =
+            item_db->getIntegerVector(index_keyword);
          hier::Index index(d_dim);
          for (int j = 0; j < d_dim.getValue(); j++) {
             index(j) = index_array[j];
@@ -953,7 +958,7 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
             item_count,
             6);
       hier::Index index = s.getNode().d_index;
-      tbox::Array<int> index_array(d_dim.getValue());
+      std::vector<int> index_array(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); i++) {
          index_array[i] = index(i);
       }
@@ -961,7 +966,9 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
       boost::shared_ptr<tbox::Database> item_db(
          restart_db->putDatabase(index_keyword));
 
-      item_db->putIntegerArray(index_keyword, index_array);
+      item_db->putIntegerArray(index_keyword,
+         &index_array[0],
+         static_cast<int>(index_array.size()));
 
       TYPE* item = getItem(index);
 

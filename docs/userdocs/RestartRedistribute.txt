@@ -43,9 +43,15 @@ indicates the MPI rank of the the processor that wrote the file.
 NOTE: If there is more than one 'nodes.NNNNNNN' subdirectory the
 resdistribute utility will fail.
 
-The usage of the restart redistribute tool is:
+The restart-redistribute tool is a parallel tool.  It is parallelized on the
+smaller of the number of input files--original number of processors--and the
+number of output files--new desired number of processors.  Therefore, you may
+run on any number of processors up to, but not greater than, this number.
+Running parallel programs is platform dependent.  The following example showing
+the usage of the restart-redistribute tool assumes the use of mpirun to launch
+parallel programs:
 
-restart-redistribute INPUT-DIR OUTPUT-DIR TIMESTEP NUM_PROCS_IN NUM_PROCS_OUT
+mpirun -np N restart-redistribute INPUT-DIR OUTPUT-DIR TIMESTEP NUM_PROCS_OUT
 
 INPUT-DIR        - the directory containing the restart dumps from a run
 
@@ -57,9 +63,10 @@ TIMESTEP         - integer identifier of the timestep of the restart
 NUM_PROCS_OUT    - the number of processors desired for a new restarted
                    run of the application.
 
-To run the tool on the example given above to redistribute 8 processor restart files to a 16 processor restart file, one would use:
+To run the tool on the example given above to redistribute 8 processor restart
+files to 16 processor restart file at timestep 5, one could use:
 
-restart-redistribute restart-dir new-restart-dir 5 16
+mpirun -np 8 restart-redistribute restart-dir new-restart-dir 5 16
 
 The resulting restart files could then be used to restart the run on
 16 procsessors.

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
@@ -18,13 +18,13 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 #include "SAMRAI/tbox/MessageStream.h"
 
 #include <typeinfo>
+#include <vector>
 
 namespace SAMRAI {
 namespace pdat {
@@ -669,7 +669,7 @@ private:
    int d_depth;
    int d_offset;
    hier::Box d_box;
-   tbox::Array<TYPE> d_array;
+   std::vector<TYPE> d_array;
 };
 
 }

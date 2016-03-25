@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace mesh {
@@ -42,7 +43,7 @@ struct BalanceUtilities {
     *                 (ranges from zero to one hundred percent)
     *
     * @param mapping  Output processor mapping.
-    * @param weights  tbox::Array of double-valued weights to distribute.
+    * @param weights  std::vector of double-valued weights to distribute.
     * @param nproc    Integer number of processors, must be > 0.
     *
     * @pre nproc > 0
@@ -51,7 +52,7 @@ struct BalanceUtilities {
    static double
    binPack(
       hier::ProcessorMapping& mapping,
-      tbox::Array<double>& weights,
+      std::vector<double>& weights,
       int nproc);
 
    /*!
@@ -69,17 +70,17 @@ struct BalanceUtilities {
     *                 (ranges from zero to one hundred percent)
     *
     * @param mapping  Output processor mapping.
-    * @param weights  tbox::Array of double-valued box weights to distribute.
-    * @param boxes    tbox::Array of boxes to distribute to processors.
+    * @param weights  std::vector of double-valued box weights to distribute.
+    * @param boxes    hier::BoxContainer of boxes to distribute to processors.
     * @param nproc    Integer number of processors, must be > 0.
     *
     * @pre nproc > 0
-    * @pre weights.getSize() == boxes.size()
+    * @pre weights.size() == boxes.size()
     */
    static double
    spatialBinPack(
       hier::ProcessorMapping& mapping,
-      tbox::Array<double>& weights,
+      std::vector<double>& weights,
       hier::BoxContainer& boxes,
       const int nproc);
 
@@ -119,9 +120,9 @@ struct BalanceUtilities {
     *                        will be either in the domain interior or outside
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
-    * @param physical_domain tbox::Array of boxes describing the physical extent of
-    *                        the index space associated with the in_boxes.
-    *                        This box array cannot be empty.
+    * @param physical_domain hier::BoxContainer of boxes describing the
+    *                        physical extent of the index space associated with
+    *                        the in_boxes.  This box array cannot be empty.
     *
     * @pre (min_size.getDim() == cut_factor.getDim()) &&
     *      (min_size.getDim() == bad_interval.getDim())
@@ -185,9 +186,9 @@ struct BalanceUtilities {
     *                        will be either in the domain interior or outside
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
-    * @param physical_domain tbox::Array of boxes describing the physical extent of
-    *                        the index space associated with the in_boxes.
-    *                        This box array cannot be empty.
+    * @param physical_domain hier::BoxContainer of boxes describing the
+    *                        physical extent of the index space associated with
+    *                        the in_boxes.  This box array cannot be empty.
     *
     * @pre (min_size.getDim() == cut_factor.getDim()) &&
     *      (min_size.getDim() == bad_interval.getDim())
@@ -264,12 +265,12 @@ struct BalanceUtilities {
     * @param boxes     Boxes to be sorted based on workload array.
     * @param workload  Workloads to use for sorting boxes.
     *
-    * @pre boxes.size() == workload.getSize()
+    * @pre boxes.size() == workload.size()
     */
    static void
    sortDescendingBoxWorkloads(
       hier::BoxContainer& boxes,
-      tbox::Array<double>& workload);
+      std::vector<double>& workload);
 
    /*!
     * Compute total workload in region of argument box based on patch
@@ -404,15 +405,15 @@ private:
 
    static void
    privateHeapify(
-      tbox::Array<int>& permutation,
-      tbox::Array<double>& workload,
+      std::vector<int>& permutation,
+      std::vector<double>& workload,
       const int index,
       const int heap_size);
 
    static void
    privateHeapify(
-      tbox::Array<int>& permutation,
-      tbox::Array<SpatialKey>& spatial_keys,
+      std::vector<int>& permutation,
+      std::vector<SpatialKey>& spatial_keys,
       const int index,
       const int heap_size);
 
@@ -420,7 +421,7 @@ private:
    privateRecursiveProcAssign(
       const int wt_index_lo,
       const int wt_index_hi,
-      tbox::Array<double>& weights,
+      std::vector<double>& weights,
       const int proc_index_lo,
       const int proc_index_hi,
       hier::ProcessorMapping& mapping,
@@ -429,11 +430,11 @@ private:
    static void
    privatePrimeFactorization(
       const int N,
-      tbox::Array<int>& p);
+      std::vector<int>& p);
 
    static void
    privateResetPrimesArray(
-      tbox::Array<int>& p);
+      std::vector<int>& p);
 
    static bool
    privateBadCutPointsExist(
@@ -441,7 +442,7 @@ private:
 
    static void
    privateInitializeBadCutPointsForBox(
-      tbox::Array<tbox::Array<bool> >& bad_cut_points,
+      std::vector<std::vector<bool> >& bad_cut_points,
       hier::Box& box,
       bool bad_domain_boundaries_exist,
       const hier::IntVector& bad_interval,
@@ -453,7 +454,7 @@ private:
       const hier::Box& in_box,
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,
-      tbox::Array<tbox::Array<bool> >& bad_cut_points);
+      std::vector<std::vector<bool> >& bad_cut_points);
 
    static int
    privateFindCutPoint(
@@ -461,19 +462,19 @@ private:
       double ideal_workload,
       int mincut,
       int numcells,
-      const tbox::Array<double>& work_in_slice,
-      const tbox::Array<bool>& bad_cut_points);
+      const std::vector<double>& work_in_slice,
+      const std::vector<bool>& bad_cut_points);
 
    static void
    privateCutBoxesAndSetBadCutPoints(
       hier::Box& box_lo,
-      tbox::Array<tbox::Array<bool> >& bad_cut_points_for_boxlo,
+      std::vector<std::vector<bool> >& bad_cut_points_for_boxlo,
       hier::Box& box_hi,
-      tbox::Array<tbox::Array<bool> >& bad_cut_points_for_boxhi,
+      std::vector<std::vector<bool> >& bad_cut_points_for_boxhi,
       const hier::Box& in_box,
       int cutdim,
       int cut_index,
-      const tbox::Array<tbox::Array<bool> >& bad_cut_points);
+      const std::vector<std::vector<bool> >& bad_cut_points);
 
    static void
    privateRecursiveBisectionUniformSingleBox(
@@ -485,7 +486,7 @@ private:
       const double workload_tolerance,
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,
-      tbox::Array<tbox::Array<bool> >& bad_cut_points);
+      std::vector<std::vector<bool> >& bad_cut_points);
 
    static void
    privateRecursiveBisectionNonuniformSingleBox(
@@ -499,7 +500,7 @@ private:
       const double workload_tolerance,
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,
-      tbox::Array<tbox::Array<bool> >& bad_cut_points);
+      std::vector<std::vector<bool> >& bad_cut_points);
 
 };
 

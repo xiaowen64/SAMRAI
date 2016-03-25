@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores HDF5 format data.
  *
  ************************************************************************/
@@ -394,12 +394,12 @@ HDFDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string>
+std::vector<std::string>
 HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
-   Array<std::string> tmp_keys(static_cast<int>(d_keydata.size()));
+   std::vector<std::string> tmp_keys(static_cast<int>(d_keydata.size()));
 
    int k = 0;
    for (std::list<KeyData>::iterator i = d_keydata.begin();
@@ -741,7 +741,7 @@ HDFDatabase::putBoolArray(
        * shortest integer type we can find, the H5T_SAMRAI_BOOL
        * type.
        */
-      Array<int> data1(nelements);
+      std::vector<int> data1(nelements);
       for (int i = 0; i < nelements; ++i) data1[i] = data[i];
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -777,7 +777,7 @@ HDFDatabase::putBoolArray(
 /*
  ************************************************************************
  *
- * Two routines to get boolean arrays from the database with the
+ * Two routines to get boolean vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a boolean type.
@@ -785,14 +785,14 @@ HDFDatabase::putBoolArray(
  ************************************************************************
  */
 
-Array<bool>
-HDFDatabase::getBoolArray(
+std::vector<bool>
+HDFDatabase::getBoolVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isBool(key)) {
-      TBOX_ERROR("HDFDatabase::getBoolArray() error in database "
+      TBOX_ERROR("HDFDatabase::getBoolVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a bool array." << std::endl);
    }
@@ -814,7 +814,7 @@ HDFDatabase::getBoolArray(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   Array<bool> bool_array(static_cast<int>(nsel));
+   std::vector<bool> bool_array(static_cast<int>(nsel));
 
    if (nsel > 0) {
       /*
@@ -824,8 +824,8 @@ HDFDatabase::getBoolArray(
        * type.  So we read bools into native integer memory
        * then convert.
        */
-      Array<int> data1(static_cast<int>(nsel));
-      int* locPtr = data1.getPointer();
+      std::vector<int> data1(static_cast<int>(nsel));
+      int* locPtr = &data1[0];
       errf = H5Dread(dset,
             H5T_NATIVE_INT,
             H5S_ALL,
@@ -956,7 +956,7 @@ HDFDatabase::putDatabaseBoxArray(
 /*
  ************************************************************************
  *
- * Two routines to get box arrays from the database with the
+ * A routine to get a box vector from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a box type.
@@ -964,14 +964,14 @@ HDFDatabase::putDatabaseBoxArray(
  ************************************************************************
  */
 
-Array<DatabaseBox>
-HDFDatabase::getDatabaseBoxArray(
+std::vector<DatabaseBox>
+HDFDatabase::getDatabaseBoxVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isDatabaseBox(key)) {
-      TBOX_ERROR("HDFDatabase::getDatabaseBoxArray() error in database "
+      TBOX_ERROR("HDFDatabase::getDatabaseBoxVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a box array." << std::endl);
    }
@@ -997,10 +997,10 @@ HDFDatabase::getDatabaseBoxArray(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   Array<DatabaseBox> boxArray(static_cast<int>(nsel));
+   std::vector<DatabaseBox> boxVector(static_cast<int>(nsel));
 
    if (nsel > 0) {
-      DatabaseBox* locPtr = boxArray.getPointer();
+      DatabaseBox* locPtr = &boxVector[0];
       errf = H5Dread(dset, mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
       TBOX_ASSERT(errf >= 0);
 
@@ -1021,7 +1021,7 @@ HDFDatabase::getDatabaseBoxArray(
    errf = H5Dclose(dset);
    TBOX_ASSERT(errf >= 0);
 
-   return boxArray;
+   return boxVector;
 }
 
 hid_t
@@ -1184,7 +1184,7 @@ HDFDatabase::putCharArray(
 /*
  ************************************************************************
  *
- * Two routines to get char arrays from the database with the
+ * Two routines to get char vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a char type.
@@ -1192,14 +1192,14 @@ HDFDatabase::putCharArray(
  ************************************************************************
  */
 
-Array<char>
-HDFDatabase::getCharArray(
+std::vector<char>
+HDFDatabase::getCharVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    if (!isChar(key)) {
-      TBOX_ERROR("HDFDatabase::getCharArray() error in database "
+      TBOX_ERROR("HDFDatabase::getCharVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a char array." << std::endl);
    }
@@ -1224,10 +1224,10 @@ HDFDatabase::getCharArray(
 
    nsel = H5Tget_size(dtype);
 
-   Array<char> charArray(static_cast<int>(nsel));
+   std::vector<char> charArray(static_cast<int>(nsel));
 
    if (nsel > 0) {
-      char* locPtr = charArray.getPointer();
+      char* locPtr = &charArray[0];
       errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
       TBOX_ASSERT(errf >= 0);
    }
@@ -1357,7 +1357,7 @@ HDFDatabase::putComplexArray(
 /*
  ************************************************************************
  *
- * Two routines to get complex arrays from the database with the
+ * Two routines to get complex vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a complex type.
@@ -1365,8 +1365,8 @@ HDFDatabase::putComplexArray(
  ************************************************************************
  */
 
-Array<dcomplex>
-HDFDatabase::getComplexArray(
+std::vector<dcomplex>
+HDFDatabase::getComplexVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1375,7 +1375,7 @@ HDFDatabase::getComplexArray(
    NULL_USE(errf);
 
    if (!isComplex(key)) {
-      TBOX_ERROR("HDFDatabase::getComplexArray() error in database "
+      TBOX_ERROR("HDFDatabase::getComplexVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a complex array." << std::endl);
    }
@@ -1398,10 +1398,10 @@ HDFDatabase::getComplexArray(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   Array<dcomplex> complexArray(static_cast<int>(nsel));
+   std::vector<dcomplex> complexArray(static_cast<int>(nsel));
 
    if (nsel > 0) {
-      dcomplex* locPtr = complexArray.getPointer();
+      dcomplex* locPtr = &complexArray[0];
       errf = H5Dread(dset, mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
       TBOX_ASSERT(errf >= 0);
    }
@@ -1553,7 +1553,7 @@ HDFDatabase::putDoubleArray(
 /*
  ************************************************************************
  *
- * Two routines to get double arrays from the database with the
+ * Two routines to get double vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a double type.
@@ -1561,8 +1561,8 @@ HDFDatabase::putDoubleArray(
  ************************************************************************
  */
 
-Array<double>
-HDFDatabase::getDoubleArray(
+std::vector<double>
+HDFDatabase::getDoubleVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1571,7 +1571,7 @@ HDFDatabase::getDoubleArray(
    NULL_USE(errf);
 
    if (!isDouble(key)) {
-      TBOX_ERROR("HDFDatabase::getDoubleArray() error in database "
+      TBOX_ERROR("HDFDatabase::getDoubleVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a double array." << std::endl);
    }
@@ -1591,10 +1591,10 @@ HDFDatabase::getDoubleArray(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   Array<double> doubleArray(static_cast<int>(nsel));
+   std::vector<double> doubleArray(static_cast<int>(nsel));
 
    if (nsel > 0) {
-      double* locPtr = doubleArray.getPointer();
+      double* locPtr = &doubleArray[0];
       errf = H5Dread(dset, H5T_NATIVE_DOUBLE,
             H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
       TBOX_ASSERT(errf >= 0);
@@ -1710,7 +1710,7 @@ HDFDatabase::putFloatArray(
 /*
  ************************************************************************
  *
- * Two routines to get float arrays from the database with the
+ * Two routines to get float vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a float type.
@@ -1718,8 +1718,8 @@ HDFDatabase::putFloatArray(
  ************************************************************************
  */
 
-Array<float>
-HDFDatabase::getFloatArray(
+std::vector<float>
+HDFDatabase::getFloatVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1728,7 +1728,7 @@ HDFDatabase::getFloatArray(
    NULL_USE(errf);
 
    if (!isFloat(key)) {
-      TBOX_ERROR("HDFDatabase::getFloatArray() error in database "
+      TBOX_ERROR("HDFDatabase::getFloatVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a float array." << std::endl);
    }
@@ -1748,10 +1748,10 @@ HDFDatabase::getFloatArray(
    TBOX_ASSERT(dspace >= 0);
    nsel = H5Sget_select_npoints(dspace);
 
-   Array<float> floatArray(static_cast<int>(nsel));
+   std::vector<float> floatArray(static_cast<int>(nsel));
 
    if (nsel > 0) {
-      float* locPtr = floatArray.getPointer();
+      float* locPtr = &floatArray[0];
       errf = H5Dread(dset, H5T_NATIVE_FLOAT,
             H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
       TBOX_ASSERT(errf >= 0);
@@ -1868,7 +1868,7 @@ HDFDatabase::putIntegerArray(
 /*
  ************************************************************************
  *
- * Two routines to get integer arrays from the database with the
+ * Two routines to get integer vectors and arrays from the database with the
  * specified key name. In any case, an error message is printed and
  * the program exits if the specified key does not exist in the
  * database or is not associated with a integer type.
@@ -1876,8 +1876,8 @@ HDFDatabase::putIntegerArray(
  ************************************************************************
  */
 
-Array<int>
-HDFDatabase::getIntegerArray(
+std::vector<int>
+HDFDatabase::getIntegerVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1886,7 +1886,7 @@ HDFDatabase::getIntegerArray(
    NULL_USE(errf);
 
    if (!isInteger(key)) {
-      TBOX_ERROR("HDFDatabase::getIntegerArray() error in database "
+      TBOX_ERROR("HDFDatabase::getIntegerVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not an integer array." << std::endl);
    }
@@ -1906,10 +1906,10 @@ HDFDatabase::getIntegerArray(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   Array<int> intArray(static_cast<int>(nsel));
+   std::vector<int> intArray(static_cast<int>(nsel));
 
    if (nsel > 0) {
-      int* locPtr = intArray.getPointer();
+      int* locPtr = &intArray[0];
       errf = H5Dread(dset, H5T_NATIVE_INT,
             H5S_ALL, H5S_ALL, H5P_DEFAULT, locPtr);
       TBOX_ASSERT(errf >= 0);
@@ -2065,8 +2065,8 @@ HDFDatabase::putStringArray(
  ************************************************************************
  */
 
-Array<std::string>
-HDFDatabase::getStringArray(
+std::vector<std::string>
+HDFDatabase::getStringVector(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -2075,7 +2075,7 @@ HDFDatabase::getStringArray(
    NULL_USE(errf);
 
    if (!isString(key)) {
-      TBOX_ERROR("HDFDatabase::getStringArray() error in database "
+      TBOX_ERROR("HDFDatabase::getStringVector() error in database "
          << d_database_name
          << "\n    Key = " << key << " is not a string array." << std::endl);
    }
@@ -2106,10 +2106,10 @@ HDFDatabase::getStringArray(
    errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
    TBOX_ASSERT(errf >= 0);
 
-   Array<std::string> stringArray(static_cast<int>(nsel));
+   std::vector<std::string> stringArray(static_cast<int>(nsel));
 
    for (int i = 0; i < static_cast<int>(nsel); i++) {
-      std::string* locPtr = stringArray.getPointer(i);
+      std::string* locPtr = &stringArray[i];
       *locPtr = &local_buf[i * dsize];
    }
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -23,22 +23,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
-
-/*
- * Forward declaration, which is questionable with respect to SAMRAI 
- * package ordering.   This is needed since pdat::ArrayData class
- * needs to access private Box default constructor.
- *
- * It would be good to come up with an alternative to this.
- */
-namespace SAMRAI {
-
-namespace pdat {
-template<class TYPE>
-class ArrayData;
-}
-
-}
 
 namespace SAMRAI {
 namespace hier {
@@ -71,6 +55,12 @@ class BoxIterator;
 class Box
 {
 public:
+   /**
+    * A box iterator iterates over the elements of a box.  This class is
+    * defined elsewhere, and the typedef is used to point to that class.
+    */
+   typedef BoxIterator iterator;
+
    /*!
     * @brief Creates an empty box with invalid BlockId and BoxId values.
     *
@@ -552,12 +542,7 @@ public:
    bool
    empty() const
    {
-      for (int i = 0; i < getDim().getValue(); i++) {
-         if (d_hi(i) < d_lo(i)) {
-            return true;
-         }
-      }
-      return false;
+      return isEmpty();
    }
 
    /*!
@@ -664,6 +649,18 @@ public:
    Index
    index(
       const int offset) const;
+
+   /*!
+    * @brief Return an iterator pointing to the first index of this.
+    */
+   iterator
+   begin() const;
+
+   /*!
+    * @brief Return an iterator pointing to the last index of this.
+    */
+   iterator
+   end() const;
 
    /*!
     * @brief Check whether an index lies within the bounds of the box.
@@ -1031,7 +1028,8 @@ public:
     *
     * @param rotation_ident
     *
-    * @pre (getDim().getValue() == 2) || (getDim().getValue() == 3)
+    * @pre (getDim().getValue() == 1) || (getDim().getValue() == 2) ||
+    *      (getDim().getValue() == 3)
     */
    void
    rotate(
@@ -1281,12 +1279,6 @@ public:
       return *(s_universes[dim.getValue() - 1]);
    }
 
-   /**
-    * A box iterator iterates over the elements of a box.  This class is
-    * defined elsewhere, and the typedef is used to point to that class.
-    */
-   typedef BoxIterator iterator;
-
    friend class BoxIterator;
 
 #ifdef BOX_TELEMETRY
@@ -1378,8 +1370,8 @@ private:
  * \verbatim
  * Box box;
  * ...
- * Box::iterator bend(box, false);
- * for (Box::iterator b(box, true); b != bend; ++b) {
+ * Box::iterator bend(box.end());
+ * for (Box::iterator b(box.begin()); b != bend; ++b) {
  *    // use index b of the box
  * }
  * \endverbatim
@@ -1393,15 +1385,9 @@ private:
 
 class BoxIterator
 {
-public:
-   /**
-    * Constructor for the box iterator.  The iterator will enumerate the
-    * indices in the argument box.
-    */
-   explicit BoxIterator(
-      const Box& box,
-      bool begin);
+friend class Box;
 
+public:
    /**
     * Copy constructor for the box iterator.
     */
@@ -1502,6 +1488,14 @@ public:
    }
 
 private:
+   /**
+    * Constructor for the box iterator.  The iterator will enumerate the
+    * indices in the argument box.
+    */
+   BoxIterator(
+      const Box& box,
+      bool begin);
+
    /*
     * Unimplemented default constructor.
     */

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test face-centered complex patch data ops
  *
  ************************************************************************/
@@ -163,30 +163,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
-      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -574,8 +577,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::FaceData<double> > fvdata = patch->getPatchData(fwgt_id);
  *
- *   pdat::FaceIterator cend(fvdata->getBox(),1, false);
- *   for (pdat::FaceIterator c(fvdata->getBox(), 1, true); c != cend && vol_test_passed; ++c) {
+ *   pdat::FaceIterator cend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+ *   for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fvdata->getBox(), 1)); c != cend && vol_test_passed; ++c) {
  *   pdat::FaceIndex face_index = *c;
  *
  *   if (ln == 0) {
@@ -855,8 +858,8 @@ int main(
                                 pdat::FaceIndex::Upper);
 
          // check X axis data
-         pdat::FaceIterator cend(cdata->getBox(), pdat::FaceIndex::X, false);
-         for (pdat::FaceIterator c(cdata->getBox(), pdat::FaceIndex::X, true);
+         pdat::FaceIterator cend(pdat::FaceGeometry::end(cdata->getBox(), pdat::FaceIndex::X));
+         for (pdat::FaceIterator c(pdat::FaceGeometry::begin(cdata->getBox(), pdat::FaceIndex::X));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::FaceIndex face_index = *c;
 
@@ -867,8 +870,8 @@ int main(
          }
 
          // check Y axis data
-         pdat::FaceIterator ccend(cdata->getBox(), pdat::FaceIndex::Y, false);
-         for (pdat::FaceIterator cc(cdata->getBox(), pdat::FaceIndex::Y, true);
+         pdat::FaceIterator ccend(pdat::FaceGeometry::end(cdata->getBox(), pdat::FaceIndex::Y));
+         for (pdat::FaceIterator cc(pdat::FaceGeometry::begin(cdata->getBox(), pdat::FaceIndex::Y));
               cc != ccend && bogus_value_test_passed; ++cc) {
             pdat::FaceIndex face_index = *cc;
 
@@ -896,8 +899,8 @@ int main(
 
          if (dim.getValue() == 3) {
             // check Z axis data
-            pdat::FaceIterator cend(cdata->getBox(), pdat::FaceIndex::Z, false);
-            for (pdat::FaceIterator c(cdata->getBox(), pdat::FaceIndex::Z, true);
+            pdat::FaceIterator cend(pdat::FaceGeometry::end(cdata->getBox(), pdat::FaceIndex::Z));
+            for (pdat::FaceIterator c(pdat::FaceGeometry::begin(cdata->getBox(), pdat::FaceIndex::Z));
                  c != cend && bogus_value_test_passed; ++c) {
                pdat::FaceIndex face_index = *c;
 
@@ -1131,8 +1134,8 @@ complexDataSameAsValue(
             patch->getPatchData(desc_id),
             BOOST_CAST_TAG);
          TBOX_ASSERT(fvdata);
-         pdat::FaceIterator fend(fvdata->getBox(), 1, false);
-         for (pdat::FaceIterator f(fvdata->getBox(), 1, true);
+         pdat::FaceIterator fend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+         for (pdat::FaceIterator f(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
               f != fend && test_passed; ++f) {
             pdat::FaceIndex face_index = *f;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*fvdata)(face_index),
@@ -1172,8 +1175,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(fvdata);
 
-         pdat::FaceIterator fend(fvdata->getBox(), 1, false);
-         for (pdat::FaceIterator f(fvdata->getBox(), 1, true);
+         pdat::FaceIterator fend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+         for (pdat::FaceIterator f(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
               f != fend && test_passed; ++f) {
             pdat::FaceIndex face_index = *f;
             if (!tbox::MathUtilities<double>::equalEps((*fvdata)(face_index),

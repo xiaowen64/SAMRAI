@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -62,19 +62,24 @@ PatchLevelInteriorFillPattern::~PatchLevelInteriorFillPattern()
 
 void
 PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxLevel& fill_box_level,
-   hier::Connector& dst_to_fill,
+   boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+   boost::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
-   const hier::Connector& dst_to_dst,
-   const hier::Connector& dst_to_src,
-   const hier::Connector& src_to_dst,
-   const hier::IntVector& fill_ghost_width)
+   const hier::IntVector& fill_ghost_width,
+   bool data_on_patch_border)
 {
-   NULL_USE(dst_to_dst);
-   NULL_USE(dst_to_src);
-   NULL_USE(src_to_dst);
    NULL_USE(fill_ghost_width);
+   NULL_USE(data_on_patch_border);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
+
+   fill_box_level.reset(new hier::BoxLevel(
+      dst_box_level.getRefinementRatio(),
+      dst_box_level.getGridGeometry(),
+      dst_box_level.getMPI()));
+
+   dst_to_fill.reset(new hier::Connector(dst_box_level,
+                                         *fill_box_level,
+                                         fill_ghost_width));
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
@@ -85,10 +90,10 @@ PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
         ni != dst_boxes.end(); ++ni) {
       const hier::BoxId& gid = ni->getBoxId();
       const hier::Box& dst_box = *dst_box_level.getBox(gid);
-      fill_box_level.addBoxWithoutUpdate(dst_box);
-      dst_to_fill.insertLocalNeighbor(dst_box, gid);
+      fill_box_level->addBoxWithoutUpdate(dst_box);
+      dst_to_fill->insertLocalNeighbor(dst_box, gid);
    }
-   fill_box_level.finalize();
+   fill_box_level->finalize();
 }
 
 /*

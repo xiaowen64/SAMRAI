@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   BoundaryBox representing a portion of the physical boundary
  *
  ************************************************************************/
@@ -46,7 +46,7 @@ BoundaryBox::BoundaryBox(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    BoundaryLookupTable* blut = BoundaryLookupTable::getLookupTable(d_dim);
-   const tbox::Array<int>& location_index_max = blut->getMaxLocationIndices();
+   const std::vector<int>& location_index_max = blut->getMaxLocationIndices();
 
    TBOX_ASSERT((bdry_type >= 1) && (bdry_type <= d_dim.getValue()));
    TBOX_ASSERT(location_index >= 0);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -603,7 +603,7 @@ public:
     * Constructor for the index list iterator.  The iterator will iterate
     * over the irregular index set of the argument data object.
     */
-   explicit IndexIterator(
+   IndexIterator(
       const IndexData<TYPE, BOX_GEOMETRY>& data,
       bool begin);
 

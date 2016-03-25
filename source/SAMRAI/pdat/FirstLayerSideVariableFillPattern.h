@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   First layer side fill pattern class
  *
  ************************************************************************/
@@ -140,7 +140,7 @@ private:
     * The computed BoxContainers will consist of side-centered boxes
     * representing the sides on the boundary of the box.
     *
-    * @param[out] stencil_boxes   Array of BoxContainers for the stencil boxes.
+    * @param[out] stencil_boxes   Vector of BoxContainers for the stencil boxes.
     *                             One BoxContainer for each axis direction.
     * @param[in]  dst_box         Input box around which stencil is computed.
     *
@@ -148,7 +148,7 @@ private:
     */
    void
    computeStencilBoxes(
-      tbox::Array<hier::BoxContainer>& stencil_boxes,
+      std::vector<hier::BoxContainer>& stencil_boxes,
       const hier::Box& dst_box) const;
 
    /*!

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -80,7 +80,7 @@ public:
     * The constructor will register the constructed object with a static
     * set that manages all RefinePatchStrategy objects in an application.
     */
-   explicit RefinePatchStrategy();
+   RefinePatchStrategy();
 
    /*!
     * @brief Destructor
@@ -195,7 +195,7 @@ public:
       const hier::IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
-      for (hier::BoxContainer::const_iterator b(fine_boxes);
+      for (hier::BoxContainer::const_iterator b = fine_boxes.begin();
            b != fine_boxes.end(); ++b) {
          preprocessRefine(fine, coarse, *b, ratio);
       }
@@ -227,7 +227,7 @@ public:
       const hier::IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
-      for (hier::BoxContainer::const_iterator b(fine_boxes);
+      for (hier::BoxContainer::const_iterator b = fine_boxes.begin();
            b != fine_boxes.end(); ++b) {
          postprocessRefine(fine, coarse, *b, ratio);
       }

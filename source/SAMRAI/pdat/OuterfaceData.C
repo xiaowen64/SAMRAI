@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Templated outerface centered patch data type
  *
  ************************************************************************/
@@ -399,7 +399,7 @@ OuterfaceData<TYPE>::packStream(
                                              getBox().getBlockId(),
                                              boxes.begin()->getBlockId());
 
-         for (hier::BoxContainer::const_iterator b(boxes);
+         for (hier::BoxContainer::const_iterator b = boxes.begin();
               b != boxes.end(); ++b) {
             hier::Box src_box(*b);
             face_transform.inverseTransform(src_box);
@@ -438,7 +438,7 @@ OuterfaceData<TYPE>::unpackStream(
          }
       }
 
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = (*b) * d_data[d][f]->getBox();
@@ -623,8 +623,8 @@ OuterfaceData<TYPE>::printAxisFace(
    const hier::Box region =
       facebox * d_data[face_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator iend(region, false);
-   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+   hier::Box::iterator iend(region.end());
+   for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal][side]))(*i, depth) << std::endl;
       os << std::flush;

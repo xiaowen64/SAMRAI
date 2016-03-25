@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -61,9 +61,11 @@ Schedule::Schedule():
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_first_tag(s_default_first_tag),
    d_second_tag(s_default_second_tag),
-   d_first_message_length(s_default_first_message_length)
+   d_first_message_length(s_default_first_message_length),
+   d_unpack_in_deterministic_order(false),
+   d_object_timers(NULL)
 {
-   setTimerPrefix("tbox::Schedule");
+   setTimerPrefix(s_default_timer_prefix);
 }
 
 /*
@@ -399,6 +401,8 @@ Schedule::performLocalCopies()
  * operations are placed in d_completed_comm.  Process these first,
  * then check for next set of completed operations.  Repeat until all
  * operations are completed.
+ *
+ * Once a receive is completed, put it in a MessageStream for unpacking.
  *************************************************************************
  */
 void
@@ -406,24 +410,25 @@ Schedule::processCompletedCommunications()
 {
    d_object_timers->t_process_incoming_messages->start();
 
-   while ( d_com_stage.numberOfCompletedMembers() > 0 ||
-           d_com_stage.advanceSome() ) {
+   if ( d_unpack_in_deterministic_order ) {
 
-      AsyncCommPeer<char>* completed_comm =
-         CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
+      // Unpack in deterministic order.  Wait for receive as needed.
 
-      TBOX_ASSERT(completed_comm != 0);
-      TBOX_ASSERT(completed_comm->isDone());
-      if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
+      int irecv = 0;
+      for ( TransactionSets::iterator recv_itr=d_recv_sets.begin();
+            recv_itr!=d_recv_sets.end(); ++recv_itr, ++irecv ) {
 
-         const int sender = completed_comm->getPeerRank();
+         int sender = recv_itr->first;
+         AsyncCommPeer<char> &completed_comm = d_coms[irecv];
+         TBOX_ASSERT( sender == completed_comm.getPeerRank() );
+         completed_comm.completeCurrentOperation();
+         completed_comm.yankFromCompletionQueue();
 
-         // Copy message into stream.
          MessageStream incoming_stream(
-            completed_comm->getRecvSize() * sizeof(char),
+            completed_comm.getRecvSize() * sizeof(char),
             MessageStream::Read,
-            completed_comm->getRecvData());
-         completed_comm->clearRecvData();
+            completed_comm.getRecvData(),
+            false /* don't use deep copy */ );
 
          d_object_timers->t_unpack_stream->start();
          for (Iterator recv = d_recv_sets[sender].begin();
@@ -431,9 +436,51 @@ Schedule::processCompletedCommunications()
             (*recv)->unpackStream(incoming_stream);
          }
          d_object_timers->t_unpack_stream->stop();
-      } else {
-         // No further action required for completed send.
+         completed_comm.clearRecvData();
+
       }
+
+      // Complete sends.
+      d_com_stage.advanceAll();
+      while ( d_com_stage.numberOfCompletedMembers() > 0 ) {
+         d_com_stage.popCompletionQueue();
+      }
+
+   }
+   else {
+
+      // Unpack in order of completed receives.
+
+      while ( d_com_stage.numberOfCompletedMembers() > 0 ||
+              d_com_stage.advanceSome() ) {
+
+         AsyncCommPeer<char>* completed_comm =
+            CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
+
+         TBOX_ASSERT(completed_comm != 0);
+         TBOX_ASSERT(completed_comm->isDone());
+         if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
+
+            const int sender = completed_comm->getPeerRank();
+
+            MessageStream incoming_stream(
+               completed_comm->getRecvSize() * sizeof(char),
+               MessageStream::Read,
+               completed_comm->getRecvData(),
+               false /* don't use deep copy */ );
+
+            d_object_timers->t_unpack_stream->start();
+            for (Iterator recv = d_recv_sets[sender].begin();
+                 recv != d_recv_sets[sender].end(); recv++) {
+               (*recv)->unpackStream(incoming_stream);
+            }
+            d_object_timers->t_unpack_stream->stop();
+            completed_comm->clearRecvData();
+         } else {
+            // No further action required for completed send.
+         }
+      }
+
    }
 
    d_object_timers->t_process_incoming_messages->stop();

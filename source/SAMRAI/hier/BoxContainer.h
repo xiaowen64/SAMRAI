@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
@@ -16,12 +16,12 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
 #include <list>
 #include <set>
+#include <vector>
 
 
 namespace SAMRAI {
@@ -104,20 +104,11 @@ public:
       friend class BoxContainerIterator;
 
    public:
-
-      /*!
-       * @brief Constructor for the BoxContainerConstIterator.
-       *
-       * The iterator will point to the beginning or the end of the argument
-       * container, depending on the from_start argument
-       *
-       * @param[in] container The container whose members are iterated.
-       * @param[in] from_start true if iteration starts at beginning of
-       * container.
-       */
-      explicit BoxContainerConstIterator(
-         const BoxContainer& container,
-         bool from_start = true);
+      typedef std::bidirectional_iterator_tag iterator_category;
+      typedef const Box value_type;
+      typedef ptrdiff_t difference_type;
+      typedef const Box* pointer;
+      typedef const Box& reference;
 
       /*!
        * @brief Copy constructor.
@@ -144,9 +135,13 @@ public:
          const BoxContainerConstIterator& rhs)
       {
          if (this != &rhs) {
-            d_list_iter = rhs.d_list_iter;
-            d_set_iter = rhs.d_set_iter;
             d_ordered = rhs.d_ordered;
+            if (d_ordered) {
+               d_set_iter = rhs.d_set_iter;
+            }
+            else {
+               d_list_iter = rhs.d_list_iter;
+            }
          }
          return *this;
       }
@@ -286,6 +281,20 @@ public:
        */
       BoxContainerConstIterator();
 
+      /*!
+       * @brief Constructor for the BoxContainerConstIterator.
+       *
+       * The iterator will point to the beginning or the end of the argument
+       * container, depending on the from_start argument
+       *
+       * @param[in] container The container whose members are iterated.
+       * @param[in] from_start true if iteration starts at beginning of
+       * container.
+       */
+      explicit BoxContainerConstIterator(
+         const BoxContainer& container,
+         bool from_start = true);
+
       /*
        * Underlying iterator to be used when unordered.
        */
@@ -294,7 +303,7 @@ public:
       /*
        * Underlying iterator to be used when ordered.
        */
-      std::set<Box*>::const_iterator d_set_iter;
+      std::set<Box*, Box::id_less>::const_iterator d_set_iter;
 
       bool d_ordered;
    };
@@ -316,20 +325,11 @@ public:
       friend class BoxContainerConstIterator;
 
    public:
-
-      /*!
-       * @brief Constructor for the BoxContainerIterator.
-       *
-       * The iterator will point to the beginning or the end of the argument
-       * container, depending on the from_start argument
-       *
-       * @param[in] container The container whose members are iterated.
-       * @param[in] from_start true if iteration starts at beginning of
-       * container.
-       */
-      explicit BoxContainerIterator(
-         BoxContainer& container,
-         bool from_start = true);
+      typedef std::bidirectional_iterator_tag iterator_category;
+      typedef Box value_type;
+      typedef ptrdiff_t difference_type;
+      typedef Box* pointer;
+      typedef Box& reference;
 
       /*!
        * @brief Copy constructor.
@@ -349,9 +349,13 @@ public:
          const BoxContainerIterator& rhs)
       {
          if (this != &rhs) {
-            d_list_iter = rhs.d_list_iter;
-            d_set_iter = rhs.d_set_iter;
             d_ordered = rhs.d_ordered;
+            if (d_ordered) {
+               d_set_iter = rhs.d_set_iter;
+            }
+            else {
+               d_list_iter = rhs.d_list_iter;
+            }
          }
          return *this;
       }
@@ -510,6 +514,20 @@ public:
        */
       BoxContainerIterator();
 
+      /*!
+       * @brief Constructor for the BoxContainerIterator.
+       *
+       * The iterator will point to the beginning or the end of the argument
+       * container, depending on the from_start argument
+       *
+       * @param[in] container The container whose members are iterated.
+       * @param[in] from_start true if iteration starts at beginning of
+       * container.
+       */
+      explicit BoxContainerIterator(
+         BoxContainer& container,
+         bool from_start = true);
+
       /*
        * Underlying iterator to be used when unordered.
        */
@@ -518,7 +536,7 @@ public:
       /*
        * Underlying iterator to be used when ordered.
        */
-      std::set<Box*>::iterator d_set_iter;
+      std::set<Box*, Box::id_less>::iterator d_set_iter;
 
       bool d_ordered;
 
@@ -592,7 +610,7 @@ public:
     * @param[in] other
     */
    explicit BoxContainer(
-      const tbox::Array<tbox::DatabaseBox>& other);
+      const std::vector<tbox::DatabaseBox>& other);
 
    /*!
     * @brief Constructor that copies only Boxes having the given BlockId
@@ -631,7 +649,7 @@ public:
     */
    BoxContainer&
    operator = (
-      const tbox::Array<tbox::DatabaseBox>& rhs);
+      const std::vector<tbox::DatabaseBox>& rhs);
 
    /*!
     * @brief The destructor releases all storage.
@@ -1529,7 +1547,7 @@ public:
     *                  its BoxId is compared to members of this container. 
     *
     * @pre isOrdered()
-    */  
+    */
    iterator
    find(
       const Box& box) const
@@ -1709,9 +1727,9 @@ public:
       tbox::Database& restart_db);
 
    /*!
-    * @brief Conversion from BoxContainer to tbox::Array<tbox::DatabaseBox>.
+    * @brief Conversion from BoxContainer to std::vector<tbox::DatabaseBox>.
     */
-   operator tbox::Array<tbox::DatabaseBox>() const;
+   operator std::vector<tbox::DatabaseBox>() const;
 
    /*!
     * @brief Print each box in the container to the specified output stream.
@@ -1745,7 +1763,7 @@ private:
       Outputter(
          const BoxContainer& boxes,
          const std::string& border,
-         int detail_depth = 0);
+         int detail_depth = 2);
 
       void
       operator = (
@@ -1774,7 +1792,7 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    //@}
 

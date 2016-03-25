@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
@@ -22,12 +21,14 @@
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
+#include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -226,7 +227,7 @@ public:
     * or if the code building the hierarchy does not provide Connectors
     * of sufficient widths, SAMRAI will still work but will not scale
     * well.  The mechanism for generating missing Connectors as needed
-    * is in the class PersistentOverlapConnector.
+    * is in the class PersistentOverlapConnectors.
     *
     * The user of a PatchHierarchy object registers implementations of
     * this strategy class with the PatchHierarchy.  See
@@ -394,26 +395,58 @@ public:
       const IntVector& coarsen_ratio) const;
 
 /*
- * TODO: Is it an error to call this method when a level with the given
+ * TODO: Is it an error to call these methods when a level with the given
  * level number already exists?  Are some preconditions assumed?
  */
-/*!
- * @brief Construct new PatchLevel in hierarchy at given level number.
- *
- * Boxes, their mappings and the refinement ratio are obtained from
- * @c new_box_level.
- *
- * @param[in]  level_number
- * @param[in]  new_box_level
- *
- * @pre getDim() == new_box_level.getDim()
- * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
- * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
- */
-   void
+   /*!
+    * @brief Construct new PatchLevel in hierarchy at given level number.
+    *
+    * This method results in the new PatchLevel making a COPY of the supplied
+    * BoxLevel.  If the caller intends to modify the supplied BoxLevel for
+    * other purposes after making the new PatchLevel, then this method must be
+    * used rather than the method taking a boost::shared_ptr<BoxLevel>.
+    *
+    * Boxes, their mappings and the refinement ratio are obtained from
+    * @c new_box_level.
+    *
+    * @param[in]  level_number
+    * @param[in]  new_box_level
+    *
+    * @pre getDim() == new_box_level.getDim()
+    * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
+    * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
+    */
+   virtual void
    makeNewPatchLevel(
       const int level_number,
       const BoxLevel& new_box_level);
+
+   /*!
+    * @brief Construct new PatchLevel in hierarchy at given level number.
+    *
+    * This method results in the new PatchLevel ACQUIRING the supplied
+    * BoxLevel.  If the caller will not modify the supplied BoxLevel for other
+    * purposes after making the new PatchLevel, then this method may be used
+    * rather than the method taking a BoxLevel&.  Use of this method where
+    * permitted is more efficient as it avoids copying an entire BoxLevel.
+    * Note that this method results in the supplied BoxLevel being locked so
+    * that any attempt by the caller to modify it after calling this method
+    * will result in an unrecoverable error.
+    *
+    * Boxes, their mappings and the refinement ratio are obtained from
+    * @c new_box_level.
+    *
+    * @param[in]  level_number
+    * @param[in]  new_box_level
+    *
+    * @pre getDim() == new_box_level->getDim()
+    * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
+    * @pre new_box_level->getRefinementRatio() > IntVector::getZero(getDim())
+    */
+   virtual void
+   makeNewPatchLevel(
+      const int level_number,
+      const boost::shared_ptr<BoxLevel> new_box_level);
 
    /*!
     * @brief Remove a patch level
@@ -425,7 +458,7 @@ public:
     *
     * @pre (level >= 0) && (level < getNumberOfLevels())
     */
-   void
+   virtual void
    removePatchLevel(
       const int level);
 
@@ -543,27 +576,6 @@ public:
       return d_patch_levels[level]->getBoxLevel();
    }
 
-   /*!
-    * @brief Get the connector between two levels
-    *
-    * Get const access to the Connector between two given BoxLevels
-    * between two given levels in the hierarchy.
-    *
-    * @return Connector between the two given level numbers.
-    *
-    * @param[in]  base_ln The base level indicating one end of the
-    *             connector.
-    * @param[in]  head_ln The head level indicating the other end of
-    *             the connector.
-    *
-    * @pre (base_ln >= 0) && (base_ln < getNumberOfLevels())
-    * @pre (head_ln >= 0) && (head_ln < getNumberOfLevels())
-    */
-   const Connector&
-   getConnector(
-      const int base_ln,
-      const int head_ln) const;
-
    //@{
 
    //! @name Connector width coordination between hierarchy builders and users.
@@ -583,7 +595,7 @@ public:
     *
     * @param[in]  cwrs The connector width requester strategy instance.
     *
-    * @pre d_connector_widths_are_computed
+    * @pre d_connector_widths_committed
     */
    void
    registerConnectorWidthRequestor(
@@ -595,18 +607,30 @@ public:
     *
     * The two level numbers must differ by no more than one.
     *
+    * The @b commit flag tells the hierarchy whether the calling code
+    * is commiting to the required widths in such a way that would
+    * break if this method later returns a bigger value.  Once this
+    * method is called with commit = true, the hierarchy will always
+    * return the same width for the same pair of level numbers.  Thus
+    * the hierarchy would not allow any changes that could result in
+    * changing the required widths.
+    *
     * @return The widths required from the base to head levels.
     *
     * @param[in]  base_ln
     * @param[in]  head_ln
+    * @param[in]  commit  Set to true if you want all future
+    * return values to be the same for the same level numbers.
     *
     * @pre (head_ln >= 0) && (head_ln < getMaxNumberOfLevels())
     * @pre (base_ln >= 0) && (base_ln < getMaxNumberOfLevels())
+    * @pre abs(base_ln - head_ln) <= 1
     */
    IntVector
    getRequiredConnectorWidth(
       int base_ln,
-      int head_ln) const;
+      int head_ln,
+      bool commit = false ) const;
 
    /*!
     * @brief Add a ConnectorWidthRequestorStrategy implementation to
@@ -637,7 +661,7 @@ public:
    const BoxLevel&
    getDomainBoxLevel() const
    {
-      return d_domain_box_level;
+      return *d_domain_box_level;
    }
 
    /*!
@@ -647,7 +671,7 @@ public:
    const tbox::SAMRAI_MPI&
    getMPI() const
    {
-      return d_domain_box_level.getMPI();
+      return d_domain_box_level->getMPI();
    }
 
    //@{
@@ -985,6 +1009,13 @@ private:
     */
    static const int HIER_PATCH_HIERARCHY_VERSION;
 
+   /*
+    * Compute required Connector widths using all the registered
+    * ConnectorWidthRequestorStrategy objects.
+    */
+   void
+   computeRequiredConnectorWidths() const;
+
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
     * it contains to the restart database.
@@ -1068,7 +1099,7 @@ private:
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy
     */
-   tbox::Array<boost::shared_ptr<PatchLevel> > d_patch_levels;
+   std::vector<boost::shared_ptr<PatchLevel> > d_patch_levels;
 
    /*!
     * @brief BaseGridGeometry that was used to construct the hierarchy
@@ -1186,12 +1217,16 @@ private:
    mutable std::vector<IntVector> d_fine_connector_widths;
 
    /*!
-    * @brief Whether Connector widths have been computed.
+    * @brief Whether Connector widths have been cached.
     *
     * This is mutable because it is computed as required by the const
-    * method getConnectorWidth().
+    * method getRequiredConnectorWidth().  Once someone indicates that
+    * the results of getRequiredConnectorWidth() has been cached, this
+    * flag becomes true and the hierarchy will not recompute the
+    * required widths or allow more ConnectorWidthRequestorStrategy
+    * registration so that the cached value would not be invalidated.
     */
-   mutable bool d_connector_widths_are_computed;
+   mutable bool d_connector_widths_committed;
 
    /*!
     * @brief Vector of all ConnectorWidthRequestorStrategy objects registered
@@ -1241,7 +1276,7 @@ private:
     * The physical domain BoxLevel is maintained in GLOBALIZED
     * mode with processor 0 owning all boxes.
     */
-   BoxLevel d_domain_box_level;
+   boost::shared_ptr<BoxLevel> d_domain_box_level;
 
    //@}
 

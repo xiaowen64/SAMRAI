@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -25,6 +25,8 @@
 
 namespace SAMRAI {
 namespace pdat {
+
+class NodeIterator;
 
 /*!
  * Class NodeGeometry manages the mapping between the AMR index space
@@ -75,6 +77,14 @@ public:
    transform(
       hier::Box& box,
       const hier::Transformation& transformation);
+
+   static NodeIterator
+   begin(
+      const hier::Box& box);
+
+   static NodeIterator
+   end(
+      const hier::Box& box);
 
    /*!
     * @brief Transform a NodeIndex.

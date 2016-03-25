@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Class to record statistics during program execution.
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/MessageStream.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include <string>
@@ -262,7 +261,7 @@ protected:
    /**
     * Return const reference to list of processor records.
     */
-   const Array<Statistic::ProcStat>&
+   const std::vector<Statistic::ProcStat>&
    getProcStatSeqArray() const
    {
       return d_proc_array;
@@ -271,7 +270,7 @@ protected:
    /**
     * Return const reference to list of patch records.
     */
-   const Array<Statistic::PatchStat>&
+   const std::vector<Statistic::PatchStat>&
    getPatchStatSeqArray() const
    {
       return d_patch_array;
@@ -318,12 +317,12 @@ private:
    int d_stat_type;            // see STATISTIC_RECORD_TYPE above.
 
    /*
-    * Arrays of records.  Note that one of these will always be empty.
+    * Vectors of records.  Note that one of these will always be empty.
     * Integer sequence length refers to length of list corresponding
     * to stat type.
     */
-   Array<Statistic::ProcStat> d_proc_array;
-   Array<Statistic::PatchStat> d_patch_array;
+   std::vector<Statistic::ProcStat> d_proc_array;
+   std::vector<Statistic::PatchStat> d_patch_array;
 
    /*
     * Sequence and patch counters (NOTE: patch counter use for patch stats

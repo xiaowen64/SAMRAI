@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
@@ -351,9 +350,9 @@ private:
 
    bool d_is_reset;
 
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_fill_source_schedule;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_refine_schedule;
-   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_fill_source_schedule;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_refine_schedule;
+   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
 };
 

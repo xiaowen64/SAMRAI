@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI convection-diffusion ex. problem.
  *
  ************************************************************************/
@@ -24,7 +24,7 @@ using namespace std;
 
 // Headers for basic SAMRAI objects
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Database.h"
@@ -57,6 +57,8 @@ using namespace std;
 #endif
 
 #include "boost/shared_ptr.hpp"
+
+#include <vector>
 
 using namespace SAMRAI;
 using namespace algs;
@@ -345,7 +347,8 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
-            input_db->getDatabase("LoadBalancer")));
+            input_db->getDatabase("LoadBalancer"),
+            boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
@@ -404,7 +407,7 @@ int main(
       *
       ****************************************************************/
 
-      tbox::Array<int>
+      std::vector<int>
       tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = main_restart_data->getTagBuffer();
@@ -413,8 +416,8 @@ int main(
                     << endl;
       }
 
-      tbox::Array<double>
-      regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<double> regrid_start_time(
+         patch_hierarchy->getMaxNumberOfLevels());
 
       double loop_time = main_restart_data->getLoopTime();
       int loop_cycle = main_restart_data->getIterationNumber();

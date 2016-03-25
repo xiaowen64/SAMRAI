@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating side data objects
  *
  ************************************************************************/
@@ -47,6 +47,21 @@ SideDataFactory<TYPE>::SideDataFactory(
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
 }
+
+template<class TYPE>
+SideDataFactory<TYPE>::SideDataFactory(
+   int depth,
+   const hier::IntVector& ghosts,
+   bool fine_boundary_represents_var):
+   hier::PatchDataFactory(ghosts),
+   d_depth(depth),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(hier::IntVector::getOne(ghosts.getDim()))
+{
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+}
+
 
 template<class TYPE>
 SideDataFactory<TYPE>::~SideDataFactory()

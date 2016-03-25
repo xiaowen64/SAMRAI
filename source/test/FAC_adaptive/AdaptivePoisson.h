@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AdaptivePoisson class declaration
  *
  ************************************************************************/
@@ -204,8 +204,8 @@ public:
       /*! hierarchy */ const hier::PatchHierarchy& hierarchy,
       /*! L2 norm */ double* l2norm,
       /*! L-inf norm */ double* linorm,
-      /*! L2 norm on each level */ tbox::Array<double>& l2norms,
-      /*! L-inf norm on each level */ tbox::Array<double>& linorms) const;
+      /*! L2 norm on each level */ std::vector<double>& l2norms,
+      /*! L-inf norm on each level */ std::vector<double>& linorms) const;
 
    /*!
     * @brief Compute error estimator (for adaption or plotting).
@@ -365,8 +365,6 @@ private:
    //@}
 
    double d_adaption_threshold;
-
-   int d_finest_plot_level;
 
    //@{
 private:

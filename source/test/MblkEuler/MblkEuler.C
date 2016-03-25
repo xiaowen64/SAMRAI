@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Template for a multiblock AMR Euler code
  *
  ************************************************************************/
@@ -31,6 +31,7 @@ using namespace std;
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
+#include <vector>
 
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -185,7 +186,7 @@ MblkEuler::~MblkEuler() {
  *
  * Register conserved variable (u) (i.e., solution state variable) and
  * flux variable with hyperbolic integrator that manages storage for
- * those quantities.  Also, register plot data with Vizamrai or VisIt.
+ * those quantities.  Also, register plot data with VisIt.
  *
  *************************************************************************
  */
@@ -235,7 +236,7 @@ void MblkEuler::registerModelVariables(
    if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
-                       << "\nVisit data writer was"
+                       << "\nVisIt data writer was"
                        << "\nregistered.  Consequently, no plot data will"
                        << "\nbe written." << endl);
    }
@@ -427,9 +428,9 @@ void MblkEuler::initializeDataOnPatch(
 
          for (int m = 0; m < d_number_of_regions; m++) {    // loop over the regions and shape in data
 
-            tbox::Array<double>& lrad = d_rev_rad[m];
-            tbox::Array<double>& laxis = d_rev_axis[m];
-            int naxis = laxis.getSize();
+            std::vector<double>& lrad = d_rev_rad[m];
+            std::vector<double>& laxis = d_rev_axis[m];
+            int naxis = static_cast<int>(laxis.size());
 
             for (int k = kmin; k <= kmax; k++) {
                for (int j = jmin; j <= jmax; j++) {
@@ -473,7 +474,7 @@ void MblkEuler::initializeDataOnPatch(
       //  the spherical initialization
       //
       else if (d_data_problem == "SPHERE") {
-         double* front = d_front_position.getPointer();
+         double* front = &d_front_position[0];
          for (int k = kmin; k <= kmax; k++) {
             for (int j = jmin; j <= jmax; j++) {
                for (int i = imin; i <= imax; i++) {
@@ -503,7 +504,7 @@ void MblkEuler::initializeDataOnPatch(
                || (d_data_problem == "PIECEWISE_CONSTANT_Y")
                || (d_data_problem == "PIECEWISE_CONSTANT_Z")) {
 
-         double* front = d_front_position.getPointer();
+         double* front = &d_front_position[0];
          double* xx = xc;
          if (d_data_problem == "PIECEWISE_CONSTANT_Y") {
             xx = yc;
@@ -531,17 +532,17 @@ void MblkEuler::initializeDataOnPatch(
       //
       else if ((d_data_problem == "RT_SHOCK_TUBE")) {
 
-         double* front = d_front_position.getPointer();
+         double* front = &d_front_position[0];
          double shock_pos = front[1]; // the shock front
          double front_pos = front[2]; // the sinusoidal perturbation between the two fluids
 
          double dt_ampl = d_dt_ampl;
-         int nmodes = d_amn.getSize();
-         double* amn = d_amn.getPointer();
-         double* n_mode = d_n_mode.getPointer();
-         double* m_mode = d_m_mode.getPointer();
-         double* phiy = d_phiy.getPointer();
-         double* phiz = d_phiz.getPointer();
+         int nmodes = static_cast<int>(d_amn.size());
+         double* amn = &d_amn[0];
+         double* n_mode = &d_n_mode[0];
+         double* m_mode = &d_m_mode[0];
+         double* phiy = &d_phiy[0];
+         double* phiz = &d_phiz[0];
 
          // ... this is a cartesian problem by definition
          const double* xdlo = 0;  // d_cart_xlo[0][0];
@@ -1511,10 +1512,10 @@ void MblkEuler::markPhysicalBoundaryConditions(
 
    for (int ii = 0; ii < 3; ii++) {
 
-      const tbox::Array<hier::BoundaryBox>& bc_bdry =
+      const std::vector<hier::BoundaryBox>& bc_bdry =
          pgeom->getCodimensionBoundaries(bc_types[ii]);
 
-      for (int jj = 0; jj < bc_bdry.getSize(); jj++) {
+      for (int jj = 0; jj < static_cast<int>(bc_bdry.size()); jj++) {
 
          hier::Box fill_box = pgeom->getBoundaryFillBox(bc_bdry[jj],
                interior,
@@ -2288,19 +2289,20 @@ void MblkEuler::tagGradientDetectorCells(
    // specified time interval.  If so, apply appropriate tagging for
    // the level.
    //
-   for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
+   for (int ncrit = 0;
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
 
       TBOX_ASSERT(var);
 
       string ref = d_refinement_criteria[ncrit];
 
       if (ref == "GRADIENT") {
-         int nStateLocal = d_state_grad_names.getSize();
+         int nStateLocal = static_cast<int>(d_state_grad_names.size());
          for (int id = 0; id < nStateLocal; id++) {
 
             double* lvar = var->getPointer(d_state_grad_id[id]);
 
-            int size = d_state_grad_tol[id].getSize();  // max depth of gradient tolerance
+            int size = static_cast<int>(d_state_grad_tol[id].size());  // max depth of gradient tolerance
             double tol = ((error_level_number < size)    // find the tolerance
                           ? d_state_grad_tol[id][error_level_number]
                           : d_state_grad_tol[id][size - 1]);
@@ -2467,7 +2469,7 @@ void MblkEuler::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxContainer::iterator b(refine_boxes);
+            for (hier::BoxContainer::iterator b = refine_boxes.begin();
                  b != refine_boxes.end(); ++b) {
                hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
@@ -2483,8 +2485,9 @@ void MblkEuler::tagGradientDetectorCells(
    //
    // Update tags
    //
-   pdat::CellIterator icend(pbox, false);
-   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+   pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+   for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+        ic != icend; ++ic) {
       (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
@@ -2502,7 +2505,7 @@ void MblkEuler::tagGradientDetectorCells(
 void MblkEuler::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   const hier::Connector& dst_to_encon,
+   boost::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
@@ -2543,7 +2546,7 @@ void MblkEuler::setMappedGridOnPatch(
    //
    d_dom_current_nboxes = domain_boxes.size();
 
-   hier::BoxContainer::iterator itr(domain_boxes);
+   hier::BoxContainer::iterator itr = domain_boxes.begin();
    d_dom_current_bounds[0] = itr->lower(0);
    d_dom_current_bounds[1] = itr->lower(1);
    d_dom_current_bounds[2] = itr->lower(2);
@@ -2748,30 +2751,27 @@ void MblkEuler::getFromInput(
    // --------------- initialize boundary condition factors
    //
    if (db->keyExists("wall_factors")) {
-      d_wall_factors = db->getIntegerArray("wall_factors");
+      d_wall_factors = db->getIntegerVector("wall_factors");
    } else {
-      d_wall_factors.resizeArray(6);
+      d_wall_factors.resize(6);
       for (int i = 0; i < 6; i++) d_wall_factors[i] = 0;
    }
 
    //
    // --------------- process the linear advection test ---------------------
    //
-   d_advection_test = 0;
+   d_advection_test = 1;
    d_advection_velocity[0] = d_advection_velocity[1] =
          d_advection_velocity[2] = FLT_MAX;
    d_advection_vel_type = 0;
-   if (db->keyExists("advection_test")) {
-      d_advection_test = db->getInteger("advection_test");
-      if (db->keyExists("advection_velocity")) {
-         db->getDoubleArray("advection_velocity",
-            d_advection_velocity, d_dim.getValue());
-         d_advection_vel_type = db->getInteger("advection_vel_type");
-      } else {
-         TBOX_ERROR(
-            d_object_name << ":  "
-                          << "Key data `advection_velocity' not found in input.");
-      }
+   if (db->keyExists("advection_velocity")) {
+      db->getDoubleArray("advection_velocity",
+         d_advection_velocity, d_dim.getValue());
+      d_advection_vel_type = db->getInteger("advection_vel_type");
+   } else {
+      TBOX_ERROR(
+         d_object_name << ":  "
+                       << "Key data `advection_velocity' not found in input.");
    }
 
    //
@@ -2779,8 +2779,8 @@ void MblkEuler::getFromInput(
    //
    if (d_advection_test) {
       if (db->keyExists("state_names")) {
-         d_state_names = db->getStringArray("state_names");
-         d_nState = d_state_names.getSize();
+         d_state_names = db->getStringVector("state_names");
+         d_nState = static_cast<int>(d_state_names.size());
       } else {
          TBOX_ERROR("missing 'state_names' input for sizing the state" << endl);
       }
@@ -2830,8 +2830,8 @@ void MblkEuler::getFromInput(
          d_axis[1] /= anorm;
          d_axis[2] /= anorm;
 
-         d_rev_rad.resizeArray(d_number_of_regions);
-         d_rev_axis.resizeArray(d_number_of_regions);
+         d_rev_rad.resize(d_number_of_regions);
+         d_rev_axis.resize(d_number_of_regions);
 
          for (int i = 0; i < d_number_of_regions; i++) {
 
@@ -2841,8 +2841,8 @@ void MblkEuler::getFromInput(
             boost::shared_ptr<tbox::Database> region_db(
                db->getDatabase(lkey));
 
-            d_rev_rad[i] = region_db->getDoubleArray("radius");
-            d_rev_axis[i] = region_db->getDoubleArray("axis");
+            d_rev_rad[i] = region_db->getDoubleVector("radius");
+            d_rev_axis[i] = region_db->getDoubleVector("axis");
 
          }
 
@@ -2868,11 +2868,11 @@ void MblkEuler::getFromInput(
 
          if (db->keyExists("amn")) {
             d_dt_ampl = db->getDouble("ampl");
-            d_amn = db->getDoubleArray("amn");
-            d_m_mode = db->getDoubleArray("m_mode");
-            d_n_mode = db->getDoubleArray("n_mode");
-            d_phiy = db->getDoubleArray("phiy");
-            d_phiz = db->getDoubleArray("phiz");
+            d_amn = db->getDoubleVector("amn");
+            d_m_mode = db->getDoubleVector("m_mode");
+            d_n_mode = db->getDoubleVector("n_mode");
+            d_phiy = db->getDoubleVector("phiy");
+            d_phiz = db->getDoubleVector("phiz");
          } else {
             TBOX_ERROR("missing input for RT_SHOCK_TUBE problem." << endl);
          }
@@ -2883,8 +2883,8 @@ void MblkEuler::getFromInput(
       //
       if (problem_1d) {
          if (db->keyExists("front_position")) {
-            d_front_position = db->getDoubleArray("front_position");
-            d_number_of_regions = d_front_position.getSize() - 1;
+            d_front_position = db->getDoubleVector("front_position");
+            d_number_of_regions = static_cast<int>(d_front_position.size()) - 1;
             TBOX_ASSERT(d_number_of_regions > 0);
          } else {
             TBOX_ERROR("Missing`front_position' input required" << endl);
@@ -2896,15 +2896,15 @@ void MblkEuler::getFromInput(
       //
 //      int llen = d_number_of_regions*d_nState;
 //     //double *tmp = new double[llen];
-//    tbox::Array<double> tmp(llen);
+//    std::vector<double> tmp(llen);
 //   for ( int ii = 0 ; ii < llen ; ii++ ) {
 //       tmp[ii] = FLT_MAX;
 //     }
 
-      d_state_ic.resizeArray(d_number_of_regions);
+      d_state_ic.resize(d_number_of_regions);
       //d_state_ic  = new double *[d_number_of_regions];
       for (int iReg = 0; iReg < d_number_of_regions; iReg++) {
-         d_state_ic[iReg].resizeArray(d_nState);
+         d_state_ic[iReg].resize(d_nState);
          //d_state_ic[iReg] = tmp[d_nState*iReg];
       }
 
@@ -2915,9 +2915,9 @@ void MblkEuler::getFromInput(
          if (db->keyExists("state_data")) {
             boost::shared_ptr<tbox::Database> state_db(
                db->getDatabase("state_data"));
-            tbox::Array<double> lpsi;
+            std::vector<double> lpsi;
             for (int iState = 0; iState < d_nState; iState++) {
-               lpsi = state_db->getDoubleArray(d_state_names[iState]);
+               lpsi = state_db->getDoubleVector(d_state_names[iState]);
                for (int iReg = 0; iReg < d_number_of_regions; iReg++) {
                   d_state_ic[iReg][iState] = lpsi[iReg];
                }
@@ -2938,12 +2938,11 @@ void MblkEuler::getFromInput(
    if (db->keyExists("Refinement_data")) {
       boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
             "Refinement_data");
-      tbox::Array<string> refinement_keys = refine_db->getAllKeys();
-      int num_keys = refinement_keys.getSize();
+      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
-         d_refinement_criteria =
-            refine_db->getStringArray("refine_criteria");
+         d_refinement_criteria = refine_db->getStringVector("refine_criteria");
       } else {
          TBOX_WARNING(
             d_object_name << ": "
@@ -2951,10 +2950,10 @@ void MblkEuler::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      tbox::Array<string> ref_keys_defined(num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < refinement_keys.getSize(); i++) {
+      for (int i = 0; i < num_keys; i++) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -2982,11 +2981,11 @@ void MblkEuler::getFromInput(
             //
             if (error_db && error_key == "GRADIENT") {
 
-               d_state_grad_names = error_db->getStringArray("names");
-               int nStateLocal = d_state_grad_names.getSize();
+               d_state_grad_names = error_db->getStringVector("names");
+               int nStateLocal = static_cast<int>(d_state_grad_names.size());
 
-               d_state_grad_tol.resizeArray(nStateLocal);
-               d_state_grad_id.resizeArray(nStateLocal);
+               d_state_grad_tol.resize(nStateLocal);
+               d_state_grad_id.resize(nStateLocal);
 
                for (int id = 0; id < nStateLocal; id++) {
                   string grad_name = d_state_grad_names[id];
@@ -3003,7 +3002,8 @@ void MblkEuler::getFromInput(
 
                   // ... the tolerance array needed
                   if (error_db->keyExists(grad_name)) {
-                     d_state_grad_tol[id] = error_db->getDoubleArray(grad_name);
+                     d_state_grad_tol[id] =
+                        error_db->getDoubleVector(grad_name);
                   } else {
                      TBOX_ERROR(
                         "No tolerance array " << grad_name
@@ -3105,7 +3105,7 @@ void MblkEuler::checkBoundaryData(
    int btype,
    const hier::Patch& patch,
    const hier::IntVector& ghost_width_to_check,
-   const tbox::Array<int>& scalar_bconds) const
+   const std::vector<int>& scalar_bconds) const
 {
    NULL_USE(btype);
    NULL_USE(patch);

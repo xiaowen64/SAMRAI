@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -83,7 +83,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -119,6 +118,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
+   buildOperators();
+
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (is_from_restart) {
       getFromRestart();
@@ -140,6 +141,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
 
+   buildOperators();
+
    setGeometryData(x_lo, x_up, domain);
 }
 
@@ -156,6 +159,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
+
+   buildOperators();
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -236,8 +241,8 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
     */
    const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   hier::BoxContainer::const_iterator fine_domain_itr(fine_domain);
-   hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+   hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
+   hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
    for (int ib = 0; ib < nboxes; ib++, ++fine_domain_itr, ++coarse_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -300,7 +305,7 @@ CartesianGridGeometry::setGeometryData(
 
    hier::Box bigbox(dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain();
-   for (hier::BoxContainer::const_iterator k(block_domain);
+   for (hier::BoxContainer::const_iterator k = block_domain.begin();
         k != block_domain.end(); ++k) {
       bigbox += *k;
    }
@@ -327,8 +332,7 @@ void
 CartesianGridGeometry::setGeometryDataOnPatch(
    hier::Patch& patch,
    const hier::IntVector& ratio_to_level_zero,
-   const TwoDimBool& touches_regular_bdry,
-   const TwoDimBool& touches_periodic_bdry) const
+   const TwoDimBool& touches_regular_bdry) const
 {
    const tbox::Dimension& dim(getDim());
 
@@ -386,7 +390,6 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    boost::shared_ptr<CartesianPatchGeometry> geom(
       boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
          touches_regular_bdry,
-         touches_periodic_bdry,
          dx, x_lo, x_up));
 
    patch.setPatchGeometry(geom);
@@ -396,12 +399,6 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 void
 CartesianGridGeometry::buildOperators()
 {
-   if (d_transfer_operator_registry->hasOperators()) {
-      return;
-   }
-
-   GridGeometry::buildOperators();
-
    // CartesianGridGeometry specific Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
@@ -609,7 +606,7 @@ CartesianGridGeometry::getFromInput(
    else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
-      int num_keys = input_db->getAllKeys().getSize();
+      int num_keys = static_cast<int>(input_db->getAllKeys().size());
       if (num_keys > 0 && read_on_restart) {
          TBOX_WARNING(
             "CartesianGridGeometry::getFromInput() warning...\n"

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
@@ -34,6 +34,7 @@
 #include "SAMRAI/appu/VisItDataWriter.h"\
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 using namespace std;
 using namespace SAMRAI;
@@ -270,9 +271,9 @@ private:
    void
    setBoundaryConditions(
       Patch& patch,
-      const tbox::Array<BoundaryBox>& node_bdry,
-      const tbox::Array<BoundaryBox>& edge_bdry,
-      const tbox::Array<BoundaryBox>& face_bdry,
+      const std::vector<BoundaryBox>& node_bdry,
+      const std::vector<BoundaryBox>& edge_bdry,
+      const std::vector<BoundaryBox>& face_bdry,
       const int cell_data_id);
 
    /*
@@ -322,7 +323,7 @@ private:
     * Node and edge sum utilities.
     */
    boost::shared_ptr<PatchBoundaryNodeSum> d_node_sum_util;
-   Array<boost::shared_ptr<PatchBoundaryEdgeSum> > d_edge_sum_util;
+   std::vector<boost::shared_ptr<PatchBoundaryEdgeSum> > d_edge_sum_util;
 
    /*
     * Flag to tell whether to check data before communication.  Usually,

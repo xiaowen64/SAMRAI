@@ -3,19 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Input file for SAMRAI Euler example problem (3d sphere) 
  *
  ************************************************************************/
 
 // 4-level Euler strong scaling performance test.
 // The 1x version is set up to do about 28.4 cell updates.
-
-GlobalInputs {
-   //use_new_comm_sched = FALSE  // uncomment to turn on OLD
-   use_newest_comm_sched = TRUE // uncomment to turn on NEW
-   //use_old_method_for_clustering = TRUE // uncomment to turn on OLD
-}
 
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
@@ -59,7 +53,7 @@ Euler {
 
       PRESSURE_DEVIATION {
          dev_tol = 0.01
-        pressure_dev = 0.01
+         pressure_dev = 0.01
       }
    }
 
@@ -167,9 +161,8 @@ BaselineMain {
    log_all_nodes = TRUE
 
 // visualization dump parameters 
-   viz_writer            = "VisIt"
    viz_dump_interval     = 0          // zero to turn off
-   visit_number_procs_per_file = 1    // not used by Vizamrai
+   visit_number_procs_per_file = 1
 
 // restart dump parameters 
    restart_interval        = 0        // zero to turn off
@@ -186,9 +179,8 @@ Main {
    log_all_nodes = TRUE
 
 // visualization dump parameters 
-   viz_writer            = "VisIt"
    viz_dump_interval     = 0          // zero to turn off
-   visit_number_procs_per_file = 1    // not used by Vizamrai
+   visit_number_procs_per_file = 1
 
 // restart dump parameters 
    restart_interval        = 0        // zero to turn off
@@ -270,10 +262,4 @@ TreeLoadBalancer {
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE
-  n_root_cycles = 2
-}
-
-// LoadBalancer is used by the new code.
-LoadBalancer {
-// using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
 }

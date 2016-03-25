@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  *
  ************************************************************************/
 
@@ -166,7 +166,8 @@ void txt2boxes(
    }
 
    // Shift all boxes into SAMRAI coordinates
-   for (hier::BoxContainer::iterator itr(boxes); itr != boxes.end(); ++itr) {
+   for (hier::BoxContainer::iterator itr = boxes.begin();
+        itr != boxes.end(); ++itr) {
       itr->shift(-hier::IntVector(tbox::Dimension(2), 2));
    }
 }
@@ -341,13 +342,13 @@ bool SingleLevelTestCase(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       new hier::PatchHierarchy("hier", geom));
 
-   hier::BoxLevel mblevel(hier::IntVector(dim, 1), geom);
+   boost::shared_ptr<hier::BoxLevel> mblevel(
+      boost::make_shared<hier::BoxLevel>(hier::IntVector(dim, 1), geom));
 
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
    hier::LocalId local_id(0);
-   tbox::Array<int> local_indices(mpi.getSize(), 0);
-   hier::BoxContainer::iterator level_boxes_itr(level_boxes);
+   hier::BoxContainer::iterator level_boxes_itr = level_boxes.begin();
    for (int i = 0; i < num_boxes; ++i, ++level_boxes_itr) {
 
       int proc;
@@ -358,7 +359,7 @@ bool SingleLevelTestCase(
       }
 
       if (proc == mpi.getRank()) {
-         mblevel.addBox(hier::Box(*level_boxes_itr, local_id, proc));
+         mblevel->addBox(hier::Box(*level_boxes_itr, local_id, proc));
          local_id++;
       }
 
@@ -429,10 +430,9 @@ bool SingleLevelTestCase(
    }
 
    // Cache Connector required for the schedule generation.
-   level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
-      *(level->getBoxLevel()),
-      hier::IntVector(dim, 2));
+   level->findConnector(*level,
+      hier::IntVector(dim, 2),
+      hier::CONNECTOR_CREATE);
 
    // Create and run comm schedule
    refine_alg.createSchedule(level)->fillData(0.0, false);
@@ -462,8 +462,8 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, false);
 
-         pdat::CellData<int>::iterator ciend(cdata->getGhostBox(), false);
-         for (pdat::CellData<int>::iterator ci(cdata->getGhostBox(), true);
+         pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(cdata->getGhostBox()));
+         for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(cdata->getGhostBox()));
               ci != ciend; ++ci) {
             if ((*cdata)(*ci) != expected(*ci)) {
                failed = true;
@@ -493,8 +493,8 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, true);
 
-         pdat::NodeData<int>::iterator niend(ndata->getGhostBox(), false);
-         for (pdat::NodeData<int>::iterator ni(ndata->getGhostBox(), true);
+         pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(ndata->getGhostBox()));
+         for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(ndata->getGhostBox()));
               ni != niend; ++ni) {
             if ((*ndata)(*ni) != expected(*ni)) {
                failed = true;

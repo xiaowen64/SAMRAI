@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
@@ -14,10 +14,10 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <map>
+#include <vector>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -72,13 +72,13 @@ public:
    }
 
    /*!
-    * @brief Array access operator.
+    * @brief Vector access operator.
     *
-    * @param[in] i  Array index.
+    * @param[in] i  Vector index.
     *
     * @pre i < getDim().getValue()
     */
-   tbox::Array<BoundaryBox>&
+   std::vector<BoundaryBox>&
    operator [] (
       unsigned int i)
    {
@@ -87,13 +87,13 @@ public:
    }
 
    /*!
-    * @brief Const Array access operator.
+    * @brief Const Vector access operator.
     *
-    * @param[in] i  Array index.
+    * @param[in] i  Vector index.
     *
     * @pre i < getDim().getValue()
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    operator [] (
       unsigned int i) const
    {
@@ -102,23 +102,23 @@ public:
    }
 
    /*!
-    * @brief Get copy of the internal arrays.
+    * @brief Get copy of the internal vectors.
     *
-    * @return  Copy of the internal arrays.
+    * @return  Copy of the internal vectors.
     */
-   tbox::Array<tbox::Array<BoundaryBox> >
-   getArrays()
+   std::vector<std::vector<BoundaryBox> >&
+   getVectors()
    {
       return d_array_of_bboxes;
    }
 
    /*!
-    * @brief Get const copy of the internal arrays.
+    * @brief Get const copy of the internal vectors.
     *
-    * @return  Const copy of the internal arrays.
+    * @return  Const copy of the internal vectors.
     */
-   const tbox::Array<tbox::Array<BoundaryBox> >
-   getArrays() const
+   const std::vector<std::vector<BoundaryBox> >&
+   getVectors() const
    {
       return d_array_of_bboxes;
    }
@@ -143,7 +143,7 @@ private:
    /*
     * @brief Internal arrays of BoundaryBox
     */
-   tbox::Array<tbox::Array<BoundaryBox> > d_array_of_bboxes;
+   std::vector<std::vector<BoundaryBox> > d_array_of_bboxes;
 };
 
 } // SAMRAI namespace

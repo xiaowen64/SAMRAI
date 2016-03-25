@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -11,12 +11,12 @@
 #include "CommTester.h"
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
-#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
@@ -78,9 +78,9 @@ CommTester::CommTester(
    }
 
    d_patch_data_components.clrAllFlags();
-   d_fill_source_schedule.resizeArray(0);
-   d_refine_schedule.resizeArray(0);
-   d_coarsen_schedule.resizeArray(0);
+   d_fill_source_schedule.resize(0);
+   d_refine_schedule.resize(0);
+   d_coarsen_schedule.resize(0);
 
    d_source =
       hier::VariableDatabase::getDatabase()->getContext("SOURCE");
@@ -267,26 +267,34 @@ void CommTester::createRefineSchedule(
 
    if (d_do_refine) {
 
-      d_fill_source_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
+      d_fill_source_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_fill_source_schedule[level_number].reset();
-      d_refine_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
+      d_refine_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_refine_schedule[level_number].reset();
 
       const hier::Connector& peer_cnect =
-         d_patch_hierarchy->getConnector(level_number, level_number);
+         d_patch_hierarchy->getPatchLevel(level_number)->findConnector(
+            *d_patch_hierarchy->getPatchLevel(level_number),
+            d_patch_hierarchy->getRequiredConnectorWidth(level_number, level_number, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
       const hier::Connector* cnect_to_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number, level_number - 1) : 0;
-      const hier::Connector* cnect_from_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number - 1, level_number) : 0;
+         &d_patch_hierarchy->getPatchLevel(level_number)->findConnectorWithTranspose(
+            *d_patch_hierarchy->getPatchLevel(level_number - 1),
+            d_patch_hierarchy->getRequiredConnectorWidth(level_number, level_number - 1, true),
+            d_patch_hierarchy->getRequiredConnectorWidth(level_number - 1, level_number),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false) : 0;
 
       if (0) {
          // These are expensive checks.
-         hier::OverlapConnectorAlgorithm oca;
-         oca.assertOverlapCorrectness(peer_cnect);
-         if (cnect_to_coarser)
-            oca.assertOverlapCorrectness(*cnect_to_coarser);
-         if (cnect_from_coarser)
-            oca.assertOverlapCorrectness(*cnect_from_coarser);
+         peer_cnect.assertOverlapCorrectness();
+         if (cnect_to_coarser) {
+            cnect_to_coarser->assertOverlapCorrectness();
+            if (cnect_to_coarser->hasTranspose()) {
+               cnect_to_coarser->getTranspose().assertOverlapCorrectness();
+            }
+         }
          d_patch_hierarchy->recursivePrint(tbox::plog, "", 3);
       }
 
@@ -336,7 +344,7 @@ void CommTester::createCoarsenSchedule(
 
    if (d_do_coarsen && (level_number > 0)) {
 
-      d_coarsen_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
+      d_coarsen_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_coarsen_schedule[level_number].reset();
 
       boost::shared_ptr<hier::PatchLevel> level(
@@ -381,7 +389,7 @@ void CommTester::performRefineOperations(
 {
    if (d_do_refine) {
       if (d_fill_source_schedule[level_number] &&
-          level_number < d_fill_source_schedule.size() - 1) {
+          level_number < static_cast<int>(d_fill_source_schedule.size()) - 1) {
          d_data_test_strategy->setDataContext(d_source);
          d_fill_source_schedule[level_number]->fillData(d_fake_time);
       }
@@ -669,7 +677,7 @@ void CommTester::setupHierarchy(
    for (int ln = 0; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
-      level->getBoxLevel()->getPersistentOverlapConnectors().clear();
+      level->getBoxLevel()->clearPersistentOverlapConnectors();
    }
 
    if (0) {

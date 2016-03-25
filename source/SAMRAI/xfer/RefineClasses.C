@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
@@ -37,7 +37,7 @@ int RefineClasses::s_default_refine_item_array_size = 20;
 RefineClasses::RefineClasses():
    d_num_refine_items(0)
 {
-   d_refine_classes_data_items.resizeArray(s_default_refine_item_array_size);
+   d_refine_classes_data_items.resize(s_default_refine_item_array_size);
 }
 
 /*
@@ -77,14 +77,15 @@ RefineClasses::insertEquivalenceClassItem(
       int eq_index = getEquivalenceClassIndex(data, descriptor);
 
       if (eq_index < 0) {
-         eq_index = d_equivalence_class_indices.size();
-         d_equivalence_class_indices.resizeArray(eq_index + 1);
+         eq_index = static_cast<int>(d_equivalence_class_indices.size());
+         d_equivalence_class_indices.resize(eq_index + 1);
       }
 
       data.d_class_index = eq_index;
 
-      if (d_num_refine_items >= d_refine_classes_data_items.size()) {
-         d_refine_classes_data_items.resizeArray(
+      if (d_num_refine_items >=
+          static_cast<int>(d_refine_classes_data_items.size())) {
+         d_refine_classes_data_items.resize(
             d_num_refine_items + s_default_refine_item_array_size);
       }
 
@@ -394,7 +395,7 @@ RefineClasses::printClassData(
 {
    stream << "RefineClasses::printClassData()\n";
    stream << "--------------------------------------\n";
-   for (int i = 0; i < d_equivalence_class_indices.size(); i++) {
+   for (int i = 0; i < static_cast<int>(d_equivalence_class_indices.size()); i++) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       const std::list<int>& indices = d_equivalence_class_indices[i];

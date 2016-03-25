@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -168,7 +167,7 @@ namespace algs {
  *   </tr>
  *   <tr>
  *     <td>tag_buffer</td>
- *     <td>Array<int></td>
+ *     <td>array of ints</td>
  *     <td>regrid_interval value for corresponding level</td>
  *     <td>all values >= 0</td>
  *     <td>opt</td>
@@ -532,7 +531,8 @@ public:
       const int regrid_interval)
    {
       TBOX_ASSERT(!d_use_refined_timestepping);
-      for (int i = 0; i < d_regrid_interval.getSize(); i++) {
+      int array_size = static_cast<int>(d_regrid_interval.size());
+      for (int i = 0; i < array_size; i++) {
          d_regrid_interval[i] = regrid_interval;
       }
    }
@@ -711,7 +711,7 @@ private:
     * that for level 1.  In the future, users may be able to specify
     * this value in the input file.
     */
-   tbox::Array<int> d_regrid_interval;
+   std::vector<int> d_regrid_interval;
 
    /*
     * The tag buffer indicates the number of cells on each level by which
@@ -727,7 +727,7 @@ private:
     * be taken to assure that improper tag buffering will not degrade the
     * calculation.
     */
-   tbox::Array<int> d_tag_buffer;
+   std::vector<int> d_tag_buffer;
 
    /*
     * Integrator data that evolves during time integration and maintains
@@ -736,13 +736,13 @@ private:
    double d_integrator_time;
    bool d_just_regridded;
    int d_last_finest_level;
-   tbox::Array<double> d_level_old_old_time;
-   tbox::Array<double> d_level_old_time;
-   tbox::Array<double> d_level_sim_time;
-   tbox::Array<double> d_dt_max_level;
-   tbox::Array<double> d_dt_actual_level;
-   tbox::Array<int> d_step_level;
-   tbox::Array<int> d_max_steps_level;
+   std::vector<double> d_level_old_old_time;
+   std::vector<double> d_level_old_time;
+   std::vector<double> d_level_sim_time;
+   std::vector<double> d_dt_max_level;
+   std::vector<double> d_dt_actual_level;
+   std::vector<int> d_step_level;
+   std::vector<int> d_max_steps_level;
    bool d_level_0_advanced;
    bool d_hierarchy_advanced;
 

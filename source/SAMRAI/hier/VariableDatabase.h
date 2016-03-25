@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Singleton database class for managing variables and contexts.
  *
  ************************************************************************/
@@ -18,11 +18,11 @@
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -816,36 +816,36 @@ private:
    int d_num_registered_patch_data_ids;
 
    /*
-    * Array of VariableContext pointers is indexed as
+    * Vector of VariableContext pointers is indexed as
     * d_contexts[ <context id> ]
     */
    int d_max_context_id;
-   tbox::Array<boost::shared_ptr<VariableContext> > d_contexts;
+   std::vector<boost::shared_ptr<VariableContext> > d_contexts;
 
    /*
-    * Array of Variable pointers is indexed as d_variables[ <variable id> ]
+    * Vector of Variable pointers is indexed as d_variables[ <variable id> ]
     */
    int d_max_variable_id;
-   tbox::Array<boost::shared_ptr<Variable> > d_variables;
+   std::vector<boost::shared_ptr<Variable> > d_variables;
 
    /*
-    * Array of VariableContext to patch descriptor indices is indexed as
+    * Vector of VariableContext to patch descriptor indices is indexed as
     * d_variable_context2index_map[ <context id> ]
     */
-   tbox::Array<tbox::Array<int> > d_variable_context2index_map;
+   std::vector<std::vector<int> > d_variable_context2index_map;
 
    /*
-    * Array of patch descriptor indices to Variables is indexed as
+    * Vector of patch descriptor indices to Variables is indexed as
     * d_index2variable_map[ <descriptor id> ]
     */
    int d_max_descriptor_id;
-   tbox::Array<boost::shared_ptr<Variable> > d_index2variable_map;
+   std::vector<boost::shared_ptr<Variable> > d_index2variable_map;
 
    /*
-    * Array of user variable booleans is indexed as
+    * Vector of user variable booleans is indexed as
     * d_is_user_variable[ <variable id> ]
     */
-   tbox::Array<bool> d_is_user_variable;
+   std::vector<bool> d_is_user_variable;
 
    /*
     * ComponentSelector holds bits that determine which patch data

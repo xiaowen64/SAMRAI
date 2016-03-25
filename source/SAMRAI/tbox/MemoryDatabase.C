@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   An memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
@@ -141,11 +141,11 @@ MemoryDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string>
+std::vector<std::string>
 MemoryDatabase::getAllKeys()
 {
    const int n = static_cast<int>(d_keyvalues.size());
-   Array<std::string> keys(n);
+   std::vector<std::string> keys(n);
 
    int k = 0;
    for (std::list<KeyData>::iterator i = d_keyvalues.begin();
@@ -265,11 +265,17 @@ MemoryDatabase::putBool(
 }
 
 void
-MemoryDatabase::putBoolArray(
+MemoryDatabase::putBoolVector(
    const std::string& key,
-   const Array<bool>& data)
+   const std::vector<bool>& data)
 {
-   putBoolArray(key, data.getPointer(), data.getSize());
+   int nbools = static_cast<int>(data.size());
+   bool* bool_array = new bool[nbools];
+   for (int i = 0; i < nbools; ++i) {
+      bool_array[i] = data[i];
+   }
+   putBoolArray(key, bool_array, nbools);
+   delete [] bool_array;
 }
 
 void
@@ -285,7 +291,7 @@ MemoryDatabase::putBoolArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_boolean = Array<bool>(nelements);
+   keydata.d_boolean = std::vector<bool>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_boolean[i] = data[i];
@@ -320,8 +326,8 @@ MemoryDatabase::getBoolWithDefault(
    return defaultvalue;
 }
 
-Array<bool>
-MemoryDatabase::getBoolArray(
+std::vector<bool>
+MemoryDatabase::getBoolVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -338,10 +344,10 @@ MemoryDatabase::getBoolArray(
    bool* data,
    const int nelements)
 {
-   Array<bool> tmp = getBoolArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<bool> tmp = getBoolVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -378,11 +384,11 @@ MemoryDatabase::putDatabaseBox(
 }
 
 void
-MemoryDatabase::putDatabaseBoxArray(
+MemoryDatabase::putDatabaseBoxVector(
    const std::string& key,
-   const Array<DatabaseBox>& data)
+   const std::vector<DatabaseBox>& data)
 {
-   putDatabaseBoxArray(key, data.getPointer(), data.getSize());
+   putDatabaseBoxArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -398,7 +404,7 @@ MemoryDatabase::putDatabaseBoxArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_box = Array<DatabaseBox>(nelements);
+   keydata.d_box = std::vector<DatabaseBox>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_box[i] = data[i];
@@ -433,8 +439,8 @@ MemoryDatabase::getDatabaseBoxWithDefault(
    return defaultvalue;
 }
 
-Array<DatabaseBox>
-MemoryDatabase::getDatabaseBoxArray(
+std::vector<DatabaseBox>
+MemoryDatabase::getDatabaseBoxVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -451,10 +457,10 @@ MemoryDatabase::getDatabaseBoxArray(
    DatabaseBox* data,
    const int nelements)
 {
-   Array<DatabaseBox> tmp = getDatabaseBoxArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<DatabaseBox> tmp = getDatabaseBoxVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -491,11 +497,11 @@ MemoryDatabase::putChar(
 }
 
 void
-MemoryDatabase::putCharArray(
+MemoryDatabase::putCharVector(
    const std::string& key,
-   const Array<char>& data)
+   const std::vector<char>& data)
 {
-   putCharArray(key, data.getPointer(), data.getSize());
+   putCharArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -511,7 +517,7 @@ MemoryDatabase::putCharArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_char = Array<char>(nelements);
+   keydata.d_char = std::vector<char>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_char[i] = data[i];
@@ -546,8 +552,8 @@ MemoryDatabase::getCharWithDefault(
    return defaultvalue;
 }
 
-Array<char>
-MemoryDatabase::getCharArray(
+std::vector<char>
+MemoryDatabase::getCharVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -564,10 +570,10 @@ MemoryDatabase::getCharArray(
    char* data,
    const int nelements)
 {
-   Array<char> tmp = getCharArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<char> tmp = getCharVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -609,11 +615,11 @@ MemoryDatabase::putComplex(
 }
 
 void
-MemoryDatabase::putComplexArray(
+MemoryDatabase::putComplexVector(
    const std::string& key,
-   const Array<dcomplex>& data)
+   const std::vector<dcomplex>& data)
 {
-   putComplexArray(key, data.getPointer(), data.getSize());
+   putComplexArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -629,7 +635,7 @@ MemoryDatabase::putComplexArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_complex = Array<dcomplex>(nelements);
+   keydata.d_complex = std::vector<dcomplex>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_complex[i] = data[i];
@@ -683,30 +689,30 @@ MemoryDatabase::getComplexWithDefault(
    return defaultvalue;
 }
 
-Array<dcomplex>
-MemoryDatabase::getComplexArray(
+std::vector<dcomplex>
+MemoryDatabase::getComplexVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
-   Array<dcomplex> array;
+   std::vector<dcomplex> array;
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
-         array = Array<dcomplex>(keydata->d_integer.getSize());
-         for (int i = 0; i < keydata->d_integer.getSize(); i++) {
+         array = std::vector<dcomplex>(keydata->d_integer.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_integer.size()); i++) {
             array[i] = dcomplex((double)keydata->d_integer[i], 0.0);
          }
          break;
       }
       case Database::SAMRAI_FLOAT: {
-         array = Array<dcomplex>(keydata->d_float.getSize());
-         for (int i = 0; i < keydata->d_float.getSize(); i++) {
+         array = std::vector<dcomplex>(keydata->d_float.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_float.size()); i++) {
             array[i] = dcomplex((double)keydata->d_float[i], 0.0);
          }
          break;
       }
       case Database::SAMRAI_DOUBLE: {
-         array = Array<dcomplex>(keydata->d_double.getSize());
-         for (int i = 0; i < keydata->d_float.getSize(); i++) {
+         array = std::vector<dcomplex>(keydata->d_double.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_double.size()); i++) {
             array[i] = dcomplex(keydata->d_double[i], 0.0);
          }
          break;
@@ -727,10 +733,10 @@ MemoryDatabase::getComplexArray(
    dcomplex* data,
    const int nelements)
 {
-   Array<dcomplex> tmp = getComplexArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<dcomplex> tmp = getComplexVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -770,11 +776,11 @@ MemoryDatabase::putDouble(
 }
 
 void
-MemoryDatabase::putDoubleArray(
+MemoryDatabase::putDoubleVector(
    const std::string& key,
-   const Array<double>& data)
+   const std::vector<double>& data)
 {
-   putDoubleArray(key, data.getPointer(), data.getSize());
+   putDoubleArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -790,7 +796,7 @@ MemoryDatabase::putDoubleArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_double = Array<double>(nelements);
+   keydata.d_double = std::vector<double>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_double[i] = data[i];
@@ -841,23 +847,23 @@ MemoryDatabase::getDoubleWithDefault(
    return defaultvalue;
 }
 
-Array<double>
-MemoryDatabase::getDoubleArray(
+std::vector<double>
+MemoryDatabase::getDoubleVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
-   Array<double> array;
+   std::vector<double> array;
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
-         array = Array<double>(keydata->d_integer.getSize());
-         for (int i = 0; i < keydata->d_integer.getSize(); i++) {
+         array = std::vector<double>(keydata->d_integer.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_integer.size()); i++) {
             array[i] = (double)keydata->d_integer[i];
          }
          break;
       }
       case Database::SAMRAI_FLOAT: {
-         array = Array<double>(keydata->d_float.getSize());
-         for (int i = 0; i < keydata->d_float.getSize(); i++) {
+         array = std::vector<double>(keydata->d_float.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_float.size()); i++) {
             array[i] = (double)keydata->d_float[i];
          }
          break;
@@ -879,10 +885,10 @@ MemoryDatabase::getDoubleArray(
    double* data,
    const int nelements)
 {
-   Array<double> tmp = getDoubleArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<double> tmp = getDoubleVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -923,11 +929,11 @@ MemoryDatabase::putFloat(
 }
 
 void
-MemoryDatabase::putFloatArray(
+MemoryDatabase::putFloatVector(
    const std::string& key,
-   const Array<float>& data)
+   const std::vector<float>& data)
 {
-   putFloatArray(key, data.getPointer(), data.getSize());
+   putFloatArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -943,7 +949,7 @@ MemoryDatabase::putFloatArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_float = Array<float>(nelements);
+   keydata.d_float = std::vector<float>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_float[i] = data[i];
@@ -1000,16 +1006,16 @@ MemoryDatabase::getFloatWithDefault(
    return defaultvalue;
 }
 
-Array<float>
-MemoryDatabase::getFloatArray(
+std::vector<float>
+MemoryDatabase::getFloatVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
-   Array<float> array;
+   std::vector<float> array;
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
-         array = Array<float>(keydata->d_integer.getSize());
-         for (int i = 0; i < keydata->d_integer.getSize(); i++) {
+         array = std::vector<float>(keydata->d_integer.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_integer.size()); i++) {
             array[i] = static_cast<float>(keydata->d_integer[i]);
          }
          break;
@@ -1018,8 +1024,8 @@ MemoryDatabase::getFloatArray(
          array = keydata->d_float;
          break;
       case Database::SAMRAI_DOUBLE: {
-         array = Array<float>(keydata->d_double.getSize());
-         for (int i = 0; i < keydata->d_double.getSize(); i++) {
+         array = std::vector<float>(keydata->d_double.size());
+         for (int i = 0; i < static_cast<int>(keydata->d_double.size()); i++) {
             array[i] = static_cast<float>(keydata->d_double[i]);
          }
          break;
@@ -1037,10 +1043,10 @@ MemoryDatabase::getFloatArray(
    float* data,
    const int nelements)
 {
-   Array<float> tmp = getFloatArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<float> tmp = getFloatVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -1077,11 +1083,11 @@ MemoryDatabase::putInteger(
 }
 
 void
-MemoryDatabase::putIntegerArray(
+MemoryDatabase::putIntegerVector(
    const std::string& key,
-   const Array<int>& data)
+   const std::vector<int>& data)
 {
-   putIntegerArray(key, data.getPointer(), data.getSize());
+   putIntegerArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -1097,7 +1103,7 @@ MemoryDatabase::putIntegerArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_integer = Array<int>(nelements);
+   keydata.d_integer = std::vector<int>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_integer[i] = data[i];
@@ -1132,8 +1138,8 @@ MemoryDatabase::getIntegerWithDefault(
    return defaultvalue;
 }
 
-Array<int>
-MemoryDatabase::getIntegerArray(
+std::vector<int>
+MemoryDatabase::getIntegerVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1150,10 +1156,10 @@ MemoryDatabase::getIntegerArray(
    int* data,
    const int nelements)
 {
-   Array<int> tmp = getIntegerArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<int> tmp = getIntegerVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -1190,11 +1196,11 @@ MemoryDatabase::putString(
 }
 
 void
-MemoryDatabase::putStringArray(
+MemoryDatabase::putStringVector(
    const std::string& key,
-   const Array<std::string>& data)
+   const std::vector<std::string>& data)
 {
-   putStringArray(key, data.getPointer(), data.getSize());
+   putStringArray(key, &data[0], static_cast<int>(data.size()));
 }
 
 void
@@ -1210,7 +1216,7 @@ MemoryDatabase::putStringArray(
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_string = Array<std::string>(nelements);
+   keydata.d_string = std::vector<std::string>(nelements);
 
    for (int i = 0; i < nelements; i++) {
       keydata.d_string[i] = data[i];
@@ -1245,8 +1251,8 @@ MemoryDatabase::getStringWithDefault(
    return defaultvalue;
 }
 
-Array<std::string>
-MemoryDatabase::getStringArray(
+std::vector<std::string>
+MemoryDatabase::getStringVector(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1263,10 +1269,10 @@ MemoryDatabase::getStringArray(
    std::string* data,
    const int nelements)
 {
-   Array<std::string> tmp = getStringArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<std::string> tmp = getStringVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
-   if (nelements != tmp.getSize()) {
+   if (nelements != tsize) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
                                  << key << " with array size="
@@ -1392,14 +1398,14 @@ MemoryDatabase::printDatabase(
     * Get the maximum key width in the output (excluding databases)
     */
 
-   long width = 0;
+   int width = 0;
    for (std::list<KeyData>::const_iterator k = d_keyvalues.begin();
         k != d_keyvalues.end(); k++) {
       if (((k->d_from_default) && (toprint & PRINT_DEFAULT))
           || ((k->d_accessed) && (toprint & PRINT_INPUT))
           || (!(k->d_accessed) && (toprint & PRINT_UNUSED))) {
          if (k->d_type != Database::SAMRAI_DATABASE) {
-            const long keywidth = k->d_key.length();
+            const int keywidth = static_cast<int>(k->d_key.length());
             if (keywidth > width) {
                width = keywidth;
             }
@@ -1440,9 +1446,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_BOOL: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_boolean.getSize();
+               const int n = static_cast<int>(i->d_boolean.size());
                for (int j = 0; j < n; j++) {
                   sstream << (i->d_boolean[j] ? "TRUE" : "FALSE");
                   if (j < n - 1) {
@@ -1455,9 +1461,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_BOX: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_box.getSize();
+               const int n = static_cast<int>(i->d_box.size());
                for (int j = 0; j < n; j++) {
                   const int m = i->d_box[j].getDimVal();
                   sstream << "[(";
@@ -1485,9 +1491,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_CHAR: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_char.getSize();
+               const int n = static_cast<int>(i->d_char.size());
                for (int j = 0; j < n; j++) {
                   sstream << "'" << i->d_char[j] << "'";
                   if (j < n - 1) {
@@ -1500,9 +1506,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_COMPLEX: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_complex.getSize();
+               const int n = static_cast<int>(i->d_complex.size());
                for (int j = 0; j < n; j++) {
                   sstream << i->d_complex[j];
                   if (j < n - 1) {
@@ -1515,9 +1521,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_DOUBLE: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_double.getSize();
+               const int n = static_cast<int>(i->d_double.size());
                for (int j = 0; j < n; j++) {
                   sstream << i->d_double[j];
                   if (j < n - 1) {
@@ -1530,9 +1536,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_FLOAT: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_float.getSize();
+               const int n = static_cast<int>(i->d_float.size());
                for (int j = 0; j < n; j++) {
                   sstream << i->d_float[j];
                   if (j < n - 1) {
@@ -1545,9 +1551,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_INT: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_integer.getSize();
+               const int n = static_cast<int>(i->d_integer.size());
                for (int j = 0; j < n; j++) {
                   sstream << i->d_integer[j];
                   if (j < n - 1) {
@@ -1560,9 +1566,9 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_STRING: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = i->d_string.getSize();
+               const int n = static_cast<int>(i->d_string.size());
                for (int j = 0; j < n; j++) {
                   sstream << "\"" << i->d_string[j] << "\"";
                   if (j < n - 1) {
@@ -1579,9 +1585,9 @@ MemoryDatabase::printDatabase(
 
          if (i->d_type != Database::SAMRAI_DATABASE) {
 #ifndef LACKS_SSTREAM
-            const long tab = 59 - sstream.str().length();
+            const int tab = static_cast<int>(59 - sstream.str().length());
 #else
-            const long tab = 59 - sstream.pcount();
+            const int tab = static_cast<int>(59 - sstream.pcount());
 #endif
             if (tab > 0) {
                indentStream(sstream, tab);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for outerface-centered patch data
  *
  ************************************************************************/
@@ -54,7 +54,7 @@ OuterfaceDataTest::OuterfaceDataTest(
 
    d_refine_option = refine_option;
 
-   d_use_fine_value_at_interface.resizeArray(0);
+   d_use_fine_value_at_interface.resize(0);
 
    d_Acoef = 0.0;
    d_Bcoef = 0.0;
@@ -91,14 +91,13 @@ void OuterfaceDataTest::readTestInput(
     */
 
    readVariableInput(db->getDatabase("VariableData"));
-   readRefinementInput(db->getDatabase("RefinementData"));
 
    boost::shared_ptr<tbox::Database> var_data(
       db->getDatabase("VariableData"));
-   tbox::Array<string> var_keys = var_data->getAllKeys();
-   int nkeys = var_keys.getSize();
+   std::vector<string> var_keys = var_data->getAllKeys();
+   int nkeys = static_cast<int>(var_keys.size());
 
-   d_use_fine_value_at_interface.resizeArray(nkeys);
+   d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
       boost::shared_ptr<tbox::Database> var_db(
@@ -147,10 +146,10 @@ void OuterfaceDataTest::registerVariables(
 
    const tbox::Dimension dim(d_dim);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables_src.resizeArray(nvars);
-   d_variables_dst.resizeArray(nvars);
+   d_variables_src.resize(nvars);
+   d_variables_dst.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables_src[i].reset(
@@ -195,12 +194,12 @@ void OuterfaceDataTest::initializeDataOnPatch(
    hier::VariableDatabase* variable_db =
       hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+   std::vector<boost::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -227,7 +226,7 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -271,8 +270,9 @@ void OuterfaceDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(interior.lower(), axis, 0);
-      pdat::FaceIterator fiend(interior, axis, false);
-      for (pdat::FaceIterator fi(interior, axis, true); fi != fiend; ++fi) {
+      pdat::FaceIterator fiend(pdat::FaceGeometry::end(interior, axis));
+      for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(interior, axis));
+           fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of face and
@@ -350,8 +350,9 @@ void OuterfaceDataTest::setLinearData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
-      pdat::FaceIterator fiend(sbox, axis, false);
-      for (pdat::FaceIterator fi(sbox, axis, true); fi != fiend; ++fi) {
+      pdat::FaceIterator fiend(pdat::FaceGeometry::end(sbox, axis));
+      for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(sbox, axis));
+           fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of cell center and
@@ -419,8 +420,8 @@ void OuterfaceDataTest::setLinearData(
          const hier::Box databox = data->getArrayData(axis, f).getBox();
 
          const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
-         hier::Box::iterator biend(databox, false);
-         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(databox.end());
+         for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of cell center and
@@ -486,7 +487,7 @@ bool OuterfaceDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -504,7 +505,7 @@ bool OuterfaceDataTest::verifyResults(
          setLinearData(solution, tbox, patch); //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
 
          boost::shared_ptr<pdat::FaceData<double> > face_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),
@@ -514,8 +515,9 @@ bool OuterfaceDataTest::verifyResults(
          hier::Box dbox = face_data->getGhostBox();
 
          for (int id = 0; id < d_dim.getValue(); id++) {
-            pdat::FaceIterator fiend(dbox, id, false);
-            for (pdat::FaceIterator fi(dbox, id, true); fi != fiend; ++fi) {
+            pdat::FaceIterator fiend(pdat::FaceGeometry::end(dbox, id));
+            for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(dbox, id));
+                 fi != fiend; ++fi) {
                double correct = (*solution)(*fi);
                for (int d = 0; d < depth; d++) {
                   double result = (*face_data)(*fi, d);

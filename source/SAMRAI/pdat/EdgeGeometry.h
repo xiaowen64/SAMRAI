@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -22,8 +22,12 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace pdat {
+
+class EdgeIterator;
 
 /*!
  * Class EdgeGeometry manages the mapping between the AMR index space
@@ -92,6 +96,16 @@ public:
       EdgeIndex& index,
       const hier::Transformation& transformation);
 
+   static EdgeIterator
+   begin(
+      const hier::Box& box,
+      int axis);
+
+   static EdgeIterator
+   end(
+      const hier::Box& box,
+      int axis);
+
    /*!
     * @brief Construct the edge geometry object given an AMR index
     * space box and ghost cell width.
@@ -134,7 +148,7 @@ public:
     */
    void
    computeDestinationBoxes(
-      tbox::Array<hier::BoxContainer>& dst_boxes,
+      std::vector<hier::BoxContainer>& dst_boxes,
       const EdgeGeometry& src_geometry,
       const hier::Box& src_mask,
       const hier::Box& fill_box,

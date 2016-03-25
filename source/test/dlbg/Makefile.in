@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
 ## Description:   makefile for DLBG test 
 ##
 #########################################################################
@@ -28,15 +28,15 @@ NUM_TESTS = 3
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = main.o DLBGTest.o get-input-filename.o
+CXX_OBJS      = main.o DLBGTest.o
 
-main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
-	$(MAKE) testlib
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB)	\
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 check:
 	$(MAKE) check2d
@@ -59,8 +59,18 @@ checkcompile: main
 checktest:
 	rm -f makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 	rm -f makecheck.logfile
+
+examples:
+
+perf:
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 clean-check:
 	$(SAMCLEAN)
@@ -68,6 +78,6 @@ clean-check:
 clean:
 	$(SAMCLEAN)
 	$(RM) *.f *main*
-	$(RM) -rf restart-*d* *visit
+	$(RM) restart-*d* *visit
 
 include $(SRCDIR)/Makefile.depend

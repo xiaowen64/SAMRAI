@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for cell-centered double data on
  *                a Cartesian mesh.
  *
@@ -57,6 +57,16 @@ void SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
+   const int *, const double *, const double *,
+   const double *, double *);
+// in cartcoarsen4d.f:
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub4d, CARTWGTAVGCELLDOUB4D) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 }
@@ -160,9 +170,22 @@ CartesianCellDoubleWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(d),
             cdata->getPointer(d));
+      } else if ((dim == tbox::Dimension(4))) {
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub4d, CARTWGTAVGCELLDOUB4D) (ifirstc(0),
+            ifirstc(1), ifirstc(2), ifirstc(3),
+            ilastc(0), ilastc(1), ilastc(2), ilastc(3),
+            filo(0), filo(1), filo(2), filo(3),
+            fihi(0), fihi(1), fihi(2), fihi(3),
+            cilo(0), cilo(1), cilo(2), cilo(3),
+            cihi(0), cihi(1), cihi(2), cihi(3),
+            &ratio[0],
+            fgeom->getDx(),
+            cgeom->getDx(),
+            fdata->getPointer(d),
+            cdata->getPointer(d));
       } else {
          TBOX_ERROR("CartesianCellDoubleWeightedAverage error...\n"
-            << "dim > 3 not supported." << std::endl);
+            << "dim > 4 not supported." << std::endl);
 
       }
    }

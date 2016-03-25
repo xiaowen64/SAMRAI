@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Class containing numerical routines for modified Bratu problem
  *
  ************************************************************************/
@@ -61,11 +61,11 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/MessageStream.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 using namespace SAMRAI;
 using namespace xfer;
@@ -590,13 +590,13 @@ private:
     */
    RefineAlgorithm d_fill_new_level;
    RefineAlgorithm d_soln_fill;
-   tbox::Array<boost::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
+   std::vector<boost::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
    CoarsenAlgorithm d_flux_coarsen;
-   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
+   std::vector<boost::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
    CoarsenAlgorithm d_soln_coarsen;
-   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
+   std::vector<boost::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
    CoarsenAlgorithm d_scratch_soln_coarsen;
-   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
+   std::vector<boost::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
 
    boost::shared_ptr<RefineOperator> d_soln_refine_op;
    boost::shared_ptr<CoarsenOperator> d_soln_coarsen_op;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   F77 external declarations for SAMRAI linear advection example.
  *
  ************************************************************************/
@@ -179,7 +179,7 @@ void SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (
    double *, double *,
    double *, double *);
 
-void SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2d) (
+void SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (
    const double&, const int&, const int&,
    const double *,
    const int&, const int&,
@@ -189,7 +189,7 @@ void SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2d) (
    double *, double *, double *,
    double *, double *, double *);
 
-void SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (
+void SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (
    const double&, const int&, const int&,
    const int&,
    const double *,

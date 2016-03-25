@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
+
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -135,7 +137,7 @@ public:
     */
 
    /*!
-    * @brief Get an array of boundary boxes of a given type
+    * @brief Get a vector of boundary boxes of a given type
     * for a specified patch.
     *
     * The specified patch must exist in the level used to compute
@@ -147,14 +149,14 @@ public:
     *
     * @pre d_initialize[block_id.getBlockValue()]
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getBoundaries(
       const GlobalId& global_id,
       const int boundary_type,
       const BlockId& block_id = BlockId::zero()) const;
 
    /*!
-    * @brief Get an array of node boundary boxes for a specified patch.
+    * @brief Get a vector of node boundary boxes for a specified patch.
     *
     * @see BoundaryBox for more information.
     *
@@ -164,7 +166,7 @@ public:
     * @param[in] global_id
     * @param[in] block_id     Defaults to 0 for the single block case
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getNodeBoundaries(
       const GlobalId& global_id,
       const BlockId& block_id = BlockId::zero()) const
@@ -173,7 +175,7 @@ public:
    }
 
    /*!
-    * @brief Get an array of edge boundary boxes for a specified patch.
+    * @brief Get a vector of edge boundary boxes for a specified patch.
     *
     * @see hier::BoundaryBox for more information.
     *
@@ -186,7 +188,7 @@ public:
     *
     * @pre getDim().getValue() >= 2
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getEdgeBoundaries(
       const GlobalId& global_id,
       const BlockId& block_id = BlockId::zero()) const
@@ -201,7 +203,7 @@ public:
    }
 
    /*!
-    * @brief Get an array of face boundary boxes for a specified patch.
+    * @brief Get a vector of face boundary boxes for a specified patch.
     *
     * @see hier::BoundaryBox for more information.
     *
@@ -214,7 +216,7 @@ public:
     *
     * @pre getDim().getValue() >= 3
     */
-   const tbox::Array<BoundaryBox>&
+   const std::vector<BoundaryBox>&
    getFaceBoundaries(
       const GlobalId& global_id,
       const BlockId& block_id = BlockId::zero()) const

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 2D Cartesian boundary data
  *
  ************************************************************************/
@@ -106,15 +106,15 @@ void
 CartesianBoundaryUtilities2::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& input_db,
-   tbox::Array<int>& edge_conds,
-   tbox::Array<int>& node_conds,
+   std::vector<int>& edge_conds,
+   std::vector<int>& node_conds,
    const hier::IntVector& periodic)
 
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
    TBOX_ASSERT(bdry_strategy != 0);
-   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
-   TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_2D_NODES);
 
    if (!input_db) {
       TBOX_ERROR(": CartesianBoundaryUtility2::getFromInput()\n"
@@ -157,13 +157,14 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
-   const tbox::Array<int>& bdry_edge_conds,
-   const tbox::Array<double>& bdry_edge_values)
+   const std::vector<int>& bdry_edge_conds,
+   const std::vector<double>& bdry_edge_values)
 {
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(vardata);
-   TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_2D_EDGES);
-   TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
+   TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
+               NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -189,9 +190,9 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    hier::IntVector gcw_to_fill(hier::IntVector::min(ghost_cells,
                                   ghost_fill_width));
 
-   const tbox::Array<hier::BoundaryBox>& edge_bdry =
+   const std::vector<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
-   for (int i = 0; i < edge_bdry.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(edge_bdry.size()); i++) {
 
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE2D);
 
@@ -211,7 +212,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
          dx,
          bedge_loc,
          bdry_edge_conds[bedge_loc],
-         bdry_edge_values.getPointer(),
+         &bdry_edge_values[0],
          vardata->getPointer(),
          vardata->getDepth());
 
@@ -239,13 +240,14 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
-   const tbox::Array<int>& bdry_node_conds,
-   const tbox::Array<double>& bdry_edge_values)
+   const std::vector<int>& bdry_node_conds,
+   const std::vector<double>& bdry_edge_values)
 {
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(vardata);
-   TBOX_ASSERT(bdry_node_conds.getSize() == NUM_2D_NODES);
-   TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
+   TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_2D_NODES);
+   TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
+               NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -271,9 +273,9 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    hier::IntVector gcw_to_fill = hier::IntVector::min(ghost_cells,
          ghost_fill_width);
 
-   const tbox::Array<hier::BoundaryBox>& node_bdry =
+   const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE2D);
-   for (int i = 0; i < node_bdry.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(node_bdry.size()); i++) {
 
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE2D);
 
@@ -293,7 +295,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
          dx,
          bnode_loc,
          bdry_node_conds[bnode_loc],
-         bdry_edge_values.getPointer(),
+         &bdry_edge_values[0],
          vardata->getPointer(),
          vardata->getDepth());
 
@@ -516,9 +518,10 @@ CartesianBoundaryUtilities2::checkBdryData(
       dbox.upper(idir) = ilast(idir);
    }
 
-   pdat::CellIterator id(dbox, true);
-   pdat::CellIterator icend(cbox, false);
-   for (pdat::CellIterator ic(cbox, true); ic != icend; ++ic) {
+   pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
+   pdat::CellIterator icend(pdat::CellGeometry::end(cbox));
+   for (pdat::CellIterator ic(pdat::CellGeometry::begin(cbox));
+        ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
       pdat::CellIndex check = *ic;
       for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
@@ -552,14 +555,14 @@ void
 CartesianBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& input_db,
-   tbox::Array<int>& edge_conds,
+   std::vector<int>& edge_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
    TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
-   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
    for (int id = 0; id < 2; id++) {
@@ -634,15 +637,15 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
 void
 CartesianBoundaryUtilities2::read2dBdryNodes(
    const boost::shared_ptr<tbox::Database>& input_db,
-   const tbox::Array<int>& edge_conds,
-   tbox::Array<int>& node_conds,
+   const std::vector<int>& edge_conds,
+   std::vector<int>& node_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
    TBOX_ASSERT(input_db);
-   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
-   TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_2D_NODES);
 
    int num_per_dirs = 0;
    for (int id = 0; id < 2; id++) {

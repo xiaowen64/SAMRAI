@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
@@ -306,7 +306,7 @@ private:
    /*!
     * @brief Copy data into the stream, advancing the stream pointer.
     *
-    * @param[in]  data
+    * @param[in]  input_data
     * @param[in]  num_bytes
     *
     * @pre growAsNeeded() || canCopyIn(num_bytes)

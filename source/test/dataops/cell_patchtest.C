@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Main program to test cell patch data operations.
  *
  ************************************************************************/
@@ -627,8 +627,8 @@ int main(
 
       TBOX_ASSERT(cvdata);
 
-      pdat::CellIterator cend(cvdata->getBox(), false);
-      for (pdat::CellIterator c(cvdata->getBox(), true);
+      pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+      for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
            c != cend && subtract_inbox_test_passed; ++c) {
          pdat::CellIndex cell_index = *c;
 
@@ -689,8 +689,8 @@ int main(
                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
       TBOX_ASSERT(cvdata);
 
-      pdat::CellIterator ccend(cvdata->getBox(), false);
-      for (pdat::CellIterator cc(cvdata->getBox(), true);
+      pdat::CellIterator ccend(pdat::CellGeometry::end(cvdata->getBox()));
+      for (pdat::CellIterator cc(pdat::CellGeometry::begin(cvdata->getBox()));
             cc != ccend && divide_inbox_test_passed; ++cc) {
          pdat::CellIndex cell_index = *cc;
 
@@ -771,8 +771,8 @@ int main(
                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
       TBOX_ASSERT(cvdata);
 
-      pdat::CellIterator cciend(cvdata->getBox(), false);
-      for (pdat::CellIterator cci(cvdata->getBox(), true);
+      pdat::CellIterator cciend(pdat::CellGeometry::end(cvdata->getBox()));
+      for (pdat::CellIterator cci(pdat::CellGeometry::begin(cvdata->getBox()));
            cci != cciend && restricted_linSum_test_passed; ++cci) {
          pdat::CellIndex cell_index = *cci;
 
@@ -835,8 +835,8 @@ int main(
       cvdata = BOOST_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
       TBOX_ASSERT(cvdata);
-      pdat::CellIterator ciend(cvdata->getBox(), false);
-      for (pdat::CellIterator ci(cvdata->getBox(), true);
+      pdat::CellIterator ciend(pdat::CellGeometry::end(cvdata->getBox()));
+      for (pdat::CellIterator ci(pdat::CellGeometry::begin(cvdata->getBox()));
            ci != ciend && setToScalar_onBox_test_passed; ++ci) {
          pdat::CellIndex cell_index = *ci;
 
@@ -1261,8 +1261,8 @@ doubleDataSameAsValue(
 
    TBOX_ASSERT(cvdata);
 
-   pdat::CellIterator cend(cvdata->getBox(), false);
-   for (pdat::CellIterator c(cvdata->getBox(), true);
+   pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+   for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
         c != cend&& test_passed; ++c) {
       pdat::CellIndex cell_index = *c;
       if (!tbox::MathUtilities<double>::equalEps((*cvdata)(cell_index),

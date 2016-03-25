@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -163,6 +163,18 @@ public:
    {
       return d_coarsen_classes;
    }
+
+   /*!
+    * @brief Set whether to unpack messages in a deterministic order.
+    *
+    * By default message unpacking is ordered by receive time, which
+    * is not deterministic.  If your results are dependent on unpack
+    * ordering and you want deterministic results, set this flag to
+    * true.
+    *
+    * @param [in] flag
+    */
+   void setDeterministicUnpackOrderingFlag( bool flag );
 
    /*!
     * @brief Static function to set box intersection algorithm to use during
@@ -440,16 +452,10 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_temp_crse_level;
 
    /*!
-    * @brief Connector from temporary (coarsened fine) box_level
-    * to coarse box_level.
-    */
-   Connector d_temp_to_coarse;
-
-   /*!
     * @brief Connector from coarse box_level to temporary
     * (coarsened fine) box_level.
     */
-   Connector d_coarse_to_temp;
+   boost::shared_ptr<Connector> d_coarse_to_temp;
 
    /*!
     * @brief Object supporting interface to user-defined spatial data
@@ -505,6 +511,7 @@ private:
    /*!
     * @name Timer objects for performance measurement.
     */
+   static boost::shared_ptr<tbox::Timer> t_coarsen_schedule;
    static boost::shared_ptr<tbox::Timer> t_coarsen_data;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_dlbg;

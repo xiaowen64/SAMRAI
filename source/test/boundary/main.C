@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Example program to demonstrate boundary utilities.
  *
  ************************************************************************/
@@ -162,17 +162,19 @@ int main(
       }
 
       hier::BoxLevelConnectorUtils edge_utils;
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
-      hier::BoxContainer::const_iterator domain_boxes(domain);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), grid_geometry));
+      hier::BoxContainer::const_iterator domain_boxes = domain.begin();
       int rank = mpi.getRank();
       int size = mpi.getSize();
       for (hier::LocalId ib(0); ib < boxes.size(); ib++, ++domain_boxes) {
          if (ib % size == rank) {
-            layer0.addBox(hier::Box(*domain_boxes, ib, rank));
+            layer0->addBox(hier::Box(*domain_boxes, ib, rank));
          }
       }
       edge_utils.addPeriodicImages(
-         layer0,
+         *layer0,
          patch_hierarchy->getGridGeometry()->getDomainSearchTree(),
          hier::IntVector(dim, 2));
 
@@ -181,10 +183,7 @@ int main(
       // Add Connector required for schedule construction.
       boost::shared_ptr<hier::PatchLevel> level0(
          patch_hierarchy->getPatchLevel(0));
-      level0->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector(
-         *level0->getBoxLevel(),
-         hier::IntVector(dim, 2));
+      level0->createConnector(*level0, hier::IntVector(dim, 2));
 
       /*
        * Allocate data on hierarchy and set variable data on patch interiors

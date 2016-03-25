@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
@@ -234,7 +234,7 @@ SNES_SAMRAIContext::solve()
          &d_SNES_completion_code);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = VecDestroy(initial_guess);
+   ierr = VecDestroy(&initial_guess);
    PETSC_SAMRAI_ERROR(ierr);
 
    return ((int)d_SNES_completion_code > 0) ? 1 : 0;
@@ -272,7 +272,7 @@ SNES_SAMRAIContext::reportCompletionCode(
       case SNES_DIVERGED_MAX_IT:
          os << " Maximum nonlinear iteration count exceeded.\n";
          break;
-      case SNES_DIVERGED_LS_FAILURE:
+      case SNES_DIVERGED_LINE_SEARCH:
          os << " Failure in linesearch procedure.\n";
          break;
       default:
@@ -324,7 +324,7 @@ SNES_SAMRAIContext::createPetscObjects()
    ierr = SNESGetKSP(d_SNES_solver, &d_krylov_solver);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = KSPSetPreconditionerSide(d_krylov_solver, PC_RIGHT);
+   ierr = KSPSetPCSide(d_krylov_solver, PC_RIGHT);
    PETSC_SAMRAI_ERROR(ierr);
 
    ierr = KSPGetPC(d_krylov_solver, &d_preconditioner);
@@ -381,7 +381,7 @@ SNES_SAMRAIContext::initializePetscObjects()
     * First delete any Jacobian object that already has been created.
     */
    if (d_jacobian) {
-      MatDestroy(d_jacobian);
+      MatDestroy(&d_jacobian);
    }
    if (d_uses_explicit_jacobian) {
 
@@ -525,12 +525,12 @@ void
 SNES_SAMRAIContext::destroyPetscObjects()
 {
    if (d_jacobian) {
-      MatDestroy(d_jacobian);
+      MatDestroy(&d_jacobian);
       d_jacobian = 0;
    }
 
    if (d_SNES_solver) {
-      SNESDestroy(d_SNES_solver);
+      SNESDestroy(&d_SNES_solver);
 //     if (d_SLES_solver) d_SLES_solver = 0;
       if (d_preconditioner) d_preconditioner = 0;
       if (d_krylov_solver) d_krylov_solver = 0;

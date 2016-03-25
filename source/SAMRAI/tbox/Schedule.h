@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -234,6 +234,21 @@ public:
    finalizeCommunication();
 
    /*!
+    * @brief Set whether to unpack messages in a deterministic order.
+    *
+    * By default message unpacking is ordered by receive time, which
+    * is not deterministic.  If your results are dependent on unpack
+    * ordering and you want deterministic results, set this flag to
+    * true.
+    *
+    * @param [in] flag
+    */
+   void setDeterministicUnpackOrderingFlag( bool flag )
+      {
+         d_unpack_in_deterministic_order = flag;
+      }
+
+   /*!
     * @brief Setup names of timers.
     *
     * By default, timers are named "tbox::Schedule::*",
@@ -371,6 +386,13 @@ private:
     * d_first_message_length for the first message's data size.
     */
    size_t d_first_message_length;
+
+   /*!
+    * @brief Whether to unpack messages in a deterministic order.
+    *
+    * @see setDeterministicUnpackOrderingFlag()
+    */
+   bool d_unpack_in_deterministic_order;
 
    static const int s_default_first_tag;
    static const int s_default_second_tag;

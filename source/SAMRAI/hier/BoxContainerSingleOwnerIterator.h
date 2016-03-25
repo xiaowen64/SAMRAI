@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
@@ -112,9 +112,9 @@ private:
    /*!
     * @brief Constructor
     *
-    * @param [i] container
-    * @param [i] owner_rank
-    * @param [i] begin
+    * @param [in] container
+    * @param [in] owner_rank
+    * @param [in] begin
     */
    BoxContainerSingleOwnerIterator(
       const BoxContainer& container,

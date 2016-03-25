@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -28,6 +28,8 @@
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -43,10 +45,10 @@ std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
 bool CoarsenSchedule::s_read_static_input = false;
 
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_schedule;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_invert_edges;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
 
 tbox::StartupShutdownManager::Handler
@@ -104,8 +106,6 @@ CoarsenSchedule::CoarsenSchedule(
    d_coarsen_items(0),
    d_crse_level(crse_level),
    d_fine_level(fine_level),
-   d_temp_to_coarse(crse_level->getDim()),
-   d_coarse_to_temp(crse_level->getDim()),
    d_coarsen_patch_strategy(patch_strategy),
    d_transaction_factory(transaction_factory),
    d_ratio_between_levels(crse_level->getDim()),
@@ -348,46 +348,45 @@ CoarsenSchedule::generateTemporaryLevel()
                                         d_fine_level->getBoxLevel()->getRefinementRatio(),
                                         min_gcw);
 
-   const hier::Connector& coarse_to_fine =
-      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_fine_level->getBoxLevel(),
-         transpose_width, true);
-   const hier::Connector& fine_to_coarse =
-      d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_crse_level->getBoxLevel(),
-         min_gcw, true);
+   const Connector& coarse_to_fine =
+      d_crse_level->findConnectorWithTranspose(*d_fine_level,
+            transpose_width,
+            min_gcw,
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            true);
 
    /*
     * Generate temporary BoxLevel and Connectors.
     */
 
    /*
-    * Compute d_coarse_to_temp and d_temp_to_coarse.
+    * Compute d_coarse_to_temp and its transpose.
     *
     * We use the fact that d_temp_crse_level patches are numbered just
     * like the fine level patches.  The Connectors between coarse and
     * temp are very similar to those between coarse and fine.
     */
-   d_coarse_to_temp = coarse_to_fine;
-   d_coarse_to_temp.setBase(*d_crse_level->getBoxLevel());
-   d_coarse_to_temp.setHead(*d_temp_crse_level->getBoxLevel());
-   d_coarse_to_temp.setWidth(coarse_to_fine.getConnectorWidth(), true);
-   d_coarse_to_temp.coarsenLocalNeighbors(d_ratio_between_levels);
+   d_coarse_to_temp.reset(new Connector(coarse_to_fine));
+   d_coarse_to_temp->setBase(*d_crse_level->getBoxLevel());
+   d_coarse_to_temp->setHead(*d_temp_crse_level->getBoxLevel());
+   d_coarse_to_temp->setWidth(coarse_to_fine.getConnectorWidth(), true);
+   d_coarse_to_temp->coarsenLocalNeighbors(d_ratio_between_levels);
    /*
-    * d_temp_to_coarse is a Connector from a coarsened version of fine to
+    * temp_to_coarse is a Connector from a coarsened version of fine to
     * coarse.  Therefore it has the same neighborhoods as fine_to_coarse
     * but it's base, head and width are different.  So first assign
-    * fine_to_coarse to d_temp_to_coarse which will properly set the
+    * fine_to_coarse to temp_to_coarse which will properly set the
     * neighborhoods.  Then initialize it with the proper base/head/width
     * keeping the neighborhoods that we just set.
     */
-   d_temp_to_coarse = fine_to_coarse;
-   d_temp_to_coarse.setBase(*d_temp_crse_level->getBoxLevel());
-   d_temp_to_coarse.setHead(coarse_to_fine.getBase());
-   d_temp_to_coarse.setWidth(coarse_to_fine.getConnectorWidth(), true);
+   Connector* temp_to_coarse = new Connector(coarse_to_fine.getTranspose());
+   temp_to_coarse->setBase(*d_temp_crse_level->getBoxLevel());
+   temp_to_coarse->setHead(coarse_to_fine.getBase());
+   temp_to_coarse->setWidth(coarse_to_fine.getConnectorWidth(), true);
    const hier::IntVector one_vector(dim, 1);
-   d_coarse_to_temp.shrinkWidth(one_vector);
-   d_temp_to_coarse.shrinkWidth(one_vector);
+   d_coarse_to_temp->shrinkWidth(one_vector);
+   temp_to_coarse->shrinkWidth(one_vector);
+   d_coarse_to_temp->setTranspose(temp_to_coarse, true);
 }
 
 /*
@@ -500,15 +499,16 @@ CoarsenSchedule::generateScheduleNSquared()
    const hier::ProcessorMapping& src_mapping =
       d_temp_crse_level->getProcessorMapping();
 
-   hier::BoxContainer::const_iterator crse_itr_dp(d_crse_level->getBoxes());
+   hier::BoxContainer::const_iterator crse_itr_dp =
+      d_crse_level->getBoxes().begin();
    for (int dp = 0; dp < dst_npatches; dp++, ++crse_itr_dp) {
 
       const hier::Box dst_box(*crse_itr_dp,
                               hier::LocalId(dp),
                               dst_mapping.getProcessorAssignment(dp));
 
-      hier::BoxContainer::const_iterator crse_itr_sp(
-         d_temp_crse_level->getBoxes());
+      hier::BoxContainer::const_iterator crse_itr_sp =
+         d_temp_crse_level->getBoxes().begin();
       for (int sp = 0; sp < src_npatches; sp++, ++crse_itr_sp) {
 
          const hier::Box src_box(
@@ -545,15 +545,14 @@ CoarsenSchedule::generateScheduleDLBG()
     * Construct sending transactions for local src Boxes.
     */
    /*
-    * Restructure the d_temp_to_coarse edge data to arange neighbors by the
+    * Restructure the temp_to_coarse edge data to arange neighbors by the
     * coarse boxes, as required to match the transaction ordering on the
     * receiving processors.  At the same time, shift temp-coarse pairs to
     * make the coarse shifts zero.
     */
    FullNeighborhoodSet temp_eto_coarse_bycoarse;
-   t_invert_edges->start();
-   restructureNeighborhoodSetsByDstNodes(temp_eto_coarse_bycoarse, d_temp_to_coarse);
-   t_invert_edges->stop();
+   restructureNeighborhoodSetsByDstNodes(temp_eto_coarse_bycoarse,
+      d_coarse_to_temp->getTranspose());
 
    for (FullNeighborhoodSet::const_iterator ei = temp_eto_coarse_bycoarse.begin();
         ei != temp_eto_coarse_bycoarse.end(); ++ei) {
@@ -595,15 +594,15 @@ CoarsenSchedule::generateScheduleDLBG()
     * Construct receiving transactions for local dst boxes.
     */
    const BoxLevel& coarse_box_level = *d_crse_level->getBoxLevel();
-   for (hier::Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp.begin();
-        ei != d_coarse_to_temp.end(); ++ei) {
+   for (Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp->begin();
+        ei != d_coarse_to_temp->end(); ++ei) {
 
       const hier::BoxId& dst_gid = *ei;
       const hier::Box& dst_box =
          *coarse_box_level.getBoxStrict(dst_gid);
 
-      for (hier::Connector::ConstNeighborIterator ni = d_coarse_to_temp.begin(ei);
-           ni != d_coarse_to_temp.end(ei); ++ni) {
+      for (Connector::ConstNeighborIterator ni = d_coarse_to_temp->begin(ei);
+           ni != d_coarse_to_temp->end(ei); ++ni) {
          const hier::Box& src_box = *ni;
 
          constructScheduleTransactions(d_crse_level,
@@ -652,11 +651,11 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
     */
    hier::Box shifted_box(dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
-   for (hier::Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
+   for (Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
         ci != src_to_dst.end();
         ++ci) {
       const hier::Box& box = *src_box_level.getBoxStrict(*ci);
-      for (hier::Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
+      for (Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
            na != src_to_dst.end(ci); ++na) {
          const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
@@ -843,7 +842,7 @@ CoarsenSchedule::constructScheduleTransactions(
    }
 
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
-   tbox::Array<boost::shared_ptr<tbox::Transaction> > transactions(
+   std::vector<boost::shared_ptr<tbox::Transaction> > transactions(
       num_coarsen_items);
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {
@@ -1168,6 +1167,23 @@ CoarsenSchedule::clearCoarsenItems()
 
 
 /*
+ **************************************************************************
+ **************************************************************************
+ */
+
+void
+CoarsenSchedule::setDeterministicUnpackOrderingFlag( bool flag )
+{
+   if ( d_schedule ) {
+      d_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_precoarsen_refine_schedule ) {
+      d_precoarsen_refine_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+}
+
+
+/*
  * ************************************************************************
  *
  * Print coarsen schedule data to the specified output stream.
@@ -1207,14 +1223,14 @@ CoarsenSchedule::printClassData(
 void
 CoarsenSchedule::initializeCallback()
 {
+   t_coarsen_schedule = tbox::TimerManager::getManager()->
+      getTimer("xfer::CoarsenSchedule::CoarsenSchedule()");
    t_coarsen_data = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarsenData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::generateScheduleNSquared()");
    t_gen_sched_dlbg = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::generateScheduleDLBG()");
-   t_invert_edges = tbox::TimerManager::getManager()->
-      getTimer("xfer::CoarsenSchedule::generate...()_invert_edges");
    t_coarse_data_fill = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarse_data_fill");
 }
@@ -1231,10 +1247,11 @@ CoarsenSchedule::initializeCallback()
 void
 CoarsenSchedule::finalizeCallback()
 {
+   t_coarsen_schedule.reset();
    t_coarsen_data.reset();
    t_gen_sched_n_squared.reset();
    t_gen_sched_dlbg.reset();
-   t_invert_edges.reset();
+   t_coarse_data_fill.reset();
 }
 
 }

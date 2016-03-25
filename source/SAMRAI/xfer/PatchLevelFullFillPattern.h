@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -61,13 +61,11 @@ public:
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxLevel& fill_box_level,
-      hier::Connector& dst_to_fill,
+      boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+      boost::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
-      const hier::Connector& dst_to_dst,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
-      const hier::IntVector& fill_ghost_width);
+      const hier::IntVector& fill_ghost_width,
+      bool data_on_patch_border);
 
    /*!
     * @copydoc PatchLevelFillPattern::needsToCommunicateDestinationFillBoxes()

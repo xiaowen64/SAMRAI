@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -57,7 +57,7 @@ AsyncCommPeer<TYPE>::s_initialize_finalize_handler(
 
 /*
  ***********************************************************************
- * FIXME: d_mpi should be initialized with commNull or SAMRAI's comm base.
+ * TODO: d_mpi should be initialized with commNull or SAMRAI's comm base.
  ***********************************************************************
  */
 template<class TYPE>
@@ -70,7 +70,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    d_full_count(0),
    d_external_buf(0),
    d_internal_buf_size(0),
-   d_internal_buf(),
+   d_internal_buf(0),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
    d_tag1(-1),
@@ -96,7 +96,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
  * Construct a simple object that works with a communication stage.
  * All parameters are set to reasonable defaults or, if appropriate,
  * invalid values.
- * FIXME: d_mpi should be initialized with commNull or SAMRAI's comm base.
+ * TODO: d_mpi should be initialized with commNull or SAMRAI's comm base.
  ***********************************************************************
  */
 template<class TYPE>
@@ -111,7 +111,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    d_full_count(0),
    d_external_buf(0),
    d_internal_buf_size(0),
-   d_internal_buf(),
+   d_internal_buf(0),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
    d_tag1(-1),
@@ -148,6 +148,7 @@ AsyncCommPeer<TYPE>::~AsyncCommPeer()
 
    if (d_internal_buf) {
       free(d_internal_buf);
+      d_internal_buf = 0;
    }
 
 }
@@ -219,7 +220,7 @@ AsyncCommPeer<TYPE>::completeCurrentOperation()
    while (!isDone()) {
 
       t_wait_timer->start();
-      int errf = d_mpi.Waitall(2,
+      int errf = SAMRAI_MPI::Waitall(2,
             req,
             mpi_status);
       t_wait_timer->stop();
@@ -270,6 +271,8 @@ void
 AsyncCommPeer<TYPE>::resizeBuffer(
    size_t size)
 {
+   TBOX_ASSERT( !hasPendingRequests() );
+
    if (d_internal_buf_size < size) {
       if (d_internal_buf) {
          d_internal_buf = (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
@@ -636,7 +639,6 @@ AsyncCommPeer<TYPE>::checkRecv()
                const size_t second_chunk_count = getNumberOfFlexData(
                      d_full_count - d_max_first_data_len);
 
-               // SGS this is bad coding.`
                resizeBuffer(d_internal_buf_size + second_chunk_count);
 
                TBOX_ASSERT(req[1] == MPI_REQUEST_NULL);
@@ -990,11 +992,11 @@ void
 AsyncCommPeer<TYPE>::initializeCallback()
 {
    t_default_send_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::MPI_ISend");
+      getTimer("tbox::AsyncCommPeer::MPI_Isend()");
    t_default_recv_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::MPI_Irecv");
+      getTimer("tbox::AsyncCommPeer::MPI_Irecv()");
    t_default_wait_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::wait_all()");
+      getTimer("tbox::AsyncCommPeer::MPI_Waitall()");
 }
 
 /*

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for the SAMRAI database objects
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -141,7 +140,7 @@ public:
    /**
     * Return all keys in the database.
     */
-   virtual Array<std::string>
+   virtual std::vector<std::string>
    getAllKeys() = 0;
 
    /**
@@ -241,20 +240,20 @@ public:
       const bool& data);
 
    /**
-    * Create a boolean array entry in the database with the specified
+    * Create a boolean vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putBoolArray(
+   putBoolVector(
       const std::string& key,
-      const Array<bool>& data);
+      const std::vector<bool>& data);
 
    /**
     * Create a boolean array entry in the database with the specified
@@ -301,13 +300,13 @@ public:
    /**
     * Get a boolean entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a boolean array, then an error message is printed and
+    * is not a boolean vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<bool>
-   getBoolArray(
+   virtual std::vector<bool>
+   getBoolVector(
       const std::string& key) = 0;
 
    /**
@@ -360,15 +359,15 @@ public:
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putDatabaseBoxArray(
+   putDatabaseBoxVector(
       const std::string& key,
-      const Array<DatabaseBox>& data);
+      const std::vector<DatabaseBox>& data);
 
    /**
     * Create a box array entry in the database with the specified
@@ -418,13 +417,13 @@ public:
    /**
     * Get a box entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a box array, then an error message is printed and
+    * is not a box vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<DatabaseBox>
-   getDatabaseBoxArray(
+   virtual std::vector<DatabaseBox>
+   getDatabaseBoxVector(
       const std::string& key) = 0;
 
    /**
@@ -472,22 +471,22 @@ public:
       const char& data);
 
    /**
-    * Create a character array entry in the database with the specified
+    * Create a character vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key Key name in database.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putCharArray(
+   putCharVector(
       const std::string& key,
-      const Array<char>& data);
+      const std::vector<char>& data);
 
    /**
     * Create a character array entry in the database with the specified
@@ -537,13 +536,13 @@ public:
    /**
     * Get a character entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a character array, then an error message is printed and
+    * is not a character vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<char>
-   getCharArray(
+   virtual std::vector<char>
+   getCharVector(
       const std::string& key) = 0;
 
    /**
@@ -591,20 +590,20 @@ public:
       const dcomplex& data);
 
    /**
-    * Create a complex array entry in the database with the specified
+    * Create a complex vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putComplexArray(
+   putComplexVector(
       const std::string& key,
-      const Array<dcomplex>& data);
+      const std::vector<dcomplex>& data);
 
    /**
     * Create a complex array entry in the database with the specified
@@ -654,13 +653,13 @@ public:
    /**
     * Get a complex entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a complex array, then an error message is printed and
+    * is not a complex vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<dcomplex>
-   getComplexArray(
+   virtual std::vector<dcomplex>
+   getComplexVector(
       const std::string& key) = 0;
 
    /**
@@ -708,20 +707,20 @@ public:
       const double& data);
 
    /**
-    * Create a double array entry in the database with the specified
+    * Create a double vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putDoubleArray(
+   putDoubleVector(
       const std::string& key,
-      const Array<double>& data);
+      const std::vector<double>& data);
 
    /**
     * Create a double array entry in the database with the specified
@@ -771,13 +770,13 @@ public:
    /**
     * Get a double entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a double array, then an error message is printed and
+    * is not a double vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<double>
-   getDoubleArray(
+   virtual std::vector<double>
+   getDoubleVector(
       const std::string& key) = 0;
 
    /**
@@ -825,20 +824,20 @@ public:
       const float& data);
 
    /**
-    * Create a float array entry in the database with the specified
+    * Create a float vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putFloatArray(
+   putFloatVector(
       const std::string& key,
-      const Array<float>& data);
+      const std::vector<float>& data);
 
    /**
     * Create a float array entry in the database with the specified
@@ -888,13 +887,13 @@ public:
    /**
     * Get a float entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a float array, then an error message is printed and
+    * is not a float vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<float>
-   getFloatArray(
+   virtual std::vector<float>
+   getFloatVector(
       const std::string& key) = 0;
 
    /**
@@ -942,20 +941,20 @@ public:
       const int& data);
 
    /**
-    * Create an integer array entry in the database with the specified
+    * Create an integer vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putIntegerArray(
+   putIntegerVector(
       const std::string& key,
-      const Array<int>& data);
+      const std::vector<int>& data);
 
    /**
     * Create an integer array entry in the database with the specified
@@ -1005,13 +1004,13 @@ public:
    /**
     * Get an integer entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not an integer array, then an error message is printed and
+    * is not an integer vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<int>
-   getIntegerArray(
+   virtual std::vector<int>
+   getIntegerVector(
       const std::string& key) = 0;
 
    /**
@@ -1059,20 +1058,20 @@ public:
       const std::string& data);
 
    /**
-    * Create a string array entry in the database with the specified
+    * Create a string vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key  Key name in database.
-    * @param data Array with data to put into database.
+    * @param data Vector with data to put into database.
     *
     * @pre !key.empty()
-    * @pre data.getSize() > 0
+    * @pre data.size() > 0
     */
    virtual void
-   putStringArray(
+   putStringVector(
       const std::string& key,
-      const Array<std::string>& data);
+      const std::vector<std::string>& data);
 
    /**
     * Create a string array entry in the database with the specified
@@ -1122,13 +1121,13 @@ public:
    /**
     * Get a string entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a string array, then an error message is printed and
+    * is not a string vector, then an error message is printed and
     * the program exits.
     *
     * @param key Key name in database.
     */
-   virtual Array<std::string>
-   getStringArray(
+   virtual std::vector<std::string>
+   getStringVector(
       const std::string& key) = 0;
 
    /**
@@ -1187,34 +1186,34 @@ public:
    /**
     * Get a bool entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a bool array, then an error message is printed and
+    * is not a bool vector, then an error message is printed and
     * the program exits.
     *
     * @param key    Key name in database.
-    * @param array  Returns array that was read.
+    * @param array  Returns vector that was read.
     */
    void
-   getArray(
+   getVector(
       const std::string& key,
-      Array<bool>& array)
+      std::vector<bool>& array)
    {
-      array = getBoolArray(key);
+      array = getBoolVector(key);
    }
 
    /**
-    * Create an bool array entry in the database with the specified
+    * Create a bool vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key    Key name in database.
-    * @param array  Array to put into database.
+    * @param array  Vector to put into database.
     */
    void
-   putArray(
+   putVector(
       const std::string& key,
-      const Array<bool> array)
+      const std::vector<bool>& array)
    {
-      putBoolArray(key, array);
+      putBoolVector(key, array);
    }
 
    /**
@@ -1254,34 +1253,34 @@ public:
    /**
     * Get a char entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a char array, then an error message is printed and
+    * is not a char vector, then an error message is printed and
     * the program exits.
     *
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
    void
-   getArray(
+   getVector(
       const std::string& key,
-      Array<char>& array)
+      std::vector<char>& array)
    {
-      array = getCharArray(key);
+      array = getCharVector(key);
    }
 
    /**
-    * Create an char array entry in the database with the specified
+    * Create an char vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key    Key name in database.
-    * @param array  Array to put into database.
+    * @param array  Vector to put into database.
     */
    void
-   putArray(
+   putVector(
       const std::string& key,
-      const Array<char> array)
+      const std::vector<char>& array)
    {
-      putCharArray(key, array);
+      putCharVector(key, array);
    }
 
    /**
@@ -1321,34 +1320,34 @@ public:
    /**
     * Get a complex entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a complex array, then an error message is printed and
+    * is not a complex vector, then an error message is printed and
     * the program exits.
     *
     * @param key    Key name in database.
     * @param array  Returns array that was read.
     */
    void
-   getArray(
+   getVector(
       const std::string& key,
-      Array<dcomplex>& array)
+      std::vector<dcomplex>& array)
    {
-      array = getComplexArray(key);
+      array = getComplexVector(key);
    }
 
    /**
-    * Create an complex array entry in the database with the specified
+    * Create a complex vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key    Key name in database.
-    * @param array  Array to put into database.
+    * @param array  Vector to put into database.
     */
    void
-   putArray(
+   putVector(
       const std::string& key,
-      const Array<dcomplex> array)
+      const std::vector<dcomplex>& array)
    {
-      putComplexArray(key, array);
+      putComplexVector(key, array);
    }
 
    /**
@@ -1388,34 +1387,34 @@ public:
    /**
     * Get a float entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a float array, then an error message is printed and
+    * is not a float vector, then an error message is printed and
     * the program exits.
     *
     * @param key    Key name in database.
-    * @param array  Returns array that was read.
+    * @param array  Returns vector that was read.
     */
    void
-   getArray(
+   getVector(
       const std::string& key,
-      Array<float>& array)
+      std::vector<float>& array)
    {
-      array = getFloatArray(key);
+      array = getFloatVector(key);
    }
 
    /**
-    * Create an float array entry in the database with the specified
+    * Create a float vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key    Key name in database.
-    * @param array  Array to put into database.
+    * @param array  Vector to put into database.
     */
    void
-   putArray(
+   putVector(
       const std::string& key,
-      const Array<float> array)
+      const std::vector<float>& array)
    {
-      putFloatArray(key, array);
+      putFloatVector(key, array);
    }
 
    /**
@@ -1455,34 +1454,34 @@ public:
    /**
     * Get a double entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a double array, then an error message is printed and
+    * is not a double vector, then an error message is printed and
     * the program exits.
     *
     * @param key    Key name in database.
-    * @param array  Returns array that was read.
+    * @param array  Returns vector that was read.
     */
    void
-   getArray(
+   getVector(
       const std::string& key,
-      Array<double>& array)
+      std::vector<double>& array)
    {
-      array = getDoubleArray(key);
+      array = getDoubleVector(key);
    }
 
    /**
-    * Create an double array entry in the database with the specified
+    * Create an double vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key    Key name in database.
-    * @param array  Array to put into database.
+    * @param array  Vector to put into database.
     */
    void
-   putArray(
+   putVector(
       const std::string& key,
-      const Array<double> array)
+      const std::vector<double>& array)
    {
-      putDoubleArray(key, array);
+      putDoubleVector(key, array);
    }
 
    /**
@@ -1522,34 +1521,34 @@ public:
    /**
     * Get a integer entry from the database with the specified key
     * name.  If the specified key does not exist in the database or
-    * is not a integer array, then an error message is printed and
+    * is not a integer vector, then an error message is printed and
     * the program exits.
     *
     * @param key    Key name in database.
-    * @param array  Returns array that was read.
+    * @param array  Returns vector that was read.
     */
    void
-   getArray(
+   getVector(
       const std::string& key,
-      Array<int>& array)
+      std::vector<int>& array)
    {
-      array = getIntegerArray(key);
+      array = getIntegerVector(key);
    }
 
    /**
-    * Create an integer array entry in the database with the specified
+    * Create an integer vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
     * @param key    Key name in database.
-    * @param array  Array to put into database.
+    * @param array  Vector to put into database.
     */
    void
-   putArray(
+   putVector(
       const std::string& key,
-      const Array<int> array)
+      const std::vector<int>& array)
    {
-      putIntegerArray(key, array);
+      putIntegerVector(key, array);
    }
 
    /**
@@ -1563,10 +1562,10 @@ public:
       const std::string& key);
 
    /**
-    * Get a std::vector<TYPE> from the database with the specified key
-    * name.  If the specified key does not exist in the database or
-    * is not a vector, then an error message is printed and
-    * the program exits.
+    * Get a std::vector<TYPE> of a collection of objects (as opposed to
+    * primitives) from the database with the specified key name. If the
+    * specified key does not exist in the database or is not a vector,
+    * then an error message is printed and the program exits.
     *
     * TYPE must implement the Database::Serializable interface.
     *
@@ -1575,7 +1574,7 @@ public:
     */
    template<class TYPE>
    void
-   getVector(
+   getObjectVector(
       const std::string& key,
       std::vector<TYPE>& vector)
    {
@@ -1587,9 +1586,10 @@ public:
    }
 
    /**
-    * Create a vector entry in the database with the specified
-    * key name.  If the key already exists in the database, then the old
-    * key record is deleted and the new one is silently created in its place.
+    * Create a vector entry of a collection of objects (as opposed to
+    * primitives) in the database with the specified key name.  If the
+    * key already exists in the database, then the old key record is
+    * deleted and the new one is silently created in its place.
     *
     * TYPE must implement the Database::Serializable interface.
     *
@@ -1598,7 +1598,7 @@ public:
     */
    template<class TYPE>
    void
-   putVector(
+   putObjectVector(
       const std::string& key,
       const std::vector<TYPE>& vector)
    {

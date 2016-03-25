@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerside double data on
  *                a Skeleton mesh.
  *
@@ -100,7 +100,7 @@ private:
       double* dx) const;
 
    const tbox::Dimension d_dim;
-   tbox::Array<tbox::Array<double> > d_dx;
+   std::vector<std::vector<double> > d_dx;
 
 };
 
