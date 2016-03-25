@@ -51,7 +51,7 @@ SideData<TYPE>::SideData(
 
    const tbox::Dimension& dim(box.getDim());
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].reset(new ArrayData<TYPE>(side, depth));
@@ -76,7 +76,7 @@ SideData<TYPE>::SideData(
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(d_directions.min() >= 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
       d_data[d].reset(new ArrayData<TYPE>(side, depth));
    }
@@ -322,7 +322,7 @@ SideData<TYPE>::copyOnBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       const hier::Box side_box = SideGeometry::toSideBox(box, axis);
       d_data[axis]->copy(src.getArrayData(axis), side_box);
    }
@@ -359,7 +359,7 @@ SideData<TYPE>::copyWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
@@ -440,7 +440,7 @@ SideData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 SideData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -450,8 +450,8 @@ SideData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   size_t size = 0;
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          size +=
             d_data[d]->getDataStreamSize(
@@ -488,7 +488,7 @@ SideData<TYPE>::packStream(
       for (int d = 0; d < getDim().getValue(); ++d) {
          if (d_directions(d)) {
             const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-            if (!boxes.isEmpty()) {
+            if (!boxes.empty()) {
                d_data[d]->packStream(stream, boxes, transformation);
             }
          }
@@ -528,13 +528,13 @@ SideData<TYPE>::packWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   const int depth = getDepth();
+   const unsigned int depth = getDepth();
 
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
-         const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+         const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
          std::vector<TYPE> buffer(size);
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
@@ -548,7 +548,7 @@ SideData<TYPE>::packWithRotation(
 
             if (!copybox.empty()) {
 
-               for (int d = 0; d < depth; ++d) {
+               for (unsigned int d = 0; d < depth; ++d) {
 
                   hier::Box::iterator ciend(copybox.end());
                   for (hier::Box::iterator ci(copybox.begin());
@@ -580,10 +580,10 @@ SideData<TYPE>::unpackStream(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->unpackStream(stream, boxes, offset);
          }
       }
@@ -613,7 +613,7 @@ SideData<TYPE>::getSizeOfData(
 
    size_t size = 0;
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       if (directions(d)) {
          const hier::Box side_box = SideGeometry::toSideBox(ghost_box, d);
          size += ArrayData<TYPE>::getSizeOfData(side_box, depth);
@@ -682,7 +682,7 @@ SideData<TYPE>::fillAll(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          d_data[i]->fillAll(t, SideGeometry::toSideBox(box, i));
       }
@@ -707,7 +707,7 @@ SideData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array side normal = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
@@ -733,13 +733,13 @@ SideData<TYPE>::print(
 template<class TYPE>
 void
 SideData<TYPE>::printAxis(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side_normal < getDim().getValue()));
 
    for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
@@ -750,7 +750,7 @@ SideData<TYPE>::printAxis(
 template<class TYPE>
 void
 SideData<TYPE>::printAxis(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -758,7 +758,7 @@ SideData<TYPE>::printAxis(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side_normal < getDim().getValue()));
 
    os.precision(prec);
    if (d_directions(side_normal)) {

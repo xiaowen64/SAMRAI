@@ -26,8 +26,8 @@ using namespace std;
 #define included_String
 
 #include "MblkGeometry.h"
-#include "MblkHyperbolicLevelIntegrator.h"
-#include "MblkHyperbolicPatchStrategy.h"
+#include "test/testlib/MblkHyperbolicLevelIntegrator.h"
+#include "test/testlib/MblkHyperbolicPatchStrategy.h"
 
 // ----------------------------------------------------------------------
 
@@ -308,7 +308,6 @@ private:
    // boost::shared_ptr to grid - [xyz]
    //
    boost::shared_ptr<pdat::NodeVariable<double> > d_xyz;
-   int d_xyz_id;
 
    //
    // =========================== Initial Conditions (private) ================

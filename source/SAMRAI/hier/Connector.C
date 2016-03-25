@@ -14,12 +14,15 @@
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
+#include "SAMRAI/tbox/CenteredRankTree.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <algorithm>
+#include <map>
+#include <vector>
+#include <set>
 //#include <iomanip>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -195,7 +198,7 @@ Connector::operator = (
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
       d_finalized = rhs.d_finalized;
-      d_transpose = rhs.d_transpose;
+      d_transpose = rhs.d_transpose; // TODO: This leads to a memory error.
       d_owns_transpose = false;
    }
    return *this;
@@ -412,6 +415,279 @@ Connector::shrinkWidth(
 
 /*
  ***********************************************************************
+ * Set this Connector to the transpose of another Connector.  The
+ * other's base owners tell its head owners about relationships, and
+ * head owners (base owners of this Connector) populate the this
+ * Connector.
+ *
+ * This method uses the termination message technique of the assumed
+ * partition algorithm.
+ *
+ * Two communication patterns are executed simultaneously: edge info
+ * and termination messages.  For edge info, other's base box owners
+ * send data to this's base box owners, who respond with
+ * acknowledgement messages.  Termination messages let the processes
+ * know when to stop checking for edge messages.  They are propagated
+ * up then down a rank tree.  Upward messages inform processes that
+ * their descendents have received all needed acknowledgements.
+ * Downward messages inform processes that the entire tree completed
+ * its acknowledgements, indicating that there are no messages in
+ * transit and the process can stop.
+ ***********************************************************************
+ */
+void
+Connector::computeTransposeOf(const Connector& other,
+                              const tbox::SAMRAI_MPI& mpi)
+{
+   *this = Connector(other.getHead(), other.getBase(),
+         convertHeadWidthToBase(other.getHead().getRefinementRatio(),
+            other.getBase().getRefinementRatio(),
+            other.getConnectorWidth()));
+
+   const tbox::SAMRAI_MPI& mpi1 = mpi.hasNullCommunicator() ? getBase().getMPI() : mpi;
+
+   // Order locally visible edges by owners who need to know about them.
+   typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
+   FullNeighborhoodSet reordered_relationships;
+   other.reorderRelationshipsByHead(reordered_relationships);
+
+   /*
+    * We receive different types of messages from different sources
+    * without knowing which one is next, so we use the same MPI tag
+    * but differentiate messages by embedding a type in each.
+    */
+   const int mpi_tag = 0;
+   char edge_msg_type = 'e';
+   char ack_msg_type = 'a';
+   char upward_term_msg_type = 'u';
+   char downward_term_msg_type = 'd';
+
+   if (mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag)) {
+      TBOX_ERROR("Connector::computeTransposeOf: not starting clean of receivable MPI messages.");
+   }
+
+   std::map<int, boost::shared_ptr<tbox::MessageStream> > messages;
+   std::vector<tbox::SAMRAI_MPI::Request> requests;
+   tbox::SAMRAI_MPI::Status tmp_status;
+   int mpi_err;
+
+   // Send edge messages and remember to get receivers' acknowledgements.
+   std::set<int> ack_needed;
+   BoxContainer unshifted_head_nabrs;
+   for (FullNeighborhoodSet::iterator rr = reordered_relationships.begin();
+        rr != reordered_relationships.end(); ++rr) {
+
+      const Box& base_box = rr->first;
+      const BoxContainer& head_nabrs = rr->second;
+      TBOX_ASSERT(!base_box.isPeriodicImage());
+
+      /*
+       * If base_box is local, store the neighbors.
+       * Else, send neighbors to base_box's owner to store.
+       */
+      if (base_box.getOwnerRank() == mpi1.getRank()) {
+         insertNeighbors(head_nabrs, base_box.getBoxId());
+      } else {
+         boost::shared_ptr<tbox::MessageStream>& mstream = messages[base_box.getOwnerRank()];
+         if (!mstream) {
+            mstream.reset(new tbox::MessageStream);
+            *mstream << edge_msg_type;
+         }
+         *mstream << base_box.getLocalId() << static_cast<size_t>(head_nabrs.size());
+         for (BoxContainer::const_iterator bi = head_nabrs.begin(); bi != head_nabrs.end(); ++bi) {
+            *mstream << *bi;
+         }
+
+         FullNeighborhoodSet::iterator nextrr = rr;
+         ++nextrr;
+         if (nextrr == reordered_relationships.end() ||
+             nextrr->first.getOwnerRank() != base_box.getOwnerRank()) {
+            requests.push_back(tbox::SAMRAI_MPI::Request());
+            mpi_err = mpi1.Isend((void *)mstream->getBufferStart(),
+                  static_cast<int>(mstream->getCurrentSize()), MPI_CHAR,
+                  base_box.getOwnerRank(), mpi_tag,
+                  &requests.back());
+            TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+            ack_needed.insert(base_box.getOwnerRank());
+         }
+      }
+   }
+
+   // Data for propagating termination messages on the rank tree.
+   tbox::CenteredRankTree rank_tree(mpi1);
+   size_t child_term_needed = rank_tree.getNumberOfChildren();
+   bool send_upward_term_msg = mpi1.getSize() > 1;
+
+   if (ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg) {
+      // Leaves of the tree initiate upward termination message if no edge communication.
+      requests.push_back(tbox::SAMRAI_MPI::Request());
+      mpi_err = mpi1.Isend(&upward_term_msg_type, 1, MPI_CHAR,
+            rank_tree.getParentRank(), mpi_tag,
+            &requests.back());
+      TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+      send_upward_term_msg = false;
+   }
+
+   /*
+    * Receive edge messages and propgate termination messages: Both
+    * communications must occur simultaneously.  Don't know where the
+    * next message will come from, so must receive from any source.
+    * Process messages based on the embedded msg_type.  Stop when
+    * there are no edge messages are in transit, indicated by the
+    * downward termination message.  Single process execution bypasses
+    * communication by setting msg_type to downward termination.
+    */
+   int msg_length = 0;
+   std::vector<char> recv_buffer;
+   Box tmp_box(getBase().getDim());
+   BoxContainer tmp_boxes;
+   char msg_type = mpi1.getSize() == 1 ? downward_term_msg_type : char(0);
+
+   while (msg_type != downward_term_msg_type) {
+
+      mpi_err = mpi1.Probe(MPI_ANY_SOURCE, mpi_tag, &tmp_status);
+      TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+      tbox::SAMRAI_MPI::Get_count(&tmp_status, MPI_CHAR, &msg_length);
+      recv_buffer.resize(msg_length);
+      mpi_err = mpi1.Recv(&recv_buffer[0], msg_length, MPI_CHAR,
+            tmp_status.MPI_SOURCE, mpi_tag, &tmp_status);
+      TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+
+      tbox::MessageStream mstream(recv_buffer.size(), tbox::MessageStream::Read,
+                                  &recv_buffer[0], false);
+
+      mstream >> msg_type;
+      if (msg_type == edge_msg_type) {
+
+         // Edge messages require acknowledgement and unpacking.
+         requests.push_back(tbox::SAMRAI_MPI::Request());
+         mpi_err = mpi1.Isend(static_cast<void *>(&ack_msg_type), 1, MPI_CHAR,
+               tmp_status.MPI_SOURCE, mpi_tag, &requests.back());
+         TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+         do {
+            LocalId lid;
+            size_t num_nabrs;
+            mstream >> lid >> num_nabrs;
+            for (size_t i = 0; i < num_nabrs; ++i) {
+               mstream >> tmp_box;
+               tmp_boxes.insert(tmp_box);
+            }
+            insertNeighbors(tmp_boxes, BoxId(lid, mpi1.getRank()));
+            tmp_boxes.clear();
+         } while (!mstream.endOfData());
+
+      } else if (msg_type == ack_msg_type) {
+         TBOX_ASSERT(ack_needed.find(tmp_status.MPI_SOURCE) != ack_needed.end());
+         ack_needed.erase(tmp_status.MPI_SOURCE);
+      } else if (msg_type == upward_term_msg_type) {
+         TBOX_ASSERT(child_term_needed > 0);
+         --child_term_needed;
+      } else if (msg_type == downward_term_msg_type) {
+         TBOX_ASSERT(child_term_needed == 0);
+         // Propagate termination message downward.
+         for (unsigned int ci = 0; ci < rank_tree.getNumberOfChildren(); ++ci) {
+            requests.push_back(tbox::SAMRAI_MPI::Request());
+            mpi_err = mpi1.Isend(&downward_term_msg_type, 1, MPI_CHAR,
+                  rank_tree.getChildRank(ci), mpi_tag,
+                  &requests.back());
+            TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+         }
+      } else {
+         TBOX_ERROR(
+            "Connector::computeTransposeOf: Library error: msg_type "
+            << static_cast<int>(msg_type)
+            <<
+            " unrecognized,\npossibly due to receiving unrelated message.");
+      }
+      TBOX_ASSERT(mstream.endOfData());
+
+      if (ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg) {
+         if (rank_tree.isRoot()) {
+            // Initiate downward termination message.
+            for (unsigned int ci = 0; ci < rank_tree.getNumberOfChildren(); ++ci) {
+               requests.push_back(tbox::SAMRAI_MPI::Request());
+               mpi_err = mpi1.Isend(&downward_term_msg_type, 1, MPI_CHAR,
+                     rank_tree.getChildRank(ci), mpi_tag,
+                     &requests.back());
+               TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+            }
+            msg_type = downward_term_msg_type;
+         } else {
+            // Propagate upward termination message.
+            requests.push_back(tbox::SAMRAI_MPI::Request());
+            mpi_err = mpi1.Isend(&upward_term_msg_type, 1, MPI_CHAR,
+                  rank_tree.getParentRank(), mpi_tag,
+                  &requests.back());
+            TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+         }
+         send_upward_term_msg = false;
+      }
+
+      recv_buffer.clear();
+   }
+
+   if (!requests.empty()) {
+      // Complete sends before allowing memory deallocation.
+      std::vector<tbox::SAMRAI_MPI::Status> statuses(requests.size());
+      tbox::SAMRAI_MPI::Waitall(static_cast<int>(requests.size()), &requests[0], &statuses[0]);
+   }
+
+   if (mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag)) {
+      TBOX_ERROR("Connector::computeTransposeOf: not finishing clean of receivable MPI messages.");
+   }
+}
+
+/*
+ ***********************************************************************
+ * This method does 2 important things with the edges:
+ *
+ * 1. It puts the edge data in head-major order so the base owners can
+ * easily loop through the head--->base edges in the same order that
+ * head owners see them.
+ *
+ * 2. It shifts periodic image head Boxes back to the zero-shift
+ * position, and applies a similar shift to base Boxes so that the
+ * overlap is unchanged.
+ ***********************************************************************
+ */
+void
+Connector::reorderRelationshipsByHead(
+   std::map<Box, BoxContainer, Box::id_less>& relationships_by_head) const
+{
+   const tbox::Dimension& dim(getBase().getDim());
+
+   const hier::PeriodicShiftCatalog* shift_catalog =
+      hier::PeriodicShiftCatalog::getCatalog(dim);
+
+   const hier::BoxLevel& base_box_level = getBase();
+   const hier::IntVector& base_ratio = getBase().getRefinementRatio();
+   const hier::IntVector& head_ratio = getHead().getRefinementRatio();
+
+   hier::Box shifted_box(dim), unshifted_nabr(dim);
+   relationships_by_head.clear();
+   for (hier::Connector::ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
+      const hier::Box& base_box = *base_box_level.getBoxStrict(*ci);
+      for (hier::Connector::ConstNeighborIterator na = begin(ci); na != end(ci); ++na) {
+         const hier::Box& nabr = *na;
+         if (nabr.isPeriodicImage()) {
+            shifted_box.initialize(
+               base_box,
+               shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
+               base_ratio);
+            unshifted_nabr.initialize(
+               nabr,
+               shift_catalog->getZeroShiftNumber(),
+               head_ratio);
+            relationships_by_head[unshifted_nabr].insert(shifted_box);
+         } else {
+            relationships_by_head[nabr].insert(base_box);
+         }
+      }
+   }
+}
+
+/*
+ ***********************************************************************
  ***********************************************************************
  */
 
@@ -550,6 +826,12 @@ Connector::finalizeContext()
    const IntVector& baseRefinementRatio = base.getRefinementRatio();
    const IntVector& headRefinementRatio = head.getRefinementRatio();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!base.getMPI().isCongruentWith(head.getMPI())) {
+      TBOX_ERROR("Connector::finalizeContext()\n"
+         "base and head MPI communicators must be congruent.");
+   }
+#endif
    if (base.getGridGeometry() != head.getGridGeometry()) {
       TBOX_ERROR("Connector::finalizeContext():\n"
          << "Connector must be finalized with\n"
@@ -1123,15 +1405,19 @@ Connector::recursivePrint(
                         ni->getBlockId(),
                         i_nabr->getBlockId());
                   }
-                  if (head_coarser) {
-                     ovlap.refine(d_ratio);
-                  } else if (d_ratio != 1) {
-                     ovlap.coarsen(d_ratio);
+                  if (ovlap.getBlockId() != ni->getBlockId()) {
+                     os << "\tov undefined (non-touching blocks.";
+                  } else {
+                     if (head_coarser) {
+                        ovlap.refine(d_ratio);
+                     } else if (d_ratio != 1) {
+                        ovlap.coarsen(d_ratio);
+                     }
+                     Box ghost_box = (*ni);
+                     ghost_box.grow(d_base_width);
+                     ovlap = ovlap * ghost_box;
+                     os << "\tov" << ovlap << "_" << ovlap.numberCells();
                   }
-                  Box ghost_box = (*ni);
-                  ghost_box.grow(d_base_width);
-                  ovlap = ovlap * ghost_box;
-                  os << "\tov" << ovlap << "_" << ovlap.numberCells();
                }
                os << '\n';
             }
@@ -2191,7 +2477,7 @@ Connector::findOverlaps_rbbt(
          nabrs_for_box.order();
          nabrs_for_box.erase(base_box);
       }
-      if (!nabrs_for_box.isEmpty()) {
+      if (!nabrs_for_box.empty()) {
          insertNeighbors(nabrs_for_box, base_box.getBoxId());
          nabrs_for_box.clear();
       }

@@ -1355,10 +1355,11 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h CellDataTest.h	\
-	CommTester.h EdgeDataTest.h FaceDataTest.h NodeDataTest.h	\
-	OuterfaceDataTest.h OuternodeDataTest.h OutersideDataTest.h	\
-	PatchDataTestStrategy.h SideDataTest.h main.C
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
+	$(TESTLIBDIR)/DerivedVisOwnerData.h CellDataTest.h CommTester.h	\
+	EdgeDataTest.h FaceDataTest.h NodeDataTest.h OuterfaceDataTest.h\
+	OuternodeDataTest.h OutersideDataTest.h PatchDataTestStrategy.h	\
+	SideDataTest.h main.C
 
 DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\

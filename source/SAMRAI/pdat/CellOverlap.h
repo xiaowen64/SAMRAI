@@ -79,7 +79,7 @@ public:
     *
     * @param[out] src_boxes
     *
-    * @pre src_boxes.isEmpty()
+    * @pre src_boxes.empty()
     */
    virtual void
    getSourceBoxContainer(
@@ -110,7 +110,6 @@ private:
    bool d_is_overlap_empty;
    hier::Transformation d_transformation;
    hier::BoxContainer d_dst_boxes;
-   int d_count;
 
 };
 

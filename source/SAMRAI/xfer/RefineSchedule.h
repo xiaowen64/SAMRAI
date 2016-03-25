@@ -322,6 +322,7 @@ private:
     * This constructor is used by the refine schedule algorithm during the
     * recursive schedule generation process.
     *
+    * @param[out] errf Error flag
     * @param[in] dst_level  A temporary level that is used during
     *                       interpolation.
     * @param[in] src_level  A level from the hierarchy that is of the
@@ -358,6 +359,7 @@ private:
     * @pre src_to_dst.getHead() == *dst_level->getBoxLevel()
     */
    RefineSchedule(
+      int& errf,
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       int next_coarser_level,
@@ -381,6 +383,11 @@ private:
     *
     * The hierarchy gives the possibility of recursion to get data from
     * coarser levels.
+    *
+    * Returns an error flag:
+    * - 0: No error.
+    * - 1: Internal error due to unfilled boxes without coarser level.
+    * - 2: Internal error due to unfilled boxes without hierarchy.
     *
     * @param[in] next_coarser_ln  Level number of the level coarser than
     *                             the destination level
@@ -408,8 +415,9 @@ private:
     * @pre d_dst_to_src->hasTranspose()
     * @pre (next_coarser_ln == -1) || hierarchy
     * @pre !d_src_level || d_dst_to_src->isFinalized()
+    * @return error flag
     */
-   void
+   int
    finishScheduleConstruction(
       int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -616,7 +624,7 @@ private:
     * @param[in]   fill_boxes_list
     * @param[in]   dst_block_id
     *
-    * @pre encon_fill_boxes.isEmpty()
+    * @pre encon_fill_boxes.empty()
     */
    void
    findEnconFillBoxes(
@@ -1201,7 +1209,7 @@ private:
     * coarser levels.
     *
     * Maintained by the top level RefineSchedule for use by the
-    * recursive schedules.  Unused in when there is no hierarchy for
+    * recursive schedules.  Unused when there is no hierarchy for
     * recursion.
     */
    std::vector<hier::IntVector> d_fine_connector_widths;

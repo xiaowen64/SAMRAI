@@ -880,7 +880,7 @@ void Euler::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); ++k) {
+         for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -1092,7 +1092,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1462,7 +1462,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -2910,8 +2910,11 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
+   NULL_USE(simulation_time);
+
    TBOX_ASSERT((region * patch.getBox()).isSpatiallyEqual(region));
 
    bool data_on_patch = FALSE;
@@ -2951,14 +2954,14 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 
       double valinv = 1.0 / (d_gamma - 1.0);
       int buf_b1 = 0;
-      int dat_b2 = data_box.offset(region.lower());
+      size_t dat_b2 = data_box.offset(region.lower());
 
       if (d_dim > tbox::Dimension(2)) {
          for (int i2 = 0; i2 < box_w2; ++i2) {
-            int dat_b1 = dat_b2;
+            size_t dat_b1 = dat_b2;
             for (int i1 = 0; i1 < box_w1; ++i1) {
                for (int i0 = 0; i0 < box_w0; ++i0) {
-                  int dat_indx = dat_b1 + i0;
+                  size_t dat_indx = dat_b1 + i0;
                   double v2norm = pow(xvel[dat_indx], 2.0)
                      + pow(yvel[dat_indx], 2.0)
                      + pow(zvel[dat_indx], 2.0)
@@ -2979,10 +2982,10 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       }
 
       if (d_dim == tbox::Dimension(2)) {
-         int dat_b1 = dat_b2;
+         size_t dat_b1 = dat_b2;
          for (int i1 = 0; i1 < box_w1; ++i1) {
             for (int i0 = 0; i0 < box_w0; ++i0) {
-               int dat_indx = dat_b1 + i0;
+               size_t dat_indx = dat_b1 + i0;
                double v2norm = pow(xvel[dat_indx], 2.0)
                   + pow(yvel[dat_indx], 2.0)
                ;
@@ -3007,13 +3010,13 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       const double * const dens = density->getPointer();
       const double * const vel = velocity->getPointer(depth_id);
       int buf_b1 = 0;
-      int dat_b2 = data_box.offset(region.lower());
+      size_t dat_b2 = data_box.offset(region.lower());
 
       if (d_dim == tbox::Dimension(2)) {
-         int dat_b1 = dat_b2;
+         size_t dat_b1 = dat_b2;
          for (int i1 = 0; i1 < box_w1; ++i1) {
             for (int i0 = 0; i0 < box_w0; ++i0) {
-               int dat_indx = dat_b1 + i0;
+               size_t dat_indx = dat_b1 + i0;
                dbuffer[buf_b1 + i0] = dens[dat_indx] * vel[dat_indx];
             }
             dat_b1 += dat_w0;
@@ -3022,10 +3025,10 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       }
       if (d_dim == tbox::Dimension(3)) {
          for (int i2 = 0; i2 < box_w2; ++i2) {
-            int dat_b1 = dat_b2;
+            size_t dat_b1 = dat_b2;
             for (int i1 = 0; i1 < box_w1; ++i1) {
                for (int i0 = 0; i0 < box_w0; ++i0) {
-                  int dat_indx = dat_b1 + i0;
+                  size_t dat_indx = dat_b1 + i0;
                   dbuffer[buf_b1 + i0] = dens[dat_indx] * vel[dat_indx];
                }
                dat_b1 += dat_w0;
@@ -3058,7 +3061,7 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 void Euler::writeData1dPencil(
    const boost::shared_ptr<hier::Patch> patch,
    const hier::Box& pencil_box,
-   const int idir,
+   const tbox::Dimension::dir_t idir,
    ostream& file)
 {
 

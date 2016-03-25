@@ -310,7 +310,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    const hier::IntVector box_dims = trial.d_whole_box.numberCells();
 
-   const int box_vol = box_dims.getProduct();
+   const size_t box_vol = box_dims.getProduct();
 
    if (box_vol <= trial.d_ideal_load) {
       // Easy: break off everything.
@@ -333,19 +333,20 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    TrialBreak trial1(trial);
 
-   for (int d = dim.getValue() - 1; d >= 0 && !sufficient_brk_load; --d) {
+   for (tbox::Dimension::dir_t d1 = 1; d1 <= dim.getValue() && !sufficient_brk_load; ++d1) {
+      const tbox::Dimension::dir_t d = static_cast<tbox::Dimension::dir_t>(dim.getValue() - d1);
 
       /*
        * Search directions from longest to shortest because we prefer
        * to break across longer directions.
        */
-      const int brk_dir = sorted_dirs(d);
+      const tbox::Dimension::dir_t brk_dir = static_cast<tbox::Dimension::dir_t>(sorted_dirs(d));
 
-      const int brk_area = box_vol / box_dims(brk_dir);
+      const size_t brk_area = box_vol / box_dims(brk_dir);
 
       const std::vector<bool>& bad = trial.d_bad_cuts[brk_dir];
 
-      const double ideal_cut_length = double(trial.d_ideal_load) / brk_area;
+      const double ideal_cut_length = double(trial.d_ideal_load) / static_cast<double>(brk_area);
 
       /*
        * Try 4 different cuts for direction brk_dir:
@@ -409,7 +410,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           d_pparams->getMinBoxSize() (brk_dir)) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.upper() (brk_dir) = lo_lower_cut_plane - 1;
+         brk_box.setUpper(brk_dir, lo_lower_cut_plane - 1);
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -427,8 +428,9 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           hi_lower_cut_plane >= trial.d_whole_box.upper() (brk_dir) + 1) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.upper() (brk_dir) = tbox::MathUtilities<int>::Min(hi_lower_cut_plane - 1,
-               trial1.d_whole_box.upper() (brk_dir));
+         brk_box.setUpper(brk_dir,
+            tbox::MathUtilities<int>::Min(hi_lower_cut_plane - 1,
+               trial1.d_whole_box.upper(brk_dir)));
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -446,8 +448,9 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           lo_upper_cut_plane <= trial.d_whole_box.lower() (brk_dir)) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.lower() (brk_dir) = tbox::MathUtilities<int>::Max(lo_upper_cut_plane,
-               trial1.d_whole_box.lower() (brk_dir));
+         brk_box.setLower(brk_dir,
+            tbox::MathUtilities<int>::Max(lo_upper_cut_plane,
+               trial1.d_whole_box.lower(brk_dir)));
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -464,7 +467,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           d_pparams->getMinBoxSize() (brk_dir)) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.lower() (brk_dir) = hi_upper_cut_plane;
+         brk_box.setLower(brk_dir, hi_upper_cut_plane);
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -545,7 +548,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 
    const hier::IntVector box_dims(trial.d_whole_box.numberCells());
 
-   const double box_load(box_dims.getProduct());
+   const double box_load(static_cast<double>(box_dims.getProduct()));
 
    if (trial.d_ideal_load >= box_load) {
       // Easy: break off everything.
@@ -566,7 +569,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       if (d_print_break_steps) {
          tbox::plog
          << "      breakOffLoad_cubic reversing direction to break "
-         << (box_dims.getProduct() - trial.d_ideal_load)
+         << (static_cast<double>(box_dims.getProduct()) - trial.d_ideal_load)
          << " instead of " << trial.d_ideal_load << " / "
          << box_dims.getProduct() << std::endl;
       }
@@ -675,17 +678,22 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
          int touches_upper_side = bn & (1 << d);
 
          if (touches_upper_side) {
-            corner_box.lower() (d) = upper_intersection(d);
-            if (corner_box.lower() (d) - trial.d_whole_box.lower() (d) <
+            corner_box.setLower(static_cast<hier::Box::dir_t>(d),
+               upper_intersection(d));
+            if (corner_box.lower(static_cast<hier::Box::dir_t>(d))
+                - trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)) <
                 d_pparams->getMinBoxSize() (d)) {
-               corner_box.lower() (d) = trial.d_whole_box.lower() (d);
+               corner_box.setLower(static_cast<hier::Box::dir_t>(d),
+                  trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)));
             }
             expansion_rate(d) = -d_pparams->getCutFactor() (d);
          } else {
-            corner_box.upper() (d) = lower_intersection(d) - 1;
+            corner_box.setUpper(static_cast<hier::Box::dir_t>(d),
+               lower_intersection(d) - 1);
             if (trial.d_whole_box.upper() (d) - corner_box.upper() (d) <
                 d_pparams->getMinBoxSize() (d)) {
-               corner_box.upper() (d) = trial.d_whole_box.upper() (d);
+               corner_box.setUpper(static_cast<hier::Box::dir_t>(d),
+                  trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(d)));
             }
             expansion_rate(d) = d_pparams->getCutFactor() (d);
          }
@@ -693,7 +701,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       }
 
       corner_box_size = corner_box.numberCells();
-      corner_box_load = corner_box.size();
+      corner_box_load = static_cast<double>(corner_box.size());
 
       if (d_print_break_steps) {
          tbox::plog << "Initial corner box " << bn << " is " << corner_box
@@ -755,26 +763,30 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
           * prevent remainder from violating min size.  Update growability.
           */
          if (expansion_rate(inc_dir) > 0) {
-            corner_box.upper() (inc_dir) = tbox::MathUtilities<int>::Min(
-                  corner_box.upper() (inc_dir) + expansion_rate(inc_dir),
-                  trial.d_whole_box.upper() (inc_dir));
+            corner_box.setUpper(static_cast<hier::Box::dir_t>(inc_dir),
+               tbox::MathUtilities<int>::Min(
+                  corner_box.upper(static_cast<hier::Box::dir_t>(inc_dir)) + expansion_rate(inc_dir),
+                  trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(inc_dir))));
             if (trial.d_whole_box.upper() (inc_dir) - corner_box.upper() (inc_dir) <
                 d_pparams->getMinBoxSize() (inc_dir)) {
-               corner_box.upper() (inc_dir) = trial.d_whole_box.upper() (inc_dir);
+               corner_box.setUpper(static_cast<hier::Box::dir_t>(inc_dir),
+                  trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(inc_dir)));
             }
             growable(inc_dir) = corner_box.upper() (inc_dir) < trial.d_whole_box.upper() (inc_dir);
          } else {
-            corner_box.lower() (inc_dir) = tbox::MathUtilities<int>::Max(
-                  corner_box.lower() (inc_dir) + expansion_rate(inc_dir),
-                  trial.d_whole_box.lower() (inc_dir));
+            corner_box.setLower(static_cast<hier::Box::dir_t>(inc_dir),
+               tbox::MathUtilities<int>::Max(
+                  corner_box.lower(static_cast<hier::Box::dir_t>(inc_dir)) + expansion_rate(inc_dir),
+                  trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(inc_dir))));
             if (corner_box.lower() (inc_dir) - trial.d_whole_box.lower() (inc_dir) <
                 d_pparams->getMinBoxSize() (inc_dir)) {
-               corner_box.lower() (inc_dir) = trial.d_whole_box.lower() (inc_dir);
+               corner_box.setLower(static_cast<hier::Box::dir_t>(inc_dir),
+                  trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(inc_dir)));
             }
             growable(inc_dir) = corner_box.lower() (inc_dir) > trial.d_whole_box.lower() (inc_dir);
          }
          corner_box_size = corner_box.numberCells();
-         corner_box_load = corner_box.size();
+         corner_box_load = static_cast<double>(corner_box.size());
 
          const bool accept_break = BalanceUtilities::compareLoads(
                break_acceptance_flags, best_breakoff_load, corner_box_load,
@@ -877,7 +889,7 @@ BalanceBoxBreaker::burstBox(
        * possible.
        */
       int slab_thickness = 0;
-      for (int d = 0; d < solid_size.getDim().getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < solid_size.getDim().getValue(); ++d) {
          if (cutme.numberCells(d) > solid_size(d)) {
             const int thickness_from_upper_cut = cutme.upper() (d)
                - solid.upper() (d);
@@ -899,11 +911,15 @@ BalanceBoxBreaker::burstBox(
 
       hier::Box removeme = cutme;
       if (cut_above_solid) {
-         cutme.upper() (cut_dir) = solid.upper() (cut_dir);
-         removeme.lower() (cut_dir) = solid.upper() (cut_dir) + 1;
+         cutme.setUpper(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.upper(static_cast<hier::Box::dir_t>(cut_dir)));
+         removeme.setLower(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.upper(static_cast<hier::Box::dir_t>(cut_dir)) + 1);
       } else {
-         cutme.lower() (cut_dir) = solid.lower() (cut_dir);
-         removeme.upper() (cut_dir) = solid.lower() (cut_dir) - 1;
+         cutme.setLower(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.lower(static_cast<hier::Box::dir_t>(cut_dir)));
+         removeme.setUpper(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.lower(static_cast<hier::Box::dir_t>(cut_dir)) - 1);
       }
 
       boxes.push_back(removeme);
@@ -995,9 +1011,9 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
    d_breakoff_load(0.0),
    d_breakoff(),
    d_leftover(),
-   d_ideal_load(orig.d_whole_box.size() - orig.d_ideal_load),
-   d_low_load(orig.d_whole_box.size() - orig.d_high_load),
-   d_high_load(orig.d_whole_box.size() - orig.d_low_load),
+   d_ideal_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_ideal_load),
+   d_low_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_high_load),
+   d_high_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_low_load),
    d_width_score(orig.d_width_score),
    d_balance_penalty(orig.d_balance_penalty),
    d_pparams(orig.d_pparams),

@@ -874,7 +874,7 @@ void Euler::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); ++k) {
+         for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -1086,7 +1086,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1456,7 +1456,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1878,7 +1878,6 @@ void Euler::postprocessRefine(
    const boost::shared_ptr<geom::CartesianPatchGeometry> fgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
-
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
 
@@ -2066,7 +2065,6 @@ void Euler::postprocessCoarsen(
    const boost::shared_ptr<geom::CartesianPatchGeometry> cgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-
    TBOX_ASSERT(fgeom);
    TBOX_ASSERT(cgeom);
 
@@ -2150,11 +2148,8 @@ void Euler::setPhysicalBoundaryConditions(
    TBOX_ASSERT(density);
    TBOX_ASSERT(velocity);
    TBOX_ASSERT(pressure);
-
-   hier::IntVector ghost_cells = density->getGhostCellWidth();
-
-   TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
-   TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
+   TBOX_ASSERT(velocity->getGhostCellWidth() == density->getGhostCellWidth());
+   TBOX_ASSERT(pressure->getGhostCellWidth() == density->getGhostCellWidth());
 
    if (d_dim == tbox::Dimension(2)) {
 
@@ -2590,9 +2585,7 @@ void Euler::tagGradientDetectorCells(
                   (*temp_tags)(*ic, 0) = TRUE;
                }
             }
-         }
-
-         if (ref == "DENSITY_GRADIENT" || ref == "PRESSURE_GRADIENT") {
+         } else if (ref == "DENSITY_GRADIENT" || ref == "PRESSURE_GRADIENT") {
             if (d_dim == tbox::Dimension(2)) {
                SAMRAI_F77_FUNC(detectgrad2d, DETECTGRAD2D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
@@ -2616,9 +2609,7 @@ void Euler::tagGradientDetectorCells(
                   var->getPointer(),
                   tags->getPointer(), temp_tags->getPointer());
             }
-         }
-
-         if (ref == "DENSITY_SHOCK" || ref == "PRESSURE_SHOCK") {
+         } else if (ref == "DENSITY_SHOCK" || ref == "PRESSURE_SHOCK") {
             if (d_dim == tbox::Dimension(2)) {
                SAMRAI_F77_FUNC(detectshock2d, DETECTSHOCK2D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
@@ -2901,6 +2892,7 @@ void Euler::registerVisItDataWriter(
 {
    TBOX_ASSERT(viz_writer);
    d_visit_writer = viz_writer;
+   d_visit_writer->registerDerivedPlotQuantity("Owner", "SCALAR", this);
 }
 #endif
 
@@ -2918,8 +2910,11 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
+   NULL_USE(simulation_time);
+
    TBOX_ASSERT((region * patch.getBox()).isSpatiallyEqual(region));
 
    bool data_on_patch = FALSE;
@@ -2950,7 +2945,16 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    const int box_w2 = d_dim >
       tbox::Dimension(2) ? region.numberCells(2) : tbox::MathUtilities<int>::getMax();
 
-   if (variable_name == "Total Energy") {
+   if (variable_name == "Owner") {
+
+      // double owner = patch.getBox().getOwnerRank();
+      double owner = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
+      const size_t size = region.size();
+      for (size_t i = 0; i < size; ++i) dbuffer[i] = owner;
+      data_on_patch = TRUE;
+
+   } else if (variable_name == "Total Energy") {
+
       const double * const dens = density->getPointer();
       const double * const xvel = velocity->getPointer(0);
       const double * const yvel = velocity->getPointer(1);
@@ -2959,14 +2963,14 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 
       double valinv = 1.0 / (d_gamma - 1.0);
       int buf_b1 = 0;
-      int dat_b2 = data_box.offset(region.lower());
+      size_t dat_b2 = data_box.offset(region.lower());
 
       if (d_dim > tbox::Dimension(2)) {
          for (int i2 = 0; i2 < box_w2; ++i2) {
-            int dat_b1 = dat_b2;
+            size_t dat_b1 = dat_b2;
             for (int i1 = 0; i1 < box_w1; ++i1) {
                for (int i0 = 0; i0 < box_w0; ++i0) {
-                  int dat_indx = dat_b1 + i0;
+                  size_t dat_indx = dat_b1 + i0;
                   double v2norm = pow(xvel[dat_indx], 2.0)
                      + pow(yvel[dat_indx], 2.0)
                      + pow(zvel[dat_indx], 2.0)
@@ -2987,10 +2991,10 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       }
 
       if (d_dim == tbox::Dimension(2)) {
-         int dat_b1 = dat_b2;
+         size_t dat_b1 = dat_b2;
          for (int i1 = 0; i1 < box_w1; ++i1) {
             for (int i0 = 0; i0 < box_w0; ++i0) {
-               int dat_indx = dat_b1 + i0;
+               size_t dat_indx = dat_b1 + i0;
                double v2norm = pow(xvel[dat_indx], 2.0)
                   + pow(yvel[dat_indx], 2.0)
                ;
@@ -3015,13 +3019,13 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       const double * const dens = density->getPointer();
       const double * const vel = velocity->getPointer(depth_id);
       int buf_b1 = 0;
-      int dat_b2 = data_box.offset(region.lower());
+      size_t dat_b2 = data_box.offset(region.lower());
 
       if (d_dim == tbox::Dimension(2)) {
-         int dat_b1 = dat_b2;
+         size_t dat_b1 = dat_b2;
          for (int i1 = 0; i1 < box_w1; ++i1) {
             for (int i0 = 0; i0 < box_w0; ++i0) {
-               int dat_indx = dat_b1 + i0;
+               size_t dat_indx = dat_b1 + i0;
                dbuffer[buf_b1 + i0] = dens[dat_indx] * vel[dat_indx];
             }
             dat_b1 += dat_w0;
@@ -3030,10 +3034,10 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       }
       if (d_dim == tbox::Dimension(3)) {
          for (int i2 = 0; i2 < box_w2; ++i2) {
-            int dat_b1 = dat_b2;
+            size_t dat_b1 = dat_b2;
             for (int i1 = 0; i1 < box_w1; ++i1) {
                for (int i0 = 0; i0 < box_w0; ++i0) {
-                  int dat_indx = dat_b1 + i0;
+                  size_t dat_indx = dat_b1 + i0;
                   dbuffer[buf_b1 + i0] = dens[dat_indx] * vel[dat_indx];
                }
                dat_b1 += dat_w0;
@@ -3066,7 +3070,7 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 void Euler::writeData1dPencil(
    const boost::shared_ptr<hier::Patch> patch,
    const hier::Box& pencil_box,
-   const int idir,
+   const tbox::Dimension::dir_t idir,
    ostream& file)
 {
 
@@ -3606,8 +3610,7 @@ void Euler::getFromInput(
             if (error_db && error_key == "DENSITY_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
-                  d_density_grad_tol =
-                     error_db->getDoubleVector("grad_tol");
+                  d_density_grad_tol = error_db->getDoubleVector("grad_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3647,8 +3650,7 @@ void Euler::getFromInput(
                }
 
                if (error_db->keyExists("shock_tol")) {
-                  d_density_shock_tol =
-                     error_db->getDoubleVector("shock_tol");
+                  d_density_shock_tol = error_db->getDoubleVector("shock_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3678,8 +3680,7 @@ void Euler::getFromInput(
             if (error_db && error_key == "DENSITY_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
-                  d_density_rich_tol =
-                     error_db->getDoubleVector("rich_tol");
+                  d_density_rich_tol = error_db->getDoubleVector("rich_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3709,8 +3710,7 @@ void Euler::getFromInput(
             if (error_db && error_key == "PRESSURE_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
-                  d_pressure_dev_tol =
-                     error_db->getDoubleVector("dev_tol");
+                  d_pressure_dev_tol = error_db->getDoubleVector("dev_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3719,8 +3719,7 @@ void Euler::getFromInput(
                }
 
                if (error_db->keyExists("pressure_dev")) {
-                  d_pressure_dev =
-                     error_db->getDoubleVector("pressure_dev");
+                  d_pressure_dev = error_db->getDoubleVector("pressure_dev");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3750,8 +3749,7 @@ void Euler::getFromInput(
             if (error_db && error_key == "PRESSURE_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
-                  d_pressure_grad_tol =
-                     error_db->getDoubleVector("grad_tol");
+                  d_pressure_grad_tol = error_db->getDoubleVector("grad_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3822,8 +3820,7 @@ void Euler::getFromInput(
             if (error_db && error_key == "PRESSURE_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
-                  d_pressure_rich_tol =
-                     error_db->getDoubleVector("rich_tol");
+                  d_pressure_rich_tol = error_db->getDoubleVector("rich_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -4577,6 +4574,7 @@ void Euler::checkBoundaryData(
                NUM_2D_EDGES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
                NUM_2D_EDGES);
+
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = bloc;
@@ -4585,6 +4583,7 @@ void Euler::checkBoundaryData(
                NUM_2D_NODES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
                NUM_2D_NODES);
+
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
@@ -4596,6 +4595,7 @@ void Euler::checkBoundaryData(
                NUM_3D_FACES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
                NUM_3D_FACES);
+
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = bloc;
@@ -4604,6 +4604,7 @@ void Euler::checkBoundaryData(
                NUM_3D_EDGES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
                NUM_3D_EDGES);
+
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
@@ -4612,6 +4613,7 @@ void Euler::checkBoundaryData(
                NUM_3D_NODES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
                NUM_3D_NODES);
+
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];

@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 
-#ifndef included_pdat_FirstLayerCellNoCornersFillPattern
+#ifndef included_pdat_FirstLayerCellNoCornersVariableFillPattern
 #define included_pdat_FirstLayerCellNoCornersVariableFillPattern
 
 #include "SAMRAI/SAMRAI_config.h"

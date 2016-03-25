@@ -194,7 +194,7 @@ void FaceDataTest::setConservativeData(
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
-   int ncells = 0;
+   size_t ncells = 0;
    for (hier::BoxContainer::const_iterator i = domain.begin();
         i != domain.end(); ++i) {
       ncells += i->size();
@@ -224,7 +224,7 @@ void FaceDataTest::setConservativeData(
                   value += (double)((*ci)(i));
                }
             }
-            value /= ncells;
+            value /= static_cast<double>(ncells);
             for (int face = pdat::FaceIndex::Lower;
                  face <= pdat::FaceIndex::Upper; ++face) {
                pdat::FaceIndex si(*ci, axis, face);
@@ -254,7 +254,7 @@ void FaceDataTest::setConservativeData(
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
-      int coarse_ncells = ncells;
+      size_t coarse_ncells = ncells;
       double* delta = new double[max_ratio * d_dim.getValue()];
       for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
@@ -280,7 +280,7 @@ void FaceDataTest::setConservativeData(
                   value += (double)(ci(i));
                }
             }
-            value /= coarse_ncells;
+            value /= static_cast<double>(coarse_ncells);
 
             for (j = 0; j < d_dim.getValue(); ++j) {
                if (j != axis) {
@@ -358,7 +358,7 @@ void FaceDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::FaceIndex loweri(interior.lower(), axis, 0);
       pdat::FaceIterator fiend(pdat::FaceGeometry::end(interior, axis));
       for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(interior, axis));
@@ -509,7 +509,7 @@ void FaceDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
       pdat::FaceIterator fiend(pdat::FaceGeometry::end(sbox, axis));
       for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(sbox, axis));
@@ -609,7 +609,7 @@ bool FaceDataTest::verifyResults(
             setLinearData(solution, tbox, patch);
          }
 
-         for (int id = 0; id < d_dim.getValue(); ++id) {
+         for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
             pdat::FaceIterator siend(pdat::FaceGeometry::end(dbox, id));
             for (pdat::FaceIterator si(pdat::FaceGeometry::begin(dbox, id));
                  si != siend; ++si) {

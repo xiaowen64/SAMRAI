@@ -252,12 +252,12 @@ BoxContainer::insert(
    TBOX_ASSERT(box.getBoxId().isValid());
    TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!isEmpty()) {
+   if (!empty()) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
-   if (!d_ordered && isEmpty()) {
+   if (!d_ordered && empty()) {
       order();
       position.d_set_iter = d_set.begin();
    }
@@ -292,12 +292,12 @@ BoxContainer::insert(
 {
    TBOX_ASSERT(box.getBoxId().isValid());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!isEmpty()) {
+   if (!empty()) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
-   if (!d_ordered && isEmpty()) {
+   if (!d_ordered && empty()) {
       order();
    }
 
@@ -336,7 +336,7 @@ BoxContainer::insert(
    const_iterator last)
 {
 
-   if (!d_ordered && isEmpty()) {
+   if (!d_ordered && empty()) {
       order();
    }
 
@@ -353,7 +353,7 @@ BoxContainer::insert(
 
       TBOX_ASSERT((**set_iter).getBoxId().isValid());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), **set_iter);
       }
 #endif
@@ -405,7 +405,7 @@ BoxContainer::simplify()
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!isEmpty()) {
+   if (!empty()) {
       const BlockId& front_block_id = front().getBlockId();
       for (const_iterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
@@ -420,13 +420,13 @@ BoxContainer::simplify()
    // Start coalescing on the highest direction of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
 
-   if (!isEmpty()) {
+   if (!empty()) {
       const tbox::Dimension dim(d_list.front().getDim());
 
       BoxContainer notCanonical;
       for (int d = dim.getValue() - 1; d >= 0; --d) {
          notCanonical.spliceBack(*this);
-         while (!notCanonical.isEmpty()) {
+         while (!notCanonical.empty()) {
             Box tryMe = notCanonical.front();
             notCanonical.popFront();
 
@@ -528,7 +528,7 @@ void
 BoxContainer::coalesce()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!isEmpty()) {
+   if (!empty()) {
       const BlockId& front_block_id = front().getBlockId();
       for (const_iterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
@@ -579,7 +579,7 @@ BoxContainer::coalesce()
 void
 BoxContainer::removePeriodicImageBoxes()
 {
-   if (!d_ordered && !isEmpty()) {
+   if (!d_ordered && !empty()) {
       TBOX_ERROR("removePeriodicImages attempted on unordered container."
          << std::endl);
    }
@@ -612,7 +612,7 @@ BoxContainer::separatePeriodicImages(
          << std::endl);
    }
 
-   if (!isEmpty()) {
+   if (!empty()) {
 
       const Box& first_element(*begin());
 
@@ -642,7 +642,7 @@ void
 BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
-   if (!isEmpty()) {
+   if (!empty()) {
 
       if (d_tree) {
          d_tree.reset();
@@ -679,7 +679,7 @@ BoxContainer::rotate(
 Box
 BoxContainer::getBoundingBox() const
 {
-   if (isEmpty()) {
+   if (empty()) {
       TBOX_ERROR("Bounding box container is empty" << std::endl);
    }
    const_iterator i = begin();
@@ -702,7 +702,7 @@ Box
 BoxContainer::getBoundingBox(
    const BlockId& block_id) const
 {
-   if (isEmpty()) {
+   if (empty()) {
       TBOX_ERROR("Bounding box container is empty" << std::endl);
    }
 
@@ -785,7 +785,7 @@ void
 BoxContainer::removeIntersections(
    const Box& takeaway)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -824,7 +824,7 @@ void
 BoxContainer::removeIntersections(
    const BoxContainer& takeaway)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -862,7 +862,7 @@ BoxContainer::removeIntersections(
    const BoxContainer& takeaway,
    const bool include_singularity_block_neighbors)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -875,7 +875,7 @@ BoxContainer::removeIntersections(
       d_tree.reset();
    }
 
-   if (takeaway.isEmpty()) {
+   if (takeaway.empty()) {
       return;
    }
 
@@ -948,7 +948,7 @@ BoxContainer::removeIntersections(
     * the intersection of box with takeaway.  If the two boxes do not
     * intersect, simply add box to the box container (no intersection removed).
     */
-   TBOX_ASSERT(isEmpty());
+   TBOX_ASSERT(empty());
    TBOX_ASSERT(box.getBlockId() == takeaway.getBlockId());
 
    if (d_tree) {
@@ -967,7 +967,7 @@ void
 BoxContainer::removeIntersections(
    const MultiblockBoxTree& takeaway)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -1054,7 +1054,7 @@ void
 BoxContainer::intersectBoxes(
    const Box& keep)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -1087,7 +1087,7 @@ void
 BoxContainer::intersectBoxes(
    const BoxContainer& keep)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -1125,7 +1125,7 @@ void
 BoxContainer::intersectBoxes(
    const MultiblockBoxTree& keep)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -1166,7 +1166,7 @@ BoxContainer::intersectBoxes(
    const BoxContainer& keep,
    const bool include_singularity_block_neighbors)
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -1179,7 +1179,7 @@ BoxContainer::intersectBoxes(
       d_tree.reset();
    }
 
-   if (keep.isEmpty()) {
+   if (keep.empty()) {
       clear();
       return;
    }
@@ -1389,7 +1389,7 @@ BoxContainer::unshiftPeriodicImageBoxes(
 
    iterator hint = output_boxes.begin();
 
-   if (!isEmpty()) {
+   if (!empty()) {
       const Box& first_element(*begin());
 
       const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
@@ -1523,10 +1523,10 @@ BoxContainer::erase(
  *************************************************************************
  */
 
-int
+size_t
 BoxContainer::getTotalSizeOfBoxes() const
 {
-   int size = 0;
+   size_t size = 0;
    if (!d_ordered) {
       for (const_iterator i = begin(); i != end(); ++i) {
          size += i->size();
@@ -1617,7 +1617,7 @@ BoxContainer::makeTree(
 {
    TBOX_ASSERT(min_number > 0);
 
-   if (!d_tree && !isEmpty()) {
+   if (!d_tree && !empty()) {
       d_tree.reset(new MultiblockBoxTree(*this, grid_geometry, min_number));
    }
 }
@@ -1726,17 +1726,18 @@ BoxContainer::getFromRestart(
 
 /*
  ***********************************************************************
- * Prind contents of the BoxContainer
+ * Print contents of the BoxContainer
  ***********************************************************************
  */
 void
 BoxContainer::print(
-   std::ostream& co) const
+   std::ostream& co,
+   const std::string& border) const
 {
    co << size() << " boxes, " << (d_ordered ? "ordered" : "unordered") << '\n';
    for (const_iterator bi = begin(); bi != end(); ++bi) {
-      Box box(*bi);
-      co << "    "
+      const Box& box(*bi);
+      co << border << "    "
          << box << "   "
          << box.numberCells() << '|'
          << box.size() << '\n';
@@ -1770,7 +1771,7 @@ operator << (
    std::ostream& s,
    const BoxContainer::Outputter& format)
 {
-   format.d_set.print(s);
+   format.d_set.print(s, format.d_border);
    return s;
 }
 
@@ -1839,7 +1840,7 @@ BoxContainer::findOverlapBoxes(
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 
@@ -1862,7 +1863,7 @@ BoxContainer::findOverlapBoxes(
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
-   if (isEmpty()) {
+   if (empty()) {
       return;
    }
 

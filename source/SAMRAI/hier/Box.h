@@ -17,11 +17,13 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Transformation.h"
+#include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include "boost/logic/tribool.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -55,6 +57,8 @@ class BoxIterator;
 class Box
 {
 public:
+   typedef tbox::Dimension::dir_t dir_t;
+
    /**
     * A box iterator iterates over the elements of a box.  This class is
     * defined elsewhere, and the typedef is used to point to that class.
@@ -261,6 +265,7 @@ public:
          d_lo = box.d_lo;
          d_hi = box.d_hi;
          d_block_id = box.d_block_id;
+         d_empty_flag = box.d_empty_flag;
       }
       if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
@@ -485,30 +490,23 @@ public:
       const Box& rhs);
 
    /*!
-    * @brief Return a non-const lower index of the box.
-    */
-   Index&
-   lower()
-   {
-      return d_lo;
-   }
-
-   /*!
-    * @brief Return a non-const upper index of the box.
-    */
-   Index&
-   upper()
-   {
-      return d_hi;
-   }
-
-   /*!
     * @brief Return a const lower index of the box.
     */
    const Index&
    lower() const
    {
       return d_lo;
+   }
+
+   /*!
+    * @brief Sets lower index of the box.
+    */
+   void
+   setLower(
+      const Index& new_lower)
+   {
+      d_lo = new_lower;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -521,23 +519,14 @@ public:
    }
 
    /*!
-    * @brief Return the i'th component (non-const) of the lower index.
+    * @brief Sets upper index of the box.
     */
-   int&
-   lower(
-      const int i)
+   void
+   setUpper(
+      const Index& new_upper)
    {
-      return d_lo(i);
-   }
-
-   /*!
-    * @brief Return the i'th component (non-const) of the upper index.
-    */
-   int&
-   upper(
-      const int i)
-   {
-      return d_hi(i);
+      d_hi = new_upper;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -545,9 +534,21 @@ public:
     */
    const int&
    lower(
-      const int i) const
+      dir_t i) const
    {
       return d_lo(i);
+   }
+
+   /*!
+    * @brief Sets the i'th component of the lower index.
+    */
+   void
+   setLower(
+      dir_t i,
+      int new_lower)
+   {
+      d_lo(i) = new_lower;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -555,9 +556,21 @@ public:
     */
    const int&
    upper(
-      const int i) const
+      dir_t i) const
    {
       return d_hi(i);
+   }
+
+   /*!
+    * @brief Sets the i'th component of the upper index.
+    */
+   void
+   setUpper(
+      dir_t i,
+      int new_upper)
+   {
+      d_hi(i) = new_upper;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -569,37 +582,51 @@ public:
       const tbox::Dimension& dim(getDim());
       d_lo = Index(dim, tbox::MathUtilities<int>::getMax());
       d_hi = Index(dim, tbox::MathUtilities<int>::getMin());
+      d_empty_flag = true;
    }
 
    /*!
     * @brief Return whether the box is ``empty''.
     *
-    * isEmpty() is preferred to match "is" standard syntax for
-    * boolean methods.
+    * Archaic syntax.  Synonymous with empty().  Retained for backward
+    * compatibility.
     *
-    * @see isEmpty()
+    * @see empty()
+    */
+   DEPRECATED(
+      bool
+      isEmpty() const)
+   {
+      return empty();
+   }
+
+   /*!
+    * @brief Return whether the box is ``empty''.
+    *
+    * This version follows the naming standards used in STL.
+    *
+    * A box is empty if any of the lower bounds is greater than the
+    * corresponding upper bound.  An empty box has a size of zero.
+    *
+    * @return True if the box is empty.
     */
    bool
    empty() const
    {
-      return isEmpty();
-   }
-
-   /*!
-    * @brief Return whether the box is ``empty''.
-    *
-    * A box is empty if any of the lower bounds is greater than the
-    * corresponding upper bound.  An empty box has a size of zero.
-    */
-   bool
-   isEmpty() const
-   {
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         if (d_hi(i) < d_lo(i)) {
-            return true;
+      if (d_empty_flag) {
+         return true;
+      } else if (!d_empty_flag) {
+         return false;
+      } else {
+         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+            if (d_hi(i) < d_lo(i)) {
+               d_empty_flag = true;
+               return true;
+            }
          }
+         d_empty_flag = false;
+         return false;
       }
-      return false;
    }
 
    /*!
@@ -608,7 +635,7 @@ public:
     */
    int
    numberCells(
-      const int i) const
+      const dir_t i) const
    {
       if (empty()) {
          return 0;
@@ -637,13 +664,13 @@ public:
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
-   int
+   size_t
    size() const
    {
-      int mysize = 0;
+      size_t mysize = 0;
       if (!empty()) {
-         mysize = 1;
-         for (int i = 0; i < getDim().getValue(); ++i) {
+         mysize = (d_hi(0) - d_lo(0) + 1);
+         for (dir_t i = 1; i < getDim().getValue(); ++i) {
             mysize *= (d_hi(i) - d_lo(i) + 1);
          }
       }
@@ -653,7 +680,7 @@ public:
    /*!
     * @brief Return the direction of the box that is longest.
     */
-   int
+   dir_t
    longestDirection() const;
 
    /*!
@@ -663,11 +690,11 @@ public:
     * the indices within the box.  This operation is a convenience
     * function for array indexing operations.
     */
-   int
+   size_t
    offset(
       const Index& p) const
    {
-      int myoffset = 0;
+      size_t myoffset = 0;
       for (int i = getDim().getValue() - 1; i > 0; --i) {
          myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
       }
@@ -688,7 +715,7 @@ public:
     */
    Index
    index(
-      const int offset) const;
+      const size_t offset) const;
 
    /*!
     * @brief Return an iterator pointing to the first index of this.
@@ -711,7 +738,7 @@ public:
    contains(
       const Index& p) const
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) {
             return false;
          }
@@ -892,6 +919,7 @@ public:
       if (!empty()) {
          d_lo -= ghosts;
          d_hi += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -906,17 +934,18 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    grow(
-      const int direction,
+      const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
          d_hi(direction) += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -935,6 +964,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -945,16 +975,17 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growLower(
-      const int direction,
+      const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -973,6 +1004,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_hi += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -983,16 +1015,17 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growUpper(
-      const int direction,
+      const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_hi(direction) += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -1006,11 +1039,11 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    lengthen(
-      const int direction,
+      const dir_t direction,
       const int ghosts);
 
    /*!
@@ -1023,11 +1056,11 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shorten(
-      const int direction,
+      const dir_t direction,
       const int ghosts);
 
    /*!
@@ -1057,14 +1090,14 @@ public:
     * @param direction
     * @param offset
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shift(
-      const int direction,
+      const dir_t direction,
       const int offset)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       d_lo(direction) += offset;
       d_hi(direction) += offset;
    }
@@ -1113,7 +1146,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
       }
@@ -1279,7 +1312,7 @@ public:
     * @brief Returns true if the BoxId of this Box is locked.
     */
    bool
-   idLocked()
+   idLocked() const
    {
       return d_id_locked;
    }
@@ -1364,7 +1397,7 @@ private:
 
    void
    rotateAboutAxis(
-      const int axis,
+      const dir_t axis,
       const int num_rotations);
 
    /*!
@@ -1388,6 +1421,7 @@ private:
    BlockId d_block_id;
    BoxId d_id;
    bool d_id_locked;
+   mutable boost::tribool d_empty_flag;
 
    /*
     * Array of empty boxes for each dimension.  Preallocated
@@ -1433,6 +1467,7 @@ class BoxIterator
    friend class Box;
 
 public:
+   typedef tbox::Dimension::dir_t dir_t;
    /**
     * Copy constructor for the box iterator.
     */
@@ -1485,7 +1520,7 @@ public:
    {
       BoxIterator tmp = *this;
       ++d_index(0);
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
+      for (dir_t i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
             ++d_index(i + 1);
@@ -1502,7 +1537,7 @@ public:
    operator ++ ()
    {
       ++d_index(0);
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
+      for (dir_t i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
             ++d_index(i + 1);

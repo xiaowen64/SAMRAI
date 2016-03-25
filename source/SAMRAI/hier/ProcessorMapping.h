@@ -70,7 +70,7 @@ public:
     */
    void
    setMappingSize(
-      const int n);
+      const size_t n);
 
    /**
     * Sets the number of boxes to n.

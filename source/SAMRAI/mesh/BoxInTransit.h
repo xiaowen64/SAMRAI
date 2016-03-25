@@ -50,7 +50,7 @@ struct BoxInTransit {
       const hier::Box& origin):
       d_box(origin),
       d_orig_box(origin),
-      d_boxload(origin.size()) {
+      d_boxload(static_cast<double>(origin.size())) {
    }
 
    /*!
@@ -71,7 +71,7 @@ struct BoxInTransit {
       double load = -1.):
       d_box(box, local_id, rank),
       d_orig_box(other.d_orig_box),
-      d_boxload(load >= 0 ? load : d_box.size()) {
+      d_boxload(load >= 0 ? load : static_cast<double>(d_box.size())) {
    }
 
    /*!

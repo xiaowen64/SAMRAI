@@ -21,20 +21,35 @@ DerivedVisOwnerData::~DerivedVisOwnerData()
 {
 }
 
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+#ifdef HAVE_HDF5
+int DerivedVisOwnerData::registerVariablesWithPlotter(
+   appu::VisItDataWriter& writer)
+{
+   writer.registerDerivedPlotQuantity("Owner", "SCALAR", this);
+   return 0;
+}
+#endif
+
 bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    double* buffer,
    const hier::Patch& patch,
    const hier::Box& region,
    const std::string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
    NULL_USE(patch);
    NULL_USE(depth_id);
+   NULL_USE(simulation_time);
 
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();
-      int i, size = region.size();
+      size_t i, size = region.size();
       for (i = 0; i < size; ++i) buffer[i] = owner;
    } else {
       // Did not register this name.

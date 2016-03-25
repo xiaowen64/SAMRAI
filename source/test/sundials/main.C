@@ -315,7 +315,7 @@ int main(
             cvode_model.get(),
             uses_preconditioning);
 
-      int neq = 0;
+      size_t neq = 0;
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();

@@ -37,19 +37,19 @@ void SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-   float *, double *, const int&);
+   const float *, double *, const int&);
 void SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-   double *, double *, const int&);
+   const double *, double *, const int&);
 void SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-   int *, double *, const int&);
+   const int *, double *, const int&);
 }
 extern "C" {
 void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
@@ -57,19 +57,19 @@ void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
-   float *, double *, const int&);
+   const float *, double *, const int&);
 void SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
-   double *, double *, const int&);
+   const double *, double *, const int&);
 void SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
-   int *, double *, const int&);
+   const int *, double *, const int&);
 }
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -115,7 +115,8 @@ VisItDataWriter::VisItDataWriter(
    const std::string& dump_directory_name,
    int number_procs_per_file,
    bool is_multiblock):
-   d_dim(dim)
+   d_dim(dim),
+   d_mpi(MPI_COMM_NULL)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(number_procs_per_file == 1);
@@ -128,6 +129,8 @@ VisItDataWriter::VisItDataWriter(
    }
 
    d_object_name = object_name;
+
+   d_mpi.dupCommunicator(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    d_default_derived_writer = 0;
    d_materials_writer = 0;
@@ -1296,10 +1299,9 @@ VisItDataWriter::dumpWriteBarrierBegin()
       proc_before_me = (d_my_file_cluster_number * d_file_cluster_size)
          + d_my_rank_in_file_cluster - 1;
 
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      if (mpi.getSize() > 1) {
+      if (d_mpi.getSize() > 1) {
          tbox::SAMRAI_MPI::Status status;
-         mpi.Recv(x,
+         d_mpi.Recv(x,
             len,
             MPI_INT,
             proc_before_me,
@@ -1312,15 +1314,14 @@ VisItDataWriter::dumpWriteBarrierBegin()
 void
 VisItDataWriter::dumpWriteBarrierEnd()
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int x[1], proc_after_me;
-   int num_procs = mpi.getSize();
+   int num_procs = d_mpi.getSize();
    proc_after_me = (d_my_file_cluster_number * d_file_cluster_size)
       + d_my_rank_in_file_cluster + 1;
    x[0] = 0;
    if (proc_after_me < num_procs) {
-      if (mpi.getSize() > 1) {
-         mpi.Send(x,
+      if (d_mpi.getSize() > 1) {
+         d_mpi.Send(x,
             1,
             MPI_INT,
             proc_after_me,
@@ -1448,7 +1449,6 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Compute max number of patches on this processor.
@@ -1467,8 +1467,8 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
    }
 
    int max_number_local_patches = number_local_patches;
-   if (mpi.getSize() > 1) {
-      mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
+   if (d_mpi.getSize() > 1) {
+      d_mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
    }
 
    /*
@@ -1476,15 +1476,15 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
     * don't want to count processor zero.
     */
    int count_me_in = 0;
-   if (number_local_patches > 0 || mpi.getRank() == VISIT_MASTER)
+   if (number_local_patches > 0 || d_mpi.getRank() == VISIT_MASTER)
       count_me_in = 1;
    d_number_working_slaves = count_me_in;
-   if (mpi.getSize() > 1) {
-      mpi.AllReduce(&d_number_working_slaves, 1, MPI_SUM);
+   if (d_mpi.getSize() > 1) {
+      d_mpi.AllReduce(&d_number_working_slaves, 1, MPI_SUM);
    }
    d_number_working_slaves -= 1;
 
-   if (mpi.getRank() != VISIT_MASTER) {
+   if (d_mpi.getRank() != VISIT_MASTER) {
 
       /*
        * Worker processor:  Allocate an array large enough to hold patch
@@ -1514,7 +1514,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
             VisMaterialsDataStrategy::VISIT_MIXED;
       }
 
-   } else {   // (mpi.getRank() == VISIT_MASTER)
+   } else {   // (d_mpi.getRank() == VISIT_MASTER)
 
       /*
        * Master processor:  allocate array for each plot item to hold
@@ -1580,9 +1580,8 @@ VisItDataWriter::writeHDFFiles(
    std::string dump_dirname;
    tbox::Database* visit_HDFFilePointer;
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   int num_procs = mpi.getSize();
-   int my_proc = mpi.getRank();
+   int num_procs = d_mpi.getSize();
+   int my_proc = d_mpi.getRank();
 
    if (d_file_cluster_size > num_procs) {
       d_file_cluster_size = num_procs;
@@ -1670,7 +1669,8 @@ VisItDataWriter::writeHDFFiles(
       writeVisItVariablesToHDFFile(processor_HDFGroup,
          hierarchy,
          0,
-         hierarchy->getFinestLevelNumber());
+         hierarchy->getFinestLevelNumber(),
+         simulation_time);
       visit_HDFFilePointer->close(); // invokes H5FClose
       delete visit_HDFFilePointer; // deletes tbox::HDFDatabase object
    }
@@ -1744,7 +1744,8 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
    const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarsest_level,
-   int finest_level)
+   int finest_level,
+   double simulation_time)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarsest_level >= 0);
@@ -1785,10 +1786,8 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
          patch_HDFGroup = level_HDFGroup->putDatabase(std::string(temp_buf));
 
          int curr_var_id_ctr = d_var_id_ctr;
-         packRegularAndDerivedData(patch_HDFGroup,
-            hierarchy,
-            ln,
-            *patch);
+         packRegularAndDerivedData(
+            patch_HDFGroup, hierarchy, ln, *patch, simulation_time);
 
          if (d_materials_names.size() > 0) {
             d_var_id_ctr = curr_var_id_ctr;
@@ -1831,12 +1830,11 @@ VisItDataWriter::packRegularAndDerivedData(
    const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   hier::Patch& patch)
+   hier::Patch& patch,
+   double simulation_time)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Loop over variables and write out those that are NOT
@@ -1881,7 +1879,8 @@ VisItDataWriter::packRegularAndDerivedData(
                         patch,
                         patch.getBox(),
                         ipi->d_var_name,
-                        depth_id);
+                        depth_id,
+                        simulation_time);
 
                } else {
 
@@ -1976,7 +1975,7 @@ VisItDataWriter::packRegularAndDerivedData(
                /*
                 * Write min/max summary info
                 */
-               if (mpi.getRank() == VISIT_MASTER) {
+               if (d_mpi.getRank() == VISIT_MASTER) {
                   int gpn = getGlobalPatchNumber(hierarchy,
                         level_number,
                         patch.getLocalId().getValue());
@@ -2138,7 +2137,7 @@ VisItDataWriter::packRegularAndDerivedData(
                /*
                 * Write min/max summary info
                 */
-               if (mpi.getRank() == VISIT_MASTER) {
+               if (d_mpi.getRank() == VISIT_MASTER) {
                   int gpn = getGlobalPatchNumber(hierarchy,
                         level_number,
                         patch.getLocalId().getValue());
@@ -2194,8 +2193,6 @@ VisItDataWriter::packMaterialsData(
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Loop over variables and pull out those that are material variables.
@@ -2470,7 +2467,7 @@ VisItDataWriter::packMaterialsData(
             /*
              * Write min/max summary info
              */
-            if (mpi.getRank() == VISIT_MASTER) {
+            if (d_mpi.getRank() == VISIT_MASTER) {
                int gpn = getGlobalPatchNumber(hierarchy,
                      level_number,
                      patch.getLocalId().getValue());
@@ -2532,8 +2529,6 @@ VisItDataWriter::packSpeciesData(
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Loop over variables and pull out those that are material variables.
@@ -2649,7 +2644,7 @@ VisItDataWriter::packSpeciesData(
             /*
              * Write min/max summary info
              */
-            if (mpi.getRank() == VISIT_MASTER) {
+            if (d_mpi.getRank() == VISIT_MASTER) {
                int gpn = getGlobalPatchNumber(hierarchy,
                      level_number,
                      patch.getLocalId().getValue());
@@ -2762,7 +2757,6 @@ VisItDataWriter::writeSummaryToHDFFile(
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int i, ln, pn;
 
    /*
@@ -2784,7 +2778,7 @@ VisItDataWriter::writeSummaryToHDFFile(
    for (ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
       hierarchy->getPatchLevel(ln)->getBoxes();
    }
-   int my_proc = mpi.getRank();
+   int my_proc = d_mpi.getRank();
    if (my_proc == VISIT_MASTER) {
       char temp_buf[VISIT_NAME_BUFSIZE];
       //sprintf(temp_buf, "/summary.samrai");
@@ -2842,7 +2836,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       basic_HDFGroup->putInteger(key_string, d_time_step_number);
 
       key_string = "number_processors";
-      basic_HDFGroup->putInteger(key_string, mpi.getSize());
+      basic_HDFGroup->putInteger(key_string, d_mpi.getSize());
 
       key_string = "number_file_clusters";
       basic_HDFGroup->putInteger(key_string, d_number_file_clusters);
@@ -3468,8 +3462,6 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-
    /*
     * Compute max number of patches on any processor, and the total number of
     * patches in the problem.
@@ -3489,8 +3481,8 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    }
 
    int max_number_local_patches = number_local_patches;
-   if (mpi.getSize() > 1) {
-      mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
+   if (d_mpi.getSize() > 1) {
+      d_mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
    }
 
    int num_items_to_plot = d_number_visit_variables_plus_depth
@@ -3500,7 +3492,7 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    int message_size = max_number_local_patches
       * static_cast<int>(sizeof(patchMinMaxStruct)) * num_items_to_plot;
 
-   if (mpi.getRank() != VISIT_MASTER) {
+   if (d_mpi.getRank() != VISIT_MASTER) {
 
       /*
        * Worker processor:  send contents of d_worker_min_max array that
@@ -3508,8 +3500,8 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
        * master processor.
        */
       if (number_local_patches > 0) {
-         if (mpi.getSize() > 1) {
-            mpi.Send(d_worker_min_max,
+         if (d_mpi.getSize() > 1) {
+            d_mpi.Send(d_worker_min_max,
                message_size,
                MPI_BYTE,
                VISIT_MASTER,
@@ -3517,7 +3509,7 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
          }
       }
 
-   } else { // (mpi.getRank() == VISIT_MASTER)
+   } else { // (d_mpi.getRank() == VISIT_MASTER)
 
       /*
        * Master processor:  Receive the min/max information sent by the
@@ -3541,9 +3533,9 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
       int number_msgs_recvd = 0;
       while (number_msgs_recvd < d_number_working_slaves) {
          int sending_proc = -1;
-         if (mpi.getSize() > 1) {
+         if (d_mpi.getSize() > 1) {
             tbox::SAMRAI_MPI::Status status;
-            mpi.Recv(buf,
+            d_mpi.Recv(buf,
                message_size,
                MPI_BYTE,
                MPI_ANY_SOURCE,
@@ -3938,10 +3930,10 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
    switch (data_type) {
 
       case VISIT_FLOAT: {
-         float* dat_ptr = 0;
+         const float* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            const boost::shared_ptr<pdat::CellData<float> > fpdata(
-               BOOST_CAST<pdat::CellData<float>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::CellData<float> > fpdata(
+               BOOST_CAST<const pdat::CellData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
@@ -3953,8 +3945,8 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const boost::shared_ptr<pdat::NodeData<float> > fpdata(
-               BOOST_CAST<pdat::NodeData<float>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::NodeData<float> > fpdata(
+               BOOST_CAST<const pdat::NodeData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
@@ -3985,10 +3977,10 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_DOUBLE: {
-         double* dat_ptr = 0;
+         const double* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            const boost::shared_ptr<pdat::CellData<double> > dpdata(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::CellData<double> > dpdata(
+               BOOST_CAST<const pdat::CellData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -3999,8 +3991,8 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const boost::shared_ptr<pdat::NodeData<double> > dpdata(
-               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::NodeData<double> > dpdata(
+               BOOST_CAST<const pdat::NodeData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4030,10 +4022,10 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_INT: {
-         int* dat_ptr = 0;
+         const int* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            const boost::shared_ptr<pdat::CellData<int> > ipdata(
-               BOOST_CAST<pdat::CellData<int>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::CellData<int> > ipdata(
+               BOOST_CAST<const pdat::CellData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 
@@ -4044,8 +4036,8 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const boost::shared_ptr<pdat::NodeData<int> > ipdata(
-               BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::NodeData<int> > ipdata(
+               BOOST_CAST<const pdat::NodeData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 

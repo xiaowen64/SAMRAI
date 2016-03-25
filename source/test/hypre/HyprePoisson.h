@@ -12,8 +12,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-using namespace std;
-
 #if !defined(HAVE_HYPRE)
 
 /*
@@ -45,6 +43,8 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include "boost/shared_ptr.hpp"
+
+using namespace std;
 
 namespace SAMRAI {
 
@@ -139,7 +139,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_id) const;
+      int depth_id,
+      double simulation_time = 0.0) const;
 
    //@}
 

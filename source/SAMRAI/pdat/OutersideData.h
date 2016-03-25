@@ -357,7 +357,7 @@ public:
     *
     * @pre dynamic_cast<const SideOverlap *>(&overlap) != 0
     */
-   virtual int
+   virtual size_t
    getDataStreamSize(
       const hier::BoxOverlap& overlap) const;
 
@@ -495,7 +495,7 @@ public:
     */
    void
    printAxisSide(
-      int side_normal,
+      tbox::Dimension::dir_t side_normal,
       int side,
       const hier::Box& box,
       std::ostream& os = tbox::plog,
@@ -526,7 +526,7 @@ public:
     */
    void
    printAxisSide(
-      int side_normal,
+      tbox::Dimension::dir_t side_normal,
       int side,
       const hier::Box& box,
       int depth,

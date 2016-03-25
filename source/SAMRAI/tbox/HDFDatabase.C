@@ -399,9 +399,10 @@ HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
-   std::vector<std::string> tmp_keys(static_cast<int>(d_keydata.size()));
+   std::vector<std::string> tmp_keys(
+      static_cast<std::vector<std::string>::size_type>(d_keydata.size()));
 
-   int k = 0;
+   size_t k = 0;
    for (std::list<KeyData>::iterator i = d_keydata.begin();
         i != d_keydata.end(); ++i) {
       tmp_keys[k] = i->d_key;
@@ -528,7 +529,7 @@ HDFDatabase::getArraySize(
    herr_t errf;
    NULL_USE(errf);
 
-   int array_size = 0;
+   size_t array_size = 0;
 
    hid_t this_set;
    BEGIN_SUPPRESS_HDF5_WARNINGS;
@@ -551,7 +552,7 @@ HDFDatabase::getArraySize(
       } else {
          nsel = H5Sget_select_npoints(this_space);
       }
-      array_size = int(nsel);
+      array_size = static_cast<size_t>(nsel);
       errf = H5Sclose(this_space);
       TBOX_ASSERT(errf >= 0);
 
@@ -814,7 +815,8 @@ HDFDatabase::getBoolVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<bool> bool_array(static_cast<int>(nsel));
+   std::vector<bool> bool_array(
+      static_cast<std::vector<bool>::size_type>(nsel));
 
    if (nsel > 0) {
       /*
@@ -824,7 +826,7 @@ HDFDatabase::getBoolVector(
        * type.  So we read bools into native integer memory
        * then convert.
        */
-      std::vector<int> data1(static_cast<int>(nsel));
+      std::vector<int> data1(static_cast<std::vector<int>::size_type>(nsel));
       int* locPtr = &data1[0];
       errf = H5Dread(dset,
             H5T_NATIVE_INT,
@@ -997,7 +999,8 @@ HDFDatabase::getDatabaseBoxVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<DatabaseBox> boxVector(static_cast<int>(nsel));
+   std::vector<DatabaseBox> boxVector(
+      static_cast<std::vector<DatabaseBox>::size_type>(nsel));
 
    if (nsel > 0) {
       DatabaseBox* locPtr = &boxVector[0];
@@ -1224,7 +1227,8 @@ HDFDatabase::getCharVector(
 
    nsel = H5Tget_size(dtype);
 
-   std::vector<char> charArray(static_cast<int>(nsel));
+   std::vector<char> charArray(
+      static_cast<std::vector<char>::size_type>(nsel));
 
    if (nsel > 0) {
       char* locPtr = &charArray[0];
@@ -1398,7 +1402,8 @@ HDFDatabase::getComplexVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<dcomplex> complexArray(static_cast<int>(nsel));
+   std::vector<dcomplex> complexArray(
+      static_cast<std::vector<dcomplex>::size_type>(nsel));
 
    if (nsel > 0) {
       dcomplex* locPtr = &complexArray[0];
@@ -1591,7 +1596,8 @@ HDFDatabase::getDoubleVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<double> doubleArray(static_cast<int>(nsel));
+   std::vector<double> doubleArray(
+      static_cast<std::vector<double>::size_type>(nsel));
 
    if (nsel > 0) {
       double* locPtr = &doubleArray[0];
@@ -1748,7 +1754,8 @@ HDFDatabase::getFloatVector(
    TBOX_ASSERT(dspace >= 0);
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<float> floatArray(static_cast<int>(nsel));
+   std::vector<float> floatArray(
+      static_cast<std::vector<float>::size_type>(nsel));
 
    if (nsel > 0) {
       float* locPtr = &floatArray[0];
@@ -1906,7 +1913,7 @@ HDFDatabase::getIntegerVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<int> intArray(static_cast<int>(nsel));
+   std::vector<int> intArray(static_cast<std::vector<int>::size_type>(nsel));
 
    if (nsel > 0) {
       int* locPtr = &intArray[0];
@@ -2100,7 +2107,8 @@ HDFDatabase::getStringVector(
    dsize = H5Tget_size(dtype);
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<std::string> stringArray(static_cast<int>(nsel));
+   std::vector<std::string> stringArray(
+      static_cast<std::vector<std::string>::size_type>(nsel));
 
    if (nsel > 0) {
       char* local_buf = new char[nsel * dsize];
@@ -2108,7 +2116,8 @@ HDFDatabase::getStringVector(
       errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
       TBOX_ASSERT(errf >= 0);
 
-      for (int i = 0; i < static_cast<int>(nsel); ++i) {
+      for (std::vector<std::string>::size_type i = 0;
+           i < static_cast<std::vector<std::string>::size_type>(nsel); ++i) {
          std::string* locPtr = &stringArray[i];
          *locPtr = &local_buf[i * dsize];
       }

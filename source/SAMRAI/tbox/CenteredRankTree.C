@@ -40,6 +40,22 @@ CenteredRankTree::CenteredRankTree():
  ****************************************************************
  */
 CenteredRankTree::CenteredRankTree(
+   const SAMRAI_MPI& mpi,
+   bool make_first_rank_the_root):
+   d_rank(getInvalidRank()),
+   d_parent(getInvalidRank()),
+   d_root_rank(getInvalidRank()),
+   d_num_children(0),
+   d_make_first_rank_the_root(make_first_rank_the_root)
+{
+   setupTreeForContiguousRanks(0, mpi.getSize() - 1, mpi.getRank());
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+CenteredRankTree::CenteredRankTree(
    int first_rank,
    int last_rank,
    int my_rank,

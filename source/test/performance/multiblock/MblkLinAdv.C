@@ -64,8 +64,8 @@ using namespace std;
 #define BOGUS_BDRY_DATA (-9999)
 
 // routines for managing boundary data
-#include "SkeletonBoundaryUtilities2.h"
-#include "SkeletonBoundaryUtilities3.h"
+#include "test/testlib/SkeletonBoundaryUtilities2.h"
+#include "test/testlib/SkeletonBoundaryUtilities3.h"
 
 // Depth of the advected variable
 #define DEPTH (1)
@@ -774,7 +774,7 @@ void MblkLinAdv::initializeDataOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      if ((d_data_problem_int == SPHERE)) {
+      if (d_data_problem_int == SPHERE) {
 
          if (d_dim == tbox::Dimension(2)) {
             SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
@@ -1036,7 +1036,7 @@ void MblkLinAdv::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); ++k) {
+         for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -1217,7 +1217,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1541,7 +1541,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 

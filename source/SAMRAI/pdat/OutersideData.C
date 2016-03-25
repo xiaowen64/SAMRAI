@@ -46,14 +46,14 @@ OutersideData<TYPE>::OutersideData(
 {
    TBOX_ASSERT(depth > 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box& ghosts = getGhostBox();
       const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
       hier::Box outersidebox = sidebox;
-      outersidebox.upper(d) = sidebox.lower(d);
+      outersidebox.setUpper(d, sidebox.lower(d));
       d_data[d][0].reset(new ArrayData<TYPE>(outersidebox, depth));
-      outersidebox.lower(d) = sidebox.upper(d);
-      outersidebox.upper(d) = sidebox.upper(d);
+      outersidebox.setLower(d, sidebox.upper(d));
+      outersidebox.setUpper(d, sidebox.upper(d));
       d_data[d][1].reset(new ArrayData<TYPE>(outersidebox, depth));
    }
 }
@@ -355,7 +355,7 @@ OutersideData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 OutersideData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -365,8 +365,8 @@ OutersideData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
-   int size = 0;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   size_t size = 0;
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
       size += d_data[d][0]->getDataStreamSize(boxlist, src_offset);
       size += d_data[d][1]->getDataStreamSize(boxlist, src_offset);
@@ -454,11 +454,11 @@ OutersideData<TYPE>::getSizeOfData(
    TBOX_ASSERT(depth > 0);
 
    size_t size = 0;
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box lower = SideGeometry::toSideBox(box, d);
       hier::Box upper = SideGeometry::toSideBox(box, d);
-      lower.upper(d) = box.lower(d);
-      upper.lower(d) = box.upper(d);
+      lower.setUpper(d, box.lower(d));
+      upper.setLower(d, box.upper(d));
       size += ArrayData<TYPE>::getSizeOfData(lower, depth);
       size += ArrayData<TYPE>::getSizeOfData(upper, depth);
    }
@@ -561,7 +561,8 @@ OutersideData<TYPE>::print(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   for (int side_normal = 0; side_normal < getDim().getValue(); ++side_normal) {
+   for (tbox::Dimension::dir_t side_normal = 0;
+        side_normal < getDim().getValue(); ++side_normal) {
       os << "Array side normal  = " << side_normal << std::endl;
       for (int side = 0; side < 2; ++side) {
          os << "side = " << ((side == 0) ? "lower" : "upper") << std::endl;
@@ -573,14 +574,14 @@ OutersideData<TYPE>::print(
 template<class TYPE>
 void
 OutersideData<TYPE>::printAxisSide(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    int side,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT(side_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    for (int d = 0; d < d_depth; ++d) {
@@ -592,7 +593,7 @@ OutersideData<TYPE>::printAxisSide(
 template<class TYPE>
 void
 OutersideData<TYPE>::printAxisSide(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    int side,
    const hier::Box& box,
    int depth,
@@ -601,7 +602,7 @@ OutersideData<TYPE>::printAxisSide(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT(side_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    const hier::Box sidebox =

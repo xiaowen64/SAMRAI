@@ -383,7 +383,7 @@ SparseData<BOX_GEOMETRY>::canEstimateStreamSizeFromBox() const
  * getDataStreamSize(overlap)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-int
+size_t
 SparseData<BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -457,7 +457,7 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
       } // for ( ; inames ...
 
       // record the size of the Indexes
-      const int index_size =
+      const size_t index_size =
          d_dim.getValue() * tbox::MessageStream::getSizeof<int>();
       bytes += (num_items * index_size + tbox::MessageStream::getSizeof<int>());
 
@@ -471,7 +471,7 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
          * tbox::MessageStream::getSizeof<int>();
 
    } // if (num_item > 0)
-   return static_cast<int>(bytes);
+   return bytes;
 }
 
 /**********************************************************************

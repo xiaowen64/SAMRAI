@@ -333,6 +333,23 @@ public:
       return tmp;
    }
 
+   /**
+    * @brief Return the component-wise minimum of two integer vector objects.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
+   void
+   min(
+      const Index& rhs)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         if (rhs[i] < (*this)[i]) {
+            (*this)[i] = rhs[i];
+         }
+      }
+   }
+
    /*!
     * @brief Coarsen the Index by a given ratio.
     *
@@ -419,6 +436,22 @@ public:
       for (int d = 0; d < dim.getValue(); ++d) {
          tmp(d) = coarsen(index(d), ratio(d));
       }
+      return tmp;
+   }
+
+   /**
+    * @brief Utility function to take the minimum of two Index objects.
+    *
+    * @pre a.getDim() == b.getDim()
+    */
+   static Index
+   min(
+      const Index& a,
+      const Index& b)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
+      Index tmp = a;
+      tmp.min(b);
       return tmp;
    }
 

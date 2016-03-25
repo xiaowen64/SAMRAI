@@ -228,7 +228,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                        ni != niend; ++ni) {
                      if (!patch_edge_box.contains(*ni)) {
                         bool use_index = true;
-                        for (int n = 0; n < d_dim.getValue(); ++n) {
+                        for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                            if (axis != n &&
                                edge_bdry[eb].getBox().numberCells(n) == 1) {
                               if ((*ni)(n) == plower(n) || (*ni)(n) ==
@@ -276,7 +276,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                        ni != niend; ++ni) {
                      if (!patch_edge_box.contains(*ni)) {
                         bool use_index = true;
-                        for (int n = 0; n < d_dim.getValue(); ++n) {
+                        for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                            if (axis != n &&
                                face_bdry[fb].getBox().numberCells(n) == 1) {
                               if ((*ni)(n) == plower(n) || (*ni)(n) ==
@@ -316,9 +316,6 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(patch_blk_id);
-
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
@@ -340,7 +337,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
          for (pdat::EdgeIterator ni(pdat::EdgeGeometry::begin(sing_fill_box, axis));
               ni != niend; ++ni) {
             bool use_index = true;
-            for (int n = 0; n < d_dim.getValue(); ++n) {
+            for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                if (axis != n && bbox.getBox().numberCells(n) == 1) {
                   if ((*ni)(n) == plower(n) || (*ni)(n) == pupper(n)) {
                      use_index = false;
@@ -376,11 +373,11 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);
 
-               std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::
-               const_iterator itr = neighbors.find(encon_blk_id);
-               if (itr != neighbors.end()) {
-                  rotation = itr->second.getRotationIdentifier();
-                  offset = itr->second.getShift();
+               hier::BaseGridGeometry::ConstNeighborIterator itr =
+                  grid_geometry->find(patch_blk_id, encon_blk_id);
+               if (itr != grid_geometry->end(patch_blk_id)) {
+                  rotation = (*itr).getRotationIdentifier();
+                  offset = (*itr).getShift();
                }
 
                offset *= patch.getPatchGeometry()->getRatio();
@@ -425,7 +422,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                      for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                           ci != ciend; ++ci) {
                         bool use_index = true;
-                        for (int n = 0; n < d_dim.getValue(); ++n) {
+                        for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                            if (axis != n && bbox.getBox().numberCells(n) == 1) {
                               if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                                  use_index = false;
@@ -466,7 +463,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
             for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
-               for (int n = 0; n < d_dim.getValue(); ++n) {
+               for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                   if (axis != n && bbox.getBox().numberCells(n) == 1) {
                      if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                         use_index = false;
@@ -501,7 +498,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
             for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
-               for (int n = 0; n < d_dim.getValue(); ++n) {
+               for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                   if (axis != n && bbox.getBox().numberCells(n) == 1) {
                      if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                         use_index = false;
@@ -553,10 +550,11 @@ bool EdgeMultiblockTest::verifyResults(
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-      hierarchy->getGridGeometry()->getNeighbors(block_id);
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+      hierarchy->getGridGeometry());
+
    hier::BoxContainer singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
+      grid_geom->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -613,16 +611,18 @@ bool EdgeMultiblockTest::verifyResults(
                pdat::EdgeGeometry::toEdgeBox(*si, axis));
          }
 
-         for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
-              ne(neighbors.begin()); ne != neighbors.end(); ++ne) {
+         for (hier::BaseGridGeometry::ConstNeighborIterator ne(
+                 grid_geom->begin(block_id));
+              ne != grid_geom->end(block_id); ++ne) {
 
-            if (ne->second.isSingularity()) {
+            const hier::BaseGridGeometry::Neighbor& nbr = *ne;
+            if (nbr.isSingularity()) {
                continue;
             }
 
-            correct = ne->second.getBlockId().getBlockValue();
+            correct = nbr.getBlockId().getBlockValue();
 
-            hier::BoxContainer neighbor_ghost(ne->second.getTransformedDomain());
+            hier::BoxContainer neighbor_ghost(nbr.getTransformedDomain());
 
             hier::BoxContainer neighbor_edge_ghost;
             for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
@@ -689,16 +689,18 @@ bool EdgeMultiblockTest::verifyResults(
                correct = 0.0;
 
                int num_sing_neighbors = 0;
-               for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
-                    ns(neighbors.begin()); ns != neighbors.end(); ++ns) {
-                  if (ns->second.isSingularity()) {
+               for (hier::BaseGridGeometry::ConstNeighborIterator ns(
+                       grid_geom->begin(block_id));
+                    ns != grid_geom->end(block_id); ++ns) {
+                  const hier::BaseGridGeometry::Neighbor& nbr = *ns;
+                  if (nbr.isSingularity()) {
                      hier::BoxContainer neighbor_ghost(
-                        ns->second.getTransformedDomain());
+                        nbr.getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         ++num_sing_neighbors;
-                        correct += ns->second.getBlockId().getBlockValue();
+                        correct += nbr.getBlockId().getBlockValue();
                      }
                   }
                }
@@ -728,7 +730,7 @@ bool EdgeMultiblockTest::verifyResults(
                   if (!patch_edge_box.contains(*ci)) {
 
                      bool use_index = true;
-                     for (int n = 0; n < d_dim.getValue(); ++n) {
+                     for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                         if (axis != n && bdry[k].getBox().numberCells(n) ==
                             1) {
                            if ((*ci)(n) == patch_edge_box.lower() (n) ||

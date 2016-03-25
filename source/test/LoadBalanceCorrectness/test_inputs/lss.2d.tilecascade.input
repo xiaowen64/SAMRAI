@@ -78,7 +78,6 @@ BergerRigoutsos {
 CascadePartitioner {
   flexible_load_tolerance = 0.05
   tile_size = 10, 10
-  DEV_balance_intermediate_groups = TRUE
   // Debugging options
   DEV_check_map = TRUE
   DEV_check_connectivity = FALSE

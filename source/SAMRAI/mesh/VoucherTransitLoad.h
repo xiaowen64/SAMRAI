@@ -113,6 +113,18 @@ public:
       LoadType high_load);
 
    /*!
+    * @copydoc TransitLoad::assignToLocal()
+    *
+    * This method uses communication to redeem vouchers.
+    */
+   void
+   assignToLocal(
+      hier::BoxLevel& balanced_box_level,
+      const hier::BoxLevel& unbalanced_box_level,
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
+
+   /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
     *
     * This method uses communication to redeem vouchers and up the map.
@@ -122,7 +134,8 @@ public:
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector& balanced_to_unbalanced,
       hier::MappingConnector& unbalanced_to_balanced,
-      double flexible_load_tol = 0.0);
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    //@}
 
@@ -147,6 +160,19 @@ public:
       int detail_depth = 1) const;
 
 private:
+   /*!
+    * @brief Real implementation of assignToLocalAndPopulateMaps, with
+    * slightly modified interface.
+    */
+   void
+   assignToLocalAndPopulateMaps(
+      hier::BoxLevel& balanced_box_level,
+      hier::MappingConnector* balanced_to_unbalanced,
+      hier::MappingConnector* unbalanced_to_balanced,
+      const hier::BoxLevel& unbalanced_box_level,
+      double flexible_load_tol,
+      const tbox::SAMRAI_MPI& alt_mpi);
+
    //! @brief MPI tag for demand communication.
    static const int VoucherTransitLoad_DEMANDTAG = 3;
    //! @brief MPI tag for supply communication.
@@ -539,6 +565,7 @@ private:
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_adjust_load;
       boost::shared_ptr<tbox::Timer> t_raise_dst_load;
+      boost::shared_ptr<tbox::Timer> t_assign_to_local;
       boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    };
 

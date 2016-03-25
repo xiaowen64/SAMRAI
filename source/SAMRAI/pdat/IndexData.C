@@ -36,7 +36,7 @@ const int IndexData<TYPE, BOX_GEOMETRY>::PDAT_INDEXDATA_VERSION = 1;
 template<class TYPE, class BOX_GEOMETRY>
 IndexDataNode<TYPE, BOX_GEOMETRY>::IndexDataNode(
    const hier::Index& index,
-   const int offset,
+   const size_t offset,
    TYPE& t,
    IndexDataNode<TYPE, BOX_GEOMETRY>* n,
    IndexDataNode<TYPE, BOX_GEOMETRY>* p):
@@ -346,7 +346,7 @@ IndexData<TYPE, BOX_GEOMETRY>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-int
+size_t
 IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -371,9 +371,9 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
          }
       }
    }
-   const int index_size = d_dim.getValue() * tbox::MessageStream::getSizeof<int>();
+   const size_t index_size = d_dim.getValue() * tbox::MessageStream::getSizeof<int>();
    bytes += (num_items * index_size + tbox::MessageStream::getSizeof<int>());
-   return static_cast<int>(bytes);
+   return bytes;
 }
 
 /*
@@ -491,8 +491,8 @@ IndexData<TYPE, BOX_GEOMETRY>::appendItem(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    if (isElement(offset)) {
       removeItem(offset);
@@ -514,8 +514,8 @@ IndexData<TYPE, BOX_GEOMETRY>::appendItemPointer(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    if (isElement(offset)) {
       removeItem(offset);
@@ -532,8 +532,8 @@ IndexData<TYPE, BOX_GEOMETRY>::addItem(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    if (isElement(offset)) {
       removeItem(offset);
@@ -554,8 +554,8 @@ IndexData<TYPE, BOX_GEOMETRY>::addItemPointer(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    if (isElement(offset)) {
       removeItem(offset);
@@ -572,8 +572,8 @@ IndexData<TYPE, BOX_GEOMETRY>::replaceAddItem(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* node = d_data[offset];
 
@@ -602,8 +602,8 @@ IndexData<TYPE, BOX_GEOMETRY>::replaceAddItemPointer(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* node = d_data[offset];
 
@@ -628,8 +628,8 @@ IndexData<TYPE, BOX_GEOMETRY>::replaceAppendItem(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* node = d_data[offset];
 
@@ -658,8 +658,8 @@ IndexData<TYPE, BOX_GEOMETRY>::replaceAppendItemPointer(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* node = d_data[offset];
 
@@ -683,8 +683,8 @@ IndexData<TYPE, BOX_GEOMETRY>::removeItem(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
    TBOX_ASSERT(hier::PatchData::getGhostBox().contains(index));
 
-   int offset = hier::PatchData::getGhostBox().offset(index);
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   size_t offset = hier::PatchData::getGhostBox().offset(index);
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    removeItem(offset);
 }
@@ -692,9 +692,9 @@ IndexData<TYPE, BOX_GEOMETRY>::removeItem(
 template<class TYPE, class BOX_GEOMETRY>
 void
 IndexData<TYPE, BOX_GEOMETRY>::removeItem(
-   const int offset)
+   const size_t offset)
 {
-   TBOX_ASSERT(offset >= 0 && offset <= hier::PatchData::getGhostBox().size());
+   TBOX_ASSERT(offset <= hier::PatchData::getGhostBox().size());
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* node = d_data[offset];
 
@@ -712,7 +712,7 @@ template<class TYPE, class BOX_GEOMETRY>
 void
 IndexData<TYPE, BOX_GEOMETRY>::addItemToList(
    const hier::Index& index,
-   const int offset,
+   const size_t offset,
    TYPE& item)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
@@ -742,7 +742,7 @@ template<class TYPE, class BOX_GEOMETRY>
 void
 IndexData<TYPE, BOX_GEOMETRY>::appendItemToList(
    const hier::Index& index,
-   const int offset,
+   const size_t offset,
    TYPE& item)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, index);
@@ -795,7 +795,7 @@ IndexData<TYPE, BOX_GEOMETRY>::removeNodeFromList(
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-int
+size_t
 IndexData<TYPE, BOX_GEOMETRY>::getNumberOfItems() const
 {
    return d_number_items;
@@ -871,7 +871,7 @@ IndexData<TYPE, BOX_GEOMETRY>::isElement(
 template<class TYPE, class BOX_GEOMETRY>
 bool
 IndexData<TYPE, BOX_GEOMETRY>::isElement(
-   int offset) const
+   size_t offset) const
 {
    return d_data[offset] != 0;
 }

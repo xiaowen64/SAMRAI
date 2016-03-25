@@ -205,7 +205,7 @@ void CommGraphWriter::writeFullGraphToTextStream(
          (void *)ostr.getBufferStart(),
          int(ostr.getCurrentSize()),
          MPI_CHAR,
-         (record.d_mpi.getRank() == d_root_rank ? &tmpbuf[0] : NULL),
+         (record.d_mpi.getRank() == d_root_rank ? &tmpbuf[0] : 0),
          int(record.d_mpi.getRank() == d_root_rank ? ostr.getCurrentSize() : 0),
          MPI_CHAR,
          d_root_rank);

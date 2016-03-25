@@ -61,7 +61,7 @@ namespace mesh {
  *   Tile size when using tile mode.  Tile mode restricts box cuts
  *   to tile boundaries.  Default is 1, which is equivalent to no restriction.
  *
- *   - \b max_cycle_spread_procs
+ *   - \b max_spread_procs
  *   This parameter limits how many processes may receive the load of one
  *   process in a load distribution cycle.  If a process has too much
  *   initial load, this limit causes the load to distribute the load over
@@ -95,7 +95,7 @@ namespace mesh {
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
- *     <td>max_cycle_spread_procs</td>
+ *     <td>max_spread_procs</td>
  *     <td>int</td>
  *     <td>500</td>
  *     <td> > 1</td>
@@ -741,7 +741,7 @@ private:
    hier::IntVector d_tile_size;
 
    //! @brief Max number of processes the a single process may spread load to per cycle.
-   int d_max_cycle_spread_procs;
+   int d_max_spread_procs;
 
    //! @brief Whether to move load via vouchers.
    bool d_voucher_mode;

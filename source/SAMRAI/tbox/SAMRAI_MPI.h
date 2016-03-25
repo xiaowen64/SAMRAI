@@ -26,8 +26,8 @@
  * These are defined in the global namespace because that's where MPI
  * defines them.  It does not matter what values these take because
  * they are not used.  (They are just place holders to let code
- * compile without MPI without adding excessive preprocessor guards to
- * the code.)
+ * compile without MPI without requiring excessive preprocessor guards
+ * in the code.)
  *
  * This is not a complete set.  Developers should add as needed to extend
  * SAMRAI_MPI's functionality.
@@ -257,6 +257,9 @@ public:
     * be automatically freed.  To manually free communicators, see
     * freeCommunicator().
     *
+    * If SAMRAI isn't configured with MPI, the duplicate is an
+    * identical copy.
+    *
     * @param[in] other  Contains the communicator to be duplicated.
     *
     */
@@ -271,6 +274,47 @@ public:
     */
    void
    freeCommunicator();
+
+   /*!
+    * @brief Compare with another SAMRAI_MPI's communicator.
+    *
+    * If MPI is enabled, compare using Comm_compare, and return the result.
+    * Otherwise, return MPI_IDENT if the two communicators are the same
+    * and MPI_CONGRUENT if they are not.  (No other choice makes sense
+    * when MPI is disabled.)
+    *
+    * Performance of this method depends on underlying MPI implementation
+    * and may not scale.
+    */
+   int
+   compareCommunicator(
+      const SAMRAI_MPI& other) const;
+
+   /*!
+    * @brief Whether the communicator is MPI_COMM_NULL.
+    */
+   bool hasNullCommunicator() const
+   {
+      return d_comm == MPI_COMM_NULL;
+   }
+
+   /*!
+    * @brief Whether the communicator is congruent with another's.
+    *
+    * Performance of this method depends on underlying MPI implementation
+    * and may not scale.
+    */
+   bool isCongruentWith(const SAMRAI_MPI& other) const
+   {
+#ifdef HAVE_MPI
+      int compare_result = compareCommunicator(other);
+      return compare_result == MPI_CONGRUENT || compare_result == MPI_IDENT;
+
+#else
+      return d_comm != MPI_COMM_NULL && d_comm == other.d_comm;
+
+#endif
+   }
 
    /*!
     * @brief Assignment operator.
@@ -585,6 +629,14 @@ public:
       int recvtag,
       Status* status) const;
 
+   int
+   Scan(
+      void* sendbuf,
+      void* recvbuf,
+      int count,
+      Datatype datatype,
+      Op op) const;
+
    //@}
 
    //@{
@@ -690,6 +742,29 @@ public:
       int* x,
       int count,
       int tag) const;
+
+   /*!
+    * @brief Check whether there a message waiting to be received.
+    *
+    * This is a convenience (non-essential) interface for use in
+    * debugging communication code.  It checks whether there are any
+    * waiting to be received.  It uses a non-blocking check; a false
+    * doesn't mean no messages are coming; it means no messages have
+    * arrived.  The checking includes barriers, making this a
+    * collective operation.
+    *
+    * @param[in,out] status
+    * @param[in] source
+    * @param[in] tag
+    *
+    * @return Whether any messages matching the source and tag are
+    * waiting to be received.
+    */
+   bool
+   hasReceivableMessage(
+      Status* status = 0,
+      int source = MPI_ANY_SOURCE,
+      int tag = MPI_ANY_TAG) const;
 
    // @}
 

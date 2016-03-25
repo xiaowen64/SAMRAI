@@ -85,7 +85,7 @@ private:
    enum Position { Lower = 0, Upper = 1 };
 
    /*
-    * Static integer constants.  Tags are for isolating messages
+    * Static integer constants.  Tags are for distinguishing messages
     * from different phases of the algorithm.
     */
    static const int CascadePartitionerTree_TAG_InfoExchange0 = 1000;
@@ -110,7 +110,7 @@ private:
    makeChildren();
 
    /*!
-    * @brief Combine near and far data for children group, to compute
+    * @brief Combine near and far data for children group to compute
     * work-related data for this group.
     */
    void
@@ -132,9 +132,10 @@ private:
     * @brief Try to supply the requested amount of work by removing
     * it from this group, and return the (estimated) amount supplied.
     *
-    * The work supplied is an estimate because the group almost always
-    * contains remote ranks whose exact actions are not known.
-    * Single-process groups set aside any work it personally gives up.
+    * The return value is an estimate of the supplied work, because
+    * the group almost always contains remote ranks whose exact
+    * actions are not known.  Single-process groups set aside any work
+    * it personally gives up.
     *
     * @param work_requested
     *
@@ -159,13 +160,19 @@ private:
    recomputeLeafData();
 
    /*!
-    * @brief Reset obligation recursively for all descendents.
-    *
-    * @param avg_load Average per-process load in the group.
+    * @brief Reset obligation recursively for all descendents, based
+    * on given average load.
     */
    void
    resetObligation(
       double avg_load);
+
+   /*!
+    * @brief Compute interval for updating Connector during load
+    * distribution.
+    */
+   double
+   computeConnectorUpdateInterval() const;
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
    const CascadePartitioner* d_common;
@@ -202,7 +209,7 @@ private:
    /*!
     * @brief Lower and upper children branches.
     *
-    * Children exist iff this is a near group and not a leaf.
+    * Children are allocated iff this is a near group and not a leaf.
     */
    CascadePartitionerTree* d_children[2];
 
@@ -220,7 +227,7 @@ private:
    //@{
    //! @name Work measures
 
-   //! @brief Estimated amount of work in this branch.
+   //! @brief Estimated or actual amount of work in this branch.
    double d_work;
 
    //! @brief Amount of work the group obligated to have.

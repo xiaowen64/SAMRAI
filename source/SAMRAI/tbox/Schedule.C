@@ -65,7 +65,7 @@ Schedule::Schedule():
    d_second_tag(s_default_second_tag),
    d_first_message_length(s_default_first_message_length),
    d_unpack_in_deterministic_order(false),
-   d_object_timers(NULL)
+   d_object_timers(0)
 {
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
@@ -177,10 +177,22 @@ Schedule::getNumRecvTransactions(
 void
 Schedule::communicate()
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+      TBOX_ERROR("Schedule::communicate: Errant message detected before beginCommunication().");
+   }
+#endif
+
    d_object_timers->t_communicate->start();
    beginCommunication();
    finalizeCommunication();
    d_object_timers->t_communicate->stop();
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+      TBOX_ERROR("Schedule::communicate: Errant message detected after finalizeCommunication().");
+   }
+#endif
 }
 
 /*
@@ -428,7 +440,7 @@ Schedule::processCompletedCommunications()
          completed_comm.yankFromCompletionQueue();
 
          MessageStream incoming_stream(
-            completed_comm.getRecvSize() * sizeof(char),
+            static_cast<size_t>(completed_comm.getRecvSize()) * sizeof(char),
             MessageStream::Read,
             completed_comm.getRecvData(),
             false /* don't use deep copy */);
@@ -466,7 +478,7 @@ Schedule::processCompletedCommunications()
             const int sender = completed_comm->getPeerRank();
 
             MessageStream incoming_stream(
-               completed_comm->getRecvSize() * sizeof(char),
+               static_cast<size_t>(completed_comm->getRecvSize()) * sizeof(char),
                MessageStream::Read,
                completed_comm->getRecvData(),
                false /* don't use deep copy */);

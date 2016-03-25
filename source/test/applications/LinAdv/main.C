@@ -44,7 +44,7 @@
 // Classes for run-time plotting and autotesting.
 
 #if (TESTING == 1)
-#include "AutoTester.h"
+#include "test/testlib/AutoTester.h"
 #endif
 
 #include "boost/shared_ptr.hpp"
@@ -370,6 +370,7 @@ int main(
                input_db->getDatabaseWithDefault(
                   "BergerRigoutsos",
                   boost::shared_ptr<tbox::Database>())));
+         box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
             new mesh::TreeLoadBalancer(

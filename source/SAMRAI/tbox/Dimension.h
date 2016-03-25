@@ -43,6 +43,9 @@ class DatabaseBox;
 class Dimension
 {
 public:
+   //! @brief Primitive type for direction or dimension.
+   typedef unsigned short int dir_t;
+
    /**
     * Constructor for Dimension, object is built using the specified dimension
     *
@@ -178,7 +181,7 @@ private:
       return *this;
    }
 
-   unsigned short d_dim;
+   dir_t d_dim;
 };
 
 }

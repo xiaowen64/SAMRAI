@@ -47,11 +47,13 @@ OuternodeData<TYPE>::OuternodeData(
 
    const tbox::Dimension& dim(box.getDim());
 
-   for (int d = 0; d < dim.getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
       hier::Box nodebox = NodeGeometry::toNodeBox(box);
 
-      for (int dh = d + 1; dh < dim.getValue(); ++dh) {
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
+           dh < dim.getValue();
+           ++dh) {
 
          /*
           * For directions higher than d, narrow the box down to avoid
@@ -64,18 +66,18 @@ OuternodeData<TYPE>::OuternodeData(
           *          Y--Y--Y
           *         node box
           */
-         nodebox.lower(dh) += 1;
-         nodebox.upper(dh) -= 1;
+         nodebox.setLower(dh, nodebox.lower(dh) + 1);
+         nodebox.setUpper(dh, nodebox.upper(dh) - 1);
       }
 
       hier::Box outernodebox = nodebox;
-      outernodebox.upper(d) = nodebox.lower(d);
-      outernodebox.lower(d) = nodebox.lower(d);
+      outernodebox.setUpper(d, nodebox.lower(d));
+      outernodebox.setLower(d, nodebox.lower(d));
       d_data[d][0].reset(new ArrayData<TYPE>(outernodebox, depth));
 
       outernodebox = nodebox;
-      outernodebox.lower(d) = nodebox.upper(d);
-      outernodebox.upper(d) = nodebox.upper(d);
+      outernodebox.setLower(d, nodebox.upper(d));
+      outernodebox.setUpper(d, nodebox.upper(d));
       d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
 
    }
@@ -462,7 +464,7 @@ OuternodeData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 OuternodeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -470,10 +472,10 @@ OuternodeData<TYPE>::getDataStreamSize(
 
    TBOX_ASSERT(t_overlap != 0);
 
-   int size = 0;
+   size_t size = 0;
    const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       size += d_data[d][0]->getDataStreamSize(boxlist, src_offset);
       size += d_data[d][1]->getDataStreamSize(boxlist, src_offset);
    }
@@ -597,24 +599,26 @@ OuternodeData<TYPE>::getSizeOfData(
    TBOX_ASSERT(depth > 0);
 
    size_t size = 0;
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box loc0 = NodeGeometry::toNodeBox(box);
       hier::Box loc1 = NodeGeometry::toNodeBox(box);
-      loc0.upper(d) = box.lower(d);
-      loc0.lower(d) = box.lower(d);
-      loc1.lower(d) = box.upper(d);
-      loc1.upper(d) = box.upper(d);
+      loc0.setUpper(d, box.lower(d));
+      loc0.setLower(d, box.lower(d));
+      loc1.setLower(d, box.upper(d));
+      loc1.setUpper(d, box.upper(d));
 
-      for (int dh = d + 1; dh < box.getDim().getValue(); ++dh) {
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
+           dh < box.getDim().getValue();
+           ++dh) {
 
          /*
           * For directions higher than d, narrow the box down to avoid
           * representing edge and corner nodes multiple times.
           */
-         loc0.lower(dh) += 1;
-         loc0.upper(dh) -= 1;
-         loc1.lower(dh) += 1;
-         loc1.upper(dh) -= 1;
+         loc0.setLower(dh, loc0.lower(dh) + 1);
+         loc0.setUpper(dh, loc0.upper(dh) - 1);
+         loc1.setLower(dh, loc1.lower(dh) + 1);
+         loc1.setUpper(dh, loc1.upper(dh) - 1);
       }
       size += ArrayData<TYPE>::getSizeOfData(loc0, depth)
          + ArrayData<TYPE>::getSizeOfData(loc1, depth);
@@ -634,10 +638,10 @@ OuternodeData<TYPE>::getSizeOfData(
 template<class TYPE>
 hier::Box
 OuternodeData<TYPE>::getDataBox(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    int side)
 {
-   if (face_normal < 0 || face_normal >= getDim().getValue() || side < 0 || side > 1) {
+   if (face_normal >= getDim().getValue() || side < 0 || side > 1) {
       TBOX_ERROR("Bad values for face_normal and/or side in\n"
          "OuternodeData<dim>::getDataBox().\n");
    }
@@ -649,24 +653,26 @@ OuternodeData<TYPE>::getDataBox(
    hier::Box databox = NodeGeometry::toNodeBox(getBox());
    const hier::IntVector& ghosts = getGhostCellWidth();
 
-   for (int dh = face_normal + 1; dh < getDim().getValue(); ++dh) {
+   for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(face_normal + 1);
+        dh < getDim().getValue();
+        ++dh) {
 
       /*
        * For directions higher than d, narrow the box down to avoid
        * representing edge and corner nodes multiple times.
        */
-      databox.lower(dh) += 1;
-      databox.upper(dh) -= 1;
+      databox.setLower(dh, databox.lower(dh) + 1);
+      databox.setUpper(dh, databox.upper(dh) - 1);
    }
 
    if (side == 0) {
-      databox.upper(face_normal) = databox.lower(face_normal);
-      databox.lower(face_normal) = databox.lower(face_normal)
-         - ghosts(face_normal);
+      databox.setUpper(face_normal, databox.lower(face_normal));
+      databox.setLower(face_normal,
+         databox.lower(face_normal) - ghosts(face_normal));
    } else { // side == 1
-      databox.lower(face_normal) = databox.upper(face_normal);
-      databox.upper(face_normal) = databox.upper(face_normal)
-         + ghosts(face_normal);
+      databox.setLower(face_normal, databox.upper(face_normal));
+      databox.setUpper(face_normal,
+         databox.upper(face_normal) + ghosts(face_normal));
    }
    return databox;
 }

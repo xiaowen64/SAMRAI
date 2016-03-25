@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/AssumedPartition.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -44,8 +45,6 @@ int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
-
 tbox::StartupShutdownManager::Handler
 OverlapConnectorAlgorithm::s_initialize_finalize_handler(
    OverlapConnectorAlgorithm::initializeCallback,
@@ -60,7 +59,9 @@ OverlapConnectorAlgorithm::s_initialize_finalize_handler(
  */
 
 OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
-   d_object_timers(NULL),
+   d_mpi(MPI_COMM_NULL),
+   d_mpi_is_exclusive(false),
+   d_object_timers(0),
    d_print_steps(s_print_steps == 'y'),
    d_barrier_before_communication(false),
    d_sanity_check_method_preconditions(false),
@@ -77,6 +78,30 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
 
 OverlapConnectorAlgorithm::~OverlapConnectorAlgorithm()
 {
+   if (d_mpi_is_exclusive) {
+      d_mpi.freeCommunicator();
+      d_mpi_is_exclusive = false;
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void OverlapConnectorAlgorithm::setSAMRAI_MPI(
+   const tbox::SAMRAI_MPI& mpi,
+   bool make_duplicate)
+{
+   if (d_mpi_is_exclusive) {
+      d_mpi.freeCommunicator();
+      d_mpi_is_exclusive = false;
+   }
+   if (make_duplicate) {
+      d_mpi.dupCommunicator(mpi);
+      d_mpi_is_exclusive = true;
+   } else {
+      d_mpi = mpi;
+   }
 }
 
 /*
@@ -388,6 +413,187 @@ OverlapConnectorAlgorithm::findOverlaps(
 
 /*
  ***********************************************************************
+ * Find overlaps using the assumed partition algorithm.  In SAMRAI
+ * terms, we create a center BoxLevel from the assumed partition,
+ * connect the base and head BoxLevels to it, then bridge across the
+ * assumed partition center to get base<==>head.
+ *
+ * 1. Get bounding boxes for base or head, which ever has smaller
+ * bounding boxes.
+ *
+ * 2. Create a reasonably balanced center BoxLevel from an
+ * AssumedPartition of the bounding boxes.
+ *
+ * 3. Populate head--->center and base--->center.
+ *
+ * 4. Get transposes center--->head and center--->base.  This is
+ * implemented in the Connector's computeTransposeOf() method.
+ *
+ * 5. Bridge base<==>center<==>head.
+ ***********************************************************************
+ */
+void
+OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
+   Connector& conn) const
+{
+   if (d_print_steps) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: entered.\n";
+   }
+   d_object_timers->t_find_overlaps_assumed_partition->start();
+
+   const BoxLevel& base = conn.getBase();
+   const BoxLevel& head = conn.getHead();
+   const BoxContainer& head_boxes = head.getBoxes();
+   const BoxContainer& base_boxes = base.getBoxes();
+
+   const IntVector& width_in_base_resolution = conn.getConnectorWidth();
+   const IntVector width_in_head_resolution =
+      Connector::convertHeadWidthToBase(head.getRefinementRatio(),
+         base.getRefinementRatio(),
+         width_in_base_resolution);
+
+   const tbox::Dimension& dim = base.getDim();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? base.getMPI() : d_mpi;
+   const boost::shared_ptr<const BaseGridGeometry>& geom = base.getGridGeometry();
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+      TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition: not starting\n"
+         << "clean of receivable MPI messages.");
+   }
+
+   if (d_sanity_check_method_preconditions) {
+      if (!d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(base.getMPI())) {
+         TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition input error: Input\n"
+            << "has SAMRAI_MPI that is incongruent with OverlapConnectorAlgorithm's.\n"
+            << "See OverlapConnectorAlgorithm::setSAMRAI_MPI.\n");
+      }
+   }
+
+   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStart();
+
+   /*
+    * Set up center BoxLevel.  We can use either the base or head to
+    * construct the center.  We choose the smaller one because we
+    * don't need to cover the bigger region.  There are no overlaps
+    * away from the smaller BoxLevel anyway.
+    */
+   BoxContainer base_bounding_boxes, head_bounding_boxes;
+   size_t base_bounding_cell_count = 0, head_bounding_cell_count = 0;
+   for (int bn = 0; bn < geom->getNumberBlocks(); ++bn) {
+      base_bounding_boxes.push_back(base.getGlobalBoundingBox(bn));
+      head_bounding_boxes.push_back(head.getGlobalBoundingBox(bn));
+      base_bounding_cell_count += base_bounding_boxes.back().size();
+      head_bounding_cell_count += head_bounding_boxes.back().size();
+   }
+   const AssumedPartition center_ap(
+      head_bounding_cell_count <
+      base_bounding_cell_count ? head_bounding_boxes : base_bounding_boxes,
+      0,
+      mpi.getSize());
+   base_bounding_boxes.clear();
+   head_bounding_boxes.clear();
+
+   BoxContainer center_boxes;
+   center_ap.getAllBoxes(center_boxes, mpi.getRank());
+   const IntVector& center_refinement_ratio = head_bounding_cell_count < base_bounding_cell_count ?
+      head.getRefinementRatio() : base.getRefinementRatio();
+   const BoxLevel center(center_boxes, center_refinement_ratio, geom, mpi);
+
+   // Set up base<==>center
+   Connector base_to_center(base, center, width_in_base_resolution);
+   BoxContainer base_boxes_mod(base_boxes);
+   base_boxes_mod.grow(width_in_base_resolution);
+   if (base.getRefinementRatio() != center_refinement_ratio) {
+      if (base.getRefinementRatio() >= center_refinement_ratio) {
+         base_boxes_mod.refine(conn.getRatio());
+      } else {
+         base_boxes_mod.coarsen(conn.getRatio());
+      }
+   }
+   for (BoxContainer::const_iterator bi = base_boxes_mod.begin(); bi != base_boxes_mod.end();
+        ++bi) {
+      const Box& compare_box = *bi;
+      BoxContainer neighbors;
+      center_ap.findOverlaps(neighbors, compare_box, *geom, center_refinement_ratio);
+      base_to_center.insertNeighbors(neighbors, bi->getBoxId());
+   }
+   base_boxes_mod.clear();
+
+   // Set up head<==>center
+   Connector head_to_center(head, center, width_in_head_resolution);
+   BoxContainer head_boxes_mod(head_boxes);
+   head_boxes_mod.grow(width_in_head_resolution);
+   if (head.getRefinementRatio() != center_refinement_ratio) {
+      if (head.getRefinementRatio() >= center_refinement_ratio) {
+         head_boxes_mod.refine(conn.getRatio());
+      } else {
+         head_boxes_mod.coarsen(conn.getRatio());
+      }
+   }
+   for (BoxContainer::const_iterator bi = head_boxes_mod.begin(); bi != head_boxes_mod.end();
+        ++bi) {
+      Box compare_box = *bi;
+      BoxContainer neighbors;
+      center_ap.findOverlaps(neighbors, compare_box, *geom, center_refinement_ratio);
+      head_to_center.insertNeighbors(neighbors, bi->getBoxId());
+   }
+   head_boxes_mod.clear();
+
+   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStop();
+
+   d_object_timers->t_find_overlaps_assumed_partition_transpose->start();
+   if (d_print_steps) {
+      tbox::plog
+      << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting transposes.\n";
+   }
+   Connector center_to_base(dim), center_to_head(dim);
+   center_to_base.computeTransposeOf(base_to_center, mpi);
+   center_to_head.computeTransposeOf(head_to_center, mpi);
+   d_object_timers->t_find_overlaps_assumed_partition_transpose->barrierAndStop();
+
+   // Bridge for base<==>head
+   base_to_center.setTranspose(&center_to_base, false);
+   head_to_center.setTranspose(&center_to_head, false);
+   const IntVector center_growth_to_nest_base(
+      dim,
+      head_bounding_cell_count <
+      base_bounding_cell_count ? tbox::MathUtilities<int>::getMax() : 0);
+   const IntVector center_growth_to_nest_head(
+      dim,
+      head_bounding_cell_count < base_bounding_cell_count ? 0 : tbox::MathUtilities<int>::getMax());
+   boost::shared_ptr<Connector> tmp_conn;
+   if (d_print_steps) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: bridging.\n";
+   }
+   bridgeWithNesting(tmp_conn,
+      base_to_center,
+      center_to_head,
+      center_growth_to_nest_base,
+      center_growth_to_nest_head,
+      IntVector(dim, -1),
+      false);
+   conn.clear();
+   conn.setBase(tmp_conn->getBase());
+   conn.setHead(tmp_conn->getHead());
+   conn.setWidth(tmp_conn->getConnectorWidth(), true);
+   for (Connector::NeighborhoodIterator ni = tmp_conn->begin(); ni != tmp_conn->end(); ++ni) {
+      for (Connector::NeighborIterator na = tmp_conn->begin(ni); na != tmp_conn->end(ni); ++na) {
+         conn.insertLocalNeighbor(*na, *ni);
+      }
+   }
+
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+      TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition: not finishing\n"
+         << "clean of receivable MPI messages.");
+   }
+
+   d_object_timers->t_find_overlaps_assumed_partition->stop();
+   if (d_print_steps) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: leaving.\n";
+   }
+}
+
+/*
+ ***********************************************************************
  ***********************************************************************
  */
 void
@@ -400,8 +606,11 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
+   const tbox::SAMRAI_MPI& mpi =
+      d_mpi.hasNullCommunicator() ? west_to_cent.getBase().getMPI() : d_mpi;
+
    if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -469,8 +678,11 @@ OverlapConnectorAlgorithm::bridge(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
+   const tbox::SAMRAI_MPI& mpi =
+      d_mpi.hasNullCommunicator() ? west_to_cent.getBase().getMPI() : d_mpi;
+
    if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -538,8 +750,11 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    bool compute_transpose) const
 {
+   const tbox::SAMRAI_MPI& mpi =
+      d_mpi.hasNullCommunicator() ? west_to_cent.getBase().getMPI() : d_mpi;
+
    if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -607,8 +822,11 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    const IntVector& connector_width_limit) const
 {
+   const tbox::SAMRAI_MPI& mpi =
+      d_mpi.hasNullCommunicator() ? cent_to_east.getBase().getMPI() : d_mpi;
+
    if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -714,7 +932,6 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
    const IntVector& east_refinement_ratio = east.getRefinementRatio();
 
    const tbox::Dimension& dim(connector_width_limit.getDim());
-   const tbox::SAMRAI_MPI& mpi(cent.getMPI());
 
    const IntVector& zero_vector(IntVector::getZero(dim));
 
@@ -775,10 +992,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
       if (!(width_limit_in_finest_refinement_ratio <= output_width_in_finest_refinement_ratio)) {
          /*
           * If user specifies a width limit, he is probably assuming
-          * that the bridge's allowable width is bigger.  If that is
-          * not the case, this method won't crash, but it will give
-          * bad results that result in elusive bugs.  Therefore, we
-          * catch it immediately.
+          * that the bridge's allowable width is no smaller.  If that
+          * is not the case, this method will not crash, but it will
+          * give bad results that result in elusive bugs.  Therefore,
+          * we catch it immediately.
           */
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue input error:\n"
             << "The given connector width limit, " << connector_width_limit
@@ -799,7 +1016,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          output_width_in_finest_refinement_ratio,
          finest_refinement_ratio / east_refinement_ratio);
 
-   const int rank = mpi.getRank();
+   const int rank = cent.getMPI().getRank();
 
    /*
     * Owners we have to exchange information with are the ones
@@ -891,7 +1108,21 @@ OverlapConnectorAlgorithm::privateBridge(
    d_object_timers->t_bridge_share->start();
    d_object_timers->t_bridge_setup_comm->start();
 
-   const tbox::SAMRAI_MPI& mpi(west_to_east.getBase().getMPI());
+   if (d_sanity_check_method_preconditions) {
+      if (!d_mpi.hasNullCommunicator() &&
+          !d_mpi.isCongruentWith(west_to_east.getBase().getMPI())) {
+         TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition input error: Input\n"
+            << "has SAMRAI_MPI that is incongruent with OverlapConnectorAlgorithm's.\n"
+            << "See OverlapConnectorAlgorithm::setSAMRAI_MPI.\n");
+      }
+   }
+
+   const tbox::SAMRAI_MPI& mpi =
+      d_mpi.hasNullCommunicator() ? west_to_east.getBase().getMPI() : d_mpi;
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+      TBOX_ERROR("Errant message detected.");
+   }
+
    setupCommunication(
       all_comms,
       comm_stage,
@@ -959,6 +1190,10 @@ OverlapConnectorAlgorithm::privateBridge(
          east_to_west->assertConsistencyWithHead();
          east_to_west->assertTransposeCorrectness(west_to_east, true);
       }
+   }
+
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+      TBOX_ERROR("Errant message detected.");
    }
 }
 
@@ -1092,7 +1327,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    NeighborSet& visible_west_nabrs,
    NeighborSet& visible_east_nabrs) const
 {
-   if (visible_west_nabrs.isEmpty() && visible_east_nabrs.isEmpty()) {
+   if (visible_west_nabrs.empty() && visible_east_nabrs.empty()) {
       return;
    }
 
@@ -1123,8 +1358,10 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       east.getGridGeometry());
 
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? east.getMPI() : d_mpi;
+
    const tbox::Dimension& dim(east.getDim());
-   const int rank = east.getMPI().getRank();
+   const int rank = mpi.getRank();
 
    d_object_timers->t_bridge_discover_form_rbbt->start();
    const BoxContainer east_rbbt(visible_east_nabrs);
@@ -1489,7 +1726,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          //BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
          tbox::plog << std::endl;
       }
-      if (!found_nabrs.isEmpty()) {
+      if (!found_nabrs.empty()) {
          if (visible_base_nabrs_box.isPeriodicImage()) {
             privateBridge_unshiftOverlappingNeighbors(
                visible_base_nabrs_box,
@@ -1526,7 +1763,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                   PeriodicId::zero());
             }
             // Add found neighbors for visible_base_nabrs_box.
-            if (!found_nabrs.isEmpty()) {
+            if (!found_nabrs.empty()) {
                Connector::NeighborhoodIterator base_box_itr =
                   bridging_connector.makeEmptyLocalNeighborhood(
                      unshifted_base_box_id);
@@ -1601,20 +1838,6 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
 void
 OverlapConnectorAlgorithm::initializeCallback()
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (s_class_mpi.getCommunicator() == MPI_COMM_NULL) {
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-         s_class_mpi.dupCommunicator(mpi);
-      }
-   }
-
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
       s_static_timers[s_default_timer_prefix]);
@@ -1630,10 +1853,7 @@ OverlapConnectorAlgorithm::initializeCallback()
 void
 OverlapConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
-      s_class_mpi.freeCommunicator();
-   }
-
+   s_static_timers.clear();
 }
 
 /*
@@ -1671,6 +1891,14 @@ OverlapConnectorAlgorithm::getAllTimers(
 {
    timers.t_find_overlaps_rbbt = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_rbbt()");
+
+   timers.t_find_overlaps_assumed_partition = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()");
+   timers.t_find_overlaps_assumed_partition_connect_to_ap = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()_connect_to_ap");
+   timers.t_find_overlaps_assumed_partition_transpose = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()_transpose");
+
    timers.t_bridge = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::privateBridge()");
    timers.t_bridge_setup_comm = tbox::TimerManager::getManager()->

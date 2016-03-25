@@ -89,7 +89,7 @@ public:
     * Changes to other as an implementation side-effect is allowed.
     * This and other are guaranteed to be the same concrete type.
     *
-    * @param other [i] Other TransitLoad container whose
+    * @param other [in] Other TransitLoad container whose
     * implementation matches this one.
     */
    virtual void
@@ -167,10 +167,32 @@ public:
       double high_load) = 0;
 
    /*!
+    * @brief Assign contents to local process.
+    *
+    * This method may use communication.
+    *
+    * @param [in,out] balanced_box_level Empty BoxLevel to populate with
+    * the contents of this TransitLoad.
+    *
+    * @param[in] unbalanced_box_level
+    *
+    * @param [in] flexible_load_tol
+    *
+    * @param [in] alt_mpi Alternate SAMRAI_MPI to use for communication if
+    * needed, overriding that in balanced_box_level.
+    */
+   virtual void
+   assignToLocal(
+      hier::BoxLevel& balanced_box_level,
+      const hier::BoxLevel& unbalanced_box_level,
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL)) = 0;
+
+   /*!
     * @brief Assign contents to local process and populate the
     * balanced<==>unbalanced maps.
     *
-    * This method uses communication to set up the map.
+    * This method may use communication.
     *
     * @param [in,out] balanced_box_level Empty BoxLevel to populate with
     * the contents of this TransitLoad.
@@ -182,13 +204,17 @@ public:
     * with the unbalanced--->balanced edges.
     *
     * @param [in] flexible_load_tol
+    *
+    * @param [in] alt_mpi Alternate SAMRAI_MPI to use for communication if
+    * needed, overriding that in balanced_box_level.
     */
    virtual void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector& balanced_to_unbalanced,
       hier::MappingConnector& unbalanced_to_balanced,
-      double flexible_load_tol = 0.0) = 0;
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL)) = 0;
 
    //@{
    //! @name Parameters in box breaking

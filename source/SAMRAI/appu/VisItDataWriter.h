@@ -30,6 +30,7 @@
 #include "SAMRAI/tbox/HDFDatabase.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
@@ -985,7 +986,8 @@ private:
       const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarsest_level,
-      int finest_level);
+      int finest_level,
+      double simulation_time);
 
    /*
     * Pack regular (i.e. NOT materials or species) and derived data into
@@ -996,7 +998,8 @@ private:
       const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      hier::Patch& patch);
+      hier::Patch& patch,
+      double simulation_time);
 
    /*
     * Pack the materials data into the supplied database for output.
@@ -1195,6 +1198,11 @@ private:
     * Dimension of object
     */
    const tbox::Dimension d_dim;
+
+   /*!
+    * @brief Exclusive SAMRAI_MPI duplicated for this object.
+    */
+   tbox::SAMRAI_MPI d_mpi;
 
    /*
     * Name of this VisIt data writer object

@@ -14,7 +14,6 @@ SUBDIR        = source/test/performance/LinAdv
 VPATH         = @srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
-TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
@@ -22,7 +21,7 @@ default:      main
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA = -I$(TESTINCLUDE)
+CPPFLAGS_EXTRA = 
 
 NUM_TESTS = 2
 TEST_NPROCS = @TEST_NPROCS@
@@ -37,6 +36,9 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
+
+testlib:
+	cd $(TESTLIBDIR) && $(MAKE) library
 
 # Prevents "No rule to make target" error.  Built in the rule for main.
 $(TESTLIB):

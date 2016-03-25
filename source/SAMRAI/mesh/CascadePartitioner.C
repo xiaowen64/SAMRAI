@@ -66,19 +66,28 @@ CascadePartitioner::CascadePartitioner(
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
    d_tile_size(dim, 1),
+   d_max_spread_procs(500),
    d_limit_supply_to_surplus(true),
-   d_balance_intermediate_groups(false),
    d_reset_obligations(true),
    d_flexible_load_tol(0.05),
    d_mca(),
    // Shared data.
+   d_balance_box_level(0),
+   d_balance_to_reference(0),
+   d_global_work_sum(-1),
+   d_global_work_avg(-1),
+   d_min_load(-1),
+   d_num_initial_owners(0),
+   d_local_load(0),
+   d_shipment(0),
    d_comm_stage(),
-   // Performance evaluation.
+   // Performance evaluation and diagnostics.
    d_barrier_before(false),
    d_barrier_after(false),
    d_report_load_balance(false),
    d_summarize_map(false),
    d_print_steps(false),
+   d_print_child_steps(false),
    d_check_connectivity(false),
    d_check_map(false)
 {
@@ -191,19 +200,12 @@ CascadePartitioner::loadBalanceBoxLevel(
       TBOX_ASSERT(d_mpi.getSize() == balance_box_level.getMPI().getSize());
       TBOX_ASSERT(d_mpi.getRank() == balance_box_level.getMPI().getRank());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_mpi.getSize() > 1) {
-         int compare_result;
-         tbox::SAMRAI_MPI::Comm_compare(
-            d_mpi.getCommunicator(),
-            balance_box_level.getMPI().getCommunicator(),
-            &compare_result);
-         if (compare_result != MPI_CONGRUENT) {
-            TBOX_ERROR("CascadePartitioner::loadBalanceBoxLevel:\n"
-               << "The input balance_box_level has a SAMRAI_MPI that is\n"
-               << "not congruent with the one set with setSAMRAI_MPI().\n"
-               << "You must use freeMPICommunicator() before balancing\n"
-               << "a BoxLevel with an incongruent SAMRAI_MPI.");
-         }
+      if (!d_mpi.isCongruentWith(balance_box_level.getMPI())) {
+         TBOX_ERROR("CascadePartitioner::loadBalanceBoxLevel:\n"
+            << "The input balance_box_level has a SAMRAI_MPI that is\n"
+            << "not congruent with the one set with setSAMRAI_MPI().\n"
+            << "You must use freeMPICommunicator() before balancing\n"
+            << "a BoxLevel with an incongruent SAMRAI_MPI.");
       }
 #endif
    } else {
@@ -211,13 +213,14 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
    if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::loadBalanceBoxLevel called with:"
+      tbox::plog << d_object_name << "::loadBalanceBoxLevel called with:"
                  << "\n  min_size = " << min_size
                  << "\n  max_size = " << max_size
                  << "\n  bad_interval = " << bad_interval
                  << "\n  cut_factor = " << cut_factor
                  << "\n  prebalance:\n"
-                 << balance_box_level.format("  ", 2);
+                 << balance_box_level.format("  ", 2)
+                 << std::flush;
    }
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
@@ -265,36 +268,9 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    LoadType local_load = computeLocalLoad(balance_box_level);
 
-   LoadType global_sum_load = local_load;
+   globalWorkReduction(local_load, (balance_box_level.getLocalNumberOfBoxes() != 0));
 
-   /*
-    * Determine the total load and number of processes that has any
-    * initial load.
-    */
-   t_get_global_load->start();
-   global_sum_load = local_load;
-   double tmp_double[2];
-   tmp_double[0] = local_load;
-   tmp_double[1] = static_cast<double>(balance_box_level.getBoxes().size() > 0);
-   if (d_mpi.getSize() > 1) {
-      d_mpi.AllReduce(tmp_double, 2, MPI_SUM);
-   }
-   global_sum_load = tmp_double[0];
-   int num_procs_with_load = static_cast<int>(tmp_double[1] + 0.5);
-   t_get_global_load->stop();
-
-   if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
-      tbox::plog.precision(6);
-      tbox::plog << "CascadePartitioner::loadBalanceBoxLevel"
-                 << " global_sum_load=" << global_sum_load
-                 << " (initially born across " << num_procs_with_load << " of " << d_mpi.getSize()
-                 << " procs, averaging " << global_sum_load / d_mpi.getSize()
-                 << " or " << pow(global_sum_load / d_mpi.getSize(), 1.0 / d_dim.getValue())
-                 << "^" << d_dim << " per proc." << std::endl;
-   }
-
-   d_global_load_avg = global_sum_load / rank_group.size();
+   d_global_work_avg = d_global_work_sum / rank_group.size();
 
    // Run the partitioning algorithm.
    partitionByCascade(
@@ -315,14 +291,14 @@ CascadePartitioner::loadBalanceBoxLevel(
       static_cast<int>(balance_box_level.getBoxes().size()));
 
    if (d_print_steps) {
-      tbox::plog << "Post balanced:\n" << balance_box_level.format("", 2);
+      tbox::plog << "Post balanced:\n" << balance_box_level.format("", 2)
+                 << std::flush;
    }
 
    if (d_report_load_balance) {
-      tbox::plog
-      << "CascadePartitioner::loadBalanceBoxLevel results  ";
-      BalanceUtilities::gatherAndReportLoadBalance(local_load,
-         balance_box_level.getMPI());
+      tbox::plog << d_object_name << "::loadBalanceBoxLevel results:" << std::endl;
+      BalanceUtilities::reduceAndReportLoadBalance(
+         std::vector<double>(1, local_load), balance_box_level.getMPI());
    }
 
    if (d_check_connectivity && balance_to_reference) {
@@ -332,15 +308,15 @@ CascadePartitioner::loadBalanceBoxLevel(
       int errs = 0;
       if (reference_to_balance.checkOverlapCorrectness(false, true, true)) {
          ++errs;
-         tbox::perr << "Error found in reference_to_balance!\n";
+         tbox::perr << "Error found in reference_to_balance!" << std::endl;
       }
       if (balance_to_reference->checkOverlapCorrectness(false, true, true)) {
          ++errs;
-         tbox::perr << "Error found in balance_to_reference!\n";
+         tbox::perr << "Error found in balance_to_reference!" << std::endl;
       }
       if (reference_to_balance.checkTransposeCorrectness(*balance_to_reference)) {
          ++errs;
-         tbox::perr << "Error found in balance-reference transpose!\n";
+         tbox::perr << "Error found in balance-reference transpose!" << std::endl;
       }
       if (errs != 0) {
          TBOX_ERROR(
@@ -354,6 +330,7 @@ CascadePartitioner::loadBalanceBoxLevel(
                  << std::endl;
    }
 
+   assertNoMessageForPrivateCommunicator();
 }
 
 /*
@@ -370,114 +347,189 @@ CascadePartitioner::partitionByCascade(
    hier::Connector* balance_to_reference) const
 {
    if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: entered" << std::endl;
+      tbox::plog << d_object_name << "::partitionByCascade: entered" << std::endl;
    }
 
-   BoxTransitSet local_work(*d_pparams), shipment(*d_pparams);
-   local_work.setAllowBoxBreaking(true);
+   BoxTransitSet local_load(*d_pparams), shipment(*d_pparams);
+   local_load.setAllowBoxBreaking(true);
+   local_load.setTimerPrefix(d_object_name);
+   shipment.setTimerPrefix(d_object_name);
 
-   const double ideal_box_width = pow(d_global_load_avg, 1.0 / d_dim.getValue());
-   local_work.setThresholdWidth(ideal_box_width);
+   const double ideal_box_width = pow(d_global_work_avg, 1.0 / d_dim.getValue());
+   local_load.setThresholdWidth(ideal_box_width);
    shipment.setThresholdWidth(ideal_box_width);
 
-   local_work.insertAll(balance_box_level.getBoxes());
+   local_load.insertAll(balance_box_level.getBoxes());
 
-   d_local_load = &local_work;
+   // Set up temporaries shared with the process groups.
+   d_balance_box_level = &balance_box_level;
+   d_balance_to_reference = balance_to_reference;
+   d_local_load = &local_load;
    d_shipment = &shipment;
+
+   CascadePartitionerTree groups(*this);
+   groups.distributeLoad();
+
+   d_balance_box_level = 0;
+   d_balance_to_reference = 0;
+   d_local_load = 0;
+   d_shipment = 0;
+   d_global_work_sum = -1;
+   d_global_work_avg = -1;
+   d_min_load = -1;
+   d_num_initial_owners = 0;
+
+   if (d_print_steps) {
+      tbox::plog << d_object_name << "::partitionByCascade: leaving" << std::endl;
+   }
+}
+
+/*
+ *************************************************************************
+ * Update connectors according to the current boxes in d_local_load.
+ * Only point-to-point communication should be used.  If there are not
+ * power-of-two processes in d_mpi and d_max_spread_procs is small enough
+ * to cause intermediate calls to updateConnectors, it is possible that
+ * a subset of processes will be calling updateConnectors().  So don't
+ * use collective MPI communications in this method!
+ *************************************************************************
+ */
+void CascadePartitioner::updateConnectors() const
+{
+   t_update_connectors->start();
+
+   if (d_print_steps) {
+      tbox::plog
+      << d_object_name << "::updateConnectors constructing unbalanced<==>balanced." << std::endl;
+   }
 
    /*
     * Initialize empty balanced_box_level and mappings so they are
     * ready to be populated.
     */
    hier::BoxLevel balanced_box_level(
-      balance_box_level.getRefinementRatio(),
-      balance_box_level.getGridGeometry(),
-      balance_box_level.getMPI());
+      d_balance_box_level->getRefinementRatio(),
+      d_balance_box_level->getGridGeometry(),
+      d_balance_box_level->getMPI());
    hier::MappingConnector balanced_to_unbalanced(balanced_box_level,
-                                                 balance_box_level,
+                                                 *d_balance_box_level,
                                                  hier::IntVector::getZero(d_dim));
-   hier::MappingConnector unbalanced_to_balanced(balance_box_level,
+   hier::MappingConnector unbalanced_to_balanced(*d_balance_box_level,
                                                  balanced_box_level,
                                                  hier::IntVector::getZero(d_dim));
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
-   t_get_map->start();
-
-   CascadePartitionerTree groups(*this);
-   groups.distributeLoad();
-
-   if (d_print_steps) {
-      tbox::plog << "CascadePartitioner: local_work after load distribution:\n";
-      local_work.recursivePrint(tbox::plog, "LL->\t", 2);
-      tbox::plog
-      << "CascadePartitioner::partitionByCascade constructing unbalanced<==>balanced.\n";
-   }
-
    t_assign_to_local_and_populate_maps->start();
-   local_work.assignToLocalAndPopulateMaps(
+   d_local_load->assignToLocalAndPopulateMaps(
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
-      d_flexible_load_tol);
+      d_flexible_load_tol,
+      d_mpi);
    t_assign_to_local_and_populate_maps->stop();
 
-   t_get_map->stop();
-
    if (d_summarize_map) {
-      tbox::plog << "CascadePartitioner::partitionByCascade unbalanced--->balanced map:\n"
+      tbox::plog << d_object_name << "::updateConnectors unbalanced--->balanced map:" << std::endl
                  << unbalanced_to_balanced.format("\t", 0)
-                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::partitionByCascade balanced--->unbalanced map:\n"
+                 << "Map statistics:" << std::endl << unbalanced_to_balanced.formatStatistics("\t")
+                 << d_object_name << "::updateConnectors balanced--->unbalanced map:" << std::endl
                  << balanced_to_unbalanced.format("\t", 0)
-                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
-                 << '\n';
+                 << "Map statistics:" << std::endl << balanced_to_unbalanced.formatStatistics("\t")
+                 << std::endl;
    }
 
    if (d_check_map) {
       if (unbalanced_to_balanced.findMappingErrors() != 0) {
          TBOX_ERROR(
-            "CascadePartitioner::partitionByCascade Mapping errors found in unbalanced_to_balanced!");
+            d_object_name << "::updateConnectors Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "CascadePartitioner::partitionByCascade Transpose errors found!");
+            d_object_name << "::updateConnectors Transpose errors found!");
       }
    }
 
    if (d_summarize_map) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: unbalanced--->balanced map:\n"
+      tbox::plog << d_object_name << "::updateConnectors: unbalanced--->balanced map:" << std::endl
                  << unbalanced_to_balanced.format("\t", 0)
-                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::partitionByCascade: balanced--->unbalanced map:\n"
+                 << "Map statistics:" << std::endl << unbalanced_to_balanced.formatStatistics("\t")
+                 << d_object_name << "::updateConnectors: balanced--->unbalanced map:" << std::endl
                  << balanced_to_unbalanced.format("\t", 0)
-                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
-                 << '\n';
+                 << "Map statistics:" << std::endl << balanced_to_unbalanced.formatStatistics("\t")
+                 << std::endl;
    }
 
-   if (balance_to_reference && balance_to_reference->hasTranspose()) {
-      t_use_map->barrierAndStart();
+   if (d_balance_to_reference && d_balance_to_reference->hasTranspose()) {
+      if (d_print_steps) {
+         tbox::plog
+         << d_object_name << "::updateConnectors applying unbalanced<==>balanced." << std::endl;
+      }
+      t_use_map->start();
       d_mca.modify(
-         balance_to_reference->getTranspose(),
+         d_balance_to_reference->getTranspose(),
          unbalanced_to_balanced,
-         &balance_box_level,
+         d_balance_box_level,
          &balanced_box_level);
-      t_use_map->barrierAndStop();
+      t_use_map->stop();
    } else {
-      hier::BoxLevel::swap(balance_box_level, balanced_box_level);
+      hier::BoxLevel::swap(*d_balance_box_level, balanced_box_level);
    }
+
+   d_local_load->clear();
+   d_local_load->insertAll(d_balance_box_level->getBoxes());
 
    if (d_print_steps) {
       tbox::plog
-      << "CascadePartitioner::partitionByCascade finished constructing unbalanced<==>balanced.\n";
+      << d_object_name << "::updateConnectors leaving." << std::endl;
    }
 
-   d_local_load = 0;
-   d_shipment = 0;
+   t_update_connectors->stop();
+}
+
+/*
+ *************************************************************************
+ * Set d_global_work_sum, d_local_work_max, d_num_initial_owners.
+ *************************************************************************
+ */
+void CascadePartitioner::globalWorkReduction(
+   LoadType local_work,
+   bool has_any_load) const
+{
+   t_global_work_reduction->start();
+
+   d_global_work_sum = d_local_work_max = local_work;
+   d_num_initial_owners = static_cast<size_t>(has_any_load);
+
+   if (d_mpi.getSize() > 1) {
+      double dtmp[2], dtmp_sum[2], dtmp_max[2];
+
+      dtmp[0] = local_work;
+      dtmp[1] = static_cast<double>(d_num_initial_owners);
+
+      d_mpi.Allreduce(dtmp, dtmp_sum, 2, MPI_DOUBLE, MPI_SUM);
+      d_global_work_sum = dtmp_sum[0];
+      d_num_initial_owners = static_cast<size_t>(dtmp_sum[1]);
+
+      d_mpi.Allreduce(dtmp, dtmp_max, 1, MPI_DOUBLE, MPI_MAX);
+      d_local_work_max = dtmp_max[0];
+   }
 
    if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: leaving" << std::endl;
+      tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
+      tbox::plog.precision(6);
+      tbox::plog << d_object_name << "::globalWorkReduction"
+                 << " d_local_work_max=" << d_local_work_max
+                 << " d_global_work_sum=" << d_global_work_sum
+                 << " (initially born on "
+                 << d_num_initial_owners << " procs) across all "
+                 << d_mpi.getSize()
+                 << " procs, averaging " << d_global_work_sum / d_mpi.getSize()
+                 << " or " << pow(d_global_work_sum / d_mpi.getSize(), 1.0 / d_dim.getValue())
+                 << "^" << d_dim << " per proc." << std::endl;
    }
+
+   t_global_work_reduction->stop();
 }
 
 /*
@@ -505,8 +557,8 @@ CascadePartitioner::setSAMRAI_MPI(
    const tbox::SAMRAI_MPI& samrai_mpi)
 {
    if (samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      TBOX_ERROR("CascadePartitioner::setSAMRAI_MPI error: Given\n"
-         << "communicator is invalid.");
+      TBOX_ERROR(d_object_name << "::setSAMRAI_MPI error: Given\n"
+                               << "communicator is invalid.");
    }
 
    if (d_mpi_is_dupe) {
@@ -516,6 +568,8 @@ CascadePartitioner::setSAMRAI_MPI(
    // Enable private communicator.
    d_mpi.dupCommunicator(samrai_mpi);
    d_mpi_is_dupe = true;
+
+   d_mca.setSAMRAI_MPI(d_mpi);
 }
 
 /*
@@ -551,7 +605,7 @@ CascadePartitioner::computeLocalLoad(
    for (hier::BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
-      double box_load = double(ni->size());
+      double box_load = static_cast<double>(ni->size());
       load += box_load;
    }
    return static_cast<LoadType>(load);
@@ -572,7 +626,10 @@ CascadePartitioner::getFromInput(
 
    if (input_db) {
 
-      d_print_steps = input_db->getBoolWithDefault("DEV_print_steps", false);
+      d_print_steps =
+         input_db->getBoolWithDefault("DEV_print_steps", d_print_steps);
+      d_print_child_steps =
+         input_db->getBoolWithDefault("DEV_print_child_steps", d_print_child_steps);
       d_check_connectivity =
          input_db->getBoolWithDefault("DEV_check_connectivity", d_check_connectivity);
       d_check_map =
@@ -588,13 +645,13 @@ CascadePartitioner::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
             d_barrier_after);
 
+      d_max_spread_procs =
+         input_db->getIntegerWithDefault("max_spread_procs",
+            d_max_spread_procs);
+
       d_limit_supply_to_surplus =
          input_db->getBoolWithDefault("DEV_limit_supply_to_surplus",
             d_limit_supply_to_surplus);
-
-      d_balance_intermediate_groups =
-         input_db->getBoolWithDefault("DEV_balance_intermediate_groups",
-            d_balance_intermediate_groups);
 
       d_reset_obligations =
          input_db->getBoolWithDefault("DEV_reset_obligations",
@@ -632,18 +689,10 @@ CascadePartitioner::assertNoMessageForPrivateCommunicator() const
     * messages that have arrived but not received.
     */
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-            MPI_ANY_TAG,
-            &flag,
-            &mpi_status);
-      if (mpi_err != MPI_SUCCESS) {
-         TBOX_ERROR("Error probing for possible lost messages.");
-      }
-      if (flag == true) {
+      if (d_mpi.hasReceivableMessage(&mpi_status)) {
          int count = -1;
-         mpi_err = tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
+         tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR(
             "Library error!\n"
             << "CascadePartitioner detected before or\n"
@@ -678,16 +727,17 @@ CascadePartitioner::setTimers()
       t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
 
-      t_get_map = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::get_map");
       t_use_map = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::use_map");
 
+      t_update_connectors = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::updateConnectors()");
+
+      t_global_work_reduction = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::globalWorkReduction()");
+
       t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::assign_to_local_and_populate_maps");
-
-      t_get_global_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::get_global_load");
 
       t_communication_wait = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::communication_wait");
@@ -717,10 +767,14 @@ void
 CascadePartitioner::printStatistics(
    std::ostream& output_stream) const
 {
-   BalanceUtilities::gatherAndReportLoadBalance(
-      d_load_stat,
-      tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      output_stream);
+   if (d_load_stat.empty()) {
+      output_stream << "No statistics for CascadePartitioner.\n";
+   } else {
+      BalanceUtilities::reduceAndReportLoadBalance(
+         d_load_stat,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         output_stream);
+   }
 }
 
 }

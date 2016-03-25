@@ -92,10 +92,10 @@ public:
    /**
     * Return the dimension of this object.
     */
-   const int&
+   Dimension::dir_t
    getDimVal() const
    {
-      return d_data.d_dimension;
+      return static_cast<Dimension::dir_t>(d_data.d_dimension);
    }
 
    void

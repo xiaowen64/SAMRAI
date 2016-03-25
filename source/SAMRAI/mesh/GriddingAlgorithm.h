@@ -548,7 +548,8 @@ private:
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
       boost::shared_ptr<hier::Connector>& tag_to_finer,
       const int tag_ln,
-      const std::vector<int>& tag_buffer);
+      const std::vector<int>& tag_buffer,
+      double regrid_time);
 
    /*!
     * @brief Given the metadata describing the new level, this method
@@ -844,7 +845,7 @@ private:
    void
    renumberBoxes(
       hier::BoxLevel& new_box_level,
-      hier::Connector& ref_to_new,
+      hier::Connector* ref_to_new,
       bool sort_by_corners,
       bool sequentialize_global_indices) const;
 
@@ -1059,6 +1060,14 @@ private:
    allocateTimers();
 
    /*!
+    * @brief Assert that the given SAMRAI_MPI has no message waiting
+    * to be received.
+    */
+   void
+   assertNoMessageForCommunicator(
+      const tbox::SAMRAI_MPI& mpi) const;
+
+   /*!
     * @brief Initialize static objects and register shutdown routine.
     *
     * Only called by StartupShutdownManager.
@@ -1190,7 +1199,7 @@ private:
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
     *
     * d_to_nesting_complement[ln] goes from level ln to
-    * d_proper_nesting_complelemt[ln].
+    * d_proper_nesting_complement[ln].
     */
    std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
 

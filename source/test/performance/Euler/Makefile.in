@@ -38,6 +38,9 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)     \
 	$(LIBSAMRAI) $(LDLIBS) -o main
 
+testlib:
+	cd $(TESTLIBDIR) && $(MAKE) library
+
 checkclean:
 	$(CLEAN_COMMON_CHECK_FILES)
 	$(RM) *.timing*

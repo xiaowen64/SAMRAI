@@ -59,7 +59,9 @@ using namespace std;
 // Header for application-specific algorithm/data structure object
 
 #include "LinAdv.h"
-#include "SinusoidalFrontTagger.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
+#include "test/testlib/SphericalShellGenerator.h"
+#include "test/testlib/MeshGenerationStrategy.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -184,11 +186,8 @@ int main(
 
    {
       string input_filename;
-      string restart_read_dirname;
-      int restore_num = 0;
       string case_name;
-
-      bool is_from_restart = false;
+      int scale_size = mpi.getSize();
 
       if ((argc != 2) && (argc != 3) && (argc != 4)) {
          tbox::pout << "USAGE:\n"
@@ -196,30 +195,23 @@ int main(
                     << "or\n"
                     << argv[0] << " <input filename> <case name>"
                     << "or\n"
-                    << argv[0] << " <input filename> "
-                    << "  <restart dir> <restore number> [options]\n"
-                    << "  options:\n"
-                    << "  none at this time"
+                    << argv[0] << " <input filename> <case name> <scale size> "
                     << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
          input_filename = argv[1];
-
-         if (argc == 3) {
+         if (argc > 2) {
             case_name = argv[2];
          }
-         if (argc == 4) {
-            restart_read_dirname = argv[2];
-            restore_num = atoi(argv[3]);
-
-            is_from_restart = true;
+         if (argc > 3) {
+            scale_size = atoi(argv[3]);
          }
       }
 
       pout << "input_filename = " << input_filename << endl;
-      pout << "restart_read_dirname = " << restart_read_dirname << endl;
-      pout << "restore_num = " << restore_num << endl;
+      pout << "case_name = " << case_name << std::endl;
+      pout << "scale_size = " << scale_size << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -253,10 +245,8 @@ int main(
 
       string scaled_input_str =
          string("ScaledInput")
-         + (use_scaled_input ? tbox::Utilities::intToString(mpi.getSize())
-            : string());
-      boost::shared_ptr<Database> scaled_input_db(
-         input_db->getDatabase(scaled_input_str));
+         + (use_scaled_input ? tbox::Utilities::intToString(scale_size) : string());
+      boost::shared_ptr<Database> scaled_input_db(input_db->getDatabase(scaled_input_str));
 
       string base_name = main_db->getStringWithDefault("base_name", "unnamed");
 
@@ -268,7 +258,10 @@ int main(
       if (!case_name.empty()) {
          base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(mpi.getSize());
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(scale_size);
+      tbox::pout << "Added case name (" << case_name << ") and nprocs ("
+                 << mpi.getSize() << ") to base name -> '"
+                 << base_name_ext << "'\n";
 
       /*
        * Logging.
@@ -324,19 +317,6 @@ int main(
          && !(restart_write_dirname.empty());
 
       /*
-       * Get the restart manager and root restart database.  If run is from
-       * restart, open the restart file.
-       */
-
-      RestartManager* restart_manager = RestartManager::getManager();
-
-      if (is_from_restart) {
-         restart_manager->
-         openRestartFile(restart_read_dirname, restore_num,
-            mpi.getSize());
-      }
-
-      /*
        * Create major algorithm and data objects which comprise application.
        * Each object will be initialized either from input data or restart
        * files, or a combination of both.  Refer to each class constructor
@@ -355,22 +335,32 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-      const bool use_analytical_tagger =
-         input_db->isDatabase("SinusoidalFrontTagger");
+      boost::shared_ptr<SinusoidalFrontGenerator> sine_wall;
+      boost::shared_ptr<SphericalShellGenerator> spherical_shell;
+      boost::shared_ptr<MeshGenerationStrategy> mesh_gen;
 
-      SinusoidalFrontTagger analytical_tagger(
-         "SinusoidalFrontTagger",
-         dim,
-         input_db->getDatabaseWithDefault("SinusoidalFrontTagger",
-            boost::shared_ptr<tbox::Database>()).get());
-      analytical_tagger.resetHierarchyConfiguration(patch_hierarchy, 0, 3);
+      if (input_db->isDatabase("SinusoidalFrontGenerator")) {
+         sine_wall.reset(new SinusoidalFrontGenerator(
+               "SinusoidalFrontGenerator", dim,
+               input_db->getDatabase("SinusoidalFrontGenerator")));
+         sine_wall->resetHierarchyConfiguration(
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels() - 1);
+         mesh_gen = sine_wall;
+      } else if (input_db->isDatabase("SphericalShellGenerator")) {
+         spherical_shell.reset(new SphericalShellGenerator(
+               "SphericalShellGenerator", dim,
+               input_db->getDatabase("SphericalShellGenerator")));
+         spherical_shell->resetHierarchyConfiguration(
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels() - 1);
+         mesh_gen = spherical_shell;
+      }
 
       LinAdv* linear_advection_model = new LinAdv(
             "LinAdv",
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            use_analytical_tagger ? &analytical_tagger : 0);
+            mesh_gen);
 
       boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?
@@ -468,7 +458,18 @@ int main(
                input_db->getDatabase("ChopAndPackLoadBalancer")));
 
          load_balancer = cap_load_balancer;
-         load_balancer0 = cap_load_balancer;
+
+         /*
+          * ChopAndPackLoadBalancer has trouble on L0 for some reason.
+          * Work around by using the CascadePartitioner for L0.
+          */
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner0",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+         load_balancer0 = cascade_partitioner0;
       }
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
@@ -489,6 +490,14 @@ int main(
             hyp_level_integrator,
             gridding_algorithm));
 
+      /*
+       * Initialize hierarchy configuration and data on all patches.
+       * Then, close restart file and write initial state for visualization.
+       */
+
+      tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // For timing.
+      double dt_now = time_integrator->initializeHierarchy();
+
       // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
@@ -500,14 +509,6 @@ int main(
       linear_advection_model->
       registerVisItDataWriter(visit_data_writer);
 #endif
-
-      /*
-       * Initialize hierarchy configuration and data on all patches.
-       * Then, close restart file and write initial state for visualization.
-       */
-
-      tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // For timing.
-      double dt_now = time_integrator->initializeHierarchy();
 
       RestartManager::getManager()->closeRestartFile();
 
@@ -605,22 +606,22 @@ int main(
 #endif
             }
          }
-      }
+
+#ifdef RECORD_STATS
+         /*
+          * Output statistics.
+          */
+         tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
+         hyp_level_integrator->printStatistics(tbox::plog);
+         tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
+         gridding_algorithm->printStatistics(tbox::plog);
+#endif
+      } // End time-stepping loop.
 
       /*
        * Output timer results.
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
-
-#ifdef RECORD_STATS
-      /*
-       * Output statistics.
-       */
-      tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
-      hyp_level_integrator->printStatistics(tbox::plog);
-      tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
-      gridding_algorithm->printStatistics(tbox::plog);
-#endif
 
       if (load_balancer_type == "TreeLoadBalancer") {
          /*

@@ -669,18 +669,22 @@ private:
    }
 
    /*!
-    * @brief Returns true if there are no boxes in the container
+    * @brief Returns true if there are no boxes in the container.
     *
-    * @return True if the container is empty.
+    * Archaic syntax.  Synonymous with empty().  Retained for backward
+    * compatibility.
+    *
+    * @see empty()
     */
-   bool
-   isEmpty() const
+   DEPRECATED(
+      bool
+      isEmpty() const)
    {
-      return d_list.empty();
+      return empty();
    }
 
    /*!
-    * @brief Returns true if there are no boxes in the container
+    * @brief Returns true if there are no boxes in the container.
     *
     * This version follows the naming standards used in STL.
     *
@@ -939,7 +943,7 @@ private:
     *
     * @return Total number of indices of all boxes in the container.
     */
-   int
+   size_t
    getTotalSizeOfBoxes() const;
 
    /*!
@@ -962,7 +966,7 @@ private:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.
     *
-    * @pre !isEmpty()
+    * @pre !empty()
     * @pre each Box in container has same BlockId
     */
    Box
@@ -974,7 +978,7 @@ private:
     *
     * @param[in] block_id
     *
-    * @pre !isEmpty()
+    * @pre !empty()
     */
    Box
    getBoundingBox(
@@ -1034,7 +1038,7 @@ private:
     *
     * @param[in] item
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1042,7 +1046,7 @@ private:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1064,7 +1068,7 @@ private:
     *
     * @param[in] item
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1072,7 +1076,7 @@ private:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1115,7 +1119,7 @@ private:
     * @param[in] iter Location to add item before.
     * @param[in] item Box to add to container.
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1124,7 +1128,7 @@ private:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1147,7 +1151,7 @@ private:
     * @param[in] iter Location to add item after.
     * @param[in] item Box to add to container.
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1178,17 +1182,17 @@ private:
     *
     * @param[in] boxes
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     *
-    * @post boxes.isEmpty()
+    * @post boxes.empty()
     */
    void
    spliceFront(
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty() && !boxes.isEmpty()) {
+      if (!empty() && !boxes.empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
@@ -1209,17 +1213,17 @@ private:
     *
     * @param[in] boxes
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     *
-    * @post boxes.isEmpty()
+    * @post boxes.empty()
     */
    void
    spliceBack(
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty() && !boxes.isEmpty()) {
+      if (!empty() && !boxes.empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
@@ -1285,7 +1289,7 @@ private:
     * coalesce(), which is not guaranteed to produce a canonical ordering.
     *
     * @pre !isOrdered()
-    * @pre isEmpty() || all Boxes in container have same BlockId
+    * @pre empty() || all Boxes in container have same BlockId
     */
    void
    simplify();
@@ -1306,7 +1310,7 @@ private:
     * before others.
     *
     * @pre !isOrdered()
-    * @pre isEmpty() || all Boxes in container have same BlockId
+    * @pre empty() || all Boxes in container have same BlockId
     */
    void
    coalesce();
@@ -1401,7 +1405,7 @@ private:
     * @param[in] takeaway
     *
     * @pre !isOrdered()
-    * @pre isEmpty()
+    * @pre empty()
     * @pre box.getBlockId() == takeaway.getBlockId()
     */
    void
@@ -1494,8 +1498,8 @@ private:
     * @param[in]  box Box to attempt to insert into the container.
     *
     * @pre box.getBoxId().isValid()
-    * @pre isEmpty() || (front().getDim() == box.getDim())
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || (front().getDim() == box.getDim())
+    * @pre empty() || isOrdered()
     */
    bool
    insert(
@@ -1528,8 +1532,8 @@ private:
     *
     * @pre box.getBoxId().isValid()
     * @pre box.getBlockId() != BlockId::invalidId()
-    * @pre isEmpty() || (front().getDim() == box.getDim())
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || (front().getDim() == box.getDim())
+    * @pre empty() || isOrdered()
     */
    iterator
    insert(
@@ -1546,9 +1550,9 @@ private:
     * @param[in] first
     * @param[in] last
     *
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || isOrdered()
     * @pre for each box in [first, last), box.getBoxId().isValid() &&
-    *      (isEmpty || front().getDim() == box.getDim())
+    *      (empty || front().getDim() == box.getDim())
     */
    void
    insert(
@@ -1680,7 +1684,7 @@ private:
     * @brief  Any members of this container that are periodic images will
     *         be erased.
     *
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || isOrdered()
     */
    void
    removePeriodicImageBoxes();
@@ -1795,10 +1799,12 @@ private:
     * @brief Print each box in the container to the specified output stream.
     *
     * @param[in] os
+    * @param[in] border
     */
    void
    print(
-      std::ostream& os = tbox::plog) const;
+      std::ostream& os = tbox::plog,
+      const std::string& border = std::string()) const;
 
    /*!
     * @brief Intermediary between BoxContainer and output streams,

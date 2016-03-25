@@ -59,9 +59,9 @@ case $1 in
 
 bgq_mpixlcxx) # BG/Q, using mpixlcxx
 cat <<-EOF
-	--with-CXX=mpixlcxx-fastmpi
-	--with-CC=mpixlc-fastmpi
-	--with-F77=mpif77
+	--with-CXX=mpixlcxx
+	--with-CC=mpixlc
+	--with-F77=mpixlf77
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
 	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.55.0
 	--with-hypre=no
@@ -128,6 +128,8 @@ EOF
 
 chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
 cat <<-EOF
+	CXXFLAGS="-std=c++0x"
+	CFLAGS="-std=c++0x"
 	--with-CC=mpiicc
 	--with-CXX=mpiicpc
 	--with-F77=mpiifort
@@ -137,7 +139,7 @@ cat <<-EOF
 	--disable-shared
 	--enable-rpath=-Wl,-R
 	--with-zlib
-	--with-hdf5=/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
+	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
 	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
 	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
@@ -148,7 +150,38 @@ EOF
 # With the above configure options, these "use" commands must precede the
 # use of configure
 # % use ic-14.0.144
-# % use gcc-4.6.1 
+# % use gcc-4.6.1
+;;
+
+chaos5_clang) # CHAOS5, clang compilers and MPI2
+cat <<-EOF
+	--with-CC=clang
+	--with-CXX=clang++
+	--with-F77=ifort
+	--without-petsc
+        --without-blas
+        --without-lapack
+        --without-hypre
+	--without-x
+	--without-sundials
+	--disable-shared
+	--enable-rpath
+        --enable-debug
+        --disable-opt
+	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
+	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
+	--with-zlib
+	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
+        --with-mpi-include=/usr/local/tools/mvapich2-intel/include
+        --with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel/lib
+        --with-mpi-libs="mpichcxx mpich opa mpl pmi"
+EOF
+# Maintained by Bill Arrighi
+;;
+# With the above configure options, these "use" commands must precede the
+# use of configure
+# % use clang
+# % use gcc-4.6.1
 
 edge_gcc) # Edge with default GNU GCC compilers
 cat <<-EOF

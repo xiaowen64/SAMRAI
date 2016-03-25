@@ -48,7 +48,7 @@ FaceData<TYPE>::FaceData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box face = FaceGeometry::toFaceBox(getGhostBox(), d);
       d_data[d].reset(new ArrayData<TYPE>(face, depth));
    }
@@ -287,7 +287,7 @@ FaceData<TYPE>::copyOnBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       const hier::Box face_box = FaceGeometry::toFaceBox(box, axis);
       d_data[axis]->copy(src.getArrayData(axis), face_box);
    }
@@ -324,7 +324,7 @@ FaceData<TYPE>::copyWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
@@ -400,7 +400,7 @@ FaceData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 FaceData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -410,8 +410,8 @@ FaceData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   size_t size = 0;
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       hier::IntVector face_offset(offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); ++i) {
@@ -461,7 +461,7 @@ FaceData<TYPE>::packStream(
                                         transformation.getEndBlock());
 
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->packStream(stream, boxes, transform);
          }
       }
@@ -502,10 +502,10 @@ FaceData<TYPE>::packWithRotation(
 
    const int depth = getDepth();
 
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
-      const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+      const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
       std::vector<TYPE> buffer(size);
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
@@ -559,7 +559,7 @@ FaceData<TYPE>::unpackStream(
       }
 
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          d_data[d]->unpackStream(stream, boxes, face_offset);
       }
    }
@@ -587,7 +587,7 @@ FaceData<TYPE>::getSizeOfData(
 
    size_t size = 0;
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       const hier::Box face_box = FaceGeometry::toFaceBox(ghost_box, d);
       size += ArrayData<TYPE>::getSizeOfData(face_box, depth);
    }
@@ -649,7 +649,7 @@ FaceData<TYPE>::fillAll(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < getDim().getValue(); ++i) {
       d_data[i]->fillAll(t, FaceGeometry::toFaceBox(box, i));
    }
 }
@@ -672,7 +672,7 @@ FaceData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array face normal = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
@@ -698,13 +698,13 @@ FaceData<TYPE>::print(
 template<class TYPE>
 void
 FaceData<TYPE>::printAxis(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((face_normal < getDim().getValue()));
 
    for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
@@ -715,7 +715,7 @@ FaceData<TYPE>::printAxis(
 template<class TYPE>
 void
 FaceData<TYPE>::printAxis(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -723,7 +723,7 @@ FaceData<TYPE>::printAxis(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((face_normal < getDim().getValue()));
 
    os.precision(prec);
    FaceIterator iend(FaceGeometry::end(box, face_normal));

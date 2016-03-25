@@ -112,6 +112,16 @@ public:
       LoadType high_load);
 
    /*!
+    * @copydoc TransitLoad::assignToLocal()
+    */
+   void
+   assignToLocal(
+      hier::BoxLevel& balanced_box_level,
+      const hier::BoxLevel& unbalanced_box_level,
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
+
+   /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
     *
     * This method uses communication to populate the map.
@@ -121,7 +131,8 @@ public:
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector& balanced_to_unbalanced,
       hier::MappingConnector& unbalanced_to_balanced,
-      double flexible_load_tol = 0.0);
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    //@}
 
@@ -169,6 +180,17 @@ public:
    void
    setTimerPrefix(
       const std::string& timer_prefix);
+
+   /*!
+    * @brief Set print flags for individual object.
+    */
+   void
+   setPrintFlags(
+      bool steps,
+      bool pop_steps,
+      bool swap_steps,
+      bool break_steps,
+      bool edge_steps);
 
    void
    recursivePrint(
@@ -241,6 +263,12 @@ private:
    //@}
 
 private:
+   void
+   populateMaps(
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
+      const tbox::SAMRAI_MPI& alt_mpi) const;
+
    static const int BoxTransitSet_EDGETAG0 = 3;
    static const int BoxTransitSet_EDGETAG1 = 4;
    static const int BoxTransitSet_FIRSTDATALEN = 1000;
@@ -275,7 +303,7 @@ private:
 private:
       bool lexicalIndexLessThan(const hier::IntVector& a,
                                 const hier::IntVector& b) const {
-         for (int i = 0; i < a.getDim().getValue(); ++i) {
+         for (hier::IntVector::dir_t i = 0; i < a.getDim().getValue(); ++i) {
             if (a(i) != b(i)) return a(i) < b(i);
          }
          return false;
@@ -468,7 +496,8 @@ private:
     */
    void
    constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector& unbalanced_to_balanced) const;
+      hier::MappingConnector& unbalanced_to_balanced,
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*!
     * @brief Re-cast a TransitLoad object to a BoxTransitSet.
@@ -509,7 +538,7 @@ private:
 
    //! @brief Compute the load for a Box.
    double computeLoad(const hier::Box& box) const {
-      return double(box.size());
+      return static_cast<double>(box.size());
    }
 
    /*!
@@ -520,7 +549,7 @@ private:
       const hier::Box& box,
       const hier::Box& restriction) const
    {
-      return double((box * restriction).size());
+      return static_cast<double>((box * restriction).size());
    }
 
    /*!
@@ -569,7 +598,8 @@ private:
       boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
       boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
       boost::shared_ptr<tbox::Timer> t_find_swap_pair;
-      boost::shared_ptr<tbox::Timer> t_assign_content_to_local_process_and_generate_map;
+      boost::shared_ptr<tbox::Timer> t_assign_to_local_process_and_populate_maps;
+      boost::shared_ptr<tbox::Timer> t_populate_maps;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;

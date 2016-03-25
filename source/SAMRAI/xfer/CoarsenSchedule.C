@@ -39,6 +39,7 @@ namespace xfer {
 
 std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
+bool CoarsenSchedule::s_barrier_and_time = false;
 bool CoarsenSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_schedule;
@@ -115,6 +116,10 @@ CoarsenSchedule::CoarsenSchedule(
 
    getFromInput();
 
+   if (s_barrier_and_time) {
+      t_coarsen_schedule->start();
+   }
+
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
@@ -168,6 +173,10 @@ CoarsenSchedule::CoarsenSchedule(
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " returning" << std::endl;
    }
+
+   if (s_barrier_and_time) {
+      t_coarsen_schedule->barrierAndStop();
+   }
 }
 
 /*
@@ -202,7 +211,9 @@ CoarsenSchedule::getFromInput()
       if (idb && idb->isDatabase("CoarsenSchedule")) {
          boost::shared_ptr<tbox::Database> csdb(
             idb->getDatabase("CoarsenSchedule"));
-         s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", false);
+         s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", s_extra_debug);
+         s_barrier_and_time =
+            csdb->getBoolWithDefault("DEV_barrier_and_time", s_barrier_and_time);
       }
    }
 }
@@ -259,7 +270,9 @@ CoarsenSchedule::coarsenData() const
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " entered" << std::endl;
    }
-   t_coarsen_data->barrierAndStart();
+   if (s_barrier_and_time) {
+      t_coarsen_data->barrierAndStart();
+   }
 
    /*
     * Allocate the source data space on the temporary patch level.
@@ -296,10 +309,12 @@ CoarsenSchedule::coarsenData() const
 
    d_temp_crse_level->deallocatePatchData(d_sources);
 
-   t_coarsen_data->stop();
-
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " returning" << std::endl;
+   }
+
+   if (s_barrier_and_time) {
+      t_coarsen_data->stop();
    }
 }
 
@@ -325,16 +340,35 @@ CoarsenSchedule::generateTemporaryLevel()
    d_temp_crse_level->setNextCoarserHierarchyLevelNumber(
       d_crse_level->getLevelNumber());
 
-   const hier::IntVector min_gcw = getMaxGhostsToGrow();
+   const hier::IntVector max_ghosts = getMaxGhostsToGrow();
+   hier::IntVector min_width(dim);
+   TBOX_ASSERT(d_crse_level->getBoxLevel()->getRefinementRatio() !=
+      hier::IntVector::getZero(dim));
+   if (d_crse_level->getBoxLevel()->getRefinementRatio() >
+       hier::IntVector::getZero(dim)) {
+      min_width =
+         (d_fine_level->getBoxLevel()->getRefinementRatio()
+          / d_crse_level->getBoxLevel()->getRefinementRatio())
+         * max_ghosts;
+   } else {
+      TBOX_ASSERT(d_fine_level->getBoxLevel()->getRefinementRatio() >=
+         hier::IntVector::getOne(dim));
+      min_width =
+         (-d_crse_level->getBoxLevel()->getRefinementRatio()
+          / d_fine_level->getBoxLevel()->getRefinementRatio())
+         * max_ghosts;
+   }
+
    const hier::IntVector transpose_width =
-      hier::Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->getRefinementRatio(),
+      hier::Connector::convertHeadWidthToBase(
+         d_crse_level->getBoxLevel()->getRefinementRatio(),
          d_fine_level->getBoxLevel()->getRefinementRatio(),
-         min_gcw);
+         min_width);
 
    const hier::Connector& coarse_to_fine =
       d_crse_level->findConnectorWithTranspose(*d_fine_level,
          transpose_width,
-         min_gcw,
+         min_width,
          hier::CONNECTOR_IMPLICIT_CREATION_RULE,
          true);
 

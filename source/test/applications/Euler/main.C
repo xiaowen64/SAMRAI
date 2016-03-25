@@ -66,7 +66,7 @@ using namespace std;
 // Classes for autotesting.
 
 #if (TESTING == 1)
-#include "AutoTester.h"
+#include "test/testlib/AutoTester.h"
 #endif
 
 using namespace SAMRAI;
@@ -181,7 +181,7 @@ dumpMatlabData1dPencil(
    const int ext,
    const double plot_time,
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-   const int pencil_direction,
+   const tbox::Dimension::dir_t pencil_direction,
    const bool default_pencil,
    const std::vector<int>& pencil_index,
    Euler* euler_model);
@@ -320,7 +320,7 @@ int main(
       string matlab_dump_filename;
       string matlab_dump_dirname;
       int matlab_dump_interval = 0;
-      int matlab_pencil_direction = 0;
+      tbox::Dimension::dir_t matlab_pencil_direction = 0;
       std::vector<int> matlab_pencil_index(dim.getValue() - 1);
       bool matlab_default_pencil = true;
       for (int id = 0; id < dim.getValue() - 1; ++id) {
@@ -339,7 +339,7 @@ int main(
          }
          if (main_db->keyExists("matlab_pencil_direction")) {
             matlab_pencil_direction =
-               main_db->getInteger("matlab_pencil_direction");
+               static_cast<tbox::Dimension::dir_t>(main_db->getInteger("matlab_pencil_direction"));
          }
          if (main_db->keyExists("matlab_pencil_index")) {
             matlab_default_pencil = false;
@@ -724,7 +724,7 @@ static void dumpMatlabData1dPencil(
    const int ext,
    const double plot_time,
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-   const int pencil_direction,
+   const tbox::Dimension::dir_t pencil_direction,
    const bool default_pencil,
    const std::vector<int>& pencil_index,
    Euler* euler_model)
@@ -748,15 +748,14 @@ static void dumpMatlabData1dPencil(
 
    if (dim > tbox::Dimension(1)) {
       int indx = 0;
-      int id = 0;
       std::vector<int> tmp(dim.getValue() - 1);
-      for (id = 0; id < dim.getValue() - 1; ++id) {
+      for (tbox::Dimension::dir_t id = 0; id < dim.getValue() - 1; ++id) {
          tmp[id] = pencil_index[id];
       }
       if (default_pencil) {
          hier::Index ifirst = domain.getBoundingBox().lower();
          indx = 0;
-         for (id = 0; id < dim.getValue(); ++id) {
+         for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
             if (id != pencil_direction) {
                tmp[indx] = ifirst(id);
                ++indx;
@@ -764,10 +763,10 @@ static void dumpMatlabData1dPencil(
          }
       }
       indx = 0;
-      for (id = 0; id < dim.getValue(); ++id) {
+      for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
          if (id != pencil_direction) {
-            pencil_box.lower(id) = tmp[indx];
-            pencil_box.upper(id) = tmp[indx];
+            pencil_box.setLower(id, tmp[indx]);
+            pencil_box.setUpper(id, tmp[indx]);
             ++indx;
          }
       }

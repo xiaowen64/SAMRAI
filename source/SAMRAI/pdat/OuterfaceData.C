@@ -46,14 +46,14 @@ OuterfaceData<TYPE>::OuterfaceData(
 
    TBOX_ASSERT(depth > 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box& ghosts = getGhostBox();
       const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
       hier::Box outerfacebox = facebox;
-      outerfacebox.upper(0) = facebox.lower(0);
+      outerfacebox.setUpper(0, facebox.lower(0));
       d_data[d][0].reset(new ArrayData<TYPE>(outerfacebox, depth));
-      outerfacebox.lower(0) = facebox.upper(0);
-      outerfacebox.upper(0) = facebox.upper(0);
+      outerfacebox.setLower(0, facebox.upper(0));
+      outerfacebox.setUpper(0, facebox.upper(0));
       d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth));
    }
 }
@@ -369,7 +369,7 @@ OuterfaceData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 OuterfaceData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -379,7 +379,7 @@ OuterfaceData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
+   size_t size = 0;
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
       hier::IntVector face_offset(offset);
@@ -417,7 +417,7 @@ OuterfaceData<TYPE>::packStream(
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
 
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          hier::IntVector face_offset(offset);
          if (d > 0) {
             for (int i = 0; i < getDim().getValue(); ++i) {
@@ -499,11 +499,11 @@ OuterfaceData<TYPE>::getSizeOfData(
    TBOX_ASSERT(depth > 0);
 
    size_t size = 0;
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box lower = FaceGeometry::toFaceBox(box, d);
       hier::Box upper = FaceGeometry::toFaceBox(box, d);
-      lower.upper(d) = box.lower(d);
-      upper.lower(d) = box.upper(d);
+      lower.setUpper(d, box.lower(d));
+      upper.setLower(d, box.upper(d));
       size += ArrayData<TYPE>::getSizeOfData(lower, depth);
       size += ArrayData<TYPE>::getSizeOfData(upper, depth);
    }
@@ -606,7 +606,8 @@ OuterfaceData<TYPE>::print(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+   for (tbox::Dimension::dir_t face_normal = 0;
+        face_normal < getDim().getValue(); ++face_normal) {
       os << "Array face normal = " << face_normal << std::endl;
       for (int side = 0; side < 2; ++side) {
          os << "side = " << ((side == 0) ? "lower" : "upper") << std::endl;
@@ -618,14 +619,14 @@ OuterfaceData<TYPE>::print(
 template<class TYPE>
 void
 OuterfaceData<TYPE>::printAxisFace(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    int side,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT(face_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    for (int d = 0; d < d_depth; ++d) {
@@ -637,7 +638,7 @@ OuterfaceData<TYPE>::printAxisFace(
 template<class TYPE>
 void
 OuterfaceData<TYPE>::printAxisFace(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    int side,
    const hier::Box& box,
    int depth,
@@ -646,7 +647,7 @@ OuterfaceData<TYPE>::printAxisFace(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT(face_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    const hier::Box facebox =

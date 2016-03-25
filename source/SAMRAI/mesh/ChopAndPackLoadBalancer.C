@@ -37,22 +37,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-tbox::StartupShutdownManager::Handler
-ChopAndPackLoadBalancer::s_initialize_handler(
-   ChopAndPackLoadBalancer::initializeCallback,
-   0,
-   0,
-   ChopAndPackLoadBalancer::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
-
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes_remove_intersection;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_get_global_boxes;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_sort;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_pack;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
-
 /*
  *************************************************************************
  *
@@ -74,10 +58,11 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL"),
-   d_tile_size(dim,1)
+   d_tile_size(dim, 1)
 {
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
+   setupTimers();
 }
 
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
@@ -92,10 +77,11 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL"),
-   d_tile_size(dim,1)
+   d_tile_size(dim, 1)
 
 {
    getFromInput(input_db);
+   setupTimers();
 }
 
 ChopAndPackLoadBalancer::~ChopAndPackLoadBalancer()
@@ -273,6 +259,8 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       cut_factor);
    NULL_USE(rank_group);
 
+   t_load_balance_box_level->start();
+
    hier::IntVector actual_max_size = max_size;
    for (int d = 0; d < d_dim.getValue(); ++d) {
       if (actual_max_size(d) < 0) {
@@ -325,6 +313,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
 
    // Build up balance_box_level from old-style data.
    balance_box_level.initialize(
+      hier::BoxContainer(),
       balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI(),
@@ -346,9 +335,13 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(*balance_to_anchor);
       oca.findOverlaps(anchor_to_balance, balance_box_level);
+      balance_to_anchor->removePeriodicRelationships();
+      anchor_to_balance.removePeriodicRelationships();
    }
 
    balance_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
+
+   t_load_balance_box_level->stop();
 }
 
 /*
@@ -427,7 +420,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
@@ -437,7 +430,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
     * This method assumes in_boxes is not empty and will fail
     * if it is.  So shortcut it for empty in_boxes.
     */
-   if (in_boxes.isEmpty()) {
+   if (in_boxes.empty()) {
       out_boxes = hier::BoxContainer();
       return;
    }
@@ -468,7 +461,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
          difference.removeIntersections(in_boxes);
          t_load_balance_boxes_remove_intersection->stop();
 
-         if (difference.isEmpty()) {
+         if (difference.empty()) {
 
             t_chop_boxes->start();
             chopUniformSingleBox(out_boxes,
@@ -597,7 +590,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
         itr != out_boxes.end() && local_indices_idx < num_local_indices;
         ++itr, ++idx) {
       if (local_indices[local_indices_idx] == idx) {
-         local_load += itr->size();
+         local_load += static_cast<double>(itr->size());
          ++local_indices_idx;
       }
    }
@@ -655,7 +648,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
     */
 
    hier::IntVector ideal_box_size(d_dim);
-   for (int i = 0; i < d_dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
       ideal_box_size(i) = (int)ceil((double)in_box.numberCells(
                i) / (double)processor_distribution(i));
 
@@ -750,7 +743,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    double total_work = 0.0;
    for (hier::BoxContainer::iterator ib0 = tmp_in_boxes_list.begin();
         ib0 != tmp_in_boxes_list.end(); ++ib0) {
-      total_work += ib0->size();
+      total_work += static_cast<double>(ib0->size());
    }
 
    double work_factor = getMaxWorkloadFactor(level_number);
@@ -853,7 +846,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    for (hier::BoxContainer::iterator i = tmp_level_boxes.begin();
         i != tmp_level_boxes.end();
         ++i, ++idx) {
-      tmp_level_workloads[idx] = i->size();
+      tmp_level_workloads[idx] = static_cast<double>(i->size());
    }
 
    hier::ProcessorMapping tmp_level_mapping;
@@ -1057,7 +1050,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    int offset = 0;
    for (hier::BoxContainer::const_iterator x = box_list_in.begin();
         x != box_list_in.end(); ++x) {
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
          buf_in_ptr[offset++] = x->lower(i);
          buf_in_ptr[offset++] = x->upper(i);
       }
@@ -1099,9 +1092,9 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    offset = 0;
    for (hier::BoxContainer::iterator b = box_list_out.begin();
         b != box_list_out.end(); ++b) {
-      for (int j = 0; j < d_dim.getValue(); ++j) {
-         b->lower(j) = buf_out_ptr[offset++];
-         b->upper(j) = buf_out_ptr[offset++];
+      for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
+         b->setLower(j, buf_out_ptr[offset++]);
+         b->setUpper(j, buf_out_ptr[offset++]);
       }
       b->setBlockId(hier::BlockId(buf_out_ptr[offset++]));
    }
@@ -1326,39 +1319,25 @@ ChopAndPackLoadBalancer::binPackBoxes(
  *************************************************************************
  */
 void
-ChopAndPackLoadBalancer::initializeCallback()
+ChopAndPackLoadBalancer::setupTimers()
 {
-   t_load_balance_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::loadBalanceBoxes()");
-   t_load_balance_boxes_remove_intersection =
-      tbox::TimerManager::getManager()->
-      getTimer(
-         "mesh::ChopAndPackLoadBalancer::loadBalanceBoxes()_remove_intersection");
-   t_get_global_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::get_global_boxes");
-   t_bin_pack_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()");
-   t_bin_pack_boxes_sort = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()_sort");
-   t_bin_pack_boxes_pack = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()_pack");
-   t_chop_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::chop_boxes");
-}
+   t_load_balance_box_level = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::loadBalanceBoxLevel()");
 
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-ChopAndPackLoadBalancer::finalizeCallback()
-{
-   t_load_balance_boxes.reset();
-   t_load_balance_boxes_remove_intersection.reset();
-   t_bin_pack_boxes.reset();
-   t_bin_pack_boxes_sort.reset();
-   t_bin_pack_boxes_pack.reset();
-   t_chop_boxes.reset();
+   t_load_balance_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::loadBalanceBoxes()");
+   t_load_balance_boxes_remove_intersection = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::loadBalanceBoxes()_remove_intersection");
+   t_get_global_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::get_global_boxes");
+   t_bin_pack_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::binPackBoxes()");
+   t_bin_pack_boxes_sort = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::binPackBoxes()_sort");
+   t_bin_pack_boxes_pack = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::binPackBoxes()_pack");
+   t_chop_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::chop_boxes");
 }
 
 }

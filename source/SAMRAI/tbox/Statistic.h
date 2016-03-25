@@ -172,10 +172,10 @@ public:
    }
 
    /**
-    * Return integer number of bytes needed to stream the statistic data.
+    * Return number of bytes needed to stream the statistic data.
     * This is the amount needed by the stat transaction class.
     */
-   int
+   size_t
    getDataStreamSize();
 
    /**

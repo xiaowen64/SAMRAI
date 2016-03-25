@@ -153,9 +153,9 @@ EdgeDoubleConstantRefine::refine(
          hier::Box fine_box(*b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
-         for (int i = 0; i < dim.getValue(); ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
-               fine_box.upper(i) -= 1;
+               fine_box.setUpper(i, fine_box.upper(i) - 1);
             }
          }
 

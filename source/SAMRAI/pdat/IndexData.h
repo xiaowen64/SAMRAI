@@ -186,7 +186,7 @@ public:
     *
     * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
-   virtual int
+   virtual size_t
    getDataStreamSize(
       const hier::BoxOverlap& overlap) const;
 
@@ -380,7 +380,7 @@ public:
     * @pre offset >= 0 && offset <= hier::PatchData::getGhostBox().size()
     * @pre d_data[offset] != 0
     */
-   int
+   size_t
    getNumberOfItems() const;
 
    /**
@@ -469,7 +469,7 @@ private:
     */
    bool
    isElement(
-      int offset) const;
+      size_t offset) const;
 
    /**
     * Remove (deallocate) the item in the irregular index set located at
@@ -480,7 +480,7 @@ private:
     */
    void
    removeItem(
-      const int offset);
+      const size_t offset);
 
    /**
     * Internal routine to append item to the linked list
@@ -494,7 +494,7 @@ private:
    void
    addItemToList(
       const hier::Index& index,
-      const int offset,
+      const size_t offset,
       TYPE& item);
 
    /**
@@ -509,7 +509,7 @@ private:
    void
    appendItemToList(
       const hier::Index& index,
-      const int offset,
+      const size_t offset,
       TYPE& item);
 
    /**
@@ -556,7 +556,7 @@ public:
 
    IndexDataNode<TYPE, BOX_GEOMETRY>(
       const hier::Index & index,
-      const int d_offset,
+      const size_t d_offset,
       TYPE & t,
       IndexDataNode<TYPE, BOX_GEOMETRY>* n,
       IndexDataNode<TYPE, BOX_GEOMETRY>* p);
@@ -568,7 +568,7 @@ private:
    IndexDataNode<TYPE, BOX_GEOMETRY>();
 
    hier::Index d_index;
-   int d_offset;
+   size_t d_offset;
    TYPE* d_item;
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* d_next;

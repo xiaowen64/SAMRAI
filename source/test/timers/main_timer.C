@@ -300,7 +300,7 @@ int main(
             getTimer(timer_name);
 
          if (!timers[timer_number]) {
-            TBOX_ERROR("Failed to allocate timer, max was " + timer_number);
+            TBOX_ERROR("Failed to allocate timer, max was " << timer_number);
          }
       }
 

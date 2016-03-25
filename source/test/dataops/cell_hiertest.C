@@ -333,7 +333,7 @@ int main(
 
       // Test #2: math::HierarchyCellDataOpsReal::numberOfEntries()
       // Expected: num_data_points = 90 for 2D, 660 for 3D
-      int num_data_points = cell_ops->numberOfEntries(cvindx[0]);
+      size_t num_data_points = cell_ops->numberOfEntries(cvindx[0]);
       if (num_data_points != ((dim == tbox::Dimension(2)) ? 90 : 660)) {
          ++num_failures;
          tbox::perr

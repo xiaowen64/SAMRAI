@@ -145,7 +145,7 @@ FaceFloatConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -155,12 +155,16 @@ FaceFloatConstantRefine::refine(
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
          hier::Box fine_box(dim);
-         for (int i = 0; i < dim.getValue(); ++i) {
-            fine_box.lower((axis + i) % dim.getValue()) = face_box.lower(i);
-            fine_box.upper((axis + i) % dim.getValue()) = face_box.upper(i);
+         for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
+            fine_box.setLower(
+               static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()),
+               face_box.lower(i));
+            fine_box.setUpper(
+               static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()),
+               face_box.upper(i));
          }
 
-         fine_box.upper(axis) -= 1;
+         fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
          const hier::Index ifirstc = coarse_box.lower();

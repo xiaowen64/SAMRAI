@@ -368,17 +368,11 @@ int
 SAMRAI_MPI::Finalized(
    int* flag)
 {
-#ifndef HAVE_MPI
-   NULL_USE(flag);
-#endif
    int rval = MPI_SUCCESS;
-   if (!s_mpi_is_initialized) {
-      TBOX_ERROR("SAMRAI_MPI::Finalized is a no-op without run-time MPI!");
-   }
 #ifdef HAVE_MPI
-   else {
-      rval = MPI_Finalized(flag);
-   }
+   rval = MPI_Finalized(flag);
+#else
+   *flag = true;
 #endif
    return rval;
 }
@@ -1223,6 +1217,37 @@ SAMRAI_MPI::Sendrecv(
 
 /*
  *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Scan(
+   void* sendbuf,
+   void* recvbuf,
+   int count,
+   Datatype datatype,
+   Op op) const
+{
+#ifndef HAVE_MPI
+   NULL_USE(sendbuf);
+   NULL_USE(recvbuf);
+   NULL_USE(count);
+   NULL_USE(datatype);
+   NULL_USE(op);
+#endif
+   int rval = MPI_SUCCESS;
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Scan is a no-op without run-time MPI!");
+   }
+#ifdef HAVE_MPI
+   else {
+      rval = MPI_Scan(sendbuf, recvbuf, count, datatype, op, d_comm);
+   }
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
  *
  * Methods named like MPI's native interfaces (without the MPI_ prefix)
  * are wrappers for the native interfaces.  The SAMRAI_MPI versions
@@ -1518,6 +1543,40 @@ SAMRAI_MPI::parallelPrefixSum(
 
 /*
  **************************************************************************
+ * Check whether there is a receivable message, for use in guarding
+ * against errant messages (message from an unrelated communication)
+ * that may be mistakenly received.  This check is imperfect; it can
+ * detect messages that have arrived but it can't detect messages that
+ * has not arrived.
+ *
+ * The barriers prevent processes from starting or finishing the check
+ * too early.  Early start may miss recently sent errant messages from
+ * slower processes.  Early finishes can allow the process to get ahead
+ * and send a valid message that may be mistaken as an errant message
+ * by the receiver doing the Iprobe.
+ **************************************************************************
+ */
+bool
+SAMRAI_MPI::hasReceivableMessage(
+   Status* status,
+   int source,
+   int tag) const
+{
+   int flag = false;
+   if (s_mpi_is_initialized) {
+      tbox::SAMRAI_MPI::Status tmp_status;
+      Barrier();
+      int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
+      if (mpi_err != MPI_SUCCESS) {
+         TBOX_ERROR("SAMRAI_MPI::hasReceivableMessage: Error probing for message." << std::endl);
+      }
+      Barrier();
+   }
+   return flag == true;
+}
+
+/*
+ **************************************************************************
  **************************************************************************
  */
 void
@@ -1535,9 +1594,9 @@ SAMRAI_MPI::dupCommunicator(
    TBOX_ASSERT(d_rank == r.d_rank);
    TBOX_ASSERT(d_size == r.d_size);
 #else
-   NULL_USE(r);
-   d_rank = 0;
-   d_size = 1;
+   d_comm = r.d_comm;
+   d_rank = r.d_rank;
+   d_size = r.d_size;
 #endif
 }
 
@@ -1559,6 +1618,32 @@ SAMRAI_MPI::freeCommunicator()
 #endif
    d_rank = 0;
    d_size = 1;
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+int
+SAMRAI_MPI::compareCommunicator(
+   const SAMRAI_MPI& r) const
+{
+#ifdef HAVE_MPI
+   int compare_result;
+   int mpi_err = Comm_compare(
+         d_comm,
+         r.d_comm,
+         &compare_result);
+   if (mpi_err != MPI_SUCCESS) {
+      TBOX_ERROR("SAMRAI_MPI::compareCommunicator: Error comparing two communicators.");
+   }
+   return compare_result;
+
+#else
+   NULL_USE(r);
+   return d_comm == r.d_comm ? MPI_IDENT : MPI_CONGRUENT;
+
+#endif
 }
 
 /*

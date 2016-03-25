@@ -17,7 +17,7 @@ namespace pdat {
 CellOverlap::CellOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation):
-   d_is_overlap_empty(boxes.isEmpty()),
+   d_is_overlap_empty(boxes.empty()),
    d_transformation(transformation),
    d_dst_boxes(boxes)
 {
@@ -42,10 +42,10 @@ CellOverlap::getDestinationBoxContainer() const
 void
 CellOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes) const
 {
-   TBOX_ASSERT(src_boxes.isEmpty());
+   TBOX_ASSERT(src_boxes.empty());
 
    src_boxes = d_dst_boxes;
-   if (!src_boxes.isEmpty()) {
+   if (!src_boxes.empty()) {
       for (hier::BoxContainer::iterator bi = src_boxes.begin();
            bi != src_boxes.end(); ++bi) {
          d_transformation.inverseTransform(*bi);

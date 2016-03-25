@@ -365,7 +365,7 @@ CellData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 CellData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -435,7 +435,7 @@ CellData<TYPE>::packWithRotation(
 
    const int depth = getDepth();
 
-   const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+   const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
    std::vector<TYPE> buffer(size);
 
    int i = 0;
@@ -498,7 +498,7 @@ void CellData<TYPE>::sum(
    const CellOverlap* t_overlap =
       dynamic_cast<const CellOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const CellData<TYPE>* t_onode_src =
       dynamic_cast<const CellData<TYPE> *>(&src);
@@ -509,7 +509,7 @@ void CellData<TYPE>::sum(
    //        data or other flavors of the copy operation, we
    //        should refactor the routine similar to the way
    //        the regular copy operations are implemented.
-   if (t_onode_src == NULL) {
+   if (t_onode_src == 0) {
       TBOX_ERROR("CellData<dim>::sum error!\n"
          << "Can copy and add only from CellData<TYPE> "
          << "of the same dim and TYPE.");
@@ -542,7 +542,7 @@ void CellData<TYPE>::unpackStreamAndSum(
    const CellOverlap* t_overlap =
       dynamic_cast<const CellOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& dst_boxes(
       t_overlap->getDestinationBoxContainer());

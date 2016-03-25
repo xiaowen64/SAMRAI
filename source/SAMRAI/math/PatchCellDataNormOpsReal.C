@@ -38,7 +38,7 @@ PatchCellDataNormOpsReal<TYPE>::~PatchCellDataNormOpsReal()
  */
 
 template<class TYPE>
-int
+size_t
 PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
@@ -47,7 +47,7 @@ PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    const hier::Box ibox = box * data->getGhostBox();
-   int retval = (ibox.size() * data->getDepth());
+   size_t retval = (ibox.size() * data->getDepth());
    return retval;
 }
 

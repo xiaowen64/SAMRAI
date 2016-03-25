@@ -63,7 +63,6 @@ AdaptivePoisson::AdaptivePoisson(
    boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
    boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
    tbox::Database& database,
-   /*! Standard output stream */ std::ostream* out_stream,
    /*! Log output stream */ std::ostream* log_stream):
    d_name(object_name),
    d_dim(dim),
@@ -84,7 +83,6 @@ AdaptivePoisson::AdaptivePoisson(
    d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact", 1)),
    d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual")),
    d_weight(new pdat::CellVariable<double>(d_dim, "vector weight", 1)),
-   d_ostream(out_stream),
    d_lstream(log_stream),
    d_problem_name("sine"),
    d_sps(object_name + "Poisson solver specifications"),
@@ -475,7 +473,7 @@ void AdaptivePoisson::applyGradientDetector(
    hier::PatchHierarchy& hierarchy = *hierarchy_;
    hier::PatchLevel& level =
       (hier::PatchLevel &) * hierarchy.getPatchLevel(ln);
-   int ntag = 0, ntotal = 0;
+   size_t ntag = 0, ntotal = 0;
    double maxestimate = 0;
    for (hier::PatchLevel::iterator pi(level.begin());
         pi != level.end(); ++pi) {
@@ -571,9 +569,11 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const std::string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
    NULL_USE(depth_id);
+   NULL_USE(simulation_time);
 
    // begin debug code
    // math::HierarchyCellDataOpsReal<double> hcellmath(d_hierarchy);
@@ -596,8 +596,7 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
       memcpy(buffer, estimate_data.getPointer(), sizeof(double) * region.size());
    } else if (variable_name == "Patch level number") {
       double pln = patch.getPatchLevelNumber();
-      int i, size = region.size();
-      for (i = 0; i < size; ++i) buffer[i] = pln;
+      for (size_t i = 0; i < region.size(); ++i) buffer[i] = pln;
    } else {
       // Did not register this name.
       TBOX_ERROR(

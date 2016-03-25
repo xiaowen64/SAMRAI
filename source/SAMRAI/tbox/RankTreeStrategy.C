@@ -25,7 +25,7 @@ namespace tbox {
 const int RankTreeStrategy::s_invalid_rank(-1);
 const unsigned int
 RankTreeStrategy::s_invalid_child_number(
-   tbox::MathUtilities<int>::getMax() / 2);
+   tbox::MathUtilities<unsigned int>::getMax() / 2);
 
 RankTreeStrategy::RankTreeStrategy()
 {

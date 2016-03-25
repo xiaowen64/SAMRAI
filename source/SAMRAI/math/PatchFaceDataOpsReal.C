@@ -92,9 +92,9 @@ PatchFaceDataOpsReal<TYPE>::copyData(
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
-   int dimVal = dst->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       (dst->getArrayData(d)).copy(src->getArrayData(d), face_box);
    }

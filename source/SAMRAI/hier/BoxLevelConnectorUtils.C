@@ -346,16 +346,11 @@ BoxLevelConnectorUtils::baseNestsInHead(
  * If sequentialize_global_indices is true, the indices are changed
  * such that they become globally sequential, with processor n
  * starting where processor n-1 ended.  In order to determine what the
- * global indices should be, an allgather communication is used to
- * determine how many boxes each processor has.  This is a
- * utility function for resetting Box indices to correspond to
- * patch indices while we try to be backward compatible with non-DLBG
- * parts of SAMRAI.
+ * global indices should be, a scan communication is used.
  *
- * If sort_boxes_by_corner is true, the local Boxes are
- * sorted by their corner indices.  This helps to de-randomize
- * Boxes that may be randomly ordered by non-deterministic
- * algorithms.
+ * If sort_boxes_by_corner is true, the local Boxes are sorted by
+ * their corner indices.  This helps to de-randomize Boxes that may be
+ * randomly ordered by non-deterministic algorithms.
  ***********************************************************************
  */
 void
@@ -387,17 +382,24 @@ BoxLevelConnectorUtils::makeSortingMap(
    if (sequentialize_global_indices) {
       // Increase last_index by the box count of all lower MPI ranks.
 
-      int box_count =
+      int local_box_count =
          static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
-      unsorted_box_level.getMPI().parallelPrefixSum(&box_count, 1, 0);
-      box_count -= static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
+      int scanned_box_count = -1;
+      if (tbox::SAMRAI_MPI::usingMPI()) {
+         unsorted_box_level.getMPI().Scan(&local_box_count,
+            &scanned_box_count,
+            1, MPI_INT, MPI_SUM);
+      } else {
+         scanned_box_count = local_box_count; // Scan result for 1 proc.
+      }
+      scanned_box_count -= static_cast<int>(local_box_count);
 
-      last_index += box_count;
+      last_index += scanned_box_count;
    }
 
    std::vector<Box> real_box_vector;
    std::vector<Box> periodic_image_box_vector;
-   if (!cur_boxes.isEmpty()) {
+   if (!cur_boxes.empty()) {
       /*
        * Bypass qsort if we have no boxes (else there is a memory warning).
        */
@@ -688,7 +690,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          false);
       // ... reference_boundary is now ( (R^1) \ R )
 
-      if (!domain.isEmpty()) {
+      if (!domain.empty()) {
 
          if (input.getRefinementRatio() == one_vec) {
             reference_box_list.intersectBoxes(
@@ -837,7 +839,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    } // Loop through input_boxes
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (parts->getBoxes().isEmpty()) {
+   if (parts->getBoxes().empty()) {
       /*
        * If there are no parts, then all in input
        * should be mapped to empty neighbor containers according
@@ -974,20 +976,18 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         const std::map<BlockId, BaseGridGeometry::Neighbor>& neighbors(
-            grid_geometry->getNeighbors(block_id));
 
-         for (std::map<BlockId, BaseGridGeometry::Neighbor>::const_iterator ni =
-                 neighbors.begin();
-              ni != neighbors.end(); ++ni) {
-            const BaseGridGeometry::Neighbor& neighbor(ni->second);
+         for (BaseGridGeometry::ConstNeighborIterator ni =
+                 grid_geometry->begin(block_id);
+              ni != grid_geometry->end(block_id); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(*ni);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
             }
          }
 
-         if (!reduced_connectivity_singularity_boxes.isEmpty()) {
+         if (!reduced_connectivity_singularity_boxes.empty()) {
             if (refinement_ratio != one_vec) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
@@ -1009,10 +1009,10 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for (std::map<BlockId, BaseGridGeometry::Neighbor>::const_iterator ni =
-                 neighbors.begin();
-              ni != neighbors.end(); ++ni) {
-            const BaseGridGeometry::Neighbor& neighbor(ni->second);
+         for (BaseGridGeometry::ConstNeighborIterator ni =
+                 grid_geometry->begin(block_id);
+              ni != grid_geometry->end(block_id); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(*ni);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&
                 reference_boxes_tree.hasBoxInBlock(neighbor_block_id)) {
@@ -1508,7 +1508,7 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    const BoxContainer& input_boxes =
       input_to_takeaway.getBase().getBoxes();
 
-   if (!remainder_boxes.isEmpty() && !input_boxes.isEmpty()) {
+   if (!remainder_boxes.empty() && !input_boxes.empty()) {
 
       for (BoxContainer::const_iterator bi = remainder_boxes.begin();
            bi != remainder_boxes.end(); ++bi) {

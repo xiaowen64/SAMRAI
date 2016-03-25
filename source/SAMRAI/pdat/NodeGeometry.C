@@ -131,7 +131,7 @@ NodeGeometry::computeDestinationBoxes(
       }
    }
 
-   if (!dst_restrict_boxes.isEmpty() && !dst_boxes.isEmpty()) {
+   if (!dst_restrict_boxes.empty() && !dst_boxes.empty()) {
       hier::BoxContainer node_restrict_boxes;
       for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
            b != dst_restrict_boxes.end(); ++b) {
@@ -185,9 +185,9 @@ NodeGeometry::transform(
    }
 
    if (!box.empty()) {
-      box.upper() -= hier::IntVector::getOne(box.getDim());
+      box.setUpper(box.upper() - hier::IntVector::getOne(box.getDim()));
       transformation.transform(box);
-      box.upper() += hier::IntVector::getOne(box.getDim());
+      box.setUpper(box.upper() + hier::IntVector::getOne(box.getDim()));
    }
 }
 

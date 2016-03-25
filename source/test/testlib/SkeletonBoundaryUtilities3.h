@@ -331,7 +331,7 @@ private:
 
    static void
    get3dBdryDirectionCheckValues(
-      int& idir,
+      tbox::Dimension::dir_t& idir,
       int& offsign,
       int btype,
       int bloc,

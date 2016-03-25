@@ -226,7 +226,7 @@ void EdgeDataTest::setConservativeData(
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
-   int ncells = 0;
+   size_t ncells = 0;
    for (hier::BoxContainer::const_iterator i = domain.begin();
         i != domain.end(); ++i) {
       ncells += i->size();
@@ -256,7 +256,7 @@ void EdgeDataTest::setConservativeData(
                   value += (double)((*ci)(i));
                }
             }
-            value /= ncells;
+            value /= static_cast<double>(ncells);
             if (d_dim == tbox::Dimension(1)) {
                for (int edge = 0; edge < 1; ++edge) {
                   pdat::EdgeIndex si(*ci, axis, edge);
@@ -307,7 +307,7 @@ void EdgeDataTest::setConservativeData(
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
-      int coarse_ncells = ncells;
+      size_t coarse_ncells = static_cast<size_t>(ncells);
       double* delta = new double[max_ratio * d_dim.getValue()];
       for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
@@ -333,7 +333,7 @@ void EdgeDataTest::setConservativeData(
                   value += (double)(ci(i));
                }
             }
-            value /= coarse_ncells;
+            value /= static_cast<double>(coarse_ncells);
 
             for (j = 0; j < d_dim.getValue(); ++j) {
                if (j == axis) {
@@ -437,7 +437,7 @@ void EdgeDataTest::setConstantBoundaryData(
 
    if (bbox.getBoundaryType() == d_dim.getValue()) {
 
-      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
          if (axis == 0) {
             if (lid % 2) {
                fillbox.growLower(axis,
@@ -468,7 +468,7 @@ void EdgeDataTest::setConstantBoundaryData(
       }
 
    } else if (bbox.getBoundaryType() == 1) {
-      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
          if (lid == 2 * axis) {
             fillbox.growLower(axis,
                tbox::MathUtilities<int>::Max(gcw(axis) - 1, 0));

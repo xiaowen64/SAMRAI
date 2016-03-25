@@ -44,7 +44,8 @@ Box::Box(
    d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_block_id(BlockId::invalidId()),
    d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(true)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -65,7 +66,8 @@ Box::Box(
    d_hi(upper),
    d_block_id(block_id),
    d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(boost::logic::indeterminate)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(lower, upper);
    TBOX_ASSERT(block_id != BlockId::invalidId());
@@ -86,7 +88,8 @@ Box::Box(
    d_hi(box.d_hi),
    d_block_id(box.d_block_id),
    d_id(box.d_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(box.d_empty_flag)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -131,7 +134,8 @@ Box::Box(
    d_hi(upper),
    d_block_id(block_id),
    d_id(local_id, owner_rank, periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(boost::logic::indeterminate)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
@@ -156,7 +160,8 @@ Box::Box(
    d_hi(box.d_hi),
    d_block_id(box.d_block_id),
    d_id(local_id, owner, periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(box.d_empty_flag)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
@@ -176,11 +181,12 @@ Box::Box(
    const tbox::Dimension& dim,
    const GlobalId& global_id,
    const PeriodicId& periodic_id):
-   d_lo(dim),
-   d_hi(dim),
+   d_lo(dim, tbox::MathUtilities<int>::getMax()),
+   d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_block_id(BlockId::invalidId()),
    d_id(global_id, periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(true)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
@@ -199,10 +205,11 @@ Box::Box(
 Box::Box(
    const tbox::Dimension& dim,
    const BoxId& box_id):
-   d_lo(dim),
-   d_hi(dim),
+   d_lo(dim, tbox::MathUtilities<int>::getMax()),
+   d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_id(box_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(true)
 {
    TBOX_ASSERT(box_id.getPeriodicId().isValid());
    TBOX_ASSERT(
@@ -220,10 +227,10 @@ Box::Box(
 }
 
 /*
- *******************************************************************************
+ ******************************************************************************
  * Construct Box from the components of a reference Box
  * and possibly changing the periodic shift.
- *******************************************************************************
+ ******************************************************************************
  */
 Box::Box(
    const Box& other,
@@ -234,7 +241,8 @@ Box::Box(
    d_block_id(other.getBlockId()),
    d_id(other.getLocalId(), other.getOwnerRank(),
         periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(other.d_empty_flag)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 #ifdef BOX_TELEMETRY
@@ -311,6 +319,7 @@ Box::operator = (
 
       d_lo = rhs.d_lo;
       d_hi = rhs.d_hi;
+      d_empty_flag = rhs.d_empty_flag;
       if (!d_id_locked) {
          d_block_id = rhs.d_block_id;
          d_id = rhs.d_id;
@@ -356,6 +365,7 @@ Box::initialize(
 
    d_lo = other.d_lo;
    d_hi = other.d_hi;
+   d_empty_flag = other.d_empty_flag;
 
    if (refinement_ratio > IntVector::getZero(dim)) {
 
@@ -408,9 +418,8 @@ Box::initialize(
 
 Index
 Box::index(
-   const int offset) const
+   const size_t offset) const
 {
-   TBOX_ASSERT(offset >= 0);
    TBOX_ASSERT(offset <= size());
 
    IntVector n(getDim());
@@ -418,7 +427,7 @@ Box::index(
 
    n = numberCells();
 
-   int remainder = offset;
+   size_t remainder = offset;
 
    for (int d = getDim().getValue() - 1; d > -1; --d) {
       /* Compute the stride for indexing */
@@ -428,11 +437,11 @@ Box::index(
       }
 
       /* Compute the local index */
-      index[d] = remainder / stride;
+      index[d] = static_cast<int>(remainder / stride);
       remainder -= index[d] * stride;
 
       /* Compute the global index */
-      index[d] += lower(d);
+      index[d] += lower(static_cast<tbox::Dimension::dir_t>(d));
    }
 
    return Index(index);
@@ -480,6 +489,7 @@ Box::operator * (
    } else {
       both.d_lo.max(box.d_lo);
       both.d_hi.min(box.d_hi);
+      both.d_empty_flag = boost::logic::indeterminate;
    }
 
    return both;
@@ -500,6 +510,7 @@ Box::operator *= (
    } else {
       d_lo.max(box.d_lo);
       d_hi.min(box.d_hi);
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    return *this;
@@ -522,6 +533,7 @@ Box::intersect(
    } else {
       result.d_lo.max(other.d_lo);
       result.d_hi.min(other.d_hi);
+      result.d_empty_flag = boost::logic::indeterminate;
    }
 }
 
@@ -539,7 +551,7 @@ Box::intersects(
       }
    }
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (dir_t i = 0; i < getDim().getValue(); ++i) {
       if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
           tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
          return false;
@@ -555,14 +567,13 @@ Box::operator + (
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   Box bbox(*this);
-
    if (d_block_id != box.d_block_id) {
       if (!(empty()) || !(box.empty())) {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
       }
    }
 
+   Box bbox(*this);
    bbox += box;
    return bbox;
 }
@@ -579,6 +590,7 @@ Box::operator += (
       } else if (d_block_id == box.d_block_id) {
          d_lo.min(box.d_lo);
          d_hi.max(box.d_hi);
+         d_empty_flag = boost::logic::indeterminate;
       } else {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
       }
@@ -588,10 +600,10 @@ Box::operator += (
 
 void
 Box::lengthen(
-   const int direction,
+   const dir_t direction,
    const int ghosts)
 {
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+   TBOX_ASSERT((direction < getDim().getValue()));
 
    if (!empty()) {
       if (ghosts > 0) {
@@ -604,10 +616,10 @@ Box::lengthen(
 
 void
 Box::shorten(
-   const int direction,
+   const dir_t direction,
    const int ghosts)
 {
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+   TBOX_ASSERT((direction < getDim().getValue()));
 
    if (!empty()) {
       if (ghosts > 0) {
@@ -615,6 +627,7 @@ Box::shorten(
       } else {
          d_lo(direction) -= ghosts;
       }
+      d_empty_flag = boost::logic::indeterminate;
    }
 }
 
@@ -625,7 +638,7 @@ Box::refine(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
 
    bool negative_ratio = false;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (dir_t d = 0; d < getDim().getValue(); ++d) {
       if (ratio(d) < 0) {
          negative_ratio = true;
          break;
@@ -636,7 +649,7 @@ Box::refine(
       d_lo *= ratio;
       d_hi = d_hi * ratio + (ratio - 1);
    } else {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          if (ratio(i) > 0) {
             d_lo(i) *= ratio(i);
             d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
@@ -656,13 +669,13 @@ Box::refine(
  *************************************************************************
  */
 
-int
+Box::dir_t
 Box::longestDirection() const
 {
    int max = upper(0) - lower(0);
-   int dim = 0;
+   dir_t dim = 0;
 
-   for (int i = 1; i < getDim().getValue(); ++i)
+   for (dir_t i = 1; i < getDim().getValue(); ++i)
       if ((upper(i) - lower(i)) > max) {
          max = upper(i) - lower(i);
          dim = i;
@@ -685,7 +698,7 @@ Box::DatabaseBox_from_Box() const
 
    new_Box.setDim(getDim());
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (dir_t i = 0; i < getDim().getValue(); ++i) {
       new_Box.lower(i) = d_lo(i);
       new_Box.upper(i) = d_hi(i);
    }
@@ -697,10 +710,11 @@ void
 Box::set_Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
-   for (int i = 0; i < box.getDimVal(); ++i) {
+   for (dir_t i = 0; i < box.getDimVal(); ++i) {
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
+   d_empty_flag = boost::logic::indeterminate;
 }
 
 void
@@ -713,8 +727,8 @@ Box::putToIntBuffer(
    d_id.putToIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const int dim(d_lo.getDim().getValue());
-   for (int d = 0; d < dim; ++d) {
+   const dir_t dim(d_lo.getDim().getValue());
+   for (dir_t d = 0; d < dim; ++d) {
       buffer[d] = d_lo(d);
       buffer[dim + d] = d_hi(d);
    }
@@ -731,11 +745,12 @@ Box::getFromIntBuffer(
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const int dim(d_lo.getDim().getValue());
-   for (int d = 0; d < dim; ++d) {
+   const dir_t dim(d_lo.getDim().getValue());
+   for (dir_t d = 0; d < dim; ++d) {
       d_lo(d) = buffer[d];
       d_hi(d) = buffer[dim + d];
    }
+   d_empty_flag = boost::logic::indeterminate;
 
 }
 
@@ -759,6 +774,7 @@ Box::getFromMessageStream(
    d_id.getFromMessageStream(msg);
    msg.unpack(&d_lo[0], d_lo.getDim().getValue());
    msg.unpack(&d_hi[0], d_hi.getDim().getValue());
+   d_empty_flag = boost::logic::indeterminate;
 }
 
 /*
@@ -775,9 +791,12 @@ operator >> (
    Box& box)
 {
    while (s.get() != '[') ;
-   s >> box.lower();
+   Index tmp(box.getDim());
+   s >> tmp;
+   box.setLower(tmp);
    while (s.get() != ',') NULL_STATEMENT;
-   s >> box.upper();
+   s >> tmp;
+   box.setUpper(tmp);
    while (s.get() != ']') NULL_STATEMENT;
    return s;
 }
@@ -790,7 +809,8 @@ operator << (
    if (box.empty()) {
       s << "[(),()]";
    } else {
-      s << box.getBoxId() << " [" << box.lower() << "," << box.upper() << "]";
+      s << box.getBoxId() << ' ' << box.getBlockId()
+      << '[' << box.lower() << ',' << box.upper() << ']';
    }
    return s;
 }
@@ -828,9 +848,9 @@ Box::coalesceIntervals(
          return retval;
       }
    } else {
-      for (int id = 0; id < dim; ++id) {
+      for (dir_t id = 0; id < dim; ++id) {
          if ((lo1[id] == lo2[id]) && (hi1[id] == hi2[id])) {
-            int id2;
+            dir_t id2;
             int low1[SAMRAI::MAX_DIM_VAL];
             int high1[SAMRAI::MAX_DIM_VAL];
             int low2[SAMRAI::MAX_DIM_VAL];
@@ -841,8 +861,8 @@ Box::coalesceIntervals(
                low2[id2] = lo2[id2];
                high2[id2] = hi2[id2];
             }
-            for (id2 = id + 1; id2 < dim; ++id2) {
-               int id1 = id2 - 1;
+            for (id2 = static_cast<tbox::Dimension::dir_t>(id + 1); id2 < dim; ++id2) {
+               dir_t id1 = static_cast<tbox::Dimension::dir_t>(id2 - 1);
                low1[id1] = lo1[id2];
                high1[id1] = hi1[id2];
                low2[id1] = lo2[id2];
@@ -883,7 +903,7 @@ Box::coalesceWith(
       retval = true;
       *this += box;
    } else if (d_block_id == box.d_block_id) {
-      int id;
+      dir_t id;
       const int* box_lo = &box.lower()[0];
       const int* box_hi = &box.upper()[0];
       int me_lo[SAMRAI::MAX_DIM_VAL];
@@ -924,15 +944,15 @@ Box::coalesceWith(
 /*
  *************************************************************************
  *                                                                       *
- * Rotates a 3-Dimensional box 45*num_rotations degrees around the given *
- * and set this box to the union of the boxes.                           *
+ * Rotates a 3-Dimensional box 90*num_rotations degrees around the given *
+ * axis.                                                                 *
  *                                                                       *
  *************************************************************************
  */
 
 void
 Box::rotateAboutAxis(
-   const int axis,
+   const dir_t axis,
    const int num_rotations)
 {
    TBOX_ASSERT(axis < getDim().getValue());
@@ -1135,7 +1155,7 @@ BoxIterator::BoxIterator(
 {
    if (!d_box.empty() && !begin) {
       d_index(d_box.getDim().getValue() - 1) =
-         d_box.upper(d_box.getDim().getValue() - 1) + 1;
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
    }
 }
 

@@ -14,7 +14,7 @@
 // using namespace std;
 
 #include "AdaptivePoisson.h"
-#include "get-input-filename.h"
+#include "test/testlib/get-input-filename.h"
 
 /*
  * Headers for basic SAMRAI objects used in this code.
@@ -214,7 +214,6 @@ int main(
                                        fac_ops,
                                        fac_precond,
                                        *(input_db->getDatabase("AdaptivePoisson")),
-                                       &tbox::pout,
                                        &tbox::plog);
 
       /*

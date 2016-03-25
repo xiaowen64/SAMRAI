@@ -16,13 +16,18 @@
 
 // Headers for major algorithm/data structure objects from SAMRAI
 
-#include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
+
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
+#include "SAMRAI/mesh/StandardTagAndInitialize.h"
+#include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
+#include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
+
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
@@ -33,6 +38,7 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SiloDatabaseFactory.h"
 #include "SAMRAI/tbox/InputDatabase.h"
@@ -173,11 +179,8 @@ int main(
 
    {
       string input_filename;
-      string restart_read_dirname;
-      int restore_num = 0;
       string case_name;
-
-      bool is_from_restart = false;
+      int scale_size = mpi.getSize();
 
       if ((argc != 2) && (argc != 3) && (argc != 4)) {
          tbox::pout << "USAGE:\n"
@@ -185,30 +188,23 @@ int main(
                     << "or\n"
                     << argv[0] << " <input filename> <case name>"
                     << "or\n"
-                    << argv[0] << " <input filename> "
-                    << "  <restart dir> <restore number> [options]\n"
-                    << "  options:\n"
-                    << "  none at this time"
+                    << argv[0] << " <input filename> <case name> <scale size> "
                     << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
          input_filename = argv[1];
-
-         if (argc == 3) {
+         if (argc > 2) {
             case_name = argv[2];
          }
-         if (argc == 4) {
-            restart_read_dirname = argv[2];
-            restore_num = atoi(argv[3]);
-
-            is_from_restart = true;
+         if (argc > 3) {
+            scale_size = atoi(argv[3]);
          }
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
-      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::plog << "restore_num = " << restore_num << endl;
+      tbox::pout << "input_filename = " << input_filename << endl;
+      tbox::pout << "case_name = " << case_name << std::endl;
+      tbox::pout << "scale_size = " << scale_size << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -253,9 +249,7 @@ int main(
       if (!case_name.empty()) {
          base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name_ext = base_name_ext + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
-            5);
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(scale_size);
       tbox::pout << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name_ext << "'\n";
@@ -331,19 +325,6 @@ int main(
          && !(restart_write_dirname.empty());
 
       /*
-       * Get restart manager and root restart database.  If run is from
-       * restart, open the restart file.
-       */
-
-      tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
-
-      if (is_from_restart) {
-         restart_manager->
-         openRestartFile(restart_read_dirname, restore_num,
-            mpi.getSize());
-      }
-
-      /*
        * Create major algorithm and data objects which comprise application.
        * Each object is initialized either from input data or restart
        * files, or a combination of both.  Refer to each class constructor
@@ -381,27 +362,99 @@ int main(
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos> new_box_generator(
-         new mesh::BergerRigoutsos(
-            dim,
-            input_db->getDatabaseWithDefault(
-               "BergerRigoutsos",
-               boost::shared_ptr<tbox::Database>())));
-#if 0
-      boost::shared_ptr<mesh::BergerRigoutsos> old_box_generator;
-      const char which_br = main_db->getCharWithDefault("which_br", 'o');
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
-         which_br == 'o'
-         ? boost::shared_ptr<mesh::BoxGeneratorStrategy>(old_box_generator)
-         : boost::shared_ptr<mesh::BoxGeneratorStrategy>(new_box_generator));
-#endif
+      // Set up the clustering.
 
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(
-            dim,
-            "TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer")));
-      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const std::string clustering_type =
+         main_db->getStringWithDefault("clustering_type", "BergerRigoutsos");
+
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
+
+      if (clustering_type == "BergerRigoutsos") {
+
+         boost::shared_ptr<tbox::Database> abr_db(
+            input_db->getDatabase("BergerRigoutsos"));
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> berger_rigoutsos(
+            new mesh::BergerRigoutsos(dim, abr_db));
+         box_generator = berger_rigoutsos;
+
+      } else if (clustering_type == "TileClustering") {
+
+         boost::shared_ptr<tbox::Database> tc_db(
+            input_db->getDatabase("TileClustering"));
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> tile_clustering(
+            new mesh::TileClustering(dim, tc_db));
+         box_generator = tile_clustering;
+
+      }
+
+      // Set up the load balancer.
+
+      boost::shared_ptr<mesh::LoadBalanceStrategy> load_balancer;
+      boost::shared_ptr<mesh::LoadBalanceStrategy> load_balancer0;
+
+      const std::string partitioner_type =
+         main_db->getStringWithDefault("partitioner_type", "TreeLoadBalancer");
+
+      if (partitioner_type == "TreeLoadBalancer") {
+
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
+            new mesh::TreeLoadBalancer(
+               dim,
+               "mesh::TreeLoadBalancer",
+               input_db->getDatabase("TreeLoadBalancer"),
+               boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
+         tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer0(
+            new mesh::TreeLoadBalancer(
+               dim,
+               "mesh::TreeLoadBalancer0",
+               input_db->getDatabase("TreeLoadBalancer"),
+               boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
+         tree_load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         load_balancer = tree_load_balancer;
+         load_balancer0 = tree_load_balancer0;
+      } else if (partitioner_type == "CascadePartitioner") {
+
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner0",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         load_balancer = cascade_partitioner;
+         load_balancer0 = cascade_partitioner0;
+      } else if (partitioner_type == "ChopAndPackLoadBalancer") {
+
+         boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
+            new mesh::ChopAndPackLoadBalancer(
+               dim,
+               "mesh::ChopAndPackLoadBalancer",
+               input_db->getDatabase("ChopAndPackLoadBalancer")));
+
+         load_balancer = cap_load_balancer;
+
+         /*
+          * ChopAndPackLoadBalancer has trouble on L0 for some reason.
+          * Work around by using the CascadePartitioner for L0.
+          */
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner0",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+         load_balancer0 = cascade_partitioner0;
+      }
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
@@ -409,8 +462,9 @@ int main(
             "GriddingAlgorithm",
             input_db->getDatabase("GriddingAlgorithm"),
             error_detector,
-            new_box_generator,
-            load_balancer));
+            box_generator,
+            load_balancer,
+            load_balancer0));
 
       boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
          new algs::TimeRefinementIntegrator(
@@ -469,6 +523,9 @@ int main(
       }
       t_write_viz->stop();
 
+      tbox::plog << "Input database before time-step loop:" << std::endl;
+      input_db->printClassData(tbox::plog);
+
       /*
        * Time step loop.  Note that the step count and integration
        * time are maintained by algs::TimeRefinementIntegrator.
@@ -495,30 +552,16 @@ int main(
          loop_time += dt_now;
          dt_now = dt_new;
 
-#if 0
-         int hierarchy_cell_count = 0;
-         for (int ln = 0; ln < patch_hierarchy->getNumberLevels(); ++ln) {
-            int level_cell_count = 0;
-            boost::shared_ptr<hier::PatchLevel> patch_level(
-               patch_hierarchy->getPatchLevel(ln));
-            for (hier::PatchLevel::iterator pi(patch_level->begin());
-                 pi != patch_level->end(); ++pi) {
-               boost::shared_ptr<hier::Patch> patch(
-                  patch_level->getPatch(*pi));
-               level_cell_count += patch->getBox().size();
-            }
-            cell_count_stat[ln]->recordProcStat(level_cell_count);
-            hierarchy_cell_count += level_cell_count;
+         if (0) {
+            /*
+             * Logging can be very slow on I/O limited machines (such as
+             * BlueGene).
+             */
+            tbox::plog << "Hierarchy summary:\n";
+            patch_hierarchy->recursivePrint(tbox::plog, "H-> ", 1);
+            tbox::plog << "PatchHierarchy summary:\n";
+            patch_hierarchy->recursivePrint(tbox::plog, "L->", 1);
          }
-         for (int ln = patch_hierarchy->getNumberLevels();
-              ln < patch_hierarchy->getMaxNumberOfLevels(); ++ln) {
-            cell_count_stat[ln]->recordProcStat(0);
-         }
-         cell_count_stat[patch_hierarchy->getMaxNumberOfLevels()]->
-         recordProcStat(hierarchy_cell_count);
-         patch_hierarchy->recursivePrint(tbox::plog, "", 2);
-         sim_time_stat->recordProcStat(dt_now);
-#endif
 
          tbox::plog << endl << endl;
          tbox::pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -559,23 +602,54 @@ int main(
          t_write_viz->stop();
 
          /*
-          * Write byte transfer information to log file.
+          * Output statistics.
           */
-#if 0
-         char num_buf[8];
-         sprintf(num_buf, "%02d", iteration_num);
-         tbox::plog << "Step " << num_buf
-                    << " P" << tbox::SAMRAI_MPI::getRank()
-                    << ": " << tbox::SAMRAI_MPI::getIncomingBytes()
-                    << " bytes in" << endl;
-#endif
+         tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
+         hyp_level_integrator->printStatistics(tbox::plog);
+         tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
+         gridding_algorithm->printStatistics(tbox::plog);
 
+      } // End time-stepping loop.
+
+      t_all->stop();
+
+      tbox::plog << "Input database after time-step loop:" << std::endl;
+      input_db->printClassData(tbox::plog);
+
+      /*
+       * Output timer results.
+       */
+      tbox::TimerManager::getManager()->print(tbox::plog);
+
+      if (partitioner_type == "TreeLoadBalancer") {
+         /*
+          * Output load balancing results for TreeLoadBalancer.
+          */
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
+            BOOST_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(tree_load_balancer);
+         tbox::plog << "\n\n" << partitioner_type << " partitioning results:\n";
+         tree_load_balancer->printStatistics(tbox::plog);
+      }
+      if (partitioner_type == "CascadePartitioner") {
+         /*
+          * Output load balancing results for CascadePartitioner.
+          */
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+            BOOST_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(cascade_partitioner);
+         tbox::plog << "\n\n" << partitioner_type << " partitioning results:\n";
+         cascade_partitioner->printStatistics(tbox::plog);
       }
 
       /*
-       * Output timer result.
+       * Output box search results.
        */
-      t_all->stop();
+      tbox::plog << "\n\nBox searching results:\n";
+      hier::BoxTree::printStatistics(dim);
+
       int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
       if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
          string timing_file =
@@ -591,7 +665,7 @@ int main(
       patch_hierarchy.reset();
       grid_geometry.reset();
 
-      new_box_generator.reset();
+      box_generator.reset();
       load_balancer.reset();
       hyp_level_integrator.reset();
       error_detector.reset();

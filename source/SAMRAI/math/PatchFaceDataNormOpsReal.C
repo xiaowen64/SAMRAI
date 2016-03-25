@@ -38,7 +38,7 @@ PatchFaceDataNormOpsReal<TYPE>::~PatchFaceDataNormOpsReal()
  */
 
 template<class TYPE>
-int
+size_t
 PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
@@ -46,11 +46,11 @@ PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
-   int dimVal = box.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = box.getDim().getValue();
 
-   int retval = 0;
+   size_t retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       const hier::Box dbox = pdat::FaceGeometry::toFaceBox(ibox, d);
       retval += (dbox.size() * data->getDepth());
    }
@@ -74,10 +74,10 @@ PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
 {
    TBOX_ASSERT(data && cvol);
 
-   int dimVal = data->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
             cvol->getArrayData(d),
@@ -96,9 +96,9 @@ PatchFaceDataNormOpsReal<TYPE>::abs(
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
-   int dimVal = box.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
@@ -116,18 +116,18 @@ PatchFaceDataNormOpsReal<TYPE>::L1Norm(
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
-   int dimVal = data->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), face_box);
       }
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
                cvol->getArrayData(d),
@@ -147,11 +147,11 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
-   int dimVal = data->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), face_box);
          retval += aval * aval;
@@ -159,7 +159,7 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2NormWithControlVolume(
                data->getArrayData(d),
@@ -182,11 +182,11 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
-   int dimVal = data->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
                weight->getArrayData(d),
@@ -196,7 +196,7 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2NormWithControlVolume(
                data->getArrayData(d),
@@ -255,18 +255,18 @@ PatchFaceDataNormOpsReal<TYPE>::maxNorm(
 {
    TBOX_ASSERT(data);
 
-   int dimVal = data->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
                d_array_ops.maxNorm(data->getArrayData(d), face_box));
       }
    } else {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
@@ -289,18 +289,18 @@ PatchFaceDataNormOpsReal<TYPE>::dot(
 {
    TBOX_ASSERT(data1 && data2);
 
-   int dimVal = data1->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data1->getDim().getValue();
 
    TYPE retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
                data2->getArrayData(d),
                face_box);
       }
    } else {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dotWithControlVolume(
                data1->getArrayData(d),
@@ -321,11 +321,11 @@ PatchFaceDataNormOpsReal<TYPE>::integral(
 {
    TBOX_ASSERT(data);
 
-   int dimVal = data->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data->getDim().getValue();
 
    TYPE retval = 0.0;
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       retval += d_array_ops.integral(data->getArrayData(d),
             vol->getArrayData(d),

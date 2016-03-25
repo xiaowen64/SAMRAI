@@ -192,7 +192,7 @@ public:
     * will be allocated according to these values, and excess buffer
     * space will waste memory resources.
     */
-   virtual int
+   virtual size_t
    getDataStreamSize(
       const BoxOverlap& overlap) const = 0;
 

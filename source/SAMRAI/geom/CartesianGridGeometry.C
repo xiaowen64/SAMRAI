@@ -222,11 +222,9 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio) const
 {
-   const tbox::Dimension& dim(getDim());
-
    TBOX_ASSERT(!coarse_geom_name.empty());
    TBOX_ASSERT(coarse_geom_name != getObjectName());
-   TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
+   TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(getDim()));
 
    hier::BoxContainer coarse_domain(getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);
@@ -293,7 +291,7 @@ CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   if (getPhysicalDomain().isEmpty()) {
+   if (getPhysicalDomain().empty()) {
       setPhysicalDomain(domain, 1);
    }
 
@@ -365,17 +363,17 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
    if (coarsen) {
       index_box.coarsen(tmp_rat);
-      for (int id3 = 0; id3 < dim.getValue(); ++id3) {
+      for (tbox::Dimension::dir_t id3 = 0; id3 < dim.getValue(); ++id3) {
          dx[id3] = d_dx[id3] * ((double)tmp_rat(id3));
       }
    } else {
       index_box.refine(tmp_rat);
-      for (int id4 = 0; id4 < dim.getValue(); ++id4) {
+      for (tbox::Dimension::dir_t id4 = 0; id4 < dim.getValue(); ++id4) {
          dx[id4] = d_dx[id4] / ((double)tmp_rat(id4));
       }
    }
 
-   for (int id5 = 0; id5 < dim.getValue(); ++id5) {
+   for (tbox::Dimension::dir_t id5 = 0; id5 < dim.getValue(); ++id5) {
       x_lo[id5] = d_x_lo[id5]
          + ((double)(box.lower(id5) - index_box.lower(id5))) * dx[id5];
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];

@@ -125,7 +125,7 @@ BoxTree::BoxTree(
     * Compute the bounding box for the set of boxes.  Also get
     * BlockId from the given boxes.
     */
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
       TBOX_ASSERT(boxes.begin()->getBlockId() != BlockId::invalidId());
       d_block_id = boxes.begin()->getBlockId();
    }
@@ -164,7 +164,7 @@ BoxTree::BoxTree(
 
       const IntVector bbsize = d_bounding_box.numberCells();
       d_partition_dir = 0;
-      for (int d = 1; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 1; d < d_dim.getValue(); ++d) {
          if (bbsize(d_partition_dir) < bbsize(d)) {
             d_partition_dir = d;
          }
@@ -297,7 +297,7 @@ BoxTree::privateGenerateTree(
 
       const IntVector bbsize = d_bounding_box.numberCells();
       d_partition_dir = 0;
-      for (int d = 1; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 1; d < d_dim.getValue(); ++d) {
          if (bbsize(d_partition_dir) < bbsize(d)) {
             d_partition_dir = d;
          }

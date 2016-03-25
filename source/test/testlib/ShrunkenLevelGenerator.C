@@ -33,8 +33,7 @@ ShrunkenLevelGenerator::ShrunkenLevelGenerator(
    d_dim(dim),
    d_hierarchy(),
    d_domain_scale_method('r'),
-   d_shrink_distance(0),
-   d_allocate_data(false)
+   d_shrink_distance(0)
 {
    if (database) {
 
@@ -106,7 +105,7 @@ void ShrunkenLevelGenerator::setDomain(
    int autoscale_base_nprocs,
    const tbox::SAMRAI_MPI& mpi)
 {
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
    NULL_USE(xlo);
    NULL_USE(xhi);
 
@@ -131,7 +130,7 @@ void ShrunkenLevelGenerator::setDomain(
       tmp_intvec -= hier::IntVector::getOne(domain_box.getDim());
       tbox::plog << "ShrunkenLevelGenerator::setDomain changing domain from "
                  << domain_box << " to ";
-      domain_box.upper() = domain_box.lower() + tmp_intvec;
+      domain_box.setUpper(domain_box.lower() + tmp_intvec);
       tbox::plog << domain_box << '\n';
 
       domain.clear();
@@ -151,15 +150,16 @@ void ShrunkenLevelGenerator::setDomain(
       ii->getDim();
       const tbox::Dimension& dim = domain.begin()->getDim();
 
-      int doubling_dir = 1;
+      tbox::Dimension::dir_t doubling_dir = 1;
       while (autoscale_base_nprocs < mpi.getSize()) {
          for (hier::BoxContainer::iterator bi = domain.begin();
               bi != domain.end(); ++bi) {
             hier::Box& input_box = *bi;
-            input_box.upper() (doubling_dir) += input_box.numberCells(doubling_dir);
+            input_box.setUpper(doubling_dir,
+               input_box.upper(doubling_dir) + input_box.numberCells(doubling_dir));
          }
          xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
-         doubling_dir = (doubling_dir + 1) % dim.getValue();
+         doubling_dir = static_cast<tbox::Dimension::dir_t>((doubling_dir + 1) % dim.getValue());
          autoscale_base_nprocs *= 2;
          tbox::plog << "autoscale_base_nprocs = " << autoscale_base_nprocs << std::endl
                     << domain.format("IB: ", 2) << std::endl;
@@ -272,4 +272,38 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
       }
 
    }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+#ifdef HAVE_HDF5
+int ShrunkenLevelGenerator::registerVariablesWithPlotter(
+   appu::VisItDataWriter& writer)
+{
+   d_vis_owner_data.registerVariablesWithPlotter(writer);
+   return 0;
+}
+#endif
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+bool ShrunkenLevelGenerator::packDerivedDataIntoDoubleBuffer(
+   double* buffer,
+   const hier::Patch& patch,
+   const hier::Box& region,
+   const std::string& variable_name,
+   int depth_index,
+   double simulation_time) const
+{
+   (void)buffer;
+   (void)patch;
+   (void)region;
+   (void)variable_name;
+   (void)depth_index;
+   (void)simulation_time;
+   return true;
 }

@@ -128,11 +128,11 @@ private:
    friend FaceIterator
    FaceGeometry::begin(
       const hier::Box& box,
-      int axis);
+      tbox::Dimension::dir_t axis);
    friend FaceIterator
    FaceGeometry::end(
       const hier::Box& box,
-      int axis);
+      tbox::Dimension::dir_t axis);
 
    /**
     * Constructor for the face iterator.  The iterator will enumerate
@@ -140,7 +140,7 @@ private:
     */
    FaceIterator(
       const hier::Box& box,
-      const int axis,
+      const tbox::Dimension::dir_t axis,
       bool begin);
 
    // Unimplemented default constructor.

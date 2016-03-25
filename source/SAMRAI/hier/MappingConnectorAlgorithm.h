@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #include <map>
 #include <string>
@@ -89,6 +90,25 @@ public:
    {
       d_sanity_check_outputs = do_check;
    }
+
+   /*!
+    * @brief Set the SAMRAI_MPI to use.
+    *
+    * If set, communication will use the specified SAMRAI_MPI instead
+    * of the SAMRAI_MPI from BoxLevels.  This protects communication
+    * operations from accidentally interacting with unrelated
+    * communications, but it limits operations to work only with
+    * metadata objects with comptatible (congruent) SAMRAI_MPI
+    * objects.
+    *
+    * If make_duplicate is true, the specified SAMRAI_MPI will be
+    * duplicated for exclusise use.  The duplicate will be freed upon
+    * object destruction.
+    */
+   void
+   setSAMRAI_MPI(
+      const tbox::SAMRAI_MPI& mpi,
+      bool make_duplicate = true);
 
    /*!
     * @brief Most general version for modifying Connectors using
@@ -361,6 +381,12 @@ private:
    static void
    finalizeCallback();
 
+   //! @brief SAMRAI_MPI for internal communications.
+   tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Whether d_mpi was duplicated for exclusive use.
+   bool d_mpi_is_exclusive;
+
    // Extra checks independent of optimization/debug.
    static char s_print_steps;
 
@@ -368,18 +394,6 @@ private:
     * @brief Border for debugging output.
     */
    static const std::string s_dbgbord;
-
-   /*!
-    * @brief Private communicator object shared by all objects in class.
-    * Protects internal communication from mixing with external.
-    *
-    * For communication, we usually use the SAMRAI_MPI of the
-    * Connectors, and this object is mainly for debugging.  If we
-    * suspect interference from unrelated communication calls, we
-    * resort to this exclusive SAMRAI_MPI object to rule out that
-    * possibility.
-    */
-   static tbox::SAMRAI_MPI s_class_mpi;
 
    /*!
     * @brief Tag to use (and increment) at begining of operations that
@@ -405,6 +419,7 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_modify;
+      boost::shared_ptr<tbox::Timer> t_modify_public;
       boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
       boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
       boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;

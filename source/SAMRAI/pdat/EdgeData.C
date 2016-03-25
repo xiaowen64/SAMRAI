@@ -376,7 +376,7 @@ EdgeData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 EdgeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -386,8 +386,8 @@ EdgeData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   size_t size = 0;
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       size += d_data[d]->getDataStreamSize(
             t_overlap->getDestinationBoxContainer(d),
             offset);
@@ -420,7 +420,7 @@ EdgeData<TYPE>::packStream(
       const hier::Transformation& transformation = t_overlap->getTransformation();
       for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->packStream(stream, boxes, transformation);
          }
       }
@@ -464,7 +464,7 @@ EdgeData<TYPE>::packWithRotation(
    for (int i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
-      const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+      const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
       std::vector<TYPE> buffer(size);
 
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
@@ -511,7 +511,7 @@ EdgeData<TYPE>::unpackStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          d_data[d]->unpackStream(stream, boxes, offset);
       }
    }
@@ -621,7 +621,7 @@ EdgeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array axis = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }

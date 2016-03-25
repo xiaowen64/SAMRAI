@@ -402,7 +402,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    tbox::plog << "btype, bloc, bcase = "
               << btype << ", = " << bloc << ", = " << bcase << endl;
 
-   int idir;
+   tbox::Dimension::dir_t idir;
    double valfact = 0.0, constval = 0.0, dxfact = 0.0;
    int offsign;
 
@@ -467,15 +467,15 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    hier::Index ilast(vardata->getBox().upper());
 
    if (offsign == -1) {
-      cbox.lower(idir) = ifirst(idir) - 1;
-      cbox.upper(idir) = ifirst(idir) - 1;
-      dbox.lower(idir) = ifirst(idir);
-      dbox.upper(idir) = ifirst(idir);
+      cbox.setLower(idir, ifirst(idir) - 1);
+      cbox.setUpper(idir, ifirst(idir) - 1);
+      dbox.setLower(idir, ifirst(idir));
+      dbox.setUpper(idir, ifirst(idir));
    } else {
-      cbox.lower(idir) = ilast(idir) + 1;
-      cbox.upper(idir) = ilast(idir) + 1;
-      dbox.lower(idir) = ilast(idir);
-      dbox.upper(idir) = ilast(idir);
+      cbox.setLower(idir, ilast(idir) + 1);
+      cbox.setUpper(idir, ilast(idir) + 1);
+      dbox.setLower(idir, ilast(idir));
+      dbox.setUpper(idir, ilast(idir));
    }
 
    pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
@@ -779,7 +779,7 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
  */
 
 void SkeletonBoundaryUtilities2::get2dBdryDirectionCheckValues(
-   int& idir,
+   tbox::Dimension::dir_t& idir,
    int& offsign,
    int btype,
    int bloc,
