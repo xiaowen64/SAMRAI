@@ -51,9 +51,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#3e996343e0164151b131b7175b320564">extendBoxOutward</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&lt; DIM &gt; &amp;extension) const</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Extend box outward by the given amount.  <a href="#3e996343e0164151b131b7175b320564"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#32eabac891daf6896db8c840bd6e86b6">shiftBoxInward</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;distance) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Shift box inward by the given distance.  <a href="#32eabac891daf6896db8c840bd6e86b6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html#54768bcc24f50bd1710233038d2a0341">normalDir</a> () const</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the normal direction.  <a href="#54768bcc24f50bd1710233038d2a0341"></a><br></td></tr>
@@ -283,41 +280,6 @@ The number of directions extended is the same as the codimension of the boundary
 Return the extended box. 
 </div>
 </div><p>
-<a class="anchor" name="32eabac891daf6896db8c840bd6e86b6"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBoxUtils::shiftBoxInward" ref="32eabac891daf6896db8c840bd6e86b6" args="(Box&lt; DIM &gt; &amp;box, const hier::IntVector&lt; DIM &gt; &amp;distance) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int DIM&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBoxUtils.html">SAMRAI::hier::BoundaryBoxUtils</a>&lt; DIM &gt;::shiftBoxInward           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&lt; DIM &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>distance</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Shift box inward by the given distance. 
-<p>
-A positive distance shifts inward while a negative distance shifts outward.<p>
-The number of direction shifted is the same as the codimension of the boundary.<p>
-Return the shifted box. 
-</div>
-</div><p>
 <a class="anchor" name="54768bcc24f50bd1710233038d2a0341"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBoxUtils::normalDir" ref="54768bcc24f50bd1710233038d2a0341" args="() const" -->
 <div class="memitem">
 <div class="memproto">
@@ -402,7 +364,7 @@ This is a utility function for working with the surface indices coresponding to 
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/hierarchy/patches/<a class="el" href="BoundaryBoxUtils_8h.html">BoundaryBoxUtils.h</a><li>source/hierarchy/patches/<a class="el" href="BoundaryBoxUtils_8C.html">BoundaryBoxUtils.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:00 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:28:29 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -77,9 +77,6 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">MemoryDatabase</a> factory.  <a href="classSAMRAI_1_1tbox_1_1MemoryDatabaseFactory.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputDatabase.html">InputDatabase</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1tbox_1_1InputDatabase.html">InputDatabase</a> stores (key,value) pairs in a hierarchical database.  <a href="classSAMRAI_1_1tbox_1_1InputDatabase.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html">InputManager</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Parser.html">Parser</a></td></tr>
@@ -164,6 +161,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Typedefs</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">SAMRAI::tbox::MemoryDatabase</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1tbox.html#f506c0b86c47956e0b66d35aff487e0d">InputDatabase</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class InputDatabase stores (key,value) pairs in a hierarchical database.  <a href="#f506c0b86c47956e0b66d35aff487e0d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">List</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> <br>
 &gt; &gt;::Iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1tbox.html#01f5bb85feb95b4501b9bd6c86403bc8">ITERATOR</a></td></tr>
 
@@ -196,8 +196,29 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">plog</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1tbox.html#3084291650c7dfa9e6c567756b4112bb">t_communicate</a></td></tr>
+
 </table>
 <hr><h2>Typedef Documentation</h2>
+<a class="anchor" name="f506c0b86c47956e0b66d35aff487e0d"></a><!-- doxytag: member="SAMRAI::tbox::InputDatabase" ref="f506c0b86c47956e0b66d35aff487e0d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">SAMRAI::tbox::MemoryDatabase</a> <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">SAMRAI::tbox::InputDatabase</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Class InputDatabase stores (key,value) pairs in a hierarchical database. 
+<p>
+This is just another name for the <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">MemoryDatabase</a>.<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">tbox::MemoryDatabase</a></dd></dl>
+It is normally filled with data using a <a class="el" href="classSAMRAI_1_1tbox_1_1Parser.html">tbox::Parser</a> (<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Parser.html">tbox::Parser</a>) and used to pass user supplied <a class="el" href="Scanner_8C.html#b77a69608c1c09f3f14d24fce44e09ca">input</a> from <a class="el" href="Scanner_8C.html#b77a69608c1c09f3f14d24fce44e09ca">input</a> files to constructors for problem setup. </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="01f5bb85feb95b4501b9bd6c86403bc8"></a><!-- doxytag: member="SAMRAI::tbox::ITERATOR" ref="01f5bb85feb95b4501b9bd6c86403bc8" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -446,7 +467,22 @@ Parallel output stream perr writes to the standard error from all nodes. Output 
 Parallel output stream plog writes output to the log file. When logging from multiple processors, the processor number is appended to the filename. 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:27 2008 for SAMRAI by&nbsp;
+<a class="anchor" name="3084291650c7dfa9e6c567756b4112bb"></a><!-- doxytag: member="SAMRAI::tbox::t_communicate" ref="3084291650c7dfa9e6c567756b4112bb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a>&gt; <a class="el" href="namespaceSAMRAI_1_1tbox.html#3084291650c7dfa9e6c567756b4112bb">SAMRAI::tbox::t_communicate</a><code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:28:58 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

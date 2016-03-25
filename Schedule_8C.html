@@ -19,6 +19,9 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <h1>source/toolbox/parallel/Schedule.C File Reference</h1><code>#include &quot;tbox/Schedule.h&quot;</code><br>
+<code>#include &quot;tbox/ShutdownRegistry.h&quot;</code><br>
+<code>#include &quot;tbox/TimerManager.h&quot;</code><br>
+<code>#include &quot;tbox/Timer.h&quot;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
@@ -34,6 +37,9 @@
 <tr><td colspan="2"><br><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef List&lt; Pointer&lt; Transaction <br>
 &gt; &gt;::Iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1tbox.html#01f5bb85feb95b4501b9bd6c86403bc8">SAMRAI::tbox::ITERATOR</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Variables</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1tbox.html#3084291650c7dfa9e6c567756b4112bb">SAMRAI::tbox::t_communicate</a></td></tr>
 
 </table>
 <hr><h2>Define Documentation</h2>
@@ -67,7 +73,7 @@
 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:05:48 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:28:17 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

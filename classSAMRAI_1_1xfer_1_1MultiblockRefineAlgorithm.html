@@ -52,9 +52,15 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that copies data from the interiors of the source components into the interior and boundary cells of the destination components on the same level where those sources and destinations overlap. Data is moved from old and new sources on coarser levels when time interpolation is needed and from the source components on the patch level into the destination components.  <a href="#433caff259e2d9a4e6d06309874cffb4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineSchedule.html">MultiblockRefineSchedule</a>&lt;<br>
+ DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineAlgorithm.html#0b1c279382dd3d18c488b635111a6615">createSchedule</a> (const std::string &amp;fill_pattern, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt; level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">hier::MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt; multiblock, <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *) NULL), <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; &gt; transaction_factory=(<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; *) NULL) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineSchedule.html">MultiblockRefineSchedule</a>&lt;<br>
  DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineAlgorithm.html#df64fb43d9273f1379a60673e534af2c">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt; src_level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">hier::MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt; multiblock, <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *) NULL), <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; &gt; transaction_factory=(<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; *) NULL) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that moves data from the interiors of the source level and coarser hierarchy levels into the interior and boundary cells of the destination components on the destination level where those sources and destinations overlap. Data is moved from old and new sources on coarser levels when time interpolation is needed and from the source components on the source level into the destination components.  <a href="#df64fb43d9273f1379a60673e534af2c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineSchedule.html">MultiblockRefineSchedule</a>&lt;<br>
+ DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineAlgorithm.html#f23e20b428f750cabcb483099a87dd43">createSchedule</a> (const std::string &amp;fill_pattern, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt; src_level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">hier::MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt; multiblock, <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *) NULL), <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; &gt; transaction_factory=(<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; *) NULL) const </td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;int DIM&gt;<br>
@@ -423,6 +429,61 @@ Create a communication schedule that copies data from the interiors of the sourc
 
 </div>
 </div><p>
+<a class="anchor" name="0b1c279382dd3d18c488b635111a6615"></a><!-- doxytag: member="SAMRAI::xfer::MultiblockRefineAlgorithm::createSchedule" ref="0b1c279382dd3d18c488b635111a6615" args="(const std::string &amp;fill_pattern, tbox::Pointer&lt; hier::MultiblockPatchLevel&lt; DIM &gt; &gt; level, const int next_coarser_level, tbox::Pointer&lt; hier::MultiblockPatchHierarchy&lt; DIM &gt; &gt; multiblock, MultiblockRefinePatchStrategy&lt; DIM &gt; *patch_strategy=((MultiblockRefinePatchStrategy&lt; DIM &gt; *) NULL), tbox::Pointer&lt; xfer::RefineTransactionFactory&lt; DIM &gt; &gt; transaction_factory=(xfer::RefineTransactionFactory&lt; DIM &gt; *) NULL) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineSchedule.html">MultiblockRefineSchedule</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineAlgorithm.html">SAMRAI::xfer::MultiblockRefineAlgorithm</a>&lt; DIM &gt;::createSchedule           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>fill_pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>next_coarser_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">hier::MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>multiblock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt;&nbsp;DIM&nbsp;&gt;&nbsp;*)&nbsp;NULL)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>(<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt;&nbsp;DIM&nbsp;&gt;&nbsp;*)&nbsp;NULL</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="df64fb43d9273f1379a60673e534af2c"></a><!-- doxytag: member="SAMRAI::xfer::MultiblockRefineAlgorithm::createSchedule" ref="df64fb43d9273f1379a60673e534af2c" args="(tbox::Pointer&lt; hier::MultiblockPatchLevel&lt; DIM &gt; &gt; dst_level, tbox::Pointer&lt; hier::MultiblockPatchLevel&lt; DIM &gt; &gt; src_level, const int next_coarser_level, tbox::Pointer&lt; hier::MultiblockPatchHierarchy&lt; DIM &gt; &gt; multiblock, MultiblockRefinePatchStrategy&lt; DIM &gt; *patch_strategy=((MultiblockRefinePatchStrategy&lt; DIM &gt; *) NULL), tbox::Pointer&lt; xfer::RefineTransactionFactory&lt; DIM &gt; &gt; transaction_factory=(xfer::RefineTransactionFactory&lt; DIM &gt; *) NULL) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -491,9 +552,70 @@ Create a communication schedule that moves data from the interiors of the source
 
 </div>
 </div><p>
+<a class="anchor" name="f23e20b428f750cabcb483099a87dd43"></a><!-- doxytag: member="SAMRAI::xfer::MultiblockRefineAlgorithm::createSchedule" ref="f23e20b428f750cabcb483099a87dd43" args="(const std::string &amp;fill_pattern, tbox::Pointer&lt; hier::MultiblockPatchLevel&lt; DIM &gt; &gt; dst_level, tbox::Pointer&lt; hier::MultiblockPatchLevel&lt; DIM &gt; &gt; src_level, const int next_coarser_level, tbox::Pointer&lt; hier::MultiblockPatchHierarchy&lt; DIM &gt; &gt; multiblock, MultiblockRefinePatchStrategy&lt; DIM &gt; *patch_strategy=((MultiblockRefinePatchStrategy&lt; DIM &gt; *) NULL), tbox::Pointer&lt; xfer::RefineTransactionFactory&lt; DIM &gt; &gt; transaction_factory=(xfer::RefineTransactionFactory&lt; DIM &gt; *) NULL) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineSchedule.html">MultiblockRefineSchedule</a>&lt; DIM &gt; &gt; <a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefineAlgorithm.html">SAMRAI::xfer::MultiblockRefineAlgorithm</a>&lt; DIM &gt;::createSchedule           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>fill_pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>dst_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchLevel.html">hier::MultiblockPatchLevel</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>src_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>next_coarser_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockPatchHierarchy.html">hier::MultiblockPatchHierarchy</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>multiblock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt; DIM &gt; *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1MultiblockRefinePatchStrategy.html">MultiblockRefinePatchStrategy</a>&lt;&nbsp;DIM&nbsp;&gt;&nbsp;*)&nbsp;NULL)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt; DIM &gt; &gt;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>(<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&lt;&nbsp;DIM&nbsp;&gt;&nbsp;*)&nbsp;NULL</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/transfer/multiblock/<a class="el" href="MultiblockRefineAlgorithm_8h.html">MultiblockRefineAlgorithm.h</a><li>source/transfer/multiblock/<a class="el" href="MultiblockRefineAlgorithm_8C.html">MultiblockRefineAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:40 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:29:11 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

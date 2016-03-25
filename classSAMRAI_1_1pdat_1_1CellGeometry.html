@@ -43,6 +43,9 @@ Inheritance diagram for SAMRAI::pdat::CellGeometry&lt; DIM &gt;:<p><center><img 
  DIM &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#7c5c374b70ab35b7f78a7559366041a0">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a>&lt; DIM &gt; &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a>&lt; DIM &gt; &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;src_mask, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;src_offset, const bool retry) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in cell-centered index space between the source box geometry and the destination box geometry.  <a href="#7c5c374b70ab35b7f78a7559366041a0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#98251ce9b7615610266910f828d494a8">computeDestinationBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxList.html">hier::BoxList</a>&lt; DIM &gt; &amp;dst_boxes, const <a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html">CellGeometry</a>&lt; DIM &gt; &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;src_mask, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;src_offset) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the cell-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry.  <a href="#98251ce9b7615610266910f828d494a8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html#f91a585c75c3881a26c7017b7be0737a">getBox</a> () const</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the box for this cell centered box geometry object.  <a href="#f91a585c75c3881a26c7017b7be0737a"></a><br></td></tr>
@@ -223,6 +226,57 @@ Compute the overlap in cell-centered index space between the source box geometry
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#3d88de82c30d5869936c5b080d3323e9">SAMRAI::hier::BoxGeometry&lt; DIM &gt;</a>.
 </div>
 </div><p>
+<a class="anchor" name="98251ce9b7615610266910f828d494a8"></a><!-- doxytag: member="SAMRAI::pdat::CellGeometry::computeDestinationBoxes" ref="98251ce9b7615610266910f828d494a8" args="(hier::BoxList&lt; DIM &gt; &amp;dst_boxes, const CellGeometry&lt; DIM &gt; &amp;src_geometry, const hier::Box&lt; DIM &gt; &amp;src_mask, const bool overwrite_interior, const hier::IntVector&lt; DIM &gt; &amp;src_offset) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int DIM&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html">SAMRAI::pdat::CellGeometry</a>&lt; DIM &gt;::computeDestinationBoxes           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxList.html">hier::BoxList</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_boxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1CellGeometry.html">CellGeometry</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>overwrite_interior</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&lt; DIM &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_offset</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Compute the cell-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="f91a585c75c3881a26c7017b7be0737a"></a><!-- doxytag: member="SAMRAI::pdat::CellGeometry::getBox" ref="f91a585c75c3881a26c7017b7be0737a" args="() const" -->
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +325,7 @@ Return the ghost cell width for this cell centered box geometry object.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/patchdata/boxgeometry/<a class="el" href="CellGeometry_8h.html">CellGeometry.h</a><li>source/patchdata/boxgeometry/<a class="el" href="CellGeometry_8C.html">CellGeometry.C</a><li>source/patchdata/boxgeometry/<a class="el" href="CellGeometry_8I.html">CellGeometry.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:12 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:28:42 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -25,7 +25,6 @@
 <p>
 Inheritance diagram for SAMRAI::tbox::MemoryDatabase:<p><center><img src="classSAMRAI_1_1tbox_1_1MemoryDatabase__inherit__graph.png" border="0" usemap="#SAMRAI_1_1tbox_1_1MemoryDatabase__inherit__map" alt="Inheritance graph"></center>
 <map name="SAMRAI_1_1tbox_1_1MemoryDatabase__inherit__map">
-<area href="classSAMRAI_1_1tbox_1_1InputDatabase.html" shape="rect" coords="16,232,216,256" alt="">
 <area href="classSAMRAI_1_1tbox_1_1Database.html" shape="rect" coords="31,83,201,107" alt="">
 <area href="classtbox_1_1DescribedClass.html" shape="rect" coords="59,8,173,32" alt="">
 </map>
@@ -202,7 +201,7 @@ Inheritance diagram for SAMRAI::tbox::MemoryDatabase:<p><center><img src="classS
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">MemoryDatabase</a> stores (key,value) pairs in a hierarchical database. Each value may be another database, boolean, box, character, complex, double, float, integer, or string. Note that boxes are stored using the toolbox box class that can store boxes of any dimension in the same data structure.<p>
 See the <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> class documentation for a description of the generic database interface.<p>
-The memory database is used for storing input (a "deck") in memory; the derived class <a class="el" href="classSAMRAI_1_1tbox_1_1InputDatabase.html">InputDatabase</a> use for this purpose; <a class="el" href="classSAMRAI_1_1tbox_1_1InputDatabase.html">InputDatabase</a> is kept around for historical reasons and the name is a bit more clear than "memory" database but this class is very generic. The <a class="el" href="classSAMRAI_1_1tbox_1_1Parser.html">Parser</a> is really the class that process the input; it parses the input file into a database.<p>
+The memory database is used for storing input (a "deck") in memory; the derived class InputDatabase use for this purpose; InputDatabase is kept around for historical reasons and the name is a bit more clear than "memory" database but this class is very generic. The <a class="el" href="classSAMRAI_1_1tbox_1_1Parser.html">Parser</a> is really the class that process the input; it parses the input file into a database.<p>
 Note that the memory database will attempt to promote numerical types where appropriate. The promotion chain is int -&gt; float -&gt; double -&gt; complex. For example, an integer key will be promoted to a complex value if <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#7db9d3356666cdd557a70c9552737ae3">isComplex()</a> or <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#ffdaa50ca428b6561bea268e6fa7e820">getComplex()</a> is called. Double values will also be truncated to floats (with loss of information) if a float call is made on a double value.<p>
 It is assumed that all processors will access the database in the same manner. Thus, all error messages are output to pout instead of perr. 
 <p>
@@ -2488,7 +2487,7 @@ Print the database keys that were set via default calls to the specified output 
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/toolbox/database/<a class="el" href="MemoryDatabase_8h.html">MemoryDatabase.h</a><li>source/toolbox/database/<a class="el" href="MemoryDatabase_8C.html">MemoryDatabase.C</a><li>source/toolbox/database/<a class="el" href="MemoryDatabase_8I.html">MemoryDatabase.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:29 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:29:00 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

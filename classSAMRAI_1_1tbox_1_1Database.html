@@ -32,24 +32,23 @@ Inheritance diagram for SAMRAI::tbox::Database:<p><center><img src="classSAMRAI_
 <area href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html" shape="rect" coords="228,157,447,181" alt="">
 <area href="classSAMRAI_1_1tbox_1_1NullDatabase.html" shape="rect" coords="471,157,663,181" alt="">
 <area href="classtbox_1_1DescribedClass.html" shape="rect" coords="280,8,395,32" alt="">
-<area href="classSAMRAI_1_1tbox_1_1InputDatabase.html" shape="rect" coords="237,232,437,256" alt="">
 </map>
 <center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center><a href="classSAMRAI_1_1tbox_1_1Database-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554">DataType</a> { <br>
-&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554577e4cf59efd0ea920f679b745263f5d">INVALID</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e145547be8fec3fda8bd323a31d8be77920d0f">DATABASE</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554cdeb9a9fd621c8d0f35754174277eb7e">BOOL</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e145540e80669a671f76a799539f407c7c20e1">CHAR</a>, 
+&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554bc017eba7e30cbd6d9404e8fd20e3c17">SAMRAI_INVALID</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554e5d70e6c4749a264bc93134b83d98972">SAMRAI_DATABASE</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554985ace4f2bc387c77fa265b0441b4a84">SAMRAI_BOOL</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e145543f9abc0288dcb6e796b5d3b69653a60d">SAMRAI_CHAR</a>, 
 <br>
-&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e145547809d2fc72c94c767110d3327da9b009">INT</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554be16f4f423c5a351713a9cd326e7aecd">COMPLEX</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554b8cb752ce7792379d5ce75854bc8634d">DOUBLE</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554c8085fe387f31d0dfcc7d2e5f217a107">FLOAT</a>, 
+&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e1455411f0aea64d1b5dcf79bb8e8e2bb9a227">SAMRAI_INT</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e1455442eafbf8e77ceeea69acee8a63aae6ab">SAMRAI_COMPLEX</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554e5091807cd7723b61529f3d2241503d7">SAMRAI_DOUBLE</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e1455469f42a01e3f8cdc4d282c4d01d11db9a">SAMRAI_FLOAT</a>, 
 <br>
-&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554e1f17feb1c8ffff42f424a47a51f9610">STRING</a>, 
-<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e145547d0be9e6c3de7cb1e9c71d2a001642dd">BOX</a>
+&nbsp;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e145541a78b9747eda4fe13aa95e87e28c40de">SAMRAI_STRING</a>, 
+<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#77ab7a307331e041363ac40d97e14554a6c72ba5b0b44c63b50eecfe03ee79c2">SAMRAI_BOX</a>
 <br>
  }</td></tr>
 
@@ -282,27 +281,28 @@ Data is extracted from the database through methods of the general form TYPE = g
 <div class="memdoc">
 
 <p>
-Enumerated type indicating what type of values is stored in a database entry. Returned from getType() method. <dl compact><dt><b>Enumerator: </b></dt><dd>
+Enumerated type indicating what type of values is stored in a database entry. Returned from getType() method.<p>
+Note: The SAMRAI_ prefix is needed since some poorly written packages do "#define CHAR" etc. <dl compact><dt><b>Enumerator: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554577e4cf59efd0ea920f679b745263f5d"></a><!-- doxytag: member="INVALID" ref="77ab7a307331e041363ac40d97e14554577e4cf59efd0ea920f679b745263f5d" args="" -->INVALID</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554bc017eba7e30cbd6d9404e8fd20e3c17"></a><!-- doxytag: member="SAMRAI_INVALID" ref="77ab7a307331e041363ac40d97e14554bc017eba7e30cbd6d9404e8fd20e3c17" args="" -->SAMRAI_INVALID</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e145547be8fec3fda8bd323a31d8be77920d0f"></a><!-- doxytag: member="DATABASE" ref="77ab7a307331e041363ac40d97e145547be8fec3fda8bd323a31d8be77920d0f" args="" -->DATABASE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554e5d70e6c4749a264bc93134b83d98972"></a><!-- doxytag: member="SAMRAI_DATABASE" ref="77ab7a307331e041363ac40d97e14554e5d70e6c4749a264bc93134b83d98972" args="" -->SAMRAI_DATABASE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554cdeb9a9fd621c8d0f35754174277eb7e"></a><!-- doxytag: member="BOOL" ref="77ab7a307331e041363ac40d97e14554cdeb9a9fd621c8d0f35754174277eb7e" args="" -->BOOL</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554985ace4f2bc387c77fa265b0441b4a84"></a><!-- doxytag: member="SAMRAI_BOOL" ref="77ab7a307331e041363ac40d97e14554985ace4f2bc387c77fa265b0441b4a84" args="" -->SAMRAI_BOOL</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e145540e80669a671f76a799539f407c7c20e1"></a><!-- doxytag: member="CHAR" ref="77ab7a307331e041363ac40d97e145540e80669a671f76a799539f407c7c20e1" args="" -->CHAR</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e145543f9abc0288dcb6e796b5d3b69653a60d"></a><!-- doxytag: member="SAMRAI_CHAR" ref="77ab7a307331e041363ac40d97e145543f9abc0288dcb6e796b5d3b69653a60d" args="" -->SAMRAI_CHAR</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e145547809d2fc72c94c767110d3327da9b009"></a><!-- doxytag: member="INT" ref="77ab7a307331e041363ac40d97e145547809d2fc72c94c767110d3327da9b009" args="" -->INT</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e1455411f0aea64d1b5dcf79bb8e8e2bb9a227"></a><!-- doxytag: member="SAMRAI_INT" ref="77ab7a307331e041363ac40d97e1455411f0aea64d1b5dcf79bb8e8e2bb9a227" args="" -->SAMRAI_INT</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554be16f4f423c5a351713a9cd326e7aecd"></a><!-- doxytag: member="COMPLEX" ref="77ab7a307331e041363ac40d97e14554be16f4f423c5a351713a9cd326e7aecd" args="" -->COMPLEX</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e1455442eafbf8e77ceeea69acee8a63aae6ab"></a><!-- doxytag: member="SAMRAI_COMPLEX" ref="77ab7a307331e041363ac40d97e1455442eafbf8e77ceeea69acee8a63aae6ab" args="" -->SAMRAI_COMPLEX</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554b8cb752ce7792379d5ce75854bc8634d"></a><!-- doxytag: member="DOUBLE" ref="77ab7a307331e041363ac40d97e14554b8cb752ce7792379d5ce75854bc8634d" args="" -->DOUBLE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554e5091807cd7723b61529f3d2241503d7"></a><!-- doxytag: member="SAMRAI_DOUBLE" ref="77ab7a307331e041363ac40d97e14554e5091807cd7723b61529f3d2241503d7" args="" -->SAMRAI_DOUBLE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554c8085fe387f31d0dfcc7d2e5f217a107"></a><!-- doxytag: member="FLOAT" ref="77ab7a307331e041363ac40d97e14554c8085fe387f31d0dfcc7d2e5f217a107" args="" -->FLOAT</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e1455469f42a01e3f8cdc4d282c4d01d11db9a"></a><!-- doxytag: member="SAMRAI_FLOAT" ref="77ab7a307331e041363ac40d97e1455469f42a01e3f8cdc4d282c4d01d11db9a" args="" -->SAMRAI_FLOAT</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554e1f17feb1c8ffff42f424a47a51f9610"></a><!-- doxytag: member="STRING" ref="77ab7a307331e041363ac40d97e14554e1f17feb1c8ffff42f424a47a51f9610" args="" -->STRING</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e145541a78b9747eda4fe13aa95e87e28c40de"></a><!-- doxytag: member="SAMRAI_STRING" ref="77ab7a307331e041363ac40d97e145541a78b9747eda4fe13aa95e87e28c40de" args="" -->SAMRAI_STRING</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e145547d0be9e6c3de7cb1e9c71d2a001642dd"></a><!-- doxytag: member="BOX" ref="77ab7a307331e041363ac40d97e145547d0be9e6c3de7cb1e9c71d2a001642dd" args="" -->BOX</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="77ab7a307331e041363ac40d97e14554a6c72ba5b0b44c63b50eecfe03ee79c2"></a><!-- doxytag: member="SAMRAI_BOX" ref="77ab7a307331e041363ac40d97e14554a6c72ba5b0b44c63b50eecfe03ee79c2" args="" -->SAMRAI_BOX</em>&nbsp;</td><td>
 </td></tr>
 </table>
 </dl>
@@ -3838,7 +3838,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#ca
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/toolbox/database/<a class="el" href="Database_8h.html">Database.h</a><li>source/toolbox/database/<a class="el" href="Database_8C.html">Database.C</a><li>source/toolbox/database/<a class="el" href="Database_8I.html">Database.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:29 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:29:00 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

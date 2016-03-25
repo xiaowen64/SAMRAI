@@ -68,9 +68,9 @@ The operations that identify mesh cells for refinement or initialize data on a n
 If user supplied refine boxes are used, they may be supplied through input. Alternatively, they may be supplied through the "resetRefineBoxes()" method. If they are supplied through input, the format is as follows:<p>
 <ul>
 <li><b>RefineBoxes</b> input section describing the refine boxes for each level.<ul>
-<li><b>Level0</b> input section providing the sequence of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> arrays describing where user-specified refinement is to occur on Level 0.<ul>
+<li><b>level_0</b> input section providing the sequence of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> arrays describing where user-specified refinement is to occur on Level 0.<ul>
 <li><b>times</b> = double array specifying times at which a particular box seqence is to be used.</li><li><b>cycles</b> = integer array specifying regrid cycles at which a particular box seqence is to be used.</li><li><b>boxes_0</b> = box array specifying refine boxes for seq 0.</li><li><b>boxes_1</b> = box array specifying refine boxes for seq 1.</li><li><b>boxes_n</b> = box array specifying refine boxes for seq n.</li></ul>
-</li><li><b>Level1</b> input section providing the sequence of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> arrays describing where user-specified refinement is to occur on Level 1.</li><li><b>LevelN</b> input section providing the sequence of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> arrays describing where user-specified refinement is to occur on Level N.</li></ul>
+</li><li><b>level_1</b> input section providing the sequence of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> arrays describing where user-specified refinement is to occur on Level 1.</li><li><b>level_n</b> input section providing the sequence of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> arrays describing where user-specified refinement is to occur on Level N.</li></ul>
 </li></ul>
 <p>
 The <b>times</b> and <b>cycles</b> entries are optional. If neither is provided, a uniform set of refine boxes specified in the boxes_0 entry will be used over the entire calculation. If no boxes_0 entry is provided, no refinement will occur on that level.<p>
@@ -79,19 +79,19 @@ The <a class="el" href="classSAMRAI_1_1hier_1_1BoxArray.html">hier::BoxArray</a>
 A sample input file entry might look like:<p>
 <div class="fragment"><pre class="fragment">
  *
- *    RefineBoxes{
- *       Level0{
+ *    RefineBoxes {
+ *       level_0 {
  *          cycles = 0, 10
  *          boxes_0 = [(5,5),(9,9)],[(12,15),(18,19)]
  *          boxes_1 = [(7,7),(11,11)],[(14,17),(20,21)]
  *       }
- *       Level1{
+ *       level_1 {
  *          times  = 0., 0.05, 0.10
  *          boxes_0 = [(25,30),(29,35)]    
  *          boxes_1 = [(30,35),(34,40)]    
  *          boxes_2 = [(35,40),(39,45)]    
  *       }
- *       Level2{
+ *       level_2 {
  *          boxes_0 = [(60,70),(70,80)]    
  *       }
  *    }
@@ -590,7 +590,7 @@ Read user supplied refine boxes from the provided database. The database must be
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/mesh/gridding/<a class="el" href="TagAndInitializeStrategy_8h.html">TagAndInitializeStrategy.h</a><li>source/mesh/gridding/<a class="el" href="TagAndInitializeStrategy_8C.html">TagAndInitializeStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Thu Jul 24 14:06:11 2008 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 18 11:28:41 2009 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>
