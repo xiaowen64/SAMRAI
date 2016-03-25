@@ -352,13 +352,15 @@ void SinusoidalFrontTagger::computeLevelData(
       hier::Patch& patch = **pi;
       boost::shared_ptr<pdat::NodeData<double> > dist_data;
       if (dist_id >= 0) {
-         dist_data = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                 hier::PatchData>(patch.getPatchData(dist_id));
+         dist_data =
+            boost::dynamic_pointer_cast<pdat::NodeData<double>, hier::PatchData>(
+               patch.getPatchData(dist_id));
       }
       boost::shared_ptr<pdat::CellData<int> > tag_data;
       if (tag_id >= 0) {
-         tag_data = boost::dynamic_pointer_cast<pdat::CellData<int>,
-                                                hier::PatchData>(patch.getPatchData(tag_id));
+         tag_data =
+            boost::dynamic_pointer_cast<pdat::CellData<int>, hier::PatchData>(
+               patch.getPatchData(tag_id));
       }
       computePatchData(patch, time,
                        dist_data.get(),

@@ -42,6 +42,9 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 2) A bug in some VariableFillPatterns that caused interpolated data to
    overwrite communicated data has been fixed.  See "what's changed" for
    more info.
+
+3) A bug that caused RefineSchedule to fail with certain multiblock
+   configurations has been fixed.
      
 *****************************************************************************
 
@@ -199,6 +202,12 @@ descriptions of items in the following list are provided below.
 
    Only certain specialized implementations of VariableFillPattern need this
    new argument.  When not needed, it should be ignored.
+
+5) There was a bug that showed up only when some specialized
+   VariableFillPatterns werea use with certain enhanced connectivity
+   multiblock configurations.  In RefineSchedule, some of the internal
+   BoxLevels did not get associated with the proper Connectors.  This has
+   been fixed as of version 3.7.3
 
 
 

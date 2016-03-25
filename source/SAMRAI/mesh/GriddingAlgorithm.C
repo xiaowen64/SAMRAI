@@ -209,8 +209,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    }
    if (d_tag_init_strategy->getErrorCoarsenRatio() > 1) {
       boost::shared_ptr<StandardTagAndInitialize> std_tag_init(
-         d_tag_init_strategy,
-         boost::detail::dynamic_cast_tag());
+         boost::dynamic_pointer_cast<StandardTagAndInitialize, TagAndInitializeStrategy>(
+            d_tag_init_strategy));
       if (std_tag_init) {
          d_hierarchy->registerConnectorWidthRequestor(
             std_tag_init->getConnectorWidthRequestor());

@@ -153,7 +153,8 @@ TileClustering::findBoxesContainingTags(
       if ( pi->getBox().intersects(bounding_box) ) {
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            pi->getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+            boost::dynamic_pointer_cast<pdat::CellData<int>, hier::PatchData>(
+               pi->getPatchData(tag_data_index)));
 
          boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
             makeCoarsenedTagData(*tag_data, tag_val);

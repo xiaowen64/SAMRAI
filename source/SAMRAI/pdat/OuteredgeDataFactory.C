@@ -187,8 +187,8 @@ OuteredgeDataFactory<TYPE>::validCopyTo(
     */
    if (!valid_copy) {
       boost::shared_ptr<EdgeDataFactory<TYPE> > edf(
-         dst_pdf,
-         boost::detail::dynamic_cast_tag());
+         boost::dynamic_pointer_cast<EdgeDataFactory<TYPE>,
+                                     hier::PatchDataFactory>(dst_pdf));
       if (edf) {
          valid_copy = true;
       }
@@ -196,8 +196,9 @@ OuteredgeDataFactory<TYPE>::validCopyTo(
 
    if (!valid_copy) {
       boost::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
-         dst_pdf,
-         boost::detail::dynamic_cast_tag());
+         boost::dynamic_pointer_cast<OuteredgeDataFactory<TYPE>,
+                                     hier::PatchDataFactory>(
+            dst_pdf));
       if (oedf) {
          valid_copy = true;
       }
