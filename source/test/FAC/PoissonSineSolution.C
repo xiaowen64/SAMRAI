@@ -1,15 +1,15 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/PoissonSineSolution.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/FAC/PoissonSineSolution.C $
   Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1993 $
-  Modified:	$LastChangedDate: 2008-02-19 08:24:52 -0800 (Tue, 19 Feb 2008) $
+  Revision:	$LastChangedRevision: 2295 $
+  Modified:	$LastChangedDate: 2008-07-14 10:35:31 -0700 (Mon, 14 Jul 2008) $
   Description:	PoissonSineSolution class implementation
 */
 
 #include "SAMRAI_config.h"
 
 #include "MDA_Access.h"
-#include "arrayConversion.h"
+#include "ArrayDataAccess.h"
 #include "patchFcns.h"
 #include "PoissonSineSolution.h"
 #include STL_SSTREAM_HEADER_FILE
@@ -268,7 +268,7 @@ void PoissonSineSolution::setBcCoefs (
 
 #if NDIM == 3
     MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > g_array;
-    if ( gcoef_data ) g_array = arrayData2ArrayAccess( *gcoef_data );
+    if ( gcoef_data ) g_array = pdat::ArrayDataAccess::access( *gcoef_data );
     int i, j, k, ibeg, iend, jbeg, jend, kbeg, kend;
     double x, y, z;
     switch (bdry_box.getLocationIndex()) {

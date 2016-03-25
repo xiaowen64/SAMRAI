@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/TimerManager.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/timers/TimerManager.h $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2286 $
+// Modified:    $LastChangedDate: 2008-07-09 09:02:19 -0700 (Wed, 09 Jul 2008) $
 // Description: Singleton timer manager class.
 //
 
@@ -400,6 +400,21 @@ private:
    void clearArrays(void);
 
    /*
+    * Gets the current maximum number of timers.
+    *
+    * If trying to use more times than this value 
+    * the arrays should be resized.
+    */
+   int getMaximumNumberOfTimers();
+
+   /*
+    * Set the maximum number of timers.
+    *
+    * This will grow the internal arrays used to store values.
+    */
+   void setMaximumNumberOfTimers(const int size);
+
+   /*
     * Static constants used by timer manager.
     */
    static int s_main_timer_identifier;
@@ -512,6 +527,11 @@ private:
    bool d_print_concurrent;
    bool d_print_timer_overhead;
 
+   /*
+    * Internal value used to set and grow arrays for storing
+    * timers.
+    */
+   static const int DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 };
 
 

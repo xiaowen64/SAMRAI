@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2009 $
-// Modified:    $LastChangedDate: 2008-02-26 15:38:52 -0800 (Tue, 26 Feb 2008) $
+// Revision:    $LastChangedRevision: 2287 $
+// Modified:    $LastChangedDate: 2008-07-09 09:18:02 -0700 (Wed, 09 Jul 2008) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -41,9 +41,9 @@
 #include "tbox/MathUtilities.h"
 #include "CoarsenSchedule.h"
 
-//#define RECORD_STATS
-#undef RECORD_STATS
-#ifdef RECORD_STATS
+//#define HLI_RECORD_STATS
+#undef HLI_RECORD_STATS
+#ifdef HLI_RECORD_STATS
 #include "tbox/Statistic.h"
 #include "tbox/Statistician.h"
 #endif
@@ -952,83 +952,9 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
    TBOX_ASSERT(current_time <= new_time);
 #endif
 
-#ifdef RECORD_STATS
-   tbox::Pointer<tbox::Statistic> num_boxes_l0 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL0", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_boxes_l1 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL1", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_boxes_l2 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL2", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_boxes_l3 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL3", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_gridcells_l0 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL0", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_gridcells_l1 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL1", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_gridcells_l2 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL2", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> num_gridcells_l3 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL3", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> timestamp_l0 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL0", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> timestamp_l1 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL1", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> timestamp_l2 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL2", "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> timestamp_l3 =
-      tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL3", "PROC_STAT");
-
-   int level_num = patch_level->getLevelNumber();
-
-   /*
-    * Record number of gridcells on each patch.  Note that patch
-    * stat requires a seq number to be identified.
-    */
-   double level_gridcells = 0.;
-   double level_local_patches = 0.;
-   // to count total gridcells on patch_level
-   //hier::BoxArray<DIM> boxes = patch_level->getBoxes();
-   //for (int i = 0; i < boxes.getNumberOfBoxes(); i++) {
-   //   level_gridcells += boxes(i).size();
-   //}
-   // to count gridcells on this processor
-   for (typename hier::PatchLevel<DIM>::Iterator ip(patch_level); ip; ip++) {
-      tbox::Pointer<hier::Patch<DIM> > patch = patch_level->getPatch(ip());
-      level_gridcells += patch->getBox().size();
-      level_local_patches += 1.0;
-   }
-   if (level_num == 0) {
-      num_boxes_l0->recordProcStat(level_local_patches);
-      num_gridcells_l0->recordProcStat(level_gridcells);
-      timestamp_l0->recordProcStat(current_time);
-   }
-   if (level_num == 1) {
-      num_boxes_l1->recordProcStat(level_local_patches);
-      num_gridcells_l1->recordProcStat(level_gridcells);
-      timestamp_l1->recordProcStat(current_time);
-   }
-   if (level_num == 2) {
-      num_boxes_l2->recordProcStat(level_local_patches);
-      num_gridcells_l2->recordProcStat(level_gridcells);
-      timestamp_l2->recordProcStat(current_time);
-   }
-   if (level_num == 3) {
-      num_boxes_l3->recordProcStat(level_local_patches);
-      num_gridcells_l3->recordProcStat(level_gridcells);
-      timestamp_l3->recordProcStat(current_time);
-   }
+// HLI_RECORD_STATS is defined in HyperbolicLevelIntegrator.h
+#ifdef HLI_RECORD_STATS
+   recordStatistics( *patch_level);
 #endif
 
    t_advance_level->start();
@@ -1243,6 +1169,51 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::advanceLevel(
    }
 
    return(next_dt);
+}
+
+/*
+*************************************************************************
+*                                                                       *
+*                                                                       *
+*************************************************************************
+*/
+template<int DIM> void HyperbolicLevelIntegrator<DIM>::recordStatistics(
+   const hier::PatchLevel<DIM> &patch_level,
+   double current_time )
+{
+   int level_num = patch_level.getLevelNumber();
+
+   if ( level_num >= d_boxes_stat.size() ) {
+      d_boxes_stat.resizeArray(level_num+1);
+      d_cells_stat.resizeArray(level_num+1);
+      d_timestamp_stat.resizeArray(level_num+1);
+   }
+
+   if ( d_boxes_stat[level_num].isNull() ) {
+      std::string lnstr = tbox::Utilities::intToString(level_num,1);
+      d_boxes_stat[level_num] =
+         tbox::Statistician::getStatistician()->
+         getStatistic( std::string("NumberBoxesL")+lnstr, "PROC_STAT");
+      d_cells_stat[level_num] =
+         tbox::Statistician::getStatistician()->
+         getStatistic( std::string("NumberGridcellsL")+lnstr, "PROC_STAT");
+      d_timestamp_stat[level_num] =
+         tbox::Statistician::getStatistician()->
+         getStatistic( std::string("TimeStampL")+lnstr, "PROC_STAT");
+   }
+
+   double level_gridcells = 0.;
+   double level_local_patches = 0.;
+   for (typename hier::PatchLevel<DIM>::Iterator ip(patch_level); ip; ip++) {
+      tbox::Pointer<hier::Patch<DIM> > patch = patch_level.getPatch(ip());
+      level_gridcells += patch->getBox().size();
+      level_local_patches += 1.0;
+   }
+
+   d_boxes_stat[level_num]->recordProcStat(level_local_patches);
+   d_cells_stat[level_num]->recordProcStat(level_gridcells);
+   d_timestamp_stat[level_num]->recordProcStat(current_time);
+   return;
 }
 
 /*
@@ -2353,6 +2324,76 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::copyTimeDependentData(
      
    }  
 
+}
+
+/*
+*************************************************************************
+* Write out gridding statistics collected by advanceLevel               *
+*************************************************************************
+*/
+template<int DIM> void HyperbolicLevelIntegrator<DIM>::printStatistics(
+   std::ostream &s ) const
+{
+   /*
+     Output statistics.
+   */
+   // Collect statistic on mesh size.
+   tbox::Statistician *statn = tbox::Statistician::getStatistician();
+
+   statn->finalize();
+   // statn->printLocalStatData(s);
+   if ( tbox::SAMRAI_MPI::getRank() == 0 ) {
+      // statn->printAllGlobalStatData(s);
+      double n_cell_updates = 0; // Number of cell updates.
+      double n_patch_updates = 0; // Number of patch updates.
+      for ( int ln=0; ln<d_cells_stat.size(); ++ln ) {
+         tbox::Statistic &cstat = *d_cells_stat[ln];
+         tbox::Statistic &bstat = *d_boxes_stat[ln];
+         tbox::Statistic &tstat = *d_timestamp_stat[ln];
+         s << "statistic " << cstat.getName() << ":" << std::endl;
+         if(0) {
+            s << "Global: \n";
+            statn->printGlobalProcStatDataFormatted(cstat.getInstanceId(),s);
+         }
+         s << " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-NormDiff  B-Sum B-Avg B-Min -> B-Max B-NormDiff C/B-Avg\n";
+         for ( int sn=0; sn<cstat.getStatSequenceLength(); ++sn ) {
+            const double csum = statn->getGlobalProcStatSum(cstat.getInstanceId(),sn);
+            const double cmax = statn->getGlobalProcStatMax(cstat.getInstanceId(),sn);
+            const double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(),sn);
+            const double cdiffnorm = !tbox::MathUtilities<double>::equalEps(cmax,0) ? 1.0 - cmin/cmax : 0;
+            const double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(),sn);
+            const double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(),sn);
+            const double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(),sn);
+            const double bdiffnorm = !tbox::MathUtilities<double>::equalEps(bmax, 0) ? 1.0 - bmin/bmax : 0;
+            const double stime = statn->getGlobalProcStatMin(tstat.getInstanceId(),sn);
+            s << std::setw(3) << sn << "  "
+              << std::scientific << std::setprecision(6) << std::setw(12)
+              << stime
+              << " "
+              << std::fixed << std::setprecision(0)
+              << std::setw(10) << csum << " "
+              << std::setw(10) << csum/tbox::SAMRAI_MPI::getNodes() << " "
+              << std::setw(10) << cmin << " -> "
+              << std::setw(10) << cmax
+              << "  " << std::setw(4) << std::setprecision(4) << cdiffnorm
+              << "  "
+              << std::fixed << std::setprecision(0)
+              << std::setw(6) << bsum << " "
+              << std::setw(5) << bsum/tbox::SAMRAI_MPI::getNodes() << " "
+              << std::setw(5) << bmin << "  ->"
+              << std::setw(5) << bmax
+              << "   " << std::setw(4) << std::setprecision(4) << bdiffnorm
+              << std::setw(10) << std::setprecision(0) 
+	      << (!tbox::MathUtilities<double>::equalEps(bsum,0) ? csum/bsum : 0)
+              << std::endl;
+            n_cell_updates += csum;
+            n_patch_updates += bsum;
+         }
+      }
+      s << "Total number of cell updates: " << n_cell_updates << std::endl;
+      s << "Total number of boxe updates: " << n_patch_updates << std::endl;
+   }
+   return;
 }
 
 /*

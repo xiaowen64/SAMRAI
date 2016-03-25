@@ -72,8 +72,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
-	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h $(INCLUDE_SAM)/tbox/Utilities.h\
-	main.C
+	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h main.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -84,18 +85,21 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/CellData.C		\
 	$(INCLUDE_SAM)/CellGeometry.C $(INCLUDE_SAM)/CellIndex.C	\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeGeometry.C		\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
-	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeGeometry.C		\
-	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
-	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/PatchData.C		\
-	$(INCLUDE_SAM)/SideData.C $(INCLUDE_SAM)/SideGeometry.C		\
-	$(INCLUDE_SAM)/SideIndex.C $(INCLUDE_SAM)/SideIterator.C	\
-	$(INCLUDE_SAM)/SideOverlap.C
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceGeometry.C		\
+	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
+	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
+	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
+	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
+	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/SideData.C		\
+	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
+	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}

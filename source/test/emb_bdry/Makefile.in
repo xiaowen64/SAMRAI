@@ -1,10 +1,10 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/emb_bdry/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/emb_bdry/Makefile.in $
 ## Package:	SAMRAI applications
 ## Copyright:	(c) 1997-2004 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
-## Revision:	$LastChangedRevision: 1704 $
-## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Revision:	$LastChangedRevision: 2181 $
+## Modified:	$LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
 ## Description:	makefile for embedded boundary sample application
 ##
 
@@ -83,7 +83,7 @@ clean:		clean-check
 include $(SRCDIR)/Makefile.depend
 
 FORTRAN         = $(SRCDIR)
-M4DIRS          = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+M4DIRS          = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
 fortran2d.o:	$(FORTRAN)/fortran2d.m4
 		$(M4) $(M4DIRS) $(FORTRAN)/fortran2d.m4 > fortran2d.f

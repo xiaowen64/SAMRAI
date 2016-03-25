@@ -1,5 +1,5 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Statistician.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/timers/Statistician.C $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:    \f$ \f$
@@ -101,20 +101,21 @@ Statistician::Statistician()
 
    d_must_call_finalize = true;
 
-   const int max_stats = tbox::SAMRAIManager::getMaxNumberStatistics();
+   setMaximumNumberOfStatistics(DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
 
    d_num_proc_stats = 0;
-   d_proc_statistics.resizeArray(max_stats);
    d_num_patch_stats = 0;
-   d_patch_statistics.resizeArray(max_stats);
+
 }
 
 Statistician::~Statistician()
 {
    if (d_restart_database_instance) delete d_restart_database_instance;
+
    d_proc_statistics.resizeArray(0);
-   d_num_proc_stats = 0;
    d_patch_statistics.resizeArray(0);
+
+   d_num_proc_stats = 0;
    d_num_patch_stats = 0;
 }
 
@@ -183,9 +184,9 @@ Pointer<Statistic> Statistician::getStatistic(
      }
 
      if (!found) {
-        if (d_num_proc_stats == d_proc_statistics.getSize()) {
-           TBOX_ERROR("Statistician::getStatistic error ..."
-              << "\n   Max statistic exceeded with stat " << name << std::endl);
+        if (d_num_proc_stats == Statistician::getMaximumNumberOfStatistics()) {
+	   setMaximumNumberOfStatistics(Statistician::getMaximumNumberOfStatistics() 
+					+ DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
         }
         stat = new Statistic(name, stat_type, d_num_proc_stats);
         d_proc_statistics[d_num_proc_stats] = stat;
@@ -204,9 +205,9 @@ Pointer<Statistic> Statistician::getStatistic(
      }
 
      if (!found) {
-        if (d_num_patch_stats == d_patch_statistics.getSize()) {
-           TBOX_ERROR("Statistician::getStatistic error ..."
-              << "\n   Max statistic exceeded with stat " << name << std::endl);
+        if (d_num_patch_stats == Statistician::getMaximumNumberOfStatistics()) {
+	   setMaximumNumberOfStatistics(Statistician::getMaximumNumberOfStatistics() 
+					+ DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
         }
         stat = new Statistic(name, stat_type, d_num_patch_stats);
         d_patch_statistics[d_num_patch_stats] = stat;
@@ -2412,6 +2413,16 @@ void StatisticRestartDatabase::getFromRestart()
 
 }
 
+int Statistician::getMaximumNumberOfStatistics() {
+   return d_proc_statistics.getSize();
+}
+
+void Statistician::setMaximumNumberOfStatistics(const int size) {
+   if( size > d_proc_statistics.getSize() ) {
+      d_proc_statistics.resizeArray(size);
+      d_patch_statistics.resizeArray(size);
+   }
+}
 
 }
 }

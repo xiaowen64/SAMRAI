@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.h $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2196 $
+// Modified:    $LastChangedDate: 2008-05-14 14:25:02 -0700 (Wed, 14 May 2008) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -37,6 +37,14 @@
 #include "RefineAlgorithm.h"
 #include "RefineSchedule.h"
 #include "tbox/Timer.h"
+
+#define HLI_RECORD_STATS
+// #undef DGA_RECORD_STATS
+
+#ifdef HLI_RECORD_STATS
+#include "tbox/Statistic.h"
+#include "tbox/Statistician.h"
+#endif
 
 #ifndef NULL
 #define NULL (0)
@@ -684,6 +692,11 @@ public:
     */
    bool usingRefinedTimestepping() const;
 
+   /*
+    * Write out statistics recorded on numbers of cells and patches generated.
+    */
+   void printStatistics( std::ostream &s = tbox::plog ) const;
+
 protected:
    /**
     * Read input values, indicated above, from given database.  The boolean
@@ -785,6 +798,13 @@ protected:
                                const tbox::Pointer< hier::PatchLevel<DIM> > coarse,
                                const double sync_time,
                                const double coarse_sim_time);
+
+   /*
+    * Record statistics on how many patches and cells were generated.
+    */
+   void recordStatistics(
+      const hier::PatchLevel<DIM> &patch_level,
+      double current_time );
 
 private:
    /*
@@ -1002,6 +1022,15 @@ private:
    tbox::Pointer<tbox::Timer> t_advance_level_sync;
    tbox::Pointer<tbox::Timer> t_std_level_sync;
    tbox::Pointer<tbox::Timer> t_sync_new_levels;
+
+#ifdef HLI_RECORD_STATS
+   /*
+    * Statistics on number of cells and patches generated.
+    */
+   tbox::Array< tbox::Pointer<tbox::Statistic> > d_boxes_stat;
+   tbox::Array< tbox::Pointer<tbox::Statistic> > d_cells_stat;
+   tbox::Array< tbox::Pointer<tbox::Statistic> > d_timestamp_stat;
+#endif
 
 };
 

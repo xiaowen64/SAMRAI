@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/ElevenPatchInterface.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/apputils/embedded_boundary/ElevenPatchInterface.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2195 $
+// Modified:    $LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description: SAMRAI interface to Eleven library
 //              
 // 
@@ -167,6 +167,11 @@ private:
  
 }
 }
+
+#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
+#include "ElevenPatchInterface.C"
+#endif
+
 #endif // included_ElevenPatchInterface
 
 

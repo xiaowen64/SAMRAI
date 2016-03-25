@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/IndexVariable.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/index/IndexVariable.h $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description:	hier::Variable class for defining irregular index variables
 //
 
@@ -23,12 +23,15 @@ namespace SAMRAI {
     namespace pdat {
 
 /**
- * Class IndexVariable<DIM> is a templated variable class used to define
- * quantities that exist on an irregular cell-centered index set.  The
- * template parameter TYPE defines the storage at each index location.
- * For example, this class is used to represent embedded boundary features
- * as a regular patch data type using the BoundaryCell class as the template
- * type.
+ * Class IndexVariable<DIM,TYPE,BOX_GEOMETRY> is a templated variable
+ * class used to define quantities that exist on an irregular
+ * cell-centered index set.  The template parameter TYPE defines the
+ * storage at each index location.  For example, this class is used to
+ * represent embedded boundary features as a regular patch data type
+ * using the BoundaryCell class as the template type.  The template
+ * parameter BOX_GEOMETRY allows IndexVariables to be instantiated
+ * with a provided centering and geometry in index space via a
+ * BoxGeometry (e.g. CellGeometry, NodeGeometry).
  *
  * Please consult the README file in the index data source directory for 
  * instructions on using this class to provide other irregular index set
@@ -39,7 +42,7 @@ namespace SAMRAI {
  * @see pdat::Variable
  */
 
-template<int DIM, class TYPE>
+template<int DIM, class TYPE, class BOX_GEOMETRY>
 class IndexVariable : public hier::Variable<DIM>
 {
 public:
@@ -51,7 +54,7 @@ public:
    /**
     * Virtual destructor for index variable objects.
     */
-   virtual ~IndexVariable<DIM,TYPE>();
+   virtual ~IndexVariable<DIM,TYPE,BOX_GEOMETRY>();
 
    /**
     * Return true so that the index data quantities will always be treated as cell-
@@ -69,8 +72,8 @@ public:
    bool dataLivesOnPatchBorder() const {return false;}
 
 private:
-   IndexVariable(const IndexVariable<DIM,TYPE>&); // not implemented
-   void operator=(const IndexVariable<DIM,TYPE>&);      // not implemented
+   IndexVariable(const IndexVariable<DIM,TYPE,BOX_GEOMETRY>&); // not implemented
+   void operator=(const IndexVariable<DIM,TYPE,BOX_GEOMETRY>&);      // not implemented
 
 };
 

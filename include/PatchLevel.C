@@ -1,9 +1,9 @@
 //
-// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchLevel.C $
+// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/hierarchy/patches/PatchLevel.C $
 // Package:   SAMRAI hierarchy
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:   $LastChangedRevision: 2141 $
-// Modified:   $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
+// Revision:   $LastChangedRevision: 2196 $
+// Modified:   $LastChangedDate: 2008-05-14 14:25:02 -0700 (Wed, 14 May 2008) $
 // Description:   A collection of patches at one level of the AMR hierarchy
 //
 
@@ -15,6 +15,8 @@
 #include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
+#include "tbox/ShutdownRegistry.h"
+#include "tbox/TimerManager.h"
 
 #define HIER_PATCH_LEVEL_VERSION (3)
 
@@ -24,6 +26,8 @@
 
 namespace SAMRAI {
     namespace hier {
+
+static tbox::Pointer<tbox::Timer> t_level_constructor;
 
 /*
  *************************************************************************
@@ -35,6 +39,8 @@ namespace SAMRAI {
 
 template<int DIM>  PatchLevel<DIM>::PatchLevel()
 {
+   initializeTimers();
+   t_level_constructor->start();
    d_number_patches = 0;
 
    d_level_number = -1;
@@ -56,6 +62,7 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel()
    d_patch_touches_regular_boundary.resizeArray(0);
    d_patch_touches_periodic_boundary.resizeArray(0);
    d_shifts.resizeArray(0);
+   t_level_constructor->stop();
 }
 
 /*
@@ -96,6 +103,8 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
       }
    }
 #endif
+   initializeTimers();
+   t_level_constructor->start();
 
    d_number_patches = boxes.getNumberOfBoxes();
    d_boxes = boxes;
@@ -166,6 +175,7 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
 
    grid_geometry->computeShiftsForLevel(d_shifts, *this, d_physical_domain);
 
+   t_level_constructor->stop();
 }
 
 /*
@@ -188,6 +198,8 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
    TBOX_ASSERT(!grid_geometry.isNull());
    TBOX_ASSERT(!descriptor.isNull());
 #endif
+   initializeTimers();
+   t_level_constructor->start();
 
    d_geometry = grid_geometry;
    d_descriptor = descriptor;
@@ -234,6 +246,7 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
    setPatchTouchesBoundaryArrays();
 
    grid_geometry->computeShiftsForLevel(d_shifts, *this, d_physical_domain);
+   t_level_constructor->stop();
 }
 
 template<int DIM>  PatchLevel<DIM>::~PatchLevel()
@@ -982,6 +995,38 @@ template<int DIM> void PatchLevel<DIM>::setPatchTouchesBoundaryArrays()
          ((tmp_per_array[ip] == 1) ? true : false);
    }
    
+}
+
+/*
+ * ************************************************************************
+ * ************************************************************************
+ */
+
+template<int DIM> void PatchLevel<DIM>::initializeTimers()
+{
+   if ( t_level_constructor.isNull() ) {
+      t_level_constructor = tbox::TimerManager::getManager() ->
+         getTimer("mesh::PatchLevel::level_constructor");
+   }
+   tbox::ShutdownRegistry::registerShutdownRoutine(freeTimers, 254);
+}
+
+
+
+
+/*
+***************************************************************************
+*                                                                         *
+* Release static timers.  To be called by shutdown registry to make sure  *
+* memory for timers does not leak.                                        *
+*                                                                         *
+***************************************************************************
+*/
+template<int DIM>
+void PatchLevel<DIM>::freeTimers()
+{
+   t_level_constructor.setNull();
+   return;
 }
 
 

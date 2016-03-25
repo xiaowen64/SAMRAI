@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/TimerManager.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/timers/TimerManager.C $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+// Revision:    $LastChangedRevision: 2286 $
+// Modified:    $LastChangedDate: 2008-07-09 09:02:19 -0700 (Wed, 09 Jul 2008) $
 // Description: Class to manage different timer objects used throughout the 
 //              library.
 //
@@ -127,29 +127,13 @@ TimerManager::TimerManager(Pointer<Database> input_db)
                             s_main_timer_identifier);
 #endif
 
-   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
+   setMaximumNumberOfTimers(DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
 
-   d_timers.resizeArray( max_timers );
    d_num_timers = 0;
 
-   d_inactive_timers.resizeArray( max_timers );
    d_num_inactive_timers = 0;
 
-   d_running_timers.resizeArray( max_timers );
-   for (int i = 0; i < max_timers; i++) {
-      d_running_timers[i] = false;
-   }
-
-   d_exclusive_timer_stack.clearItems();
-
-   d_timers.resizeArray( max_timers );
-   d_num_timers = 0;
-
-   d_inactive_timers.resizeArray( max_timers );
-   d_num_inactive_timers = 0;
-
-   d_running_timers.resizeArray( max_timers );
-   for (int i = 0; i < max_timers; i++) {
+   for (int i = 0; i <d_running_timers.getSize() ; i++) {
       d_running_timers[i] = false;
    }
 
@@ -260,8 +244,6 @@ Pointer<Timer> TimerManager::getTimer(
    TBOX_ASSERT(!name.empty());
 #endif
 
-   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
-
    bool timer_active = true;
    if (!ignore_timer_input) {   
       /*
@@ -280,9 +262,9 @@ Pointer<Timer> TimerManager::getTimer(
                                     name,
                                     d_timers,
                                     d_num_timers) ) {
-         if ( d_num_timers == max_timers ) {
-            TBOX_ERROR("TimerManager::getTimer error ..."
-               << "\n   Max timers exceeded with timer " << name << std::endl);
+         if ( d_num_timers == getMaximumNumberOfTimers() ) {
+	    setMaximumNumberOfTimers(getMaximumNumberOfTimers() 
+				     + DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
          }
          timer = new Timer(name, d_num_timers);
          d_timers[d_num_timers] = timer;
@@ -293,10 +275,10 @@ Pointer<Timer> TimerManager::getTimer(
                                      name,
                                      d_inactive_timers,
                                      d_num_inactive_timers) ) {
-          if ( d_num_inactive_timers == max_timers ) {
-             TBOX_ERROR("TimerManager::getTimer error ..."
-                << "\n   Max timers exceeded with timer " << name << std::endl);
-          }
+         if ( d_num_inactive_timers == getMaximumNumberOfTimers() ) {
+	    setMaximumNumberOfTimers(getMaximumNumberOfTimers() 
+				     + DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
+         }
           timer = new Timer(name, s_inactive_timer_identifier);
           timer->setInactive(); 
           d_inactive_timers[d_num_inactive_timers] = timer;
@@ -1585,7 +1567,7 @@ void TimerManager::printOverhead(
 void TimerManager::printConcurrent(std::ostream& os)
 {
   
-   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
+   const int max_timers = getMaximumNumberOfTimers();
 
    std::string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
    std::string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
@@ -1623,10 +1605,11 @@ void TimerManager::printConcurrent(std::ostream& os)
 
       os << std::setw(maxlen+3) << d_timers[n]->getName().c_str();
 
-      const Array<bool>& bool_vec = d_timers[n]->getConcurrentTimerVector();
       int count = 0;
       for (i = 0; i < max_timers; i++) {
-         if (bool_vec[i]) count++;
+         if ( d_timers[n]->isConcurrentTimer(i) ) {
+	    count++;
+	 }
       }
       if (count == 0) {
 	os << std::setw(25) << "none " << std::endl;
@@ -1640,7 +1623,7 @@ void TimerManager::printConcurrent(std::ostream& os)
          */
         count = 0;
         for (int j = 0; j < max_timers; j++) {
-           if (bool_vec[j]) {
+           if ( d_timers[n]->isConcurrentTimer(j) ) {
               if (count == 0) {
                  os << std::setw(25) << d_timers[j]->getName().c_str() << std::endl;
               } else {
@@ -2453,20 +2436,30 @@ void TimerManager::clearArrays(void) {
                             s_main_timer_identifier);
 #endif
 
-   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
-
-   d_timers.resizeArray( max_timers );
    d_num_timers = 0;
 
-   d_inactive_timers.resizeArray( max_timers );
    d_num_inactive_timers = 0;
 
-   d_running_timers.resizeArray( max_timers );
-   for (int i = 0; i < max_timers; i++) {
+   for (int i = 0; i < d_running_timers.getSize(); i++) {
       d_running_timers[i] = false;
    }
 
    d_exclusive_timer_stack.clearItems();
+}
+
+int TimerManager::getMaximumNumberOfTimers() {
+   return d_timers.getSize();
+}
+
+void TimerManager::setMaximumNumberOfTimers(const int size) {
+   if( size > d_timers.getSize() ) {
+      d_timers.resizeArray( size );
+      d_inactive_timers.resizeArray( size );
+      d_running_timers.resizeArray( size );
+      d_timers.resizeArray( size );
+      d_inactive_timers.resizeArray( size );
+      d_running_timers.resizeArray( size );
+   }
 }
 
 }

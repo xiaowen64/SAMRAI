@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/OuteredgeGeometry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/boxgeometry/OuteredgeGeometry.h $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	$Name:  $
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description:	Box geometry information for edge centered objects
 //
 
@@ -15,6 +15,7 @@
 #include "Box.h"
 #include "BoxGeometry.h"
 #include "BoxOverlap.h"
+#include "EdgeOverlap.h"
 #include "IntVector.h"
 #include "tbox/Pointer.h"
 
@@ -41,6 +42,13 @@ template<int DIM> class EdgeGeometry;
 template<int DIM> class OuteredgeGeometry : public hier::BoxGeometry<DIM>
 {
 public:
+
+   /*!
+    * The BoxOverlap implemenation for this geometry.
+    */
+   typedef EdgeOverlap<DIM> Overlap;
+
+
    /*!
     * Convert a given box in the standard cell-centered AMR index space to an
     * outeredge geometry box for the specified axis, face normal, and 

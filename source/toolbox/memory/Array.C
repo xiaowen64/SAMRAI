@@ -1,11 +1,14 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/memory/Array.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/memory/Array.C $
 // Package:	SAMRAI toolbox for memory management
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2037 $
-// Modified:	$LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
+// Revision:	$LastChangedRevision: 2195 $
+// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description:	A simple array template class
 //
+
+#ifndef included_tbox_Array_C
+#define included_tbox_Array_C
 
 #include "tbox/Array.h"
 #include "tbox/Arena.h"
@@ -132,3 +135,5 @@ void Array<TYPE>::resizeArray(
 
 }
 }
+
+#endif

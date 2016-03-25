@@ -34,6 +34,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h CellGeometry.C CellGeometry.I	\
 	CellGeometry.h CellOverlap.I CellOverlap.h
 
@@ -42,7 +43,9 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C CellOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C CellOverlap.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -71,6 +74,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h CellOverlap.C CellOverlap.I	\
 	CellOverlap.h
 
@@ -78,7 +82,10 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -108,6 +115,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h EdgeGeometry.C EdgeGeometry.I	\
 	EdgeGeometry.h EdgeOverlap.I EdgeOverlap.h
 
@@ -116,7 +124,9 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C EdgeOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C EdgeOverlap.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -145,6 +155,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h EdgeOverlap.C EdgeOverlap.I	\
 	EdgeOverlap.h
 
@@ -152,7 +163,10 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -182,6 +196,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h FaceGeometry.C FaceGeometry.I	\
 	FaceGeometry.h FaceOverlap.I FaceOverlap.h
 
@@ -190,7 +205,9 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C FaceOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C FaceOverlap.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -219,6 +236,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h FaceOverlap.C FaceOverlap.I	\
 	FaceOverlap.h
 
@@ -226,7 +244,10 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -256,6 +277,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h NodeGeometry.C NodeGeometry.I	\
 	NodeGeometry.h NodeOverlap.I NodeOverlap.h
 
@@ -264,7 +286,9 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C NodeOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C NodeOverlap.C
 endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
@@ -293,6 +317,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h NodeOverlap.C NodeOverlap.I	\
 	NodeOverlap.h
 
@@ -300,7 +325,10 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
@@ -330,6 +358,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h EdgeGeometry.I EdgeGeometry.h	\
 	EdgeOverlap.I EdgeOverlap.h OuteredgeGeometry.C			\
 	OuteredgeGeometry.I OuteredgeGeometry.h
@@ -339,7 +368,9 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C EdgeGeometry.C EdgeOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C EdgeGeometry.C EdgeOverlap.C
 endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
@@ -369,6 +400,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h FaceGeometry.I FaceGeometry.h	\
 	FaceOverlap.I FaceOverlap.h OuterfaceGeometry.C			\
 	OuterfaceGeometry.I OuterfaceGeometry.h
@@ -378,7 +410,9 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C FaceGeometry.C FaceOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C FaceGeometry.C FaceOverlap.C
 endif
 
 ${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
@@ -408,6 +442,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h NodeGeometry.I NodeGeometry.h	\
 	NodeOverlap.I NodeOverlap.h OuternodeGeometry.C			\
 	OuternodeGeometry.I OuternodeGeometry.h
@@ -417,7 +452,9 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C NodeGeometry.C NodeOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C NodeGeometry.C NodeOverlap.C
 endif
 
 ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
@@ -447,6 +484,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h OutersideGeometry.C		\
 	OutersideGeometry.I OutersideGeometry.h SideGeometry.I		\
 	SideGeometry.h SideOverlap.I SideOverlap.h
@@ -456,7 +494,9 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C SideGeometry.C SideOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C SideGeometry.C SideOverlap.C
 endif
 
 ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
@@ -486,6 +526,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h SideGeometry.C SideGeometry.I	\
 	SideGeometry.h SideOverlap.I SideOverlap.h
 
@@ -494,7 +535,9 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C SideOverlap.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C SideOverlap.C
 endif
 
 ${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
@@ -523,6 +566,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h SideOverlap.C SideOverlap.I	\
 	SideOverlap.h
 
@@ -530,7 +574,10 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_13 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}

@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/sundials/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/sundials/Makefile.in $
 ## Package:	SAMRAI applications
 ## Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1749 $
-## Modified:	$LastChangedDate: 2007-12-10 15:14:02 -0800 (Mon, 10 Dec 2007) $
+## Revision:	$LastChangedRevision: 2181 $
+## Modified:	$LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
 ## Description:	makefile for cvode sample application
 ##
 
@@ -80,7 +80,7 @@ clean:
 include $(SRCDIR)/Makefile.depend
 
 FORTRAN       = $(SRCDIR)
-M4DIRS        = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
 FACjacobian2d.o:	$(FORTRAN)/FACjacobian2d.m4
 		$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian2d.m4 > FACjacobian2d.f

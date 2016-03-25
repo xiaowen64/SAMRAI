@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/load_balance/LoadBalancer.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/load_balance/LoadBalancer.h $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2208 $
+// Modified:    $LastChangedDate: 2008-06-05 15:32:48 -0700 (Thu, 05 Jun 2008) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
  
@@ -216,10 +216,7 @@ public:
     * the specified descriptor index for estimating the workload on each cell.
     *
     * @param data_id       Integer value of patch data identifier for workload
-    *                      estimate on each cell.  An invalid value (i.e., < 0)
-    *                      indicates that a spatially-uniform work estimate
-    *                      will be used.  The default value is -1 (undefined)
-    *                      implying the uniform work estimate.
+    *                      estimate on each cell.
     * @param level_number  Optional integer number for level on which data id
     *                      is used.  If no value is given, the data will be
     *                      used for all levels.

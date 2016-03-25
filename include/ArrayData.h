@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/array/ArrayData.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/array/ArrayData.h $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2172 $
-// Modified:	$LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
+// Revision:	$LastChangedRevision: 2195 $
+// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description:	Templated array data structure supporting patch data types
 //
 
@@ -557,8 +557,9 @@ private:
 #include "ArrayData.I"
 #endif
 
-#endif
-
 #ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "ArrayData.C"
 #endif
+
+#endif
+

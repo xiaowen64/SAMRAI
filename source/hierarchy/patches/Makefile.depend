@@ -45,6 +45,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h BasePatchHierarchy.C		\
 	BasePatchHierarchy.h BasePatchLevel.h ProcessorMapping.I	\
 	ProcessorMapping.h
@@ -56,7 +57,9 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
 	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/PatchData.C		\
 	$(INCLUDE_SAM)/PatchDataFactory.C				\
-	$(INCLUDE_SAM)/PatchDescriptor.C
+	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BasePatchLevel.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -87,7 +90,8 @@ DEPENDS_1:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -97,12 +101,20 @@ DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/Index.I			\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.h $(INCLUDE_SAM)/tbox/IOStream.h\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h					\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
@@ -112,7 +124,9 @@ DEPENDS_2:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C BoundaryLookupTable.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C BoundaryLookupTable.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -122,12 +136,20 @@ DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/Index.I			\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.h $(INCLUDE_SAM)/tbox/IOStream.h\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h					\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
@@ -138,7 +160,10 @@ DEPENDS_3:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C BoundaryBox.C BoundaryLookupTable.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C BoundaryBox.C			\
+	BoundaryLookupTable.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -146,8 +171,15 @@ ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 FILE_4=BoundaryLookupTable.o
 DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/IntVector.I	\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
-	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/IOStream.h	\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/tbox/Array.h					\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/Pointer.I	\
+	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
@@ -156,7 +188,8 @@ DEPENDS_4:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -242,10 +275,12 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/MultiblockPatchLevel.C $(INCLUDE_SAM)/PatchData.C\
 	$(INCLUDE_SAM)/PatchDataFactory.C				\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BasePatchHierarchy.C		\
-	BoundaryBox.C BoundaryLookupTable.C GridGeometry.C Patch.C	\
-	PatchFactory.C PatchGeometry.C PatchHierarchy.C PatchLevel.C	\
-	PatchLevelFactory.C
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BasePatchHierarchy.C		\
+	BasePatchLevel.C BoundaryBox.C BoundaryLookupTable.C		\
+	GridGeometry.C Patch.C PatchFactory.C PatchGeometry.C		\
+	PatchHierarchy.C PatchLevel.C PatchLevelFactory.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -319,7 +354,9 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BoundaryBox.C			\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BasePatchLevel.C BoundaryBox.C	\
 	BoundaryLookupTable.C Patch.C PatchFactory.C PatchGeometry.C	\
 	PatchLevel.C
 endif
@@ -379,7 +416,9 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/PatchData.C		\
 	$(INCLUDE_SAM)/PatchDataFactory.C				\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BoundaryBox.C			\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BoundaryBox.C			\
 	BoundaryLookupTable.C PatchGeometry.C
 endif
 
@@ -461,10 +500,12 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BasePatchHierarchy.C		\
-	BoundaryBox.C BoundaryLookupTable.C GridGeometry.C Patch.C	\
-	PatchFactory.C PatchGeometry.C PatchHierarchy.C PatchLevel.C	\
-	PatchLevelFactory.C
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BasePatchHierarchy.C		\
+	BasePatchLevel.C BoundaryBox.C BoundaryLookupTable.C		\
+	GridGeometry.C Patch.C PatchFactory.C PatchGeometry.C		\
+	PatchHierarchy.C PatchLevel.C PatchLevelFactory.C
 endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
@@ -523,7 +564,9 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/PatchData.C		\
 	$(INCLUDE_SAM)/PatchDataFactory.C				\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BoundaryBox.C			\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BoundaryBox.C			\
 	BoundaryLookupTable.C Patch.C PatchGeometry.C
 endif
 
@@ -534,14 +577,20 @@ DEPENDS_10:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/Index.I			\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
-	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
@@ -552,7 +601,10 @@ DEPENDS_10:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C BoundaryBox.C BoundaryLookupTable.C
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BoundaryBox.C			\
+	BoundaryLookupTable.C
 endif
 
 ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
@@ -632,7 +684,9 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BoundaryBox.C			\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BasePatchLevel.C BoundaryBox.C	\
 	BoundaryLookupTable.C GridGeometry.C Patch.C PatchFactory.C	\
 	PatchGeometry.C PatchLevel.C PatchLevelFactory.C
 endif
@@ -691,11 +745,12 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.h BasePatchLevel.h BoundaryBox.I	\
-	BoundaryBox.h BoundaryLookupTable.I BoundaryLookupTable.h	\
-	GridGeometry.I GridGeometry.h Patch.I Patch.h PatchFactory.I	\
-	PatchFactory.h PatchGeometry.I PatchGeometry.h PatchLevel.C	\
-	PatchLevel.I PatchLevel.h ProcessorMapping.I ProcessorMapping.h
+	$(INCLUDE_SAM)/tbox/Utilities.h BasePatchLevel.C		\
+	BasePatchLevel.h BoundaryBox.I BoundaryBox.h			\
+	BoundaryLookupTable.I BoundaryLookupTable.h GridGeometry.I	\
+	GridGeometry.h Patch.I Patch.h PatchFactory.I PatchFactory.h	\
+	PatchGeometry.I PatchGeometry.h PatchLevel.C PatchLevel.I	\
+	PatchLevel.h ProcessorMapping.I ProcessorMapping.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
@@ -708,7 +763,9 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BoundaryBox.C			\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BoundaryBox.C			\
 	BoundaryLookupTable.C GridGeometry.C Patch.C PatchFactory.C	\
 	PatchGeometry.C
 endif
@@ -785,7 +842,9 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C BoundaryBox.C			\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C BasePatchLevel.C BoundaryBox.C	\
 	BoundaryLookupTable.C GridGeometry.C Patch.C PatchFactory.C	\
 	PatchGeometry.C PatchLevel.C
 endif
@@ -794,9 +853,15 @@ ${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
 
 FILE_14=ProcessorMapping.o
 DEPENDS_14:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/IOStream.h					\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/Pointer.I	\
+	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAI_MPI.I				\
@@ -805,7 +870,7 @@ DEPENDS_14:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_14 +=\
-	
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}

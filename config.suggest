@@ -1,10 +1,10 @@
 #!/bin/sh
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/config.suggest $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/config.suggest $
 ## Package:     SAMRAI
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 2176 $
-## Modified:    $LastChangedDate: 2008-05-05 15:25:08 -0700 (Mon, 05 May 2008) $
+## Revision:    $LastChangedRevision: 2303 $
+## Modified:    $LastChangedDate: 2008-07-21 09:55:39 -0700 (Mon, 21 Jul 2008) $
 ## Description: script to suggest ways to configure SAMRAI
 ##
 
@@ -40,24 +40,9 @@
 
 case $1 in
 
-casc_gnu3) # CASC RedHat 3, GNU-3.x.x compilers
-cat <<-EOF
-	--with-CXX=/usr/apps/gcc/3.3.2/bin/g++
-	--with-CC=/usr/apps/gcc/3.3.2/bin/gcc
-	--with-F77=/usr/apps/gcc/3.3.2/bin/g77
-	--with-hdf5=/usr/apps/hdf5/serial-1.4.4
-	--with-mpi-include=/usr/apps/mpich/1.2.5/include
-	--with-mpi-lib-dirs=/usr/apps/mpich/1.2.5/lib
-	--with-mpi-libs="mpich pmpich"
-	--with-parallel-run-bin=/usr/apps/mpich/1.2.5/bin/mpirun
-	--with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.13.0b
-        --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh3
-	--without-petsc
-	--without-blaslapack
-	--with-x
-	EOF
-# Maintained by Steve Smith
-;;
+#-----------------------------------------------------------------------------
+# CASC machines
+#-----------------------------------------------------------------------------
 
 casc_gnu4) # CASC RedHat 3, GNU-4.x.x compilers
 cat <<-EOF 
@@ -127,8 +112,30 @@ cat <<-EOF
 # Maintained by 
 ;;
 
+casc_rh4_gnu3) # CASC RedHat 4, GNU-3.x.x compilers
+cat <<-EOF 
+      --with-CXX=/usr/bin/g++
+      --with-CC=/usr/bin/gcc
+      --with-F77=/usr/bin/g77
+      --with-hdf5=/usr/apps/hdf5/1.6.5/gcc3.4.6-serial
+      --with-silo=/usr/casc/samrai/silo/silo-4.6.1_rh4
+      --with-mpi-include=/usr/apps/mpich/1.2.7p1/include
+      --with-mpi-lib-dirs=/usr/apps/mpich/1.2.7p1/lib
+      --with-mpi-libs="mpich pmpich"
+      --with-parallel-run-bin=/usr/apps/mpich/1.2.7p1/bin/mpirun
+      --with-hypre=/usr/casc/samrai/local.tux_rh4/hypre/hypre-2.2.0b-gcc-3.3.2.opt
+      --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh4
+      --with-petsc=/usr/casc/samrai/petsc/petsc-2.3.3-p8
+      --with-petsc-arch=linux_gnu
+      --with-blaslapack=/usr/lib
+      --with-blaslapack-libs="-llapack -lblas"
+      --with-x
+EOF
+# Maintained by Steven Smith
+;;
 
-casc_rh4_gnu) # CASC RedHat 4, GNU-4.x.x compilers
+
+casc_rh4_gnu4) # CASC RedHat 4, GNU-4.x.x compilers
 cat <<-EOF 
       --with-CXX=/usr/apps/gcc/4.2.2/bin/g++
       --with-CC=/usr/apps/gcc/4.2.2/bin/gcc
@@ -156,6 +163,7 @@ cat <<-EOF
       --with-CC="/usr/apps/intel/cc/9.1.045/bin/icc -gcc-name=/usr/bin/gcc"
       --with-F77=/usr/apps/intel/fc/9.1.040/bin/ifort
       --disable-template-depend
+      --enable-rpath=-Wl,-R
       --with-hdf5=/usr/apps/hdf5/1.6.5/gcc3.4.6-serial
       --with-silo=/usr/casc/samrai/silo/silo-4.6.1_rh4_gcc3
       --with-mpi-include=/usr/apps/mpich/1.2.7p1/include
@@ -197,11 +205,15 @@ EOF
 # Maintained by Steven Smith
 ;;
 
+#-----------------------------------------------------------------------------
+# LC machines
+#-----------------------------------------------------------------------------
+
 thunder_icc9) # Thunder, Intel v9.0 compilers
 cat <<-EOF
-	--with-CXX=/usr/local/bin/mpiicpc
-	--with-CC=/usr/local/bin/mpiicc
-	--with-F77=/usr/local/bin/mpiifort
+	--with-CXX=/usr/local/intel/compiler91/bin/icpc
+	--with-CC=/usr/local/intel/compiler91/bin/icc 
+	--with-F77=/usr/local/intel/compiler91/bin/ifort
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.6.5/serial
 	--with-hypre=/usr/gapps/hypre/chaos_3_ia64_elan4/hypre-1.13.0b
 	--without-sundials
@@ -216,38 +228,32 @@ cat <<-EOF
 ;;
 
 
-zeus_icc9) # Zeus, Intel v9.1 compilers
+zeus_mpiicpc) # Zeus, Intel compilers with LLNL mpiicpc front ends
 cat <<-EOF
-	--with-CXX=/usr/local/bin/mpiicpc-9.1.052
-	--with-CC=/usr/local/bin/mpiicc-9.1.052
-	--with-F77=/usr/local/bin/mpiifort-9.1.052
+	--with-CXX=/usr/local/bin/mpiicpc
+	--with-CC=/usr/local/bin/mpiicc
+	--with-F77=/usr/local/bin/mpiifort
 	--with-hdf5=/usr/local/tools/hdf5-intel-serial-1.6.5
-        --with-hypre=/usr/gapps/hypre/chaos_3_x86_64_ib/hypre-1.13.0b
+	--with-hypre=/usr/casc/aleamr/hypre/chaos4_x86_64_ib/hypre-2.2.0b
 	--without-sundials
 	--without-petsc
 	--without-blaslapack
 	--without-x
 	--enable-rpath=-Wl,-R
 	--disable-template-depend
-	--enable-test-nprocs="1,2"
 	EOF
 # Maintained by Brian Gunney
 ;;
 
-
-yana_icc9) # Yana, Intel v9.1 compilers
+yana_mpiicpc) # Yana, Intel MPI wrapper script
 cat <<-EOF
-	--with-CXX=/usr/local/intel/compiler91_64/bin/icpc
-	--with-CC=/usr/local/intel/compiler91_64/bin/icc
-	--with-F77=/usr/local/intel/compiler91_64/bin/ifort
-	--with-fortran-libs=-L/usr/local/intel/compiler91_64/lib
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.6.5/serial
-	--with-mpi-include=/usr/stlocal/tools/mpi/mpich-1.2.7p1_shmem/gnu/include
-	--with-mpi-lib-dirs=/usr/stlocal/tools/mpi/mpich-1.2.7p1_shmem/gnu/lib
-	--with-mpi-libs=mpich
-	--with-parallel-run-bin=/usr/stlocal/tools/mpi/mpich-1.2.7p1_shmem/gnu/bin/mpirun
-	--with-hypre=/usr/gapps/hypre/chaos_3_x86_64_ib/hypre-1.13.0b
-        --without-sundials
+	--with-CXX=/usr/local/bin/mpiicpc
+	--with-CC=/usr/local/bin/mpiicc
+	--with-F77=/usr/local/bin/mpiifort
+	--with-hdf5=/usr/local/tools/hdf5-intel-serial-1.6.5
+	--with-parallel-run-bin=/usr/bin/mpirun
+	--with-hypre=/usr/gapps/samrai/hypre/2.2.0b/chaos_4_x86_64
+	--without-sundials
 	--without-petsc
 	--without-blaslapack
 	--without-x
@@ -255,6 +261,8 @@ cat <<-EOF
 	EOF
 # Maintained by Brian Gunney
 ;;
+
+
 
 up_xlc) # uP, IBM xlC compilers, run configure with nopoe
 cat <<-EOF
@@ -271,6 +279,28 @@ cat <<-EOF
 	EOF
 # Maintained by Steven Smith
 ;;
+
+atlas_mpiicpc) # Atlas, using Intel MPI wrappers
+cat <<-EOF
+	--with-CXX=/usr/local/bin/mpiicpc
+	--with-CC=/usr/local/bin/mpiicc
+	--with-F77=/usr/local/bin/mpiifort
+	--with-hdf5=/usr/local/tools/hdf5-intel-serial-1.6.5
+	--with-hypre=/usr/casc/aleamr/atlas-local/hypre-2.2.0b
+	--without-sundials
+	--without-petsc
+	--without-blaslapack
+	--without-x
+	--enable-rpath=-Wl,-R
+	--disable-template-depend
+	EOF
+# Maintained by Brian Gunney
+;;
+
+#-----------------------------------------------------------------------------
+# Misc other machines
+#-----------------------------------------------------------------------------
+
 
 pks_gnu)
 # PKS machine
@@ -306,6 +336,8 @@ cat <<-EOF
 	EOF
 # Maintained by Steven Smith
 ;;
+
+
 
 
 *) # Bad index or no index given, so provide help message.

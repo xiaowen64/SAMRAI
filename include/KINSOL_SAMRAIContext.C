@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/kinsol/KINSOL_SAMRAIContext.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/packages/sundials/kinsol/KINSOL_SAMRAIContext.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1941 $
-// Modified:    $LastChangedDate: 2008-01-31 08:25:47 -0800 (Thu, 31 Jan 2008) $
+// Revision:    $LastChangedRevision: 2209 $
+// Modified:    $LastChangedDate: 2008-06-06 13:58:49 -0700 (Fri, 06 Jun 2008) $
 // Description: KINSOL solver for use within a SAMRAI-based application.
 //
  
@@ -96,6 +96,9 @@ template<int DIM>  KINSOL_SAMRAIContext<DIM>::KINSOL_SAMRAIContext(
  
 template<int DIM>  KINSOL_SAMRAIContext<DIM>::~KINSOL_SAMRAIContext()
 {
+
+   tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
+
    if (d_solution_vector) {
       Sundials_SAMRAIVector<DIM>::destroySundialsVector(d_solution_vector);
    }

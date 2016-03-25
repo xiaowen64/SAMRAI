@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/locally_active/LocallyActiveDataTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/locally_active/LocallyActiveDataTester.C $
 // Package:     SAMRAI test
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2147 $
-// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2195 $
+// Modified:    $LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description: Class to test locally-active data communication
 //
 
@@ -95,9 +95,7 @@ void bdry_(const int&, const int&,
 }
 
 #include "tbox/Array.C"
-#ifndef LACKS_EXPLICIT_TEMPLATE_INSTANTIATION
 template class tbox::Array< LocallyActiveDataTester::Function >;
-#endif
 
 /*************************************************************************
  *

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2002 $
-// Modified:    $LastChangedDate: 2008-02-21 13:54:25 -0800 (Thu, 21 Feb 2008) $
+// Revision:    $LastChangedRevision: 2218 $
+// Modified:    $LastChangedDate: 2008-06-12 10:37:21 -0700 (Thu, 12 Jun 2008) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
@@ -566,6 +566,7 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::resetSolver(const int coarsest_l
    initializePetscObjects();
 }
 
+
 /*
 *************************************************************************
 *                                                                       *
@@ -576,35 +577,35 @@ template<int DIM> void SNES_SAMRAIContext<DIM>::resetSolver(const int coarsest_l
 template<int DIM> int SNES_SAMRAIContext<DIM>::solve()
 {
    int ierr;
-
+   
    if ( d_context_needs_initialization ) initializePetscObjects();
-
+   
    Vec initial_guess;
-
+   
    ierr = VecDuplicate(d_solution_vector, &initial_guess);
    PETSC_SAMRAI_ERROR(ierr);
-
-   ierr = VecSet( initial_guess, 0.0); 
-   PETSC_SAMRAI_ERROR(ierr);
    
+   ierr = VecSet( initial_guess, 0.0);
+   PETSC_SAMRAI_ERROR(ierr);
    ierr = SNESSolve(d_SNES_solver,
 		    initial_guess,
-		    d_solution_vector); 
+		    d_solution_vector);
    PETSC_SAMRAI_ERROR(ierr);
-
-   ierr = SNESGetLinearSolveIterations(d_SNES_solver,
-				       &d_nonlinear_iterations);
+   
+   ierr = SNESGetIterationNumber(d_SNES_solver,
+				 &d_nonlinear_iterations);
    PETSC_SAMRAI_ERROR(ierr);
-
+   
    ierr = SNESGetConvergedReason(d_SNES_solver,
-				 &d_SNES_completion_code);  
+				 &d_SNES_completion_code);    
    PETSC_SAMRAI_ERROR(ierr);
-
+   
    ierr = VecDestroy(initial_guess);
    PETSC_SAMRAI_ERROR(ierr);
-
+   
    return(((int)d_SNES_completion_code > 0) ? 1 : 0);
 }
+
 
 /*
 *************************************************************************

@@ -2,13 +2,66 @@ dnl
 dnl File:        configure.in
 dnl Package:     SAMRAI build system
 dnl Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-dnl Revision:    $LastChangedRevision: 2157 $
-dnl Modified:    $LastChangedDate: 2008-04-28 13:55:06 -0700 (Mon, 28 Apr 2008) $
+dnl Revision:    $LastChangedRevision: 2256 $
+dnl Modified:    $LastChangedDate: 2008-07-03 11:25:04 -0700 (Thu, 03 Jul 2008) $
 dnl Description: autoconfig configuration file
 dnl
 
 AC_INIT(COPYRIGHT)
 AC_CONFIG_HEADER(include/SAMRAI_config.h:config/SAMRAI_config.h.in)
+dnl
+dnl Autoheader stuff
+AH_TOP([
+
+#ifndef INCLUDED_SAMRAI_CONFIG_H
+#define INCLUDED_SAMRAI_CONFIG_H
+
+#define SAMRAI_VERSION_MAJOR 2
+#define SAMRAI_VERSION_MINOR 4
+#define SAMRAI_VERSION_PATCHLEVEL 0
+])
+AH_BOTTOM([
+/********************************************************************/
+/********************* Hardwired defines ****************************/
+/********************************************************************/
+
+/*
+ * Some compilers require cmath to be included before the regular
+ * C math.h and stdlib.h headers are brought in, otherwise
+ * the compiler will get conflicting definitions for the functions.
+ */
+#if defined(__xlC__)
+#define REQUIRES_CMATH 1
+#endif
+
+#define STL_SSTREAM_HEADER_FILE <sstream>
+#define LACKS_STRSTREAM
+
+/*
+ * A few things for the MSVC++ version.
+ */
+#ifdef _MSC_VER
+
+/*
+ * Move this bad stuff to the utility class, not POSIX
+ */
+#define drand48() ((double)rand()/(double)RAND_MAX)
+/*
+ * This is not correct, the range is wrong, need to find
+ * a better solution
+ */
+#define mrand48() (rand())
+
+/*
+ * Some IEEE stuff is not under the normal names.
+ *
+ */
+#define isnan _isnan
+
+#endif
+
+#endif
+])
 
 BTNG_AC_LOG_VAR(CONFIG_SHELL)
 
@@ -159,7 +212,7 @@ AC_ISC_POSIX
 
 dnl
 dnl Find ar for archiving
-dnl 
+dnl
 
 AC_CHECK_PROGS(AR, $with_AR ar,)
 if test -z "$AR"; then
@@ -257,10 +310,12 @@ dnl
 # By default make the object files depend on the template implementation files
 # Turn this off for known cases that do not require it.
 
+IMPLICIT_TEMPLATE_INSTANTIATION="no"
 AC_ARG_ENABLE(implicit-template-instantiation,
 [  --enable-implicit-template-instantiation
        Enable implicit template instantiation (disabled by default).
        Feature is at users' request.  We don't test it.],
+IMPLICIT_TEMPLATE_INSTANTIATION="yes"
 ,
 enable_implicit_template_instantiation=no
 )
@@ -283,6 +338,7 @@ case "$CXX_ID" in
 esac
 fi
 AC_SUBST(CXX_FLAGS_NO_TEMPLATE_INST)
+AC_SUBST(IMPLICIT_TEMPLATE_INSTANTIATION)
 
 # For insure add -Zsl option for linking
 case $CXX in 
@@ -343,7 +399,7 @@ esac
 
 dnl
 dnl Set the compile mode flag for the kind of target to build
-dnl 
+dnl
 
 XARGS="xargs -n 150"
 SAMRAI_TARGET="standard"
@@ -411,6 +467,7 @@ dnl implementation be present when compiling a template.
 dnl
 if test "${enable_implicit_template_instantiation}" = 'yes'; then
    AC_DEFINE([INCLUDE_TEMPLATE_IMPLEMENTATION],[1],[INCLUDE_TEMPLATE_IMPLEMENTATION])
+   DEPENDS_ON_TEMPLATE_IMPLEMENTATION="yes"
 fi
 AC_SUBST(DEPENDS_ON_TEMPLATE_IMPLEMENTATION)
 
@@ -418,7 +475,7 @@ dnl
 dnl Set the flag indicating if extra targets
 dnl should be included in the Makefile.
 dnl Normally used by developers but not users.
-dnl 
+dnl
 if test "$enable_developer_makefile" = "no"; then
    DEVELOPER_MAKEFILE="no"
 else
@@ -471,9 +528,9 @@ esac
 case "$enable_debug" in
    no) ;;
    *)
-   AC_DEFINE(DEBUG_NO_INLINE)
-   AC_DEFINE(DEBUG_CHECK_ASSERTIONS)
-   AC_DEFINE(DEBUG_INITIALIZE_UNDEFINED)
+   AC_DEFINE([DEBUG_NO_INLINE],[1],[Disable inlining for debug mode])
+   AC_DEFINE([DEBUG_CHECK_ASSERTIONS],[1],[Enable assertion checking for debug mode])
+   AC_DEFINE([DEBUG_INITIALIZE_UNDEFINED],[1],[Initialize new memory to undefined values in debug mode])
 esac],
 debug_switches=-g)
 
@@ -494,26 +551,25 @@ SAMRAI_OPTIONAL_LIBS=""
 SAMRAI_ENABLE_SPECIAL="no"
 if test "$enable_char" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libchar"
-   SAMRAI_ENABLE_SPECIAL="yes"
-   AC_DEFINE(HAVE_CHAR)	  
+   AC_DEFINE([HAVE_CHAR],[1],[Build SAMRAI with instantiated char datatypes])
 fi
 
 if test "$enable_bool" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libbool $SAMRAI_OPTIONAL_LIBS" 
    SAMRAI_ENABLE_SPECIAL="yes"
-   AC_DEFINE(HAVE_BOOL)
+   AC_DEFINE([HAVE_BOOL],[1],[Build SAMRAI with instantiated bool datatypes])
 fi
 
 if test "$enable_float" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libfloat $SAMRAI_OPTIONAL_LIBS" 
    SAMRAI_ENABLE_SPECIAL="yes"
-   AC_DEFINE(HAVE_FLOAT)	  
+   AC_DEFINE([HAVE_FLOAT],[1],[Build SAMRAI with instantiated float datatypes])
 fi
 
 if test "$enable_dcomplex" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libdcomplex $SAMRAI_OPTIONAL_LIBS" 
    SAMRAI_ENABLE_SPECIAL="yes"
-   AC_DEFINE(HAVE_DCOMPLEX)	  
+   AC_DEFINE([HAVE_DCOMPLEX],[1],[Build SAMRAI with instantiated double-complex datatypes])
 fi
 AC_SUBST(SAMRAI_OPTIONAL_LIBS)
 AC_SUBST(SAMRAI_ENABLE_SPECIAL)
@@ -619,6 +675,38 @@ LIB_NAME="$F77LIBFLAGS $LIB_NAME"
 BTNG_AC_LOG_VAR(F77LIBFLAGS, after appending F77LIBFLAGS to LIB_NAME)
 
 dnl
+dnl Find the correct way to mangle fortran function names
+dnl so they can be called from C.  Calling this macro puts
+dnl certain #define statements in the config.h file to choose
+dnl the correct mangling.
+dnl A fortran subroutine named dothis can be called from C using
+dnl    F77_FUNC(dothis,DOTHIS)
+dnl A fortran subroutine named do_this can be called from C using
+dnl    F77_FUNC_(do_this,DO_THIS)
+dnl
+AC_F77_WRAPPERS
+
+dnl
+dnl When user specifies, override the results from AC_F77_WRAPPERS.
+dnl This is a total kludge for fixing a problem on Purple.
+dnl It corrects the results of the name mangling test in
+dnl AC_F77_WRAPPERS, where the mangling results differs
+dnl depending on whether direct compiles or with intervening
+dnl library (.a) file.  This is a total kludge!!!! but it's
+dnl too hard to improve the test or fix the strange behavior.
+dnl
+AC_MSG_CHECKING(whether to kludge override fortran name mangling results)
+AC_ARG_ENABLE([fortran-mangling-override],
+[  Kludgey FORTRAN name mangling fix.  Not for general use.],
+[case "$enable_fortran_mangling_override" in
+  [yes)]
+  AC_MSG_RESULT(yes)
+  sed -e ['s/^\(#define F77_FUNC.\{1,\}\)/\1 ## _/'] confdefs.h > confdefs1.h
+  mv confdefs1.h confdefs.h
+esac],
+AC_MSG_RESULT(no))
+
+dnl
 dnl Find the X11 include directory, library directory, and associated
 dnl libraries.
 dnl
@@ -627,9 +715,9 @@ if test "${with_x+set}" = set; then
    AC_PATH_XTRA
    if test "yes" = "$no_x"; then
       AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the X11 library])
-      AC_DEFINE(LACKS_X11)
+      AC_DEFINE([LACKS_X11],[1],[X11 library is missing])
    else
-      AC_DEFINE(HAVE_X11)
+      AC_DEFINE([HAVE_X11],[1],[X11 library is present])
       X_LIBS=`echo $X_LIBS | sed 's/-R\//-R \//'`
       if test -n "$x_includes"; then
          INC_PATH="-I$x_includes $INC_PATH"
@@ -639,7 +727,7 @@ if test "${with_x+set}" = set; then
    fi
 else
    AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the X11 library])
-   AC_DEFINE(LACKS_X11)
+   AC_DEFINE([LACKS_X11],[1],[X11 library is missing])
 fi
 
 dnl
@@ -806,7 +894,9 @@ AC_LANG_POP([C++])
 dnl
 dnl Check if malloc.h is present
 dnl
-AC_CHECK_HEADER(malloc.h,AC_DEFINE(HAVE_MALLOC_H))
+AC_CHECK_HEADER(malloc.h,
+        AC_DEFINE([HAVE_MALLOC_H],[1],[HAVE_MALLOC_H])
+        )
 
 dnl
 dnl Checking for mallinfo
@@ -924,11 +1014,11 @@ dnl
 AC_ARG_WITH(mpi,[  --without-mpi	Compile without MPI library.])
 if test "$with_mpi" = no; then
    AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the MPI library])
-   AC_DEFINE(LACKS_MPI)
+   AC_DEFINE([LACKS_MPI],[1],[MPI library is missing])
 else
 
    case $ARCH in
-      alpha) 
+      alpha)
          CASC_FIND_MPI_ALPHA
       ;;
       *)
@@ -938,7 +1028,7 @@ else
 
    if test -n "$MPIINCLUDE" -o -n "$MPILIBS" -o -n "$MPILIBDIRS"; then
       with_mpi=yes
-      AC_DEFINE(HAVE_MPI)
+      AC_DEFINE([HAVE_MPI],[1],[MPI library is present])
       INC_PATH="$MPIINCLUDE $INC_PATH"
       LIB_NAME="$MPILIBS $LIB_NAME"
       LIB_PATH="$MPILIBDIRS $LIB_PATH"
@@ -952,7 +1042,7 @@ BTNG_AC_LOG_VAR(with_mpi)
 dnl
 dnl Set variables for hdf5 support
 dnl
-BTNG_SUPPORT_HDF5
+CASC_SUPPORT_HDF5
 if test "${hdf5_PREFIX+set}" = set; then
   LIBS="$hdf5_LIBS $LIBS"
   SAMRAI_SPLIT_LIBS_STRING(hdf5_LIBS,hdf5_LIB_PATH,hdf5_LIB_NAME)
@@ -978,7 +1068,7 @@ if test "${silo_PREFIX+set}" = set; then
   LIB_PATH="$silo_LIB_PATH $LIB_PATH"
   LIB_NAME="$silo_LIB_NAME $LIB_NAME"
   INC_PATH="$silo_INCLUDES $INC_PATH"
-  AC_DEFINE(HAVE_SILO,1,SILO library is available so use it)
+  AC_DEFINE([HAVE_SILO],[1],[SILO library is available so use it])
 fi
 BTNG_AC_LOG_VAR(
 [silo_INCLUDES INC_PATH silo_LIB_PATH silo_LIB_NAME LIB_PATH LIB_NAME])
@@ -1004,7 +1094,7 @@ if test "${hypre_PREFIX+set}" = set; then
      fi
   elif test "$hypre_PARALLELISM" = 'serial'; then
      AC_MSG_RESULT(no)
-     AC_DEFINE(HYPRE_SEQUENTIAL)
+     AC_DEFINE([HYPRE_SEQUENTIAL],[1],[Hypre library is configured for sequential mode])
      if test "$with_mpi" != no ; then
         AC_MSG_ERROR(parallel SAMRAI cannot call sequential HYPRE)
      fi
@@ -1013,7 +1103,7 @@ if test "${hypre_PREFIX+set}" = set; then
   fi
 else
   AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the HYPRE library])
-  AC_DEFINE(LACKS_HYPRE)
+  AC_DEFINE([LACKS_HYPRE],[1],[Hypre library is missing])
 fi
 
 dnl
@@ -1082,11 +1172,16 @@ dnl
 
 case $ARCH in
    Linux | LINUX | linux | CYGWIN )
-      AC_DEFINE(LACKS_PROPER_XDR_HEADER)
+      AC_DEFINE([LACKS_PROPER_XDR_HEADER],[1],[LACKS_PROPER_XDR_HEADER])
       ;;
    rs6000)
-      AC_DEFINE(_ALL_SOURCE)
-      AC_DEFINE(_POWER)
+      dnl
+      dnl Defining ALL_SOURCE causes ASC Purple mpxlC and mpCC
+      dnl to complain that it is already defined as something else.
+      dnl I don't why it is required.  --BTNG
+      dnl AC_DEFINE([_ALL_SOURCE],[1],[Kludgey thing inserted by configure.in])
+      dnl
+      AC_DEFINE([_POWER],[1],[Kludgey thing inserted by configure.in])
       ;;
    *)
       ;;
@@ -1136,14 +1231,14 @@ AC_ARG_WITH(sundials,
 
 if test "$with_sundials" = no; then
    AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the Sundials library])
-   AC_DEFINE(LACKS_SUNDIALS)
+   AC_DEFINE([LACKS_SUNDIALS],[1],[LACKS_SUNDIALS])
 else
    sundials_dir="$with_sundials"
    if test ! -d "$sundials_dir" ; then
      AC_MSG_ERROR(
        [You MUST specify an existing path when using --with-sundials=PATH])
    fi
-   AC_DEFINE(HAVE_SUNDIALS)
+   AC_DEFINE([HAVE_SUNDIALS],[1],[HAVE_SUNDIALS])
    LIB_PATH="$LIB_PATH -L$sundials_dir/lib"
    LIB_NAME="$LIB_NAME -lsundials_cvode -lsundials_kinsol"
    INC_PATH="-I$sundials_dir/include $INC_PATH"
@@ -1164,15 +1259,15 @@ AC_ARG_WITH(cubes,
 CUBES_C_FILES="error_in_script.c"
 if test "$with_cubes" = no; then
    AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the CUBES library])
-   AC_DEFINE(LACKS_CUBES)
+   AC_DEFINE(LACKS_CUBES, [1], [Configured without Cubes library])
 else
    cubes_dir="$with_cubes"
    if test ! -d "$cubes_dir" ; then
      AC_MSG_ERROR(
        [You MUST specify an existing path when using --with-cubes=PATH])
    fi
-   AC_DEFINE(HAVE_CUBES)
-   cubes_includes="-I${cubes_dir}/include -I${cubes_dir}/cart3d/include"     
+   AC_DEFINE(HAVE_CUBES, [1], [Configured with Cubes library])
+   cubes_includes="-I${cubes_dir}/include -I${cubes_dir}/cart3d/include"
    cubes_lib="-L${cubes_dir} -L${cubes_dir}/cart3d/lib"
    INC_PATH="$cubes_includes $INC_PATH"
    LIB_PATH="$cubes_lib $LIB_PATH"
@@ -1193,14 +1288,14 @@ AC_ARG_WITH(eleven,
 ELEVEN_C_FILES="error_in_script.c"
 if test "$with_eleven" = no; then
    AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the ELEVEN library])
-   AC_DEFINE(LACKS_ELEVEN)
+   AC_DEFINE(LACKS_ELEVEN, [1], [Configured without Eleven library])
 else
    eleven_dir="$with_eleven"
    if test ! -d "$eleven_dir" ; then
      AC_MSG_ERROR(
        [You MUST specify an existing path when using --with-eleven=PATH])
    fi
-   AC_DEFINE(HAVE_ELEVEN)
+   AC_DEFINE(HAVE_ELEVEN, [1], [Configured with Eleven library])
    eleven_includes="-I${eleven_dir}/common -I${eleven_dir}/mesh -I${eleven_dir}/dbase -I${eleven_dir}/dbase/gzstream -I${eleven_dir}/eleven/src -I${eleven_dir}/geom_util"
    eleven_lib="-L${eleven_dir}/eleven/lib"
    INC_PATH="$eleven_includes $INC_PATH"
@@ -1214,7 +1309,7 @@ dnl
 dnl If VAMPIR is requested, then set up the VAMPIR libraries and include paths.
 dnl
 if test -z "$with_vampir"; then
-   AC_DEFINE(LACKS_VAMPIR)
+   AC_DEFINE([LACKS_VAMPIR],[1],[LACKS_VAMPIR])
 else
    if test "$with_vampir" = yes; then
       AC_MSG_CHECKING(for VAMPIR)
@@ -1231,17 +1326,17 @@ else
 
    if test -n "$vampir_dir"; then
       AC_MSG_RESULT($vampir_dir)
-      AC_DEFINE(HAVE_VAMPIR)
+      AC_DEFINE([HAVE_VAMPIR],[1],[HAVE_VAMPIR])
       with_vampir=yes
 
       INC_PATH="-I$vampir_dir/include $INC_PATH"
       LIB_PATH="-L$vampir_dir/lib $LIB_PATH"
 
-      case $ARCH in 
-         alpha) 
+      case $ARCH in
+         alpha)
             LIB_NAME="-lVT -lpmpi -lmld -lpthread -lm $LIB_NAME"
             ;;
-         rs6000) 
+         rs6000)
             LIB_NAME="-lVT -lld -lm $LIB_NAME"
             ;;
          *)
@@ -1249,7 +1344,7 @@ else
       esac
    else
       AC_MSG_RESULT(VAMPIR library not found)
-      AC_DEFINE(LACKS_VAMPIR)
+      AC_DEFINE([LACKS_VAMPIR],[1],[LACKS_VAMPIR])
       with_vampir=no
    fi
 fi
@@ -1260,11 +1355,11 @@ dnl If TAU is requested, setup the TAU included makefile, libraries,
 dnl and include paths.
 dnl
 if test -z "$with_tau"; then
-   AC_DEFINE(LACKS_TAU)
+   AC_DEFINE([LACKS_TAU],[1],[LACKS_TAU])
 else
    AC_MSG_CHECKING(for TAU)
    AC_MSG_RESULT($with_tau)
-   AC_DEFINE(HAVE_TAU)
+   AC_DEFINE([HAVE_TAU],[1],[HAVE_TAU])
    TAU_INCLUDE="$with_tau"
    INC_PATH="\$(TAU_INCLUDE) \$(TAU_DEFS) \$(TAU_MPI_INCLUDE) $INC_PATH"
    case $ARCH in
@@ -1450,6 +1545,14 @@ SAMRAI_LINK_FILES([ source/test/dlbg/front2d.input:source/test/dlbg/front2d.inpu
 SAMRAI_LINK_FILES([ esyscmd(find source/test/hypre -name \*.input | sort | sed 's/.*/\0:\0/') ])
 SAMRAI_LINK_FILES([ source/test/FAC/inputs:source/test/FAC/inputs ])
 
+dnl Optionally configure with performance directory if it is included.
+define( [performance_dir_exists], [esyscmd( if test -d performance; then echo -n yes; else echo -n no; fi )])
+m4_if(performance_dir_exists, [yes],
+performance_dir=performance
+SAMRAI_LINK_FILES([ esyscmd(find performance/LinAdv        samrai_find_excludes samrai_typical_example_files 2>/dev/null | sort | sed 's/.*/\0:\0/') ]),
+unset performance_dir
+)
+
 dnl Undefine the m4 symbols not needed anymore.
 dnl (Keep samrai_find_excludes in case it do more finds below.)
 undefine([samrai_typical_example_files])
@@ -1458,13 +1561,15 @@ dnl
 dnl Generate the output files.
 dnl
 
-dnl Find all Makefile.in and associated subdirectories.  
-subdirs=`cd $srcdir; find source examples tools -name Makefile.in -print | sed 's%/Makefile.in$%%g' | sort `
+dnl Find all Makefile.in and associated subdirectories.
+subdirs=`cd $srcdir; find source examples ${performance_dir} tools -name Makefile.in -print | sed 's%/Makefile.in$%%g' | sort `
 makefiles=
 for i in $subdirs; do makefiles="$makefiles $i/Makefile"; done
 BTNG_AC_LOG_VAR(makefiles)
 BTNG_AC_LOG_VAR(subdirs)
 $MKDIR_P $subdirs
+
+undefine([performance_dir_exists])
 
 AC_OUTPUT([
 Makefile

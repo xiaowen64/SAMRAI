@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/AdaptivePoisson.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/FAC/AdaptivePoisson.C $
   Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 2043 $
-  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+  Revision:	$LastChangedRevision: 2274 $
+  Modified:	$LastChangedDate: 2008-07-07 11:10:49 -0700 (Mon, 07 Jul 2008) $
   Description:	AdaptivePoisson class implementation
 */
 
@@ -10,7 +10,7 @@
 
 #include "printObject.h"
 #include "MDA_Access.h"
-#include "arrayConversion.h"
+#include "ArrayDataAccess.h"
 #include "patchFcns.h"
 #include "AdaptivePoisson.h"
 #include "CellPoissonFACOps.h"
@@ -333,14 +333,14 @@ void AdaptivePoisson::initializeLevelData (
       tbox::Pointer<pdat::CellData<NDIM,double> >
         Soln0_data = solution.getComponentPatchData ( 0 , Patch0 );
       MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> >
-	d_array[0] = arrayData2ArrayAccess( Soln0_data->getArrayData() );
+	d_array[0] = pdat::ArrayDataAccess::access( Soln0_data->getArrayData() );
     break;
   case 1:
       hier::Patch<NDIM> &Patch1 = *level->getPatch(0);
       tbox::Pointer<pdat::CellData<NDIM,double> >
         Soln1_data = solution.getComponentPatchData ( 0 , Patch1 );
       MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> >
-	d_array[1] = arrayData2ArrayAccess( Soln1_data->getArrayData() );
+	d_array[1] = pdat::ArrayDataAccess::access( Soln1_data->getArrayData() );
     break;
   }
 #endif
@@ -701,9 +701,9 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
     tbox::Pointer<pdat::CellData<NDIM,double> > exact_solution
       = patch.getPatchData(d_exact_persistent);
     MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > ex =
-      arrayData2ArrayAccess( exact_solution->getArrayData() );
+      pdat::ArrayDataAccess::access( exact_solution->getArrayData() );
     MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > co =
-      arrayData2ArrayAccess( current_solution->getArrayData() );
+      pdat::ArrayDataAccess::access( current_solution->getArrayData() );
 #if NDIM == 2
     for ( int j=lower[1]; j<=upper[1]; ++j ) {
       for ( int i=lower[0]; i<=upper[0]; ++i ) {
@@ -758,9 +758,9 @@ void AdaptivePoisson::computeAdaptionEstimate(
   const int *lower = estimate_data.getBox().lower();
   const int *upper = estimate_data.getBox().upper();
   MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > co =
-    arrayData2ArrayAccess( soln_cell_data.getArrayData() );
+    pdat::ArrayDataAccess::access( soln_cell_data.getArrayData() );
   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > es =
-    arrayData2ArrayAccess( estimate_data.getArrayData() );
+    pdat::ArrayDataAccess::access( estimate_data.getArrayData() );
 #if NDIM == 2
   int i, j;
   double estimate, est0, est1, est2, est3, est4, est5;
@@ -872,11 +872,11 @@ int AdaptivePoisson::computeError(
 
       {
 	MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > ex =
-          arrayData2ArrayAccess( exact_solution->getArrayData() );
+          pdat::ArrayDataAccess::access( exact_solution->getArrayData() );
 	MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > co =
-          arrayData2ArrayAccess( current_solution->getArrayData() );
+          pdat::ArrayDataAccess::access( current_solution->getArrayData() );
 	MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > wt =
-          arrayData2ArrayAccess( weight->getArrayData() );
+          pdat::ArrayDataAccess::access( weight->getArrayData() );
         const int *lower = current_solution->getBox().lower();
         const int *upper = current_solution->getBox().upper();
 #if NDIM == 2

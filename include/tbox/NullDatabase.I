@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/NullDatabase.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/restartdb/NullDatabase.I $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2122 $
-// Modified:	$LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
+// Revision:	$LastChangedRevision: 2205 $
+// Modified:	$LastChangedDate: 2008-06-04 16:28:56 -0700 (Wed, 04 Jun 2008) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -42,6 +42,7 @@ NullDatabase::~NullDatabase()
 *************************************************************************
 */
 
+inline
 bool NullDatabase::create(const std::string& name) 
 {
    NULL_USE(name);
@@ -57,6 +58,7 @@ bool NullDatabase::create(const std::string& name)
 *************************************************************************
 */
 
+inline
 bool NullDatabase::open(const std::string& name) 
 {
    NULL_USE(name);
@@ -71,6 +73,7 @@ bool NullDatabase::open(const std::string& name)
 *************************************************************************
 */
 
+inline
 bool NullDatabase::close() 
 {
    return true;
@@ -434,6 +437,7 @@ Array<std::string> NullDatabase::getStringArray(const std::string& key)
    return (empty);
 }
 
+inline
 std::string NullDatabase::getName(void)
 {
    return std::string();

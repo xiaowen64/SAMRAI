@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2141 $
-// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2292 $
+// Modified:    $LastChangedDate: 2008-07-11 11:31:57 -0700 (Fri, 11 Jul 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -185,6 +185,7 @@ MultiblockGriddingAlgorithm<DIM>::MultiblockGriddingAlgorithm(
 
    d_proper_nesting_buffer.resizeArray(d_max_levels);
    d_allow_patches_smaller_than_ghostwidth = false;
+   d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps = false;
 
    for (int ln = 0; ln < d_max_levels; ln++) {
       d_ratio_to_coarser[ln] = hier::IntVector<DIM>(1);
@@ -873,6 +874,21 @@ void MultiblockGriddingAlgorithm<DIM>::getFromInput(
       }
    }
 
+   if (db->keyExists("allow_patches_smaller_than_minimum_size_to_prevent_overlaps")) {
+      d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
+         db->getBoolWithDefault(
+            "allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
+            d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
+
+      if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
+            TBOX_WARNING(d_object_name << ":  "
+                         << "Allowing patches smaller than the given "
+                         << "smallest patch size.  Note:  If periodic "
+                         << "boundary conditions are used, this flag is "
+                         << "ignored in the periodic directions.");
+                                                                                
+      }
+   }
 
    /*
     * Read input for efficiency tolerance.
@@ -1719,7 +1735,7 @@ void MultiblockGriddingAlgorithm<DIM>::findRefinementBoxes(
 
       box_list.coalesceBoxes();
 
-      if (!d_allow_patches_smaller_than_ghostwidth) {
+      if (!d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
          hier::BoxUtilities<DIM>::growBoxesWithinDomain(box_list,
                                                    nesting_boxes,
                                                    smallest_box_to_refine);

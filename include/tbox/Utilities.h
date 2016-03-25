@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/Utilities.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/base/Utilities.h $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2249 $
+// Modified:    $LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 // Description: Utility functions for error reporting, file manipulation, etc.
 //
 
@@ -125,11 +125,11 @@ struct Utilities
        if(0) {char *temp = (char *)&variable; temp++;} \
     } while (0)
 
-   /*!
-    * Throw an error exception from within any C++ source code.  The 
-    * macro argument may be any standard ostream expression.  The file and
-    * line number of the abort are also printed.
-    */
+/*!
+ * Throw an error exception from within any C++ source code.  The 
+ * macro argument may be any standard ostream expression.  The file and
+ * line number of the abort are also printed.
+ */
 #ifndef LACKS_SSTREAM
 #define TBOX_ERROR(X) do {					\
       std::ostringstream tboxos;					\
@@ -222,6 +222,17 @@ struct Utilities
 } while (0)
 #endif
 #endif
+
+/**
+ * Macro for use when assertions are to be included
+ * only when debugging.
+ */
+#ifdef DEBUG_CHECK_ASSERTIONS
+#define TBOX_CHECK_ASSERT(EXP) TBOX_ASSERT(EXP)
+#else
+#define TBOX_CHECK_ASSERT(EXP) 
+#endif
+
 
 /**
  * Throw an error exception from within any C++ source code.  This is

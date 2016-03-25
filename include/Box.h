@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/Box.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/hierarchy/boxes/Box.h $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2249 $
+// Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 // Description:	Box representing a portion of the AMR index space
 //
 
@@ -157,6 +157,14 @@ public:
     * function for later array indexing operations.
     */
    int offset(const Index<DIM>& p) const;
+
+   /**
+    * Given an offset, calculate the index of the offset into the box.
+    * This function assumes column-major (e.g., Fortran) ordering of
+    * the indices within the box.  This operation is a convenience
+    * function for later array indexing operations.
+    */
+   Index<DIM> index(const int offset) const;
 
    /**
     * Check whether an index lies within the bounds of the box.

@@ -217,5 +217,19 @@ AC_DEFUN([CASC_SET_SUFFIX_RULES],
 
 ])
 
+dnl Macro to save compiler state flags for invoking dnl compiler tests
+dnl NOTE that this is NOT currently a stack so can dnl only be called
+dnl in push/pop order.  push push pop pop dnl will fail
+AC_DEFUN([CASC_PUSH_COMPILER_STATE],[
+   casc_save_LIBS=$LIBS
+   casc_save_CXXFLAGS=$CXXFLAGS
+])
 
-
+dnl Macro to restore compiler state flags for invoking
+dnl compiler tests
+AC_DEFUN([CASC_POP_COMPILER_STATE],[
+   LIBS=$casc_save_LIBS
+   unset casc_save_LIBS
+   CXXFLAGS=$casc_save_CXXFLAGS
+   unset casc_save_CXXFLAGS
+])

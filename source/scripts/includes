@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/includes $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/scripts/includes $
 ## Package:     SAMRAI templates
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+## Revision:    $LastChangedRevision: 2226 $
+## Modified:    $LastChangedDate: 2008-06-22 16:21:50 -0700 (Sun, 22 Jun 2008) $
 ## Description: shell script to copy include files into main include directory
 ##
 
@@ -113,7 +113,7 @@ print "Selecting files...\n";
     open IFILE, "< $sourcepath/$_" || die "Cannot open $_";
     $lines = join '', <IFILE>;
     close IFILE;
-    $lines =~ m/(template\s?<\s?int DIM\s?>)|(template\s?<\s?int DIM\s?,\s?class\sTYPE\s?>)|(template\s?<\s?int DIM\s?,\s?class\sTYPE\s?,\s?class\sOP\s?>)|(template\s<class\sTYPE>)|(template\s<>)/;
+    $lines =~ m/(template\s<.*>)|(template<.*>)/;
 } @templates;
 
 

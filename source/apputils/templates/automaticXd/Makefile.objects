@@ -21,9 +21,9 @@ libdefault:	BoundaryNode-NDIM${NDIM}.o					\
 	VisDerivedDataStrategy-NDIM${NDIM}.o				\
 	VisItDataWriter-NDIM${NDIM}.o					\
 	VisMaterialsDataStrategy-NDIM${NDIM}.o				\
-	pdat__IndexData-NDIM_appu__CutCell_NDIM_${NDIM}.o		\
-	pdat__IndexDataFactory-NDIM_appu__CutCell_NDIM_${NDIM}.o	\
-	pdat__IndexVariable-NDIM_appu__CutCell_NDIM_${NDIM}.o		\
+	pdat__IndexData-NDIM_appu__CutCell_NDIM__pdat__CellGeometry_NDIM_${NDIM}.o\
+	pdat__IndexDataFactory-NDIM_appu__CutCell_NDIM__pdat__CellGeometry_NDIM_${NDIM}.o\
+	pdat__IndexVariable-NDIM_appu__CutCell_NDIM__pdat__CellGeometry_NDIM_${NDIM}.o\
 	tbox__Array-appu__CutCell_NDIM_${NDIM}.o			\
 	tbox__List-appu__VisItDataWriter_NDIM___VisItItem${NDIM}.o	\
 	tbox__Pointer-appu__CutCell_NDIM_${NDIM}.o			\
@@ -36,9 +36,9 @@ libdefault:	BoundaryNode-NDIM${NDIM}.o					\
 	tbox__Pointer-appu__EmbeddedBoundaryGeometry-NDIM${NDIM}.o	\
 	tbox__Pointer-appu__EmbeddedBoundaryShape-NDIM${NDIM}.o		\
 	tbox__Pointer-appu__VisItDataWriter-NDIM${NDIM}.o		\
-	tbox__Pointer-pdat__IndexData-NDIM_appu__CutCell_NDIM_${NDIM}.o	\
-	tbox__Pointer-pdat__IndexDataFactory-NDIM_appu__CutCell_NDIM_${NDIM}.o\
-	tbox__Pointer-pdat__IndexVariable-NDIM_appu__CutCell_NDIM_${NDIM}.o\
+	tbox__Pointer-pdat__IndexData-NDIM_appu__CutCell_NDIM__pdat__CellGeometry_NDIM_${NDIM}.o\
+	tbox__Pointer-pdat__IndexDataFactory-NDIM_appu__CutCell_NDIM__pdat__CellGeometry_NDIM_${NDIM}.o\
+	tbox__Pointer-pdat__IndexVariable-NDIM_appu__CutCell_NDIM__pdat__CellGeometry_NDIM_${NDIM}.o\
 	tbox__Array-tbox__Pointer-appu__EmbeddedBoundaryShape-NDIM${NDIM}.o
 
 

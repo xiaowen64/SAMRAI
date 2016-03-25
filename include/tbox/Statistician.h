@@ -1,5 +1,5 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Statistician.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/timers/Statistician.h $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
@@ -17,7 +17,7 @@
 #include "tbox/Serializable.h"
 #include "tbox/Statistic.h"
 #ifndef included_String
-#include <std::string>
+#include <string>
 #define included_String
 #endif
 
@@ -670,6 +670,22 @@ protected:
                                      const std::string& name) const;
 
 private:
+
+   /*
+    * Gets the current maximum number of statistics.
+    *
+    * If trying to use more statistics than this value 
+    * the arrays should be resized.
+    */
+   int getMaximumNumberOfStatistics();
+
+   /*
+    * Set the maximum number of statistics.
+    *
+    * This will grow the internal arrays used to store values.
+    */
+   void setMaximumNumberOfStatistics(const int size);
+
    /**
     * Static data members to manage the singleton statistician instance.
     */
@@ -725,8 +741,12 @@ private:
       d_global_patch_stat_proc_data;
    Array< Array< Array<int> > > d_global_patch_stat_mapping;
 
-   
 
+   /*
+    * Internal value used to set and grow arrays for storing
+    * statistics.
+    */
+   static const int DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 };
 
 /*

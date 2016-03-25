@@ -188,7 +188,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -200,14 +201,14 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CellDataFactory.C $(INCLUDE_SAM)/CellGeometry.C	\
 	$(INCLUDE_SAM)/CellIndex.C $(INCLUDE_SAM)/CellIterator.C	\
 	$(INCLUDE_SAM)/CellOverlap.C $(INCLUDE_SAM)/CellVariable.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
-	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
-	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
-	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
-	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
-	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
-	$(INCLUDE_SAM)/GridGeometry.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
+	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
+	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
+	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
+	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
+	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C			\
@@ -238,7 +239,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
-	$(INCLUDE_SAM)/OutersideGeometry.C $(INCLUDE_SAM)/Patch.C	\
+	$(INCLUDE_SAM)/OutersideGeometry.C				\
+	$(INCLUDE_SAM)/PETScAbstractVectorReal.C $(INCLUDE_SAM)/Patch.C	\
 	$(INCLUDE_SAM)/PatchCellDataBasicOps.C				\
 	$(INCLUDE_SAM)/PatchCellDataMiscellaneousOpsReal.C		\
 	$(INCLUDE_SAM)/PatchCellDataNormOpsReal.C			\
@@ -267,8 +269,10 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SideDataFactory.C $(INCLUDE_SAM)/SideGeometry.C	\
 	$(INCLUDE_SAM)/SideIndex.C $(INCLUDE_SAM)/SideIterator.C	\
 	$(INCLUDE_SAM)/SideOverlap.C $(INCLUDE_SAM)/SideVariable.C	\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	SAMRAIVectorReal.C
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/Variable.C		\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C SAMRAIVectorReal.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -450,7 +454,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -462,14 +467,14 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/CellDataFactory.C $(INCLUDE_SAM)/CellGeometry.C	\
 	$(INCLUDE_SAM)/CellIndex.C $(INCLUDE_SAM)/CellIterator.C	\
 	$(INCLUDE_SAM)/CellOverlap.C $(INCLUDE_SAM)/CellVariable.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
-	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
-	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
-	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
-	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
-	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
-	$(INCLUDE_SAM)/GridGeometry.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
+	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
+	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
+	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
+	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
+	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C			\
@@ -529,7 +534,10 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SideDataFactory.C $(INCLUDE_SAM)/SideGeometry.C	\
 	$(INCLUDE_SAM)/SideIndex.C $(INCLUDE_SAM)/SideIterator.C	\
 	$(INCLUDE_SAM)/SideOverlap.C $(INCLUDE_SAM)/SideVariable.C	\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/Variable.C		\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -713,7 +721,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -725,14 +734,14 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/CellDataFactory.C $(INCLUDE_SAM)/CellGeometry.C	\
 	$(INCLUDE_SAM)/CellIndex.C $(INCLUDE_SAM)/CellIterator.C	\
 	$(INCLUDE_SAM)/CellOverlap.C $(INCLUDE_SAM)/CellVariable.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
-	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
-	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
-	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
-	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
-	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
-	$(INCLUDE_SAM)/GridGeometry.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
+	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
+	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
+	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
+	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
+	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C			\
@@ -792,8 +801,10 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SideDataFactory.C $(INCLUDE_SAM)/SideGeometry.C	\
 	$(INCLUDE_SAM)/SideIndex.C $(INCLUDE_SAM)/SideIterator.C	\
 	$(INCLUDE_SAM)/SideOverlap.C $(INCLUDE_SAM)/SideVariable.C	\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	SAMRAIVectorReal.C
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/Variable.C		\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C SAMRAIVectorReal.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}

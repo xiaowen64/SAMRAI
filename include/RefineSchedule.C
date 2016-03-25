@@ -1,9 +1,9 @@
 //
-// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefineSchedule.C $
+// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/transfer/datamovers/standard/RefineSchedule.C $
 // Package:      SAMRAI data transfer
 // Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:     $LastChangedRevision: 2141 $
-// Modified:     $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
+// Revision:     $LastChangedRevision: 2196 $
+// Modified:     $LastChangedDate: 2008-05-14 14:25:02 -0700 (Wed, 14 May 2008) $
 // Description:  Refine schedule for data transfer between AMR levels
 //
 
@@ -23,6 +23,7 @@
 #include "PatchGeometry.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/InputManager.h"
+#include "tbox/ShutdownRegistry.h"
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
@@ -38,6 +39,17 @@ namespace SAMRAI {
 #endif
 
 #define BIG_GHOST_CELL_WIDTH  (10)
+
+
+/*!
+ * Timer objects for performance measurement.
+ */
+static tbox::Pointer<tbox::Timer> t_fill_data;
+static tbox::Pointer<tbox::Timer> t_gen_sched_n_squared;
+static tbox::Pointer<tbox::Timer> t_gen_sched_box_graph;
+static tbox::Pointer<tbox::Timer> t_gen_sched_box_tree; 
+static tbox::Pointer<tbox::Timer> t_gen_comm_sched;
+static tbox::Pointer<tbox::Timer> t_finish_sched_const;
 
 /*
 *************************************************************************
@@ -108,14 +120,7 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
-   t_fill_data =tbox::TimerManager::getManager() ->
-      getTimer("xfer::RefineSchedule::fillData()");
-   t_gen_sched_n_squared = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
-   t_gen_sched_box_graph = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxGraph()");
-   t_gen_sched_box_tree = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxTree()");
+   initializeTimers();
 
    /*
     * Initial values; some will change in setup operations.
@@ -172,10 +177,6 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    tbox::Array< xfer::FillBoxSet<DIM> >
       unfilled_boxes(dst_level->getNumberOfPatches());
 
-   tbox::Pointer<tbox::Timer> t_gen_comm_sched =
-      tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generate_comm_schedule");
-
    t_gen_comm_sched->start();
    generateCommunicationSchedule(d_coarse_priority_level_schedule,
 				 d_fine_priority_level_schedule,
@@ -227,14 +228,7 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    TBOX_ASSERT(!transaction_factory.isNull());
 #endif
 
-   t_fill_data =tbox::TimerManager::getManager() ->
-      getTimer("xfer::RefineSchedule::fillData()");
-   t_gen_sched_n_squared = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
-   t_gen_sched_box_graph = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxGraph()");
-   t_gen_sched_box_tree = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxTree()");
+   initializeTimers();
 
    /*
     * Initial values; some will change in setup operations.
@@ -284,9 +278,6 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
                      d_dst_level,
                      d_boundary_fill_ghost_width);
 
-   tbox::Pointer<tbox::Timer> t_finish_sched_const =
-      tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish_schedule_const");
 
    bool skip_first_generate_schedule =
       (fill_pattern == "FILL_LEVEL_BORDERS_ONLY");
@@ -328,14 +319,7 @@ template<int DIM>  RefineSchedule<DIM>::RefineSchedule(
    TBOX_ASSERT(fill_boxes.getSize() == dst_level->getNumberOfPatches());
 #endif
 
-   t_fill_data =tbox::TimerManager::getManager() ->
-      getTimer("xfer::RefineSchedule::fillData()");
-   t_gen_sched_n_squared = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
-   t_gen_sched_box_graph = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxGraph()");
-   t_gen_sched_box_tree = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxTree()");
+   initializeTimers();
 
    /*
     * Initial values; some will change in setup operations.
@@ -424,10 +408,7 @@ template<int DIM>  RefineSchedule<DIM>::~RefineSchedule()
    d_coarse_schedule.setNull();
    d_coarse_level.setNull();
 
-   t_fill_data.setNull();
-   t_gen_sched_n_squared.setNull();
-   t_gen_sched_box_graph.setNull();
-   t_gen_sched_box_tree.setNull();
+   return;
 }
 
      /*
@@ -513,10 +494,6 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
    tbox::Array< xfer::FillBoxSet<DIM> > unfilled_boxes(dst_npatches);
 
    if ( !src_level.isNull() && !skip_generate_schedule ) {
-
-      tbox::Pointer<tbox::Timer> t_gen_comm_sched =
-         tbox::TimerManager::getManager()->
-         getTimer("xfer::RefineSchedule::generate_comm_schedule");
 
       t_gen_comm_sched->start();
       generateCommunicationSchedule(d_coarse_priority_level_schedule,
@@ -2235,6 +2212,56 @@ template<int DIM> void RefineSchedule<DIM>::printClassData(std::ostream& stream)
    } else {
       stream << "coarse refine schedule is null" << std::endl;
    }
+}
+
+
+/*
+***********************************************************************
+***********************************************************************
+*/
+template<int DIM>
+void RefineSchedule<DIM>::initializeTimers()
+{
+   /*
+     The first constructor gets timers from the TimerManager.
+     and sets up their deallocation.
+   */
+   if ( t_fill_data.isNull() ) {
+      t_fill_data =tbox::TimerManager::getManager() ->
+         getTimer("xfer::RefineSchedule::fillData()");
+      t_gen_sched_n_squared = tbox::TimerManager::getManager()->
+         getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
+      t_gen_sched_box_graph = tbox::TimerManager::getManager()->
+         getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxGraph()");
+      t_gen_sched_box_tree = tbox::TimerManager::getManager()->
+         getTimer("xfer::RefineSchedule::generateCommunicationScheduleBoxTree()");
+      t_gen_comm_sched = tbox::TimerManager::getManager()->
+         getTimer("xfer::RefineSchedule::generate_comm_schedule");
+      t_finish_sched_const = tbox::TimerManager::getManager()->
+         getTimer("xfer::RefineSchedule::finish_schedule_const");
+      tbox::ShutdownRegistry::registerShutdownRoutine(freeTimers, 254);
+   }
+   return;
+}
+
+
+
+
+/*
+***************************************************************************
+Release static timers.  To be called by shutdown registry to make sure
+memory for timers does not leak.
+***************************************************************************
+*/
+template<int DIM>
+void RefineSchedule<DIM>::freeTimers()
+{
+   t_fill_data.setNull();
+   t_gen_sched_n_squared.setNull();
+   t_gen_sched_box_graph.setNull();
+   t_gen_sched_box_tree.setNull();
+   t_gen_comm_sched.setNull();
+   t_finish_sched_const.setNull();
 }
 
 }

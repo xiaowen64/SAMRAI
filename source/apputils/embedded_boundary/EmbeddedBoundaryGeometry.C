@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 2147 $
-// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: Compute and store geometry information about the 
 //              embedded boundary
 //              
@@ -752,7 +752,7 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevelWithPackage(
 
      double num_flowcells = (double)patch->getBox().size();
      double time = t_patch->getTotalWallclockTime();
-     tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > eboundary =
+     tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM>,pdat::CellGeometry<DIM> > > eboundary =
         patch->getPatchData(d_ebdry_data_id);
      int num_cutcells = eboundary->getNumberOfItems();
      num_flowcells = num_flowcells - num_cutcells;
@@ -971,7 +971,7 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
 
       const hier::Box<DIM>& interior = patch->getBox();
 
-      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > eboundary =
+      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM>,pdat::CellGeometry<DIM> > > eboundary =
          patch->getPatchData(d_ebdry_data_id);
       tbox::Pointer< pdat::CellData<DIM,int> > cell_flag =
          patch->getPatchData(d_cell_flag_data_id);
@@ -1497,7 +1497,7 @@ EmbeddedBoundaryGeometry<DIM>::postprocessRefine(
 {
    NULL_USE(coarse);
 
-   tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > feboundary =
+   tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM>, pdat::CellGeometry<DIM> > > feboundary =
       fine.getPatchData(d_ebdry_data_id);
    tbox::Pointer< pdat::CellData<DIM,int> > fcell_flag =
       fine.getPatchData(d_cell_flag_data_id);
@@ -1716,7 +1716,7 @@ EmbeddedBoundaryGeometry<DIM>::initializeVariables(
    hier::VariableDatabase<DIM>* variable_db = hier::VariableDatabase<DIM>::getDatabase();
 
    d_ebdry_var = 
-     new pdat::IndexVariable<DIM,appu::CutCell<DIM> >("Embedded Boundary");
+      new pdat::IndexVariable<DIM,appu::CutCell<DIM>, pdat::CellGeometry<DIM> >("Embedded Boundary");
    d_cell_flag_var = 
      new pdat::CellVariable<DIM,int>("Cell Flag",1);
    d_cell_vol_var = 
@@ -3465,7 +3465,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
    
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++) {
       tbox::Pointer<hier::Patch<DIM> > patch = level->getPatch(ip());
-      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > eboundary =
+      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM>,pdat::CellGeometry<DIM> > > eboundary =
          patch->getPatchData(d_ebdry_data_id);
       tbox::Pointer< pdat::CellData<DIM,int> > cell_flag =
          patch->getPatchData(d_cell_flag_data_id);
@@ -3522,7 +3522,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
          
       int cut_cell_ctr = 0;
 
-      for (typename pdat::IndexData<DIM,appu::CutCell<DIM> >::Iterator 
+      for (typename pdat::IndexData<DIM,appu::CutCell<DIM>,pdat::CellGeometry<DIM> >::Iterator 
               bc(*eboundary); bc; bc++) {
          
          std::string name3 = "cut_cell[" + 
@@ -3653,7 +3653,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++) {
       tbox::Pointer<hier::Patch<DIM> > patch = level->getPatch(ip());
 
-      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > eboundary =
+      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM>,pdat::CellGeometry<DIM> > > eboundary =
          patch->getPatchData(d_ebdry_data_id);
       tbox::Pointer< pdat::CellData<DIM,int> > cell_flag =
          patch->getPatchData(d_cell_flag_data_id);

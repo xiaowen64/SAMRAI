@@ -42,6 +42,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataBasicOps.C		\
 	ArrayDataBasicOps.h
 
@@ -50,8 +51,11 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/CopyOperation.C		\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -89,6 +93,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataMiscellaneousOpsReal.C	\
 	ArrayDataMiscellaneousOpsReal.h
 
@@ -97,8 +102,11 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/CopyOperation.C		\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -136,6 +144,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataNormOpsComplex.C	\
 	ArrayDataNormOpsComplex.h
 
@@ -144,8 +153,11 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/CopyOperation.C		\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -183,6 +195,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataNormOpsInteger.C	\
 	ArrayDataNormOpsInteger.h
 
@@ -191,8 +204,11 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/CopyOperation.C		\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -230,6 +246,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/PointerBase.h				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h ArrayDataNormOpsReal.C		\
 	ArrayDataNormOpsReal.h
 
@@ -238,8 +255,11 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
-	$(INCLUDE_SAM)/IntVector.C
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/CopyOperation.C		\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}

@@ -169,7 +169,8 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BlockPatchGeometry.C $(INCLUDE_SAM)/BoundaryBox.C\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -184,6 +185,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CellGeometry.C $(INCLUDE_SAM)/CellIndex.C	\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/FaceComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
 	$(INCLUDE_SAM)/FaceDoubleLinearTimeInterpolateOp.C		\
@@ -236,9 +238,12 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SideFloatLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}

@@ -1,14 +1,14 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/PoissonGaussianSolution.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/FAC/PoissonGaussianSolution.C $
   Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1993 $
-  Modified:	$LastChangedDate: 2008-02-19 08:24:52 -0800 (Tue, 19 Feb 2008) $
+  Revision:	$LastChangedRevision: 2278 $
+  Modified:	$LastChangedDate: 2008-07-07 14:51:53 -0700 (Mon, 07 Jul 2008) $
   Description:	PoissonGaussianSolution class implementation
 */
 
 #include "SAMRAI_config.h"
 
-#include "arrayConversion.h"
+#include "ArrayDataAccess.h"
 #include "patchFcns.h"
 #include "PoissonGaussianSolution.h"
 #include STL_SSTREAM_HEADER_FILE
@@ -217,9 +217,9 @@ void PoissonGaussianSolution::setBcCoefs (
 
 #if NDIM == 3
   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > a_array, b_array, g_array;
-  if ( acoef_data ) a_array = arrayData2ArrayAccess( *acoef_data );
-  if ( bcoef_data ) b_array = arrayData2ArrayAccess( *bcoef_data );
-  if ( gcoef_data ) g_array = arrayData2ArrayAccess( *gcoef_data );
+  if ( acoef_data ) a_array = pdat::ArrayDataAccess::access( *acoef_data );
+  if ( bcoef_data ) b_array = pdat::ArrayDataAccess::access( *bcoef_data );
+  if ( gcoef_data ) g_array = pdat::ArrayDataAccess::access( *gcoef_data );
   int i, j, k, ibeg, iend, jbeg, jend, kbeg, kend;
   double x, y, z;
   switch (bdry_box.getLocationIndex()) {

@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonHypreSolver.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/poisson/CellPoissonHypreSolver.h $
  * Package:     SAMRAI solvers
  * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 2132 $
- * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+ * Revision:    $LastChangedRevision: 2270 $
+ * Modified:    $LastChangedDate: 2008-07-07 09:47:47 -0700 (Mon, 07 Jul 2008) $
  * Description:	Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -15,8 +15,17 @@
 #ifdef HAVE_HYPRE
 
 #ifndef included_HYPRE_struct_ls
-#define included_HYPRE_struct_ls
+/*
+ * This might break things if F77_FUNC_ is different for hypre vs
+ * SAMRAI autoconf detection.  But then C/C++ macros are totally
+ * broken due to namespace collision as this example highlights so
+ * resorting to hacks are necessary.
+ */
+#ifdef F77_FUNC_
+#undef F77_FUNC_
+#endif
 #include "HYPRE_struct_ls.h"
+#define included_HYPRE_struct_ls
 #endif
 
 #include "BoxList.h"

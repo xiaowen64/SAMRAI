@@ -174,7 +174,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -194,12 +195,12 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
-	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
-	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
-	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
-	$(INCLUDE_SAM)/Geometry.C $(INCLUDE_SAM)/GridGeometry.C		\
-	$(INCLUDE_SAM)/GriddingAlgorithm.C				\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FaceData.C	\
+	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
+	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
+	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
+	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/Geometry.C		\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
 	$(INCLUDE_SAM)/HyperbolicPatchStrategy.C $(INCLUDE_SAM)/Index.C	\
 	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
 	$(INCLUDE_SAM)/MBUtilities.C					\
@@ -237,10 +238,14 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -370,7 +375,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -385,9 +391,10 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C					\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/GriddingAlgorithm.C $(INCLUDE_SAM)/Index.C	\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/LoadBalanceStrategy.C				\
 	$(INCLUDE_SAM)/MBUtilities.C					\
 	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
@@ -407,9 +414,13 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -594,7 +605,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -606,14 +618,14 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/CellDataFactory.C $(INCLUDE_SAM)/CellGeometry.C	\
 	$(INCLUDE_SAM)/CellIndex.C $(INCLUDE_SAM)/CellIterator.C	\
 	$(INCLUDE_SAM)/CellOverlap.C $(INCLUDE_SAM)/CellVariable.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
-	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
-	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
-	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
-	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
-	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
-	$(INCLUDE_SAM)/GridGeometry.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
+	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
+	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
+	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
+	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
+	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C			\
@@ -674,7 +686,10 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SideDataFactory.C $(INCLUDE_SAM)/SideGeometry.C	\
 	$(INCLUDE_SAM)/SideIndex.C $(INCLUDE_SAM)/SideIterator.C	\
 	$(INCLUDE_SAM)/SideOverlap.C $(INCLUDE_SAM)/SideVariable.C	\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/Variable.C		\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -862,7 +877,8 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -874,14 +890,14 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/CellDataFactory.C $(INCLUDE_SAM)/CellGeometry.C	\
 	$(INCLUDE_SAM)/CellIndex.C $(INCLUDE_SAM)/CellIterator.C	\
 	$(INCLUDE_SAM)/CellOverlap.C $(INCLUDE_SAM)/CellVariable.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
-	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
-	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
-	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
-	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
-	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
-	$(INCLUDE_SAM)/GridGeometry.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
+	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
+	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
+	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
+	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
+	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/HierarchyCellDataOpsReal.C			\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.C				\
 	$(INCLUDE_SAM)/HierarchyEdgeDataOpsReal.C			\
@@ -945,7 +961,10 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SideDataFactory.C $(INCLUDE_SAM)/SideGeometry.C	\
 	$(INCLUDE_SAM)/SideIndex.C $(INCLUDE_SAM)/SideIterator.C	\
 	$(INCLUDE_SAM)/SideOverlap.C $(INCLUDE_SAM)/SideVariable.C	\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/Variable.C		\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -1046,17 +1065,19 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeGeometry.C		\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/LocallyActiveDataPatchLevelManager.C		\
 	$(INCLUDE_SAM)/LocallyActiveDataRefineTransactionFactory.C	\
 	$(INCLUDE_SAM)/LocallyActiveVariableDatabase.C			\
@@ -1067,8 +1088,12 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -1167,15 +1192,16 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/LocallyActiveDataPatchLevelManager.C		\
 	$(INCLUDE_SAM)/LocallyActiveDataRefineTransactionFactory.C	\
 	$(INCLUDE_SAM)/LocallyActiveVariableDatabase.C			\
@@ -1187,8 +1213,12 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -1321,7 +1351,8 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1330,12 +1361,13 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CoarsenClasses.C	\
-	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/EdgeData.C	\
-	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/LocallyActiveDataFillBox.C			\
 	$(INCLUDE_SAM)/LocallyActiveDataFillBoxSet.C			\
 	$(INCLUDE_SAM)/LocallyActiveDataOuteredgeSumTransactionFactory.C\
@@ -1364,8 +1396,12 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.C\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
@@ -1394,7 +1430,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/BoxUtilities.h $(INCLUDE_SAM)/CoarsenClasses.h	\
 	$(INCLUDE_SAM)/CoarsenCopyTransaction.h				\
 	$(INCLUDE_SAM)/CoarsenOperator.h				\
-	$(INCLUDE_SAM)/CoarsenTransactionFactory.h			\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
 	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
@@ -1453,7 +1488,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/RefineCopyTransaction.h				\
 	$(INCLUDE_SAM)/RefineOperator.h					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.h				\
-	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataCoarsenTransactionFactory.h\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.h\
 	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
@@ -1506,7 +1540,8 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1516,8 +1551,7 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CoarsenClasses.C	\
 	$(INCLUDE_SAM)/CoarsenCopyTransaction.C				\
-	$(INCLUDE_SAM)/CoarsenOperator.C				\
-	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
+	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/CopyOperation.C	\
 	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/LocallyActiveDataCoarsenAlgorithm.C		\
@@ -1543,6 +1577,7 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeVariable.C $(INCLUDE_SAM)/Patch.C	\
@@ -1554,10 +1589,14 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/RefineCopyTransaction.C				\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
-	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
+	$(INCLUDE_SAM)/StandardLocallyActiveDataCoarsenTransactionFactory.C\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.C\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
@@ -1699,7 +1738,8 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1716,9 +1756,9 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/MBUtilities.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
 	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
@@ -1732,6 +1772,7 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuternodeData.C	\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeSumTransactionFactory.C			\
@@ -1749,8 +1790,12 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
@@ -1889,7 +1934,8 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1909,10 +1955,10 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/Geometry.C		\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/LoadBalanceStrategy.C				\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/Geometry.C $(INCLUDE_SAM)/GridGeometry.C		\
+	$(INCLUDE_SAM)/GriddingAlgorithm.C $(INCLUDE_SAM)/Index.C	\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
 	$(INCLUDE_SAM)/MBUtilities.C					\
 	$(INCLUDE_SAM)/MethodOfLinesPatchStrategy.C			\
 	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
@@ -1935,9 +1981,13 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
@@ -2008,7 +2058,9 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchGeometry.C	\
 	$(INCLUDE_SAM)/RefinePatchStrategy.C $(INCLUDE_SAM)/Variable.C	\
-	$(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
@@ -2102,25 +2154,30 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeGeometry.C		\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/OuteredgeData.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeGeometry.C $(INCLUDE_SAM)/Patch.C	\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
@@ -2218,18 +2275,19 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeGeometry.C		\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/OuteredgeData.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/OuteredgeData.C	\
 	$(INCLUDE_SAM)/OuteredgeGeometry.C				\
 	$(INCLUDE_SAM)/OuteredgeSumTransaction.C $(INCLUDE_SAM)/Patch.C	\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
@@ -2237,8 +2295,12 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
@@ -2330,24 +2392,30 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
-	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
-	$(INCLUDE_SAM)/OuternodeData.C $(INCLUDE_SAM)/Patch.C		\
-	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeGeometry.C		\
+	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
+	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/OuternodeData.C	\
+	$(INCLUDE_SAM)/Patch.C $(INCLUDE_SAM)/PatchData.C		\
+	$(INCLUDE_SAM)/PatchDataFactory.C				\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
@@ -2443,26 +2511,31 @@ DEPENDS_14 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/NodeData.C		\
-	$(INCLUDE_SAM)/NodeGeometry.C $(INCLUDE_SAM)/NodeIndex.C	\
-	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
-	$(INCLUDE_SAM)/OuternodeData.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/NodeData.C $(INCLUDE_SAM)/NodeGeometry.C		\
+	$(INCLUDE_SAM)/NodeIndex.C $(INCLUDE_SAM)/NodeIterator.C	\
+	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/OuternodeData.C	\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C $(INCLUDE_SAM)/Patch.C	\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchLevel.C	\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
@@ -2588,7 +2661,8 @@ DEPENDS_15 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -2596,12 +2670,13 @@ DEPENDS_15 +=\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/EdgeData.C		\
-	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
@@ -2625,8 +2700,12 @@ DEPENDS_15 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
@@ -2762,7 +2841,8 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -2779,8 +2859,9 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
 	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
@@ -2791,6 +2872,7 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeSumTransactionFactory.C			\
@@ -2808,8 +2890,12 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
@@ -2863,21 +2949,27 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
-	$(INCLUDE_SAM)/tbox/Serializable.h $(INCLUDE_SAM)/tbox/Timer.I	\
-	$(INCLUDE_SAM)/tbox/Timer.h $(INCLUDE_SAM)/tbox/TimerManager.h	\
+	$(INCLUDE_SAM)/tbox/Serializable.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
+	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
+	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h TimeRefinementIntegrator-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_17 +=\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/Box.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/Box.C		\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C				\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
-	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C
+	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
@@ -2926,19 +3018,24 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	TimeRefinementLevelStrategy-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_18 +=\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/Box.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/Box.C		\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C				\
-	$(INCLUDE_SAM)/TagAndInitializeStrategy.C
+	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
@@ -3071,7 +3168,8 @@ DEPENDS_19 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3080,12 +3178,13 @@ DEPENDS_19 +=\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CoarsenClasses.C	\
-	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/EdgeData.C	\
-	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/LocallyActiveDataFillBox.C			\
 	$(INCLUDE_SAM)/LocallyActiveDataFillBoxSet.C			\
 	$(INCLUDE_SAM)/LocallyActiveDataOuteredgeSumTransactionFactory.C\
@@ -3115,8 +3214,11 @@ DEPENDS_19 +=\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.C\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
@@ -3145,7 +3247,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/BoxUtilities.h $(INCLUDE_SAM)/CoarsenClasses.h	\
 	$(INCLUDE_SAM)/CoarsenCopyTransaction.h				\
 	$(INCLUDE_SAM)/CoarsenOperator.h				\
-	$(INCLUDE_SAM)/CoarsenTransactionFactory.h			\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
 	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
@@ -3203,7 +3304,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/RefineCopyTransaction.h				\
 	$(INCLUDE_SAM)/RefineOperator.h					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.h				\
-	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataCoarsenTransactionFactory.h\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.h\
 	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
@@ -3257,7 +3357,8 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3267,8 +3368,7 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CoarsenClasses.C	\
 	$(INCLUDE_SAM)/CoarsenCopyTransaction.C				\
-	$(INCLUDE_SAM)/CoarsenOperator.C				\
-	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
+	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/CopyOperation.C	\
 	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/LocallyActiveDataCoarsenAlgorithm.C		\
@@ -3295,6 +3395,7 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeVariable.C $(INCLUDE_SAM)/Patch.C	\
@@ -3306,10 +3407,13 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/RefineCopyTransaction.C				\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
-	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
+	$(INCLUDE_SAM)/StandardLocallyActiveDataCoarsenTransactionFactory.C\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.C\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
@@ -3437,7 +3541,8 @@ DEPENDS_21 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3445,12 +3550,13 @@ DEPENDS_21 +=\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/EdgeData.C		\
-	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
@@ -3475,8 +3581,11 @@ DEPENDS_21 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
@@ -3614,7 +3723,8 @@ DEPENDS_22 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3631,8 +3741,9 @@ DEPENDS_22 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
 	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
@@ -3643,6 +3754,7 @@ DEPENDS_22 +=\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeSumTransactionFactory.C			\
@@ -3661,8 +3773,11 @@ DEPENDS_22 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
@@ -3831,7 +3946,8 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3851,12 +3967,12 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
-	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
-	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
-	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
-	$(INCLUDE_SAM)/Geometry.C $(INCLUDE_SAM)/GridGeometry.C		\
-	$(INCLUDE_SAM)/GriddingAlgorithm.C				\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FaceData.C	\
+	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
+	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
+	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
+	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/Geometry.C		\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
 	$(INCLUDE_SAM)/HyperbolicLevelIntegrator.C			\
 	$(INCLUDE_SAM)/HyperbolicPatchStrategy.C $(INCLUDE_SAM)/Index.C	\
 	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
@@ -3895,10 +4011,13 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
@@ -4030,7 +4149,8 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4039,12 +4159,13 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CoarsenClasses.C	\
-	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/EdgeData.C	\
-	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/LocallyActiveDataFillBox.C			\
 	$(INCLUDE_SAM)/LocallyActiveDataFillBoxSet.C			\
 	$(INCLUDE_SAM)/LocallyActiveDataOuteredgeSumTransactionFactory.C\
@@ -4074,8 +4195,11 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.C\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
@@ -4104,7 +4228,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/BoxUtilities.h $(INCLUDE_SAM)/CoarsenClasses.h	\
 	$(INCLUDE_SAM)/CoarsenCopyTransaction.h				\
 	$(INCLUDE_SAM)/CoarsenOperator.h				\
-	$(INCLUDE_SAM)/CoarsenTransactionFactory.h			\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h				\
 	$(INCLUDE_SAM)/CopyOperation.I $(INCLUDE_SAM)/CopyOperation.h	\
@@ -4162,7 +4285,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/RefineCopyTransaction.h				\
 	$(INCLUDE_SAM)/RefineOperator.h					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.h				\
-	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataCoarsenTransactionFactory.h\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.h\
 	$(INCLUDE_SAM)/SumOperation.I $(INCLUDE_SAM)/SumOperation.h	\
@@ -4215,7 +4337,8 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4225,8 +4348,7 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CoarsenClasses.C	\
 	$(INCLUDE_SAM)/CoarsenCopyTransaction.C				\
-	$(INCLUDE_SAM)/CoarsenOperator.C				\
-	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
+	$(INCLUDE_SAM)/CoarsenOperator.C $(INCLUDE_SAM)/CopyOperation.C	\
 	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/LocallyActiveDataCoarsenAlgorithm.C		\
@@ -4253,6 +4375,7 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeVariable.C $(INCLUDE_SAM)/Patch.C	\
@@ -4264,10 +4387,13 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/RefineCopyTransaction.C				\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
-	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
+	$(INCLUDE_SAM)/StandardLocallyActiveDataCoarsenTransactionFactory.C\
 	$(INCLUDE_SAM)/StandardLocallyActiveDataRefineTransactionFactory.C\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
@@ -4409,7 +4535,8 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4426,9 +4553,9 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/MBUtilities.C					\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
 	$(INCLUDE_SAM)/MblkPatchBoundaryNodeSum.C			\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
@@ -4443,6 +4570,7 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/NodeIterator.C $(INCLUDE_SAM)/NodeOverlap.C	\
 	$(INCLUDE_SAM)/NodeVariable.C $(INCLUDE_SAM)/OuternodeData.C	\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeSumTransactionFactory.C			\
@@ -4460,8 +4588,11 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
@@ -4600,7 +4731,8 @@ DEPENDS_27 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4620,10 +4752,10 @@ DEPENDS_27 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/Geometry.C		\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/LoadBalanceStrategy.C				\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/Geometry.C $(INCLUDE_SAM)/GridGeometry.C		\
+	$(INCLUDE_SAM)/GriddingAlgorithm.C $(INCLUDE_SAM)/Index.C	\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
 	$(INCLUDE_SAM)/MBUtilities.C					\
 	$(INCLUDE_SAM)/MethodOfLinesIntegrator.C			\
 	$(INCLUDE_SAM)/MethodOfLinesPatchStrategy.C			\
@@ -4647,9 +4779,12 @@ DEPENDS_27 +=\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
@@ -4776,7 +4911,8 @@ DEPENDS_28 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4784,12 +4920,13 @@ DEPENDS_28 +=\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/EdgeData.C		\
-	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
-	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
-	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
+	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
+	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
+	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
@@ -4814,8 +4951,11 @@ DEPENDS_28 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
@@ -4952,7 +5092,8 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4969,8 +5110,9 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/CoarsenPatchStrategy.C				\
 	$(INCLUDE_SAM)/CoarsenSchedule.C				\
 	$(INCLUDE_SAM)/CoarsenTransactionFactory.C			\
-	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/FillBoxSet.C	\
+	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
+	$(INCLUDE_SAM)/IntVector.C					\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
 	$(INCLUDE_SAM)/MultiblockNodeDataTranslator.C			\
@@ -4981,6 +5123,7 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/NodeOverlap.C $(INCLUDE_SAM)/NodeVariable.C	\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
 	$(INCLUDE_SAM)/OuternodeSumTransaction.C			\
 	$(INCLUDE_SAM)/OuternodeSumTransactionFactory.C			\
@@ -4999,8 +5142,11 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardCoarsenTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
@@ -5053,15 +5199,18 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/tbox/RestartManager.h				\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
-	$(INCLUDE_SAM)/tbox/Serializable.h $(INCLUDE_SAM)/tbox/Timer.I	\
-	$(INCLUDE_SAM)/tbox/Timer.h $(INCLUDE_SAM)/tbox/TimerManager.h	\
+	$(INCLUDE_SAM)/tbox/Serializable.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
+	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
+	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	tbox__Pointer-algs__TimeRefinementIntegrator-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_30 +=\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/Box.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/Box.C		\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
@@ -5069,7 +5218,9 @@ DEPENDS_30 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C				\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeRefinementIntegrator.C			\
-	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C
+	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
@@ -5117,20 +5268,24 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/tbox/SAMRAIManager.h				\
 	$(INCLUDE_SAM)/tbox/Serializable.I				\
 	$(INCLUDE_SAM)/tbox/Serializable.h				\
+	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h					\
 	tbox__Pointer-algs__TimeRefinementLevelStrategy-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_31 +=\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/Box.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/Box.C		\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C $(INCLUDE_SAM)/PatchDataFactory.C	\
 	$(INCLUDE_SAM)/PatchDescriptor.C				\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
-	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C
+	$(INCLUDE_SAM)/TimeRefinementLevelStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/cell/PatchCellDataOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mathops/cell/PatchCellDataOpsReal.C $
 // Package:	SAMRAI mathops
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2249 $
+// Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 // Description:	Templated operations for real cell-centered patch data.
 //
 
@@ -11,9 +11,7 @@
 #define included_math_PatchCellDataOpsReal_C
 
 #include "PatchCellDataOpsReal.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
 #include "tbox/Utilities.h"
-#endif
 
 namespace SAMRAI {
     namespace math {

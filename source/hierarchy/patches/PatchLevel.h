@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchLevel.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/hierarchy/patches/PatchLevel.h $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2196 $
+// Modified:	$LastChangedDate: 2008-05-14 14:25:02 -0700 (Wed, 14 May 2008) $
 // Description:	A collection of patches at one level of the AMR hierarchy
 //
 
@@ -27,6 +27,7 @@
 #include "BoxTop.h"
 #include "BoxTree.h"
 #include "tbox/DescribedClass.h"
+#include "tbox/Timer.h"
 
 
 #ifndef NULL
@@ -477,6 +478,16 @@ private:
     * across all (distributed) patches on level.
     */
    void setPatchTouchesBoundaryArrays();
+
+   void initializeTimers();
+
+   /*!
+    * Free static timers.
+    *
+    * To be called by shutdown registry to make sure
+    * memory for timers does not leak.
+    */
+   static void freeTimers();
 
    /*
     * Data mambers that describe contents of every patch level.

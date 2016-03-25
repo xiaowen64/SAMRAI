@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/Makefile.in $
 ## Package:	SAMRAI test
 ## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2122 $
-## Modified:	$LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
+## Revision:	$LastChangedRevision: 2249 $
+## Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 ## Description:	makefile for testing parts of SAMRAI library
 ##
 
@@ -17,7 +17,7 @@ SUBDIRS = logger async_comm \
 	dlbg emb_bdry FAC hierarchy hypre ieee inputdb restartdb  \
 	locally_active \
 	mblkcomm MblkLinAdv nonlinear patchbdrysum patch_configuration pointer \
-        sundials schedules timers variables vector
+        sundials schedules timers variables vector indexdata
 
 default: check	
 

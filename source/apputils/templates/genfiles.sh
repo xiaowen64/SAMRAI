@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/apputils/templates/genfiles.sh $
 ## Package:     SAMRAI templates
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+## Revision:    $LastChangedRevision: 2224 $
+## Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -64,15 +64,15 @@ ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer appu::EmbeddedBound
 # Templates for CutCell
 #
 
-${MT} default.filenames ./tmp pdat pdat::IndexData NDIM\,appu::CutCell\<NDIM\>
-${MT} default.filenames ./tmp pdat pdat::IndexDataFactory NDIM\,appu::CutCell\<NDIM\>
-${MT} default.filenames ./tmp pdat pdat::IndexVariable NDIM\,appu::CutCell\<NDIM\>
+${MT} default.filenames ./tmp pdat pdat::IndexData NDIM\,appu::CutCell\<NDIM\>,pdat::CellGeometry\<NDIM\>
+${MT} default.filenames ./tmp pdat pdat::IndexDataFactory NDIM\,appu::CutCell\<NDIM\>,pdat::CellGeometry\<NDIM\>
+${MT} default.filenames ./tmp pdat pdat::IndexVariable NDIM\,appu::CutCell\<NDIM\>,pdat::CellGeometry\<NDIM\>
 ${MT} default.filenames ./tmp tbox tbox::Array appu::CutCell\<NDIM\>
 ${MT} default.filenames ./tmp tbox tbox::Pointer appu::CutCell\<NDIM\>
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer appu::CutCell\<NDIM\>
-${MT} default.filenames ./tmp tbox tbox::Pointer pdat::IndexData NDIM\,appu::CutCell\<NDIM\>
-${MT} default.filenames ./tmp tbox tbox::Pointer pdat::IndexVariable NDIM\,appu::CutCell\<NDIM\>
-${MT} default.filenames ./tmp tbox tbox::Pointer pdat::IndexDataFactory NDIM\,appu::CutCell\<NDIM\>
+${MT} default.filenames ./tmp tbox tbox::Pointer pdat::IndexData NDIM\,appu::CutCell\<NDIM\>,pdat::CellGeometry\<NDIM\>
+${MT} default.filenames ./tmp tbox tbox::Pointer pdat::IndexVariable NDIM\,appu::CutCell\<NDIM\>,pdat::CellGeometry\<NDIM\>
+${MT} default.filenames ./tmp tbox tbox::Pointer pdat::IndexDataFactory NDIM\,appu::CutCell\<NDIM\>,pdat::CellGeometry\<NDIM\>
 
 
 #

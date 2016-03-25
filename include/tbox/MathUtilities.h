@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/MathUtilities.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/base/MathUtilities.h $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2195 $
+// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description:	Utilities class to access common POSIX constants and math ops
 //
 
@@ -290,6 +290,10 @@ template<> double   MathUtilities<double>::round(double a);
 
 #ifndef DEBUG_NO_INLINE
 #include "tbox/MathUtilities.I"
+#endif
+
+#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
+#include "tbox/MathUtilities.C"
 #endif
 
 #endif

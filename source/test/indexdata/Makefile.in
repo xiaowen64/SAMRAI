@@ -1,0 +1,58 @@
+##
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/test/vector/Makefile.in $
+## Package:	SAMRAI algorithm
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2231 $
+## Modified:	$LastChangedDate: 2008-06-27 12:45:19 -0700 (Fri, 27 Jun 2008) $
+## Description:	makefile for test of patch data and vector operations
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/vector
+VPATH	      =	@srcdir@
+TESTTOOLS     = ../testtools
+OBJECT        = ../../..
+
+#
+# For these classes don't turn off implicit template instantiation.
+#
+ALLOW_IMPLICIT_TEMPLATES = yes
+
+
+
+default: main
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DTESTING=1
+
+main:		main.o $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o $(COBJS) \
+			$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+NUM_TESTS = 1
+
+TEST_NPROCS = @TEST_NPROCS@
+
+check:
+		$(MAKE) check2d
+
+check2d:	main
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
+
+check3d:
+
+
+checktest:
+		rm -rf makecheck.logfile
+		$(MAKE) check >& makecheck.logfile
+		cat makecheck.logfile
+		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		rm -rf makecheck.logfile
+
+
+clean: 
+	$(SAMCLEAN)
+	@$(RM) *.f *vtest*
+
+include $(SRCDIR)/Makefile.depend

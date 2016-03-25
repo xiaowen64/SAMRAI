@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefineSchedule.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/transfer/datamovers/standard/RefineSchedule.h $
 // Package:	SAMRAI data transfer
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2196 $
+// Modified:	$LastChangedDate: 2008-05-14 14:25:02 -0700 (Wed, 14 May 2008) $
 // Description:	Refine schedule for data transfer between AMR levels
 //
  
@@ -542,6 +542,22 @@ private:
     */
    void initialCheckRefineClassItems() const;
 
+   void initializeTimers();
+
+
+   /*!
+    * @brief Set up things for the entire class.
+    */
+   void firstConstructorTasks();
+
+   /*!
+    * Free static timers.
+    *
+    * To be called by shutdown registry to make sure
+    * memory for timers does not leak.
+    */
+   static void freeTimers();
+
    /*!
     * Constant int vectors used to avoid recreating these vectors in loops.
     */
@@ -708,22 +724,14 @@ private:
    hier::BoxArray<DIM> d_src_masks;
 
 
-   /*!
-    * Timer objects for performance measurement.
-    */
-   tbox::Pointer<tbox::Timer> t_fill_data;
-   tbox::Pointer<tbox::Timer> t_gen_sched_n_squared;
-   tbox::Pointer<tbox::Timer> t_gen_sched_box_graph;
-   tbox::Pointer<tbox::Timer> t_gen_sched_box_tree; 
-
-
 };
 
 }
 }
 
-#endif
-
 #ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "RefineSchedule.C"
 #endif
+
+#endif
+

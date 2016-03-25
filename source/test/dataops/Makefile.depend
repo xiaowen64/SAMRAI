@@ -171,6 +171,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -261,7 +262,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -313,6 +315,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -376,7 +379,9 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -405,9 +410,12 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -571,6 +579,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -658,7 +667,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -710,6 +720,7 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -771,7 +782,9 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -798,9 +811,12 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -963,6 +979,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -1050,7 +1067,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1102,6 +1120,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -1161,7 +1180,9 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -1188,9 +1209,12 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -1358,6 +1382,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -1450,7 +1475,8 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1503,6 +1529,7 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -1566,7 +1593,9 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -1596,9 +1625,12 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -1766,6 +1798,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -1858,7 +1891,8 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -1911,6 +1945,7 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -1974,7 +2009,9 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -2004,9 +2041,12 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -2174,6 +2214,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -2266,7 +2307,8 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -2319,6 +2361,7 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -2382,7 +2425,9 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -2412,9 +2457,12 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -2582,6 +2630,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -2674,7 +2723,8 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -2727,6 +2777,7 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -2790,7 +2841,9 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -2820,9 +2873,12 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
@@ -2990,6 +3046,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -3081,7 +3138,8 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3134,6 +3192,7 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -3197,7 +3256,9 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -3226,9 +3287,12 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
@@ -3396,6 +3460,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -3487,7 +3552,8 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3540,6 +3606,7 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -3603,7 +3670,9 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -3632,9 +3701,12 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
@@ -3802,6 +3874,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -3893,7 +3966,8 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3946,6 +4020,7 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -4009,7 +4084,9 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -4038,9 +4115,12 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
@@ -4208,6 +4288,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -4299,7 +4380,8 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsComplex.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4352,6 +4434,7 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -4415,7 +4498,9 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -4444,9 +4529,12 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SideGeometry.C $(INCLUDE_SAM)/SideIndex.C	\
 	$(INCLUDE_SAM)/SideIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
-	$(INCLUDE_SAM)/SideVariable.C					\
+	$(INCLUDE_SAM)/SideVariable.C $(INCLUDE_SAM)/SumOperation.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}

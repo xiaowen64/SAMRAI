@@ -1,10 +1,10 @@
 #! /usr/bin/perl
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/depend.pl $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/scripts/depend.pl $
 ## Package:     SAMRAI templates
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+## Revision:    $LastChangedRevision: 2195 $
+## Modified:    $LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 ## Description: perl script to generate dependencies for SAMRAI files
 ##
 
@@ -56,15 +56,21 @@ if ( "$inc_dir" eq '-' ) {
     # Find the include directory by climbing back up the path,
     # past the source directory.
     $inc_dir = `pwd`; chop $inc_dir;
-    $inc_dir =~ s|^.*/?source/?|source/|o;	# This gets past dir source.
-    $inc_dir =~ s|[^/]+|..|go;		# Change each generation to '..'.
-    $inc_dir = "$inc_dir/include";	# Append include.
+    if( $inc_dir =~ m|^.*/?source/?| ) {
+	$inc_dir =~ s|^.*/?source/?|source/|o;	# This gets past dir source.
+	$inc_dir =~ s|[^/]+|..|go;		# Change each generation to '..'.
+	$inc_dir = "$inc_dir/include";          # Append include.
+    } else {
+	$inc_dir =~ s|^.*/?SAMRAI/?||o;	        # This gets past dir source.
+	$inc_dir =~ s|[^/]+|..|go;		# Change each generation to '..'.
+	$inc_dir = "$inc_dir/include";          # Append include.
+    }
 }
 
 @INCPATH = ($src_dir, $inc_dir);
-print "$src_dir\n" if $debug;
-print "$inc_dir\n" if $debug;
-print "@FILES\n" if $debug;
+print "src_dir = $src_dir\n" if $debug;
+print "inc_dir = $inc_dir\n" if $debug;
+print "files = @FILES\n" if $debug;
 
 $TABLEN  = 8;
 $LINLEN  = 72;
@@ -102,18 +108,19 @@ for $cfile (@FILES) {
 
     while (@depfiles) {
 	$depfile = shift @depfiles;
+	print "\tprocessing $depfile\n" if $debug;
 	next if ( $depfile eq '' );
 	if ( defined $dset{$depfile} ) {
-	    print "$depfile is already in dependency set.\n" if $debug;
+	    print "\t$depfile is already in dependency set.\n" if $debug;
 	    next;
 	}
 	# This file is not part of the dependency set.
-	print "$depfile is being added the dependency set\n" if $debug;
+	print "\t$depfile is being added the dependency set\n" if $debug;
 	$dset{$depfile} = 1;	# Make current file a part of dependency set.
 	# See what files $depfile depends on (and cache that info in
 	# the variable filedeps).
 	if ( ! defined $filedeps{$depfile} ) {
-	    print "Finding filedeps for $depfile\n" if $debug;
+	    print "\tFinding filedeps for $depfile\n" if $debug;
 	    $filedeps{$depfile} = [ &getMoreDeps( &getFullPath($depfile) ) ];
 	}
 
@@ -121,7 +128,7 @@ for $cfile (@FILES) {
 	for $maybedepfile ( @{$filedeps{$depfile}} ) {
 	    $maybedepfile = &getFullPath($maybedepfile);
 	    if ( $maybedepfile ne '' ) {
-		print "Will also check file: $maybedepfile\n" if $debug;
+		print "\tWill also check file: $maybedepfile\n" if $debug;
 		# Do not process the newly found include lines here.
 		# Just add them to @depfiles to be processed by the
 		# while loop.
@@ -158,12 +165,12 @@ sub getMoreDeps {
 	}
 	close DEPFILE;
 	if ( $debug ) {
-	    print "$file is recursively dependent on\n";
-	    for ( @deps ) { print "$_\n"; }
+	    print "\t\t$file is recursively dependent on\n";
+	    for ( @deps ) { print "\t\t\t$_\n"; }
 	}
     }
     else {
-	print "Skipping recursion on file: $file\n" if $debug;
+	print "\t\tSkipping recursion on file: $file\n" if $debug;
     }
     return @deps;
 }

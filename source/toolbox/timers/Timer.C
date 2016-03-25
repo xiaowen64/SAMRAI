@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Timer.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/timers/Timer.C $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2222 $
+// Modified:    $LastChangedDate: 2008-06-19 10:39:01 -0700 (Thu, 19 Jun 2008) $
 // Description: Timer class to track elapsed time in portions of a program. 
 //
 
@@ -48,7 +48,7 @@ Timer::Timer(const std::string& name,
    d_is_running = false; 
    d_is_active = true; 
    d_accesses = 0;
-   d_concurrent_timers.resizeArray( tbox::SAMRAIManager::getMaxNumberTimers() );
+   d_concurrent_timers.resizeArray( DEFAULT_NUMBER_OF_TIMERS_INCREMENT );
 
 #ifdef HAVE_VAMPIR
    string::size_type position;
@@ -194,8 +194,7 @@ void Timer::reset()
 
    d_max_wallclock = 0.0;
 
-   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
-   for (int i = 0; i < max_timers; i++) {
+   for (int i = 0; i < d_concurrent_timers.getSize(); i++) {
       d_concurrent_timers[i] = false;
    }
 }

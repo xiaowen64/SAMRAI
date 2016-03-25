@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/IndexDataFactory.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/index/IndexDataFactory.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: hier::Patch data factory for irregularly indexed patch data
 //
 
@@ -16,7 +16,7 @@
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
 #include "Box.h"
-#include "CellGeometry.h"
+#include "Geometry.h"
 #include "IndexData.h"
 
 namespace SAMRAI {
@@ -30,12 +30,12 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM, class TYPE> IndexDataFactory<DIM,TYPE>::IndexDataFactory(const hier::IntVector<DIM>& ghosts) 
-   :   hier::PatchDataFactory<DIM>(ghosts)
+template<int DIM, class TYPE, class BOX_GEOMETRY> IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::IndexDataFactory(const hier::IntVector<DIM>& ghosts) 
+:   hier::PatchDataFactory<DIM>(ghosts)
 {
 }
 
-template<int DIM, class TYPE> IndexDataFactory<DIM,TYPE>::~IndexDataFactory()
+template<int DIM, class TYPE, class BOX_GEOMETRY> IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::~IndexDataFactory()
 {
 }
 
@@ -47,11 +47,11 @@ template<int DIM, class TYPE> IndexDataFactory<DIM,TYPE>::~IndexDataFactory()
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
+template<int DIM, class TYPE, class BOX_GEOMETRY>
 tbox::Pointer< hier::PatchDataFactory<DIM> >
-IndexDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
+IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 {
-   return(new IndexDataFactory<DIM,TYPE>(ghosts));
+   return(new IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>(ghosts));
 }
 
 /*
@@ -63,21 +63,21 @@ IndexDataFactory<DIM,TYPE>::cloneFactory(const hier::IntVector<DIM>& ghosts)
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
+template<int DIM, class TYPE, class BOX_GEOMETRY>
 tbox::Pointer< hier::PatchData<DIM> >
-IndexDataFactory<DIM,TYPE>::allocate(
+IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::allocate(
    const hier::Box<DIM>& box, tbox::Pointer<tbox::Arena> pool) const
 {
    if (pool.isNull()) {
       pool = tbox::ArenaManager::getManager()->getStandardAllocator();
    }
-   hier::PatchData<DIM> *pd = new (pool) IndexData<DIM,TYPE>(box, this -> d_ghosts);
+   hier::PatchData<DIM> *pd = new (pool) IndexData<DIM,TYPE,BOX_GEOMETRY>(box, this -> d_ghosts);
    return(tbox::Pointer< hier::PatchData<DIM> >(pd, pool));
 }
 
-template<int DIM, class TYPE>
+template<int DIM, class TYPE, class BOX_GEOMETRY>
 tbox::Pointer< hier::PatchData<DIM> >
-IndexDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
+IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::allocate(const hier::Patch<DIM>& patch,
                                      tbox::Pointer<tbox::Arena> pool) const
 {
    return (allocate(patch.getBox(), pool));
@@ -92,11 +92,11 @@ IndexDataFactory<DIM,TYPE>::allocate(const hier::Patch<DIM>& patch,
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
+template<int DIM, class TYPE, class BOX_GEOMETRY>
 tbox::Pointer< hier::BoxGeometry<DIM> >
-IndexDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
+IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::getBoxGeometry(const hier::Box<DIM>& box) const
 {
-   hier::BoxGeometry<DIM> *boxgeometry = new CellGeometry<DIM>(box, this -> d_ghosts);
+   hier::BoxGeometry<DIM> *boxgeometry = new BOX_GEOMETRY(box, this -> d_ghosts);
    return(tbox::Pointer< hier::BoxGeometry<DIM> >(boxgeometry));
 }
 
@@ -108,11 +108,11 @@ IndexDataFactory<DIM,TYPE>::getBoxGeometry(const hier::Box<DIM>& box) const
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
-size_t IndexDataFactory<DIM,TYPE>::getSizeOfMemory(const hier::Box<DIM>& box) const
+template<int DIM, class TYPE, class BOX_GEOMETRY>
+size_t IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::getSizeOfMemory(const hier::Box<DIM>& box) const
 {
    NULL_USE(box);
-   return(tbox::Arena::align(sizeof(IndexData<DIM,TYPE>)));
+   return(tbox::Arena::align(sizeof(IndexData<DIM,TYPE,BOX_GEOMETRY>)));
 }
 
 /*
@@ -124,8 +124,8 @@ size_t IndexDataFactory<DIM,TYPE>::getSizeOfMemory(const hier::Box<DIM>& box) co
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
-bool IndexDataFactory<DIM,TYPE>::validCopyTo(
+template<int DIM, class TYPE, class BOX_GEOMETRY>
+bool IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>::validCopyTo(
    const tbox::Pointer<hier::PatchDataFactory<DIM> >& dst_pdf) const
 {
 
@@ -136,7 +136,7 @@ bool IndexDataFactory<DIM,TYPE>::validCopyTo(
     * and type.
     */
    if (!valid_copy) {
-      tbox::Pointer< IndexDataFactory<DIM,TYPE> > idf = dst_pdf;
+      tbox::Pointer< IndexDataFactory<DIM,TYPE,BOX_GEOMETRY> > idf = dst_pdf;
       if (!idf.isNull()) {
          valid_copy = true;
       }

@@ -330,8 +330,7 @@ xlc		????
 
 pathscale	Does not currently work.  Appears to be a compiler bug.
 
-HDF5		1.4.4, 1.4.5, 1.6.5
-		HDF 1.8.X is NOT supported; the HDF API has changed.
+HDF5		1.4.4, 1.4.5, 1.6.5, 1.8.1
 
 MPICH 		1.2.5.2, 1.2.7
 

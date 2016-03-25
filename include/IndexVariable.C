@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/IndexVariable.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/index/IndexVariable.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2272 $
+// Modified:	$LastChangedDate: 2008-07-07 10:38:57 -0700 (Mon, 07 Jul 2008) $
 // Description:	hier::Variable class for defining irregular index variables
 //
 
@@ -31,15 +31,15 @@ namespace SAMRAI {
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
-IndexVariable<DIM,TYPE>::IndexVariable(const std::string &name)
-:  hier::Variable<DIM>(name, new IndexDataFactory<DIM,TYPE>(hier::IntVector<DIM>(0))) 
+template<int DIM, class TYPE, class BOX_GEOMETRY>
+IndexVariable<DIM,TYPE,BOX_GEOMETRY>::IndexVariable(const std::string &name) 
+:  hier::Variable<DIM>(name, new IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>(hier::IntVector<DIM>(0))) 
                                                         // default zero ghost cells
 {
 }
 
-template<int DIM, class TYPE>
-IndexVariable<DIM,TYPE>::~IndexVariable()
+template<int DIM, class TYPE, class BOX_GEOMETRY>
+IndexVariable<DIM,TYPE,BOX_GEOMETRY>::~IndexVariable()
 {
 }
 
@@ -53,17 +53,17 @@ IndexVariable<DIM,TYPE>::~IndexVariable()
 *************************************************************************
 */
 
-template<int DIM, class TYPE>
-IndexVariable<DIM,TYPE>::IndexVariable(
-   const IndexVariable<DIM,TYPE>& foo)
+template<int DIM, class TYPE,class BOX_GEOMETRY>
+IndexVariable<DIM,TYPE,BOX_GEOMETRY>::IndexVariable(
+   const IndexVariable<DIM,TYPE,BOX_GEOMETRY>& foo)
 :  hier::Variable<DIM>(NULL, NULL)
 {
    // not implemented
    NULL_USE(foo);
 }
 
-template<int DIM, class TYPE>
-void IndexVariable<DIM,TYPE>::operator=(const IndexVariable<DIM,TYPE>& foo)
+template<int DIM, class TYPE,class BOX_GEOMETRY>
+void IndexVariable<DIM,TYPE,BOX_GEOMETRY>::operator=(const IndexVariable<DIM,TYPE,BOX_GEOMETRY>& foo)
 {
    // not implemented
    NULL_USE(foo);

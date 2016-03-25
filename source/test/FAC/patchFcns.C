@@ -1,19 +1,19 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/patchFcns.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/FAC/patchFcns.C $
  * Package:     SAMRAI tests
  * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1917 $
- * Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+ * Revision:    $LastChangedRevision: 2274 $
+ * Modified:    $LastChangedDate: 2008-07-07 11:10:49 -0700 (Mon, 07 Jul 2008) $
  * Description: Misc patch functions used in FAC solver tests.
  */
 
 #include "SAMRAI_config.h"
 
 #include "MDA_Access.h"
+#include "ArrayDataAccess.h"
 #include "QuarticFcn.h"
 #include "SinusoidFcn.h"
 
-#include "arrayConversion.h"
 #include "setArrayData.h"
 
 #include "Patch.h"
@@ -39,7 +39,7 @@ void scaleArrayData (
   pdat::ArrayData<NDIM,double> &ad ,
   double scale )
 {
-  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = arrayData2ArrayAccess(ad);
+   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = pdat::ArrayDataAccess::access(ad);
   setArrayDataToScaled( t4 ,
 			ad.getBox().lower() ,
 			ad.getBox().upper() ,
@@ -55,7 +55,7 @@ void setArrayDataToConstant(
   const geom::CartesianPatchGeometry<NDIM> &patch_geom ,
   double value )
 {
-  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = arrayData2ArrayAccess(ad);
+   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = pdat::ArrayDataAccess::access(ad);
   setArrayDataToConstant( t4 ,
 			  ad.getBox().lower() ,
 			  ad.getBox().upper() ,
@@ -73,7 +73,7 @@ void setArrayDataTo(
   pdat::ArrayData<NDIM,double> &ad ,
   const geom::CartesianPatchGeometry<NDIM> &patch_geom )
 {
-  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = arrayData2ArrayAccess(ad);
+  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = pdat::ArrayDataAccess::access(ad);
   setArrayDataTo( t4 ,
 		   ad.getBox().lower() ,
 		   ad.getBox().upper() ,
@@ -94,7 +94,7 @@ void setCellDataToSinusoid(
   tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >
     patch_geom = patch.getPatchGeometry();
   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> >
-    t4 = arrayData2ArrayAccess(cd.getArrayData());
+    t4 = pdat::ArrayDataAccess::access(cd.getArrayData());
   setArrayDataToSinusoid( t4 ,
 			  cd.getGhostBox().lower() ,
 			  cd.getGhostBox().upper() ,
@@ -112,7 +112,7 @@ void setArrayDataToPerniceExact(
   pdat::ArrayData<NDIM,double> &ad ,
   const geom::CartesianPatchGeometry<NDIM> &patch_geom )
 {
-  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = arrayData2ArrayAccess(ad);
+  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = pdat::ArrayDataAccess::access(ad);
   setArrayDataToPerniceExact( t4 ,
 			      ad.getBox().lower() ,
 			      ad.getBox().upper() ,
@@ -129,7 +129,7 @@ void setArrayDataToPerniceSource(
   pdat::ArrayData<NDIM,double> &ad ,
   const geom::CartesianPatchGeometry<NDIM> &patch_geom )
 {
-  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = arrayData2ArrayAccess(ad);
+  MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> > t4 = pdat::ArrayDataAccess::access(ad);
   setArrayDataToPerniceSource( t4 ,
 			       ad.getBox().lower() ,
 			       ad.getBox().upper() ,
@@ -150,7 +150,7 @@ void setCellDataToQuartic(
   tbox::Pointer<geom::CartesianPatchGeometry<NDIM> >
     patch_geom = patch.getPatchGeometry();
   MDA_Access<double,NDIM,MDA_OrderColMajor<NDIM> >
-    t4 = arrayData2ArrayAccess(cd.getArrayData());
+    t4 = pdat::ArrayDataAccess::access(cd.getArrayData());
   setArrayDataToQuartic( t4 ,
 			  cd.getGhostBox().lower() ,
 			  cd.getGhostBox().upper() ,

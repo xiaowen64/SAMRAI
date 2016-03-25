@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/IndexDataFactory.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/index/IndexDataFactory.h $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: hier::Patch data factory for irregularly indexed patch data
 //
 
@@ -37,7 +37,7 @@ namespace SAMRAI {
  * @see hier::PatchDataFactory
  */
 
-template<int DIM, class TYPE>
+template<int DIM, class TYPE, class BOX_GEOMETRY>
 class IndexDataFactory : public hier::PatchDataFactory<DIM>
 {
 public:
@@ -51,7 +51,7 @@ public:
    /**
     * Virtual destructor for the irregular data factory class.
     */
-   virtual ~IndexDataFactory<DIM,TYPE>();
+   virtual ~IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>();
 
    /**
     * @brief Abstract virtual function to clone a patch data factory.
@@ -76,7 +76,7 @@ public:
             tbox::Pointer<tbox::Arena> pool = (tbox::Arena *) NULL) const;
 
    /**
-    * Virtual factory function to allocate a concrete cell data object.
+    * Virtual factory function to allocate a concrete index data object.
     * Same as above function, except passes in a patch instead of a box.
     */
    virtual tbox::Pointer< hier::PatchData<DIM> > allocate(
@@ -89,7 +89,7 @@ public:
     * and data dependencies between objects.
     */
    virtual tbox::Pointer< hier::BoxGeometry<DIM> >
-   getBoxGeometry(const hier::Box<DIM>& box) const;
+      getBoxGeometry(const hier::Box<DIM>& box) const;
 
    /**
     * Calculate the amount of memory needed to store the irregular data
@@ -125,8 +125,8 @@ public:
 
 private:
 
-   IndexDataFactory(const IndexDataFactory<DIM,TYPE>&);
-   void operator=(const IndexDataFactory<DIM,TYPE>&);
+   IndexDataFactory(const IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>&);
+   void operator=(const IndexDataFactory<DIM,TYPE,BOX_GEOMETRY>&);
 
 };
 

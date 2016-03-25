@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/VisItDataWriter.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/apputils/plotting/VisItDataWriter.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $LastChangedRevision: 2141 $
-// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2220 $
+// Modified:    $LastChangedDate: 2008-06-17 18:19:28 -0700 (Tue, 17 Jun 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
@@ -4448,11 +4448,22 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputIntegerArray2D(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(space >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(group_id,
+                                key.c_str(),
+                                H5T_NATIVE_INT,
+                                space,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT,
+				H5P_DEFAULT);
+#else	 
       hid_t dataset = H5Dcreate(group_id,
                                 key.c_str(),
                                 H5T_NATIVE_INT,
                                 space,
                                 H5P_DEFAULT);
+#endif
+
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dataset >= 0);
 #endif
@@ -4511,11 +4522,22 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputDoubleArray2D(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(space >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(group_id,
+                                key.c_str(),
+                                H5T_NATIVE_DOUBLE,
+                                space,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT);
+#else	 
       hid_t dataset = H5Dcreate(group_id,
                                 key.c_str(),
                                 H5T_NATIVE_DOUBLE,
                                 space,
                                 H5P_DEFAULT);
+#endif
+
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dataset >= 0);
 #endif
@@ -4584,11 +4606,19 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchExtentsStructArray(
 #endif
       hsize_t dim1[1];
       dim1[0] = VISIT_FIXED_DIM;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1);
+#else	 
       hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1, NULL);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(intXdType >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1);
+#else	 
       hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1, NULL);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(doubleXdType >= 0);
 #endif
@@ -4622,11 +4652,21 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchExtentsStructArray(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(group_id,
+                                key.c_str(),
+                                pe_id,
+                                space,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT);
+#else	 
       hid_t dataset = H5Dcreate(group_id,
                                 key.c_str(),
                                 pe_id,
                                 space,
                                 H5P_DEFAULT);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dataset >= 0);
 #endif
@@ -4731,11 +4771,21 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchMapStructArray(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(group_id,
+                                key.c_str(),
+                                pm_id,
+                                space,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT);
+#else	 
       hid_t dataset = H5Dcreate(group_id,
                                 key.c_str(),
                                 pm_id,
                                 space,
                                 H5P_DEFAULT);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dataset >= 0);
 #endif
@@ -4837,11 +4887,21 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputPatchMinMaxStructArray(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(group_id,
+                                key.c_str(),
+                                s1_tid,
+                                space,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT);
+#else	 
       hid_t dataset = H5Dcreate(group_id,
                                 key.c_str(),
                                 s1_tid,
                                 space,
                                 H5P_DEFAULT);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dataset >= 0);
 #endif
@@ -4927,11 +4987,21 @@ template<int DIM> void VisItDataWriter<DIM>::HDFputChildParentStructArray(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(errf >= 0);
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(group_id,
+                                key.c_str(),
+                                s1_tid,
+                                space,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT,
+                                H5P_DEFAULT);
+#else	 
       hid_t dataset = H5Dcreate(group_id,
                                 key.c_str(),
                                 s1_tid,
                                 space,
                                 H5P_DEFAULT);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dataset >= 0);
 #endif

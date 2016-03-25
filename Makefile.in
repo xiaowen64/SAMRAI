@@ -2,8 +2,8 @@
 ## File:	Makefile.in
 ## Package:	SAMRAI
 ## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2170 $
-## Modified:	$LastChangedDate: 2008-04-30 18:00:41 -0700 (Wed, 30 Apr 2008) $
+## Revision:	$LastChangedRevision: 2219 $
+## Modified:	$LastChangedDate: 2008-06-12 13:14:48 -0700 (Thu, 12 Jun 2008) $
 ## Description:	makefile for the entire SAMRAI distribution
 ##
 
@@ -281,9 +281,11 @@ install:
 		   $(INSTALL) -c -m 644 $$i $(INSTDIR)/lib;             \
 		done                                                    \
 	fi
-	for i in bin/*; do               				\
-	   $(INSTALL) -c -m 755 $$i $(INSTDIR)/bin;                     \
-	done                                                            \
+	if test -f bin/restart-redistribute; then                       \
+		for i in bin/*; do               			\
+		   $(INSTALL) -c -m 755 $$i $(INSTDIR)/bin;             \
+		done                                                    \
+	fi
 
 
 # Rebuild config.status if configure changed.

@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: Construction and management of embedded boundary data 
 //              on an AMR hierarchy.
 // 
@@ -19,6 +19,7 @@
 #include "Box.h"
 #include "CartesianGridGeometry.h"
 #include "CellVariable.h"
+#include "CellGeometry.h"
 #include "CubesPatchInterface.h"
 #include "tbox/Database.h"
 #include "EmbeddedBoundaryDefines.h"
@@ -38,6 +39,7 @@
 #include "tbox/Timer.h"
 #include "VisItDataWriter.h"
 #include "VisMaterialsDataStrategy.h"
+
 
 #ifndef NULL
 #define NULL (0)
@@ -722,7 +724,7 @@ private:
    /*
     * Data members that defined the embedded Boundary.
     */
-   tbox::Pointer< pdat::IndexVariable<DIM,appu::CutCell<DIM> > > d_ebdry_var;
+   tbox::Pointer< pdat::IndexVariable<DIM,appu::CutCell<DIM>, pdat::CellGeometry<DIM> > > d_ebdry_var;
    tbox::Pointer< pdat::CellVariable<DIM,int> > d_cell_flag_var;
    tbox::Pointer< pdat::CellVariable<DIM,double> > d_cell_vol_var;
    tbox::Pointer< pdat::NodeVariable<DIM,int> > d_node_flag_var;

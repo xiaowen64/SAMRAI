@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v2.3.0
+                     Release Notes for SAMRAI v2.4.0
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -50,18 +50,11 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) User control over SAMRAI logging via a new Logger class.
+(1) 'allow_patches_smaller_than_minimum_size_to_prevent_overlaps' flag added
+to GriddingAlgorithm.
 
-(2) Round method added to MathUtilities class.
+(2) 'check_overlapping_patches' flag added to GriddingAlgorithm.
 
-(3) Query function that tells location of BoundaryBox added
-
-(4) Capability for user to manually set decomposition and load balance of
-    coarsest level in a hierarchy 
-
-(5) Additional options for writing SAMRAI restart files.
-
-(6) Configure option for deprecated features.
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -70,43 +63,20 @@ descriptions of items in the following list are provided below.
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) Building with/without extra types working again.
+(1) Improved support for implicit template instantiation
 
-(2) Fixed bug in KINSOL wrapper when setting MaxKrylovDimension.
+(2) Added support for current HDF releases.
 
-(3) Improved template instantiation for STL classes.
+(3) Removed fixed number of timers and statistics.
 
-(4) KAI KCC compiler code removed.
+(4) IndexData underwent a significant rewrite.
 
-(5) configure and standard environment variables
+(5) Configure scripts improved.
 
-(6) Intel icc rpath configure improved
+(6) 'resolve_nonnesting_tags' input flag in GriddingAlgorithm changed.
 
-(7) Improved MS VC++ support.
-
-(8) Compiling in source directory.
-
-(9) Calculation of timer overhead values
-
-(10) Nonlinear example code was not working with KINSOL and regridding.
-
-(11) KINSOL initialize method interface change.
-
-(12) PETSC differencing parameter strategy default set to WP
-
-(13) Array constructor interface no longer takes optional is_standard_type flag.
-
-(14) "getNumber" methods renamed to "getNumberOf"
-
-(15) Make tools is separated from library build
-
-(16) Added index operator[] to BoxArray class.
-
-(17) PatchGeometry API for getting patch boundaries changed to
-     get*Boundaries from get*Boundary.
-
-(18) Gridding algorithm ratio_to_coarser input will fill in missing 
-     values.
+(7) extra behavior of 'allow_patches_smaller_than_ghostwidth" flag in
+GriddingAlgorithm removed.
 
 *****************************************************************************
 
@@ -114,304 +84,126 @@ descriptions of items in the following list are provided below.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-(1) User control over SAMRAI logging.
+(1) 'allow_patches_smaller_than_minimum_size_to_prevent_overlaps' flag added
+to GriddingAlgorithm.
 
-Two new classes have been introduced to enable user control over the
-logging of SAMRAI messages.  This should allow for better integration
-to applications.
+When this flag is set to false, the default value, patches created for a
+new level are grown to enforce the minimum patch size.  This sometimes causes
+there to be patches on a level that overlap in index space.  For users who
+want to prevent this kind of overlap, this flag should be set to true.  Users
+who used the flag 'allow_patches_smaller_than_ghostwidth' to prevent overlaps
+should now use this flag instead.
 
-The tbox::Logger is a singleton class with methods to log messages.
-All SAMRAI log messages are sent to this class (e.g. logWarning()
-method ).  tbox::Logger delegates the mechanism of logging to the
-Logger::Appender class.  Default implementations of this class are
-provided to replicate previous behavior of logging to the plog stream.
+(2) 'check_overlapping_patches' flag added to GriddingAlgorithm.
 
-The user may supply Logger::Appender implementations to direct SAMRAI
-messages to a different destination, most commonly an application
-specific logging mechanism.  See the
-source/test/logger/userloggertest.C file for a simple example and the
-Logger documentation for API information.
-
-NOTE: The logging API in tbox::Utilities was removed.  If this was
-being used the logging methods in the tbox::Logger class should be
-used instead.  If the TBOX_ABORT and TBOX_WARNING macros are being
-used, no changes are required.
-
-
-(2) Round method added to MathUtilities class.
-
-For portability a round method was added to the MathUtilities class
-since cmath does not yet have a round method.
-
-(3) Query function that tells location of BoundaryBox added
-
-BoundaryBox::getBoundaryDirection enables the querying of a BoundaryBox
-to determine whether the boundary box is above or below a patch in a given
-coordinate direction.  It returns the enumerated type 'BoundaryDirection' which
-can have the value 'LOWER', 'MIDDLE', or 'UPPER'.
-
-
-(4) Capability for user to manually set decomposition and load balance of
-coarsest level in a hierarchy
-
-TimeRefinementIntegrator::initializeHierarchy now has optional arguments with
-which a user can specify the decomposition and load balance of the coarsest
-level of the new hierarchy.  The arguments are a BoxArray that specifies the
-box decomposition of the level, and a ProcessorMapping that maps each box in
-the decomposition to a processor.
-
-(5) Additional options for writing SAMRAI restart files.
-
-API's are supplied for writing SAMRAI restart files to a SILO file and
-options have been added to enable writing SAMRAI restart information
-to a file (SILO/HDF) supplied by the application.  This will enable a
-SAMRAI application to store the SAMRAI specific restart data to the
-applications existing file rather than creating a separate one.
-
-See docs/userdocs/userguide.pdf for more information.
-
-(6) Configure option for deprecated features.
-
-The configure script option "--enable-deprecated" and
-"--disable-deprecated" may be used to include/exclude deprecated
-features from the build.  Deprecated features will be removed from
-future SAMRAI releases; the most frequent deprecation is removal of a
-method from a class.
-
-The default is to enable deprecated features for backwards compatibility.
+This flag can cause the checking of a newly-created level for any overlapping
+patches.  The user can select 'i' (ignore), the default value, to skip the
+check completely, 'w' (warn) to check for overlapping patches and output a
+warning if any exist, or 'e' (error) to stop the run with an error if any
+exist.  The check can be expensive, so the 'w' and 'e' options are
+recommended only for debugging in applications that need to prevent overlaps.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
 -----------------------------------------------------------------------------
 
-(1) Building with/without extra types working again.
-
-The SAMRAI configure script takes optional arguments to build the
-template types on bool, char, float, and dcomplex:
-
-  --enable-char           build char patch datatypes
-  --enable-float          build float patch datatypes
-  --enable-bool           build boolean patch datatypes
-  --enable-dcomplex       build double complex patch datatypes
-
-This feature was broken in previous releases and all the types were
-built regardless of what was specified on the configure line. These
-types are no longer built by default, the --enable flag for that type
-is required.
-
-The number of object files when building the default configuration was
-reduced to 1544 from 2240 and the libraries were reduced to 147MB from
-177MB (under Linux GNU 4.2.2).
-
-(2) Fixed bug in KINSOL wrapper when setting MaxKrylovDimension.
-
-Was setting setMaxIterations(d_max_krylov_dimension) when this should
-have been setMaxKrylovDimension(d_max_krylov_dimension).
-
-art7816  
-
-(3) Improved template instantiation for STL classes.
-
-Since SAMRAI is normally compiled using explicit template
-instantiation, the instantiation of the STL classes caused an
-explosion of templates that were required by STL.  To address this
-issue the toolbox/templates/special directory is now compiled with
-implicit template instantiation.  This should eliminate a number of
-problems with unresolved symbols when compiling the library.
-
-The SAMRAI team is currently evaluating the explicit template
-instantiation decision.  When this decision was originally made the
-difference in compilation times was over 30 minutes.  With faster
-machines and better compilers this is not as significant a problem.
-
-(4) KAI KCC compiler code removed.
-
-The old KAI KCC support was stripped from the configure scripts and
-other files.  KCC had not been supported for some time by SAMRAI and
-all references to it have been or will removed.
-
-(5) configure and standard environment variables
-
-Several users reported problems with configure and standard configure
-environment variables (e.g. CFLAGS etc).  The SAMRAI configure script
-was not including these in the Makefile.config.  The Makefile.config
-should now include the flags mentioned in configure --help notes and
-use them during the compilation of the library.
-
-(6) Intel icc rpath configure improved
-
-Intel compilation detection of shared library path syntax was improved
-in autoconf.  The previous configure script was not able to determine
-the syntax for including a shared library directory in the link line
-(e.g. -rpath, -R etc).  This was improved so users should not have to
-manually specify the syntax on the configure line in most cases.  This
-was specific to the Intel icc compiler.
-
-(7) Improved MS VC++ support.
-
-Minor changes to code were made to enable compiling with Microsoft
-Visual Studio 2008.  This is based on user submitted patches and is
-not tested by the SAMRAI team.
-
-(8) Compiling in source directory.
-
-Configuring and compiling in the source directory should work again.
-This is not the recommended compilation model, we suggest creating an
-object directory and configuring/compiling in it.
-
-(9) Calculation of timer overhead values.
-
-The timer overhead values were hard-coded and not correct on most
-machines; these values are now being computed at runtime.
-
-(10) Nonlinear example code was not working with KINSOL and regridding.
-
-The nonlinear example code had a problem with some smart pointer
-manipulation which was causing a bug when regridding was turned on and
-KINSOL was being used.
-
-(11) KINSOL initialize method interface change.
-
-This change only effects KINSOL users who are setting one of the
-scaling vectors.
-
-The KINSOL initialize method previously took a single argument and the
-solution and residual scaling vectors were set using additional "set"
-methods.  This was replaced with a single initialize method that has
-two optional arguments for setting the scaling vectors.
-
-So the following three methods:
-
-void initialize(SundialsAbstractVector* solution);
-
-void setSolutionScaleVector(SundialsAbstractVector* uscale);
-
-void setResidualScaleVector(SundialsAbstractVector* fscale);
-
-are replaced with a single initialize method of:
-
-void initialize(SundialsAbstractVector* solution, 
-     SundialsAbstractVector* uscale = NULL, 
-     SundialsAbstractVector* fscale = NULL); 
-
-(12) PETSc differencing parameter strategy default set to WP
-
-Previous releases used the value "default" as the default value for
-the differencing parameter strategy, this was changed to be the PETSc
-value of MATMFFD_WP to match current PETSc API.  This can be set to
-MATMFFD_DS via the setDifferencingParameterMethod method of
-SNES_SAMRAIContext.  See PETSc documentation for more information on
-these options.
-
-This should not change the behavior but should remove a warning
-message being generated by PETSc.
-
-(13) Array constructor interface no longer takes optional is_standard_type flag.
-
-The Array constructors previously had an optional flag to signal if
-the templated type was one of the standard (builtin) types.  The
-mechanism to determine if the templated type is a standard type was
-moved inside the Array class and this flag is no longer supported.
-
-art7725
-
-(14) "getNumber" methods renamed to "getNumberOf"
-
-Users reported naming differences in the methods that return the
-number of something.  Both "getNumber" and "getNumberOf" were used.
-The method names were changed to be "getNumberOf".
-
-A conversion script "convert2.3" in tools/scripts/conversion2.3 will
-do a text replacement of the names on a source code tree.  See the
-README in the conversion2.3 directory for more information.
-
-The following names were changed:
-
-getNumberBlocks
-getNumberBoundaryNodes
-getNumberEquivalenceClasses
-getNumberItems
-getNumberItemsInEquivalenceClass
-getNumberIterations
-getNumberLevels
-getNumberNearestNeighborNodes
-getNumberNeighbors
-getNumberOutsideNeighborNodes
-getNumberRegisteredPatchDataIndices
-getNumberRegisteredVariableContexts
-getNumberRegisteredVariables
-
-art8253
-
-(15) Make tools is separated from library build.
-
-The SAMRAI tools are built using 
-
-make tools
-
-instead of building automatically built with the library.  This is
-currently only used to build the restart-redistribute utility.
-
-(16) Added index operator[] to BoxArray class
-
-The BoxArray class was using getBox() and operator "()" as operator to index.  The more
-familiar "[]" operator was added.
-
-E.G.
-BoxArray<2> boxes;
-boxes[0] = box;
-
-Is more array like than the previous:
-
-boxes(0) = box;
-
-getBox() and operator() are deprecated and will be removed.
-
-
-(17) PatchGeometry API for getting patch boundaries changed to
-     get*Boundaries from get*Boundary.
-
-SAMRAI does not have a consistent naming convention for boundary
-information.  Various classes use Boundaries, Boundary, and/or
-BoundaryBoxes for the same notion of a set of BoundaryBox that
-describe a boundary.
-
-PatchGeometry's API was change from get*Boundary methods to
-get*Boundaries method to match other classes (e.g. CoarseFineBoundary)
-as a minor step towards increasing the consistency of the names.  This
-is only a partial fix for a larger naming problem.
-
-(18) Gridding algorithm ratio_to_coarser input will fill in missing 
-     values.
-
-The array of level values for ratio_to_coarser will use the finest
-value supplied for levels that are finer in the same manner as the
-other gridding algorithm input.
-
-For example:
-
-   max_levels = 3         // Maximum number of levels in hierarchy.
-
-   ratio_to_coarser {      // vector ratio to next coarser level
-      level_1 = 4 , 4
-      // all finer levels will use same values as level_0...
-   }
-
-
-Is the same as:
-
-   ratio_to_coarser {      // vector ratio to next coarser level
-      level_1 = 4 , 4
-      level_2 = 4 , 4
-   }
-
-*****************************************************************************
-
------------------------------------------------------------------------------
-                Known Problems
------------------------------------------------------------------------------
-
-(1) 
+(1) Improved support for implicit template instantiation
+
+Previous releases of SAMRAI had a configure option to optionally use
+an implicit instantiation model when compiling via the
+
+   --enable-implicit-template-instantiation
+
+flag.  The support was incomplete as SAMRAI compiled files with
+explicit instantiated statements for all the templates.  Thus the
+library was much larger than strictly necessary.  With implicit
+compilation the compiler is responsible for doing the instantiations
+so SAMRAI's manual explicit statements are redundant.
+
+The make system was changed so that when the implicit compilation mode
+is used the explicit instantiation statements are bypassed (basically
+the "templates" directories are ignored).   
+
+This results in dramatic smaller SAMRAI libraries and reduced build
+times for the library.  Note that with implicit template instantiation
+there is a potential for increased application compilation times
+(since the templates are built when the application needs them by the
+compiler).
+
+In testing the SAMRAI team has found that some platforms/compilers
+actually achieve better overall compilation times with the implicit
+mode.  On a local IBM PowerPC machine using XLC we have observed a 50%
+reduction in building the example codes.  When using GCC on a desktop
+machine the application compile times increased by a factor of 3 when
+using the implicit compilation mode.
+
+(2) Added support for current HDF releases.
+
+HDF versions 1.8.x changed the API.  The SAMRAI HDF classes now
+support the 1.6.x and 1.8.x API's.  Most of the testing and running is
+currently still done with HDF 1.6.x
+
+(3) Removed fixed number of timers and statistics.
+
+Previous versions allocated a fixed number of timers and statistics.
+This limitation was removed and the TimerManager and Statistician
+singletons can handle any number of timers (subject to memory
+limitations).
+
+The API for SAMRAIManager was changed to remove the following methods
+(which are no longer needed):
+
+getMaxNumberTimers();
+setMaxNumberTimers(int maxnum);
+getMaxNumberStatistics();
+setMaxNumberStatistics(int maxnum);
+
+(4) IndexData underwent a significant rewrite.
+
+IndexData, IndexVariable, and IndexDataFactory types are now have a
+template parameter for the BoxGeometry being used.  Previously
+IndexData was hard-coded for cell centered data only.  To recreate old
+behavior simply add pdat::CellGeometry<DIM> to the template
+parameters list.
+
+The performance of IndexData for several operations was improved.
+Removal of items was particularly poor requiring an O(N) where N is
+number of items stored.  These were fixed to be O(1).  Other
+operations were also optimized to improve performance by a
+factor of 2-3.
+
+The API was extended to include new methods for insertion of items
+that will improve performance in specific use cases.  See
+documentation for IndexData replaceAddItem and addItemPointer for
+additional information.
+
+(5) Configure scripts improved.
+
+The autoconf configure scripts were improved, primarily in adding
+better Fortran name mangling support.
+
+(6) 'resolve_nonnesting_tags' input flag in GriddingAlgorithm changed
+
+The input flag 'resolve_nonnesting_tags' in GriddingAlgorithm has been
+changed to 'check_nonrefined_tags'.  If the tagging operation creates a tag
+that violates the nesting requirements, its location in index space
+will not be refined when creating a finer level.  This flag allows the
+user to determine what to do when this occurs, whether to ignore the tag
+completely, output a warning, or stop execution of the run with an error
+message.
+
+(7) extra behavior of 'allow_patches_smaller_than_ghostwidth" flag in
+GriddingAlgorithm removed.
+
+Previously, this flag, when set to true, allowed the minimum patch size to
+be smaller than the maximum ghost width of the problem, and it also
+suppressed the strict enforcement of the minimum patch size.  Now, it only
+has the first effect, allowing a user to specify a minimum patch size
+smaller than the maximum ghost width.  Users who used this flag to prevent
+patches on a level from overlapping should no use the flag
+'allow_patches_smaller_than_minimum_size_to_prevent_overlaps'. (See "What's
+New".)
+ 
 
 =============================================================================
 =============================================================================

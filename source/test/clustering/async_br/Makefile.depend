@@ -170,6 +170,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -268,7 +269,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -322,6 +324,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -383,7 +386,9 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -414,29 +419,21 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
 	$(INCLUDE_SAM)/SideVariable.C					\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
 	$(INCLUDE_SAM)/VisDerivedDataStrategy.C				\
 	$(INCLUDE_SAM)/VisItDataWriter.C				\
-	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C
+	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
 
-FILE_1=MDA_Access_instances.o
+FILE_1=SinusoidalFrontTagger.o
 DEPENDS_1:=\
-	$(OBJECT)/include/SAMRAI_config.h MDA_Access.h			\
-	MDA_Access_instances.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_1 +=\
-	
-endif
-
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
-
-FILE_2=SinusoidalFrontTagger.o
-DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataBasicOps.h	\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
@@ -547,6 +544,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/HierarchyDataOpsReal.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/MBUtilities.h		\
+	$(INCLUDE_SAM)/MDA_Access.h					\
 	$(INCLUDE_SAM)/MultiblockCellDataTranslator.h			\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.h			\
 	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.h			\
@@ -595,6 +593,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -681,17 +680,18 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/Timer.I $(INCLUDE_SAM)/tbox/Timer.h		\
 	$(INCLUDE_SAM)/tbox/TimerManager.h				\
 	$(INCLUDE_SAM)/tbox/Utilities.h $(INCLUDE_SAM)/tbox/XDRStream.I	\
-	$(INCLUDE_SAM)/tbox/XDRStream.h MDA_Access.h			\
-	SinusoidalFrontTagger.C SinusoidalFrontTagger.h
+	$(INCLUDE_SAM)/tbox/XDRStream.h SinusoidalFrontTagger.C		\
+	SinusoidalFrontTagger.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_2 +=\
+DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -744,6 +744,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -805,7 +806,9 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -834,29 +837,33 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SideIterator.C $(INCLUDE_SAM)/SideOverlap.C	\
 	$(INCLUDE_SAM)/SideVariable.C					\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
 	$(INCLUDE_SAM)/VisDerivedDataStrategy.C				\
 	$(INCLUDE_SAM)/VisItDataWriter.C				\
-	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C
+	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 
-FILE_3=get-input-filename.o
-DEPENDS_3:=\
+FILE_2=get-input-filename.o
+DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h get-input-filename.C		\
 	get-input-filename.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_3 +=\
+DEPENDS_2 +=\
 	
 endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 
-FILE_4=main.o
-DEPENDS_4:=\
+FILE_3=main.o
+DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/ArrayData.I	\
 	$(INCLUDE_SAM)/ArrayData.h $(INCLUDE_SAM)/ArrayDataBasicOps.h	\
 	$(INCLUDE_SAM)/ArrayDataIterator.I				\
@@ -1053,6 +1060,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -1202,7 +1210,7 @@ DEPENDS_4:=\
 	SinusoidalFrontTagger.h get-input-filename.h main.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_4 +=\
+DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataBasicOps.C	\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataMiscellaneousOpsReal.C			\
@@ -1215,8 +1223,8 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/BalanceUtilities.C				\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
-	$(INCLUDE_SAM)/BergerRigoutsos.C $(INCLUDE_SAM)/BinaryTree.C	\
-	$(INCLUDE_SAM)/BoundaryBox.C					\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BergerRigoutsos.C\
+	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeneratorStrategy.C				\
@@ -1271,6 +1279,7 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -1356,7 +1365,9 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -1427,13 +1438,17 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
 	$(INCLUDE_SAM)/StandardTagAndInitialize.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
 	$(INCLUDE_SAM)/VisDerivedDataStrategy.C				\
 	$(INCLUDE_SAM)/VisItDataWriter.C				\
-	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C
+	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C			\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 

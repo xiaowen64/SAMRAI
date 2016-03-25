@@ -1,11 +1,14 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/petsc/PETScAbstractVectorReal.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/packages/petsc/PETScAbstractVectorReal.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2195 $
+// Modified:    $LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description: Interface to C++ vector implementation for PETSc package.
 //
+
+#ifndef included_solv_PETScAbstractVectorReal_C
+#define included_solv_PETScAbstractVectorReal_C
 
 #include "PETScAbstractVectorReal.h"
 
@@ -1059,4 +1062,6 @@ PETScAbstractVectorReal<TYPE>::vecGetValues(
 
 }
 }
+#endif
+
 #endif

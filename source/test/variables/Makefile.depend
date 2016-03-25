@@ -116,7 +116,8 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/ArrayData.C $(INCLUDE_SAM)/ArrayDataIterator.C	\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -127,12 +128,13 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CellData.C $(INCLUDE_SAM)/CellDataFactory.C	\
 	$(INCLUDE_SAM)/CellGeometry.C $(INCLUDE_SAM)/CellIndex.C	\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
-	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/FaceData.C		\
-	$(INCLUDE_SAM)/FaceDataFactory.C $(INCLUDE_SAM)/FaceGeometry.C	\
-	$(INCLUDE_SAM)/FaceIndex.C $(INCLUDE_SAM)/FaceIterator.C	\
-	$(INCLUDE_SAM)/FaceOverlap.C $(INCLUDE_SAM)/FaceVariable.C	\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/MBUtilities.C		\
+	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/FaceData.C $(INCLUDE_SAM)/FaceDataFactory.C	\
+	$(INCLUDE_SAM)/FaceGeometry.C $(INCLUDE_SAM)/FaceIndex.C	\
+	$(INCLUDE_SAM)/FaceIterator.C $(INCLUDE_SAM)/FaceOverlap.C	\
+	$(INCLUDE_SAM)/FaceVariable.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
+	$(INCLUDE_SAM)/MBUtilities.C					\
 	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockFaceDataTranslator.C			\
@@ -147,7 +149,10 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C $(INCLUDE_SAM)/PatchFactory.C	\
 	$(INCLUDE_SAM)/PatchGeometry.C $(INCLUDE_SAM)/PatchHierarchy.C	\
 	$(INCLUDE_SAM)/PatchLevel.C $(INCLUDE_SAM)/PatchLevelFactory.C	\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/SumOperation.C $(INCLUDE_SAM)/Variable.C		\
+	$(INCLUDE_SAM)/VariableDatabase.C $(INCLUDE_SAM)/tbox/Array.C	\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}

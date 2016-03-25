@@ -1,0 +1,40 @@
+##
+## File:	$URL$
+## Package:	SAMRAI templates
+## Copyright:	(c) 1997-2006 The Regents of the University of California
+## Revision:	$LastChangedRevision: 2275 $
+## Modified:	$LastChangedDate: 2008-07-07 13:39:44 -0700 (Mon, 07 Jul 2008) $
+## Description:	makefile for the template classes
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/patchdata/templates/special
+VPATH	      =	@srcdir@
+OBJECT        = ../../../..
+
+ALLOW_IMPLICIT_TEMPLATES = yes
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+OBJS = pdat__ArrayDataAccess-NDIM_double${NDIM}.o pdat__ArrayDataAccess-NDIM_int${NDIM}.o pdat__ArrayDataAccess-NDIM_char${NDIM}.o
+
+library:	lib1d lib2d lib3d
+
+lib1d:
+	$(MAKE) NDIM=1 libXd
+
+lib2d:
+	$(MAKE) NDIM=2 libXd
+
+lib3d:
+	$(MAKE) NDIM=3 libXd
+
+libXd:	$(OBJS)
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

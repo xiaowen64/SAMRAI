@@ -1,401 +1,371 @@
-/*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/config/SAMRAI_config.h.in $
- * Package:     SAMRAI autoconf
- * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 2144 $
- * Modified:    $LastChangedDate: 2008-04-23 10:40:03 -0700 (Wed, 23 Apr 2008) $
- * Description: SAMRAI configuration file
- */  
+/* config/SAMRAI_config.h.in.  Generated from configure.in by autoheader.  */
 
-/*
-*************************************************************************
-*                                                                       *
-* IMPORTANT NOTE:  This file may be included in C source and/or         *
-*                  header files.  Thus, all syntax, including           *
-*                  comments must be standard C.                         *
-*                                                                       *
-*************************************************************************
-*/
 
-#ifndef included_SAMRAI_config
-#define included_SAMRAI_config
+
+#ifndef INCLUDED_SAMRAI_CONFIG_H
+#define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 2
-#define SAMRAI_VERSION_MINOR 3
+#define SAMRAI_VERSION_MINOR 4
 #define SAMRAI_VERSION_PATCHLEVEL 0
 
-/*
- * Flags to signal building optional types.
- */
-#ifndef HAVE_BOOL
+
+/* Define if bool type is not properly supported */
+#undef BOOL_IS_BROKEN
+
+/* Define if DBL_MAX is not in float.h */
+#undef DBL_MAX_IS_BROKEN
+
+/* Define if DBL_SNAN is not in float.h */
+#undef DBL_SNAN_IS_BROKEN
+
+/* Enable assertion checking for debug mode */
+#undef DEBUG_CHECK_ASSERTIONS
+
+/* Initialize new memory to undefined values in debug mode */
+#undef DEBUG_INITIALIZE_UNDEFINED
+
+/* Disable inlining for debug mode */
+#undef DEBUG_NO_INLINE
+
+/* Define to dummy `main' function (if any) required to link to the Fortran
+   libraries. */
+#undef F77_DUMMY_MAIN
+
+/* Define to a macro mangling the given C identifier (in lower and upper
+   case), which must not contain underscores, for linking with Fortran. */
+#undef F77_FUNC
+
+/* As F77_FUNC, but for C identifiers containing underscores. */
+#undef F77_FUNC_
+
+/* Define if F77 and FC dummy `main' functions are identical. */
+#undef FC_DUMMY_MAIN_EQ_F77
+
+/* Define if FLT_MAX is not in float.h */
+#undef FLT_MAX_IS_BROKEN
+
+/* Define if FLT_SNAN is not in float.h */
+#undef FLT_SNAN_IS_BROKEN
+
+/* FORTRAN_CAPS */
+#undef FORTRAN_CAPS
+
+/* FORTRAN_DOUBLE_UNDERSCORE */
+#undef FORTRAN_DOUBLE_UNDERSCORE
+
+/* FORTRAN_NO_UNDERSCORE */
+#undef FORTRAN_NO_UNDERSCORE
+
+/* FORTRAN_UNDERSCORE */
+#undef FORTRAN_UNDERSCORE
+
+/* BLASLAPACK library is available so use it */
+#undef HAVE_BLASLAPACK
+
+/* Build SAMRAI with instantiated bool datatypes */
 #undef HAVE_BOOL
-#endif
 
-#ifndef HAVE_CHAR
+/* Build SAMRAI with instantiated char datatypes */
 #undef HAVE_CHAR
-#endif
 
-#ifndef HAVE_FLOAT
-#undef HAVE_FLOAT
-#endif
+/* HAVE_CMATH */
+#undef HAVE_CMATH
 
-#ifndef HAVE_DCOMPLEX
+/* HAVE_CMATH_ISNAN */
+#undef HAVE_CMATH_ISNAN
+
+/* Configured with Cubes library */
+#undef HAVE_CUBES
+
+/* Build SAMRAI with instantiated double-complex datatypes */
 #undef HAVE_DCOMPLEX
-#endif
 
+/* Configured with Eleven library */
+#undef HAVE_ELEVEN
 
-/*
- * Building on a Sun Solaris machine.
- */
+/* HAVE_EXCEPTION_HANDLING */
+#undef HAVE_EXCEPTION_HANDLING
 
-#ifndef HOST_OS_IS_SOLARIS
+/* Build SAMRAI with instantiated float datatypes */
+#undef HAVE_FLOAT
+
+/* HDF5 library is available so use it */
+#undef HAVE_HDF5
+
+/* HYPRE library is available so use it */
+#undef HAVE_HYPRE
+
+/* HAVE_INLINE_ISNAND */
+#undef HAVE_INLINE_ISNAND
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* HAVE_IOMANIP_LEFT */
+#undef HAVE_IOMANIP_LEFT
+
+/* HAVE_ISNAN */
+#undef HAVE_ISNAN
+
+/* HAVE_ISNAND */
+#undef HAVE_ISNAND
+
+/* HAVE_ISNAN_TEMPLATE */
+#undef HAVE_ISNAN_TEMPLATE
+
+/* HAVE_ISO_SSTREAM */
+#undef HAVE_ISO_SSTREAM
+
+/* Define if you have the 'mallinfo' function. */
+#undef HAVE_MALLINFO
+
+/* HAVE_MALLOC_H */
+#undef HAVE_MALLOC_H
+
+/* HAVE_MEMBER_FUNCTION_SPECIALIZATION */
+#undef HAVE_MEMBER_FUNCTION_SPECIALIZATION
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* MPI library is present */
+#undef HAVE_MPI
+
+/* HAVE_NAMESPACE */
+#undef HAVE_NAMESPACE
+
+/* HAVE_NEW_PLACEMENT_OPERATOR */
+#undef HAVE_NEW_PLACEMENT_OPERATOR
+
+/* PETSC library is available so use it */
+#undef HAVE_PETSC
+
+/* HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION */
+#undef HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION
+
+/* SILO library is available so use it */
+#undef HAVE_SILO
+
+/* HAVE_SSTREAM */
+#undef HAVE_SSTREAM
+
+/* HAVE_STANDARD_STATIC_DATA_SPECIALIZATION */
+#undef HAVE_STANDARD_STATIC_DATA_SPECIALIZATION
+
+/* HAVE_STATIC_DATA_INSTANTIATION */
+#undef HAVE_STATIC_DATA_INSTANTIATION
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if cpp supports the ANSI # stringizing operator. */
+#undef HAVE_STRINGIZE
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* HAVE_SUNDIALS */
+#undef HAVE_SUNDIALS
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* HAVE_TAU */
+#undef HAVE_TAU
+
+/* HAVE_TEMPLATE_COMPLEX */
+#undef HAVE_TEMPLATE_COMPLEX
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* HAVE_VAMPIR */
+#undef HAVE_VAMPIR
+
+/* X11 library is present */
+#undef HAVE_X11
+
+/* "Compiling with XDR support" */
+#undef HAVE_XDR
+
+/* Define if the host system is Solaris */
 #undef HOST_OS_IS_SOLARIS
-#endif
 
-/*
- * Header file defines and some special defines for AIX (yuck!)
- */
+/* Hypre library is configured for sequential mode */
+#undef HYPRE_SEQUENTIAL
 
-#ifndef _POSIX_SOURCE
-#undef _POSIX_SOURCE
-#endif
+/* "Compiling without deprecated features" */
+#undef INCLUDE_DEPRECATED
 
-#ifndef _ALL_SOURCE
-#undef _ALL_SOURCE
-#endif
+/* INCLUDE_TEMPLATE_IMPLEMENTATION */
+#undef INCLUDE_TEMPLATE_IMPLEMENTATION
 
-#ifndef _POWER
-#undef _POWER
-#endif
+/* Header file for iomanip */
+#undef IOMANIP_HEADER_FILE
 
-/*
- * Sun and MSVC++ compiler do can not resolve bool and void*
- * methods.
- */
-#if defined(__SUNPRO_CC)
-#define LACKS_BOOL_VOID_RESOLUTION
-#endif
+/* The iomanip header file is broken */
+#undef IOMANIP_IS_BROKEN
 
-/*
- * Architecture-specific bugs in system header files
- */
+/* Header file for iostream */
+#undef IOSTREAM_HEADER_FILE
 
-#ifndef LACKS_PROPER_XDR_HEADER
+/* The iostream header file is broken */
+#undef IOSTREAM_IS_BROKEN
+
+/* LACKS_CMATH */
+#undef LACKS_CMATH
+
+/* LACKS_CMATH_ISNAN */
+#undef LACKS_CMATH_ISNAN
+
+/* Configured without Cubes library */
+#undef LACKS_CUBES
+
+/* Configured without Eleven library */
+#undef LACKS_ELEVEN
+
+/* LACKS_EXCEPTION_HANDLING */
+#undef LACKS_EXCEPTION_HANDLING
+
+/* Hypre library is missing */
+#undef LACKS_HYPRE
+
+/* LACKS_INLINE_ISNAND */
+#undef LACKS_INLINE_ISNAND
+
+/* LACKS_IOMANIP_LEFT */
+#undef LACKS_IOMANIP_LEFT
+
+/* LACKS_ISNAN */
+#undef LACKS_ISNAN
+
+/* LACKS_ISNAND */
+#undef LACKS_ISNAND
+
+/* LACKS_ISNAN_TEMPLATE */
+#undef LACKS_ISNAN_TEMPLATE
+
+/* LACKS_MEMBER_FUNCTION_SPECIALIZATION */
+#undef LACKS_MEMBER_FUNCTION_SPECIALIZATION
+
+/* MPI library is missing */
+#undef LACKS_MPI
+
+/* LACKS_NAMESPACE */
+#undef LACKS_NAMESPACE
+
+/* LACKS_NEW_PLACEMENT_OPERATOR */
+#undef LACKS_NEW_PLACEMENT_OPERATOR
+
+/* LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION */
+#undef LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION
+
+/* LACKS_PROPER_XDR_HEADER */
 #undef LACKS_PROPER_XDR_HEADER
-#endif
+
+/* LACKS_SSTREAM */
+#undef LACKS_SSTREAM
+
+/* LACKS_STANDARD_STATIC_DATA_SPECIALIZATION */
+#undef LACKS_STANDARD_STATIC_DATA_SPECIALIZATION
+
+/* LACKS_STATIC_DATA_INSTANTIATION */
+#undef LACKS_STATIC_DATA_INSTANTIATION
+
+/* LACKS_SUNDIALS */
+#undef LACKS_SUNDIALS
+
+/* LACKS_TAU */
+#undef LACKS_TAU
+
+/* LACKS_TEMPLATE_COMPLEX */
+#undef LACKS_TEMPLATE_COMPLEX
+
+/* LACKS_VAMPIR */
+#undef LACKS_VAMPIR
+
+/* X11 library is missing */
+#undef LACKS_X11
+
+/* LACK_ISO_SSTREAM */
+#undef LACK_ISO_SSTREAM
+
+/* Define if namespace is not properly supported */
+#undef NAMESPACE_IS_BROKEN
+
+/* Define if NAN is not in float.h */
+#undef NAN_IS_BROKEN
+
+/* The type ostringstream is broken */
+#undef OSTRINGSTREAM_TYPE_IS_BROKEN
+
+/* The type ostrstream is broken */
+#undef OSTRSTREAM_TYPE_IS_BROKEN
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define if restrict is not properly supported */
+#undef RESTRICT_IS_BROKEN
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Header file for stl-sstream */
+#undef STL_SSTREAM_HEADER_FILE
+
+/* The stl-sstream header file is broken */
+#undef STL_SSTREAM_IS_BROKEN
+
+/* Define to 1 if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING
+
+/* Kludgey thing inserted by configure.in */
+#undef _POWER
+
+
+/********************************************************************/
+/********************* Hardwired defines ****************************/
+/********************************************************************/
 
 /*
  * Some compilers require cmath to be included before the regular
- * C math.h and stdlib.h headers are brought in, otherwise 
+ * C math.h and stdlib.h headers are brought in, otherwise
  * the compiler will get conflicting definitions for the functions.
  */
 #if defined(__xlC__)
 #define REQUIRES_CMATH 1
 #endif
 
-
-/*
- * general C compiler support
- */
-
-/*
- * Whether the #EXP symbol expands to the actual string
- * version of EXP in a macro.
- */
-#ifndef HAVE_STRINGIZE
-#undef HAVE_STRINGIZE
-#endif
-
-
-/*
- * general C++ compiler support
- */
-
-#ifndef LACKS_NAMESPACE
-#undef LACKS_NAMESPACE
-#endif
-
-#ifndef LACKS_TEMPLATE_COMPLEX
-#undef LACKS_TEMPLATE_COMPLEX
-#endif
-
 #define STL_SSTREAM_HEADER_FILE <sstream>
-#define LACKS_STRSTREAM 
-
-#ifndef IOMANIP_HEADER_FILE
-#undef IOMANIP_HEADER_FILE
-#endif
-#ifndef IOMANIP_HEADER_IS_BROKEN
-#undef IOMANIP_HEADER_IS_BROKEN
-#endif
-
-#ifndef IOSTREAM_HEADER_FILE
-#undef IOSTREAM_HEADER_FILE
-#endif
-#ifndef IOSTREAM_HEADER_IS_BROKEN
-#undef IOSTREAM_HEADER_IS_BROKEN
-#endif
-
-#ifndef LACKS_IOMANIP_LEFT
-#undef LACKS_IOMANIP_LEFT
-#endif
-
-#ifndef LACKS_NEW_PLACEMENT_OPERATOR
-#undef LACKS_NEW_PLACEMENT_OPERATOR
-#endif
-
-#ifndef HAVE_MALLOC_H 
-#undef HAVE_MALLOC_H 
-#endif
-
-#ifndef HAVE_MALLINFO 
-#undef HAVE_MALLINFO
-#endif
-
-/*
- * Control when template implementations (usually the .C file)
- * is included when compiling.
- *
- * This may be required by the compiler and compilation model (e.g.
- * implicit template instantiation models).
- */
-#ifndef INCLUDE_TEMPLATE_IMPLEMENTATION
-#undef INCLUDE_TEMPLATE_IMPLEMENTATION
-#endif
-
-#ifndef LACKS_MEMBER_FUNCTION_SPECIALIZATION
-#undef LACKS_MEMBER_FUNCTION_SPECIALIZATION
-#endif
-
-#ifndef LACKS_STATIC_DATA_INSTANTIATION
-#undef LACKS_STATIC_DATA_INSTANTIATION
-#endif
-
-#ifndef LACKS_STANDARD_STATIC_DATA_SPECIALIZATION
-#undef LACKS_STANDARD_STATIC_DATA_SPECIALIZATION
-#endif
-
-#ifndef HAVE_ISNAN_TEMPLATE
-#undef HAVE_ISNAN_TEMPLATE
-#endif
-
-/*
- * Only one of the ISNAN macros should be defined 
- */
-#ifndef HAVE_CMATH_ISNAN
-#undef HAVE_CMATH_ISNAN
-#endif
-
-#ifndef HAVE_ISNAN
-#undef HAVE_ISNAN
-#endif
-
-#ifndef HAVE_ISNAND
-#undef HAVE_ISNAND
-#endif
-
-#ifndef HAVE_INLINE_ISNAND
-#undef HAVE_INLINE_ISNAND
-#endif
-
-#ifndef LACKS_EXCEPTION_HANDLING
-#undef LACKS_EXCEPTION_HANDLING
-#endif
-
-#ifndef HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION
-#undef HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION
-#endif
-
-#ifndef HAVE_SPECIAL_COMPLEX_OSTREAM_INSTANTIATION
-#undef HAVE_SPECIAL_COMPLEX_OSTREAM_INSTANTIATION
-#endif
-
-#ifndef HAVE_SPECIAL_STRING_OSTREAM_INSTANTIATION
-#undef HAVE_SPECIAL_STRING_OSTREAM_INSTANTIATION
-#endif
-
-#ifndef RESTRICT_IS_BROKEN
-#undef RESTRICT_IS_BROKEN
-#endif
-
-// If restrict pointer is broken, remove request from code.
-#ifdef RESTRICT_IS_BROKEN
-#define SAMRAI_RESTRICT
-#else
-#define SAMRAI_RESTRICT __restrict__
-#endif
-
-#ifndef NAMESPACE_IS_BROKEN
-#undef NAMESPACE_IS_BROKEN
-#endif
-
-#ifndef HAVE_EXCEPTION_HANDLING
-#undef HAVE_EXCEPTION_HANDLING
-#endif
-
-#ifndef NAN_IS_BROKEN
-#undef NAN_IS_BROKEN
-#endif
-
-#ifndef FLT_SNAN_IS_BROKEN
-#undef FLT_SNAN_IS_BROKEN
-#endif
-
-#ifndef DBL_SNAN_IS_BROKEN
-#undef DBL_SNAN_IS_BROKEN
-#endif
-
-#ifndef FLT_MAX_IS_BROKEN
-#undef FLT_MAX_IS_BROKEN
-#endif
-
-#ifndef DBL_MAX_IS_BROKEN
-#undef DBL_MAX_IS_BROKEN
-#endif
-
-#ifndef OSTRINGSTREAM_TYPE_IS_BROKEN
-#undef OSTRINGSTREAM_TYPE_IS_BROKEN
-#endif
-
-#ifndef OSTRSTREAM_TYPE_IS_BROKEN
-#undef OSTRSTREAM_TYPE_IS_BROKEN
-#endif
-
-
-
-/*
- * X11 libraries
- */
-
-#ifndef LACKS_X11
-#undef LACKS_X11
-#endif
-
-/*
- * Fortran compiler name mangling
- */
-
-/* #undef FORTRAN_DOUBLE_UNDERSCORE */
-/* #undef FORTRAN_UNDERSCORE */
-/* #undef FORTRAN_CAPS */
-/* #undef FORTRAN_NO_UNDERSCORE */
-
-/*
- * HDF5 common data format library
- */
-
-#ifndef HAVE_HDF5
-#undef HAVE_HDF5
-#endif
-
-
-/*
- * Silo 
- */
-
-#ifndef HAVE_SILO
-#undef HAVE_SILO
-#endif
-
-/*
- * Building with XDR
- */
-#ifndef HAVE_XDR
-#undef HAVE_XDR
-#endif
-
-/*
- * MPI parallel message passing package
- */
-
-#ifndef HAVE_MPI
-#undef HAVE_MPI
-#endif
-
-/*
- * Sundials solver package
- */
-
-#ifndef HAVE_SUNDIALS
-#undef HAVE_SUNDIALS
-#endif
-
-/*
- * PETSc solvers package
- */
-
-#ifndef HAVE_PETSC
-#undef HAVE_PETSC
-#endif
-
-/*
- * HYPRE preconditioning library
- */
-
-#ifndef HAVE_HYPRE
-#undef HAVE_HYPRE
-#endif
-
-#ifndef HYPRE_SEQUENTIAL
-#undef HYPRE_SEQUENTIAL
-#endif
-
-/*
- * CUBES package
- */
-
-#ifndef HAVE_CUBES
-#undef HAVE_CUBES
-#endif
-
-/*
- * Eleven package
- */
-
-#ifndef HAVE_ELEVEN
-#undef HAVE_ELEVEN
-#endif
-
-/*
- * VAMPIR performance analysis package
- */
-
-#ifndef HAVE_VAMPIR
-#undef HAVE_VAMPIR
-#endif
-
-/*
- * TAU performance analysis package
- */
-
-#ifndef HAVE_TAU
-#undef HAVE_TAU
-#endif
-
-/*
- * SAMRAI debugging macros
- */
-
-#ifndef DEBUG_NO_INLINE
-#undef DEBUG_NO_INLINE
-#endif
-
-#ifndef DEBUG_TRACE_CALLS
-#undef DEBUG_TRACE_CALLS
-#endif
-
-#ifndef DEBUG_CHECK_ASSERTIONS
-#undef DEBUG_CHECK_ASSERTIONS
-#endif
-
-#ifndef DEBUG_INITIALIZE_UNDEFINED
-#undef DEBUG_INITIALIZE_UNDEFINED
-#endif
+#define LACKS_STRSTREAM
 
 /*
  * A few things for the MSVC++ version.
  */
-#ifdef _MSC_VER	
+#ifdef _MSC_VER
 
 /*
  * Move this bad stuff to the utility class, not POSIX
@@ -409,19 +379,11 @@
 
 /*
  * Some IEEE stuff is not under the normal names.
- * 
+ *
  */
 #define isnan _isnan
 
 #endif
 
-/*
- * Set the depracated level, deprecated features from
- * release greater than this number will be included.
- * 
- */
-#ifndef INCLUDE_DEPRECATED
-#undef INCLUDE_DEPRECATED
 #endif
 
-#endif

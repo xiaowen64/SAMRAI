@@ -76,9 +76,6 @@ redo:
 
 include $(SRCDIR)/Makefile.depend
 
-#FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
-#M4DIRS        = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\' 
-
 boundaryconditions.o:	$(SRCDIR)/boundaryconditions.f
 		$(F77) $(FFLAGS) -c $(SRCDIR)/boundaryconditions.f -o $@
 

@@ -1,11 +1,14 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/load_balance/SpatialKey.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/load_balance/SpatialKey.C $
 // Package:	SAMRAI mesh generation
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2195 $
+// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description:	Spatial Key used for generating space-filling curves.
 //
+
+#ifndef included_mesh_SpatialKey_C
+#define included_mesh_SpatialKey_C
 
 #include "SpatialKey.h"
 #include <stdio.h>
@@ -248,3 +251,5 @@ void SpatialKey::setKey(const unsigned int i,
 
 }
 }
+
+#endif

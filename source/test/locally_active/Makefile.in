@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/locally_active/Makefile.in $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/locally_active/Makefile.in $
 ## Package:     SAMRAI tests
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+## Revision:    $LastChangedRevision: 2181 $
+## Modified:    $LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
 ## Description: makefile for SAMRAI locally-active data tests
 ##
 
@@ -102,7 +102,7 @@ redo:
 include $(SRCDIR)/Makefile.depend
 
 FORTRAN       = $(SRCDIR)
-M4DIRS        = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
 laplacian2d.o:	$(FORTRAN)/laplacian2d.m4
 		$(M4) $(M4DIRS) $(FORTRAN)/laplacian2d.m4 > laplacian2d.f

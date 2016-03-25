@@ -39,9 +39,9 @@ bool b = true;
    AC_MSG_RESULT($casc_cv_cxx_have_bool)
 
    if test "$casc_cv_cxx_have_bool" = yes; then
-      AC_DEFINE(HAVE_BOOL)
+      AC_DEFINE([HAVE_BOOL],[1],[HAVE_BOOL])
    else
-      AC_DEFINE(LACKS_BOOL)
+      AC_DEFINE([LACKS_BOOL],[1],[LACKS_BOOL])
    fi
 ])
 
@@ -74,9 +74,9 @@ int foo() { int x = t(); x++; return x; }
    AC_MSG_RESULT($casc_cv_cxx_have_namespace)
 
    if test "$casc_cv_cxx_have_namespace" = yes; then
-      AC_DEFINE(HAVE_NAMESPACE)
+      AC_DEFINE([HAVE_NAMESPACE],[1],[HAVE_NAMESPACE])
    else
-      AC_DEFINE(LACKS_NAMESPACE)
+      AC_DEFINE([LACKS_NAMESPACE],[1],[LACKS_NAMESPACE])
    fi
 ])
 
@@ -108,9 +108,9 @@ void foo() {
    AC_MSG_RESULT($casc_cv_cxx_have_cmath)
 
    if test "$casc_cv_cxx_have_cmath" = yes; then
-      AC_DEFINE(HAVE_CMATH)
+      AC_DEFINE([HAVE_CMATH],[1],[HAVE_CMATH])
    else
-      AC_DEFINE(LACKS_CMATH)
+      AC_DEFINE([LACKS_CMATH],[1],[LACKS_CMATH])
    fi
 ])
 
@@ -142,7 +142,7 @@ void foo() {
    AC_MSG_RESULT($casc_cv_cxx_have_template_complex)
 
    if test "$casc_cv_cxx_have_template_complex" = yes; then
-      AC_DEFINE(HAVE_TEMPLATE_COMPLEX)
+      AC_DEFINE([HAVE_TEMPLATE_COMPLEX],[1],[HAVE_TEMPLATE_COMPLEX])
    else
       AC_MSG_CHECKING(whether ${CXX} supports ISO template-based complex numbers)
       AC_CACHE_VAL(casc_cv_cxx_have_template_complex_std, [
@@ -162,9 +162,9 @@ void foo() {
       AC_MSG_RESULT($casc_cv_cxx_have_template_complex_std)
 
       if test "$casc_cv_cxx_have_template_complex_std" = yes; then
-         AC_DEFINE(HAVE_TEMPLATE_COMPLEX)
+         AC_DEFINE([HAVE_TEMPLATE_COMPLEX],[1],[HAVE_TEMPLATE_COMPLEX])
       else
-         AC_DEFINE(LACKS_TEMPLATE_COMPLEX)
+         AC_DEFINE([LACKS_TEMPLATE_COMPLEX],[1],[LACKS_TEMPLATE_COMPLEX])
       fi
    fi
 ])
@@ -208,7 +208,7 @@ void foo() {
    AC_MSG_RESULT($casc_cv_cxx_have_sstream)
 
    if test "$casc_cv_cxx_have_sstream" = yes; then
-      AC_DEFINE(HAVE_SSTREAM)
+      AC_DEFINE([HAVE_SSTREAM],[1],[HAVE_SSTREAM])
    else
         AC_MSG_CHECKING(whether ${CXX} supports sstream and class ostringstream)
 	AC_CACHE_VAL(casc_cv_cxx_have_sstream_std, [
@@ -234,11 +234,11 @@ void foo() {
       AC_MSG_RESULT($casc_cv_cxx_have_sstream_std)
 
       if test "$casc_cv_cxx_have_sstream_std" = yes; then
-         AC_DEFINE(HAVE_SSTREAM)
-         AC_DEFINE(HAVE_ISO_SSTREAM)
+         AC_DEFINE([HAVE_SSTREAM],[1],[HAVE_SSTREAM])
+         AC_DEFINE([HAVE_ISO_SSTREAM],[1],[HAVE_ISO_SSTREAM])
       else
-         AC_DEFINE(LACKS_SSTREAM)
-         AC_DEFINE(LACK_ISO_SSTREAM)
+         AC_DEFINE([LACKS_SSTREAM],[1],[LACKS_SSTREAM])
+         AC_DEFINE([LACK_ISO_SSTREAM],[1],[LACK_ISO_SSTREAM])
       fi
    fi
 ])
@@ -273,9 +273,9 @@ void foo()
    AC_MSG_RESULT($casc_cv_cxx_have_iomanip_left)
 
    if test "$casc_cv_cxx_have_iomanip_left" = yes; then
-      AC_DEFINE(HAVE_IOMANIP_LEFT)
+      AC_DEFINE([HAVE_IOMANIP_LEFT],[1],[HAVE_IOMANIP_LEFT])
    else
-      AC_DEFINE(LACKS_IOMANIP_LEFT)
+      AC_DEFINE([LACKS_IOMANIP_LEFT],[1],[LACKS_IOMANIP_LEFT])
    fi
 ])
 
@@ -309,9 +309,9 @@ void trynew() {
    AC_MSG_RESULT($casc_cv_cxx_have_new_placement_operator)
 
    if test "$casc_cv_cxx_have_new_placement_operator" = yes; then
-      AC_DEFINE(HAVE_NEW_PLACEMENT_OPERATOR)
+      AC_DEFINE([HAVE_NEW_PLACEMENT_OPERATOR],[1],[HAVE_NEW_PLACEMENT_OPERATOR])
    else
-      AC_DEFINE(LACKS_NEW_PLACEMENT_OPERATOR)
+      AC_DEFINE([LACKS_NEW_PLACEMENT_OPERATOR],[1],[LACKS_NEW_PLACEMENT_OPERATOR])
    fi
 ])
 
@@ -353,9 +353,9 @@ template class Pointer<int>;
    AC_MSG_RESULT($casc_cv_cxx_have_explicit_template_instantiation)
 
    if test "$casc_cv_cxx_have_explicit_template_instantiation" = yes; then
-      AC_DEFINE(HAVE_EXPLICIT_TEMPLATE_INSTANTIATION)
+      AC_DEFINE([HAVE_EXPLICIT_TEMPLATE_INSTANTIATION],[1],[HAVE_EXPLICIT_TEMPLATE_INSTANTIATION])
    else
-      AC_DEFINE(LACKS_EXPLICIT_TEMPLATE_INSTANTIATION)
+      AC_DEFINE([LACKS_EXPLICIT_TEMPLATE_INSTANTIATION],[1],[LACKS_EXPLICIT_TEMPLATE_INSTANTIATION])
    fi
 ])
 
@@ -406,9 +406,9 @@ template <> void Pointer<int>::foo() { }
 
    AC_MSG_RESULT($casc_cv_cxx_have_member_function_specialization)
    if test "$casc_cv_cxx_have_member_function_specialization" = yes; then
-      AC_DEFINE(HAVE_MEMBER_FUNCTION_SPECIALIZATION)
+      AC_DEFINE([HAVE_MEMBER_FUNCTION_SPECIALIZATION],[1],[HAVE_MEMBER_FUNCTION_SPECIALIZATION])
    else
-      AC_DEFINE(LACKS_MEMBER_FUNCTION_SPECIALIZATION)
+      AC_DEFINE([LACKS_MEMBER_FUNCTION_SPECIALIZATION],[1],[LACKS_MEMBER_FUNCTION_SPECIALIZATION])
    fi
 
 ])
@@ -449,9 +449,9 @@ template <> void Pointer<int>::foo() { }
    ])
    AC_MSG_RESULT($casc_cv_cxx_have_static_data_instantiation)
    if test "$casc_cv_cxx_have_static_data_instantiation" = yes; then
-      AC_DEFINE(HAVE_STATIC_DATA_INSTANTIATION)
+      AC_DEFINE([HAVE_STATIC_DATA_INSTANTIATION],[1],[HAVE_STATIC_DATA_INSTANTIATION])
    else
-      AC_DEFINE(LACKS_STATIC_DATA_INSTANTIATION)
+      AC_DEFINE([LACKS_STATIC_DATA_INSTANTIATION],[1],[LACKS_STATIC_DATA_INSTANTIATION])
    fi
 ])
 
@@ -494,9 +494,9 @@ template class Pointer<int>;
    ])
    AC_MSG_RESULT($casc_cv_cxx_have_standard_static_data_specialization)
    if test "$casc_cv_cxx_have_standard_static_data_specialization" = yes; then
-      AC_DEFINE(HAVE_STANDARD_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([HAVE_STANDARD_STATIC_DATA_SPECIALIZATION],[1],[HAVE_STANDARD_STATIC_DATA_SPECIALIZATION])
    else
-      AC_DEFINE(LACKS_STANDARD_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([LACKS_STANDARD_STATIC_DATA_SPECIALIZATION],[1],[LACKS_STANDARD_STATIC_DATA_SPECIALIZATION])
    fi
 ])
 
@@ -540,9 +540,9 @@ template class Pointer<int>;
    ])
    AC_MSG_RESULT($casc_cv_cxx_have_pragma_static_data_specialization)
    if test "$casc_cv_cxx_have_pragma_static_data_specialization" = yes; then
-      AC_DEFINE(HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION],[1],[HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION])
    else
-      AC_DEFINE(LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION],[1],[LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION])
    fi
 ])
 
@@ -593,9 +593,9 @@ void foo() {
     ])
     AC_MSG_RESULT($casc_cxx_have_exception_handling)
     if test "$casc_cxx_have_exception_handling" = yes; then
-       AC_DEFINE(HAVE_EXCEPTION_HANDLING)
+       AC_DEFINE([HAVE_EXCEPTION_HANDLING],[1],[HAVE_EXCEPTION_HANDLING])
     else
-       AC_DEFINE(LACKS_EXCEPTION_HANDLING)
+       AC_DEFINE([LACKS_EXCEPTION_HANDLING],[1],[LACKS_EXCEPTION_HANDLING])
     fi
 ])
 
@@ -626,9 +626,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
    AC_MSG_RESULT($casc_cv_cxx_have_isnan)
 
    if test "$casc_cv_cxx_have_isnan" = yes; then
-      AC_DEFINE(HAVE_CMATH_ISNAN)
+      AC_DEFINE([HAVE_CMATH_ISNAN],[1],[HAVE_CMATH_ISNAN])
    else
-      AC_DEFINE(LACKS_CMATH_ISNAN)
+      AC_DEFINE([LACKS_CMATH_ISNAN],[1],[LACKS_CMATH_ISNAN])
 
       AC_MSG_CHECKING(checking for isnan in math.h)
 
@@ -643,9 +643,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
       AC_MSG_RESULT($casc_cv_cxx_have_isnan)
 
       if test "$casc_cv_cxx_have_isnan" = yes; then
-         AC_DEFINE(HAVE_ISNAN)
+         AC_DEFINE([HAVE_ISNAN],[1],[HAVE_ISNAN])
       else
-         AC_DEFINE(LACKS_ISNAN)
+         AC_DEFINE([LACKS_ISNAN],[1],[LACKS_ISNAN])
 
          AC_MSG_CHECKING(checking for __isnand)
 
@@ -659,9 +659,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
   
          AC_MSG_RESULT($casc_cv_cxx_have_isnand)
          if test "$casc_cv_cxx_have_isnand" = yes; then
-            AC_DEFINE(HAVE_ISNAND)
+            AC_DEFINE([HAVE_ISNAND],[1],[HAVE_ISNAND])
          else
-            AC_DEFINE(LACKS_ISNAND)
+            AC_DEFINE([LACKS_ISNAND],[1],[LACKS_ISNAND])
 
             AC_MSG_CHECKING(checking for __inline_isnand)
 
@@ -675,9 +675,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
 
             AC_MSG_RESULT($casc_cv_cxx_have_inline_isnan)
             if test "$casc_cv_cxx_have_inline_isnan" = yes; then
-               AC_DEFINE(HAVE_INLINE_ISNAND)
+               AC_DEFINE([HAVE_INLINE_ISNAND],[1],[HAVE_INLINE_ISNAND])
             else
-               AC_DEFINE(LACKS_INLINE_ISNAND)
+               AC_DEFINE([LACKS_INLINE_ISNAND],[1],[LACKS_INLINE_ISNAND])
            fi
 	fi
       fi
@@ -713,8 +713,8 @@ template int __gnu_cxx::__capture_isnan<float>(float);
    AC_MSG_RESULT($casc_cv_cxx_have_isnan_template)
 
    if test "$casc_cv_cxx_have_isnan_template" = yes; then
-      AC_DEFINE(HAVE_ISNAN_TEMPLATE)
+      AC_DEFINE([HAVE_ISNAN_TEMPLATE],[1],[HAVE_ISNAN_TEMPLATE])
    else
-      AC_DEFINE(LACKS_ISNAN_TEMPLATE)
+      AC_DEFINE([LACKS_ISNAN_TEMPLATE],[1],[LACKS_ISNAN_TEMPLATE])
    fi
 ])

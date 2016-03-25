@@ -1,11 +1,14 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/MathUtilities.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/base/MathUtilities.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2195 $
+// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description:	Utilities class to access common POSIX constants and math ops
 //
+
+#ifndef included_tbox_MathUtilities_C
+#define included_tbox_MathUtilities_C
 
 #include "tbox/MathUtilities.h"
 
@@ -116,3 +119,4 @@ void MathUtilities<TYPE>::setArrayToEpsilon(TYPE* array, int n)
 }
 }
 
+#endif

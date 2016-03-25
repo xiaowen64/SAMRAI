@@ -923,88 +923,6 @@ BTNG_VAR_SET_DL(dl_PREFIX,dl_INCLUDES,dl_LIBS)
 # End macro BTNG_SUPPORT_DL
 ])
 
-dnl Define macros for supporting HDF5.
-dnl $Id: support-hdf5.m4 155 2007-05-14 22:09:31Z gunney $
-
-AC_DEFUN([BTNG_VAR_SET_HDF5],[
-dnl Provides support for the blas and lapack libraries.
-dnl
-dnl Arguments are:
-dnl 1. Name of variable to set to path where hdf5 is installed.
-dnl    Nothing is done if this variable is unset.
-dnl    If you only want to look in default locations, set it to blank.
-dnl 2. Name of the INCLUDES variable similar to the automake INCLUDES variable.
-dnl    This variable is modified ONLY if it is NOT set and the path
-dnl    is non-blank.
-dnl 3. Name of the LIBS variable similar to the automake LIBS variable.
-dnl    This variable is modified ONLY if it is NOT set.
-dnl    If the library cannot be found, this remains unset.
-dnl
-dnl If arg1 is defined, assume that the user wants hdf5 support.
-dnl Do so by assigning arg2 and arg3 if they are not defined.
-dnl
-# Begin macro BTNG_VAR_SET_HDF5
-if test "${$1+set}" = set ; then
-  # Modify the output INCLUDES variable, if it is not set.
-  if test ! "${$2+set}" = set ; then
-    test -n "${$1}" && $2="-I${$1}/include"
-  fi
-  # Modify the output LIBS variable, if it is not set.
-  if test ! "${$3+set}" = set ; then
-    # Save LIBS for later recovery.
-    btng_save_LIBS="$LIBS";
-    # Extra libraries, if any, required by this check.
-    btng_extra_libs="$libz_LIBS -lm"
-    # If path is given, add path to extra flag for library search.
-    test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
-    # Look for library.
-    AC_SEARCH_LIBS([H5get_libversion],hdf5,[
-      BTNG_AC_LOG_VAR(LIBS,After finding hdf5 flag)
-      # Action if found ...
-      # Extract modifications to LIB into library-specific LIBS variable.
-      $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
-      test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found hdf5 library flag)
-      ],[
-      # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find hdf5 library flag)
-      AC_MSG_WARN(
-[I could not systematically find the name of
-the hdf5 library so I am using -lhdf5 instead.])
-      $3="-lhdf5"
-      test -n "${$1}" &&	\
-	$3="-L${$1}/lib ${$3}"	# Add path flag to output variable.
-      ],[$btng_extra_libs])
-    LIBS="$btng_save_LIBS";	# Restore global-use variable.
-    unset btng_extra_libs
-    unset btng_save_LIBS
-  else
-    BTNG_AC_LOG(Not looking for hdf5 because $3 is already set)
-  fi
-fi
-# End macro BTNG_VAR_SET_HDF5
-])dnl
-
-
-
-AC_DEFUN([BTNG_SUPPORT_HDF5],[
-dnl Support hdf5 libraries by setting the variables
-dnl hdf5_PREFIX, hdf5_INCLUDES, and hdf5_LIBS.
-dnl Arg1: empty if you want the default to be off.
-dnl
-# Begin macro BTNG_SUPPORT_HDF5
-BTNG_ARG_WITH_ENV_WRAPPER(hdf5, hdf5_PREFIX,
-ifelse($1,,
-[  --with-hdf5[=PATH]	Use HDF5 and optionally specify where it is installed.],
-[  --without-hdf5	Do not use the HDF5 library.]),
-ifelse($1,,unset hdf5_PREFIX; test "${with_hdf5+set}" = set && hdf5_PREFIX=,hdf5_PREFIX=))
-BTNG_VAR_SET_HDF5(hdf5_PREFIX,hdf5_INCLUDES,hdf5_LIBS)
-BTNG_AC_LOG_VAR(hdf5_PREFIX hdf5_INCLUDES hdf5_LIBS)
-# End macro BTNG_SUPPORT_HDF5
-])
-
-
-
 dnl $Id: support-hypre.m4 155 2007-05-14 22:09:31Z gunney $
 
 dnl Define macros for supporting HYPRE.
@@ -2241,9 +2159,9 @@ bool b = true;
    AC_MSG_RESULT($casc_cv_cxx_have_bool)
 
    if test "$casc_cv_cxx_have_bool" = yes; then
-      AC_DEFINE(HAVE_BOOL)
+      AC_DEFINE([HAVE_BOOL],[1],[HAVE_BOOL])
    else
-      AC_DEFINE(LACKS_BOOL)
+      AC_DEFINE([LACKS_BOOL],[1],[LACKS_BOOL])
    fi
 ])
 
@@ -2276,9 +2194,9 @@ int foo() { int x = t(); x++; return x; }
    AC_MSG_RESULT($casc_cv_cxx_have_namespace)
 
    if test "$casc_cv_cxx_have_namespace" = yes; then
-      AC_DEFINE(HAVE_NAMESPACE)
+      AC_DEFINE([HAVE_NAMESPACE],[1],[HAVE_NAMESPACE])
    else
-      AC_DEFINE(LACKS_NAMESPACE)
+      AC_DEFINE([LACKS_NAMESPACE],[1],[LACKS_NAMESPACE])
    fi
 ])
 
@@ -2310,9 +2228,9 @@ void foo() {
    AC_MSG_RESULT($casc_cv_cxx_have_cmath)
 
    if test "$casc_cv_cxx_have_cmath" = yes; then
-      AC_DEFINE(HAVE_CMATH)
+      AC_DEFINE([HAVE_CMATH],[1],[HAVE_CMATH])
    else
-      AC_DEFINE(LACKS_CMATH)
+      AC_DEFINE([LACKS_CMATH],[1],[LACKS_CMATH])
    fi
 ])
 
@@ -2344,7 +2262,7 @@ void foo() {
    AC_MSG_RESULT($casc_cv_cxx_have_template_complex)
 
    if test "$casc_cv_cxx_have_template_complex" = yes; then
-      AC_DEFINE(HAVE_TEMPLATE_COMPLEX)
+      AC_DEFINE([HAVE_TEMPLATE_COMPLEX],[1],[HAVE_TEMPLATE_COMPLEX])
    else
       AC_MSG_CHECKING(whether ${CXX} supports ISO template-based complex numbers)
       AC_CACHE_VAL(casc_cv_cxx_have_template_complex_std, [
@@ -2364,9 +2282,9 @@ void foo() {
       AC_MSG_RESULT($casc_cv_cxx_have_template_complex_std)
 
       if test "$casc_cv_cxx_have_template_complex_std" = yes; then
-         AC_DEFINE(HAVE_TEMPLATE_COMPLEX)
+         AC_DEFINE([HAVE_TEMPLATE_COMPLEX],[1],[HAVE_TEMPLATE_COMPLEX])
       else
-         AC_DEFINE(LACKS_TEMPLATE_COMPLEX)
+         AC_DEFINE([LACKS_TEMPLATE_COMPLEX],[1],[LACKS_TEMPLATE_COMPLEX])
       fi
    fi
 ])
@@ -2410,7 +2328,7 @@ void foo() {
    AC_MSG_RESULT($casc_cv_cxx_have_sstream)
 
    if test "$casc_cv_cxx_have_sstream" = yes; then
-      AC_DEFINE(HAVE_SSTREAM)
+      AC_DEFINE([HAVE_SSTREAM],[1],[HAVE_SSTREAM])
    else
         AC_MSG_CHECKING(whether ${CXX} supports sstream and class ostringstream)
 	AC_CACHE_VAL(casc_cv_cxx_have_sstream_std, [
@@ -2436,11 +2354,11 @@ void foo() {
       AC_MSG_RESULT($casc_cv_cxx_have_sstream_std)
 
       if test "$casc_cv_cxx_have_sstream_std" = yes; then
-         AC_DEFINE(HAVE_SSTREAM)
-         AC_DEFINE(HAVE_ISO_SSTREAM)
+         AC_DEFINE([HAVE_SSTREAM],[1],[HAVE_SSTREAM])
+         AC_DEFINE([HAVE_ISO_SSTREAM],[1],[HAVE_ISO_SSTREAM])
       else
-         AC_DEFINE(LACKS_SSTREAM)
-         AC_DEFINE(LACK_ISO_SSTREAM)
+         AC_DEFINE([LACKS_SSTREAM],[1],[LACKS_SSTREAM])
+         AC_DEFINE([LACK_ISO_SSTREAM],[1],[LACK_ISO_SSTREAM])
       fi
    fi
 ])
@@ -2475,9 +2393,9 @@ void foo()
    AC_MSG_RESULT($casc_cv_cxx_have_iomanip_left)
 
    if test "$casc_cv_cxx_have_iomanip_left" = yes; then
-      AC_DEFINE(HAVE_IOMANIP_LEFT)
+      AC_DEFINE([HAVE_IOMANIP_LEFT],[1],[HAVE_IOMANIP_LEFT])
    else
-      AC_DEFINE(LACKS_IOMANIP_LEFT)
+      AC_DEFINE([LACKS_IOMANIP_LEFT],[1],[LACKS_IOMANIP_LEFT])
    fi
 ])
 
@@ -2511,9 +2429,9 @@ void trynew() {
    AC_MSG_RESULT($casc_cv_cxx_have_new_placement_operator)
 
    if test "$casc_cv_cxx_have_new_placement_operator" = yes; then
-      AC_DEFINE(HAVE_NEW_PLACEMENT_OPERATOR)
+      AC_DEFINE([HAVE_NEW_PLACEMENT_OPERATOR],[1],[HAVE_NEW_PLACEMENT_OPERATOR])
    else
-      AC_DEFINE(LACKS_NEW_PLACEMENT_OPERATOR)
+      AC_DEFINE([LACKS_NEW_PLACEMENT_OPERATOR],[1],[LACKS_NEW_PLACEMENT_OPERATOR])
    fi
 ])
 
@@ -2555,9 +2473,9 @@ template class Pointer<int>;
    AC_MSG_RESULT($casc_cv_cxx_have_explicit_template_instantiation)
 
    if test "$casc_cv_cxx_have_explicit_template_instantiation" = yes; then
-      AC_DEFINE(HAVE_EXPLICIT_TEMPLATE_INSTANTIATION)
+      AC_DEFINE([HAVE_EXPLICIT_TEMPLATE_INSTANTIATION],[1],[HAVE_EXPLICIT_TEMPLATE_INSTANTIATION])
    else
-      AC_DEFINE(LACKS_EXPLICIT_TEMPLATE_INSTANTIATION)
+      AC_DEFINE([LACKS_EXPLICIT_TEMPLATE_INSTANTIATION],[1],[LACKS_EXPLICIT_TEMPLATE_INSTANTIATION])
    fi
 ])
 
@@ -2608,9 +2526,9 @@ template <> void Pointer<int>::foo() { }
 
    AC_MSG_RESULT($casc_cv_cxx_have_member_function_specialization)
    if test "$casc_cv_cxx_have_member_function_specialization" = yes; then
-      AC_DEFINE(HAVE_MEMBER_FUNCTION_SPECIALIZATION)
+      AC_DEFINE([HAVE_MEMBER_FUNCTION_SPECIALIZATION],[1],[HAVE_MEMBER_FUNCTION_SPECIALIZATION])
    else
-      AC_DEFINE(LACKS_MEMBER_FUNCTION_SPECIALIZATION)
+      AC_DEFINE([LACKS_MEMBER_FUNCTION_SPECIALIZATION],[1],[LACKS_MEMBER_FUNCTION_SPECIALIZATION])
    fi
 
 ])
@@ -2651,9 +2569,9 @@ template <> void Pointer<int>::foo() { }
    ])
    AC_MSG_RESULT($casc_cv_cxx_have_static_data_instantiation)
    if test "$casc_cv_cxx_have_static_data_instantiation" = yes; then
-      AC_DEFINE(HAVE_STATIC_DATA_INSTANTIATION)
+      AC_DEFINE([HAVE_STATIC_DATA_INSTANTIATION],[1],[HAVE_STATIC_DATA_INSTANTIATION])
    else
-      AC_DEFINE(LACKS_STATIC_DATA_INSTANTIATION)
+      AC_DEFINE([LACKS_STATIC_DATA_INSTANTIATION],[1],[LACKS_STATIC_DATA_INSTANTIATION])
    fi
 ])
 
@@ -2696,9 +2614,9 @@ template class Pointer<int>;
    ])
    AC_MSG_RESULT($casc_cv_cxx_have_standard_static_data_specialization)
    if test "$casc_cv_cxx_have_standard_static_data_specialization" = yes; then
-      AC_DEFINE(HAVE_STANDARD_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([HAVE_STANDARD_STATIC_DATA_SPECIALIZATION],[1],[HAVE_STANDARD_STATIC_DATA_SPECIALIZATION])
    else
-      AC_DEFINE(LACKS_STANDARD_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([LACKS_STANDARD_STATIC_DATA_SPECIALIZATION],[1],[LACKS_STANDARD_STATIC_DATA_SPECIALIZATION])
    fi
 ])
 
@@ -2742,9 +2660,9 @@ template class Pointer<int>;
    ])
    AC_MSG_RESULT($casc_cv_cxx_have_pragma_static_data_specialization)
    if test "$casc_cv_cxx_have_pragma_static_data_specialization" = yes; then
-      AC_DEFINE(HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION],[1],[HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION])
    else
-      AC_DEFINE(LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION)
+      AC_DEFINE([LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION],[1],[LACKS_PRAGMA_STATIC_DATA_SPECIALIZATION])
    fi
 ])
 
@@ -2795,9 +2713,9 @@ void foo() {
     ])
     AC_MSG_RESULT($casc_cxx_have_exception_handling)
     if test "$casc_cxx_have_exception_handling" = yes; then
-       AC_DEFINE(HAVE_EXCEPTION_HANDLING)
+       AC_DEFINE([HAVE_EXCEPTION_HANDLING],[1],[HAVE_EXCEPTION_HANDLING])
     else
-       AC_DEFINE(LACKS_EXCEPTION_HANDLING)
+       AC_DEFINE([LACKS_EXCEPTION_HANDLING],[1],[LACKS_EXCEPTION_HANDLING])
     fi
 ])
 
@@ -2828,9 +2746,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
    AC_MSG_RESULT($casc_cv_cxx_have_isnan)
 
    if test "$casc_cv_cxx_have_isnan" = yes; then
-      AC_DEFINE(HAVE_CMATH_ISNAN)
+      AC_DEFINE([HAVE_CMATH_ISNAN],[1],[HAVE_CMATH_ISNAN])
    else
-      AC_DEFINE(LACKS_CMATH_ISNAN)
+      AC_DEFINE([LACKS_CMATH_ISNAN],[1],[LACKS_CMATH_ISNAN])
 
       AC_MSG_CHECKING(checking for isnan in math.h)
 
@@ -2845,9 +2763,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
       AC_MSG_RESULT($casc_cv_cxx_have_isnan)
 
       if test "$casc_cv_cxx_have_isnan" = yes; then
-         AC_DEFINE(HAVE_ISNAN)
+         AC_DEFINE([HAVE_ISNAN],[1],[HAVE_ISNAN])
       else
-         AC_DEFINE(LACKS_ISNAN)
+         AC_DEFINE([LACKS_ISNAN],[1],[LACKS_ISNAN])
 
          AC_MSG_CHECKING(checking for __isnand)
 
@@ -2861,9 +2779,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
   
          AC_MSG_RESULT($casc_cv_cxx_have_isnand)
          if test "$casc_cv_cxx_have_isnand" = yes; then
-            AC_DEFINE(HAVE_ISNAND)
+            AC_DEFINE([HAVE_ISNAND],[1],[HAVE_ISNAND])
          else
-            AC_DEFINE(LACKS_ISNAND)
+            AC_DEFINE([LACKS_ISNAND],[1],[LACKS_ISNAND])
 
             AC_MSG_CHECKING(checking for __inline_isnand)
 
@@ -2877,9 +2795,9 @@ AC_DEFUN([CASC_CXX_ISNAN], [
 
             AC_MSG_RESULT($casc_cv_cxx_have_inline_isnan)
             if test "$casc_cv_cxx_have_inline_isnan" = yes; then
-               AC_DEFINE(HAVE_INLINE_ISNAND)
+               AC_DEFINE([HAVE_INLINE_ISNAND],[1],[HAVE_INLINE_ISNAND])
             else
-               AC_DEFINE(LACKS_INLINE_ISNAND)
+               AC_DEFINE([LACKS_INLINE_ISNAND],[1],[LACKS_INLINE_ISNAND])
            fi
 	fi
       fi
@@ -2915,9 +2833,9 @@ template int __gnu_cxx::__capture_isnan<float>(float);
    AC_MSG_RESULT($casc_cv_cxx_have_isnan_template)
 
    if test "$casc_cv_cxx_have_isnan_template" = yes; then
-      AC_DEFINE(HAVE_ISNAN_TEMPLATE)
+      AC_DEFINE([HAVE_ISNAN_TEMPLATE],[1],[HAVE_ISNAN_TEMPLATE])
    else
-      AC_DEFINE(LACKS_ISNAN_TEMPLATE)
+      AC_DEFINE([LACKS_ISNAN_TEMPLATE],[1],[LACKS_ISNAN_TEMPLATE])
    fi
 ])
 
@@ -3175,9 +3093,15 @@ AC_DEFUN([CASC_FIND_F77LIBS],
 
          F77LIBFLAGS="$casc_other_flags $casc_f77_dirs"
 
+
          if test -n "`echo $F77LIBFLAGS | grep '\-R/'`"; then
             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-R\//-R \//'`
          fi
+	 
+	 dnl Strip off quotes.  This was needed for mpi wrappers.
+         dnl This is potentially bad.
+         F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/\"//'`
+         casc_f77_libs=`echo $casc_f77_libs | sed 's/\"//'`
 
          dnl * each -l flag is checked using CASC_CHECK_LIB_FORTRAN, until
          dnl * successful linking of a test program is accomplished, at which
@@ -3315,20 +3239,20 @@ EOF
     /bin/rm -f confftest.f confftest.o
     AC_MSG_CHECKING(Fortran external names)
     if test -n "$nameform4" ; then
-        AC_DEFINE(FORTRAN_DOUBLE_UNDERSCORE)
+        AC_DEFINE([FORTRAN_DOUBLE_UNDERSCORE],[1],[FORTRAN_DOUBLE_UNDERSCORE])
         AC_MSG_RESULT(lowercase with one or two trailing underscores)
         FORTRANNAMES="FORTRANDOUBLEUNDERSCORE"
     elif test -n "$nameform1" ; then
         # We don't set this in CFLAGS; it is a default case
-        AC_DEFINE(FORTRAN_UNDERSCORE)
+        AC_DEFINE([FORTRAN_UNDERSCORE],[1],[FORTRAN_UNDERSCORE])
         AC_MSG_RESULT(lowercase with a trailing underscore)
         FORTRANNAMES="FORTRANUNDERSCORE"
     elif test -n "$nameform2" ; then
-        AC_DEFINE(FORTRAN_CAPS)
+        AC_DEFINE([FORTRAN_CAPS],[1],[FORTRAN_CAPS])
         AC_MSG_RESULT(uppercase)
         FORTRANNAMES="FORTRANCAPS"
     elif test -n "$nameform3" ; then
-        AC_DEFINE(FORTRAN_NO_UNDERSCORE)
+        AC_DEFINE([FORTRAN_NO_UNDERSCORE],[1],[FORTRAN_NO_UNDERSCORE])
         AC_MSG_RESULT(lowercase)
         FORTRANNAMES="FORTRANNOUNDERSCORE"
     else
@@ -3555,6 +3479,98 @@ AC_DEFUN([LF_FLIBS],[
   dnl AC_MSG_RESULT([$FLIBS])
 dnl  AC_SUBST(FLIBS)
 ])dnl
+
+
+dnl Define a macro for supporting HDF5
+
+AC_DEFUN([CASC_SUPPORT_HDF5],[
+
+# Begin CASC_SUPPORT_HDF5
+# Defines hdf5_PREFIX hdf5_INCLUDES and hdf5_LIBS if with-hdf5 is specified.
+AC_ARG_WITH(hdf5,
+[ --with-hdf5[=PATH]  Use HDF5 and optionally specify where HDF5 is installed.],
+, with_hdf5=no)
+
+case "$with_hdf5" in
+  no)
+    AC_MSG_NOTICE([configuring without HDF5 support])
+    : Do nothing
+  ;;
+  yes)
+    # HDF5 install path was not specified.
+    # Look in a couple of standard locations to probe if 
+    # HDF5 header files are there.
+    AC_MSG_CHECKING([for HDF5 installation])
+    for dir in /usr /usr/local; do
+      if test -f ${dir}/include/hdf5.h; then
+        hdf5_PREFIX=${dir}
+        break
+      fi
+    done
+    AC_MSG_RESULT([$hdf5_PREFIX])
+  ;;
+  *)
+    # HDF5 install path was specified.
+    AC_MSG_CHECKING([for HDF5 installation])
+
+    if test -f ${with_hdf5}/include/hdf5.h; then
+        hdf5_PREFIX=$with_hdf5
+        hdf5_INCLUDES="-I${hdf5_PREFIX}/include"
+        hdf5_LIBS="-L${hdf5_PREFIX}/lib -lhdf5"
+        AC_MSG_RESULT([$hdf5_PREFIX])
+    else
+        AC_MSG_RESULT([$hdf5_PREFIX])
+        AC_MSG_ERROR([HDF5 not found in $with_hdf5])
+    fi
+  ;;
+esac
+
+
+
+# Test compiling an HDF application
+
+# NOTE that AC_SEARCH_LIBS didn't work completely so
+# use a more complicated example program to see
+# if that will catch when HDF is not working.
+if test "${hdf5_PREFIX+set}" = set; then
+
+   AC_REQUIRE([AC_PROG_CXX])
+   AC_MSG_CHECKING(whether HDF5 link works)
+   AC_LANG_PUSH(C++)
+   CASC_PUSH_COMPILER_STATE
+   # NOTE lib z and m were from BTNG macro.
+   LIBS="${LIBS} ${hdf5_LIBS} $libz_LIBS -lm "
+   CXXFLAGS="${CXXFLAGS} ${hdf5_INCLUDES}"
+   AC_LINK_IFELSE([
+      #include "hdf5.h"
+      #define FILE "file.h5"
+
+      int main() {
+
+         hid_t       file_id;   /* file identifier */
+         herr_t      status;
+
+         /* Create a new file using default properties. */
+         file_id = H5Fcreate(FILE, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+
+         /* Terminate access to the file. */
+         status = H5Fclose(file_id); 
+     }
+      ], 
+      casc_hdf5_compile=yes,
+      casc_hdf5_compile=no)
+   CASC_POP_COMPILER_STATE
+   AC_LANG_POP
+   AC_MSG_RESULT($casc_hdf5_compile)
+
+   if test "$casc_hdf5_compile" = no; then
+      AC_MSG_ERROR([HDF5 compile/link test failed])
+   fi
+fi
+
+# END CASC_SUPPORT_HDF5
+
+])dnl End definition of CASC_SUPPORT_HDF5
 
 
 
@@ -4396,9 +4412,22 @@ AC_DEFUN([CASC_SET_SUFFIX_RULES],
 
 ])
 
+dnl Macro to save compiler state flags for invoking dnl compiler tests
+dnl NOTE that this is NOT currently a stack so can dnl only be called
+dnl in push/pop order.  push push pop pop dnl will fail
+AC_DEFUN([CASC_PUSH_COMPILER_STATE],[
+   casc_save_LIBS=$LIBS
+   casc_save_CXXFLAGS=$CXXFLAGS
+])
 
-
-
+dnl Macro to restore compiler state flags for invoking
+dnl compiler tests
+AC_DEFUN([CASC_POP_COMPILER_STATE],[
+   LIBS=$casc_save_LIBS
+   unset casc_save_LIBS
+   CXXFLAGS=$casc_save_CXXFLAGS
+   unset casc_save_CXXFLAGS
+])
 
 dnl ********************************************************************
 dnl * CASC_PROG_MPICC searches the PATH for an available MPI C compiler
@@ -5247,55 +5276,59 @@ dnl Define a macro for supporting SILO
 AC_DEFUN([CASC_SUPPORT_SILO],[
 
 # Begin CASC_SUPPORT_SILO
-# Defines SILO_PREFIX SILO_INCLUDES and SILO_LIBS if with-silo is specified.
+# Defines silo_PREFIX silo_INCLUDES and silo_LIBS if with-silo is specified.
 AC_ARG_WITH(silo,
-[ --with-silo=PATH  Use SILO and optionally specify where SILO is installed.],
+[ --with-silo[=PATH]  Use SILO and optionally specify where SILO is installed.],
 , with_silo=no)
-
-BTNG_AC_LOG(with_silo is $with_silo)
 
 case "$with_silo" in
   no)
-    BTNG_AC_LOG(Not setting up for SILO)
+    AC_MSG_NOTICE([configuring without SILO support])
     : Do nothing
   ;;
   yes)
     # SILO install path was not specified.
     # Look in a couple of standard locations to probe if 
     # SILO header files are there.
-    BTNG_AC_LOG(Looking for SILO installation)
+    AC_MSG_CHECKING([for SILO installation])
     for dir in /usr /usr/local; do
       if test -f ${dir}/include/silo.h; then
         silo_PREFIX=${dir}
-	BTNG_AC_LOG(Found silo.h ${dir}/include)
         break
       fi
     done
+    AC_MSG_RESULT([$silo_PREFIX])
   ;;
   *)
     # SILO install path was specified.
-    BTNG_AC_LOG(Expect SILO installation in $with_silo)
+    AC_MSG_CHECKING([for SILO installation])
     silo_PREFIX=$with_silo
     silo_INCLUDES="-I${silo_PREFIX}/include"
-    BTNG_AC_LOG(Set silo_INCLUDES to $silo_INCLUDES)
+    if test -f ${silo_PREFIX}/include/silo.h; then
+        AC_MSG_RESULT([$silo_PREFIX])
+    else
+        AC_MSG_RESULT([$silo_PREFIX])
+        AC_MSG_ERROR([SILO not found in $with_silo])
+    fi
   ;;
 esac
 
-# Use HDF silo library if available
+# Determine which SILO library is built
 if test "${silo_PREFIX+set}" = set; then
+   AC_MSG_CHECKING([for SILO library])
    if test -f ${silo_PREFIX}/lib/libsilo.a; then
       silo_LIBS='-lsilo'
+      AC_MSG_RESULT([using $silo_LIBS])
    elif test -f ${silo_PREFIX}/lib/libsiloh5.a; then
       silo_LIBS='-lsiloh5'
+      AC_MSG_RESULT([using $silo_LIBS])
    else
+      AC_MSG_RESULT([using $silo_LIBS])
       AC_MSG_ERROR([Could not fine silo library in $silo_PREFIX])
    fi
 
    silo_LIBS="-L${silo_PREFIX}/lib ${silo_LIBS}"
 fi
-
-BTNG_AC_LOG(silo_INCLUDES is $silo_INCLUDES)
-BTNG_AC_LOG(silo_LIBS is $silo_LIBS)
 
 # END CASC_SUPPORT_SILO
 

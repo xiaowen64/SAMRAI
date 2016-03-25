@@ -1,5 +1,5 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/timers/main_timer.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/timers/main_timer.C $
 // Description: Test program to demonstrate/test timers.
 //
 
@@ -268,6 +268,28 @@ int main( int argc, char *argv[] )
    }
    timer_excl->stop();
    timer->stop();
+
+   /*
+    * Check if we can allocate a large number of timers
+    */
+   const int max_timers = 575;
+   
+   tbox::Pointer<tbox::Timer> timers[max_timers];
+   for(int timer_number = 0; timer_number < max_timers; timer_number++) {
+
+      std::string timer_name = "testcount-" + tbox::Utilities::intToString(timer_number, 4);
+
+      timers[timer_number] = tbox::TimerManager::getManager()->
+	 getTimer(timer_name);
+
+      if (timers[timer_number].isNull()) {
+	 TBOX_ERROR("Failed to allocate timer, max was " + timer_number);
+      }
+   }
+
+   for(int timer_number = 0; timer_number < max_timers; timer_number++) {
+      timers[timer_number].setNull();
+   }
 
 #ifdef CHECK_PTIMER
 

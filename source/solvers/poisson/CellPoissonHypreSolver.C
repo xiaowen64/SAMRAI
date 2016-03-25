@@ -2,11 +2,11 @@
 #define included_solv_CellPoissonHypreSolver_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonHypreSolver.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/poisson/CellPoissonHypreSolver.C $
  * Package:     SAMRAI solvers
  * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 2147 $
- * Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+ * Revision:    $LastChangedRevision: 2294 $
+ * Modified:    $LastChangedDate: 2008-07-14 10:34:59 -0700 (Mon, 14 Jul 2008) $
  * Description: Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -1364,16 +1364,20 @@ template<int DIM> int CellPoissonHypreSolver<DIM>::solveSystem( const int u ,
    }
 
    if ( d_use_smg ) {
-      HYPRE_StructSMGSolve(d_mg_data,
-			   d_matrix,
-			   d_linear_rhs,
-			   d_linear_sol);
+      // HYPRE_StructSMGSetMaxIter(d_mg_data, d_max_iterations);
+      HYPRE_StructSMGSetTol(d_mg_data, d_relative_residual_tol);
+      /* converge = */ HYPRE_StructSMGSolve(d_mg_data,
+                                      d_matrix,
+                                      d_linear_rhs,
+                                      d_linear_sol);
    } 
    else {
-      HYPRE_StructPFMGSolve(d_mg_data,
-			    d_matrix,
-			    d_linear_rhs,
-			    d_linear_sol);
+      // HYPRE_StructPFMGSetMaxIter(d_mg_data, d_max_iterations);
+      HYPRE_StructPFMGSetTol(d_mg_data, d_relative_residual_tol);
+      /* converge = */ HYPRE_StructPFMGSolve(d_mg_data,
+                                       d_matrix,
+                                       d_linear_rhs,
+                                       d_linear_sol);
    }
 
    if (d_print_solver_info) {

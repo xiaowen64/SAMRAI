@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/NodeGeometry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/boxgeometry/NodeGeometry.h $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description:	hier::Box geometry information for node centered objects
 //
 
@@ -14,6 +14,7 @@
 #include "Box.h"
 #include "BoxGeometry.h"
 #include "BoxOverlap.h"
+#include "NodeOverlap.h"
 #include "IntVector.h"
 #include "tbox/Pointer.h"
 
@@ -36,6 +37,12 @@ namespace SAMRAI {
 template<int DIM> class NodeGeometry : public hier::BoxGeometry<DIM>
 {
 public:
+
+   /*!
+    * The BoxOverlap implemenation for this geometry.
+    */
+   typedef NodeOverlap<DIM> Overlap;
+
    /*!
     * @brief Convert an AMR index box space box into a node geometry box.
     * A node geometry box is extends the given AMR index box space box

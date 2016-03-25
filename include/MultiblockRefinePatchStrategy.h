@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefinePatchStrategy.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/transfer/multiblock/MultiblockRefinePatchStrategy.h $
 // Package:	SAMRAI multiblock
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2190 $
+// Modified:	$LastChangedDate: 2008-05-07 15:02:02 -0700 (Wed, 07 May 2008) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
  
@@ -118,7 +118,7 @@ public:
 
    /*!
     * Perform user-defined refining operations.  This member function
-    * is called before standard refining operations (expressed using
+    * is called after standard refining operations (expressed using
     * concrete subclasses of the xfer::RefineOperator<DIM> base class).
     * The postprocess function must refine data from the scratch components
     * of the coarse patch into the scratch components of the fine patch on the

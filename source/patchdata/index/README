@@ -1,8 +1,8 @@
-File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/README $
+File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/index/README $
 Package:     SAMRAI templates
 Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-Revision:    $LastChangedRevision: 1917 $
-Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+Revision:    $LastChangedRevision: 2249 $
+Modified:    $LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 Description: README file for index data.
 
 THE USER-DEFINED TYPE TO BE USED WITH INDEX DATA
@@ -49,7 +49,7 @@ for the prescribed datatype to be used properly in the application.
 If you are constructing a datatype that is intended to be used for a particular
 application, and is NOT intended to be part of the SAMRAI library, instantiation
 may be done in user code.   Datatypes that are included in SAMRAI should instead
-be instantiated through separate files.  See below.
+be instantiated through the normal SAMRAI files.
 
 To instantiate the templates in user code, add the following lines to one of the
 *.C files in your application code:
@@ -61,58 +61,24 @@ To instantiate the templates in user code, add the following lines to one of the
         #include "tbox/List.C"
         #include "tbox/Pointer.C"
         #include "IndexVariable.C"
-        template class pdat::IndexData< NDIM,TYPE >;
-        template class pdat::IndexDataFactory< NDIM,TYPE >;
-        template class pdat::IndexDataNode< NDIM,TYPE >;
-        template class pdat::IndexIterator< NDIM,TYPE >;
-        template class pdat::IndexVariable< NDIM,TYPE >;
+
+        template class pdat::IndexData< NDIM,TYPE,BOX_GEOMETRY >;
+        template class pdat::IndexDataFactory< NDIM,TYPE,BOX_GEOMETRY >;
+        template class pdat::IndexDataNode< NDIM,TYPE,BOX_GEOMETRY >;
+        template class pdat::IndexIterator< NDIM,TYPE,BOX_GEOMETRY >;
+        template class pdat::IndexVariable< NDIM,TYPE,BOX_GEOMETRY >;
         template class tbox::Array< NDIM,TYPE >;
-        template class tbox::Array< pdat::IndexDataNode<NDIM,TYPE> >;
-        template class tbox::List< pdat::IndexDataNode<NDIM,TYPE> >;
-        template class tbox::ListIterator< pdat::IndexDataNode<NDIM,TYPE> >;
-        template class tbox::ListNode< pdat::IndexDataNode<NDIM,TYPE> >;
-        template class tbox::Pointer< pdat::IndexData<NDIM,TYPE> >;
-        template class tbox::Pointer< pdat::IndexVariable<NDIM,TYPE> >;
+        template class tbox::Array< pdat::IndexDataNode<NDIM,TYPE,BOX_GEOMETRY> >;
+        template class tbox::List< pdat::IndexDataNode<NDIM,TYPE,BOX_GEOMETRY> >;
+        template class tbox::ListIterator< pdat::IndexDataNode<NDIM,TYPE,BOX_GEOMETRY> >;
+        template class tbox::ListNode< pdat::IndexDataNode<NDIM,TYPE,BOX_GEOMETRY> >;
+        template class tbox::Pointer< pdat::IndexData<NDIM,TYPE,BOX_GEOMETRY> >;
+        template class tbox::Pointer< pdat::IndexVariable<NDIM,TYPE,BOX_GEOMETRY> >;
 
-where TYPE is the class that defines a particular parameter 
-of IndexData type (e.g. BoundaryCell).
-
-
-INSTATIATING TEMPLATES IN THE LIBRARY
-
-If the datatype is intended to go into the SAMRAI library, it should
-be instantiated through separate files to correspond with the way the
-other datatypes are instantiated in the library.
-For each combination of templated types that uses TYPE as a template
-parameter, a file needs to be created for the instantiation of the template.
-This can be done using the perl script make-template.pl located in
-SAMRAI/source/templates.  For example, to create the instantiation file for
-the template class pdat::IndexData<NDIM,TYPE> in directory temp, execute the
-script by typing on the command line:
-
-% perl make-template.pl temp pdat pdat::IndexData NDIM\,TYPE
-
-The file pdat__IndexData-NDIM_TYPE.C would be created in directory temp.
-
-For nested templates, such as tbox::Pointer< pdat::IndexData2<TYPE> >, just
-add another type name to the command line:
-
-% perl make-template.pl temp tbox tbxo::Pointer pdat::IndexData NDIM\,TYPE
-
-When a template parameter type is created, instantiation files need to be
-created for the following template classes, in order for the IndexData classes
-to properly link:
-
-pdat::IndexData<NDIM,TYPE>
-pdat::IndexDataFactory<NDIM,TYPE>
-pdat::IndexDataNode<NDIM,TYPE>
-pdat::IndexIterator<NDIM,TYPE>
-pdat::IndexVariable<NDIM,TYPE>
-tbox::Array<NDIM,TYPE>
-tbox::Array< pdat::IndexDataNode<NDIM,TYPE> >
-tbox::List< pdat::IndexDataNode<NDIM,TYPE> >
-tbox::Pointer< pdat::IndexData<NDIM,TYPE> >
-tbox::Pointer< pdat::IndexVariable<NDIM,TYPE> >
+where TYPE is the class that defines a particular parameter of
+IndexData type (e.g. BoundaryCell).  BOX_GEOMETRY is the BoxGeometry
+that specifies the centering and geometry in index (e.g. CellGeometry,
+NodeGeometry).
 
 ACCESSING INDEX DATA THROUGH THE ITERATOR
 
@@ -148,5 +114,4 @@ patch (including ghosts) where an IndexData object is located
 using a IndexIterator.  
 
      ADD EXAMPLE USE HERE
-
 

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/EdgeOverlap.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/boxgeometry/EdgeOverlap.h $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description:	hier::Box intersection information for edge centered objects
 //
 
@@ -55,11 +55,13 @@ public:
    virtual bool isOverlapEmpty() const;
 
    /**
-    * Return the list of boxes (in edge centered index space) that constitute
-    * the intersection.  The boxes are given in the destination coordinate
-    * space and must be shifted by -(getSourceOffset()) to lie in the source
-    * index space.  The axis argument represents which axis is desired: X=0,
-    * Y=1, and Z=2.
+    * Return the list of boxes (in edge centered index space) that
+    * constitute the intersection.  The boxes are given in the
+    * destination coordinate space and must be shifted by
+    * -(getSourceOffset()) to lie in the source index space.  The axis
+    * argument represents which axis is desired: X=0, Y=1, and
+    * Z=2. This method over-rides the virtual function in the
+    * hier::BoxOverlap<DIM> base class.
     */
    virtual const hier::BoxList<DIM>& getDestinationBoxList(const int axis) const;
 

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/HDFDatabase.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/restartdb/HDFDatabase.C $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2130 $
-// Modified:    $LastChangedDate: 2008-04-11 17:55:01 -0700 (Fri, 11 Apr 2008) $
+// Revision:    $LastChangedRevision: 2220 $
+// Modified:    $LastChangedDate: 2008-06-17 18:19:28 -0700 (Tue, 17 Jun 2008) $
 // Description: A database structure that stores HDF5 format data.
 //
 
@@ -70,6 +70,21 @@
 *************************************************************************
 */
 
+/*
+ * SGS Note:  Can the new HDF5 stack stuff be a better solution to this?
+ */
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+#define BEGIN_SUPPRESS_HDF5_WARNINGS                  \
+{                                                     \
+   herr_t (*H5E_saved_efunc) (hid_t, void*) = NULL;   \
+   void *H5E_saved_edata = NULL;                      \
+   H5Eget_auto(H5E_DEFAULT, &H5E_saved_efunc, &H5E_saved_edata); \
+   H5Eset_auto(H5E_DEFAULT, NULL, NULL);                              
+
+#define END_SUPPRESS_HDF5_WARNINGS                     \
+   H5Eset_auto(H5E_DEFAULT, H5E_saved_efunc, H5E_saved_edata);	\
+}
+#else
 #define BEGIN_SUPPRESS_HDF5_WARNINGS                  \
 {                                                     \
    herr_t (*H5E_saved_efunc) (void*) = NULL;          \
@@ -80,6 +95,7 @@
 #define END_SUPPRESS_HDF5_WARNINGS                     \
    H5Eset_auto(H5E_saved_efunc, H5E_saved_edata);      \
 }
+#endif
 
 
 
@@ -138,7 +154,12 @@ herr_t HDFDatabase::iterateKeys(
          addKeyToList(name, KEY_DATABASE, void_database);
        } else if ( !strcmp(name, database -> d_group_to_search.c_str()) ) {
          hid_t grp;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+	 grp = H5Gopen(loc_id, name, H5P_DEFAULT);
+#else	 
          grp = H5Gopen(loc_id, name);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
          TBOX_ASSERT( grp >= 0 );
 #endif
@@ -152,7 +173,13 @@ herr_t HDFDatabase::iterateKeys(
          database -> d_found_group = false;
        } else {
          hid_t grp;
+
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+	 grp = H5Gopen(loc_id, name, H5P_DEFAULT);
+#else	 
          grp = H5Gopen(loc_id, name);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
          TBOX_ASSERT( grp >= 0 );
 #endif
@@ -172,8 +199,12 @@ herr_t HDFDatabase::iterateKeys(
      case H5G_DATASET: {
        if (database -> d_still_searching && database -> d_found_group) {
          hid_t this_set;
-         BEGIN_SUPPRESS_HDF5_WARNINGS
-         this_set = H5Dopen(loc_id, name);
+         BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(loc_id, name, H5P_DEFAULT);
+#else	 
+      this_set = H5Dopen(loc_id, name);
+#endif
          END_SUPPRESS_HDF5_WARNINGS
          if (this_set > 0) {
             hid_t attr = H5Aopen_name(this_set, "Type");
@@ -340,9 +371,13 @@ bool HDFDatabase::keyExists(const std::string& key)
    herr_t errf;
    
    hid_t this_set;
-   BEGIN_SUPPRESS_HDF5_WARNINGS
-   this_set = H5Dopen(d_group_id, key.c_str());
-   END_SUPPRESS_HDF5_WARNINGS
+   BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	
+   this_set = H5Dopen(d_group_id, key.c_str()); 
+#endif
+   END_SUPPRESS_HDF5_WARNINGS;
    if (this_set > 0) {
       key_exists = true;
       errf = H5Dclose(this_set);
@@ -352,8 +387,14 @@ bool HDFDatabase::keyExists(const std::string& key)
    }
    if (!key_exists) {
       hid_t this_group;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_group = H5Gopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_group = H5Gopen(d_group_id, key.c_str());
+#endif
+
       END_SUPPRESS_HDF5_WARNINGS
       if (this_group > 0) {
          key_exists = true;
@@ -413,9 +454,13 @@ enum Database::DataType HDFDatabase::getArrayType(const std::string& key)
       } else {
 
 	 hid_t this_set;
-	 BEGIN_SUPPRESS_HDF5_WARNINGS
-	    this_set = H5Dopen(d_group_id, key.c_str());
-	 END_SUPPRESS_HDF5_WARNINGS
+	 BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+	 this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
+	 this_set = H5Dopen(d_group_id, key.c_str());
+#endif
+	 END_SUPPRESS_HDF5_WARNINGS;
 	    if (this_set > 0) {
 	       int type_key = readAttribute(this_set);
 	       
@@ -503,9 +548,13 @@ int HDFDatabase::getArraySize(const std::string& key)
    int array_size  = 0;
 
    hid_t this_set;
-   BEGIN_SUPPRESS_HDF5_WARNINGS
+   BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    this_set = H5Dopen(d_group_id, key.c_str());
-   END_SUPPRESS_HDF5_WARNINGS
+#endif
+   END_SUPPRESS_HDF5_WARNINGS;
    if (this_set > 0) {
       hid_t this_space = H5Dget_space(this_set);
 #ifdef ASSERT_HDF5_RETURN_VALUES
@@ -557,9 +606,13 @@ bool HDFDatabase::isDatabase(const std::string& key)
    herr_t errf;
 
    hid_t this_group;
-   BEGIN_SUPPRESS_HDF5_WARNINGS
+   BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   this_group = H5Gopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    this_group = H5Gopen(d_group_id, key.c_str());
-   END_SUPPRESS_HDF5_WARNINGS
+#endif
+   END_SUPPRESS_HDF5_WARNINGS;
    if (this_group > 0) {
       is_database = true;
       errf = H5Gclose(this_group);
@@ -586,7 +639,13 @@ HDFDatabase::putDatabase(const std::string& key)
    TBOX_ASSERT(!key.empty());
 #endif
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   hid_t this_group = H5Gcreate(d_group_id, key.c_str(), 0, H5P_DEFAULT, H5P_DEFAULT);
+#else	
    hid_t this_group = H5Gcreate(d_group_id, key.c_str(), 0);
+#endif
+
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( this_group >= 0 );
 #endif
@@ -616,7 +675,11 @@ HDFDatabase::getDatabase(const std::string& key)
          << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
-   hid_t this_group = H5Gopen(d_group_id, key.c_str());
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   hid_t this_group = H5Gopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	
+   hid_t this_group = H5Gopen(d_group_id, key.c_str()); 
+#endif
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( this_group >= 0 );
 #endif
@@ -644,9 +707,13 @@ bool HDFDatabase::isBool(const std::string& key)
    
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_BOOL_ARRAY) {
@@ -702,8 +769,14 @@ void HDFDatabase::putBoolArray(
       Array<int> data1( nelements );
       for ( int i=0; i<nelements; ++i ) data1[i] = data[i];
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_BOOL,
+                                space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_BOOL,
                                 space, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -759,7 +832,12 @@ Array<bool> HDFDatabase::getBoolArray(const std::string& key)
    hsize_t nsel;
    herr_t errf;
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset   = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset   = H5Dopen(d_group_id, key.c_str());
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -819,9 +897,13 @@ bool HDFDatabase::isDatabaseBox(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_BOX_ARRAY) {
@@ -866,8 +948,15 @@ void HDFDatabase::putDatabaseBoxArray(
       hsize_t length = nelements;
       hid_t space = H5Screate_simple(1, &length, NULL);
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset =
+         H5Dcreate( d_group_id, key.c_str(), stype, space, H5P_DEFAULT, 
+		    H5P_DEFAULT, H5P_DEFAULT);
+#else	
       hid_t dataset =
          H5Dcreate( d_group_id, key.c_str(), stype, space, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -933,7 +1022,12 @@ Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(const std::string& key)
    // Memory type
    hid_t mtype = createCompoundDatabaseBox('n');
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset   = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset   = H5Dopen(d_group_id, key.c_str());
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -1020,9 +1114,14 @@ bool HDFDatabase::isChar(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_CHAR_ARRAY) {
@@ -1084,8 +1183,14 @@ void HDFDatabase::putCharArray(
       TBOX_ASSERT( space >= 0 );
 #endif
 
-      dataset = 
-         H5Dcreate(d_group_id, key.c_str(), atype, space, H5P_DEFAULT);
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      dataset = H5Dcreate(d_group_id, key.c_str(), atype, space,
+			   H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
+      dataset = H5Dcreate(d_group_id, key.c_str(), atype, space, 
+			  H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -1147,7 +1252,11 @@ Array<char> HDFDatabase::getCharArray(const std::string& key)
    size_t  nsel = 0;
    herr_t errf;
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset   = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset   = H5Dopen(d_group_id, key.c_str());
+#endif
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -1204,9 +1313,13 @@ bool HDFDatabase::isComplex(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_COMPLEX_ARRAY) {
@@ -1258,8 +1371,14 @@ void HDFDatabase::putComplexArray(
       TBOX_ASSERT( space >= 0 );
 #endif
    
-      dataset = 
-         H5Dcreate( d_group_id, key.c_str(), stype, space, H5P_DEFAULT);
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      dataset = H5Dcreate( d_group_id, key.c_str(), stype, space, 
+			   H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
+      dataset = H5Dcreate( d_group_id, key.c_str(), stype, space, 
+			   H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -1325,7 +1444,12 @@ Array<dcomplex> HDFDatabase::getComplexArray(const std::string& key)
    // Memory type
    hid_t mtype = createCompoundComplex('n');
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset   = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset   = H5Dopen(d_group_id, key.c_str());
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -1410,9 +1534,13 @@ bool HDFDatabase::isDouble(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_DOUBLE_ARRAY) {
@@ -1455,8 +1583,14 @@ void HDFDatabase::putDoubleArray(
       TBOX_ASSERT( space >= 0 );
 
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_DOUBLE, 
+                                space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_DOUBLE, 
                                 space, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -1512,7 +1646,11 @@ Array<double> HDFDatabase::getDoubleArray(const std::string& key)
    hid_t   dset, dspace;
    hsize_t nsel;
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset = H5Dopen(d_group_id, key.c_str());
+#endif
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -1562,9 +1700,13 @@ bool HDFDatabase::isFloat(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_FLOAT_ARRAY) {
@@ -1607,8 +1749,14 @@ void HDFDatabase::putFloatArray(
       TBOX_ASSERT( space >= 0 );
 
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_FLOAT, 
+                                space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_FLOAT, 
                                 space, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -1664,7 +1812,12 @@ Array<float> HDFDatabase::getFloatArray(const std::string& key)
    hid_t   dset, dspace;
    hsize_t nsel;
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset = H5Dopen(d_group_id, key.c_str());
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -1715,9 +1868,13 @@ bool HDFDatabase::isInteger(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_INT_ARRAY) {
@@ -1760,8 +1917,14 @@ void HDFDatabase::putIntegerArray(
       TBOX_ASSERT(space >= 0);
 #endif
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_INT, 
+                                space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_INT, 
                                 space, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT(dataset >= 0);
 #endif
@@ -1817,7 +1980,12 @@ Array<int> HDFDatabase::getIntegerArray(const std::string& key)
    hid_t   dset, dspace;
    hsize_t nsel;
 
-   dset = H5Dopen(d_group_id, key.c_str());
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	
+   dset = H5Dopen(d_group_id, key.c_str()); 
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -1867,9 +2035,13 @@ bool HDFDatabase::isString(const std::string& key)
 
    if (!key.empty()) {
       hid_t this_set;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
+      BEGIN_SUPPRESS_HDF5_WARNINGS;
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      this_set = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
       this_set = H5Dopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
+#endif
+      END_SUPPRESS_HDF5_WARNINGS;
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_STRING_ARRAY) {
@@ -1942,9 +2114,14 @@ void HDFDatabase::putStringArray(
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( space >= 0 );
 #endif
-
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t dataset = H5Dcreate(d_group_id, key.c_str(), 
+                                atype, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else	
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), 
                                 atype, space, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( dataset >= 0 );
 #endif
@@ -2007,7 +2184,12 @@ Array<std::string> HDFDatabase::getStringArray(const std::string& key)
    hid_t   dset, dspace, dtype;
    char*   local_buf;
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   dset   = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
+#else	 
    dset   = H5Dopen(d_group_id, key.c_str());
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( dset >= 0 );
 #endif
@@ -2062,8 +2244,14 @@ void HDFDatabase::writeAttribute( int type_key,
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( attr_id >= 0 );
 #endif
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   hid_t attr = H5Acreate(dataset_id, "Type", H5T_SAMRAI_ATTR, 
+                          attr_id, H5P_DEFAULT, H5P_DEFAULT);
+#else	
    hid_t attr = H5Acreate(dataset_id, "Type", H5T_SAMRAI_ATTR, 
                           attr_id, H5P_DEFAULT);
+#endif
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( attr >= 0 );
 #endif
@@ -2300,7 +2488,16 @@ void HDFDatabase::insertArray(
    herr_t errf;
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 2))
 
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+   hid_t array = H5Tarray_create(member_id, ndims, dim);
+#else	
+   /*
+    * Note that perm is NOT used by HDF, see HDF documentation.
+    */
    hid_t array = H5Tarray_create(member_id, ndims, dim, perm);
+#endif
+
+
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( array >= 0 );
 #endif

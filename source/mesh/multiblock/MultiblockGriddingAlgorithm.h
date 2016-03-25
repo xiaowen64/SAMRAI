@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.h $
 // Package:     SAMRAI multiblock
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2292 $
+// Modified:    $LastChangedDate: 2008-07-11 11:31:57 -0700 (Fri, 11 Jul 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -774,6 +774,7 @@ private:
 
    tbox::Array<int> d_proper_nesting_buffer;
    bool d_allow_patches_smaller_than_ghostwidth;
+   bool d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
    tbox::Array<double> d_efficiency_tolerance;
    tbox::Array<double> d_combine_efficiency;
 

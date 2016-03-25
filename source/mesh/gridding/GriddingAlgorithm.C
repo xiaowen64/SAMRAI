@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/GriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/gridding/GriddingAlgorithm.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2148 $
-// Modified:    $LastChangedDate: 2008-04-24 10:04:24 -0700 (Thu, 24 Apr 2008) $
+// Revision:    $LastChangedRevision: 2297 $
+// Modified:    $LastChangedDate: 2008-07-14 17:06:37 -0700 (Mon, 14 Jul 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -76,7 +76,8 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
    tbox::Pointer< LoadBalanceStrategy<DIM> > balancer,
    bool register_for_restart)
    :
-   d_resolve_nonnesting_tags('w')
+   d_check_nonrefined_tags('w'),
+   d_check_overlapping_patches('i')
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
     TBOX_ASSERT(!object_name.empty());
@@ -93,23 +94,23 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
       tbox::RestartManager::getManager()->
          registerRestartItem(d_object_name, this);
    }
- 
-   d_tag_init_strategy  = tag_init_strategy; 
-   d_box_generator   = generator; 
+
+   d_tag_init_strategy  = tag_init_strategy;
+   d_box_generator   = generator;
    d_load_balancer   = balancer;
 
-   /* 
-    * Construct integer tag variables and add to variable database.  Note that 
-    * variables and patch data indices are shared among all GriddingAlgorithm 
-    * instances.  The VariableDatabase holds the variables, once contructed and 
-    * registered via the VariableDatabase::registerInternalSAMRAIVariable() 
+   /*
+    * Construct integer tag variables and add to variable database.  Note that
+    * variables and patch data indices are shared among all GriddingAlgorithm
+    * instances.  The VariableDatabase holds the variables, once contructed and
+    * registered via the VariableDatabase::registerInternalSAMRAIVariable()
     * function call.  Note that variables are registered and patch data indices
-    * are made only for the first time through the constructor. 
+    * are made only for the first time through the constructor.
     */
    hier::VariableDatabase<DIM>* var_db = hier::VariableDatabase<DIM>::getDatabase();
 
    static std::string tag_interior_variable_name("GriddingAlgorithm__tag-interior");
-   static std::string tag_buffer_variable_name("GriddingAlgorithm__tag-buffer"); 
+   static std::string tag_buffer_variable_name("GriddingAlgorithm__tag-buffer");
 
    d_tag = var_db->getVariable(tag_interior_variable_name);
    if (d_tag.isNull()) {
@@ -124,12 +125,12 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
    if (s_tag_indx < 0) {
       s_tag_indx =
          var_db->registerInternalSAMRAIVariable(d_tag,
-                                                hier::IntVector<DIM>(0)); 
+                                                hier::IntVector<DIM>(0));
    }
    if (s_buf_tag_indx < 0) {
       s_buf_tag_indx =
          var_db->registerInternalSAMRAIVariable(d_buf_tag,
-                                                hier::IntVector<DIM>(1)); 
+                                                hier::IntVector<DIM>(1));
    }
 
    d_tag_indx = s_tag_indx;
@@ -142,7 +143,7 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
    d_false_tag = 0;
 
    /*
-    * Initialize communication algorithm for exchanging buffered tag data. 
+    * Initialize communication algorithm for exchanging buffered tag data.
     */
    d_bdry_fill_tags = new xfer::RefineAlgorithm<DIM>();
 
@@ -153,7 +154,7 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
                     ((tbox::Pointer<xfer::RefineOperator<DIM> >)NULL));
 
    /*
-    * Set default state for gridding parameters.  These values will be 
+    * Set default state for gridding parameters.  These values will be
     * reset to valid values when reading from input or restart.
     */
    d_max_levels = 1;
@@ -168,6 +169,7 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
 
    d_proper_nesting_buffer.resizeArray(d_max_levels);
    d_allow_patches_smaller_than_ghostwidth = false;
+   d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps = false;
 
    for (int ln = 0; ln < d_max_levels; ln++) {
      d_ratio_to_coarser[ln] = hier::IntVector<DIM>(1);
@@ -184,19 +186,20 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
 
    d_barrier_before_clustering = false;
    d_sort_boxes_after_clustering = false;
+   d_coalesce_boxes = true;
 
    d_extend_tags_to_bdry = false;
-  
+
    /*
-    * Timers:  for gathering performance information about box 
+    * Timers:  for gathering performance information about box
     * calculus and other regridding operations.
     */
    t_find_domain_complement = tbox::TimerManager::getManager() ->
      getTimer("mesh::GriddingAlgorithm::findDomainComplement()");
    t_intersect_boxes_find_refinement = tbox::TimerManager::getManager() ->
      getTimer("mesh::GriddingAlgorithm::intersect_boxes_find_refinement");
-   t_load_balance_boxes = tbox::TimerManager::getManager() ->
-     getTimer("mesh::GriddingAlgorithm::load_balance_boxes");
+   t_load_balance = tbox::TimerManager::getManager() ->
+     getTimer("mesh::GriddingAlgorithm::load_balance");
    t_bdry_fill_tags_create = tbox::TimerManager::getManager() ->
      getTimer("mesh::GriddingAlgorithm::bdry_fill_tags_create");
    t_make_coarsest = tbox::TimerManager::getManager() ->
@@ -227,14 +230,24 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
      getTimer("mesh::GriddingAlgorithm::find_nesting_restriction");
    t_apply_nesting_restriction = tbox::TimerManager::getManager()->
      getTimer("mesh::GriddingAlgorithm::apply_nesting_restriction");
-   t_extend_domain_to_boundary = tbox::TimerManager::getManager()->
-     getTimer("mesh::GriddingAlgorithm::extend_domain_to_boundary");
    t_coalesce_boxes = tbox::TimerManager::getManager()->
      getTimer("mesh::GriddingAlgorithm::coalesce_boxes");
    t_before_load_balance = tbox::TimerManager::getManager()->
      getTimer("mesh::GriddingAlgorithm::before_load_balance");
    t_grow_boxes_within_domain = tbox::TimerManager::getManager()->
      getTimer("mesh::GriddingAlgorithm::grow_boxes_within_domain");
+   t_reset_hier = tbox::TimerManager::getManager()->
+      getTimer("mesh::GriddingAlgorithm::reset_hierarchy_config");
+   t_tag_cells_for_refinement = tbox::TimerManager::getManager() ->
+     getTimer("mesh::GriddingAlgorithm::tag_cells_for_refinement");
+   t_box_massage = tbox::TimerManager::getManager()->
+      getTimer("mesh::GriddingAlgorithm::box_massage");
+   t_enforce_nesting = tbox::TimerManager::getManager()->
+     getTimer("mesh::GriddingAlgorithm::enforce_nesting");
+   t_extend_to_domain_boundary = tbox::TimerManager::getManager()->
+     getTimer("mesh::GriddingAlgorithm::extend_to_domain_boundary");
+   t_regrid_finer_create = tbox::TimerManager::getManager() ->
+     getTimer("mesh::GriddingAlgorithm::regridFinerLevel()_create");
 
   /*
    * Initialize object with data read from input and restart databases.
@@ -249,15 +262,15 @@ template<int DIM> GriddingAlgorithm<DIM>::GriddingAlgorithm(
   d_proper_nesting_boxes.resizeArray(d_max_levels);
   d_proper_nesting_complement.resizeArray(d_max_levels);
   d_bdry_sched_tags.resizeArray(d_max_levels);
- 
+
   if (d_read_dumped_level_boxes) {
-     d_regrid_box_utility = 
+     d_regrid_box_utility =
         new hier::BoxIOUtility<DIM>(d_regrid_boxes_filename,
                                hier::BoxIOUtility<DIM>::READ);
   }
 
   if (d_write_dumped_level_boxes) {
-     d_regrid_box_utility = 
+     d_regrid_box_utility =
         new hier::BoxIOUtility<DIM>(d_regrid_boxes_filename,
                                hier::BoxIOUtility<DIM>::WRITE);
   }
@@ -333,14 +346,14 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
    tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
    const double level_time,
    const hier::BoxArray<DIM>& override_boxes,
-   const hier::ProcessorMapping& override_mapping) 
+   const hier::ProcessorMapping& override_mapping)
 {
    tbox::Pointer< hier::PatchHierarchy<DIM> > patch_hierarchy = hierarchy;
 
    bool override_load_balance = false;
    if (override_boxes.size() != 0) {
       override_load_balance = true;
-   } 
+   }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(patch_hierarchy.isNull()));
@@ -410,7 +423,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
                          true);
 
    /*
-    * If there is no level 0 in the patch hierarchy, then check 
+    * If there is no level 0 in the patch hierarchy, then check
     * constraints on domain description.
     */
 
@@ -420,7 +433,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
          hier::Box<DIM> test_box = b();
          for (int dir = 0; dir < DIM; dir++) {
             if (test_box.numberCells(dir) < smallest_patch(dir)) {
-              int error_coarsen_ratio = 
+              int error_coarsen_ratio =
                   d_tag_init_strategy->getErrorCoarsenRatio();
                if (error_coarsen_ratio > 1) {
                   TBOX_ERROR(d_object_name << ": "
@@ -433,7 +446,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
                              << "properly enforced during coarsening for"
                              << "\nerror computation, the minimum patch"
                              << "size is the smallest patch size multiplied"
-                             << "\nby the error coarsen ratio, which is " 
+                             << "\nby the error coarsen ratio, which is "
                              << error_coarsen_ratio << " in this case."
                              << std::endl);
                } else {
@@ -455,17 +468,17 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
                  << "contain intersections with each other!");
       }
 
-      if ( (d_max_levels > 1) 
+      if ( (d_max_levels > 1)
            && (!d_tag_init_strategy->coarsestLevelBoxesOK(domain)) ) {
          TBOX_ERROR(d_object_name << ":  "
                  << "level gridding strategy encountered"
                  << " a problem with the domain boxes!");
       }
-   
+
    }
 
    /*
-    * Apply load balancing algorithm to boxes describing domain 
+    * Apply load balancing algorithm to boxes describing domain
     * to determine configuration of patches on level 0.
     */
 
@@ -475,17 +488,18 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
    const hier::IntVector<DIM> ratio_to_level_zero(1);
    hier::BoxArray<DIM> level_boxes;
    hier::ProcessorMapping mapping;
- 
-   if (!override_load_balance) { 
-      t_load_balance_boxes->start(); 
+
+   if (!override_load_balance) {
+      tbox::SAMRAI_MPI::barrier();
+      t_load_balance->start();
       d_load_balancer->loadBalanceBoxes(level_boxes, mapping,
-                                        domain_list, 
+                                        domain_list,
                                         patch_hierarchy, level_number, domain,
-                                        ratio_to_level_zero, 
-                                        smallest_patch, 
+                                        ratio_to_level_zero,
+                                        smallest_patch,
                                         largest_patch,
                                         patch_cut_factor, extend_ghosts);
-      t_load_balance_boxes->stop(); 
+      t_load_balance->stop();
    } else {
       level_boxes = override_boxes;
       mapping.setProcessorMapping(override_mapping.getProcessorMapping());
@@ -498,7 +512,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
                                          level_boxes,
                                          mapping);
 
-      // "true" argument: const bool initial_time = true; 
+      // "true" argument: const bool initial_time = true;
       d_tag_init_strategy->initializeLevelData(patch_hierarchy, level_number,
                                                level_time,
                                                levelCanBeRefined(level_number),
@@ -506,9 +520,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
 
    } else {
 
-      tbox::Pointer< hier::PatchLevel<DIM> > old_level = 
+      tbox::Pointer< hier::PatchLevel<DIM> > old_level =
          patch_hierarchy->getPatchLevel(level_number);
-   
+
       patch_hierarchy->removePatchLevel(level_number);
 
       patch_hierarchy->makeNewPatchLevel(level_number,
@@ -516,7 +530,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
                                          level_boxes,
                                          mapping);
 
-      // "false" argument: const bool initial_time = false; 
+      // "false" argument: const bool initial_time = false;
       d_tag_init_strategy->initializeLevelData(patch_hierarchy, level_number,
                                                level_time,
                                                levelCanBeRefined(level_number),
@@ -527,9 +541,13 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
 
    }
 
+   tbox::SAMRAI_MPI::barrier();
+   t_reset_hier->start();
    d_tag_init_strategy->resetHierarchyConfiguration(patch_hierarchy,
                                                     level_number,
                                                     level_number);
+   tbox::SAMRAI_MPI::barrier();
+   t_reset_hier->stop();
 
    t_make_coarsest->stop();
 
@@ -584,23 +602,23 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
 
    if ( levelCanBeRefined(level_number) ) {
 
-      const tbox::Pointer< hier::PatchLevel<DIM> > 
+      const tbox::Pointer< hier::PatchLevel<DIM> >
          patch_level = patch_hierarchy->getPatchLevel(level_number);
 
       hier::BoxArray<DIM> fine_boxes;
       hier::ProcessorMapping mapping;
 
       /*
-       * The boolean "do_tagging" specifies whether or not tagging will 
+       * The boolean "do_tagging" specifies whether or not tagging will
        * be performed. This will be true except in two circumstances:
        *    1) only user supplied refine boxes are used
        *    2) the boxes are read from a previously dumped file.
        *
        * If either of these circumstances is true, tagging operations
-       * are NOT necessary so do_tagging will be set to false. 
+       * are NOT necessary so do_tagging will be set to false.
        */
       bool do_tagging = true;
-      if (d_read_dumped_level_boxes || 
+      if (d_read_dumped_level_boxes ||
           d_tag_init_strategy->refineUserBoxInputOnly()) do_tagging = false;
 
       /*
@@ -609,22 +627,24 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
        */
       if (do_tagging) {
 
+         t_enforce_nesting->start();
          t_find_nesting_restriction->start();
          /*
           * Determine proper nesting box array for specified level.  If the
-          * level is the coarsest, the proper nesting box array covers same 
+          * level is the coarsest, the proper nesting box array covers same
           * region as the physical domain.  Otherwise, the nesting boxes are
           * computed from a proper interior of the level.
           */
          findProperNestingData(hierarchy, level_number);
          t_find_nesting_restriction->stop();
+         t_enforce_nesting->stop();
 
          /*
           * Create communication schedule for buffer tags on this level.
           */
          t_bdry_fill_tags_create->start();
          d_bdry_sched_tags[level_number] =
-         d_bdry_fill_tags->createSchedule(patch_level); 
+         d_bdry_fill_tags->createSchedule(patch_level);
          t_bdry_fill_tags_create->stop();
 
          /*
@@ -632,9 +652,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
           */
 
          patch_level->allocatePatchData(d_tag_indx);
-         setTagsOnLevel(d_false_tag, 
-                        patch_level, 
-                        d_tag_indx, 
+         setTagsOnLevel(d_false_tag,
+                        patch_level,
+                        d_tag_indx,
                         patch_level->getBoxes());
          /*
           * Perform pre-processing of error estimation data, if appropriate.
@@ -649,33 +669,37 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
          }
 
          /*
-          * Determine cells needing refinement on level and set tags to true. 
+          * Determine cells needing refinement on level and set tags to true.
           * Because we are constructing a new level, not regridding the level,
           * the coarsest_sync_level argument is always false.
           */
          bool coarsest_sync_level = false;
+         tbox::SAMRAI_MPI::barrier();
+         t_tag_cells_for_refinement->start();
          d_tag_init_strategy->
             tagCellsForRefinement(patch_hierarchy,
                                   level_number,
-                                  level_time, 
-                                  d_tag_indx, 
-                                  initial_time, 
+                                  level_time,
+                                  d_tag_indx,
+                                  initial_time,
                                   coarsest_sync_level,
                                   levelCanBeRefined(level_number),
                                   regrid_start_time);
+         tbox::SAMRAI_MPI::barrier();
+         t_tag_cells_for_refinement->stop();
 
          /*
           * Check for user-tagged cells that violate proper nesting.
           * except if user specified that the violating tags be ignored.
           */
-         if ( d_resolve_nonnesting_tags != 'i' ) {
-            checkNonnestingTags(patch_level,
+         if ( d_check_nonrefined_tags != 'i' ) {
+            checkNonrefinedTags(patch_level,
                                 *d_proper_nesting_complement[level_number]);
          }
 
          /*
-          * Buffer true tagged cells by specified amount which should be 
-          * sufficient to keep disturbance on refined region until next regrid 
+          * Buffer true tagged cells by specified amount which should be
+          * sufficient to keep disturbance on refined region until next regrid
           * of the level occurs.
           */
          patch_level->allocatePatchData(d_buf_tag_indx);
@@ -683,10 +707,10 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
 
          if ( d_extend_tags_to_bdry ) {
             /*
-             * Extend tags to physical boundaries whereever tags extend to 
+             * Extend tags to physical boundaries whereever tags extend to
              * within a the ghost cell width of the physical boundaries.  This
              * avoids construction of patches whose with ghost cell regions that
-             * are only partially outside the physical boundary.  
+             * are only partially outside the physical boundary.
              */
             extendTagsToBoundary(d_true_tag, patch_level,patch_hierarchy);
          }
@@ -704,10 +728,10 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
           * Deallocate tag arrays and schedule -- no longer needed.
           */
          patch_level->deallocatePatchData(d_tag_indx);
-         d_bdry_sched_tags[level_number].setNull(); 
+         d_bdry_sched_tags[level_number].setNull();
 
          /*
-          * Write refine boxes to file if requested. 
+          * Write refine boxes to file if requested.
           */
          if (d_write_dumped_level_boxes) {
             d_regrid_box_utility->
@@ -722,7 +746,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
          /*
           * If tagging is not necessary (do_tagging = false) we simply
           * need to access the level boxes, either from a dumped file or
-          * from user-supplied refine boxes, and load balance them before 
+          * from user-supplied refine boxes, and load balance them before
           * constructing the finer level.
           */
          bool remove_old_fine_level = false;
@@ -742,23 +766,34 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeFinerLevel(
 
          hier::IntVector<DIM> ratio_to_level_zero =
             patch_level->getRatio() * getRatioToCoarserLevel(fine_level_number);
-         
-         patch_hierarchy->makeNewPatchLevel(fine_level_number, 
-                                      ratio_to_level_zero, 
+
+         patch_hierarchy->makeNewPatchLevel(fine_level_number,
+                                      ratio_to_level_zero,
                                       fine_boxes, mapping);
 
-         d_tag_init_strategy->initializeLevelData(patch_hierarchy, 
+         if (d_check_overlapping_patches != 'i') {
+            checkOverlappingPatches(
+               patch_hierarchy->getPatchLevel(fine_level_number));
+         }
+
+         d_tag_init_strategy->initializeLevelData(patch_hierarchy,
                                                   fine_level_number,
                                                   level_time,
                                                   levelCanBeRefined(
                                                   fine_level_number),
                                                   initial_time);
 
+
+
+         tbox::SAMRAI_MPI::barrier();
+         t_reset_hier->start();
          d_tag_init_strategy->resetHierarchyConfiguration(patch_hierarchy,
                                                           fine_level_number,
                                                           fine_level_number);
+         tbox::SAMRAI_MPI::barrier();
+         t_reset_hier->stop();
       }
- 
+
    }  // if level cannot be refined, the routine drops through...
 
    t_make_finer->stop();
@@ -792,7 +827,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridAllFinerLevels(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(hierarchy.isNull()));
-   TBOX_ASSERT( (level_number>=0) 
+   TBOX_ASSERT( (level_number>=0)
            && (level_number <= hierarchy->getFinestLevelNumber()) );
    TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
    TBOX_ASSERT(tag_buffer.getSize() >= level_number+1);
@@ -805,7 +840,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridAllFinerLevels(
 
    if ( levelCanBeRefined(level_number) ) {
 
-      const tbox::Pointer< hier::PatchLevel<DIM> > patch_level = 
+      const tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
          hierarchy->getPatchLevel(level_number);
 
       t_find_nesting_restriction->start();
@@ -813,22 +848,22 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridAllFinerLevels(
       t_find_nesting_restriction->stop();
 
       /*
-       * Perform pre-processing of error estimation data, if 
+       * Perform pre-processing of error estimation data, if
        * appropriate.
        */
       if (errorEstimationUsesTimeIntegration() ) {
-         for (int ln = level_number; 
+         for (int ln = level_number;
                   ln <= hierarchy->getFinestLevelNumber(); ln++) {
             if (levelCanBeRefined(ln) ) {
                bool initial_time = false;
                double level_regrid_start_time = 0.;
                if (regrid_start_time.getSize() < ln+1) {
-                  level_regrid_start_time = 
+                  level_regrid_start_time =
                      tbox::MathUtilities<double>::getSignalingNaN();
                } else {
                   level_regrid_start_time = regrid_start_time[ln];
                }
-                  
+
                d_tag_init_strategy->
                   preprocessErrorEstimation(hierarchy,
                                             ln,
@@ -840,7 +875,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridAllFinerLevels(
       }
 
 
-      /* 
+      /*
        * Recursively regrid each finer level.
        */
       const int finest_level_not_regridded = level_number;
@@ -852,17 +887,21 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridAllFinerLevels(
                        tag_buffer,
                        regrid_start_time);
 
-      /* 
+      /*
        * Invoke application-specific routines to reset information for those
        * levels which have been modified.
        */
 
       if ( hierarchy->getFinestLevelNumber() >= (level_number+1) ) {
+         tbox::SAMRAI_MPI::barrier();
+         t_reset_hier->start();
          d_tag_init_strategy->
             resetHierarchyConfiguration(hierarchy,
                                         level_number+1,
                                         hierarchy->
                                         getFinestLevelNumber());
+         tbox::SAMRAI_MPI::barrier();
+         t_reset_hier->stop();
 
       }
 
@@ -917,7 +956,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
    TBOX_ASSERT( (level_number >= 0)
           && (level_number <= hierarchy->getFinestLevelNumber()) );
    TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
-   TBOX_ASSERT(finest_level_not_regridded >= 0 
+   TBOX_ASSERT(finest_level_not_regridded >= 0
           && finest_level_not_regridded <= level_number);
    TBOX_ASSERT(tag_buffer.getSize() >= level_number+1);
    for (int i = 0; i < tag_buffer.getSize(); i++) {
@@ -929,33 +968,33 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
 
       int fine_level_number = level_number+1;
 
-      tbox::Pointer< hier::PatchLevel<DIM> > 
+      tbox::Pointer< hier::PatchLevel<DIM> >
          patch_level = hierarchy->getPatchLevel(level_number);
 
       hier::BoxArray<DIM> fine_boxes;
       hier::ProcessorMapping mapping;
 
       /*
-       * The boolean "do_tagging" specifies whether or not tagging will 
+       * The boolean "do_tagging" specifies whether or not tagging will
        * be performed. This will be true except in two circumstances:
        *    1) only user supplied refine boxes are used
        *    2) the boxes are read from a previously dumped file.
        *
        * If either of these circumstances is true, tagging operations
-       * are NOT necessary so do_tagging will be set to false. 
+       * are NOT necessary so do_tagging will be set to false.
        *
        * The old level is generally removed when regridding, but
-       * some circumstances may warrant keeping the old level.  For 
+       * some circumstances may warrant keeping the old level.  For
        * example, if the refine region has not changed, there is no
        * need to regenerate the finer level.  The boolean
        * "remove_old_fine_level" specifies if the old level should
-       * be removed. 
+       * be removed.
        */
       bool do_tagging = true;
-      if (d_read_dumped_level_boxes || 
+      if (d_read_dumped_level_boxes ||
           d_tag_init_strategy->refineUserBoxInputOnly()) do_tagging = false;
       bool remove_old_fine_level = true;
-      
+
       /*
        * Tag cells, determine refine boxes from tagged regions, and
        * load balance in preparation for constructing new refined level.
@@ -963,31 +1002,31 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
       if (do_tagging) {
 
          /*
-          * Create communication schedule for buffer tags and set tags to 
+          * Create communication schedule for buffer tags and set tags to
           * false.
           */
 
         t_bdry_fill_tags_create->start();
-        d_bdry_sched_tags[level_number] = 
+        d_bdry_sched_tags[level_number] =
           d_bdry_fill_tags->createSchedule(patch_level);
         t_bdry_fill_tags_create->stop();
 
-        patch_level->allocatePatchData(d_tag_indx); 
-        setTagsOnLevel(d_false_tag, 
+        patch_level->allocatePatchData(d_tag_indx);
+        setTagsOnLevel(d_false_tag,
                        patch_level, d_tag_indx, patch_level->getBoxes());
 
         /*
          * Set tags to true for cells that currently cover next finer level.
-         * Note that this is not needed for all regridding strategies.  But 
-         * knowledge of currently refined cells is generally useful to avoid 
-         * repeated refining and coarsening of cells near boundaries of 
-         * refined regions where error estimates may hover around the error 
-         * tolerance. For example, the regridding scheme may require that 
-         * the error in a cell that is currently refined fall below a 
-         * certain tolerance  (generally different than the tolerance to 
-         * refine the cell in the first place) before the cell will be 
+         * Note that this is not needed for all regridding strategies.  But
+         * knowledge of currently refined cells is generally useful to avoid
+         * repeated refining and coarsening of cells near boundaries of
+         * refined regions where error estimates may hover around the error
+         * tolerance. For example, the regridding scheme may require that
+         * the error in a cell that is currently refined fall below a
+         * certain tolerance  (generally different than the tolerance to
+         * refine the cell in the first place) before the cell will be
          * de-refined.
-         */ 
+         */
 
         if ( hierarchy->finerLevelExists(level_number) ) {
            tbox::Pointer< hier::PatchLevel<DIM> > fine_level =
@@ -1002,22 +1041,22 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
          * error estimation procedure and set to true.
          *
          * The "level_is_coarsest_sync_level" is provided as an argument
-         * to this method.  Provide the additional check of whether the 
-         * level is not the coarsest level and that it is not a new level 
-         * in the hierarchy.  If all three conditions are true, the 
+         * to this method.  Provide the additional check of whether the
+         * level is not the coarsest level and that it is not a new level
+         * in the hierarchy.  If all three conditions are true, the
          * "coarsest_sync_level" argument passed into the tagCells method
          * will be true.  Otherwise, it will be false.
          */
 
-        bool coarsest_sync_level = 
-           level_is_coarsest_sync_level && 
+        bool coarsest_sync_level =
+           level_is_coarsest_sync_level &&
            level_number > 0 &&
            level_number <= finest_level_not_regridded;
 
-        bool initial_time = false;  
+        bool initial_time = false;
         double level_regrid_start_time = 0.;
         if (regrid_start_time.getSize() < level_number+1) {
-           level_regrid_start_time = 
+           level_regrid_start_time =
               tbox::MathUtilities<double>::getSignalingNaN();
         } else {
            level_regrid_start_time = regrid_start_time[level_number];
@@ -1036,17 +1075,17 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
           * Check for user-tagged cells that violate proper nesting.
           * except if user specified that the violating tags be ignored.
           */
-         if ( d_resolve_nonnesting_tags != 'i' ) {
-            checkNonnestingTags(patch_level,
+         if ( d_check_nonrefined_tags != 'i' ) {
+            checkNonrefinedTags(patch_level,
                                 *d_proper_nesting_complement[level_number]);
          }
 
         /*
          * Perform regridding recursively on finer levels, if appropriate.
-         */ 
-        if ( hierarchy->finerLevelExists(level_number) 
+         */
+        if ( hierarchy->finerLevelExists(level_number)
              && levelCanBeRefined(fine_level_number) ) {
-           regridFinerLevel(hierarchy, 
+           regridFinerLevel(hierarchy,
                             fine_level_number,
                             regrid_time,
                             finest_level_not_regridded,
@@ -1054,10 +1093,10 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
                             tag_buffer,
                             regrid_start_time);
         }
- 
+
          /*
-          * Buffer true tagged cells by specified amount which should be 
-          * sufficient to keep disturbance on refined region until next 
+          * Buffer true tagged cells by specified amount which should be
+          * sufficient to keep disturbance on refined region until next
           * regrid of the level occurs.
           */
          patch_level->allocatePatchData(d_buf_tag_indx);
@@ -1078,29 +1117,29 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
                                         getRatioToCoarserLevel(fine_level_number));
             setTagsOnLevel(d_true_tag, patch_level, d_tag_indx, second_fine_boxes);
 	 }
- 
+
          if ( d_extend_tags_to_bdry ) {
             /*
-             * Extend tags to physical boundaries whereever tags extend to 
+             * Extend tags to physical boundaries whereever tags extend to
              * within a the ghost cell width of the physical boundaries.  This
              * avoids construction of patches whose with ghost cell regions that
-             * are only partially outside the physical boundary.  
+             * are only partially outside the physical boundary.
              */
             extendTagsToBoundary(d_true_tag, patch_level, hierarchy);
          }
 
          patch_level->deallocatePatchData(d_buf_tag_indx);
- 
+
          /*
-          * Determine box array containing cells on level with a true tag 
-          * value.  The box array must be contained in array of proper 
+          * Determine box array containing cells on level with a true tag
+          * value.  The box array must be contained in array of proper
           * nesting boxes.
           */
-         findRefinementBoxes(fine_boxes, mapping, 
+         findRefinementBoxes(fine_boxes, mapping,
                              hierarchy, level_number);
 
          /*
-          * Deallocate tag arrays and schedule; no longer needed on current 
+          * Deallocate tag arrays and schedule; no longer needed on current
           * level.
           */
 
@@ -1122,9 +1161,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
 
       } else {
 
- 	 if ( hierarchy->finerLevelExists(level_number) 
+ 	 if ( hierarchy->finerLevelExists(level_number)
 	     && levelCanBeRefined(fine_level_number) ) {
-	    regridFinerLevel(hierarchy, 
+	    regridFinerLevel(hierarchy,
                              fine_level_number,
                              regrid_time,
                              finest_level_not_regridded,
@@ -1136,7 +1175,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
          /*
           * If tagging is not necessary (do_tagging = false) we simply
           * need to access the level boxes, either from a dumped file or
-          * from user-supplied refine boxes, and load balance them before 
+          * from user-supplied refine boxes, and load balance them before
           * constructing the finer level.
           */
          readLevelBoxes(fine_boxes,
@@ -1148,31 +1187,34 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
       }
 
       /*
-       * Make new finer level (fine_level_number) if necessary, or remove 
+       * Make new finer level (fine_level_number) if necessary, or remove
        * next finer level if it is no longer needed.
        */
-         
+
       if ( !(fine_boxes.getNumberOfBoxes() == 0) ) {
-         
+
+         tbox::SAMRAI_MPI::barrier();
+         t_regrid_finer_create->start();
+
          /*
-          * Either remove pre-existing fine level from hierarchy and make 
+          * Either remove pre-existing fine level from hierarchy and make
           * a new level, or just make a new fine level for hierarchy.
           */
-         
+
          tbox::Pointer< hier::PatchLevel<DIM> > old_fine_level;
-         
+
          hier::IntVector<DIM> ratio(patch_level->getRatio()
                                * getRatioToCoarserLevel(fine_level_number));
-         
+
          if ( hierarchy->finerLevelExists(level_number) ) {
             old_fine_level = hierarchy->getPatchLevel(fine_level_number);
             hierarchy->removePatchLevel(fine_level_number);
             ratio = old_fine_level->getRatio();
          }
-         
+
          hierarchy->makeNewPatchLevel(fine_level_number, ratio,
                                       fine_boxes, mapping);
-         
+
          // "false" argument": const bool initial_time = false;
          d_tag_init_strategy->initializeLevelData(hierarchy,
                                                   fine_level_number,
@@ -1186,42 +1228,45 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
           * Destroy old patch level, if such a level existed prior to regrid.
           */
          old_fine_level.setNull();
-            
+         tbox::SAMRAI_MPI::barrier();
+         t_regrid_finer_create->stop();
+
+
          if ( do_tagging ) {
-            
+
             /*
-             * If current level (level_number) is coarser than the finest 
-             * level subject to regridding, then adjust tags for next coarser 
-             * level (i.e., level_number-1) so that the next finer level 
-             * (fine_level_number) will be nested within the new level 
+             * If current level (level_number) is coarser than the finest
+             * level subject to regridding, then adjust tags for next coarser
+             * level (i.e., level_number-1) so that the next finer level
+             * (fine_level_number) will be nested within the new level
              * (level_number) on return from recursion.
              */
-            
+
             if (level_number > finest_level_not_regridded) {
                fine_boxes.coarsen(getRatioToCoarserLevel(fine_level_number)
                                   * getRatioToCoarserLevel(level_number));
-               setTagsOnLevel(d_true_tag, 
-                              hierarchy->getPatchLevel(level_number-1), 
-                              d_tag_indx, 
-                              fine_boxes); 
+               setTagsOnLevel(d_true_tag,
+                              hierarchy->getPatchLevel(level_number-1),
+                              d_tag_indx,
+                              fine_boxes);
             }
-            
+
          }
-            
+
       } else {
-            
+
          /*
-          * If there are no boxes for the new fine level, remove the 
+          * If there are no boxes for the new fine level, remove the
           * pre-existing fine level if it existed.
           */
-         
-         if ( hierarchy->finerLevelExists(level_number) 
+
+         if ( hierarchy->finerLevelExists(level_number)
               && remove_old_fine_level) {
             hierarchy->removePatchLevel(fine_level_number);
          }
 
       } // if we are not re-gridding the level
-      
+
    } //  if level cannot be refined, the routine drops through...
 
 }
@@ -1231,7 +1276,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::regridFinerLevel(
 *************************************************************************
 *************************************************************************
 */
-template<int DIM> void GriddingAlgorithm<DIM>::checkNonnestingTags(
+template<int DIM> void GriddingAlgorithm<DIM>::checkNonrefinedTags(
    const tbox::Pointer<hier::PatchLevel<DIM> > &level,
    const hier::BoxTree<DIM> &proper_nesting_complement )
 {
@@ -1258,16 +1303,39 @@ template<int DIM> void GriddingAlgorithm<DIM>::checkNonnestingTags(
    maxval = tbox::SAMRAI_MPI::maxReduction(maxval);
 
    if ( maxval > 0 ) {
-      if ( d_resolve_nonnesting_tags == 'w' ) {
+      if ( d_check_nonrefined_tags == 'w' ) {
          TBOX_WARNING("User code has tagged cells in\n"
                       <<"violation of nesting requirements.\n"
                       <<"Violating tags will be discarded.\n"
-                      <<"See GriddingAlgorithm::setResolveNonnestingTags()\n");
+                      <<"See GriddingAlgorithm::checkNonrefinedTags()\n");
       }
-      else if ( d_resolve_nonnesting_tags == 'e' ) {
+      else if ( d_check_nonrefined_tags == 'e' ) {
          TBOX_ERROR("User code has tagged cells in\n"
                     <<"violation of nesting requirements.\n"
-                    <<"See GriddingAlgorithm::setResolveNonnestingTags()\n");
+                    <<"See GriddingAlgorithm::checkNonrefinedTags()\n");
+      }
+   }
+
+   return;
+}
+
+/*
+*************************************************************************
+*************************************************************************
+*/
+template<int DIM> void GriddingAlgorithm<DIM>::checkOverlappingPatches(
+   const tbox::Pointer<hier::PatchLevel<DIM> > &level )
+{
+   hier::BoxList<DIM> level_boxes(level->getBoxes());
+
+   if (level_boxes.boxesIntersect()) {
+      if ( d_check_overlapping_patches == 'w' ) {
+         TBOX_WARNING("PatchLevel has patches which overlap in index space\n"
+                      <<"See GriddingAlgorithm::checkOverlappingPatches()\n");
+      }
+      else if ( d_check_nonrefined_tags == 'e' ) {
+         TBOX_ERROR("PatchLevel has patches which overlap in index space\n"
+                    <<"See GriddingAlgorithm::checkOverlappingPatches()\n");
       }
    }
 
@@ -1288,74 +1356,74 @@ template<int DIM> void GriddingAlgorithm<DIM>::readLevelBoxes(
    const tbox::Pointer<hier::PatchHierarchy<DIM> > hierarchy,
    const int level_number,
    const double regrid_time,
-   bool& remove_old_fine_level) 
+   bool& remove_old_fine_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!hierarchy.isNull());
    TBOX_ASSERT( (level_number >= 0)
           && (level_number <= hierarchy->getFinestLevelNumber()) );
 #endif
-   int fine_level_number = level_number + 1; 
+   int fine_level_number = level_number + 1;
    hier::BoxArray<DIM> boxes_to_refine;
 
    if (d_read_dumped_level_boxes) {
-     
+
      d_regrid_box_utility->
        getLevelBoxes(boxes_to_refine,
                      fine_level_number,
                      d_regrid_box_counter[fine_level_number]);
-     
+
      d_regrid_box_counter[fine_level_number]++;
-            
-   } 
+
+   }
 
    /*
-    * Access the user supplied refine boxes.  The 
-    * "new_level_has_new_boxes" boolean specifies whether the 
-    * level boxes have changed from the last time 
-    * getUserSuppliedRefineBoxes() was called.  If they have changed, 
+    * Access the user supplied refine boxes.  The
+    * "new_level_has_new_boxes" boolean specifies whether the
+    * level boxes have changed from the last time
+    * getUserSuppliedRefineBoxes() was called.  If they have changed,
     * it returns true.  If they are unchanged, it returns false.
     */
-   bool new_level_has_new_boxes = true;         
+   bool new_level_has_new_boxes = true;
    if (d_tag_init_strategy->refineUserBoxInputOnly()) {
-     
+
      new_level_has_new_boxes = d_tag_init_strategy->
        getUserSuppliedRefineBoxes(boxes_to_refine,
                                   level_number,
                                   regrid_time);
-     
-     boxes_to_refine.refine(getRatioToCoarserLevel(fine_level_number)); 
-     
+
+     boxes_to_refine.refine(getRatioToCoarserLevel(fine_level_number));
+
    }
 
    /*
     * If "new_level_has_new_boxes" is false we wish to keep the
-    * existing fine level intact.  Avoid further work by setting 
+    * existing fine level intact.  Avoid further work by setting
     * the parameter "compute_load_balanced_level_boxes" to false
     * and indicate that we want to avoid removing the old fine level
-    * by setting "remove_old_fine_level" to false. 
+    * by setting "remove_old_fine_level" to false.
     */
    bool compute_load_balanced_level_boxes = true;
    if (!new_level_has_new_boxes) {
      compute_load_balanced_level_boxes = false;
      remove_old_fine_level = false;
    }
-   
+
    /*
-    * If we are using the nonuniform load balance option, we 
-    * still need to redo the load balance and construct a new level, 
-    * even if the level boxes have not changed.  
+    * If we are using the nonuniform load balance option, we
+    * still need to redo the load balance and construct a new level,
+    * even if the level boxes have not changed.
     */
-   
+
    if (d_load_balancer->getLoadBalanceDependsOnPatchData(fine_level_number)
        && boxes_to_refine.getNumberOfBoxes() > 0) {
      compute_load_balanced_level_boxes = true;
      remove_old_fine_level = true;
    }
-  
+
    /*
     * If the boxes_to_refine are empty, this implies that no
-    * refinement is desired so a new finer level will NOT be 
+    * refinement is desired so a new finer level will NOT be
     * constructed.  In this case, avoid load balance steps and
     * specify that we want to remove the old fine level.
     */
@@ -1363,24 +1431,24 @@ template<int DIM> void GriddingAlgorithm<DIM>::readLevelBoxes(
      compute_load_balanced_level_boxes = false;
      remove_old_fine_level = true;
    }
-             
-   if (compute_load_balanced_level_boxes) {  
-     
+
+   if (compute_load_balanced_level_boxes) {
+
      hier::BoxList<DIM> fine_box_list(boxes_to_refine);
      tbox::Pointer<hier::PatchLevel<DIM> > patch_level =
         hierarchy->getPatchLevel(level_number);
-     
-     hier::IntVector<DIM> ratio_to_level_zero = 
+
+     hier::IntVector<DIM> ratio_to_level_zero =
        patch_level->getRatio() * getRatioToCoarserLevel(fine_level_number);
-     
+
      hier::BoxArray<DIM> physical_domain;
      hierarchy->getGridGeometry()->
        computePhysicalDomain(physical_domain,
                              ratio_to_level_zero);
-     
+
      hier::IntVector<DIM>
        patch_cut_factor(getRatioToCoarserLevel(fine_level_number));
-     
+
      hier::IntVector<DIM> smallest_patch;
      hier::IntVector<DIM> smallest_box_to_refine;
      hier::IntVector<DIM> largest_patch;
@@ -1390,19 +1458,20 @@ template<int DIM> void GriddingAlgorithm<DIM>::readLevelBoxes(
                            smallest_box_to_refine,
                            largest_patch,
                            extend_ghosts,
-                           hierarchy, 
+                           hierarchy,
                            fine_level_number,
                            false);
-     
-     t_load_balance_boxes->start();
+
+     tbox::SAMRAI_MPI::barrier();
+     t_load_balance->start();
      d_load_balancer->loadBalanceBoxes(new_level_boxes, mapping,
-                                       fine_box_list, hierarchy, 
+                                       fine_box_list, hierarchy,
                                        fine_level_number, physical_domain,
                                        ratio_to_level_zero,
                                        smallest_patch,
                                        getLargestPatchSize(fine_level_number),
                                        patch_cut_factor, extend_ghosts);
-     t_load_balance_boxes->stop();
+     t_load_balance->stop();
    }
 }
 
@@ -1424,8 +1493,8 @@ template<int DIM> void GriddingAlgorithm<DIM>::readLevelBoxes(
 */
 
 template<int DIM> void GriddingAlgorithm<DIM>::findProperNestingData(
-   const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy, 
-   const int base_ln) 
+   const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
+   const int base_ln)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(hierarchy.isNull()));
@@ -1471,11 +1540,11 @@ template<int DIM> void GriddingAlgorithm<DIM>::findProperNestingData(
       t_intersect_boxes_find_proper->start();
       complement.intersectBoxes( level->getPhysicalDomain() );
       t_intersect_boxes_find_proper->stop();
- 
+
       propernest = hier::BoxList<DIM>( level->getPhysicalDomain() );
-      t_remove_intersections_find_proper->start(); 
+      t_remove_intersections_find_proper->start();
       propernest.removeIntersections(complement);
-      t_remove_intersections_find_proper->stop(); 
+      t_remove_intersections_find_proper->stop();
 
       ++ln;
 
@@ -1525,9 +1594,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::findProperNestingData(
 
 template<int DIM> void GriddingAlgorithm<DIM>::setTagsOnLevel(
    const int tag_value,
-   const tbox::Pointer< hier::PatchLevel<DIM> > level, 
+   const tbox::Pointer< hier::PatchLevel<DIM> > level,
    const int index,
-   const hier::BoxArray<DIM>& boxes, 
+   const hier::BoxArray<DIM>& boxes,
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1544,13 +1613,13 @@ template<int DIM> void GriddingAlgorithm<DIM>::setTagsOnLevel(
    for (typename hier::PatchLevel<DIM>::Iterator ip(level); ip; ip++) {
       tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(ip());
 
-      tbox::Pointer< pdat::CellData<DIM,int> > 
+      tbox::Pointer< pdat::CellData<DIM,int> >
          tag_data = patch->getPatchData(index);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT( !(tag_data.isNull()) );
 #endif
 
-      hier::Box<DIM> set_box( (interior_only ? tag_data->getBox() : 
+      hier::Box<DIM> set_box( (interior_only ? tag_data->getBox() :
                                           tag_data->getGhostBox()) );
 
       for (int ib = 0; ib < n_boxes; ib++) {
@@ -1591,7 +1660,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::bufferTagsOnLevel(
     */
    t_buffer_tags->start();
 
-   /* 
+   /*
     * Set temporary buffered tags based on buffer width and
     * distance from actual tags.
     */
@@ -1599,9 +1668,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::bufferTagsOnLevel(
    for (typename hier::PatchLevel<DIM>::Iterator ip1(level); ip1; ip1++) {
       tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(ip1());
 
-      tbox::Pointer< pdat::CellData<DIM,int> > 
+      tbox::Pointer< pdat::CellData<DIM,int> >
          buf_tag_data = patch->getPatchData(d_buf_tag_indx);
-      tbox::Pointer< pdat::CellData<DIM,int> > 
+      tbox::Pointer< pdat::CellData<DIM,int> >
          tag_data = patch->getPatchData(d_tag_indx);
 
       buf_tag_data->fillAll(not_tag);
@@ -1610,7 +1679,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::bufferTagsOnLevel(
 
       for (int bc = buffer_size; bc >= 0; bc--) {
 
-         int fill_val = buffer_size - bc + 1; 
+         int fill_val = buffer_size - bc + 1;
 
          for (pdat::CellIterator<DIM> ic(interior); ic; ic++) {
             if ( (*tag_data)(ic()) == tag_value ) {
@@ -1627,25 +1696,25 @@ template<int DIM> void GriddingAlgorithm<DIM>::bufferTagsOnLevel(
     * Communicate boundary data for buffered tag array so that tags
     * near patch boundaries will become buffered properly.
     */
-   const double dummy_time = 0.0; 
+   const double dummy_time = 0.0;
 
    t_bdry_fill_tags_comm->start();
    d_bdry_sched_tags[level->getLevelNumber()]->fillData(dummy_time);
    t_bdry_fill_tags_comm->stop();
 
    /*
-    * Buffer tags on patch interior according to buffered tag data. 
+    * Buffer tags on patch interior according to buffered tag data.
     */
    for (typename hier::PatchLevel<DIM>::Iterator ip2(level); ip2; ip2++) {
       tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(ip2());
 
-      tbox::Pointer< pdat::CellData<DIM,int> > buf_tag_data = 
+      tbox::Pointer< pdat::CellData<DIM,int> > buf_tag_data =
                                  patch->getPatchData(d_buf_tag_indx);
-      tbox::Pointer< pdat::CellData<DIM,int> > tag_data = 
+      tbox::Pointer< pdat::CellData<DIM,int> > tag_data =
                                  patch->getPatchData(d_tag_indx);
-  
-      hier::Box<DIM> buf_tag_box = buf_tag_data->getGhostBox(); 
-      hier::Box<DIM> tag_box = tag_data->getBox(); 
+
+      hier::Box<DIM> buf_tag_box = buf_tag_data->getGhostBox();
+      hier::Box<DIM> tag_box = tag_data->getBox();
 
       /*
        * Set all interior tags to tag value where buffer tags non-zero.
@@ -1655,13 +1724,13 @@ template<int DIM> void GriddingAlgorithm<DIM>::bufferTagsOnLevel(
       }
 
       /*
-       * Set all interior tags in buffers around tags in ghosts. 
+       * Set all interior tags in buffers around tags in ghosts.
        */
       for (pdat::CellIterator<DIM> ic2(buf_tag_box); ic2; ic2++) {
          int tval = (*buf_tag_data)(ic2());
          if ( tval > 1 ) {
             int buf_size = tval - 1;
-            hier::Box<DIM> buf_box(ic2()-buf_size, ic2()+buf_size);  
+            hier::Box<DIM> buf_box(ic2()-buf_size, ic2()+buf_size);
             tag_data->fill(tag_value, buf_box);
          }
       }
@@ -1708,7 +1777,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::extendTagsToBoundary(
                          smallest_box_to_refine,
                          largest_patch,
                          extend_ghosts,
-                         hierarchy, 
+                         hierarchy,
                          level_number,
                          true);
 
@@ -1717,9 +1786,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::extendTagsToBoundary(
     * needs of the variables.
     */
    for (int i = 0; i < DIM; i++) {
-     int extend = extend_ghosts(i) 
+     int extend = extend_ghosts(i)
        / d_ratio_to_coarser[fine_level_number](i);
-     if ( !((extend_ghosts(i) 
+     if ( !((extend_ghosts(i)
              - extend * d_ratio_to_coarser[fine_level_number](i)) == 0) ) {
        extend++;
      }
@@ -1748,9 +1817,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::extendTagsToBoundary(
 
      if (patch->getPatchGeometry()->intersectsPhysicalBoundary()) {
 
-        tbox::Pointer< pdat::CellData<DIM,int> > 
+        tbox::Pointer< pdat::CellData<DIM,int> >
            buf_tag_data = patch->getPatchData(d_buf_tag_indx);
-        tbox::Pointer< pdat::CellData<DIM,int> > 
+        tbox::Pointer< pdat::CellData<DIM,int> >
            tag_data = patch->getPatchData(d_tag_indx);
 
         buf_tag_data->fillAll(not_tag);
@@ -1759,7 +1828,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::extendTagsToBoundary(
         hier::BoxList<DIM> patch_extend_ghost_boxes(grown_level_domain);
         patch_extend_ghost_boxes.intersectBoxes(pbox);
 
-        for (typename hier::BoxList<DIM>::Iterator 
+        for (typename hier::BoxList<DIM>::Iterator
                 b(patch_extend_ghost_boxes); b; b++) {
            hier::Box<DIM> extend_box = b();
 
@@ -1774,17 +1843,17 @@ template<int DIM> void GriddingAlgorithm<DIM>::extendTagsToBoundary(
               }
            }
         }
-        
+
         /*
          * Set all interior tags to tag value where buffer tags non-zero.
          */
-        hier::Box<DIM> tag_box = tag_data->getBox(); 
+        hier::Box<DIM> tag_box = tag_data->getBox();
         for (typename pdat::CellIterator<DIM> ic2(tag_box); ic2; ic2++) {
            (*tag_data)(ic2()) = ( (*buf_tag_data)(ic2()) ? tag_value : not_tag );
         }
 
      } // if patch touches boundary
-     
+
    } // loop over patches
 
 
@@ -1808,13 +1877,13 @@ template<int DIM> void GriddingAlgorithm<DIM>::extendTagsToBoundary(
 */
 
 template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
-   hier::BoxArray<DIM>& fine_boxes, 
-   hier::ProcessorMapping& mapping, 
+   hier::BoxArray<DIM>& fine_boxes,
+   hier::ProcessorMapping& mapping,
    const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
    const int coarse_level_number ) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( (coarse_level_number >= 0) 
+   TBOX_ASSERT( (coarse_level_number >= 0)
            && (coarse_level_number <= hierarchy->getFinestLevelNumber()) );
    TBOX_ASSERT(!(hierarchy.isNull()));
    TBOX_ASSERT(!(hierarchy->getPatchLevel(coarse_level_number).isNull()));
@@ -1828,11 +1897,11 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
 
    /*
     * Construct list of boxes covering the true tags on the level.
-    * Note that box list will be contained in the bounding box 
-    * but will not be contained in the list of proper nesting boxes, 
-    * in general.  So we intersect the box list against the list of 
+    * Note that box list will be contained in the bounding box
+    * but will not be contained in the list of proper nesting boxes,
+    * in general.  So we intersect the box list against the list of
     * nesting boxes.  Note that this may produce boxes which are too
-    * small.  Thus, boxes are regrown later. 
+    * small.  Thus, boxes are regrown later.
     */
 
    hier::IntVector<DIM> smallest_patch;
@@ -1844,12 +1913,12 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
                          smallest_box_to_refine,
                          largest_patch,
                          extend_ghosts,
-                         hierarchy, 
+                         hierarchy,
                          coarse_level_number,
                          true);
 
    hier::BoxList<DIM> box_list;
-   tbox::Pointer< hier::PatchLevel<DIM> > level = 
+   tbox::Pointer< hier::PatchLevel<DIM> > level =
    hierarchy->getPatchLevel(coarse_level_number);
 
    /*
@@ -1877,6 +1946,8 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
 
    if (!box_list.isEmpty()) {
 
+      t_box_massage->start();
+
       if(d_sort_boxes_after_clustering) {
          /*
           * Temporarily stop timer and sort box for
@@ -1895,27 +1966,29 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
          t_find_refinement->start();
       }
 
+      t_enforce_nesting->start();
       t_apply_nesting_restriction->start();
 
       t_intersect_boxes_find_refinement->start();
       box_list.intersectBoxes(d_proper_nesting_boxes[coarse_level_number]);
-      // d_proper_nesting_complement[coarse_level_number]->removeIntersections(box_list); 
+      // d_proper_nesting_complement[coarse_level_number]->removeIntersections(box_list);
       t_intersect_boxes_find_refinement->stop();
+      t_enforce_nesting->start();
 
       /*
        * If overlaps are to be avoided, at the possible expense of constructing
-       * boxes smaller than the minimum patch size, set the 
-       * "grow_after_nesting" argument to false in input.  By default, this 
+       * boxes smaller than the minimum patch size, set the
+       * "grow_after_nesting" argument to false in input.  By default, this
        * argument is true.  If set false, the boxes will not be grown within
-       * the nesting domain and no overlaps will be introduced.  
+       * the nesting domain and no overlaps will be introduced.
        */
 
-      t_extend_domain_to_boundary->start();
+      t_extend_to_domain_boundary->start();
       hier::BoxList<DIM> level_domain(level->getPhysicalDomain());
       for (int i = 0; i < DIM; i++) {
-         int extend = extend_ghosts(i) 
+         int extend = extend_ghosts(i)
             / d_ratio_to_coarser[fine_level_number](i);
-         if ( !((extend_ghosts(i) 
+         if ( !((extend_ghosts(i)
                  - extend * d_ratio_to_coarser[fine_level_number](i)) == 0) ) {
             extend++;
          }
@@ -1926,20 +1999,22 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
          box_list,
          level_domain,
          extend_ghosts);
-      t_extend_domain_to_boundary->stop();
-      
-      t_coalesce_boxes->start();
-      box_list.coalesceBoxes();
-      t_coalesce_boxes->stop();
+      t_extend_to_domain_boundary->stop();
 
       t_apply_nesting_restriction->stop();
 
-      if (!d_allow_patches_smaller_than_ghostwidth) {
+      if ( d_coalesce_boxes ) {
+         t_coalesce_boxes->start();
+         box_list.coalesceBoxes();
+         t_coalesce_boxes->stop();
+      }
+
+      if (!d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
          t_grow_boxes_within_domain->start();
          hier::BoxUtilities<DIM>::growBoxesWithinDomain(
-            box_list, 
-            d_proper_nesting_boxes[coarse_level_number], 
-            smallest_box_to_refine); 
+            box_list,
+            d_proper_nesting_boxes[coarse_level_number],
+            smallest_box_to_refine);
          t_grow_boxes_within_domain->stop();
       } else {
          hier::IntVector<DIM> periodic_dirs(
@@ -1962,6 +2037,8 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
          }
       }
 
+      t_box_massage->stop();
+
       if ( !box_list.isEmpty() ) {
          /*
           * Refine boxes to index space of next finer level and load balance.
@@ -1971,7 +2048,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
 
          box_list.refine(getRatioToCoarserLevel(fine_level_number));
 
-         hier::IntVector<DIM> ratio_to_level_zero = 
+         hier::IntVector<DIM> ratio_to_level_zero =
             level->getRatio() * getRatioToCoarserLevel(fine_level_number);
 
          hier::BoxArray<DIM> physical_domain;
@@ -1980,16 +2057,17 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
 
          hier::IntVector<DIM> patch_cut_factor(getRatioToCoarserLevel(fine_level_number));
          // "false" argument: for_building_finer level = false
-         getGriddingParameters(smallest_patch, 
-                               smallest_box_to_refine, 
+         getGriddingParameters(smallest_patch,
+                               smallest_box_to_refine,
                                largest_patch,
                                extend_ghosts,
-                               hierarchy, 
+                               hierarchy,
                                fine_level_number,
                                false);
          t_before_load_balance->stop();
 
-         t_load_balance_boxes->start();
+         tbox::SAMRAI_MPI::barrier();
+         t_load_balance->start();
          d_load_balancer->loadBalanceBoxes(
             fine_boxes, mapping,
             box_list, hierarchy, fine_level_number, physical_domain,
@@ -1997,7 +2075,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
             smallest_patch,
             getLargestPatchSize(fine_level_number),
             patch_cut_factor, extend_ghosts);
-         t_load_balance_boxes->stop();
+         t_load_balance->stop();
       }
 
    } else {
@@ -2029,7 +2107,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getGriddingParameters(
    hier::IntVector<DIM>& extend_ghosts,
    const tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy,
    const int level_number,
-   const bool for_building_finer) const 
+   const bool for_building_finer) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(hierarchy.isNull()));
@@ -2040,12 +2118,12 @@ template<int DIM> void GriddingAlgorithm<DIM>::getGriddingParameters(
     * currently known to the patch descriptor, and set the smallest
     * patch size.  The maximum number of ghosts is multiplied by the
     * error coarsen ratio (which should always be 1 unless regridding
-    * uses error estimation).  This assures that when levels are 
-    * coarsened during error estimation, the coarser level patches 
+    * uses error estimation).  This assures that when levels are
+    * coarsened during error estimation, the coarser level patches
     * will meet the ghost cell constraint.
     */
    smallest_patch = getSmallestPatchSize(level_number);
-   hier::IntVector<DIM> max_ghosts = 
+   hier::IntVector<DIM> max_ghosts =
       hierarchy->getPatchDescriptor()->getMaxGhostWidth();
    max_ghosts = max_ghosts * d_tag_init_strategy->getErrorCoarsenRatio();
    smallest_patch = getSmallestPatchSize(level_number);
@@ -2070,51 +2148,51 @@ template<int DIM> void GriddingAlgorithm<DIM>::getGriddingParameters(
    largest_patch.max(smallest_patch);
 
    /*
-    * Set the smallest box to refine based on the number of cells that 
+    * Set the smallest box to refine based on the number of cells that
     * coarsened patches must accomodate to meet ghost cell needs of variables.
     * On the finest level, the smallest box to refine is the smallest patch.
     * On coarser levels, it is a function of the error coarsen ratio and
     * the ratio to the next finer level.
     *
     * If we are accessing gridding parameters for a level that is being
-    * reconstructed, the smallest box to refine is not applicable so we 
+    * reconstructed, the smallest box to refine is not applicable so we
     * set it to -1 to indicate an invalid entry in case it is used.
     */
    if (for_building_finer) {
 
       if (level_number < d_max_levels-1) {
-         
+
          int fine_level_number = level_number + 1;
-         
+
          for (int i = 0; i < DIM; i++) {
             int den = d_ratio_to_coarser[fine_level_number](i)
-               / d_tag_init_strategy->getErrorCoarsenRatio(); 
+               / d_tag_init_strategy->getErrorCoarsenRatio();
             int sz = max_ghosts(i)/den;
             if ( max_ghosts(i) - sz * den ) sz++;
 
-            smallest_box_to_refine(i) = tbox::MathUtilities<int>::Max( sz, 
+            smallest_box_to_refine(i) = tbox::MathUtilities<int>::Max( sz,
                 smallest_patch(i)/d_ratio_to_coarser[fine_level_number](i) );
          }
- 
+
       } else {
- 
+
         smallest_box_to_refine = smallest_patch;
 
       }
 
    } else {
-      
+
       smallest_box_to_refine = hier::IntVector<DIM>(-1);
-      
+
    }
-   
+
    /*
-    * Determine number of cells box may be extended to physical 
-    * domain boundary to accomodate ghost cells. 
+    * Determine number of cells box may be extended to physical
+    * domain boundary to accomodate ghost cells.
     */
-   extend_ghosts = max_ghosts 
+   extend_ghosts = max_ghosts
                    * d_tag_init_strategy->getErrorCoarsenRatio();
- 
+
 }
 
 
@@ -2137,9 +2215,9 @@ template<int DIM> void GriddingAlgorithm<DIM>::printClassData(std::ostream& os) 
    os << "d_object_name = " << d_object_name << std::endl;
    os << "d_tag_init_strategy = "
       << (TagAndInitializeStrategy<DIM>*)d_tag_init_strategy << std::endl;
-   os << "d_box_generator = " 
+   os << "d_box_generator = "
       << (BoxGeneratorStrategy<DIM>*)d_box_generator << std::endl;
-   os << "d_load_balancer = " 
+   os << "d_load_balancer = "
       << (LoadBalanceStrategy<DIM>*)d_load_balancer << std::endl;
    os << "d_tag = " << d_tag.getPointer() << std::endl;
    os << "d_tag_indx = " << d_tag_indx << std::endl;
@@ -2158,18 +2236,18 @@ template<int DIM> void GriddingAlgorithm<DIM>::printClassData(std::ostream& os) 
 
    os << "d_efficiency_tolerance..." << std::endl;
    for (ln = 0; ln < d_efficiency_tolerance.getSize(); ln++) {
-      os << "    d_efficiency_tolerance[" << ln << "] = " 
+      os << "    d_efficiency_tolerance[" << ln << "] = "
          << d_efficiency_tolerance[ln] << std::endl;
-   }   
+   }
    os << "d_combine_efficiency..." << std::endl;
-   for (ln = 0; ln < d_combine_efficiency.getSize(); ln++) {   
-      os << "    d_combine_efficiency[" << ln << "] = " 
+   for (ln = 0; ln < d_combine_efficiency.getSize(); ln++) {
+      os << "    d_combine_efficiency[" << ln << "] = "
          << d_combine_efficiency[ln] << std::endl;
    }
-  
+
    os << "d_smallest_patch_size..." << std::endl;
-   for (ln = 0; ln < d_smallest_patch_size.getSize(); ln++) {   
-      os << "    d_smallest_patch_size[" << ln << "] = " 
+   for (ln = 0; ln < d_smallest_patch_size.getSize(); ln++) {
+      os << "    d_smallest_patch_size[" << ln << "] = "
          << d_smallest_patch_size[ln] << std::endl;
    }
 
@@ -2183,7 +2261,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::printClassData(std::ostream& os) 
    os << "d_read_dumped_level_boxes = " << d_read_dumped_level_boxes << std::endl;
    os << "d_regrid_boxes_filename = " << d_regrid_boxes_filename << std::endl;
    for (int il = 0; il < d_regrid_box_counter.getSize(); il++) {
-      os << "d_regrid_box_counter[" << il << "] = " 
+      os << "d_regrid_box_counter[" << il << "] = "
          << d_regrid_box_counter[il] << std::endl;
    }
 }
@@ -2201,7 +2279,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::putToDatabase(tbox::Pointer<tbox:
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!db.isNull());
 #endif
-   
+
    db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
                    ALGS_GRIDDING_ALGORITHM_VERSION);
 
@@ -2211,7 +2289,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::putToDatabase(tbox::Pointer<tbox:
 
    int ln;
 
-   tbox::Pointer<tbox::Database> ratio_to_coarser_db = 
+   tbox::Pointer<tbox::Database> ratio_to_coarser_db =
       db->putDatabase("d_ratio_to_coarser");
    for (ln = 1; ln < d_max_levels; ln++) {
       int* temp_ratio_to_coarser = d_ratio_to_coarser[ln];
@@ -2232,13 +2310,13 @@ template<int DIM> void GriddingAlgorithm<DIM>::putToDatabase(tbox::Pointer<tbox:
    }
 
 
-   tbox::Pointer<tbox::Database> smallest_patch_db =  
+   tbox::Pointer<tbox::Database> smallest_patch_db =
       db->putDatabase("d_smallest_patch_size");
    for (ln = 0; ln < d_smallest_patch_size.getSize(); ln++) {
       int* tmp_array = d_smallest_patch_size[ln];
       std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       smallest_patch_db->putIntegerArray(level_name, tmp_array, DIM);
-   }  
+   }
 
    db->putIntegerArray("d_proper_nesting_buffer", d_proper_nesting_buffer);
 }
@@ -2296,7 +2374,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
    /*
     * Read input for ratios between levels.  Default is 1 for level zero
     * ratio to coarser.  If starting from restart, coarsen ratio data
-    * is only read in for new levels if new max levels is greater than 
+    * is only read in for new levels if new max levels is greater than
     * old max levels.
     */
 
@@ -2304,7 +2382,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
    d_ratio_to_coarser[0] = hier::IntVector<DIM>(1);
 
    tbox::Pointer<tbox::Database> ratio_to_coarser_db;
-   if ( (is_from_restart && (new_max_levels > d_max_levels)) 
+   if ( (is_from_restart && (new_max_levels > d_max_levels))
         || (new_max_levels > 1)) {
       ratio_to_coarser_db = db->getDatabase("ratio_to_coarser");
       if (ratio_to_coarser_db.isNull()) {
@@ -2341,7 +2419,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
       ratio_to_coarser_db->getIntegerArray(level_name,
                                            temp_ratio_to_coarser, DIM);
 
-      hier::IntVector<DIM> test = 
+      hier::IntVector<DIM> test =
          hier::IntVector<DIM>::min(d_ratio_to_coarser[ln], hier::IntVector<DIM>(1));
       if (test.max() < 1) {
          TBOX_ERROR(d_object_name << ":  "
@@ -2359,7 +2437,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
    }
 
    /*
-    * Read input for largest patch sizes. 
+    * Read input for largest patch sizes.
     */
 
    tbox::Pointer<tbox::Database> largest_patch_db =
@@ -2419,7 +2497,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
 			  <<"Key data `" << level_name
 			  << "' not found in smallest_patch_size input.");
 	    }
-	    
+
             smallest_patch_db->getIntegerArray(level_name, temp_array, DIM);
          }
       }
@@ -2429,27 +2507,27 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
     * Read input for proper nesting buffer and option of whether to grow
     * boxes after nesting is applied.
     */
-   
+
    if (db->keyExists("proper_nesting_buffer")) {
       d_proper_nesting_buffer = db->getIntegerArray("proper_nesting_buffer");
-      
+
       for (ln = 0; ln < d_proper_nesting_buffer.getSize(); ln++) {
          if (d_proper_nesting_buffer[ln] < 0) {
             TBOX_ERROR(d_object_name << ":  "
-                       << "Key data `proper_nesting_buffer' has values < 0.");    
+                       << "Key data `proper_nesting_buffer' has values < 0.");
          }
          if (d_proper_nesting_buffer[ln] == 0) {
-            TBOX_WARNING(d_object_name << ":  "    
+            TBOX_WARNING(d_object_name << ":  "
                          << "Using zero `proper_nesting_buffer' values.");
-  
+
          }
       }
 
    }
-   
+
    if (db->keyExists("allow_patches_smaller_than_ghostwidth")) {
-      d_allow_patches_smaller_than_ghostwidth = 
-         db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth", 
+      d_allow_patches_smaller_than_ghostwidth =
+         db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth",
                                 d_allow_patches_smaller_than_ghostwidth);
 
       if (d_allow_patches_smaller_than_ghostwidth) {
@@ -2461,7 +2539,24 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
 
       }
    }
-   
+
+   if (db->keyExists("allow_patches_smaller_than_minimum_size_to_prevent_overlaps")) {
+      d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
+         db->getBoolWithDefault(
+            "allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
+            d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
+
+      if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
+            TBOX_WARNING(d_object_name << ":  "
+                         << "Allowing patches smaller than the given "
+                         << "smallest patch size.  Note:  If periodic "
+                         << "boundary conditions are used, this flag is "
+                         << "ignored in the periodic directions.");
+                                                                                
+      }
+   }
+
+
 
    /*
     * Read input for efficiency tolerance.
@@ -2471,10 +2566,10 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
       d_efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
 
       for (ln = 0; ln < d_efficiency_tolerance.getSize(); ln++) {
-         if ( (d_efficiency_tolerance[ln] <= 0.0e0) 
+         if ( (d_efficiency_tolerance[ln] <= 0.0e0)
              || (d_efficiency_tolerance[ln] >= 1.0e0) ) {
             TBOX_ERROR(d_object_name << ":  "
-                       << "Key data `efficiency_tolerance' has values" 
+                       << "Key data `efficiency_tolerance' has values"
                        << " out of range 0.0 < tol < 1.0.");
 
          }
@@ -2490,10 +2585,10 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
       d_combine_efficiency = db->getDoubleArray("combine_efficiency");
 
       for (ln = 0; ln < d_combine_efficiency.getSize(); ln++) {
-         if ( (d_combine_efficiency[ln] <= 0.0e0) 
+         if ( (d_combine_efficiency[ln] <= 0.0e0)
              || (d_combine_efficiency[ln] >= 1.0e0) ) {
             TBOX_ERROR(d_object_name << ":  "
-                       << "Key data `combine_efficiency' has values" 
+                       << "Key data `combine_efficiency' has values"
                        << " out of range 0.0 < tol < 1.0.");
 
          }
@@ -2502,18 +2597,28 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
    }
 
    d_max_levels = new_max_levels;
- 
+
    if (d_max_levels > 1) {
       d_tag_init_strategy->checkCoarsenRatios(d_ratio_to_coarser);
    }
 
-   d_resolve_nonnesting_tags =
-      db->getCharWithDefault( "resolve_nonnesting_tags",
-                              d_resolve_nonnesting_tags );
-   if ( d_resolve_nonnesting_tags != 'i' &&
-        d_resolve_nonnesting_tags != 'w' &&
-        d_resolve_nonnesting_tags != 'e' ) {
-      TBOX_ERROR("GriddingAlgorithm: input parameter resolve_nonnesting_tags\n"
+   d_check_nonrefined_tags =
+      db->getCharWithDefault( "check_nonrefined_tags",
+                              d_check_nonrefined_tags );
+   if ( d_check_nonrefined_tags != 'i' &&
+        d_check_nonrefined_tags != 'w' &&
+        d_check_nonrefined_tags != 'e' ) {
+      TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
+                 <<"can only be i (ignore), w (warn) or e (error)");
+   }
+
+   d_check_overlapping_patches =
+      db->getCharWithDefault( "check_overplapping_patches",
+                              d_check_overlapping_patches );
+   if ( d_check_overlapping_patches != 'i' &&
+        d_check_overlapping_patches != 'w' &&
+        d_check_overlapping_patches != 'e' ) {
+      TBOX_ERROR("GriddingAlgorithm: input parameter check_overlapping_patches\n"
                  <<"can only be i (ignore), w (warn) or e (error)");
    }
 
@@ -2540,7 +2645,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
                     << "\nGriddingAlgorithm, you must specify the"
                     << "\n'regrid_boxes_filename' in the input file.");
       }
- 
+
    }
 
    if (db->keyExists("barrier_before_clustering")) {
@@ -2549,12 +2654,15 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
    if (db->keyExists("sort_boxes_after_clustering")) {
       d_sort_boxes_after_clustering = db->getBool("sort_boxes_after_clustering");
    }
+   if (db->keyExists("coalesce_boxes")) {
+      d_coalesce_boxes = db->getBool("coalesce_boxes");
+   }
 
    d_extend_tags_to_bdry = db->getBoolWithDefault("extend_tags_to_bdry",
                                                   d_extend_tags_to_bdry);
 
 }
-   
+
 /*
 *************************************************************************
 *                                                                       *
@@ -2569,7 +2677,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
 
 template<int DIM> void GriddingAlgorithm<DIM>::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db = 
+   tbox::Pointer<tbox::Database> root_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
    tbox::Pointer<tbox::Database> db;
@@ -2592,7 +2700,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromRestart()
 
    d_ratio_to_coarser.resizeArray(d_max_levels);
 
-   tbox::Pointer<tbox::Database> ratio_to_coarser_db = 
+   tbox::Pointer<tbox::Database> ratio_to_coarser_db =
       db->getDatabase("d_ratio_to_coarser");
 
    for (ln = 1; ln < d_max_levels; ln++) {
@@ -2627,7 +2735,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromRestart()
       largest_patch_db->getIntegerArray(largest_patch_keys[ln],
                                         tmp_array, DIM);
    }
-    
+
    d_proper_nesting_buffer = db->getIntegerArray("d_proper_nesting_buffer");
 }
 
@@ -2652,7 +2760,7 @@ template<int DIM> int GriddingAlgorithm<DIM>::qsortBoxCompare(const void *v, con
 }
 
 
-       
+
 }
 }
 

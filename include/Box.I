@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/Box.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/hierarchy/boxes/Box.I $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2249 $
+// Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 // Description:	Box representing a portion of the AMR index space
 //
 
@@ -176,6 +176,39 @@ int Box<DIM>::offset(const Index<DIM>& p) const
    myoffset += p(0)-d_lo(0);
 
    return(myoffset);
+}
+
+template<int DIM> inline
+Index<DIM> Box<DIM>::index(const int offset) const
+{
+   TBOX_CHECK_ASSERT(offset >= 0);
+   TBOX_CHECK_ASSERT(offset <= size());
+
+   hier::IntVector<DIM> n;
+   hier::IntVector<DIM> index;
+
+   n = numberCells();
+
+   int remainder = offset;
+
+   for(int dim = DIM -1; dim > -1; dim--) {
+      /* Compute the stride for indexing */
+      int stride = 1;
+      for(int stride_dim = 0; stride_dim < dim; stride_dim++) {
+	 stride *= n[stride_dim];
+      }      
+
+      /* Compute the local index */
+      index[dim] = remainder / stride;
+      remainder -= index[dim] * stride;
+
+      /* Compute the global index */
+      index[dim] += lower(dim);
+   }
+
+   hier::Index<DIM> idx(index);
+
+   return idx;
 }
 
 

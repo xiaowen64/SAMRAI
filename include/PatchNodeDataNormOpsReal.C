@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/node/PatchNodeDataNormOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mathops/node/PatchNodeDataNormOpsReal.C $
 // Package:	SAMRAI mathops
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2249 $
+// Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 // Description:	Templated norm operations for real node-centered patch data.
 //
 
@@ -11,10 +11,8 @@
 #define included_math_PatchNodeDataNormOpsReal_C
 
 #include "PatchNodeDataNormOpsReal.h"
-#include "NodeGeometry.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
 #include "tbox/Utilities.h"
-#endif
+#include "NodeGeometry.h"
 
 namespace SAMRAI {
     namespace math {

@@ -174,6 +174,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.h			\
 	$(INCLUDE_SAM)/OuternodeGeometry.I				\
 	$(INCLUDE_SAM)/OuternodeGeometry.h				\
+	$(INCLUDE_SAM)/OuternodeVariable.h				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/OutersideData.I $(INCLUDE_SAM)/OutersideData.h	\
 	$(INCLUDE_SAM)/OutersideDataFactory.I				\
@@ -283,8 +284,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/BalanceUtilities.C				\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
-	$(INCLUDE_SAM)/BergerRigoutsos.C $(INCLUDE_SAM)/BinaryTree.C	\
-	$(INCLUDE_SAM)/BoundaryBox.C					\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BergerRigoutsos.C\
+	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeneratorStrategy.C				\
@@ -337,6 +338,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/CellIntegerConstantRefine.C			\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
 	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CoarsenOperator.C	\
+	$(INCLUDE_SAM)/CopyOperation.C					\
 	$(INCLUDE_SAM)/EdgeComplexConstantRefine.C			\
 	$(INCLUDE_SAM)/EdgeComplexLinearTimeInterpolateOp.C		\
 	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
@@ -399,7 +401,9 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/OuterfaceVariable.C				\
 	$(INCLUDE_SAM)/OuternodeData.C					\
 	$(INCLUDE_SAM)/OuternodeDataFactory.C				\
+	$(INCLUDE_SAM)/OuternodeDoubleConstantCoarsen.C			\
 	$(INCLUDE_SAM)/OuternodeGeometry.C				\
+	$(INCLUDE_SAM)/OuternodeVariable.C				\
 	$(INCLUDE_SAM)/OutersideComplexLinearTimeInterpolateOp.C	\
 	$(INCLUDE_SAM)/OutersideData.C					\
 	$(INCLUDE_SAM)/OutersideDataFactory.C				\
@@ -434,9 +438,13 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
 	$(INCLUDE_SAM)/StandardTagAndInitialize.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -564,7 +572,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -577,10 +586,10 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/CellData.C $(INCLUDE_SAM)/CellDataFactory.C	\
 	$(INCLUDE_SAM)/CellGeometry.C $(INCLUDE_SAM)/CellIndex.C	\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
-	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/LoadBalanceStrategy.C				\
+	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/GriddingAlgorithm.C $(INCLUDE_SAM)/Index.C	\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
 	$(INCLUDE_SAM)/MBUtilities.C					\
 	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
@@ -601,9 +610,13 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -732,7 +745,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BaseGriddingAlgorithm.C				\
-	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
+	$(INCLUDE_SAM)/BasePatchHierarchy.C				\
+	$(INCLUDE_SAM)/BasePatchLevel.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -745,10 +759,10 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/CellData.C $(INCLUDE_SAM)/CellDataFactory.C	\
 	$(INCLUDE_SAM)/CellGeometry.C $(INCLUDE_SAM)/CellIndex.C	\
 	$(INCLUDE_SAM)/CellIterator.C $(INCLUDE_SAM)/CellOverlap.C	\
-	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/GriddingAlgorithm.C\
-	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
-	$(INCLUDE_SAM)/LoadBalanceStrategy.C				\
+	$(INCLUDE_SAM)/CellVariable.C $(INCLUDE_SAM)/CopyOperation.C	\
+	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/GriddingAlgorithm.C $(INCLUDE_SAM)/Index.C	\
+	$(INCLUDE_SAM)/IntVector.C $(INCLUDE_SAM)/LoadBalanceStrategy.C	\
 	$(INCLUDE_SAM)/MBUtilities.C					\
 	$(INCLUDE_SAM)/MultiblockCellDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
@@ -769,9 +783,12 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/RefineTransactionFactory.C			\
 	$(INCLUDE_SAM)/StandardRefineTransactionFactory.C		\
 	$(INCLUDE_SAM)/StandardTagAndInitStrategy.C			\
+	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
-	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
+	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
+	$(INCLUDE_SAM)/tbox/MathUtilities.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}

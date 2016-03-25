@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/FaceGeometry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/boxgeometry/FaceGeometry.h $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2224 $
+// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description:	hier::Box geometry information for face centered objects
 //
 
@@ -14,6 +14,7 @@
 #include "Box.h"
 #include "BoxGeometry.h"
 #include "BoxOverlap.h"
+#include "FaceOverlap.h"
 #include "IntVector.h"
 #include "tbox/Pointer.h"
 
@@ -36,6 +37,12 @@ namespace SAMRAI {
 template<int DIM> class FaceGeometry : public hier::BoxGeometry<DIM>
 {
 public:
+
+   /*!
+    * The BoxOverlap implemenation for this geometry.
+    */
+   typedef FaceOverlap<DIM> Overlap;
+
   /*!
     * @brief Convert an AMR index box space box into an face geometry box.
     * An face geometry box extends the given AMR index box space box

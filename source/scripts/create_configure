@@ -3,8 +3,11 @@
 if [ ! -d acmacros ] 
 then
 	svn checkout file:///usr/casc/samrai/gunney/svnrepo/acmacros/branches/0.3 acmacros
+else
+	svn update acmacros
 fi
 
 rm -fr autom4te.cache
 aclocal -I `pwd`/config -I `pwd`/acmacros --output=config/aclocal.m4
+autoheader -I config
 autoconf -I config

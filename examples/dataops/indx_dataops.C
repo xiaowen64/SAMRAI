@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/dataops/indx_dataops.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/examples/dataops/indx_dataops.C $
 // Package:     SAMRAI test
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: Main program to test index data operations
 //
 
@@ -70,10 +70,10 @@ int main( int argc, char *argv[] ) {
 
       hier::BoxArray<NDIM> coarse_domain(2);
       hier::BoxArray<NDIM> fine_domain(2);
-      coarse_domain(0) = coarse0;
-      coarse_domain(1) = coarse1;
-      fine_domain(0) = fine0;
-      fine_domain(1) = fine1;
+      coarse_domain[0] = coarse0;
+      coarse_domain[1] = coarse1;
+      fine_domain[0] = fine0;
+      fine_domain[1] = fine1;
 
       tbox::Pointer<geom::CartesianGridGeometry<NDIM> > geometry =
 	 new geom::CartesianGridGeometry<NDIM>("CartesianGeometry",lo, hi, coarse_domain);
@@ -118,8 +118,8 @@ int main( int argc, char *argv[] ) {
       tbox::Pointer< hier::VariableContext > cxt = variable_db->getContext("dummy");
       const hier::IntVector<NDIM> no_ghosts(0);
 
-      tbox::Pointer< pdat::IndexVariable<NDIM, SampleIndexData> > data = 
-	 new pdat::IndexVariable<NDIM,SampleIndexData>("sample");
+      tbox::Pointer< pdat::IndexVariable< NDIM, SampleIndexData, pdat::CellGeometry<NDIM> > > data =
+	 new pdat::IndexVariable< NDIM, SampleIndexData, pdat::CellGeometry<NDIM> >("sample");
       int data_id = variable_db->registerVariableAndContext(
 	 data, cxt, no_ghosts);
 
@@ -136,7 +136,7 @@ int main( int argc, char *argv[] ) {
        * Loop over hierarchy levels and set index data on cells of patches
        */
       int counter = 0;
-      ostream& os = tbox::plog;
+      std::ostream& os = tbox::plog;
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
 	 tbox::Pointer<hier::PatchLevel<NDIM> > level = hierarchy->getPatchLevel(ln);
 
@@ -147,10 +147,10 @@ int main( int argc, char *argv[] ) {
 	 // loop over patches on level
 	 for (hier::PatchLevel<NDIM>::Iterator ip(level); ip; ip++) {
 	    tbox::Pointer<hier::Patch<NDIM> > patch = level->getPatch(ip());     
-	    os << "Patch: " << patch->getPatchNumber() << endl;
+	    os << "Patch: " << patch->getPatchNumber() << std::endl;
 
 	    // access sample data from patch
-	    tbox::Pointer< pdat::IndexData<NDIM, SampleIndexData> > sample = 
+	    tbox::Pointer< pdat::IndexData<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> > > sample = 
 	       patch->getPatchData(data_id);
 
 	    // iterate over cells of patch and invoke one "SampleIndexData" 
@@ -164,10 +164,10 @@ int main( int argc, char *argv[] ) {
 
 	    // iterate over the "SampleIndexData" index data stored on the patch
 	    // and dump the integer stored on it.
-	    for (pdat::IndexData<NDIM,SampleIndexData>::Iterator id(*sample); id; id++) {
+	    for (pdat::IndexData< NDIM, SampleIndexData, pdat::CellGeometry<NDIM> >::Iterator id(*sample); id; id++) {
 	       os << "   Index: " << id().getIndex() 
 		  << "      SampleIndexData data: " << id().getInt()
-		  << endl;
+		  << std::endl;
 	    }
          
 	 }

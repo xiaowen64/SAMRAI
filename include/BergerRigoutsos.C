@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/clustering/BergerRigoutsos.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/clustering/BergerRigoutsos.C $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+// Revision:    $LastChangedRevision: 2233 $
+// Modified:    $LastChangedDate: 2008-06-30 17:02:09 -0700 (Mon, 30 Jun 2008) $
 // Description: Class for Burger/Rigoutsos tagged cell clustering algorithm.
 //
 
@@ -440,6 +440,7 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
     */
    if (recurse_level == 0) {
       t_cluster->stop();
+      tbox::SAMRAI_MPI::barrier(); // Separate cluster and globalize timings.
       t_globalize_boxes->start();
       hier::BoxComm<DIM>::bcastBoxList(boxes);
       t_globalize_boxes->stop();

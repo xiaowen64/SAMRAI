@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/dataops/SampleIndexData.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/examples/dataops/SampleIndexData.h $
 // Package:     SAMRAI applications
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: Boundary cell struct for embedded boundary implementations
 //
 
@@ -75,7 +75,7 @@ public:
     * Print class data representation when an unrecoverable run-time
     * exception is thrown. Or, when desired.
     */
-   void printClassData(ostream& os) const;
+   void printClassData(std::ostream& os) const;
 
    /**
     * The copySourceItem() method allows SampleIndexData to be a templated

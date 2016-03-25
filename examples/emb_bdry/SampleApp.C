@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/emb_bdry/SampleApp.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/examples/emb_bdry/SampleApp.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: Class to manage functions for QM calculations.
 //
 
@@ -218,10 +218,10 @@ void SampleApp::setWeightOnPatch(
    // so thats the weight we use.
    int eb_index = d_eb_geom->getIndexCutCellDataId();
    if (patch->checkAllocated(eb_index)) {
-      Pointer< IndexData<NDIM,CutCell<NDIM> > > eboundary =
+      Pointer< IndexData<NDIM,CutCell<NDIM>,pdat::CellGeometry<NDIM> > > eboundary =
          patch->getPatchData(eb_index);
 
-      for (IndexData<NDIM,CutCell<NDIM> >::Iterator cc(*eboundary); cc; cc++) {
+      for (IndexData<NDIM,CutCell<NDIM>,pdat::CellGeometry<NDIM> >::Iterator cc(*eboundary); cc; cc++) {
          Index<NDIM> ind = cc().getIndex();
          CellIndex<NDIM> cind(ind);
          Box<NDIM> box(ind,ind);
@@ -344,11 +344,11 @@ void SampleApp::printBoundaryNodeData(
       Pointer< NodeData<NDIM,int> >    node_flag    =
          patch->getPatchData(eb_geom->getNodeInsideOutsideDataId());
          
-      Pointer< IndexData<NDIM,CutCell<NDIM> > > eboundary =
+      Pointer< IndexData<NDIM,CutCell<NDIM>,pdat::CellGeometry<NDIM> > > eboundary =
          patch->getPatchData(eb_geom->getIndexCutCellDataId());
          
       Index<NDIM> ij;
-      for (IndexData<NDIM,CutCell<NDIM> >::Iterator cc(*eboundary); cc; cc++) {
+      for (IndexData<NDIM,CutCell<NDIM>,pdat::CellGeometry<NDIM> >::Iterator cc(*eboundary); cc; cc++) {
             
          ij = cc().getIndex();
          // print boundary node information for this cut cell

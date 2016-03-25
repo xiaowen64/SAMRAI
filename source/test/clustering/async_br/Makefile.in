@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/clustering/async_br/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/clustering/async_br/Makefile.in $
 ## Package:	SAMRAI applications
 ## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1917 $
-## Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+## Revision:	$LastChangedRevision: 2276 $
+## Modified:	$LastChangedDate: 2008-07-07 13:57:27 -0700 (Mon, 07 Jul 2008) $
 ## Description:	makefile for asynchronous Berger-Rigoutsos test
 ##
 
@@ -21,7 +21,7 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM) -DTESTING=1
 #LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
 
-CXX_OBJS      = main.o ABRTest.o SinusoidalFrontTagger.o MDA_Access_instances.o get-input-filename.o
+CXX_OBJS      = main.o ABRTest.o SinusoidalFrontTagger.o get-input-filename.o
 
 main2d:
 		if test -f stamp-3d; then $(MAKE) clean-check; fi

@@ -2,8 +2,8 @@
 // File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/branches/smith84/source/test/restartdb/mainHDF5.C $
 // Package:     SAMRAI test
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2169 $
-// Modified:    $LastChangedDate: 2008-04-30 16:24:39 -0700 (Wed, 30 Apr 2008) $
+// Revision:    $LastChangedRevision: 2220 $
+// Modified:    $LastChangedDate: 2008-06-17 18:19:28 -0700 (Tue, 17 Jun 2008) $
 // Description: Tests HDF database in SAMRAI
 //
 
@@ -86,7 +86,11 @@ int main(int argc, char *argv[])
       std::string name = "./restart." + tbox::Utilities::processorToString(tbox::SAMRAI_MPI::getRank()) + ".hdf5";
       hid_t file_id = H5Fcreate(name.c_str(), H5F_ACC_TRUNC, 
 				H5P_DEFAULT, H5P_DEFAULT);
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hid_t hdf_group = H5Gcreate(file_id, "SAMRAIGroup", 0, H5P_DEFAULT, H5P_DEFAULT);
+#else
       hid_t hdf_group = H5Gcreate(file_id, "SAMRAIGroup", 0);
+#endif
       database -> attachToFile(hdf_group);
 
       restart_manager -> setRootDatabase(database);
@@ -105,7 +109,11 @@ int main(int argc, char *argv[])
 
       database = new tbox::HDFDatabase("SAMRAI Restart");      
       file_id = H5Fopen(name.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+#if (H5_VERS_MAJOR>1) || ((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR > 6))
+      hdf_group = H5Gopen(file_id, "SAMRAIGroup", H5P_DEFAULT);
+#else
       hdf_group = H5Gopen(file_id, "SAMRAIGroup");
+#endif
       database -> attachToFile(hdf_group);
 
       restart_manager -> setRootDatabase(database);

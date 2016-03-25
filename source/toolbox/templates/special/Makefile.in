@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/templates/special/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/templates/special/Makefile.in $
 ## Package:	SAMRAI toolbox
 ## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2037 $
-## Modified:	$LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
+## Revision:	$LastChangedRevision: 2272 $
+## Modified:	$LastChangedDate: 2008-07-07 10:38:57 -0700 (Mon, 07 Jul 2008) $
 ## Description:	makefile for the special templates for toolbox
 ##
 
@@ -13,19 +13,20 @@ SUBDIR        = source/toolbox/templates/special
 VPATH	      =	@srcdir@
 OBJECT        = ../../../..
 
+default: library
+
 #
 # For these classes don't turn off implicit template instantiation.
 #
 ALLOW_IMPLICIT_TEMPLATES = yes
 
-default: library
-
 include $(OBJECT)/config/Makefile.config
 
 library:	lib1d lib2d lib3d
 
-OBJS	      = ComplexSpecial.o  MathUtilitiesSpecial.o StringSpecial.o  tbox_List-tbox_TimerPointer.o \
-		ArraySpecial.o stl-FundamentalTypes.o
+OBJS          = ComplexInst.o  MathUtilitiesInst.o \
+		StringInst.o  tbox_List-tbox_TimerPointer.o \
+		stl-FundamentalTypes.o
 lib1d:		$(OBJS)
 lib2d:		$(OBJS)
 lib3d:		$(OBJS)

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/geometry/cartesian/operators/edge/CartesianEdgeComplexWeightedAverage.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/geometry/cartesian/operators/edge/CartesianEdgeComplexWeightedAverage.C $
 // Package:	SAMRAI geometry
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2009 $
-// Modified:	$LastChangedDate: 2008-02-26 15:38:52 -0800 (Tue, 26 Feb 2008) $
+// Revision:	$LastChangedRevision: 2249 $
+// Modified:	$LastChangedDate: 2008-07-03 08:17:20 -0700 (Thu, 03 Jul 2008) $
 // Description: Weighted averaging operator for edge-centered complex data on 
 //              a Cartesian mesh.
 //
@@ -11,14 +11,12 @@
 #ifndef included_geom_CartesianEdgeComplexWeightedAverage_C
 #define included_geom_CartesianEdgeComplexWeightedAverage_C
 
-#include "CartesianEdgeComplexWeightedAverage.h"
-#include "tbox/Complex.h"
-
 #include<float.h>
 #include<math.h>
-#ifdef DEBUG_CHECK_ASSERTIONS
+
+#include "CartesianEdgeComplexWeightedAverage.h"
+#include "tbox/Complex.h"
 #include "tbox/Utilities.h"
-#endif
 #include "CartesianPatchGeometry.h"
 #include "Index.h"
 #include "EdgeData.h"

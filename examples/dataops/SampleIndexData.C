@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/dataops/SampleIndexData.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/examples/dataops/SampleIndexData.C $
 // Package:     SAMRAI application
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: SampleIndexData example demonstrating IndexData type.
 //
 
@@ -125,7 +125,7 @@ pdat::CellIndex<NDIM> SampleIndexData::getIndex() const
 *                                              *
 *************************************************************************
 */
-void SampleIndexData::printClassData(ostream& os) const 
+void SampleIndexData::printClassData(std::ostream& os) const 
 {
    
 }
@@ -266,18 +266,19 @@ void SampleIndexData::getFromDatabase(
 #include "IndexDataFactory.C"
 #include "IndexVariable.C"
 #include "tbox/Pointer.C"
+#include "CellGeometry.h"
 
 namespace SAMRAI {
 
-template class pdat::IndexData<NDIM, SampleIndexData >;
-template class pdat::IndexDataFactory<NDIM,SampleIndexData>;
-template class pdat::IndexDataNode<NDIM,SampleIndexData>;
-template class pdat::IndexIterator<NDIM, SampleIndexData >;
-template class pdat::IndexVariable<NDIM, SampleIndexData >;
+template class pdat::IndexData<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> >;
+template class pdat::IndexDataFactory<NDIM,SampleIndexData, pdat::CellGeometry<NDIM> >;
+template class pdat::IndexDataNode<NDIM,SampleIndexData, pdat::CellGeometry<NDIM> >;
+template class pdat::IndexIterator<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> >;
+template class pdat::IndexVariable<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> >;
 template class tbox::Array< SampleIndexData >;
-template class tbox::Array< pdat::IndexDataNode<NDIM, SampleIndexData > >;
-template class tbox::Pointer < pdat::IndexData<NDIM, SampleIndexData > >;
-template class tbox::Pointer < pdat::IndexVariable<NDIM, SampleIndexData > >;
-template class tbox::Pointer < pdat::IndexDataFactory<NDIM, SampleIndexData > >;
+template class tbox::Array< pdat::IndexDataNode<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> > >;
+template class tbox::Pointer < pdat::IndexData<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> > >;
+template class tbox::Pointer < pdat::IndexVariable<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> > >;
+template class tbox::Pointer < pdat::IndexDataFactory<NDIM, SampleIndexData, pdat::CellGeometry<NDIM> > >;
 
 }

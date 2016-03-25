@@ -2,8 +2,8 @@
 // File:	$URL$
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2195 $
+// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
 // Description:	Copy operation on single array data elements templated on data type
 //
 
@@ -50,6 +50,10 @@ private:
 
 #ifndef DEBUG_NO_INLINE
 #include "CopyOperation.I"
+#endif
+
+#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
+#include "CopyOperation.C"
 #endif
 
 #endif

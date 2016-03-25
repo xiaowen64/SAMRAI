@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/dataops/cell_hierops.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/examples/dataops/cell_hierops.C $
 // Package:     SAMRAI test
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2224 $
+// Modified:    $LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
 // Description: Main program to test cell-centered patch data ops
 //
 
@@ -83,10 +83,10 @@ int main( int argc, char *argv[] ) {
 
       hier::BoxArray<2> coarse_domain(2);
       hier::BoxArray<2> fine_domain(2);
-      coarse_domain(0) = coarse0;
-      coarse_domain(1) = coarse1;
-      fine_domain(0) = fine0;
-      fine_domain(1) = fine1;
+      coarse_domain[0] = coarse0;
+      coarse_domain[1] = coarse1;
+      fine_domain[0] = fine0;
+      fine_domain[1] = fine1;
 
       tbox::Pointer<geom::CartesianGridGeometry<2> > geometry =
 	 new geom::CartesianGridGeometry<2>("CartesianGeometry",lo, hi, coarse_domain);

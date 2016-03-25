@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/SAMRAIManager.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/base/SAMRAIManager.C $
 // Package:	SAMRAI initialization and shutdown
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2223 $
+// Modified:	$LastChangedDate: 2008-06-19 13:12:20 -0700 (Thu, 19 Jun 2008) $
 // Description:	SAMRAI class to manage package startup and shutdown
 //
 
@@ -33,8 +33,6 @@ namespace SAMRAI {
 *                                                                       *
 * These values can be changed by calling the static functions:          *
 * SAMRAIManager::setMaxNumberPatchDataEntries(),                        *
-* SAMRAIManager::setMaxNumberTimers().                                  *
-* SAMRAIManager::setMaxNumberStatistics().                              *
 *									*
 * To avoid potentially erroneous or unexpected behavior, these          *
 * value should be set early on during program execution before they     *
@@ -46,12 +44,6 @@ namespace SAMRAI {
 
 int SAMRAIManager::s_max_patch_data_entries = 256;
 bool SAMRAIManager::s_max_patch_data_entries_accessed = false;
-
-int SAMRAIManager::s_max_timers = 128;
-bool SAMRAIManager::s_max_timers_accessed = false;
-
-int SAMRAIManager::s_max_statistics = 128;
-bool SAMRAIManager::s_max_statistics_accessed = false;
 
 /*
 *************************************************************************
@@ -126,65 +118,6 @@ void SAMRAIManager::setMaxNumberPatchDataEntries(int maxnum)
                                                          s_max_patch_data_entries);
    }
 }
-
-/*
-*************************************************************************
-*                                                                       *
-* Functions to get and set the maximum number of timers                 *
-* that will be supported.  Note that the set routine cannot be called   *
-* after the max number has been accessed.                               *
-*                                                                       *
-*************************************************************************
-*/
-
-int SAMRAIManager::getMaxNumberTimers()
-{
-   s_max_timers_accessed = true;
-   return (s_max_timers);
-}
-
-void SAMRAIManager::setMaxNumberTimers(int maxnum)
-{
-   if (s_max_timers_accessed) {
-      TBOX_ERROR("SAMRAIManager::setMaxNumberTimers() error..."
-                 << "\nThe max timers value has already been accessed and cannot"
-                 << "\nbe reset after that point by calling this method -- program abort!"
-                 << std::endl);
-   } else {
-      s_max_timers = MathUtilities<int>::Max(maxnum,
-                                             s_max_timers);
-   }
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Functions to get and set the maximum number of statistics             *
-* that will be supported.  Note that the set routine cannot be called   *
-* after the max number has been accessed.                               *
-*                                                                       *
-*************************************************************************
-*/
-
-int SAMRAIManager::getMaxNumberStatistics()
-{
-   s_max_statistics_accessed = true;
-   return (s_max_statistics);
-}
-
-void SAMRAIManager::setMaxNumberStatistics(int maxnum)
-{
-   if (s_max_statistics_accessed) {
-      TBOX_ERROR("SAMRAIManager::setMaxNumberStatistics() error..."
-                 << "\nThe max statistics value has already been accessed and cannot"
-                 << "\nbe reset after that point by calling this method -- program abort!"
-                 << std::endl);
-   } else {
-      s_max_statistics = MathUtilities<int>::Max(maxnum,
-                                                 s_max_statistics);
-   }
-}
-
 
 }
 }

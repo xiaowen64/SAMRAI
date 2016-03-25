@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Timer.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/timers/Timer.h $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Modified:    $LastChangedDate: 2008-07-09 09:02:19 -0700 (Wed, 09 Jul 2008) $
 // Description: Timer class to track elapsed time in portions of a program.
 //
 
@@ -154,9 +154,9 @@ public:
    void setConcurrentTimer(const int id);
 
    /**
-    * Return the concurrent timer vector. 
+    * Return if the timer id is running concurrently with this one.
     */
-   const Array<bool>& getConcurrentTimerVector() const;
+   bool isConcurrentTimer(const int id) const;
 
    /**
     * Return number of accesses to start()-stop() functions for the 
@@ -262,6 +262,8 @@ private:
     * are accessed.
     */
    int d_accesses;
+
+   static const int DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 
    /*
     * Objects used for performance analysis with TAU.  The "tautimer" mapping

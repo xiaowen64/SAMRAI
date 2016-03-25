@@ -252,9 +252,15 @@ AC_DEFUN([CASC_FIND_F77LIBS],
 
          F77LIBFLAGS="$casc_other_flags $casc_f77_dirs"
 
+
          if test -n "`echo $F77LIBFLAGS | grep '\-R/'`"; then
             F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/-R\//-R \//'`
          fi
+	 
+	 dnl Strip off quotes.  This was needed for mpi wrappers.
+         dnl This is potentially bad.
+         F77LIBFLAGS=`echo $F77LIBFLAGS | sed 's/\"//'`
+         casc_f77_libs=`echo $casc_f77_libs | sed 's/\"//'`
 
          dnl * each -l flag is checked using CASC_CHECK_LIB_FORTRAN, until
          dnl * successful linking of a test program is accomplished, at which
@@ -392,20 +398,20 @@ EOF
     /bin/rm -f confftest.f confftest.o
     AC_MSG_CHECKING(Fortran external names)
     if test -n "$nameform4" ; then
-        AC_DEFINE(FORTRAN_DOUBLE_UNDERSCORE)
+        AC_DEFINE([FORTRAN_DOUBLE_UNDERSCORE],[1],[FORTRAN_DOUBLE_UNDERSCORE])
         AC_MSG_RESULT(lowercase with one or two trailing underscores)
         FORTRANNAMES="FORTRANDOUBLEUNDERSCORE"
     elif test -n "$nameform1" ; then
         # We don't set this in CFLAGS; it is a default case
-        AC_DEFINE(FORTRAN_UNDERSCORE)
+        AC_DEFINE([FORTRAN_UNDERSCORE],[1],[FORTRAN_UNDERSCORE])
         AC_MSG_RESULT(lowercase with a trailing underscore)
         FORTRANNAMES="FORTRANUNDERSCORE"
     elif test -n "$nameform2" ; then
-        AC_DEFINE(FORTRAN_CAPS)
+        AC_DEFINE([FORTRAN_CAPS],[1],[FORTRAN_CAPS])
         AC_MSG_RESULT(uppercase)
         FORTRANNAMES="FORTRANCAPS"
     elif test -n "$nameform3" ; then
-        AC_DEFINE(FORTRAN_NO_UNDERSCORE)
+        AC_DEFINE([FORTRAN_NO_UNDERSCORE],[1],[FORTRAN_NO_UNDERSCORE])
         AC_MSG_RESULT(lowercase)
         FORTRANNAMES="FORTRANNOUNDERSCORE"
     else
