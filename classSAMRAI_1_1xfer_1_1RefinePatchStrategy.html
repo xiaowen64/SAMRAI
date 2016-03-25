@@ -37,32 +37,32 @@
 <a href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#5479ea8a55a9c329fd354c35452b53ce">RefinePatchStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#0a18fdf4898f9efb3330e9e719877626">RefinePatchStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#5479ea8a55a9c329fd354c35452b53ce"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#be8a4aae18b924cc8a3fc3f73b739514">~RefinePatchStrategy</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#0a18fdf4898f9efb3330e9e719877626"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#8bc1f8921366d5386a59f9769b289cc7">~RefinePatchStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#be8a4aae18b924cc8a3fc3f73b739514"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#428a5d166ab97a9ce9c8344685817b26">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#8bc1f8921366d5386a59f9769b289cc7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#e6da055f3a0e95bb34761e76eda0744e">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function interface for physical boundary filling.  <a href="#428a5d166ab97a9ce9c8344685817b26"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bb3eaa0149ac4477ec4c8d85d0cbf074">getRefineOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function interface for physical boundary filling.  <a href="#e6da055f3a0e95bb34761e76eda0744e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#acad2fa260c38de8a88e23086338e888">getRefineOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data refinement operations performed by this object.  <a href="#bb3eaa0149ac4477ec4c8d85d0cbf074"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5d1588459650fb4ff5f7c5dd66ece46">preprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data refinement operations performed by this object.  <a href="#acad2fa260c38de8a88e23086338e888"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#57207582e1411612c159f0629963a793">preprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#c5d1588459650fb4ff5f7c5dd66ece46"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">postprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#57207582e1411612c159f0629963a793"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#5f9968834fafcaa4ef777893e1300205">postprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#bd5a91534d2cd570b23e679555e4cf27"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#b7ecf070476c948a6bf2f4e26f904bc0">preprocessRefineBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fine_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#5f9968834fafcaa4ef777893e1300205"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#3f787c292cf6e20d7a88dba5af5e155d">preprocessRefineBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fine_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5250bd18bb4200f7f89741d6493fad6">postprocessRefineBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fine_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bc3cf88e0f74f62adfc8f5b9adca1aa5">postprocessRefineBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;fine_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#23e8f9fc9761bb80a39d603e7615c5cf">getMaxRefineOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#3347546b2699d877e3e77c30facd8c2a">getMaxRefineOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> objects used in an application.  <a href="#23e8f9fc9761bb80a39d603e7615c5cf"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> objects used in an application.  <a href="#3347546b2699d877e3e77c30facd8c2a"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class for user-defined patch data refining operations and physical boundary filling operations. 
@@ -87,7 +87,7 @@ For operations on a mesh with block-singularities, implementations of this class
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="5479ea8a55a9c329fd354c35452b53ce"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::RefinePatchStrategy" ref="5479ea8a55a9c329fd354c35452b53ce" args="()" -->
+<a class="anchor" name="0a18fdf4898f9efb3330e9e719877626"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::RefinePatchStrategy" ref="0a18fdf4898f9efb3330e9e719877626" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -108,7 +108,7 @@ Constructor.
 The constructor will register the constructed object with a static set that manages all <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> objects in an application. 
 </div>
 </div><p>
-<a class="anchor" name="be8a4aae18b924cc8a3fc3f73b739514"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::~RefinePatchStrategy" ref="be8a4aae18b924cc8a3fc3f73b739514" args="()" -->
+<a class="anchor" name="8bc1f8921366d5386a59f9769b289cc7"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::~RefinePatchStrategy" ref="8bc1f8921366d5386a59f9769b289cc7" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -130,7 +130,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="23e8f9fc9761bb80a39d603e7615c5cf"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::getMaxRefineOpStencilWidth" ref="23e8f9fc9761bb80a39d603e7615c5cf" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="3347546b2699d877e3e77c30facd8c2a"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::getMaxRefineOpStencilWidth" ref="3347546b2699d877e3e77c30facd8c2a" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -149,7 +149,7 @@ Destructor.
 <p>
 Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> objects used in an application. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>The maximum of the return values of calls to <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bb3eaa0149ac4477ec4c8d85d0cbf074">getRefineOpStencilWidth()</a> for every <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> of the given Dimension used in an application.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The maximum of the return values of calls to <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#acad2fa260c38de8a88e23086338e888">getRefineOpStencilWidth()</a> for every <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> of the given Dimension used in an application.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
@@ -158,7 +158,7 @@ Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1
 
 </div>
 </div><p>
-<a class="anchor" name="428a5d166ab97a9ce9c8344685817b26"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::setPhysicalBoundaryConditions" ref="428a5d166ab97a9ce9c8344685817b26" args="(hier::Patch &amp;patch, const double fill_time, const hier::IntVector &amp;ghost_width_to_fill)=0" -->
+<a class="anchor" name="e6da055f3a0e95bb34761e76eda0744e"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::setPhysicalBoundaryConditions" ref="e6da055f3a0e95bb34761e76eda0744e" args="(hier::Patch &amp;patch, const double fill_time, const hier::IntVector &amp;ghost_width_to_fill)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -202,10 +202,10 @@ Set data in ghost regions at patch boundaries that touch the physical domain bou
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#07f2c1fcbf8b4dd6fc1ba9abda85cd14">SAMRAI::mesh::MultiblockGriddingTagger</a>, <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#036d4b480f37ed811e36650ea76f73c5">SAMRAI::solv::CartesianRobinBcHelper</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#31f097ee69de5a175f4b34d31c469bf8">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#668799adc09b7daf8ebc70b2e42e468b">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#ddac72566ababdfd15eb95987b89fdb8">SAMRAI::mesh::MultiblockGriddingTagger</a>, <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#16446008b3dda2332960e2748d43678e">SAMRAI::solv::CartesianRobinBcHelper</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#f482fa0a13cf89f84276b5d1f6b09822">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#712040f2a35c444883c9cb8e3f06af14">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="bb3eaa0149ac4477ec4c8d85d0cbf074"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::getRefineOpStencilWidth" ref="bb3eaa0149ac4477ec4c8d85d0cbf074" args="(const tbox::Dimension &amp;dim) const =0" -->
+<a class="anchor" name="acad2fa260c38de8a88e23086338e888"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::getRefineOpStencilWidth" ref="acad2fa260c38de8a88e23086338e888" args="(const tbox::Dimension &amp;dim) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -227,10 +227,10 @@ Return maximum stencil width needed for user-defined data refinement operations 
 This is needed to determine the correct interpolatin data dependencies and to ensure that the data has a sufficient amount of ghost width.<p>
 For any user-defined interpolation operations implemented in the preprocess or postprocess methods, return the maximum stencil needed on a coarse patch to refine data to a fine patch. If your implementation doesn't work with the given dimension, return zero. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#9ceaf41f29cf103a9f4e914e9361c492">SAMRAI::mesh::MultiblockGriddingTagger</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#406512e9038767c362f5a84264dd3326">SAMRAI::solv::CartesianRobinBcHelper</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#eafa7511570d3a84d7b6edc6532e7525">SAMRAI::mesh::MultiblockGriddingTagger</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#400adb380f36bda2bc9fa8dcf9a64db6">SAMRAI::solv::CartesianRobinBcHelper</a>.
 </div>
 </div><p>
-<a class="anchor" name="c5d1588459650fb4ff5f7c5dd66ece46"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::preprocessRefine" ref="c5d1588459650fb4ff5f7c5dd66ece46" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)=0" -->
+<a class="anchor" name="57207582e1411612c159f0629963a793"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::preprocessRefine" ref="57207582e1411612c159f0629963a793" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -281,10 +281,10 @@ This member function is called before standard refine operations (expressed usin
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#707e8b20085f141bbf018dd1e9a9699b">SAMRAI::mesh::MultiblockGriddingTagger</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#fa142e52689d375d2b150cf1da41e19d">SAMRAI::solv::CartesianRobinBcHelper</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#071dc0ad3c0fc0918e76ad11ad3532c3">SAMRAI::mesh::MultiblockGriddingTagger</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#45f34002a8892972bad987f62efb18e8">SAMRAI::solv::CartesianRobinBcHelper</a>.
 </div>
 </div><p>
-<a class="anchor" name="bd5a91534d2cd570b23e679555e4cf27"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::postprocessRefine" ref="bd5a91534d2cd570b23e679555e4cf27" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)=0" -->
+<a class="anchor" name="5f9968834fafcaa4ef777893e1300205"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::postprocessRefine" ref="5f9968834fafcaa4ef777893e1300205" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -335,10 +335,10 @@ This member function is called after standard refine operations (expressed using
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#8a978d60d8cac30ddd6d553e561a62c4">SAMRAI::mesh::MultiblockGriddingTagger</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#ef8ff23d92caeba0c5da381834d09e8e">SAMRAI::solv::CartesianRobinBcHelper</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagger.html#203981543aaed716ea9d6b997fb877ab">SAMRAI::mesh::MultiblockGriddingTagger</a>, and <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#1e6971500c7065980dc23970b850deed">SAMRAI::solv::CartesianRobinBcHelper</a>.
 </div>
 </div><p>
-<a class="anchor" name="b7ecf070476c948a6bf2f4e26f904bc0"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::preprocessRefineBoxes" ref="b7ecf070476c948a6bf2f4e26f904bc0" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::BoxContainer &amp;fine_boxes, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="3f787c292cf6e20d7a88dba5af5e155d"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::preprocessRefineBoxes" ref="3f787c292cf6e20d7a88dba5af5e155d" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::BoxContainer &amp;fine_boxes, const hier::IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -378,7 +378,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1MultiblockGriddingTagg
 <p>
 Perform user-defined patch data refinement operations on a list of boxes.<p>
 This member function is called before standard refining operations (expressed using concrete subclasses of the RefineOperator base class).<p>
-The default implementation of this virtual function loops over the box list and calls the <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5d1588459650fb4ff5f7c5dd66ece46">preprocessRefine()</a> method for a single box.<p>
+The default implementation of this virtual function loops over the box list and calls the <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#57207582e1411612c159f0629963a793">preprocessRefine()</a> method for a single box.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing destination data. </td></tr>
@@ -390,10 +390,10 @@ The default implementation of this virtual function loops over the box list and 
 <dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) </dd></dl>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#f9cfae649ce238deb28b990c8b4e98d5">SAMRAI::solv::CartesianRobinBcHelper</a>.
+Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#cf86f3a681a534f91f33ad9eeeda18f1">SAMRAI::solv::CartesianRobinBcHelper</a>.
 </div>
 </div><p>
-<a class="anchor" name="c5250bd18bb4200f7f89741d6493fad6"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::postprocessRefineBoxes" ref="c5250bd18bb4200f7f89741d6493fad6" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::BoxContainer &amp;fine_boxes, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="bc3cf88e0f74f62adfc8f5b9adca1aa5"></a><!-- doxytag: member="SAMRAI::xfer::RefinePatchStrategy::postprocessRefineBoxes" ref="bc3cf88e0f74f62adfc8f5b9adca1aa5" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::BoxContainer &amp;fine_boxes, const hier::IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -433,7 +433,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelp
 <p>
 Perform user-defined patch data refinement operations on a list of boxes.<p>
 This member function is called after standard refining operations (expressed using concrete subclasses of the RefineOperator base class).<p>
-The default implementation of this virtual function loops over the box list and calls the <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">postprocessRefine()</a> method for a single box.<p>
+The default implementation of this virtual function loops over the box list and calls the <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#5f9968834fafcaa4ef777893e1300205">postprocessRefine()</a> method for a single box.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing destination data. </td></tr>
@@ -445,12 +445,12 @@ The default implementation of this virtual function loops over the box list and 
 <dl compact><dt><b>Precondition:</b></dt><dd>(fine.getDim() == coarse.getDim()) &amp;&amp; (fine.getDim() == ratio.getDim()) </dd></dl>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#1dfc4a230436ca86b243e438c121c306">SAMRAI::solv::CartesianRobinBcHelper</a>.
+Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CartesianRobinBcHelper.html#28c2af4322afcefa6db8fc30897a4ae0">SAMRAI::solv::CartesianRobinBcHelper</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefinePatchStrategy_8h.html">RefinePatchStrategy.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefinePatchStrategy_8C.html">RefinePatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

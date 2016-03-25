@@ -35,25 +35,25 @@
 <a href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#e1b7c56ad0dae57fbebcf66674d872e0">CoarsenPatchStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#02690e682468a78578d54faddb98ffce">CoarsenPatchStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#e1b7c56ad0dae57fbebcf66674d872e0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#e5772583cb67ec03be8e3d4eeeecbbc9">~CoarsenPatchStrategy</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#02690e682468a78578d54faddb98ffce"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#f167813b447b2ff617bd649e597b0ee1">~CoarsenPatchStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#e5772583cb67ec03be8e3d4eeeecbbc9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#1f7fdd482bbf042513bf3cd236b8db2f">getCoarsenOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#f167813b447b2ff617bd649e597b0ee1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#e3f4d912dcce2662117d89c38586aa74">getCoarsenOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data coarsening operations performed by this object.  <a href="#1f7fdd482bbf042513bf3cd236b8db2f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#0814ce9491959240638a20bd848a2350">preprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return maximum stencil width needed for user-defined data coarsening operations performed by this object.  <a href="#e3f4d912dcce2662117d89c38586aa74"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#659500fc458f4a76c611592fea297e27">preprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#0814ce9491959240638a20bd848a2350"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#a2d42bd7e5e5b39581df0d5a15059a33">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#659500fc458f4a76c611592fea297e27"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#8cfc7cf51182a3b1f057b347bbe56d80">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#a2d42bd7e5e5b39581df0d5a15059a33"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#8cfc7cf51182a3b1f057b347bbe56d80"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#417e8f41e8404aa092a58d0b55890ad5">getMaxCoarsenOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#615ac4296aab6acf729b96b841d639c5">getMaxCoarsenOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> objects used in an application.  <a href="#417e8f41e8404aa092a58d0b55890ad5"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> objects used in an application.  <a href="#615ac4296aab6acf729b96b841d639c5"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class for user-defined patch data coarsening operations. 
@@ -74,7 +74,7 @@ Note that the preprocess member function is called before standard data coarseni
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="e1b7c56ad0dae57fbebcf66674d872e0"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::CoarsenPatchStrategy" ref="e1b7c56ad0dae57fbebcf66674d872e0" args="()" -->
+<a class="anchor" name="02690e682468a78578d54faddb98ffce"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::CoarsenPatchStrategy" ref="02690e682468a78578d54faddb98ffce" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -95,7 +95,7 @@ Constructor.
 The constructor will register the constructed object with a static set that manages all <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> objects in an application. 
 </div>
 </div><p>
-<a class="anchor" name="e5772583cb67ec03be8e3d4eeeecbbc9"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::~CoarsenPatchStrategy" ref="e5772583cb67ec03be8e3d4eeeecbbc9" args="()" -->
+<a class="anchor" name="f167813b447b2ff617bd649e597b0ee1"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::~CoarsenPatchStrategy" ref="f167813b447b2ff617bd649e597b0ee1" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -117,7 +117,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="417e8f41e8404aa092a58d0b55890ad5"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::getMaxCoarsenOpStencilWidth" ref="417e8f41e8404aa092a58d0b55890ad5" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="615ac4296aab6acf729b96b841d639c5"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::getMaxCoarsenOpStencilWidth" ref="615ac4296aab6acf729b96b841d639c5" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -136,7 +136,7 @@ Destructor.
 <p>
 Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> objects used in an application. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>The maximum of the return values of calls to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#1f7fdd482bbf042513bf3cd236b8db2f">getCoarsenOpStencilWidth()</a> for every <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> of the given Dimension used in an application.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The maximum of the return values of calls to <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#e3f4d912dcce2662117d89c38586aa74">getCoarsenOpStencilWidth()</a> for every <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> of the given Dimension used in an application.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
@@ -145,7 +145,7 @@ Get the maximum stencil width over all <a class="el" href="classSAMRAI_1_1xfer_1
 
 </div>
 </div><p>
-<a class="anchor" name="1f7fdd482bbf042513bf3cd236b8db2f"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::getCoarsenOpStencilWidth" ref="1f7fdd482bbf042513bf3cd236b8db2f" args="(const tbox::Dimension &amp;dim) const =0" -->
+<a class="anchor" name="e3f4d912dcce2662117d89c38586aa74"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::getCoarsenOpStencilWidth" ref="e3f4d912dcce2662117d89c38586aa74" args="(const tbox::Dimension &amp;dim) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -168,7 +168,7 @@ This is needed to determine the correct coarsening data dependencies and to ensu
 For any user-defined coarsening operations implemented in the preprocess or postprocess methods, return the maximum stencil needed on a fine patch to coarsen data to a coarse patch. If your implementation doesn't work with the given dimension, return zero. 
 </div>
 </div><p>
-<a class="anchor" name="0814ce9491959240638a20bd848a2350"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::preprocessCoarsen" ref="0814ce9491959240638a20bd848a2350" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
+<a class="anchor" name="659500fc458f4a76c611592fea297e27"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::preprocessCoarsen" ref="659500fc458f4a76c611592fea297e27" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -220,7 +220,7 @@ This member function is called before standard coarsening operations (expressed 
 
 </div>
 </div><p>
-<a class="anchor" name="a2d42bd7e5e5b39581df0d5a15059a33"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::postprocessCoarsen" ref="a2d42bd7e5e5b39581df0d5a15059a33" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
+<a class="anchor" name="8cfc7cf51182a3b1f057b347bbe56d80"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::postprocessCoarsen" ref="8cfc7cf51182a3b1f057b347bbe56d80" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -274,7 +274,7 @@ This member function is called after standard coarsening operations (expressed u
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenPatchStrategy_8h.html">CoarsenPatchStrategy.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenPatchStrategy_8C.html">CoarsenPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -32,29 +32,29 @@
 <a href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3daa070508b85bc7fdc52b02d389a686">MethodOfLinesPatchStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#480516ff28c181e8a6c92179d3b3c1ed">MethodOfLinesPatchStrategy</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#e5e6e006a8aa441a2921f50702c90067">~MethodOfLinesPatchStrategy</a> ()=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#497f8142c09f645c1cf1d760b86dc413">~MethodOfLinesPatchStrategy</a> ()=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#aa9ded3da1bf20cd89f27e6a33777c2c">registerModelVariables</a> (<a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> *integrator)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#ff8f6ef934a337a2e4f86f000233851c">registerModelVariables</a> (<a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html">MethodOfLinesIntegrator</a> *integrator)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#12b6eb8c71e53d24efb9e91d0fe645cf">initializeDataOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double time, const bool initial_time) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#e4e0d2e3309dbb5be78158c84212db05">initializeDataOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double time, const bool initial_time) const =0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#b793f2cb40ed9ec5bc907686c6b85570">computeStableDtOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double time) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#68c086922e74ae0f8cba318573df1c41">computeStableDtOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double time) const =0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#f485d275c43539dafbf2e1dd49ec75f7">singleStep</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double dt, const double alpha_1, const double alpha_2, const double beta) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3163b0a1c4d2e11d74f12591aad59e95">singleStep</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double dt, const double alpha_1, const double alpha_2, const double beta) const =0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#979c6e894c22554743a23b99739b1ab6">tagGradientDetectorCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#c799539cc1d417aae811743a6f4c8a84">tagGradientDetectorCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#668799adc09b7daf8ebc70b2e42e468b">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#712040f2a35c444883c9cb8e3f06af14">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#9f800adf74e19e5549d4c716dc0a9444">getInteriorWithGhostsContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#188518bf40329018b3eceb6c63e8586b">getInteriorWithGhostsContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#eff4b1fb760c7eaec6dab9f4b771dc3c">getInteriorContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#d07fe543d11192a37a1bae1e63ad89a7">getInteriorContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3b7df58e74934006d68972e0647bf8f2">setInteriorWithGhostsContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#e73949c7353babf1d4a260f25c9dc690">setInteriorWithGhostsContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#74e826b840ca48dbc174b0f5d31b2f3b">setInteriorContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#a1c057f4751883e48e11a359d0fbc6eb">setInteriorContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -65,7 +65,7 @@ Class <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="3daa070508b85bc7fdc52b02d389a686"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy" ref="3daa070508b85bc7fdc52b02d389a686" args="()" -->
+<a class="anchor" name="480516ff28c181e8a6c92179d3b3c1ed"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy" ref="480516ff28c181e8a6c92179d3b3c1ed" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -84,7 +84,7 @@ Class <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html
 Blank constructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html">MethodOfLinesPatchStrategy</a>. 
 </div>
 </div><p>
-<a class="anchor" name="e5e6e006a8aa441a2921f50702c90067"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy" ref="e5e6e006a8aa441a2921f50702c90067" args="()=0" -->
+<a class="anchor" name="497f8142c09f645c1cf1d760b86dc413"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy" ref="497f8142c09f645c1cf1d760b86dc413" args="()=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -104,7 +104,7 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesP
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="aa9ded3da1bf20cd89f27e6a33777c2c"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::registerModelVariables" ref="aa9ded3da1bf20cd89f27e6a33777c2c" args="(MethodOfLinesIntegrator *integrator)=0" -->
+<a class="anchor" name="ff8f6ef934a337a2e4f86f000233851c"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::registerModelVariables" ref="ff8f6ef934a337a2e4f86f000233851c" args="(MethodOfLinesIntegrator *integrator)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -121,10 +121,10 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesP
 <div class="memdoc">
 
 <p>
-Register variables specific to the problem to be solved with the integrator using the registerVariable function. This defines the way data for each quantity will be manipulated on the patches. For more information, refer to <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#df9e494270964a2ec6d162bb6b7f8e4b">MethodOfLinesIntegrator::registerVariable</a>. 
+Register variables specific to the problem to be solved with the integrator using the registerVariable function. This defines the way data for each quantity will be manipulated on the patches. For more information, refer to <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#33923f2cf98de20eb3effac6888f41d5">MethodOfLinesIntegrator::registerVariable</a>. 
 </div>
 </div><p>
-<a class="anchor" name="12b6eb8c71e53d24efb9e91d0fe645cf"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::initializeDataOnPatch" ref="12b6eb8c71e53d24efb9e91d0fe645cf" args="(hier::Patch &amp;patch, const double time, const bool initial_time) const =0" -->
+<a class="anchor" name="e4e0d2e3309dbb5be78158c84212db05"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::initializeDataOnPatch" ref="e4e0d2e3309dbb5be78158c84212db05" args="(hier::Patch &amp;patch, const double time, const bool initial_time) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -159,7 +159,7 @@ Register variables specific to the problem to be solved with the integrator usin
 Set the initial data on a patch interior (i.e., NO GHOST CELLS). Setting "initial_time" true will initialize data at time. Setting it false will interpolate data from the appropriate coarser patch. 
 </div>
 </div><p>
-<a class="anchor" name="b793f2cb40ed9ec5bc907686c6b85570"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::computeStableDtOnPatch" ref="b793f2cb40ed9ec5bc907686c6b85570" args="(hier::Patch &amp;patch, const double time) const =0" -->
+<a class="anchor" name="68c086922e74ae0f8cba318573df1c41"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::computeStableDtOnPatch" ref="68c086922e74ae0f8cba318573df1c41" args="(hier::Patch &amp;patch, const double time) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -188,7 +188,7 @@ Set the initial data on a patch interior (i.e., NO GHOST CELLS). Setting "initia
 Compute the stable time increment for a patch. 
 </div>
 </div><p>
-<a class="anchor" name="f485d275c43539dafbf2e1dd49ec75f7"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::singleStep" ref="f485d275c43539dafbf2e1dd49ec75f7" args="(hier::Patch &amp;patch, const double dt, const double alpha_1, const double alpha_2, const double beta) const =0" -->
+<a class="anchor" name="3163b0a1c4d2e11d74f12591aad59e95"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::singleStep" ref="3163b0a1c4d2e11d74f12591aad59e95" args="(hier::Patch &amp;patch, const double dt, const double alpha_1, const double alpha_2, const double beta) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -245,7 +245,7 @@ Advance a single Runge Kutta step.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="979c6e894c22554743a23b99739b1ab6"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::tagGradientDetectorCells" ref="979c6e894c22554743a23b99739b1ab6" args="(hier::Patch &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)=0" -->
+<a class="anchor" name="c799539cc1d417aae811743a6f4c8a84"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::tagGradientDetectorCells" ref="c799539cc1d417aae811743a6f4c8a84" args="(hier::Patch &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -292,7 +292,7 @@ Advance a single Runge Kutta step.<p>
 Using a user-specified gradient detection scheme, determine cells which have high gradients and, consequently, should be refined. 
 </div>
 </div><p>
-<a class="anchor" name="668799adc09b7daf8ebc70b2e42e468b"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setPhysicalBoundaryConditions" ref="668799adc09b7daf8ebc70b2e42e468b" args="(hier::Patch &amp;patch, const double fill_time, const hier::IntVector &amp;ghost_width_to_fill)=0" -->
+<a class="anchor" name="712040f2a35c444883c9cb8e3f06af14"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setPhysicalBoundaryConditions" ref="712040f2a35c444883c9cb8e3f06af14" args="(hier::Patch &amp;patch, const double fill_time, const hier::IntVector &amp;ghost_width_to_fill)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -326,10 +326,10 @@ Using a user-specified gradient detection scheme, determine cells which have hig
 <p>
 Set user-defined boundary conditions at the physical domain boundary. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#428a5d166ab97a9ce9c8344685817b26">SAMRAI::xfer::RefinePatchStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#e6da055f3a0e95bb34761e76eda0744e">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="9f800adf74e19e5549d4c716dc0a9444"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorWithGhostsContext" ref="9f800adf74e19e5549d4c716dc0a9444" args="() const " -->
+<a class="anchor" name="188518bf40329018b3eceb6c63e8586b"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorWithGhostsContext" ref="188518bf40329018b3eceb6c63e8586b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -349,7 +349,7 @@ The method of lines integrator controls the context for the data to be used in t
 Return pointer to data context with ghost cells. 
 </div>
 </div><p>
-<a class="anchor" name="eff4b1fb760c7eaec6dab9f4b771dc3c"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorContext" ref="eff4b1fb760c7eaec6dab9f4b771dc3c" args="() const " -->
+<a class="anchor" name="d07fe543d11192a37a1bae1e63ad89a7"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorContext" ref="d07fe543d11192a37a1bae1e63ad89a7" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -368,7 +368,7 @@ Return pointer to data context with ghost cells.
 Return pointer to data context with NO ghosts. 
 </div>
 </div><p>
-<a class="anchor" name="3b7df58e74934006d68972e0647bf8f2"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorWithGhostsContext" ref="3b7df58e74934006d68972e0647bf8f2" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
+<a class="anchor" name="e73949c7353babf1d4a260f25c9dc690"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorWithGhostsContext" ref="e73949c7353babf1d4a260f25c9dc690" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -388,7 +388,7 @@ Return pointer to data context with NO ghosts.
 Set pointer to data context with ghosts. 
 </div>
 </div><p>
-<a class="anchor" name="74e826b840ca48dbc174b0f5d31b2f3b"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorContext" ref="74e826b840ca48dbc174b0f5d31b2f3b" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
+<a class="anchor" name="a1c057f4751883e48e11a359d0fbc6eb"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorContext" ref="a1c057f4751883e48e11a359d0fbc6eb" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -410,7 +410,7 @@ Set pointer to data context with NO ghosts.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="MethodOfLinesPatchStrategy_8h.html">MethodOfLinesPatchStrategy.h</a><li>source/SAMRAI/algs/<a class="el" href="MethodOfLinesPatchStrategy_8C.html">MethodOfLinesPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

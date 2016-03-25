@@ -29,13 +29,13 @@
 <a href="structSAMRAI_1_1tbox_1_1MemoryUtilities-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#e625f69dcb5dd2ee357e1972f8cbc9f1">printMemoryInfo</a> (std::ostream &amp;os)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#e913939762fc02d17e012c46eb81eaf3">printMemoryInfo</a> (std::ostream &amp;os)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#f858f5e9ef808d81cb459d46f6115ffa">recordMemoryInfo</a> (double time=0.0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#41ad0ba08a58c5ad6feb59a0e168d4cd">recordMemoryInfo</a> (double time=0.0)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#b3bcc3c2c78259789ea5a4e10feb6ddb">printMaxMemory</a> (std::ostream &amp;os)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#d6aa80f883549880b3ea715c7ab8d210">printMaxMemory</a> (std::ostream &amp;os)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#f50d76b02050ae5ca3b60b06320e0f14">align</a> (const size_t bytes)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1MemoryUtilities.html#5a15f4a908d33346d74b5766357d56d8">align</a> (const size_t bytes)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -46,7 +46,7 @@ Calls to these methods may be placed at various points in an application to trac
 Note that all member functions of this class are static so it is not necessary to instantiate the class. Simply call the functions as static functions; e.g.,MemoryUtilities::function(...). 
 <p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="e625f69dcb5dd2ee357e1972f8cbc9f1"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::printMemoryInfo" ref="e625f69dcb5dd2ee357e1972f8cbc9f1" args="(std::ostream &amp;os)" -->
+<a class="anchor" name="e913939762fc02d17e012c46eb81eaf3"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::printMemoryInfo" ref="e913939762fc02d17e012c46eb81eaf3" args="(std::ostream &amp;os)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -66,7 +66,7 @@ Note that all member functions of this class are static so it is not necessary t
 Print memory information to the supplied output stream. 
 </div>
 </div><p>
-<a class="anchor" name="f858f5e9ef808d81cb459d46f6115ffa"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::recordMemoryInfo" ref="f858f5e9ef808d81cb459d46f6115ffa" args="(double time=0.0)" -->
+<a class="anchor" name="41ad0ba08a58c5ad6feb59a0e168d4cd"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::recordMemoryInfo" ref="41ad0ba08a58c5ad6feb59a0e168d4cd" args="(double time=0.0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -86,7 +86,7 @@ Print memory information to the supplied output stream.
 Record memory info to be analyzed by TAU (Tuning and Analysis <a class="el" href="structSAMRAI_1_1tbox_1_1Utilities.html">Utilities</a>). If tracing is enabled, you can supply a time at which the memory is recorded. This method requires <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> to be configured with TAU. If it is not, the method will do nothing. 
 </div>
 </div><p>
-<a class="anchor" name="b3bcc3c2c78259789ea5a4e10feb6ddb"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::printMaxMemory" ref="b3bcc3c2c78259789ea5a4e10feb6ddb" args="(std::ostream &amp;os)" -->
+<a class="anchor" name="d6aa80f883549880b3ea715c7ab8d210"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::printMaxMemory" ref="d6aa80f883549880b3ea715c7ab8d210" args="(std::ostream &amp;os)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -106,7 +106,7 @@ Record memory info to be analyzed by TAU (Tuning and Analysis <a class="el" href
 Print maximum memory used (i.e. high-water mark) to the supplied output stream. 
 </div>
 </div><p>
-<a class="anchor" name="f50d76b02050ae5ca3b60b06320e0f14"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::align" ref="f50d76b02050ae5ca3b60b06320e0f14" args="(const size_t bytes)" -->
+<a class="anchor" name="5a15f4a908d33346d74b5766357d56d8"></a><!-- doxytag: member="SAMRAI::tbox::MemoryUtilities::align" ref="5a15f4a908d33346d74b5766357d56d8" args="(const size_t bytes)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -128,7 +128,7 @@ Static function to compute alignment for memory allocation. Data allocations les
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="MemoryUtilities_8h.html">MemoryUtilities.h</a><li>source/SAMRAI/tbox/<a class="el" href="MemoryUtilities_8C.html">MemoryUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

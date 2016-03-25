@@ -31,21 +31,21 @@
 <a href="classSAMRAI_1_1pdat_1_1NodeVariable-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#64f9ee2b9909e2afb21e3e81bf06fe2f">NodeVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#718ea8b88bd10269dd03358510aac7da">NodeVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a cell-centered variable object with the given name and depth (i.e., number of data values at each cell index location). A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces.  <a href="#64f9ee2b9909e2afb21e3e81bf06fe2f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#2f88bc03008e598150c77dc46008a484">~NodeVariable</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a cell-centered variable object with the given name and depth (i.e., number of data values at each cell index location). A default depth of one is provided. The fine boundary representation boolean argument indicates which values (either coarse or fine) take precedence at coarse-fine mesh boundaries during coarsen and refine operations. The default is that fine data values take precedence on coarse-fine interfaces.  <a href="#718ea8b88bd10269dd03358510aac7da"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#df77044e3a4e350fb279cf0b9c8b863b">~NodeVariable</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for node variable objects.  <a href="#2f88bc03008e598150c77dc46008a484"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#23f39a2b3c7931b096d13e4f8bab6f91">fineBoundaryRepresentsVariable</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for node variable objects.  <a href="#df77044e3a4e350fb279cf0b9c8b863b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#8a676942aa5f2f8367cb7763822e20d5">fineBoundaryRepresentsVariable</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return boolean indicating which node data values (coarse or fine) take precedence at coarse-fine mesh interfaces. The value is set in the constructor.  <a href="#23f39a2b3c7931b096d13e4f8bab6f91"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#649f517a46b8e4ff07f513dc760ad6db">dataLivesOnPatchBorder</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return boolean indicating which node data values (coarse or fine) take precedence at coarse-fine mesh interfaces. The value is set in the constructor.  <a href="#8a676942aa5f2f8367cb7763822e20d5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#c2b83b52781a7cb0134f5f019f37c78b">dataLivesOnPatchBorder</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true indicating that node data on a patch interior exists on the patch boundary.  <a href="#649f517a46b8e4ff07f513dc760ad6db"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#a78621c89582aa08e0d16118d608d9e4">getDepth</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true indicating that node data on a patch interior exists on the patch boundary.  <a href="#c2b83b52781a7cb0134f5f019f37c78b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeVariable.html#dfe1d52faaa8455b3a465d8c7fd17690">getDepth</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the the depth (number of components).  <a href="#a78621c89582aa08e0d16118d608d9e4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the the depth (number of components).  <a href="#dfe1d52faaa8455b3a465d8c7fd17690"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;class TYPE&gt;<br>
@@ -59,7 +59,7 @@ See header file for NodeData&lt;TYPE&gt; class for a more detailed description o
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="64f9ee2b9909e2afb21e3e81bf06fe2f"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::NodeVariable" ref="64f9ee2b9909e2afb21e3e81bf06fe2f" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true)" -->
+<a class="anchor" name="718ea8b88bd10269dd03358510aac7da"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::NodeVariable" ref="718ea8b88bd10269dd03358510aac7da" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, int depth=1, bool fine_boundary_represents_var=true)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -104,7 +104,7 @@ Create a cell-centered variable object with the given name and depth (i.e., numb
 
 </div>
 </div><p>
-<a class="anchor" name="2f88bc03008e598150c77dc46008a484"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::~NodeVariable" ref="2f88bc03008e598150c77dc46008a484" args="()" -->
+<a class="anchor" name="df77044e3a4e350fb279cf0b9c8b863b"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::~NodeVariable" ref="df77044e3a4e350fb279cf0b9c8b863b" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -128,7 +128,7 @@ Virtual destructor for node variable objects.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="23f39a2b3c7931b096d13e4f8bab6f91"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::fineBoundaryRepresentsVariable" ref="23f39a2b3c7931b096d13e4f8bab6f91" args="() const " -->
+<a class="anchor" name="8a676942aa5f2f8367cb7763822e20d5"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::fineBoundaryRepresentsVariable" ref="8a676942aa5f2f8367cb7763822e20d5" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -150,10 +150,10 @@ Return boolean indicating which node data values (coarse or fine) take precedenc
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html#ae5ca9bf7ed5db50adb102733d04a14b">SAMRAI::hier::Variable</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html#de475c6b4d21594c00a21ce389c9a5e7">SAMRAI::hier::Variable</a>.
 </div>
 </div><p>
-<a class="anchor" name="649f517a46b8e4ff07f513dc760ad6db"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::dataLivesOnPatchBorder" ref="649f517a46b8e4ff07f513dc760ad6db" args="() const " -->
+<a class="anchor" name="c2b83b52781a7cb0134f5f019f37c78b"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::dataLivesOnPatchBorder" ref="c2b83b52781a7cb0134f5f019f37c78b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -175,10 +175,10 @@ Return true indicating that node data on a patch interior exists on the patch bo
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html#123739a01dc795982995374c29e423f8">SAMRAI::hier::Variable</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html#f9ee6b4f933a9fbe84c431c24a5f0673">SAMRAI::hier::Variable</a>.
 </div>
 </div><p>
-<a class="anchor" name="a78621c89582aa08e0d16118d608d9e4"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::getDepth" ref="a78621c89582aa08e0d16118d608d9e4" args="() const " -->
+<a class="anchor" name="dfe1d52faaa8455b3a465d8c7fd17690"></a><!-- doxytag: member="SAMRAI::pdat::NodeVariable::getDepth" ref="dfe1d52faaa8455b3a465d8c7fd17690" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -203,7 +203,7 @@ Return the the depth (number of components).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="NodeVariable_8h.html">NodeVariable.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeVariable_8C.html">NodeVariable.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -34,35 +34,35 @@
 <a href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#16ed48b2d12f3ec333f658b26e52a92c">CoarsenTransactionFactory</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#d95c87efededdf0ba024a678418c5a1b">CoarsenTransactionFactory</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor.  <a href="#16ed48b2d12f3ec333f658b26e52a92c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#da777bf05b21a07064ad6131ab231820">~CoarsenTransactionFactory</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor.  <a href="#d95c87efededdf0ba024a678418c5a1b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#dd18a30109e9ee490f1a8e1cb5e6a3aa">~CoarsenTransactionFactory</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#da777bf05b21a07064ad6131ab231820"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#d6a506365d7637be85a581a8d56ca086">setCoarsenItems</a> (const <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">CoarsenClasses::Data</a> **coarsen_items, int num_coarsen_items)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#dd18a30109e9ee490f1a8e1cb5e6a3aa"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#59c300f1d6a9b4dc08e06664ff2652f5">setCoarsenItems</a> (const <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">CoarsenClasses::Data</a> **coarsen_items, int num_coarsen_items)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to set the array of CoarsenClass::Data items associated with the coarsen schedule. Typical concrete transactions used by the schedule use this information to communicate data. This operation is called by the coarsen schedule during the execution of the CoarsenSchedule::fillData() routine before data communication operations begin.  <a href="#d6a506365d7637be85a581a8d56ca086"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#fe975418b483051df4ae3e9d487f7747">unsetCoarsenItems</a> ()=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to set the array of CoarsenClass::Data items associated with the coarsen schedule. Typical concrete transactions used by the schedule use this information to communicate data. This operation is called by the coarsen schedule during the execution of the CoarsenSchedule::fillData() routine before data communication operations begin.  <a href="#59c300f1d6a9b4dc08e06664ff2652f5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#71a4cb5c0f08ecaf631bd4c0687ce01c">unsetCoarsenItems</a> ()=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to clear the array of CoarsenClass::Data items associated with the coarsen schedule. This operation is called by the coarsen schedule after data communication operations are complete.  <a href="#fe975418b483051df4ae3e9d487f7747"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to clear the array of CoarsenClass::Data items associated with the coarsen schedule. This operation is called by the coarsen schedule after data communication operations are complete.  <a href="#71a4cb5c0f08ecaf631bd4c0687ce01c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#949b1602b75535130b24f45a7e2e79a0">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_box, int citem_id) const =0</td></tr>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#def365426d03efcce1470548d2f97428">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_box, int citem_id) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to allocate a concrete coarsen transaction object. This routine is called by the coarsen schedule during construction of the schedule.  <a href="#949b1602b75535130b24f45a7e2e79a0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to allocate a concrete coarsen transaction object. This routine is called by the coarsen schedule during construction of the schedule.  <a href="#def365426d03efcce1470548d2f97428"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class defining the interface for all concrete transaction factory objects that generate data transaction objects used with a <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> object. A concrete subclass will allocate new transaction objects. This class is an example of the ``Abstract Factory'' method described in the Design Patterns book by Gamma, et al. 
 <p>
 To add a new type of Transaction object MyCoarsenTransaction:<p>
 <ol type=1>
-<li>Implement a concrete <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> object as a subclass that is derived from this <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> base class. Implement the abstract virtual functions as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#949b1602b75535130b24f45a7e2e79a0">allocate()</a> function must return a new instance of the desired transaction object.</li><li>The type of the transaction allocated by the concrete factory is a Transaction. Thus, the new transaction object must be derived from the Transaction base class and implement the abstract virtual functions declared by the base class.</li></ol>
+<li>Implement a concrete <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> object as a subclass that is derived from this <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> base class. Implement the abstract virtual functions as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#def365426d03efcce1470548d2f97428">allocate()</a> function must return a new instance of the desired transaction object.</li><li>The type of the transaction allocated by the concrete factory is a Transaction. Thus, the new transaction object must be derived from the Transaction base class and implement the abstract virtual functions declared by the base class.</li></ol>
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="16ed48b2d12f3ec333f658b26e52a92c"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::CoarsenTransactionFactory" ref="16ed48b2d12f3ec333f658b26e52a92c" args="()" -->
+<a class="anchor" name="d95c87efededdf0ba024a678418c5a1b"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::CoarsenTransactionFactory" ref="d95c87efededdf0ba024a678418c5a1b" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -83,7 +83,7 @@ Default constructor.
 
 </div>
 </div><p>
-<a class="anchor" name="da777bf05b21a07064ad6131ab231820"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::~CoarsenTransactionFactory" ref="da777bf05b21a07064ad6131ab231820" args="()" -->
+<a class="anchor" name="dd18a30109e9ee490f1a8e1cb5e6a3aa"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::~CoarsenTransactionFactory" ref="dd18a30109e9ee490f1a8e1cb5e6a3aa" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -105,7 +105,7 @@ Virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="d6a506365d7637be85a581a8d56ca086"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::setCoarsenItems" ref="d6a506365d7637be85a581a8d56ca086" args="(const CoarsenClasses::Data **coarsen_items, int num_coarsen_items)=0" -->
+<a class="anchor" name="59c300f1d6a9b4dc08e06664ff2652f5"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::setCoarsenItems" ref="59c300f1d6a9b4dc08e06664ff2652f5" args="(const CoarsenClasses::Data **coarsen_items, int num_coarsen_items)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -135,10 +135,10 @@ Pure virtual function to set the array of CoarsenClass::Data items associated wi
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#ea0d1732c172491728f06f160a54cb94">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#5ba1aeaca0b323847bb6aaff82721fb2">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="fe975418b483051df4ae3e9d487f7747"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::unsetCoarsenItems" ref="fe975418b483051df4ae3e9d487f7747" args="()=0" -->
+<a class="anchor" name="71a4cb5c0f08ecaf631bd4c0687ce01c"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::unsetCoarsenItems" ref="71a4cb5c0f08ecaf631bd4c0687ce01c" args="()=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -158,10 +158,10 @@ Pure virtual function to clear the array of CoarsenClass::Data items associated 
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#e119b70d53bc5ef53452cf4c11277047">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#772562414bb20481d2430df0a4b0d304">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="949b1602b75535130b24f45a7e2e79a0"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::allocate" ref="949b1602b75535130b24f45a7e2e79a0" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_box, const hier::Box &amp;src_box, int citem_id) const =0" -->
+<a class="anchor" name="def365426d03efcce1470548d2f97428"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::allocate" ref="def365426d03efcce1470548d2f97428" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_box, const hier::Box &amp;src_box, int citem_id) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -225,12 +225,12 @@ Pure virtual function to allocate a concrete coarsen transaction object. This ro
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#6fbedb6bd9521f84e517345af4ea482f">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#942e59847ec89540459c6ebd852d942b">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenTransactionFactory_8h.html">CoarsenTransactionFactory.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenTransactionFactory_8C.html">CoarsenTransactionFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

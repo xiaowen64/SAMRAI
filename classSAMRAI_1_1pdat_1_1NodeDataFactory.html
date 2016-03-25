@@ -31,29 +31,29 @@
 <a href="classSAMRAI_1_1pdat_1_1NodeDataFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#6e1965d0e3c7bad06e7d1113599a835b">NodeDataFactory</a> (int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts, bool fine_boundary_represents_var)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#fc5ba39fcbf43188f28214ff90a3c0f7">NodeDataFactory</a> (int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts, bool fine_boundary_represents_var)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#131b562fd8252127dadade91fcbf413b">~NodeDataFactory</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#af37e79881b19728ff14d8280cc3c25c">cloneFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to clone a patch data factory.  <a href="#af37e79881b19728ff14d8280cc3c25c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#b1e28ad26e03f4e126349e87ce81b03e">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#c473550c5797d05abae3252ce45665af">~NodeDataFactory</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#c7d009ffeff5a61962fedb45072bea5c">getBoxGeometry</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+ <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#a9722cf09fddad954b8b6631fbd95f13">cloneFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#da4f8a1fc4c261908805dfa51b7559a5">getDepth</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to clone a patch data factory.  <a href="#a9722cf09fddad954b8b6631fbd95f13"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#0baebf9f667b4489fd2a84b218fa7299">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#28fbccf89d502116b4c788a02f22392d">getSizeOfMemory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#9dee6eeac88c228cca274c3e8d7f7eef">getBoxGeometry</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#9f567d0fe7a10b63186e767db27af6ae">fineBoundaryRepresentsVariable</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#5fa0db1951bdd85c0c3e58dbbbc4e63d">getDepth</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#44f4e136320a67b1e253dc4c1307a732">dataLivesOnPatchBorder</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#7a94107d940f9bde283dd6a346bfb3b8">getSizeOfMemory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#609caf66be172dff27f17222bb6c8dec">validCopyTo</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &gt; &amp;dst_pdf) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#19ae6bf8091e89c13ac4fe47742aeb99">fineBoundaryRepresentsVariable</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#1d2dddefcebedf2b3abfd7bb08cdd8a3">dataLivesOnPatchBorder</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#afa564c46959f186e7c5703c34718059">validCopyTo</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">hier::PatchDataFactory</a> &gt; &amp;dst_pdf) const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -66,7 +66,7 @@ pdat::PatchDataFactory </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="6e1965d0e3c7bad06e7d1113599a835b"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::NodeDataFactory" ref="6e1965d0e3c7bad06e7d1113599a835b" args="(int depth, const hier::IntVector &amp;ghosts, bool fine_boundary_represents_var)" -->
+<a class="anchor" name="fc5ba39fcbf43188f28214ff90a3c0f7"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::NodeDataFactory" ref="fc5ba39fcbf43188f28214ff90a3c0f7" args="(int depth, const hier::IntVector &amp;ghosts, bool fine_boundary_represents_var)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -106,7 +106,7 @@ ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="131b562fd8252127dadade91fcbf413b"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::~NodeDataFactory" ref="131b562fd8252127dadade91fcbf413b" args="()" -->
+<a class="anchor" name="c473550c5797d05abae3252ce45665af"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::~NodeDataFactory" ref="c473550c5797d05abae3252ce45665af" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -128,7 +128,7 @@ Virtual destructor for the node data factory class.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="af37e79881b19728ff14d8280cc3c25c"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::cloneFactory" ref="af37e79881b19728ff14d8280cc3c25c" args="(const hier::IntVector &amp;ghosts)" -->
+<a class="anchor" name="a9722cf09fddad954b8b6631fbd95f13"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::cloneFactory" ref="a9722cf09fddad954b8b6631fbd95f13" args="(const hier::IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -155,13 +155,13 @@ This will return a new instantiation of the abstract factory with the same prope
     <tr><td valign="top"></td><td valign="top"><em>ghosts</em>&nbsp;</td><td>default ghost cell width for concrete classes created from the factory.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == ghosts.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#218d9afe4e8acf752849f2f4c4e6fa02">getDim()</a> == ghosts.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#8e25f724ce554c386c4942565956e5ea">SAMRAI::hier::PatchDataFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#24334a733219559cfd8c2fe1191e4b0c">SAMRAI::hier::PatchDataFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="b1e28ad26e03f4e126349e87ce81b03e"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::allocate" ref="b1e28ad26e03f4e126349e87ce81b03e" args="(const hier::Patch &amp;patch) const " -->
+<a class="anchor" name="0baebf9f667b4489fd2a84b218fa7299"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::allocate" ref="0baebf9f667b4489fd2a84b218fa7299" args="(const hier::Patch &amp;patch) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -181,13 +181,13 @@ template&lt;class TYPE&gt; </div>
 
 <p>
 Virtual factory function to allocate a concrete node data object. The default information about the object (e.g., ghost cell width) is taken from the factory.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == patch.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#218d9afe4e8acf752849f2f4c4e6fa02">getDim()</a> == patch.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">SAMRAI::hier::PatchDataFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#4b554c5f714493c9cb3e0786a9a8cc2c">SAMRAI::hier::PatchDataFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="c7d009ffeff5a61962fedb45072bea5c"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::getBoxGeometry" ref="c7d009ffeff5a61962fedb45072bea5c" args="(const hier::Box &amp;box) const " -->
+<a class="anchor" name="9dee6eeac88c228cca274c3e8d7f7eef"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::getBoxGeometry" ref="9dee6eeac88c228cca274c3e8d7f7eef" args="(const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -207,13 +207,13 @@ template&lt;class TYPE&gt; </div>
 
 <p>
 Allocate the box geometry object associated with the patch data. This information will be used in the computation of intersections and data dependencies between objects.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#218d9afe4e8acf752849f2f4c4e6fa02">getDim()</a> == box.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#0714dc4177b9fa53181a4146fe31fc7d">SAMRAI::hier::PatchDataFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#ed41a849221d09982c3a874f8f734620">SAMRAI::hier::PatchDataFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="da4f8a1fc4c261908805dfa51b7559a5"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::getDepth" ref="da4f8a1fc4c261908805dfa51b7559a5" args="() const " -->
+<a class="anchor" name="5fa0db1951bdd85c0c3e58dbbbc4e63d"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::getDepth" ref="5fa0db1951bdd85c0c3e58dbbbc4e63d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -234,7 +234,7 @@ template&lt;class TYPE&gt; </div>
 Get the depth (number of components). This is the depth that will be used in the instantiation of node data objects. 
 </div>
 </div><p>
-<a class="anchor" name="28fbccf89d502116b4c788a02f22392d"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::getSizeOfMemory" ref="28fbccf89d502116b4c788a02f22392d" args="(const hier::Box &amp;box) const " -->
+<a class="anchor" name="7a94107d940f9bde283dd6a346bfb3b8"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::getSizeOfMemory" ref="7a94107d940f9bde283dd6a346bfb3b8" args="(const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -254,13 +254,13 @@ template&lt;class TYPE&gt; </div>
 
 <p>
 Calculate the amount of memory needed to store the node data object, including object data and dynamically allocated data.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == box.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#218d9afe4e8acf752849f2f4c4e6fa02">getDim()</a> == box.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#81f1cf57f6d5e5d600b7dd439f5cdfbb">SAMRAI::hier::PatchDataFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#3fa8a830e87cf72c2f16238fd528632f">SAMRAI::hier::PatchDataFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="9f567d0fe7a10b63186e767db27af6ae"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::fineBoundaryRepresentsVariable" ref="9f567d0fe7a10b63186e767db27af6ae" args="() const " -->
+<a class="anchor" name="19ae6bf8091e89c13ac4fe47742aeb99"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::fineBoundaryRepresentsVariable" ref="19ae6bf8091e89c13ac4fe47742aeb99" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -280,10 +280,10 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a boolean value indicating how data for the node quantity will be treated on coarse-fine interfaces. This value is passed into the constructor. See the NodeVariable&lt;TYPE&gt; class header file for more information. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#f43fa01dd54c980fb6931f820100e57a">SAMRAI::hier::PatchDataFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#ee151da4304c49ef6d719325c4ee9142">SAMRAI::hier::PatchDataFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="44f4e136320a67b1e253dc4c1307a732"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::dataLivesOnPatchBorder" ref="44f4e136320a67b1e253dc4c1307a732" args="() const " -->
+<a class="anchor" name="1d2dddefcebedf2b3abfd7bb08cdd8a3"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::dataLivesOnPatchBorder" ref="1d2dddefcebedf2b3abfd7bb08cdd8a3" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -303,10 +303,10 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return true since the node data index space extends beyond the interior of patches. That is, node data lives on patch borders. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#cf3abe526e3c8bef87fbb1288fa8f421">SAMRAI::hier::PatchDataFactory</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#20b20d411c3d41a3450d1d76c01d132e">SAMRAI::hier::PatchDataFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="609caf66be172dff27f17222bb6c8dec"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::validCopyTo" ref="609caf66be172dff27f17222bb6c8dec" args="(const boost::shared_ptr&lt; hier::PatchDataFactory &gt; &amp;dst_pdf) const " -->
+<a class="anchor" name="afa564c46959f186e7c5703c34718059"></a><!-- doxytag: member="SAMRAI::pdat::NodeDataFactory::validCopyTo" ref="afa564c46959f186e7c5703c34718059" args="(const boost::shared_ptr&lt; hier::PatchDataFactory &gt; &amp;dst_pdf) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -326,13 +326,13 @@ template&lt;class TYPE&gt; </div>
 
 <p>
 Return whether it is valid to copy this <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html">NodeDataFactory</a> to the supplied destination patch data factory. It will return true if dst_pdf is <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html">NodeDataFactory</a> or <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html">OuternodeDataFactory</a>, false otherwise.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> == dst_pdf-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim()</a> </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#218d9afe4e8acf752849f2f4c4e6fa02">getDim()</a> == dst_pdf-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#218d9afe4e8acf752849f2f4c4e6fa02">getDim()</a> </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="NodeDataFactory_8h.html">NodeDataFactory.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeDataFactory_8C.html">NodeDataFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

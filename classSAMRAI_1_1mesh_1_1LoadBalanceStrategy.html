@@ -36,20 +36,20 @@
 <a href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#b783122330df4525d0c913d8019a1d11">~LoadBalanceStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#7886ea19b472581a014744d1fb5ad5a5">~LoadBalanceStrategy</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1b1525f4eafbf028b8585def7a19541b">getLoadBalanceDependsOnPatchData</a> (int level_number) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#26cddcc6d628372374dd30549800bfc5">getLoadBalanceDependsOnPatchData</a> (int level_number) const =0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#de61f9ac7ac39f028abfbf808d66e711">loadBalanceBoxLevel</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balance_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;balance_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;anchor_to_balance, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;unbalanced_to_attractor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;attractor_to_unbalanced, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;domain_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> &amp;rank_group=<a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a>()) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#4d66efec76d25e52fec60c91b84dfe55">loadBalanceBoxLevel</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balance_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;balance_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;anchor_to_balance, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;unbalanced_to_attractor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;attractor_to_unbalanced, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;domain_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> &amp;rank_group=<a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a>()) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a BoxLevel, representing the domain of a specified level in the AMR hierarchy, generate a new BoxLevel from which the patches for the level may be formed and update two Connectors incident on the changed BoxLevel.  <a href="#de61f9ac7ac39f028abfbf808d66e711"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a BoxLevel, representing the domain of a specified level in the AMR hierarchy, generate a new BoxLevel from which the patches for the level may be formed and update two Connectors incident on the changed BoxLevel.  <a href="#4d66efec76d25e52fec60c91b84dfe55"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#50c18ecf37bb62d993f47824d0e16175">LoadBalanceStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#f80c05053dd84aac72b9f0b5d912be33">LoadBalanceStrategy</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#0c199d9c9de1e2bc965b2ed1c1b5be40">markLoadForPostprocessing</a> (int rank, double load, int nbox)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#4d2509cc7c30c8364dc1de602b05b636">markLoadForPostprocessing</a> (int rank, double load, int nbox)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write load data to log for postprocessing later.  <a href="#0c199d9c9de1e2bc965b2ed1c1b5be40"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write load data to log for postprocessing later.  <a href="#4d2509cc7c30c8364dc1de602b05b636"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> is an abstract base class that defines a Strategy pattern interface for operations that load balance patches on a single AMR patch hierarchy level. Typically, such operations are invoked after the domain of a new hierarchy level is determined (e.g., via some error estimation procedure) and is applied to the collection of boxes that describe the domain. The load balancing process produces a set of boxes from which patches on the new level are created and a processor mapping describing how the new patches are mapped to processors. 
@@ -58,7 +58,7 @@ Class <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadB
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="b783122330df4525d0c913d8019a1d11"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::~LoadBalanceStrategy" ref="b783122330df4525d0c913d8019a1d11" args="()" -->
+<a class="anchor" name="7886ea19b472581a014744d1fb5ad5a5"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::~LoadBalanceStrategy" ref="7886ea19b472581a014744d1fb5ad5a5" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -77,7 +77,7 @@ Class <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadB
 This virtual destructor does nothing interesting. 
 </div>
 </div><p>
-<a class="anchor" name="50c18ecf37bb62d993f47824d0e16175"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::LoadBalanceStrategy" ref="50c18ecf37bb62d993f47824d0e16175" args="()" -->
+<a class="anchor" name="f80c05053dd84aac72b9f0b5d912be33"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::LoadBalanceStrategy" ref="f80c05053dd84aac72b9f0b5d912be33" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -97,7 +97,7 @@ Construct load balance strategy object.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="1b1525f4eafbf028b8585def7a19541b"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::getLoadBalanceDependsOnPatchData" ref="1b1525f4eafbf028b8585def7a19541b" args="(int level_number) const =0" -->
+<a class="anchor" name="26cddcc6d628372374dd30549800bfc5"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::getLoadBalanceDependsOnPatchData" ref="26cddcc6d628372374dd30549800bfc5" args="(int level_number) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -123,10 +123,10 @@ Indicate whether load balancing procedure for given level depends on patch data 
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#88e41115102265dd474ae40a0c19635a">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#3784dd2378c8d1f626d2678cfc9a24bf">SAMRAI::mesh::TreeLoadBalancer</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html#c430766cdbb7437984b21f989d3815f5">SAMRAI::mesh::TreeLoadBalancerOld</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#2156edcd6cccc24337965fddf91d69b1">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#9e4de5cd3e0abdb81dff88323e7093ad">SAMRAI::mesh::TreeLoadBalancer</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html#79e15518e638668e4808c31b55018025">SAMRAI::mesh::TreeLoadBalancerOld</a>.
 </div>
 </div><p>
-<a class="anchor" name="de61f9ac7ac39f028abfbf808d66e711"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::loadBalanceBoxLevel" ref="de61f9ac7ac39f028abfbf808d66e711" args="(hier::BoxLevel &amp;balance_box_level, hier::Connector &amp;balance_to_anchor, hier::Connector &amp;anchor_to_balance, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const hier::Connector &amp;unbalanced_to_attractor, const hier::Connector &amp;attractor_to_unbalanced, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const =0" -->
+<a class="anchor" name="4d66efec76d25e52fec60c91b84dfe55"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::loadBalanceBoxLevel" ref="4d66efec76d25e52fec60c91b84dfe55" args="(hier::BoxLevel &amp;balance_box_level, hier::Connector &amp;balance_to_anchor, hier::Connector &amp;anchor_to_balance, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const hier::Connector &amp;unbalanced_to_attractor, const hier::Connector &amp;attractor_to_unbalanced, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -240,10 +240,10 @@ The union of the boxes in the balance_box_level is the same before and after the
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#e1cfcd807a4f90b03f0f5686056998ad">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#746a5638e9821aa34719bd1a920b5d62">SAMRAI::mesh::TreeLoadBalancer</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html#ff805ca7cba4aec06448fb9dd6eeb2cc">SAMRAI::mesh::TreeLoadBalancerOld</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#89d5d73b369589c33e6c1f1f1da2adda">SAMRAI::mesh::ChopAndPackLoadBalancer</a>, <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html#e7c4f4338d08185565ddf44440d21360">SAMRAI::mesh::TreeLoadBalancer</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancerOld.html#6160d887ee0c5c6da5843068919fdf6f">SAMRAI::mesh::TreeLoadBalancerOld</a>.
 </div>
 </div><p>
-<a class="anchor" name="0c199d9c9de1e2bc965b2ed1c1b5be40"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::markLoadForPostprocessing" ref="0c199d9c9de1e2bc965b2ed1c1b5be40" args="(int rank, double load, int nbox)" -->
+<a class="anchor" name="4d2509cc7c30c8364dc1de602b05b636"></a><!-- doxytag: member="SAMRAI::mesh::LoadBalanceStrategy::markLoadForPostprocessing" ref="4d2509cc7c30c8364dc1de602b05b636" args="(int rank, double load, int nbox)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -290,7 +290,7 @@ For development only. Not for general use.<p>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="LoadBalanceStrategy_8h.html">LoadBalanceStrategy.h</a><li>source/SAMRAI/mesh/<a class="el" href="LoadBalanceStrategy_8C.html">LoadBalanceStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

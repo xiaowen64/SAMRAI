@@ -36,24 +36,24 @@
 <a href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#2c8bc59d0011d0c101e158e192b26e9c">~ConnectorWidthRequestorStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#4003a5a712b4507f33394cdf7aa91721">~ConnectorWidthRequestorStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#2c8bc59d0011d0c101e158e192b26e9c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#067d699e55dc77f0cc39d9b23a2e92ff">computeRequiredConnectorWidths</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;self_connector_widths, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;fine_connector_widths, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &amp;patch_hierarchy) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#4003a5a712b4507f33394cdf7aa91721"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#d3c4f3a9a289dd3c13652c479b9000b6">computeRequiredConnectorWidths</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;self_connector_widths, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;fine_connector_widths, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &amp;patch_hierarchy) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provide <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths the child class requires in order to work properly on a given hierarchy.  <a href="#067d699e55dc77f0cc39d9b23a2e92ff"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provide <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths the child class requires in order to work properly on a given hierarchy.  <a href="#d3c4f3a9a289dd3c13652c479b9000b6"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class defining a Strategy pattern interface for providing <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width information to the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. 
 <p>
 The hierarchy needs to know that <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width constraints must be applied so it can provide correct connector width information to mesh generation operations so that they can generate Connectors with sufficient widths. It is most efficient (scales better) to generate overlap Connectors when the mesh is built rather than searching for overlaps later. If the required widths are not set up this way, or if the code building the hierarchy does not provide Connectors of sufficient widths, <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> will still work but will not scale well. The mechanism for generating missing Connectors as needed is in the class PersistentOverlapConnector.<p>
-The user of a <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object registers implementations of this strategy class with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. See <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#98412048edc455b0ab6efbb02c9ce711">PatchHierarchy::registerConnectorWidthRequestor()</a>. By default, requesters implemented by the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library will be automatically registered. Unless you want to provide your own requesters, no special action is required.<p>
+The user of a <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> object registers implementations of this strategy class with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. See <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3685131ffdf41ca44cc4a3c26bb7856b">PatchHierarchy::registerConnectorWidthRequestor()</a>. By default, requesters implemented by the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library will be automatically registered. Unless you want to provide your own requesters, no special action is required.<p>
 TODO: The following paragraph is more confusing than helpful. It exposes internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> implementation details and confuses what a user needs to do.<p>
-When the hierarchy is first asked for any required width, it uses the registered implementations to compute all required widths. After that, no further registration is allowed. Implementations of this class usually requires the max ghost data width and the max stencil widths, so it is best to make sure that those have been registered before doing something that calls <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#9afa657dccd500ee42468ac792ee5f9b">getRequiredConnectorWidth()</a>, such as using <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">mesh::GriddingAlgorithm</a> to populate the hierarchy with a level.<p>
+When the hierarchy is first asked for any required width, it uses the registered implementations to compute all required widths. After that, no further registration is allowed. Implementations of this class usually requires the max ghost data width and the max stencil widths, so it is best to make sure that those have been registered before doing something that calls <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#3d42c870d68df0578988280ab8f92e86">getRequiredConnectorWidth()</a>, such as using <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">mesh::GriddingAlgorithm</a> to populate the hierarchy with a level.<p>
 Example of a typical scenario: GriddingAlgorithm is used to build the hierarchy. Two classes that will want the hierarchy's Connectors to have some specified widths are GriddingAlgorithm and RefineSchedule. This strategy should therefore be implemented by GriddingAlgorithm and RefineSchedule. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="2c8bc59d0011d0c101e158e192b26e9c"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy" ref="2c8bc59d0011d0c101e158e192b26e9c" args="()" -->
+<a class="anchor" name="4003a5a712b4507f33394cdf7aa91721"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy" ref="4003a5a712b4507f33394cdf7aa91721" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -75,7 +75,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="067d699e55dc77f0cc39d9b23a2e92ff"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths" ref="067d699e55dc77f0cc39d9b23a2e92ff" args="(std::vector&lt; IntVector &gt; &amp;self_connector_widths, std::vector&lt; IntVector &gt; &amp;fine_connector_widths, const PatchHierarchy &amp;patch_hierarchy) const =0" -->
+<a class="anchor" name="d3c4f3a9a289dd3c13652c479b9000b6"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths" ref="d3c4f3a9a289dd3c13652c479b9000b6" args="(std::vector&lt; IntVector &gt; &amp;self_connector_widths, std::vector&lt; IntVector &gt; &amp;fine_connector_widths, const PatchHierarchy &amp;patch_hierarchy) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -128,7 +128,7 @@ On completion of the function call, fine_connector_width must be of length <code
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8C.html">PatchHierarchy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:54 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

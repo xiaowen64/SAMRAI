@@ -26,12 +26,12 @@
 <a href="classSAMRAI_1_1tbox_1_1Tracer-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#76537b7c1390fb64a73acd788cef4603">Tracer</a> (const std::string &amp;message)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#78d5aaa0545f1b85e81b02ff15ccc670">Tracer</a> (const std::string &amp;message)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#f9bb40c73b6718326cfad4dbf9dc2465">~Tracer</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#3d0884589b37e98af63ddea9a03990ae">~Tracer</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#4b90f9c0eb36ad472645e14b38a77ecc">setTraceStream</a> (std::ostream *stream)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#8cd13e9d91a5b88666df07b1a08e1df4">setTraceStream</a> (std::ostream *stream)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -42,10 +42,10 @@ Class <a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html">Tracer</a> allows 
     Tracer t(<span class="stringliteral">"MyClass::myClassMemberFunction"</span>);
      ....
  }
-</pre></div> When the function `myClassMemberFunction' is called, a tracer object local to the function scope is created and the message {<em>Entering</em> MyClass::myClassMemberFunction} is sent to the tracer output stream. Upon exiting the function, the tracer object is destroyed and {<em>Exiting</em> MyClass::myClassMemberFunction} is sent to the tracer output stream. By default, the tracer class sends data to the parallel log stream, although the default output stream can be changed through a call to static member function <a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#4b90f9c0eb36ad472645e14b38a77ecc">setTraceStream()</a>, which will set the tracer output stream for all subsequent calls. 
+</pre></div> When the function `myClassMemberFunction' is called, a tracer object local to the function scope is created and the message {<em>Entering</em> MyClass::myClassMemberFunction} is sent to the tracer output stream. Upon exiting the function, the tracer object is destroyed and {<em>Exiting</em> MyClass::myClassMemberFunction} is sent to the tracer output stream. By default, the tracer class sends data to the parallel log stream, although the default output stream can be changed through a call to static member function <a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html#8cd13e9d91a5b88666df07b1a08e1df4">setTraceStream()</a>, which will set the tracer output stream for all subsequent calls. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="76537b7c1390fb64a73acd788cef4603"></a><!-- doxytag: member="SAMRAI::tbox::Tracer::Tracer" ref="76537b7c1390fb64a73acd788cef4603" args="(const std::string &amp;message)" -->
+<a class="anchor" name="78d5aaa0545f1b85e81b02ff15ccc670"></a><!-- doxytag: member="SAMRAI::tbox::Tracer::Tracer" ref="78d5aaa0545f1b85e81b02ff15ccc670" args="(const std::string &amp;message)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -65,7 +65,7 @@ Class <a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html">Tracer</a> allows 
 The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html">Tracer</a> prints ``Entering &lt;message&gt;'' to the tracer output stream. 
 </div>
 </div><p>
-<a class="anchor" name="f9bb40c73b6718326cfad4dbf9dc2465"></a><!-- doxytag: member="SAMRAI::tbox::Tracer::~Tracer" ref="f9bb40c73b6718326cfad4dbf9dc2465" args="()" -->
+<a class="anchor" name="3d0884589b37e98af63ddea9a03990ae"></a><!-- doxytag: member="SAMRAI::tbox::Tracer::~Tracer" ref="3d0884589b37e98af63ddea9a03990ae" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -85,7 +85,7 @@ The destructor for <a class="el" href="classSAMRAI_1_1tbox_1_1Tracer.html">Trace
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="4b90f9c0eb36ad472645e14b38a77ecc"></a><!-- doxytag: member="SAMRAI::tbox::Tracer::setTraceStream" ref="4b90f9c0eb36ad472645e14b38a77ecc" args="(std::ostream *stream)" -->
+<a class="anchor" name="8cd13e9d91a5b88666df07b1a08e1df4"></a><!-- doxytag: member="SAMRAI::tbox::Tracer::setTraceStream" ref="8cd13e9d91a5b88666df07b1a08e1df4" args="(std::ostream *stream)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -107,7 +107,7 @@ Set the tracer output stream for all tracer output. By default, this is set to t
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Tracer_8h.html">Tracer.h</a><li>source/SAMRAI/tbox/<a class="el" href="Tracer_8C.html">Tracer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:57 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

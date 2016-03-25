@@ -34,25 +34,25 @@
 <a href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#dd9fd1f0c39e245a73d42a18d57f0854">GriddingAlgorithmStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#c66a495166fdc78a84fe45848e09bea1">GriddingAlgorithmStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#dd9fd1f0c39e245a73d42a18d57f0854"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#f9fc20502c23884ef353c7c4da7fd7b6">~GriddingAlgorithmStrategy</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#c66a495166fdc78a84fe45848e09bea1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#0e896b76805fc074e90eae21aa956b85">~GriddingAlgorithmStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">GriddingAlgorithmStrategy</a>.  <a href="#f9fc20502c23884ef353c7c4da7fd7b6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#719a01e9347f418653d860d1460762da">makeCoarsestLevel</a> (const double level_time)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">GriddingAlgorithmStrategy</a>.  <a href="#0e896b76805fc074e90eae21aa956b85"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#bc3105d7f7328bc1a0b4e99e37924d73">makeCoarsestLevel</a> (const double level_time)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the coarsest level in the hierarchy (i.e., level 0).  <a href="#719a01e9347f418653d860d1460762da"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#f6541670ca43ef5e7b0a2c8c214e2f74">makeFinerLevel</a> (const int tag_buffer, const bool initial_cycle, const int cycle, const double level_time, const double regrid_start_time=0.0)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the coarsest level in the hierarchy (i.e., level 0).  <a href="#bc3105d7f7328bc1a0b4e99e37924d73"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#2308dc7afdfec02156a3ad9daad1426d">makeFinerLevel</a> (const int tag_buffer, const bool initial_cycle, const int cycle, const double level_time, const double regrid_start_time=0.0)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempts to create a new level in the hierarchy finer than the finest level currently residing in the hierarchy.  <a href="#f6541670ca43ef5e7b0a2c8c214e2f74"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#c0e7e6cf96051ea23cad8fbd109c657b">regridAllFinerLevels</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;tag_buffer, const int cycle, const double level_time, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; regrid_start_time=<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempts to create a new level in the hierarchy finer than the finest level currently residing in the hierarchy.  <a href="#2308dc7afdfec02156a3ad9daad1426d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#a7a4d12d77b922aa356b999b5d0ce090">regridAllFinerLevels</a> (const int level_number, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;tag_buffer, const int cycle, const double level_time, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; regrid_start_time=<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to regrid each level in the PatchHierarchy that is finer than the specified level.  <a href="#c0e7e6cf96051ea23cad8fbd109c657b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to regrid each level in the PatchHierarchy that is finer than the specified level.  <a href="#a7a4d12d77b922aa356b999b5d0ce090"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
- <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#3ffee71426ab6aeba38f2eefce9ab25a">getTagAndInitializeStrategy</a> () const =0</td></tr>
+ <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#9bc169fa1026482c1b24ec63164b9ed0">getTagAndInitializeStrategy</a> () const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to level gridding strategy data member.  <a href="#3ffee71426ab6aeba38f2eefce9ab25a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to level gridding strategy data member.  <a href="#9bc169fa1026482c1b24ec63164b9ed0"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Virtual base class providing interface for gridding algorithms. 
@@ -62,7 +62,7 @@ This class defines operations for building and regridding hierarchies. The inter
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="dd9fd1f0c39e245a73d42a18d57f0854"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::GriddingAlgorithmStrategy" ref="dd9fd1f0c39e245a73d42a18d57f0854" args="()" -->
+<a class="anchor" name="c66a495166fdc78a84fe45848e09bea1"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::GriddingAlgorithmStrategy" ref="c66a495166fdc78a84fe45848e09bea1" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -83,7 +83,7 @@ Constructor.
 
 </div>
 </div><p>
-<a class="anchor" name="f9fc20502c23884ef353c7c4da7fd7b6"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy" ref="f9fc20502c23884ef353c7c4da7fd7b6" args="()" -->
+<a class="anchor" name="0e896b76805fc074e90eae21aa956b85"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy" ref="0e896b76805fc074e90eae21aa956b85" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -105,7 +105,7 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgori
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="719a01e9347f418653d860d1460762da"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::makeCoarsestLevel" ref="719a01e9347f418653d860d1460762da" args="(const double level_time)=0" -->
+<a class="anchor" name="bc3105d7f7328bc1a0b4e99e37924d73"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::makeCoarsestLevel" ref="bc3105d7f7328bc1a0b4e99e37924d73" args="(const double level_time)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -131,10 +131,10 @@ Construct the coarsest level in the hierarchy (i.e., level 0).
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d1846e119aeff11f5f40c7dd2aa2e7f5">SAMRAI::mesh::GriddingAlgorithm</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0dc18630ab497fca0bdfd135bf35d9cb">SAMRAI::mesh::GriddingAlgorithm</a>.
 </div>
 </div><p>
-<a class="anchor" name="f6541670ca43ef5e7b0a2c8c214e2f74"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::makeFinerLevel" ref="f6541670ca43ef5e7b0a2c8c214e2f74" args="(const int tag_buffer, const bool initial_cycle, const int cycle, const double level_time, const double regrid_start_time=0.0)=0" -->
+<a class="anchor" name="2308dc7afdfec02156a3ad9daad1426d"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::makeFinerLevel" ref="2308dc7afdfec02156a3ad9daad1426d" args="(const int tag_buffer, const bool initial_cycle, const int cycle, const double level_time, const double regrid_start_time=0.0)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -181,7 +181,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html
 Attempts to create a new level in the hierarchy finer than the finest level currently residing in the hierarchy. 
 <p>
 It should select cells for refinement on the finest level and construct a new finest level, if necessary. If no cells are selected for refinement, no new level should be added to the hierarchy.<p>
-The boolean argument initial_cycle indicates whether the routine is called at the initial simulation cycle. If true, this routine is being used to build individual levels during the construction of the AMR hierarchy at the initial simulation time. If false, the routine is being used to add new levels to the hierarchy at some later point. In either case, the time value is the current simulation time. Note that this routine cannot be used to construct the coarsest level in the hierarchy (i.e., level 0). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#719a01e9347f418653d860d1460762da">makeCoarsestLevel()</a> above must be used for that purpose.<p>
+The boolean argument initial_cycle indicates whether the routine is called at the initial simulation cycle. If true, this routine is being used to build individual levels during the construction of the AMR hierarchy at the initial simulation time. If false, the routine is being used to add new levels to the hierarchy at some later point. In either case, the time value is the current simulation time. Note that this routine cannot be used to construct the coarsest level in the hierarchy (i.e., level 0). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#bc3105d7f7328bc1a0b4e99e37924d73">makeCoarsestLevel()</a> above must be used for that purpose.<p>
 The tag buffer indicates the number of cells by which cells selected for refinement should be buffered before new finer level boxes are constructed.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -194,10 +194,10 @@ The tag buffer indicates the number of cells by which cells selected for refinem
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#dc701340eb3493711efc342f1fb0644d">SAMRAI::mesh::GriddingAlgorithm</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#890bae2dd741f14a04160ec5861c9f0a">SAMRAI::mesh::GriddingAlgorithm</a>.
 </div>
 </div><p>
-<a class="anchor" name="c0e7e6cf96051ea23cad8fbd109c657b"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::regridAllFinerLevels" ref="c0e7e6cf96051ea23cad8fbd109c657b" args="(const int level_number, const tbox::Array&lt; int &gt; &amp;tag_buffer, const int cycle, const double level_time, tbox::Array&lt; double &gt; regrid_start_time=tbox::Array&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)=0" -->
+<a class="anchor" name="a7a4d12d77b922aa356b999b5d0ce090"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::regridAllFinerLevels" ref="a7a4d12d77b922aa356b999b5d0ce090" args="(const int level_number, const tbox::Array&lt; int &gt; &amp;tag_buffer, const int cycle, const double level_time, tbox::Array&lt; double &gt; regrid_start_time=tbox::Array&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -249,7 +249,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html
 <p>
 Attempt to regrid each level in the PatchHierarchy that is finer than the specified level. 
 <p>
-The given level number is that of the coarsest level on which cells will be selected for refinement. In other words, that level is the finest level that will not be subject to a change in its patch configuration during the regridding process. Generally, this routine should be used to alter the pre-existing AMR patch hierarchy based on the need to adapt the computational mesh around some phenomenon of interest. The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#f6541670ca43ef5e7b0a2c8c214e2f74">makeFinerLevel()</a> above should be used to construct the initial hierarchy configuration or to add more than one new level into the hierarchy. Also, this routine will not reconfigure the patches on level 0 (i.e., the coarsest in the hierarchy). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#719a01e9347f418653d860d1460762da">makeCoarsestLevel()</a> above is provided for that purpose.<p>
+The given level number is that of the coarsest level on which cells will be selected for refinement. In other words, that level is the finest level that will not be subject to a change in its patch configuration during the regridding process. Generally, this routine should be used to alter the pre-existing AMR patch hierarchy based on the need to adapt the computational mesh around some phenomenon of interest. The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#2308dc7afdfec02156a3ad9daad1426d">makeFinerLevel()</a> above should be used to construct the initial hierarchy configuration or to add more than one new level into the hierarchy. Also, this routine will not reconfigure the patches on level 0 (i.e., the coarsest in the hierarchy). The routine <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#bc3105d7f7328bc1a0b4e99e37924d73">makeCoarsestLevel()</a> above is provided for that purpose.<p>
 The boolean level_is_coarsest_to_sync is used for regridding in time-dependent problems. When true, it indicates that the specified level is the coarsest level to synchronize at the current regrid time before this regridding method is called. This is a pretty idiosyncratic argument but allows some flexibility in the way memory is managed during time-dependent regridding operations.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -263,10 +263,10 @@ The boolean level_is_coarsest_to_sync is used for regridding in time-dependent p
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#e1549d30754f0d258ac15e81e7e4f2f9">SAMRAI::mesh::GriddingAlgorithm</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#6dd9a0c2f75c902d41d989c8f31611a5">SAMRAI::mesh::GriddingAlgorithm</a>.
 </div>
 </div><p>
-<a class="anchor" name="3ffee71426ab6aeba38f2eefce9ab25a"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::getTagAndInitializeStrategy" ref="3ffee71426ab6aeba38f2eefce9ab25a" args="() const =0" -->
+<a class="anchor" name="9bc169fa1026482c1b24ec63164b9ed0"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::getTagAndInitializeStrategy" ref="9bc169fa1026482c1b24ec63164b9ed0" args="() const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -286,12 +286,12 @@ Return pointer to level gridding strategy data member.
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#f6477d7887a8b2b5fc734fb824242b0c">SAMRAI::mesh::GriddingAlgorithm</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#5e3807368fa25c7cafa0bf5f3203dafd">SAMRAI::mesh::GriddingAlgorithm</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmStrategy_8h.html">GriddingAlgorithmStrategy.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmStrategy_8C.html">GriddingAlgorithmStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:55 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

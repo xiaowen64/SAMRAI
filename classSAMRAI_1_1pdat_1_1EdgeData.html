@@ -34,98 +34,98 @@
 <a href="classSAMRAI_1_1pdat_1_1EdgeData-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#be6e7fa8d96a6846353d9a83ea8afa43">iterator</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIterator.html">EdgeIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#3fb297169460d7c977a551637cd0cc32">iterator</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#cbbbce93b385966199311de2102313ff">EdgeData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#b5433fa04b62996fde14c07a6e657ae3">EdgeData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for an edge data object.  <a href="#cbbbce93b385966199311de2102313ff"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#7b42bbf85ebc17e8c29ff091ea66e88e">~EdgeData</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for an edge data object.  <a href="#b5433fa04b62996fde14c07a6e657ae3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#11202fd30fba48fa4cb1c8044fad2c99">~EdgeData</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor for an edge data object.  <a href="#7b42bbf85ebc17e8c29ff091ea66e88e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor for an edge data object.  <a href="#11202fd30fba48fa4cb1c8044fad2c99"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the depth (e.g., the number of components in each spatial location) of the array.  <a href="#e3f5414bdd3da4a056d9668b7fae4273"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#3572f817622d481ddacc406d1248b11e">getPointer</a> (int axis, int depth=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the depth (e.g., the number of components in each spatial location) of the array.  <a href="#8634a19d407d6329381400efeb473e64"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#95c7bed56968ec7d2581fbaf6b9a5e3d">getPointer</a> (int axis, int depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a pointer to the beginning of a particular axis and depth component of the edge centered array.  <a href="#3572f817622d481ddacc406d1248b11e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#9d2402aaab140c64acb62a1d66a8919e">getPointer</a> (int axis, int depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a pointer to the beginning of a particular axis and depth component of the edge centered array.  <a href="#95c7bed56968ec7d2581fbaf6b9a5e3d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#3b8690a411ef41142a72110a54087fe8">getPointer</a> (int axis, int depth=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a const pointer to the beginning of a particular axis and depth component of the edge centered array.  <a href="#9d2402aaab140c64acb62a1d66a8919e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#0fe33fdfc9a1081890b24bcb31c75b44">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a const pointer to the beginning of a particular axis and depth component of the edge centered array.  <a href="#3b8690a411ef41142a72110a54087fe8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#d22e5960528f9f79eff78eb75b454039">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the data entry corresponding to a given edge index and depth.  <a href="#0fe33fdfc9a1081890b24bcb31c75b44"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#b724ed072eb8cc6708a550ab765ed4aa">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the data entry corresponding to a given edge index and depth.  <a href="#d22e5960528f9f79eff78eb75b454039"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#51a79902f467169467a8d0244cb11439">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the data entry corresponding to a given edge index and depth.  <a href="#b724ed072eb8cc6708a550ab765ed4aa"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#3c6f4b30beb78f02ebe986bcef6c10c5">getArrayData</a> (int axis)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the data entry corresponding to a given edge index and depth.  <a href="#51a79902f467169467a8d0244cb11439"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#335184178c68800e8b141a4a5f5e4f9b">getArrayData</a> (int axis)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the array data object for the given axis of the edge centered data object.  <a href="#3c6f4b30beb78f02ebe986bcef6c10c5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#7a8d129eea28134d046c306e3fd9b02d">getArrayData</a> (int axis) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the array data object for the given axis of the edge centered data object.  <a href="#335184178c68800e8b141a4a5f5e4f9b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#62bcd76aaad92ce1a6e355ba0229dbf9">getArrayData</a> (int axis) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the array data object for the given axis of the edge centered data object.  <a href="#7a8d129eea28134d046c306e3fd9b02d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#4a3a3ef2df738718ebfaa8ea0c27a589">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the array data object for the given axis of the edge centered data object.  <a href="#62bcd76aaad92ce1a6e355ba0229dbf9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#51cbb7edf56d38565ddecf7a78823259">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fast copy from source to destination (i.e., this) patch data object.  <a href="#4a3a3ef2df738718ebfaa8ea0c27a589"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#c865295ceeb66ac9a0b1eba73e7d6a81">copy2</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fast copy from source to destination (i.e., this) patch data object.  <a href="#51cbb7edf56d38565ddecf7a78823259"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#7c7c7cbdd958c73ff3941dc1638729fc">copy2</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fast copy from source (i.e., this) to destination patch data object.  <a href="#c865295ceeb66ac9a0b1eba73e7d6a81"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#d69ff961a8f64feec556627ab70a0cfb">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fast copy from source (i.e., this) to destination patch data object.  <a href="#7c7c7cbdd958c73ff3941dc1638729fc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#c2f432fdfce0ce06f67e34aa344f317c">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source to destination (i.e., this) patch data object on the given overlap.  <a href="#d69ff961a8f64feec556627ab70a0cfb"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#3d53d54ebf999661e8cd1fa665771ede">copy2</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source to destination (i.e., this) patch data object on the given overlap.  <a href="#c2f432fdfce0ce06f67e34aa344f317c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#371515be9c432de97192b8090978c14e">copy2</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source (i.e., this) to destination patch data object on the given overlap.  <a href="#3d53d54ebf999661e8cd1fa665771ede"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#2d39f0082933398333e94443a3a15cc3">copyOnBox</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a>&lt; TYPE &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source (i.e., this) to destination patch data object on the given overlap.  <a href="#371515be9c432de97192b8090978c14e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#ea58d9adb17860b8860377f16670df5a">copyOnBox</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a>&lt; TYPE &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box.  <a href="#2d39f0082933398333e94443a3a15cc3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#40eff46256c69acdeb27113f843eb380">copyDepth</a> (int dst_depth, const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a>&lt; TYPE &gt; &amp;src, int src_depth)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box.  <a href="#ea58d9adb17860b8860377f16670df5a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#c4fa8b17b2ca511ff50b88eecd341b1b">copyDepth</a> (int dst_depth, const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a>&lt; TYPE &gt; &amp;src, int src_depth)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fast copy (i.e., source and this edge data objects are defined over the same box) to this destination edge data object from the given source edge data object at the specified depths.  <a href="#40eff46256c69acdeb27113f843eb380"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e9fb675c532bdf63aae3e95210e8422d">canEstimateStreamSizeFromBox</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fast copy (i.e., source and this edge data objects are defined over the same box) to this destination edge data object from the given source edge data object at the specified depths.  <a href="#c4fa8b17b2ca511ff50b88eecd341b1b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#6702152c33038aa68106aa8f38aa1d9c">canEstimateStreamSizeFromBox</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if the patch data object can estimate the stream size required to fit its data using only index space information (i.e., a box).  <a href="#e9fb675c532bdf63aae3e95210e8422d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#25ed1a16d50ad6463fa7606b09f91739">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if the patch data object can estimate the stream size required to fit its data using only index space information (i.e., a box).  <a href="#6702152c33038aa68106aa8f38aa1d9c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#a3ba2cba2f0d5ed040940dbe69fee5eb">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region.  <a href="#25ed1a16d50ad6463fa7606b09f91739"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#23519bf7784d26adf49b3dbdc2e1a982">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region.  <a href="#a3ba2cba2f0d5ed040940dbe69fee5eb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#a6067bee17fe87f7625e11bd57ceeda3">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack data in this patch data object lying in the specified box overlap region into the stream. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM.  <a href="#23519bf7784d26adf49b3dbdc2e1a982"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#2d93cc6a86862f3b39dca5f00222808b">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack data in this patch data object lying in the specified box overlap region into the stream. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM.  <a href="#a6067bee17fe87f7625e11bd57ceeda3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#c9469ffa5caabec2528a74fa76420ab8">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack data from stream into this patch data object over the specified box overlap region. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM.  <a href="#2d93cc6a86862f3b39dca5f00222808b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#72e6196ec45d0c2f35027f40c83ad680">fill</a> (const TYPE &amp;t, int d=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack data from stream into this patch data object over the specified box overlap region. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM.  <a href="#c9469ffa5caabec2528a74fa76420ab8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#99711ccd5bb47ae7f71f1c8ea7ed3463">fill</a> (const TYPE &amp;t, int d=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all values at depth d with the value t.  <a href="#72e6196ec45d0c2f35027f40c83ad680"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#92a09b9488381f3689399788508b5319">fill</a> (const TYPE &amp;t, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int d=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all values at depth d with the value t.  <a href="#99711ccd5bb47ae7f71f1c8ea7ed3463"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#43a7472c1062b6c7e1f1605fd58156c2">fill</a> (const TYPE &amp;t, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int d=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all values at depth d within the box with the value t.  <a href="#92a09b9488381f3689399788508b5319"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#6c628ee34a0785b2cf3ad880c66faa7f">fillAll</a> (const TYPE &amp;t)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all values at depth d within the box with the value t.  <a href="#43a7472c1062b6c7e1f1605fd58156c2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#4a33b8808c81aafb00f0e5b3ab5af269">fillAll</a> (const TYPE &amp;t)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all depth components with value t.  <a href="#6c628ee34a0785b2cf3ad880c66faa7f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#a680efc7e5b8bf976f7cd444568a9748">fillAll</a> (const TYPE &amp;t, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all depth components with value t.  <a href="#4a33b8808c81aafb00f0e5b3ab5af269"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#9684211bd0f9031c4defcec97f5d53bd">fillAll</a> (const TYPE &amp;t, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all depth components within the box with value t.  <a href="#a680efc7e5b8bf976f7cd444568a9748"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#1021dec44f45073e13627f3bab054b35">print</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fill all depth components within the box with value t.  <a href="#9684211bd0f9031c4defcec97f5d53bd"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#abcb66a698f63bfa74c935e56e89e8ca">print</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge data values residing in the specified box. If the depth of the array is greater than one, all depths are printed.  <a href="#1021dec44f45073e13627f3bab054b35"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#b05e3b022419cffdcba5a2c7526d0e46">print</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge data values residing in the specified box. If the depth of the array is greater than one, all depths are printed.  <a href="#abcb66a698f63bfa74c935e56e89e8ca"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#2b8e8b0ad522105a458b475045a6c143">print</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge data values at the given array depth in the specified box.  <a href="#b05e3b022419cffdcba5a2c7526d0e46"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#464819ba2f4e920a859b40c9c1b11231">printAxis</a> (int axis, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge data values at the given array depth in the specified box.  <a href="#2b8e8b0ad522105a458b475045a6c143"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#1fc3b9ba467c94587b54603e809f20ce">printAxis</a> (int axis, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge centered data values for specified axis residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#464819ba2f4e920a859b40c9c1b11231"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#01a3bf9c2aa32b97bf4dbeaafe377604">printAxis</a> (int axis, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge centered data values for specified axis residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#1fc3b9ba467c94587b54603e809f20ce"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8e1c47bfbc79045c13719cd62cffd102">printAxis</a> (int axis, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge centered data values for specified axis residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#01a3bf9c2aa32b97bf4dbeaafe377604"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#af25e0c0fcbb036ef8bd4651264bc102">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all edge centered data values for specified axis residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#8e1c47bfbc79045c13719cd62cffd102"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#b4a6272ecff6704a459e6ca1f264a531">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#23b4948357b72c72dc4d7556bc6225aa">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#453668f0989fc7c792280de9e385ecf8">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#b6813f8d8c3cde558c63a20f3fab22db">getSizeOfData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#9b946825852f3c08712ca2b458b5625f">getSizeOfData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the amount of memory needed to represent edge- centered data over a CELL-centered AMR index space box.  <a href="#b6813f8d8c3cde558c63a20f3fab22db"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the amount of memory needed to represent edge- centered data over a CELL-centered AMR index space box.  <a href="#9b946825852f3c08712ca2b458b5625f"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;class TYPE&gt;<br>
@@ -160,7 +160,7 @@ The data type TYPE must define a default constructor (that takes no arguments) a
 
 <p>
 <hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="be6e7fa8d96a6846353d9a83ea8afa43"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::iterator" ref="be6e7fa8d96a6846353d9a83ea8afa43" args="" -->
+<a class="anchor" name="3fb297169460d7c977a551637cd0cc32"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::iterator" ref="3fb297169460d7c977a551637cd0cc32" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -178,7 +178,7 @@ The edge iterator iterates over the elements on one axis of an edge centered box
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="cbbbce93b385966199311de2102313ff"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::EdgeData" ref="cbbbce93b385966199311de2102313ff" args="(const hier::Box &amp;box, int depth, const hier::IntVector &amp;ghosts)" -->
+<a class="anchor" name="b5433fa04b62996fde14c07a6e657ae3"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::EdgeData" ref="b5433fa04b62996fde14c07a6e657ae3" args="(const hier::Box &amp;box, int depth, const hier::IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -227,7 +227,7 @@ ghosts.min() &gt;= 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="7b42bbf85ebc17e8c29ff091ea66e88e"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::~EdgeData" ref="7b42bbf85ebc17e8c29ff091ea66e88e" args="()" -->
+<a class="anchor" name="11202fd30fba48fa4cb1c8044fad2c99"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::~EdgeData" ref="11202fd30fba48fa4cb1c8044fad2c99" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -251,7 +251,7 @@ The virtual destructor for an edge data object.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b6813f8d8c3cde558c63a20f3fab22db"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getSizeOfData" ref="b6813f8d8c3cde558c63a20f3fab22db" args="(const hier::Box &amp;box, int depth, const hier::IntVector &amp;ghosts)" -->
+<a class="anchor" name="9b946825852f3c08712ca2b458b5625f"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getSizeOfData" ref="9b946825852f3c08712ca2b458b5625f" args="(const hier::Box &amp;box, int depth, const hier::IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -300,7 +300,7 @@ depth &gt; 0 </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="e3f5414bdd3da4a056d9668b7fae4273"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getDepth" ref="e3f5414bdd3da4a056d9668b7fae4273" args="() const " -->
+<a class="anchor" name="8634a19d407d6329381400efeb473e64"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getDepth" ref="8634a19d407d6329381400efeb473e64" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -323,7 +323,7 @@ Return the depth (e.g., the number of components in each spatial location) of th
 
 </div>
 </div><p>
-<a class="anchor" name="3572f817622d481ddacc406d1248b11e"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getPointer" ref="3572f817622d481ddacc406d1248b11e" args="(int axis, int depth=0)" -->
+<a class="anchor" name="95c7bed56968ec7d2581fbaf6b9a5e3d"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getPointer" ref="95c7bed56968ec7d2581fbaf6b9a5e3d" args="(int axis, int depth=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -353,12 +353,12 @@ template&lt;class TYPE&gt; </div>
 <p>
 Get a pointer to the beginning of a particular axis and depth component of the edge centered array. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
-(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="9d2402aaab140c64acb62a1d66a8919e"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getPointer" ref="9d2402aaab140c64acb62a1d66a8919e" args="(int axis, int depth=0) const " -->
+<a class="anchor" name="3b8690a411ef41142a72110a54087fe8"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getPointer" ref="3b8690a411ef41142a72110a54087fe8" args="(int axis, int depth=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -388,12 +388,12 @@ template&lt;class TYPE&gt; </div>
 <p>
 Get a const pointer to the beginning of a particular axis and depth component of the edge centered array. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
-(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="0fe33fdfc9a1081890b24bcb31c75b44"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::operator()" ref="0fe33fdfc9a1081890b24bcb31c75b44" args="(const EdgeIndex &amp;i, int depth=0)" -->
+<a class="anchor" name="d22e5960528f9f79eff78eb75b454039"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::operator()" ref="d22e5960528f9f79eff78eb75b454039" args="(const EdgeIndex &amp;i, int depth=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -423,13 +423,13 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a reference to the data entry corresponding to a given edge index and depth. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == i.getDim() <p>
-(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
-(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == i.getDim() <p>
+(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="b724ed072eb8cc6708a550ab765ed4aa"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::operator()" ref="b724ed072eb8cc6708a550ab765ed4aa" args="(const EdgeIndex &amp;i, int depth=0) const " -->
+<a class="anchor" name="51a79902f467169467a8d0244cb11439"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::operator()" ref="51a79902f467169467a8d0244cb11439" args="(const EdgeIndex &amp;i, int depth=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -459,13 +459,13 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a const reference to the data entry corresponding to a given edge index and depth. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == i.getDim() <p>
-(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) <p>
-(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == i.getDim() <p>
+(i.getAxis() &gt;= 0) &amp;&amp; (i.getAxis() &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="3c6f4b30beb78f02ebe986bcef6c10c5"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getArrayData" ref="3c6f4b30beb78f02ebe986bcef6c10c5" args="(int axis)" -->
+<a class="anchor" name="335184178c68800e8b141a4a5f5e4f9b"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getArrayData" ref="335184178c68800e8b141a4a5f5e4f9b" args="(int axis)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -486,11 +486,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a reference to the array data object for the given axis of the edge centered data object. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="7a8d129eea28134d046c306e3fd9b02d"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getArrayData" ref="7a8d129eea28134d046c306e3fd9b02d" args="(int axis) const " -->
+<a class="anchor" name="62bcd76aaad92ce1a6e355ba0229dbf9"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getArrayData" ref="62bcd76aaad92ce1a6e355ba0229dbf9" args="(int axis) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -511,11 +511,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return a const reference to the array data object for the given axis of the edge centered data object. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="4a3a3ef2df738718ebfaa8ea0c27a589"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy" ref="4a3a3ef2df738718ebfaa8ea0c27a589" args="(const hier::PatchData &amp;src)" -->
+<a class="anchor" name="51cbb7edf56d38565ddecf7a78823259"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy" ref="51cbb7edf56d38565ddecf7a78823259" args="(const hier::PatchData &amp;src)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -537,13 +537,13 @@ template&lt;class TYPE&gt; </div>
 A fast copy from source to destination (i.e., this) patch data object. 
 <p>
 Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == src.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1eceef85e707249a51fd6e8719b8b888">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e11daa48e2aedf80b7c44bb838cdf9f2">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="c865295ceeb66ac9a0b1eba73e7d6a81"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy2" ref="c865295ceeb66ac9a0b1eba73e7d6a81" args="(hier::PatchData &amp;dst) const " -->
+<a class="anchor" name="7c7c7cbdd958c73ff3941dc1638729fc"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy2" ref="7c7c7cbdd958c73ff3941dc1638729fc" args="(hier::PatchData &amp;dst) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -565,14 +565,14 @@ template&lt;class TYPE&gt; </div>
 A fast copy from source (i.e., this) to destination patch data object. 
 <p>
 Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, destination data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == dst.getDim() <p>
 dynamic_cast&lt;EdgeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#09c4b4a8c05efa18ad83662db4ba5351">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="d69ff961a8f64feec556627ab70a0cfb"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy" ref="d69ff961a8f64feec556627ab70a0cfb" args="(const hier::PatchData &amp;src, const hier::BoxOverlap &amp;overlap)" -->
+<a class="anchor" name="c2f432fdfce0ce06f67e34aa344f317c"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy" ref="c2f432fdfce0ce06f67e34aa344f317c" args="(const hier::PatchData &amp;src, const hier::BoxOverlap &amp;overlap)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -603,13 +603,13 @@ template&lt;class TYPE&gt; </div>
 Copy data from source to destination (i.e., this) patch data object on the given overlap. 
 <p>
 Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == src.getDim() </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#60dd0fcc44ae5ef062a4249dad8a4f47">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#9db2a42da4a464f29d9e69c271bb7cd2">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="3d53d54ebf999661e8cd1fa665771ede"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy2" ref="3d53d54ebf999661e8cd1fa665771ede" args="(hier::PatchData &amp;dst, const hier::BoxOverlap &amp;overlap) const " -->
+<a class="anchor" name="371515be9c432de97192b8090978c14e"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copy2" ref="371515be9c432de97192b8090978c14e" args="(hier::PatchData &amp;dst, const hier::BoxOverlap &amp;overlap) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -640,15 +640,15 @@ template&lt;class TYPE&gt; </div>
 Copy data from source (i.e., this) to destination patch data object on the given overlap. 
 <p>
 Currently, destination data must be <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html">EdgeData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> of the same DIM. If not, then an unrecoverable error results.<p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == dst.getDim() <p>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == dst.getDim() <p>
 dynamic_cast&lt;EdgeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 <p>
 dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#bd068fc4e5d159b2f927d59ea2ffda40">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#828b790d3f3c553535b4502452ba2eba">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="2d39f0082933398333e94443a3a15cc3"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copyOnBox" ref="2d39f0082933398333e94443a3a15cc3" args="(const EdgeData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box)" -->
+<a class="anchor" name="ea58d9adb17860b8860377f16670df5a"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copyOnBox" ref="ea58d9adb17860b8860377f16670df5a" args="(const EdgeData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -678,11 +678,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == src.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == box.getDim()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="40eff46256c69acdeb27113f843eb380"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copyDepth" ref="40eff46256c69acdeb27113f843eb380" args="(int dst_depth, const EdgeData&lt; TYPE &gt; &amp;src, int src_depth)" -->
+<a class="anchor" name="c4fa8b17b2ca511ff50b88eecd341b1b"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::copyDepth" ref="c4fa8b17b2ca511ff50b88eecd341b1b" args="(int dst_depth, const EdgeData&lt; TYPE &gt; &amp;src, int src_depth)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -718,11 +718,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fast copy (i.e., source and this edge data objects are defined over the same box) to this destination edge data object from the given source edge data object at the specified depths. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == src.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == src.getDim() </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="e9fb675c532bdf63aae3e95210e8422d"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::canEstimateStreamSizeFromBox" ref="e9fb675c532bdf63aae3e95210e8422d" args="() const " -->
+<a class="anchor" name="6702152c33038aa68106aa8f38aa1d9c"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::canEstimateStreamSizeFromBox" ref="6702152c33038aa68106aa8f38aa1d9c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -744,10 +744,10 @@ Return true if the patch data object can estimate the stream size required to fi
 <p>
 This routine is defined for the standard types (bool, char, double, float, int, and dcomplex). 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e9cfe3b5f5cb132e6968467154f46521">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#6a8a6bea3564c490bac76fa7989e1d6a">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="25ed1a16d50ad6463fa7606b09f91739"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getDataStreamSize" ref="25ed1a16d50ad6463fa7606b09f91739" args="(const hier::BoxOverlap &amp;overlap) const " -->
+<a class="anchor" name="a3ba2cba2f0d5ed040940dbe69fee5eb"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getDataStreamSize" ref="a3ba2cba2f0d5ed040940dbe69fee5eb" args="(const hier::BoxOverlap &amp;overlap) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -772,10 +772,10 @@ This routine is defined for the standard types (bool, char, double, float, int, 
 <dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#c70a44451c3a87e5744328e09b33efa8">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#79afb3717c2858e760eb43d1c92e8aed">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="23519bf7784d26adf49b3dbdc2e1a982"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::packStream" ref="23519bf7784d26adf49b3dbdc2e1a982" args="(tbox::MessageStream &amp;stream, const hier::BoxOverlap &amp;overlap) const " -->
+<a class="anchor" name="a6067bee17fe87f7625e11bd57ceeda3"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::packStream" ref="a6067bee17fe87f7625e11bd57ceeda3" args="(tbox::MessageStream &amp;stream, const hier::BoxOverlap &amp;overlap) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -808,10 +808,10 @@ Pack data in this patch data object lying in the specified box overlap region in
 <dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5f351ded8a02c75ecf9eb124cec0b509">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#9b73721b1f1f580e99626de07f91d950">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="2d93cc6a86862f3b39dca5f00222808b"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::unpackStream" ref="2d93cc6a86862f3b39dca5f00222808b" args="(tbox::MessageStream &amp;stream, const hier::BoxOverlap &amp;overlap)" -->
+<a class="anchor" name="c9469ffa5caabec2528a74fa76420ab8"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::unpackStream" ref="c9469ffa5caabec2528a74fa76420ab8" args="(tbox::MessageStream &amp;stream, const hier::BoxOverlap &amp;overlap)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -844,10 +844,10 @@ Unpack data from stream into this patch data object over the specified box overl
 <dl compact><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const EdgeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#64f047f667adb684706c6a546176f460">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#da56faab0c403e0c8b2e95ad28515a00">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="72e6196ec45d0c2f35027f40c83ad680"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fill" ref="72e6196ec45d0c2f35027f40c83ad680" args="(const TYPE &amp;t, int d=0)" -->
+<a class="anchor" name="99711ccd5bb47ae7f71f1c8ea7ed3463"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fill" ref="99711ccd5bb47ae7f71f1c8ea7ed3463" args="(const TYPE &amp;t, int d=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -877,11 +877,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all values at depth d with the value t. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="92a09b9488381f3689399788508b5319"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fill" ref="92a09b9488381f3689399788508b5319" args="(const TYPE &amp;t, const hier::Box &amp;box, int d=0)" -->
+<a class="anchor" name="43a7472c1062b6c7e1f1605fd58156c2"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fill" ref="43a7472c1062b6c7e1f1605fd58156c2" args="(const TYPE &amp;t, const hier::Box &amp;box, int d=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -917,12 +917,12 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all values at depth d within the box with the value t. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
-(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == box.getDim() <p>
+(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="6c628ee34a0785b2cf3ad880c66faa7f"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fillAll" ref="6c628ee34a0785b2cf3ad880c66faa7f" args="(const TYPE &amp;t)" -->
+<a class="anchor" name="4a33b8808c81aafb00f0e5b3ab5af269"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fillAll" ref="4a33b8808c81aafb00f0e5b3ab5af269" args="(const TYPE &amp;t)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -946,7 +946,7 @@ Fill all depth components with value t.
 
 </div>
 </div><p>
-<a class="anchor" name="a680efc7e5b8bf976f7cd444568a9748"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fillAll" ref="a680efc7e5b8bf976f7cd444568a9748" args="(const TYPE &amp;t, const hier::Box &amp;box)" -->
+<a class="anchor" name="9684211bd0f9031c4defcec97f5d53bd"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::fillAll" ref="9684211bd0f9031c4defcec97f5d53bd" args="(const TYPE &amp;t, const hier::Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -976,11 +976,11 @@ template&lt;class TYPE&gt; </div>
 <p>
 Fill all depth components within the box with value t. 
 <p>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == box.getDim() </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="1021dec44f45073e13627f3bab054b35"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::print" ref="1021dec44f45073e13627f3bab054b35" args="(const hier::Box &amp;box, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
+<a class="anchor" name="abcb66a698f63bfa74c935e56e89e8ca"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::print" ref="abcb66a698f63bfa74c935e56e89e8ca" args="(const hier::Box &amp;box, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -996,7 +996,7 @@ template&lt;class TYPE&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a></code>, </td>
+          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1026,7 +1026,7 @@ Print all edge data values residing in the specified box. If the depth of the ar
 
 </div>
 </div><p>
-<a class="anchor" name="b05e3b022419cffdcba5a2c7526d0e46"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::print" ref="b05e3b022419cffdcba5a2c7526d0e46" args="(const hier::Box &amp;box, int depth, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
+<a class="anchor" name="2b8e8b0ad522105a458b475045a6c143"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::print" ref="2b8e8b0ad522105a458b475045a6c143" args="(const hier::Box &amp;box, int depth, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1048,7 +1048,7 @@ template&lt;class TYPE&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a></code>, </td>
+          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1076,12 +1076,12 @@ Print all edge data values at the given array depth in the specified box.
     <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
-(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == box.getDim() <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="464819ba2f4e920a859b40c9c1b11231"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::printAxis" ref="464819ba2f4e920a859b40c9c1b11231" args="(int axis, const hier::Box &amp;box, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
+<a class="anchor" name="1fc3b9ba467c94587b54603e809f20ce"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::printAxis" ref="1fc3b9ba467c94587b54603e809f20ce" args="(int axis, const hier::Box &amp;box, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1103,7 +1103,7 @@ template&lt;class TYPE&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a></code>, </td>
+          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1131,12 +1131,12 @@ Print all edge centered data values for specified axis residing in the specified
     <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
-(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == box.getDim() <p>
+(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="01a3bf9c2aa32b97bf4dbeaafe377604"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::printAxis" ref="01a3bf9c2aa32b97bf4dbeaafe377604" args="(int axis, const hier::Box &amp;box, int depth, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
+<a class="anchor" name="8e1c47bfbc79045c13719cd62cffd102"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::printAxis" ref="8e1c47bfbc79045c13719cd62cffd102" args="(int axis, const hier::Box &amp;box, int depth, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1164,7 +1164,7 @@ template&lt;class TYPE&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a></code>, </td>
+          <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#b84041705493761fb17a8127e3a2dca2">tbox::plog</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1193,13 +1193,13 @@ Print all edge centered data values for specified axis residing in the specified
     <tr><td valign="top"></td><td valign="top"><em>prec</em>&nbsp;</td><td>integer precision for printing floating point numbers (i.e., TYPE = float, double, or dcomplex). The default is 12 decimal places for double and complex floating point numbers, and the default is 6 decimal places floats. For other types, this value is ignored.</td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a> == box.getDim() <p>
-(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#e3f5414bdd3da4a056d9668b7fae4273">getDepth()</a>) <p>
-(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#48d31df9afb07d0f67bc86671ebf78ca">getDim()</a>.getValue()) </dd></dl>
+<dl compact><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a> == box.getDim() <p>
+(depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeData.html#8634a19d407d6329381400efeb473e64">getDepth()</a>) <p>
+(axis &gt;= 0) &amp;&amp; (axis &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#4b2528593ae5bf177579d4d11afac2e3">getDim()</a>.getValue()) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="af25e0c0fcbb036ef8bd4651264bc102"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getFromRestart" ref="af25e0c0fcbb036ef8bd4651264bc102" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
+<a class="anchor" name="b4a6272ecff6704a459e6ca1f264a531"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::getFromRestart" ref="b4a6272ecff6704a459e6ca1f264a531" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1222,10 +1222,10 @@ Check that class version and restart file version are equal. If so, read data me
 <dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5af241c296edc22d41af70f76aff5108">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#78b67dc5c322c4def87ae730b4092696">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="23b4948357b72c72dc4d7556bc6225aa"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::putToRestart" ref="23b4948357b72c72dc4d7556bc6225aa" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
+<a class="anchor" name="453668f0989fc7c792280de9e385ecf8"></a><!-- doxytag: member="SAMRAI::pdat::EdgeData::putToRestart" ref="453668f0989fc7c792280de9e385ecf8" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;restart_db) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1248,12 +1248,12 @@ Write out the class version number and other data members to the restart databas
 <dl compact><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#d057afe4f494361226db6bbd932348cf">SAMRAI::hier::PatchData</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#46f69705aaa6831bf10978dd2973f375">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="EdgeData_8h.html">EdgeData.h</a><li>source/SAMRAI/pdat/<a class="el" href="EdgeData_8C.html">EdgeData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Oct 15 15:43:56 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on 16 Jan 2013 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
