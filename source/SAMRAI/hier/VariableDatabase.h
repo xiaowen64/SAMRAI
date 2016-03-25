@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Singleton database class for managing variables and contexts.
  *
  ************************************************************************/
@@ -166,10 +166,10 @@ namespace hier {
  * </ul>
  *
  *
- * @see hier::PatchDescriptor
- * @see hier::VariableContext
- * @see hier::Variable
- * @see hier::Patch
+ * @see PatchDescriptor
+ * @see VariableContext
+ * @see Variable
+ * @see Patch
  */
 
 class VariableDatabase

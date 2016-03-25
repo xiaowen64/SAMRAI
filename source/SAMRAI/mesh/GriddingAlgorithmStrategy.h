@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -31,7 +31,7 @@ namespace mesh {
  * hierarchies.  The interfaces imply that the implementation of this
  * strategy class works on some hierarchy.
  *
- * @see mesh::GriddingAlgorithm
+ * @see GriddingAlgorithm
  */
 
 class GriddingAlgorithmStrategy

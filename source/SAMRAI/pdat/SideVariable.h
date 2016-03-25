@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -37,9 +37,9 @@ namespace pdat {
  * define the same storage as this side variable class, except that the
  * individual array indices are permuted in the face data type.
  *
- * @see pdat::SideData
- * @see pdat::SideDataFactory
- * @see pdat::SideGeometry
+ * @see SideData
+ * @see SideDataFactory
+ * @see SideGeometry
  * @see hier::Variable
  */
 

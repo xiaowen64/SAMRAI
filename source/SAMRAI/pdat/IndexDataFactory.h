@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   IndexDataFactory
  *
  ************************************************************************/
@@ -29,8 +29,8 @@ namespace pdat {
  * allocate new instances of IndexData<TYPE, BOX_GEOMETRY> objects.  It is a
  * subclass of the hier::PatchDataFactory base class.
  *
- * @see pdat::IndexData
- * @see pdat::IndexVariable
+ * @see IndexData
+ * @see IndexVariable
  * @see hier::PatchDataFactory
  */
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface to application-specific patch functions in support
  *                Method of Lines integration algorithm
  *
@@ -40,7 +40,7 @@ class MethodOfLinesIntegrator;
  * interlevel data refining and coarsening operations and the specification
  * of physical boundary conditions.
  *
- * @see algs::MethodOfLinesIntegrator
+ * @see MethodOfLinesIntegrator
  * @see xfer::RefinePatchStrategy
  * @see xfer::CoarsenPatchStrategy
  */

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real cell data on multiple levels.
  *
  ************************************************************************/
@@ -52,7 +52,7 @@ namespace math {
  * HierarchyCellDataOpsComplex and HierarchyCellDataOpsInteger,
  * respectively.
  *
- * @see math::PatchCellDataOpsReal
+ * @see PatchCellDataOpsReal
  */
 
 template<class TYPE>

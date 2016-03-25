@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   A class describing the adjacency of Boxes.
  *
  ************************************************************************/
@@ -712,7 +712,8 @@ BoxNeighborhoodCollection::putToRestart(
                const Box& nbr = *ni;
                local_ids[counter] = nbr.getLocalId().getValue();
                ranks[counter] = nbr.getOwnerRank();
-               block_ids[counter] = nbr.getBlockId().getBlockValue();
+               block_ids[counter] =
+                  static_cast<int>(nbr.getBlockId().getBlockValue());
                periodic_ids[counter] = nbr.getPeriodicId().getPeriodicValue();
                db_box_array[counter] = nbr;
                ++counter;

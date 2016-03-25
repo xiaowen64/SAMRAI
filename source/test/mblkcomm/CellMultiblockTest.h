@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for cell-centered patch data
  *
  ************************************************************************/
@@ -105,15 +105,6 @@ public:
       const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id);
-
-   ///
-   void
-   postprocessRefine(
-      hier::Patch& fine,
-      const hier::Patch& coarse,
-      const boost::shared_ptr<hier::VariableContext>& context,
-      const hier::Box& fine_box,
-      const hier::IntVector& ratio) const;
 
 private:
    /**

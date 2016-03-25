@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
@@ -36,7 +36,7 @@ MblkGeometry::MblkGeometry(
    const std::string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
-   const int nblocks):
+   const size_t nblocks):
    d_dim(dim)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -97,11 +97,11 @@ std::string MblkGeometry::getGeometryType()
  */
 bool MblkGeometry::getRefineBoxes(
    hier::BoxContainer& refine_boxes,
-   const int block_number,
+   const hier::BlockId::block_t block_number,
    const int level_number)
 {
    bool boxes_exist = false;
-   if (block_number < static_cast<int>(d_refine_boxes.size())) {
+   if (block_number < d_refine_boxes.size()) {
       if (level_number < static_cast<int>(d_refine_boxes[level_number].size())) {
          boxes_exist = true;
          refine_boxes = d_refine_boxes[block_number][level_number];
@@ -185,7 +185,7 @@ void MblkGeometry::getFromInput(
    d_geom_problem = db->getString("problem_type");
 
    bool found = false;
-   int i, nb;
+   int i;
    char block_name[128];
    double temp_domain[SAMRAI::MAX_DIM_VAL];
 
@@ -200,7 +200,7 @@ void MblkGeometry::getFromInput(
       d_cart_xlo.resize(d_nblocks);
       d_cart_xhi.resize(d_nblocks);
 
-      for (nb = 0; nb < d_nblocks; ++nb) {
+      for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
 
          // xlo
          sprintf(block_name, "domain_xlo_%d", nb);
@@ -245,7 +245,7 @@ void MblkGeometry::getFromInput(
       d_wedge_rmin.resize(d_nblocks);
       d_wedge_rmax.resize(d_nblocks);
 
-      for (nb = 0; nb < d_nblocks; ++nb) {
+      for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
 
          // rmin
          sprintf(block_name, "rmin_%d", nb);
@@ -336,7 +336,7 @@ void MblkGeometry::getFromInput(
     * Block rotation
     */
    d_block_rotation.resize(d_nblocks);
-   for (nb = 0; nb < d_nblocks; ++nb) {
+   for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
       d_block_rotation[nb] = 0;
       sprintf(block_name, "rotation_%d", nb);
       if (db->keyExists(block_name)) {
@@ -358,7 +358,7 @@ void MblkGeometry::getFromInput(
     *
     */
    d_refine_boxes.resize(d_nblocks);
-   for (nb = 0; nb < d_nblocks; ++nb) {
+   for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
 
       // see what the max number of levels is
       int max_ln = 0;
@@ -401,7 +401,7 @@ void MblkGeometry::buildGridOnPatch(
    const hier::Box& domain,
    const int xyz_id,
    const int level_number,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
 
    if (d_geom_problem == "CARTESIAN") {
@@ -507,7 +507,7 @@ void MblkGeometry::getDx(
  */
 
 int MblkGeometry::getBlockRotation(
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 
 {
    return d_block_rotation[block_number];
@@ -559,7 +559,7 @@ void MblkGeometry::buildCartesianGridOnPatch(
    const hier::Patch& patch,
    const int xyz_id,
    const int level_number,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
@@ -653,7 +653,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    const hier::Patch& patch,
    const int xyz_id,
    const int level_number,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
@@ -792,7 +792,7 @@ void MblkGeometry::buildSShellGridOnPatch(
    const hier::Box& domain,
    const int xyz_id,
    const int level_number,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
 
    bool xyz_allocated = patch.checkAllocated(xyz_id);
@@ -970,7 +970,7 @@ void MblkGeometry::buildSShellGridOnPatch(
  *************************************************************************
  */
 void MblkGeometry::computeUnitSphereOctant(
-   int nblock,
+   hier::BlockId::block_t nblock,
    int nth,
    int j,
    int k,
@@ -1023,7 +1023,7 @@ void MblkGeometry::computeUnitSphereOctant(
    //
    // nblock = 1, xface = 2, yface, = 3, zface
 
-   int tb = nblock;
+   int tb = static_cast<int>(nblock);
    int tj = j;
    int tk = k;
 

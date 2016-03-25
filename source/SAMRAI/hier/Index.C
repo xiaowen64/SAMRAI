@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface for the AMR Index object
  *
  ************************************************************************/
@@ -30,27 +30,41 @@ Index::s_initialize_finalize_handler(
 
 Index::Index(
    const tbox::Dimension& dim):
-   IntVector(dim)
+   d_dim(dim)
 {
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
+      d_index[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
 }
 
 Index::Index(
    const tbox::Dimension& dim,
-   const int i):
-   IntVector(dim, i)
+   const int value):
+   d_dim(dim)
 {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_index[i] = value;
+   }
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
+      d_index[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
 }
 
 Index::Index(
    const int i,
    const int j):
-   IntVector(tbox::Dimension(2))
+   d_dim(2)
 {
    TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
 
-   (*this)[0] = i;
+   d_index[0] = i;
    if (SAMRAI::MAX_DIM_VAL > 1) {
-      (*this)[1] = j;
+      d_index[1] = j;
    }
 }
 
@@ -58,44 +72,64 @@ Index::Index(
    const int i,
    const int j,
    const int k):
-   IntVector(tbox::Dimension(3))
+   d_dim(3)
 {
    TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(3));
 
-   (*this)[0] = i;
+   d_index[0] = i;
    if (SAMRAI::MAX_DIM_VAL > 1) {
-      (*this)[1] = j;
+      d_index[1] = j;
    }
 
    if (SAMRAI::MAX_DIM_VAL > 2) {
-      (*this)[2] = k;
+      d_index[2] = k;
    }
 
 }
 
 Index::Index(
    const std::vector<int>& a):
-   IntVector(a)
+   d_dim(static_cast<unsigned short>(a.size()))
 {
+   TBOX_ASSERT(a.size() > 0);
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_index[i] = a[i];
+   }
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
+      d_index[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
 }
 
 Index::Index(
    const tbox::Dimension& dim,
    const int array[]):
-   IntVector(dim, array)
+   d_dim(dim)
 {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_index[i] = array[i];
+   }
 }
 
 Index::Index(
    const Index& rhs):
-   IntVector(rhs)
+   d_dim(rhs.d_dim)
 {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_index[i] = rhs.d_index[i];
+   }
 }
 
 Index::Index(
    const IntVector& rhs):
-   IntVector(rhs)
+   d_dim(rhs.getDim())
 {
+   TBOX_ASSERT(rhs.getNumBlocks() == 1);
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_index[i] = rhs[i];
+   }
 }
 
 Index::~Index()
@@ -127,6 +161,41 @@ Index::finalizeCallback()
       delete s_maxs[d];
    }
 }
+
+std::istream&
+operator >> (
+   std::istream& s,
+   Index& rhs)
+{
+   while (s.get() != '(') ;
+
+   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
+      s >> rhs(i);
+      if (i < rhs.getDim().getValue() - 1)
+         while (s.get() != ',') ;
+   }
+
+   while (s.get() != ')') ;
+
+   return s;
+}
+
+std::ostream& operator << (
+   std::ostream& s,
+   const Index& rhs)
+{
+   s << '(';
+
+   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
+      s << rhs(i);
+      if (i < rhs.getDim().getValue() - 1)
+         s << ",";
+   }
+   s << ')';
+
+   return s;
+}
+
 
 }
 }

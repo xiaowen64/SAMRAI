@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Gridding routines and params for Richardson Extrapolation.
  *
  ************************************************************************/
@@ -165,9 +165,9 @@ namespace mesh {
  * are performed in the StandardTagAndInitStrategy
  * data member, for which methods are specified in a derived subclass.
  *
- * @see mesh::TagAndInitializeStrategy
- * @see mesh::GriddingAlgorithm
- * @see mesh::StandardTagAndInitStrategy
+ * @see TagAndInitializeStrategy
+ * @see GriddingAlgorithm
+ * @see StandardTagAndInitStrategy
  */
 
 class StandardTagAndInitialize:
@@ -529,8 +529,8 @@ public:
     *                     removed.
     * @param old_level The level in hierarchy about to be removed.
     *
-    * @see mesh::GriddingAlgorithm
-    * @see mesh::StandardTagAndInitStrategy
+    * @see GriddingAlgorithm
+    * @see StandardTagAndInitStrategy
     */
    void
    processLevelBeforeRemoval(
@@ -538,6 +538,48 @@ public:
       const int level_number,
       const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>());
+
+   /*!
+    * @brief Check the tags on a tagged level.
+    *
+    * This is a callback that is used to check the values held in
+    * user tag PatchData.  The tag data will contain the tags created
+    * by application code in tagCellsForRefinement as well as
+    * any tags added internally by the GriddingAlgorithm (for
+    * example, buffering).
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number  Level number of the tagged level
+    * @param[in] regrid_cycle
+    * @param[in] regrid_time
+    * @param[in] tag_index     Patch data index for user tags
+    */
+   void
+   checkUserTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int regrid_cycle,
+      const double regrid_time,
+      const int tag_index);
+
+   /*!
+    * @brief Check the tags on a newly-created level.
+    *
+    * This is a callback that allow for checking tag values that
+    * have been saved on a new level that has been created during
+    * initialization or regridding.  The tag values will be the values
+    * of the user tags on the coarser level, constant-refined onto the
+    * cells of the new level.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number   Level number of the new level
+    * @param[in] tag_index      Patch data index for the new tags.
+    */
+   void
+   checkNewLevelTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index);
 
 private:
    /*

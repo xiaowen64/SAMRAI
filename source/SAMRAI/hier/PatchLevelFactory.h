@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Abstract factory class for creating patch level objects
  *
  ************************************************************************/
@@ -30,7 +30,7 @@ namespace hier {
  * New types of patch level objects can be introduced into SAMRAI by deriving
  * from PatchLevelFactory and re-defining allocate.
  *
- * @see hier::PatchLevel
+ * @see PatchLevel
  */
 class PatchLevelFactory
 {

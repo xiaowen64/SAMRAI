@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   fill pattern class for filling interiors only
  *
  ************************************************************************/
@@ -21,13 +21,13 @@ namespace xfer {
 /*!
  * @brief PatchLevelFillPattern implementation for patch interior filling.
  *
- * For documentation on this interface see @ref xfer::PatchLevelFillPattern
+ * For documentation on this interface see @ref PatchLevelFillPattern
  *
  * Those fill boxes for this PatchLevelFillPattern will consist of the
  * patch interiors on the destination level only.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class PatchLevelInteriorFillPattern:public PatchLevelFillPattern

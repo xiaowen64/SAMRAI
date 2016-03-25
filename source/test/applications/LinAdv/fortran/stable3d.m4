@@ -1,6 +1,13 @@
+c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   F77 routine for compuation of stable dt in 3d.
+c
 define(NDIM,3)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 
       subroutine stabledt3d(dx,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,

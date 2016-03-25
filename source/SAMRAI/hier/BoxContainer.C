@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
@@ -614,9 +614,6 @@ BoxContainer::separatePeriodicImages(
    }
 
    if (!empty()) {
-
-      const Box& first_element(*begin());
-
       const PeriodicId zero_shift_number(shift_catalog.getZeroShiftNumber());
 
       real_box_vector.reserve(real_box_vector.size() + size());
@@ -1390,8 +1387,6 @@ BoxContainer::unshiftPeriodicImageBoxes(
    iterator hint = output_boxes.begin();
 
    if (!empty()) {
-      const Box& first_element(*begin());
-
       const PeriodicId zero_shift_number(shift_catalog.getZeroShiftNumber());
 
       for (const_iterator na = begin(); na != end(); ++na) {
@@ -1561,7 +1556,6 @@ BoxContainer::contains(
  * Spatial manipulation of Boxes
  ************************************************************************
  */
-
 void
 BoxContainer::grow(
    const IntVector& ghosts)
@@ -1670,7 +1664,7 @@ BoxContainer::putToRestart(
       for (BoxContainer::const_iterator ni = begin(); ni != end(); ++ni) {
          local_ids.push_back(ni->getLocalId().getValue());
          ranks.push_back(ni->getOwnerRank());
-         block_ids.push_back(ni->getBlockId().getBlockValue());
+         block_ids.push_back(static_cast<int>(ni->getBlockId().getBlockValue()));
          periodic_ids.push_back(ni->getPeriodicId().getPeriodicValue());
          db_box_array[++counter] = *ni;
       }

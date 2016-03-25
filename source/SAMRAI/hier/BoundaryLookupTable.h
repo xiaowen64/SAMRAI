@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
@@ -35,9 +35,9 @@ namespace hier {
  * of using this class is that such calculations can be programmed in
  * a dimension-independent way.
  *
- * @see hier::BoundaryBox
- * @see hier::BaseGridGeometry
- * @see hier::PatchGeometry
+ * @see BoundaryBox
+ * @see BaseGridGeometry
+ * @see PatchGeometry
  */
 
 class BoundaryLookupTable

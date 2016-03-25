@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -32,7 +32,7 @@ namespace mesh {
  * implemented are the interfaces for xfer::RefinePatchStrategy, needed
  * primarily for physical boundary filling.
  *
- * @see mesh::GriddingAlgorithm
+ * @see GriddingAlgorithm
  * @see xfer::RefineSchedule
  * @see xfer::RefinePatchStrategy
  */

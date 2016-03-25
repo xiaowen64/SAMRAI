@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -591,11 +591,11 @@ Schedule::getFromInput()
     */
    if (s_ignore_external_timer_prefix == '\0') {
       s_ignore_external_timer_prefix = 'n';
-      if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
+      if (InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<Database> idb(
+            InputManager::getInputDatabase());
          if (idb->isDatabase("Schedule")) {
-            boost::shared_ptr<tbox::Database> sched_db(
+            boost::shared_ptr<Database> sched_db(
                idb->getDatabase("Schedule"));
             s_ignore_external_timer_prefix =
                sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",

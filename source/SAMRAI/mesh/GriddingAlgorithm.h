@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -134,12 +134,16 @@ namespace mesh {
  *
  *   - \b    sequentialize_patch_indices
  *      whether patch indices will be globally sequentialized.
- *      This is not scalable, but is required for writing correct VisIt files.
- *      Due to the current VisIt requirement, this is currently true by
+ *      This is required for writing correct VisIt files, and
+ *      due to the current VisIt requirement, this is currently true by
  *      default.  It will evetually be set back to false after we remove the
  *      VisIt requirement.
  *
  *   - \b    enforce_proper_nesting
+ * 
+ *   - \b    save_tag_data
+ *      This is an option to save the tags that are used to create a new
+ *      fine level in CellData on that level.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -207,15 +211,23 @@ namespace mesh {
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
+ *   <tr>
+ *     <td>save_tag_data</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db will not be overridden by input db</td>
+ *   </tr>
  * </table>
  *
  * All values read in from a restart database may be overriden by input
  * database values.  If no new input database value is given, the restart
  * database value is used.
  *
- * @see mesh::TagAndInitializeStrategy
- * @see mesh::LoadBalanceStrategy
- * @see mesh::BoxGeneratorStrategy
+ * @see TagAndInitializeStrategy
+ * @see LoadBalanceStrategy
+ * @see BoxGeneratorStrategy
  */
 
 class GriddingAlgorithm:
@@ -223,6 +235,35 @@ class GriddingAlgorithm:
    public tbox::Serializable
 {
 public:
+
+   /*!
+    * @brief static symbols to hold special tag values for user tags
+    *
+    * These symbols are used to hold special values that are added to the
+    * user tag data when the GriddingAlgorithm adds tags for algorithmic
+    * reasons.
+    *
+    * EXISTING_FINE_PATCHES_TAG_VAL:  This value is placed in all cells
+    * of the tag level than intersect the existing next finest level.
+    * This value is added before calling the application's tagging methods,
+    * so that the application code can take into account the location
+    * of an existing finer level if it is relevant to its tagging criteria.
+    *
+    * NEW_FINE_PATCHES_TAG_VAL:  This value is placed in all cells of the
+    * tag level that intersect the level that is two levels finer, if such
+    * a level exists.  This value is added after the application's tagging
+    * methods are invoked, and is used to ensure that all finer levels of
+    * a hierarchy are nested inside coarser levels.
+    *
+    * BUFFER_TAG_VAL:  This value is added to cells that are tagged due to
+    * the buffering operation of the GriddingAlgorithm, according to the
+    * tag buffer arguments that are passed into certain methods of this
+    * class.
+    */
+   static const int EXISTING_FINE_PATCHES_TAG_VAL;
+   static const int NEW_FINE_PATCHES_TAG_VAL;
+   static const int BUFFER_TAG_VAL;
+
    /*!
     * @brief The constructor for GriddingAlgorithm configures the
     * gridding algorithm with the patch hierarchy and concrete algorithm
@@ -428,6 +469,15 @@ public:
    getPatchHierarchy() const;
 
    /*!
+    * @brief Return patch data index for tag data saved in the hierarchy.
+    */
+   int
+   getSavedTagPatchDataIndex() const
+   {
+      return d_saved_tag_indx;
+   }
+
+   /*!
     * @brief Print all data members of the class instance to given output stream.
     */
    void
@@ -608,8 +658,13 @@ private:
     *
     * @param[in] interior_only
     *
-    * @param fill_box_growth How much to grow fill boxes before using
+    * @param[in] fill_box_growth How much to grow fill boxes before using
     * them to tag.  Must be in index space of level holding fill boxes.
+    *
+    * @param[in] preserve_existing_tags If set to true, only cells that
+    * have a value of d_false_tag on input will be changed to tag_value. If
+    * false, then all cells intersecting by the fill BoxLevel will be set to
+    * tag_value. 
     *
     * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
     * @pre tag_level
@@ -623,7 +678,8 @@ private:
       const int index,
       const hier::Connector& tag_level_to_fill_box_level,
       const bool interior_only,
-      const hier::IntVector& fill_box_growth) const;
+      const hier::IntVector& fill_box_growth,
+      const bool preserve_existing_tags) const;
 
    /*!
     * @brief Enforce proper nesting.
@@ -1001,6 +1057,29 @@ private:
       const hier::BoxLevel& new_box_level) const;
 
    /*!
+    * @brief Set tag data that will be only have the values expected by
+    * the algorithms for box generation.
+    *
+    * Boolean tag data should have only values of d_true_tag or
+    * d_false_tag.  This method interprets user tag data to set
+    * boolean tag data to these values.
+    *
+    * Note that the use of the term "boolean" does not mean that the bool
+    * type is used, but that the integer data will have only two possible
+    * values.
+    *
+    * @param[in] tag_level  Level being tagged
+    * @param[in] preserve_existing_tags  If set to true, any cells already
+    * set to d_true_tag in the algorthmic tag data will be guaranteed to
+    * remain so.  If false, no current values of the boolean tag data
+    * will be guaranteed to be preserved.
+    */
+   void
+   setBooleanTagData(
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      bool preserve_existing_tags) const;
+
+   /*!
     * @brief Check for user tags that violate proper nesting.
     *
     * @param tag_level  Tag level
@@ -1067,34 +1146,6 @@ private:
    assertNoMessageForCommunicator(
       const tbox::SAMRAI_MPI& mpi) const;
 
-   /*!
-    * @brief Initialize static objects and register shutdown routine.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   startupCallback()
-   {
-      s_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-      s_buf_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-   }
-
-   /*!
-    * @brief Method registered with ShutdownRegister to cleanup statics.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   shutdownCallback()
-   {
-      delete s_tag_indx;
-      delete s_buf_tag_indx;
-   }
-
    /*
     * @brief Record statistics on how many patches and cells were generated.
     */
@@ -1112,13 +1163,6 @@ private:
     * hierarchy what width the GriddingAlgorithm will be requesting.
     */
    GriddingAlgorithmConnectorWidthRequestor d_connector_width_requestor;
-
-   /*
-    * Static members for managing shared tag data among multiple
-    * GriddingAlgorithm objects.
-    */
-   static std::vector<int> * s_tag_indx;
-   static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
 
@@ -1147,30 +1191,52 @@ private:
     */
    MultiblockGriddingTagger * d_mb_tagger_strategy;
 
-   /*
+   /*!
+    * @brief Variables and patch data indices for tags.
+    *
     * Cell-centered integer variables use to tag cells for refinement.
-    * The descriptor index d_tag_indx is used to obtain tag information
+    * The descriptor index d_user_tag_indx is used to obtain tag information
     * from user-defined routines on patch interiors.  The descriptor index
     * d_buf_tag_indx is used to buffer tags on patches that may be
-    * distributed across processors.  The refine algorithm and schedule are
-    * used for interprocessor communication.
+    * distributed across processors.  d_boolean_tag_indx is used to put tag
+    * values in a standard format that will be understood by box generator
+    * implementations, and d_saved_tag_indx is used to preserve tag values
+    * on new levels after gridding operations are completed.  Note that
+    * d_boolean_tag does not use the bool type, but rather its associated
+    * integer data is treated as a boolean with only two possible values.
     */
-   boost::shared_ptr<pdat::CellVariable<int> > d_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_user_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_saved_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_boolean_tag;
    boost::shared_ptr<pdat::CellVariable<int> > d_buf_tag;
-   int d_tag_indx;
+   int d_user_tag_indx;
+   int d_saved_tag_indx;
+   int d_boolean_tag_indx;
    int d_buf_tag_indx;
 
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
-   /*
-    * True and false integer tag values set in constructor and used to
-    * set and compare integer tag values on the patch hierarchy.  Generally,
+   /*!
+    * @brief Refine algorithm and schedule for filling saved tag data on new
+    * levels.
+    */
+   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_saved_tags;
+   boost::shared_ptr<xfer::RefineSchedule> d_saved_tags_sched;
+
+   /*!
+    * @brief Tag values defined in the constructor.
+    * 
+    * Tag values defined in the constructor and used to set and compare
+    * integer tag values on the patch hierarchy.  Generally, these
     * these variables are easier to read in the code than integer constants,
     * such as 0 and 1.
     */
    const int d_true_tag;
    const int d_false_tag;
+   const int d_from_fine_pretag;
+   const int d_from_fine_tag;
+   const int d_buffer_tag;
 
    /*!
     * @brief Finest level not changed during regrid.
@@ -1291,6 +1357,11 @@ private:
    bool d_extend_to_domain_boundary;
    bool d_load_balance;
 
+   /*
+    * Flag to save tag data on new fine levels.
+    */
+   bool d_save_tag_data; 
+
    //@{
    //! @name Used for evaluating peformance.
    bool d_barrier_and_time;
@@ -1319,7 +1390,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_refinement;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_new;
    boost::shared_ptr<tbox::Timer> t_find_new_to_new;
-   boost::shared_ptr<tbox::Timer> t_bridge_new_to_coarser;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
@@ -1363,12 +1433,6 @@ private:
    bool d_check_proper_nesting;
    bool d_check_connectors;
    bool d_print_steps;
-
-   /*
-    * Static startup and shutdown handler.
-    */
-   static tbox::StartupShutdownManager::Handler
-      s_startup_shutdown_handler;
 
 };
 

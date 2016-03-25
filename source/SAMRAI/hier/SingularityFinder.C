@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Class for finding multiblockSingularities
  *
  ************************************************************************/
@@ -493,7 +493,7 @@ SingularityFinder::findCoincidentEdges(
    Box b_node_box(b_box);
    b_node_box.setUpper(b_node_box.upper() + IntVector::getOne(d_dim));
    IntVector b_box_size(b_node_box.numberCells());
-   hier::BoxContainer b_edge_boxes;
+   BoxContainer b_edge_boxes;
 
    int nedges_per_face = 4;
 
@@ -560,9 +560,9 @@ SingularityFinder::findCoincidentEdges(
 
       if (a_box.getBlockId() != b_box.getBlockId()) {
          bool transformed = grid_geometry.transformBox(edge_box,
-               IntVector::getOne(d_dim),
-               b_box.getBlockId(),
-               a_box.getBlockId());
+                                                       0,
+                                                       b_box.getBlockId(),
+                                                       a_box.getBlockId());
 #ifndef DEBUG_CHECK_ASSERTIONS
          NULL_USE(transformed);
 #endif
@@ -807,9 +807,9 @@ SingularityFinder::findCoincidentPoints(
 
       if (a_box.getBlockId() != b_box.getBlockId()) {
          bool transformed = grid_geometry.transformBox(point_box,
-               IntVector::getOne(d_dim),
-               b_box.getBlockId(),
-               a_box.getBlockId());
+                                                       0,
+                                                       b_box.getBlockId(),
+                                                       a_box.getBlockId());
 #ifndef DEBUG_CHECK_ASSERTIONS
          NULL_USE(transformed);
 #endif

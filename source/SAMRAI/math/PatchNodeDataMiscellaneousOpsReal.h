@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real node-centered data.
  *
  ************************************************************************/
@@ -51,7 +51,7 @@ namespace math {
  * to include other operations, the member functions must be specialized or the
  * new operations must be added.
  *
- * @see math::ArrayDataMiscellaneousOpsReal
+ * @see ArrayDataMiscellaneousOpsReal
  */
 
 template<class TYPE>

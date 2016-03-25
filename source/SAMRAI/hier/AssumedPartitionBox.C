@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Fast assumed partition for a box.
  *
  ************************************************************************/
@@ -200,7 +200,7 @@ AssumedPartitionBox::getBox(int box_index) const
 Box
 AssumedPartitionBox::getBox(const IntVector& position) const
 {
-   TBOX_ASSERT(position >= hier::IntVector::getZero(d_box.getDim()));
+   TBOX_ASSERT(position >= IntVector::getZero(d_box.getDim()));
    TBOX_ASSERT(position < d_partition_grid_size);
 
    int box_index = d_index_begin;
@@ -289,7 +289,7 @@ AssumedPartitionBox::selfCheck() const
 
    BoxContainer all_parts;
    for (int box_index = begin(); box_index != end(); ++box_index) {
-      const hier::Box box = getBox(box_index);
+      const Box box = getBox(box_index);
       if (box.getOwnerRank() == tbox::SAMRAI_MPI::getInvalidRank() ||
           box.getOwnerRank() < d_rank_begin || box.getOwnerRank() >= d_rank_end) {
          ++nerr;
@@ -425,12 +425,12 @@ AssumedPartitionBox::computeLayout(double avg_parts_per_rank)
        */
       const int target_parts_count = static_cast<int>(num_ranks * avg_parts_per_rank + 0.5);
       d_uniform_partition_size = box_size;
-      d_partition_grid_size = hier::IntVector::getOne(d_box.getDim());
+      d_partition_grid_size = IntVector::getOne(d_box.getDim());
       long int parts_count = d_partition_grid_size.getProduct();
       IntVector num_parts_can_increase(d_box.getDim(), 1);
       IntVector sorter(d_box.getDim());
       while (parts_count < target_parts_count &&
-             num_parts_can_increase != hier::IntVector::getZero(d_box.getDim())) {
+             num_parts_can_increase != IntVector::getZero(d_box.getDim())) {
          sorter.sortIntVector(d_uniform_partition_size);
          int inc_dir = 0;
          for (inc_dir = d_box.getDim().getValue() - 1; inc_dir >= 0; --inc_dir) {

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Fast assumed partition for a set of boxes.
  *
  ************************************************************************/
@@ -203,10 +203,10 @@ AssumedPartition::getBox(int box_index) const
 }
 
 /*
- ********************************************************************************
- * Compute the box with the given index.
- ********************************************************************************
- */
+********************************************************************************
+* Compute all boxes.
+********************************************************************************
+*/
 void
 AssumedPartition::getAllBoxes(BoxContainer& all_boxes) const
 {
@@ -216,10 +216,10 @@ AssumedPartition::getAllBoxes(BoxContainer& all_boxes) const
 }
 
 /*
- ********************************************************************************
- * Compute the box with the given index.
- ********************************************************************************
- */
+********************************************************************************
+* Compute all boxes owned by the given rank.
+********************************************************************************
+*/
 void
 AssumedPartition::getAllBoxes(BoxContainer& all_boxes, int rank) const
 {

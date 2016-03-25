@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -637,7 +637,7 @@ private:
    static boost::shared_ptr<Timer> t_default_recv_timer;
    static boost::shared_ptr<Timer> t_default_wait_timer;
 
-   static tbox::StartupShutdownManager::Handler
+   static StartupShutdownManager::Handler
       s_initialize_finalize_handler;
 
 };

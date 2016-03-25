@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -62,9 +62,9 @@ namespace xfer {
  * - @c PatchLevelBorderAndInteriorFillPattern - Fill interior and
  *      ghosts on level borders.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefinePatchStrategy
- * @see xfer::RefineClasses
+ * @see RefineAlgorithm
+ * @see RefinePatchStrategy
+ * @see RefineClasses
  */
 
 class RefineSchedule
@@ -441,6 +441,11 @@ private:
     */
    void
    allocateScratchSpace(
+      hier::ComponentSelector& allocate_vector,
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      double fill_time) const;
+   void
+   allocateDestinationSpace(
       hier::ComponentSelector& allocate_vector,
       const boost::shared_ptr<hier::PatchLevel>& level,
       double fill_time) const;
@@ -1113,6 +1118,12 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_encon_level;
 
    /*!
+    * @brief Intermediate destination level for interpolating ghost data at
+    * block boundaries
+    */
+   boost::shared_ptr<hier::PatchLevel> d_nbr_blk_fill_level;
+
+   /*!
     * @brief Describes remaining unfilled boxes after attempting to
     * fill from the source level.  These remaining boxes must be
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
@@ -1142,6 +1153,13 @@ private:
    d_encon_refine_overlaps;
 
    /*!
+    * @brief Stores the overlaps needed to copy from d_nbr_blk_fill_level
+    * to the destination at block boundaries.
+    */
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
+   d_nbr_blk_copy_overlaps;
+
+   /*!
     * @brief Connector from the destination level to the coarse interpolation.
     */
    boost::shared_ptr<hier::Connector> d_dst_to_coarse_interp;
@@ -1162,9 +1180,19 @@ private:
 
    boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
 
+   /*!
+    * @brief Connector from coarse interp level to d_nbr_blk_fill_level,
+    * used to connect coarse and fine patches for interpolation at
+    * block boundaries.
+    */
+   boost::shared_ptr<hier::Connector> d_coarse_interp_to_nbr_fill;
+
    boost::shared_ptr<hier::Connector> d_dst_to_encon;
    boost::shared_ptr<hier::Connector> d_encon_to_src;
    const hier::Connector* d_dst_to_src;
+
+   std::map<hier::BoxId, hier::IntVector> d_nbr_refine_ratio;
+   std::map<hier::BoxId, hier::IntVector> d_encon_nbr_refine_ratio;
 
    //@{
 

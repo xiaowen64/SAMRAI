@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface for processing user-defined boundary data in
  *                CartesianBoundaryUtilities classes
  *
@@ -37,8 +37,8 @@ namespace appu {
  * definitions that apply for the various boundary types, locations,
  * and boundary conditions.
  *
- * @see appu::CartesianBoundaryUtilities2
- * @see appu::CartesianBoundaryUtilities3
+ * @see CartesianBoundaryUtilities2
+ * @see CartesianBoundaryUtilities3
  */
 
 class BoundaryUtilityStrategy

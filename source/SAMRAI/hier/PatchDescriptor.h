@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -54,9 +54,9 @@ namespace hier {
  * changing this maximum value.
  *
  * @see tbox::SAMRAIManager
- * @see hier::PatchDataFactory
- * @see hier::PatchDataData
- * @see hier::Patch
+ * @see PatchDataFactory
+ * @see PatchDataData
+ * @see Patch
  */
 
 class PatchDescriptor

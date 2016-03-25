@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
 ## Description:   makefile dependencies
 ##
 #########################################################################
@@ -305,6 +305,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Connector.h				\
@@ -1058,6 +1059,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIntegerConstantRefine.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
@@ -1093,7 +1095,9 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/PatchInteriorVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelInteriorFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
@@ -1858,6 +1862,7 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/SequentialLocalIdGenerator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\

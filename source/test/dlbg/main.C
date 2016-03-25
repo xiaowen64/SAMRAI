@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Test program for asynchronous BR implementation
  *
  ************************************************************************/
@@ -506,7 +506,7 @@ static int createAndTestDLBG(
             oca.findOverlaps(fine_connectors[ln],
                *box_levels[ln],
                *box_levels[ln + 1],
-               IntVector(dim, 1));
+               IntVector::getOne(dim));
          }
          if (ln > 0) {
             oca.findOverlaps(crse_connectors[ln],
@@ -544,7 +544,7 @@ static int createAndTestDLBG(
             oca.findOverlaps(peer_connectors[ln],
                *box_levels[ln],
                *box_levels[ln],
-               IntVector(dim, 1));
+               IntVector::getOne(dim));
          }
          if (edge_log_detail >= 0) {
             plog << "****************************************\n";

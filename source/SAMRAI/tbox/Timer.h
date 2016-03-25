@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -56,7 +56,7 @@ class TimerManager;
  * Note that the constructor is protected so that timer objects can only
  * be created by the TimerManager class.
  *
- * @see tbox::TimerManager
+ * @see TimerManager
  */
 
 class Timer

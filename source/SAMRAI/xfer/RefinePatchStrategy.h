@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -55,8 +55,8 @@ namespace xfer {
  * For operations on a mesh with block-singularities, implementations of this
  * class must also inherit and implement SingularityPatchStrategy.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class RefinePatchStrategy

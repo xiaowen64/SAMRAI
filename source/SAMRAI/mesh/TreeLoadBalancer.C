@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -224,12 +224,24 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
-   hier::IntVector effective_cut_factor = cut_factor;
-   if (d_tile_size != hier::IntVector::getOne(d_dim)) {
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         while (effective_cut_factor[d] / d_tile_size[d] * d_tile_size[d] !=
-                effective_cut_factor[d]) {
-            effective_cut_factor[d] += cut_factor[d];
+   const size_t nblocks = balance_box_level.getGridGeometry()->getNumberBlocks();
+   hier::IntVector effective_cut_factor(cut_factor, nblocks);
+   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
+      if (cut_factor.getNumBlocks() == 1) {
+         for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+                  effective_cut_factor(b,d) += cut_factor[d];
+               }
+            }
+         }
+      }  else {
+         for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+                  effective_cut_factor(b,d) += cut_factor(b,d);
+               }
+            }
          }
       }
       if (d_print_steps) {
@@ -584,11 +596,11 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI());
    hier::MappingConnector balanced_to_unbalanced(balanced_box_level,
-                                                 balance_box_level,
-                                                 hier::IntVector::getZero(d_dim));
+         balance_box_level,
+         hier::IntVector::getZero(d_dim));
    hier::MappingConnector unbalanced_to_balanced(balance_box_level,
-                                                 balanced_box_level,
-                                                 hier::IntVector::getZero(d_dim));
+         balanced_box_level,
+         hier::IntVector::getZero(d_dim));
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
    t_get_map->start();

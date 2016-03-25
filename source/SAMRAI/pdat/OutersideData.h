@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated outerside centered patch data type
  *
  ************************************************************************/
@@ -75,12 +75,12 @@ namespace pdat {
  * individual arrays are permuted; i.e., OuterfaceData is consistent
  * with the FaceData implementation.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::OutersideDataFactory
- * @see pdat::OutersideGeometry
- * @see pdat::SideIterator
- * @see pdat::SideIndex
+ * @see OutersideDataFactory
+ * @see OutersideGeometry
+ * @see SideIterator
+ * @see SideIndex
  */
 
 template<class TYPE>

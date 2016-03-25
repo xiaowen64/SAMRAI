@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for data copies during data
  *                coarsening
  *
@@ -34,8 +34,8 @@ namespace xfer {
  * patch data index for a copy transaction is always the destination data, all
  * as defined in the CoarsenClasses class.
  *
- * @see xfer::CoarsenSchedule
- * @see xfer::CoarsenClasses
+ * @see CoarsenSchedule
+ * @see CoarsenClasses
  * @see tbox::Schedule
  * @see tbox::Transaction
  */

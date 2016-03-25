@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed box graph.
  *
  ************************************************************************/
@@ -57,8 +57,6 @@ PeriodicShiftCatalog::setShifts(
    const tbox::Dimension& dim,
    const std::vector<IntVector>& shifts)
 {
-   const int dim_index(dim.getValue() - 1);
-
    std::vector<IntVector> tmp_shifts;
    d_opposite_number.clear();
 

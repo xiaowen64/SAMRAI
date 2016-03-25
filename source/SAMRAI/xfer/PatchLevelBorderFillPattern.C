@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -70,6 +70,9 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
+   const int dst_level_num = dst_box_level.getGridGeometry()->
+      getEquivalentLevelNumber(dst_box_level.getRefinementRatio());
+
    hier::IntVector dst_to_dst_width(fill_ghost_width);
    if (data_on_patch_border) {
       dst_to_dst_width += hier::IntVector::getOne(fill_ghost_width.getDim());
@@ -111,9 +114,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
                grid_geometry->getRotationIdentifier(dst_block_id,
                   nbr_block_id);
             hier::IntVector offset(
-               grid_geometry->getOffset(dst_block_id, nbr_block_id));
-
-            offset *= (dst_box_level.getRefinementRatio());
+               grid_geometry->getOffset(dst_block_id, nbr_block_id, dst_level_num));
 
             hier::Transformation transformation(rotation, offset,
                                                 nbr_block_id, dst_block_id);

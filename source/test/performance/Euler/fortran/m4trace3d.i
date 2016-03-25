@@ -1,3 +1,10 @@
+c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   m4 include file for trace computation in 3d.
+c
 define(trace_init,`dnl
       do  ic$3=ifirst$3-FACEG,ilast$3+FACEG
          do  ic$2=ifirst$2-FACEG,ilast$2+FACEG

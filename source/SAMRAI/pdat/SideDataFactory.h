@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating side data objects
  *
  ************************************************************************/
@@ -35,8 +35,8 @@ namespace pdat {
  * and manage data for cell sides associated with a single coordinate
  * direction only.  See the constructor for more information.
  *
- * @see pdat::SideData
- * @see pdat::PatchDataFactory
+ * @see SideData
+ * @see PatchDataFactory
  */
 
 template<class TYPE>

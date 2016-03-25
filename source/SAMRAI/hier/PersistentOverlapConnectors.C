@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Registry of PersistentOverlapConnectorss incident from a common BoxLevel.
  *
  ************************************************************************/
@@ -109,9 +109,19 @@ PersistentOverlapConnectors::createConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
+   const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
+   IntVector width(connector_width);
+   if (width.getNumBlocks() == 1 && num_blocks != 1) {
+      if (width.max() == width.min()) {
+         width = IntVector(width, num_blocks);
+      } else {
+         TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::createConnector must be of size equal to the number of blocks." << std::endl);
+      }
+   }
+
    for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
       if (&d_cons_from_me[i]->getHead() == &head &&
-          d_cons_from_me[i]->getConnectorWidth() == connector_width) {
+          d_cons_from_me[i]->getConnectorWidth() == width) {
          TBOX_ERROR(
             "PersistentOverlapConnectors::createConnector:\n"
             << "Cannot create duplicate Connectors.");
@@ -123,7 +133,7 @@ PersistentOverlapConnectors::createConnector(
    oca.findOverlaps(new_connector,
       d_my_box_level,
       head,
-      connector_width);
+      width);
 
    postprocessForEmptyNeighborContainers(*new_connector);
 
@@ -260,22 +270,21 @@ PersistentOverlapConnectors::findConnectorWithTranspose(
 bool
 PersistentOverlapConnectors::hasConnector(
    const BoxLevel& head,
-   const IntVector& min_connector_width,
-   bool exact_width_only) const
+   const IntVector& min_connector_width) const
 {
-   if (exact_width_only) {
-      for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
-         if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() == min_connector_width) {
-            return true;
-         }
+   const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
+   IntVector min_width(min_connector_width);
+   if (min_width.getNumBlocks() == 1 && num_blocks != 1) {
+      if (min_width.max() == min_width.min()) {
+         min_width = IntVector(min_width, num_blocks);
+      } else {
+         TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
       }
-   } else {
-      for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
-         if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
-            return true;
-         }
+   }
+   for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
+      if (&d_cons_from_me[i]->getHead() == &head &&
+          d_cons_from_me[i]->getConnectorWidth() >= min_width) {
+         return true;
       }
    }
    return false;
@@ -369,6 +378,16 @@ PersistentOverlapConnectors::doFindConnectorWork(
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
+   const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
+   IntVector min_width(min_connector_width);
+   if (min_width.getNumBlocks() == 1 && num_blocks != 1) {
+      if (min_width.max() == min_width.min()) {
+         min_width = IntVector(min_width, num_blocks);
+      } else {
+         TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
+      }
+   }
+
    boost::shared_ptr<Connector> found;
    for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
@@ -384,7 +403,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
          getBoxLevel());
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
-         if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
+         if (d_cons_from_me[i]->getConnectorWidth() >= min_width) {
             if (!found) {
                found = d_cons_from_me[i];
             } else {
@@ -392,17 +411,20 @@ PersistentOverlapConnectors::doFindConnectorWork(
                   d_cons_from_me[i]->getConnectorWidth()
                   - found->getConnectorWidth();
 
-               TBOX_ASSERT(vdiff != IntVector::getZero(vdiff.getDim()));
+               TBOX_ASSERT(vdiff != 0);
 
+               size_t nblocks = head.getGridGeometry()->getNumberBlocks();
                int diff = 0;
-               for (int j = 0; j < vdiff.getDim().getValue(); ++j) {
-                  diff += vdiff(j);
+               for (BlockId::block_t b = 0; b < nblocks; ++b) {
+                  for (unsigned int j = 0; j < vdiff.getDim().getValue(); ++j) {
+                     diff += vdiff(b,j);
+                  }
                }
                if (diff < 0) {
                   found = d_cons_from_me[i];
                }
             }
-            if (found->getConnectorWidth() == min_connector_width) {
+            if (found->getConnectorWidth() == min_width) {
                break;
             }
          }
@@ -430,7 +452,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
          << "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
          << &d_my_box_level << "--->" << &head
          << " with " << (exact_width_only ? "exact" : "min")
-         << " width of " << min_connector_width << ".\n"
+         << " width of " << min_width << ".\n"
          << "base:\n" << d_my_box_level.format("B: ")
          << "head:\n" << head.format("H: ")
          << "\nThe available Connectors have these widths:\n";
@@ -455,11 +477,11 @@ PersistentOverlapConnectors::doFindConnectorWork(
                << "Number of implicit global searches: " << s_num_implicit_global_searches << '\n');
          }
 
-         createConnector(head, min_connector_width);
+         createConnector( head, min_width );
          found = d_cons_from_me.back();
       }
    } else if (exact_width_only &&
-              found->getConnectorWidth() != min_connector_width) {
+              found->getConnectorWidth() != min_width) {
 
       /*
        * Found a sufficient Connector, but it is too wide.  Extract
@@ -469,10 +491,10 @@ PersistentOverlapConnectors::doFindConnectorWork(
 
       OverlapConnectorAlgorithm oca;
       boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
-                                                    d_my_box_level,
-                                                    head,
-                                                    min_connector_width));
-      oca.extractNeighbors(*new_connector, *found, min_connector_width);
+         d_my_box_level,
+         head,
+         min_width));
+      oca.extractNeighbors(*new_connector, *found, min_width);
 
       postprocessForEmptyNeighborContainers(*new_connector);
 

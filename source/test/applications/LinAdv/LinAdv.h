@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -336,6 +336,16 @@ public:
       const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
+
+   void
+   checkUserTagData(
+      hier::Patch& patch,
+      const int tag_index) const;
+
+   void
+   checkNewPatchTagData(
+      hier::Patch& patch,
+      const int tag_index) const;
 
 #ifdef HAVE_HDF5
    /**

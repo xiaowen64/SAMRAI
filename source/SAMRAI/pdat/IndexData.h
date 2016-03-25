@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -94,9 +94,9 @@ class IndexIterator;
  * IndexData objects are created by the IndexDataFactory
  * factory object just as all other patch data types.
  *
- * @see pdat::IndexData
+ * @see IndexData
  * @see hier::PatchData
- * @see pdat::IndexDataFactory
+ * @see IndexDataFactory
  */
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -591,8 +591,8 @@ private:
  * }
  * \endverbatim
  *
- * @see pdat::IndexData
- * @see pdat::IndexIterator
+ * @see IndexData
+ * @see IndexIterator
  */
 
 template<class TYPE, class BOX_GEOMETRY>

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
@@ -46,6 +46,12 @@ public:
     * @brief Destructor.
     */
    virtual ~OverlapConnectorAlgorithm();
+
+   /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
 
    /*!
     * @brief Create overlap Connector then discover and add overlaps from base
@@ -164,9 +170,9 @@ public:
     * @param[out] neighbors
     * @param[in] connector
     * @param[in] box_id
-    * @param[in] gcw
+    * @param[in] width
     *
-    * @pre gcw <= connector.getConnectorWidth()
+    * @pre width <= connector.getConnectorWidth()
     * @pre (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
     *      (box_id.getOwnerRank() == connector.getMPI().getRank())
     * @pre connector.getBase().hasBox(box_id)
@@ -176,7 +182,7 @@ public:
       Connector::NeighborSet& neighbors,
       const Connector& connector,
       const BoxId& box_id,
-      const IntVector& gcw) const;
+      const IntVector& width) const;
 
    /*!
     * @brief Like extractNeighbors above except that it computes all
@@ -184,9 +190,9 @@ public:
     *
     * @param[out] other
     * @param[in] connector
-    * @param[in] gcw
+    * @param[in] width
     *
-    * @pre gcw <= connector.getConnectorWidth()
+    * @pre width <= connector.getConnectorWidth()
     * @pre for the box_id of each neighborhood base box in connector,
     *      (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
     *      (box_id.getOwnerRank() == connector.getMPI().getRank())
@@ -197,7 +203,7 @@ public:
    extractNeighbors(
       Connector& other,
       const Connector& connector,
-      const IntVector& gcw) const;
+      const IntVector& width) const;
 
    /*!
     * @brief Compute the overlap Connectors between BoxLevels
@@ -652,12 +658,6 @@ private:
       const PeriodicShiftCatalog& shift_catalog) const;
 
    /*!
-    * @brief Read extra debugging flag from input database.
-    */
-   void
-   getFromInput();
-
-   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -692,6 +692,7 @@ private:
     */
    static int s_operation_mpi_tag;
 
+
    //@{
    //! @name Timer data for this class.
 
@@ -707,6 +708,7 @@ private:
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition;
+      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_get_ap;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_connect_to_ap;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_transpose;
 

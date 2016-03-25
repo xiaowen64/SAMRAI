@@ -1,14 +1,14 @@
 c
-c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/examples/Euler/fortran/2d/avgint.m4 $
-c  Package:     SAMRAI applications
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
-c  Revision:    $LastChangedRevision: 1917 $
-c  Description: F77 routines for interlevel transfer of velocity and 
-c               pressure for 2d euler equations.
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   F77 routines for interlevel transfer of velocity and pressure
+c                for 2d euler equations.
 c
 define(NDIM,2)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 include(FORTDIR/amrflaten2d.i)dnl
 c
 define(coarsen_index,`dnl

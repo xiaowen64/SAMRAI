@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory to create standard copy and time transactions
  *                for refine schedules.
  *
@@ -30,9 +30,9 @@ namespace xfer {
  * allocates RefineCopyTransaction and RefineTimeTransaction objects for a
  * RefineSchedule object.
  *
- * @see xfer::RefineCopyTransaction
- * @see xfer::RefineTimeTransaction
- * @see xfer::RefineTransactionFactory
+ * @see RefineCopyTransaction
+ * @see RefineTimeTransaction
+ * @see RefineTransactionFactory
  */
 
 class StandardRefineTransactionFactory:public RefineTransactionFactory

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Routines for processing boxes within a domain of index space.
  *
  ************************************************************************/
@@ -123,8 +123,8 @@ namespace hier {
  * than in the box, box list, box array classes to avoid circular dependencies
  * among these classes.
  *
- * @see hier::Box
- * @see hier::BoxContainer
+ * @see Box
+ * @see BoxContainer
  */
 
 struct BoxUtilities {
@@ -839,7 +839,7 @@ struct BoxUtilities {
 
    /**
     *
-    * This static private member function is called by findBadCutPoints(),
+    * This function is called by findBadCutPoints(),
     * and the findBadCutPointsForDirection() member functions.  It sets bad
     * cut points near the lower and upper ends of the border box in the
     * given coordinate direction.
@@ -886,6 +886,44 @@ struct BoxUtilities {
    makeNonOverlappingBoxContainers(
       std::vector<BoxContainer>& box_list_array,
       const BoxContainer& boxes);
+
+   /*!
+    * @brief Grow a box and chop it at block boundaries.
+    *
+    * If growing a box will cause it to extend across a block boundary, this
+    * method will chop it into distinct parts that are stored in the output
+    * BoxContainer.
+    *
+    * The output may be coarsened or refined from the input's index space,
+    * controlled by the do_refine and do_coarsen arguments.  These arguments
+    * may both be false, but at most one may be true.
+    *
+    * The boxes in the output container that are intersections with neighboring
+    * blocks will be defined in the index space of those neighboring blocks
+    *
+    * @pre (do_refine != do_coarsen || (!do_refine && !do_coarsen))
+    * @pre ratio_to_level_zero.getBlockSize() == grid_geom.getNumberBlocks()
+    * @pre refine_coarsen_ratio.getBlockSize() == grid_geom.getNumberBlocks()
+    *
+    * @param[out] grown_boxes  Container to hold the results
+    * @param[in]  box          Input box
+    * @param[in]  grid_geom    Grid Geometry
+    * @param[in]  ratio_to_level_zero  Ratio from input box to level 0
+    * @param[in]  refine_coarsen_ratio Ratio to refine or coarsen output
+    * @param[in]  grow_width   Width to grow before chopping
+    * @param[in]  do_refine
+    * @param[in]  do_coarsen
+    */
+   static void growAndAdjustAcrossBlockBoundary(
+      BoxContainer& grown_boxes,
+      const Box& box,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const IntVector& ratio_to_level_zero,
+      const IntVector& refine_coarsen_ratio,
+      const IntVector& grow_width,
+      bool do_refine,
+      bool do_coarsen);
+
 
 };
 

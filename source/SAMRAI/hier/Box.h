@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -48,11 +48,11 @@ class BoxIterator;
  * SAMRAI, the BlockId and the PeriodicId associated with a Box cannot both be
  * nonzero.
  *
- * @see hier::BoxIterator
- * @see hier::Index
- * @see hier::BlockId
- * @see hier::BoxId
- * @see hier::PeriodicId
+ * @see BoxIterator
+ * @see Index
+ * @see BlockId
+ * @see BoxId
+ * @see PeriodicId
  */
 
 class Box
@@ -653,7 +653,7 @@ public:
       if (empty()) {
          return IntVector::getZero(getDim());
       } else {
-         return d_hi - d_lo + 1;
+         return IntVector(d_hi - d_lo + 1);
       }
    }
 
@@ -668,9 +668,9 @@ public:
    {
       size_t mysize = 0;
       if (!empty()) {
-         mysize = (d_hi(0) - d_lo(0) + 1);
+         mysize = static_cast<size_t>((d_hi(0) - d_lo(0) + 1));
          for (dir_t i = 1; i < getDim().getValue(); ++i) {
-            mysize *= (d_hi(i) - d_lo(i) + 1);
+            mysize *= static_cast<size_t>((d_hi(i) - d_lo(i) + 1));
          }
       }
       return mysize;
@@ -694,10 +694,11 @@ public:
       const Index& p) const
    {
       size_t myoffset = 0;
-      for (int i = getDim().getValue() - 1; i > 0; --i) {
-         myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
+      for (unsigned int i = getDim().getValue() - 1; i > 0; --i) {
+         myoffset = static_cast<size_t>(
+            (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset));
       }
-      myoffset += p(0) - d_lo(0);
+      myoffset += static_cast<size_t>(p(0) - d_lo(0));
       return myoffset;
    }
 
@@ -916,8 +917,16 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
-         d_lo -= ghosts;
-         d_hi += ghosts;
+         if (ghosts.getNumBlocks() > 1) {
+            BlockId::block_t b = d_block_id.getBlockValue();
+            for (unsigned int i = 0; i < getDim().getValue(); ++i) {
+               d_lo(i) -= ghosts(b,i);
+               d_hi(i) += ghosts(b,i);
+            }
+         } else {
+            d_lo -= ghosts;
+            d_hi += ghosts;
+         }
          d_empty_flag = boost::logic::indeterminate;
       }
    }
@@ -1145,10 +1154,19 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      for (dir_t i = 0; i < getDim().getValue(); ++i) {
-         d_lo(i) = coarsen(d_lo(i), ratio(i));
-         d_hi(i) = coarsen(d_hi(i), ratio(i));
+      if (ratio.getNumBlocks() > 1) {
+         BlockId::block_t b = d_block_id.getBlockValue();
+         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+            d_lo(i) = coarsen(d_lo(i), ratio(b,i));
+            d_hi(i) = coarsen(d_hi(i), ratio(b,i));
+         }
+      } else {
+         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+            d_lo(i) = coarsen(d_lo(i), ratio(i));
+            d_hi(i) = coarsen(d_hi(i), ratio(i));
+         }
       }
+
    }
 
    /*!
@@ -1457,8 +1475,8 @@ private:
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see hier::Index
- * @see hier::Box
+ * @see Index
+ * @see Box
  */
 
 class BoxIterator

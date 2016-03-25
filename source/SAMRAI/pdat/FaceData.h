@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated face centered patch data type
  *
  ************************************************************************/
@@ -76,12 +76,12 @@ namespace pdat {
  * as this face data class, except that the coordinate directions of the
  * individual arrays are not permuted.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::FaceDataFactory
- * @see pdat::FaceIndex
- * @see pdat::FaceIterator
- * @see pdat::FaceGeometry
+ * @see FaceDataFactory
+ * @see FaceIndex
+ * @see FaceIterator
+ * @see FaceGeometry
  */
 
 template<class TYPE>

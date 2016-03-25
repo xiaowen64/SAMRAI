@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for objects to be serialized
  *
  ************************************************************************/
@@ -24,7 +24,7 @@ namespace tbox {
  * database serialization for objects.
  *
  * Objects needing to serialize their data to a database implement the
- * function putToRestart(boost::shared_ptr<tbox::Database>) specifying
+ * function putToRestart(boost::shared_ptr<Database>) specifying
  * how to put its data members into the database instance.
  *
  * @note The interface asymmetric in that is no corresponding

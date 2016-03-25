@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex cell-centered data.
  *
  ************************************************************************/
@@ -48,7 +48,7 @@ namespace math {
  * Note that a similar set of norm operations is implemented for real
  * patch data (double and float) in the class PatchCellDataNormOpsReal.
  *
- * @see math::ArrayDataNormOpsComplex
+ * @see ArrayDataNormOpsComplex
  */
 
 class PatchCellDataNormOpsComplex

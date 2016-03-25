@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
- * Description:   (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Description:   (c) 1997-2015 Lawrence Livermore National Security, LLC
  *                Description:   Simple class used for autotesting.
  *
  ************************************************************************/
@@ -94,6 +94,14 @@ public:
       int ln,
       const hier::BoxLevel& correct_box_level,
       int iter);
+
+   static int
+   testHierarchyNeighbors(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+
+   static int
+   testFlattenedHierarchy(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
 private:
    /*

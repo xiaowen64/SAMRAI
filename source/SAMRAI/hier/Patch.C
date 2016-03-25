@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -286,7 +286,8 @@ Patch::putToRestart(
    restart_db->putDatabaseBox("d_box", d_box);
    restart_db->putInteger("d_patch_local_id", d_box.getLocalId().getValue());
    restart_db->putInteger("d_patch_owner", d_box.getOwnerRank());
-   restart_db->putInteger("d_block_id", d_box.getBlockId().getBlockValue());
+   restart_db->putInteger("d_block_id",
+                          static_cast<int>(d_box.getBlockId().getBlockValue()));
    restart_db->putInteger("d_patch_level_number", d_patch_level_number);
    restart_db->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 

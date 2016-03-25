@@ -3,15 +3,16 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
- * Description:   (c) 1997-2014 Lawrence Livermore National Security, LLC
- *                Description:   Class used for auto testing applications
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Description:   Class used for auto testing applications
  *
  ************************************************************************/
 
 #include "AutoTester.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/FlattenedHierarchy.h"
+#include "SAMRAI/hier/HierarchyNeighbors.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
@@ -202,6 +203,9 @@ int AutoTester::evalTestData(
          ++num_failures;
       }
 
+      num_failures += testHierarchyNeighbors(hierarchy);
+      num_failures += testFlattenedHierarchy(hierarchy);
+
    }
 
    if ((static_cast<int>(d_test_patch_boxes_at_steps.size()) >
@@ -382,6 +386,9 @@ int AutoTester::evalTestData(
          ++num_failures;
       }
 
+      num_failures += testHierarchyNeighbors(hierarchy);
+      num_failures += testFlattenedHierarchy(hierarchy);
+
    }
 
    if ((static_cast<int>(d_test_patch_boxes_at_steps.size()) > 0) &&
@@ -452,6 +459,170 @@ int AutoTester::evalTestData(
 
       ++d_test_patch_boxes_step_count;
 
+   }
+
+   return num_failures;
+}
+
+int AutoTester::testHierarchyNeighbors(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+{
+   int num_failures = 0;
+   int num_levels = hierarchy->getNumberOfLevels();
+   hier::HierarchyNeighbors hier_nbrs(*hierarchy, 0, num_levels-1);
+   for (int ln = 0; ln < num_levels; ++ln) {
+      const boost::shared_ptr<hier::PatchLevel>& current_level =
+         hierarchy->getPatchLevel(ln);
+
+      if (ln < num_levels-1) {
+
+         boost::shared_ptr<hier::PatchLevel> finer_level(
+            hierarchy->getPatchLevel(ln+1));
+
+         const hier::Connector& coarse_to_fine =
+            current_level->findConnector(
+               *finer_level,
+               hier::IntVector::getOne(hierarchy->getDim()),
+               hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+               true);
+
+         for (hier::Connector::ConstNeighborhoodIterator cf =
+              coarse_to_fine.begin(); cf != coarse_to_fine.end(); ++cf) {
+
+            const hier::BoxId& crse_box_id(*cf);
+            const hier::Box& crse_box =
+               *(current_level->getBoxLevel()->getBox(crse_box_id));
+            const hier::BoxContainer& finer_nbrs =
+               hier_nbrs.getFinerLevelNeighbors(crse_box, ln);
+            TBOX_ASSERT(finer_nbrs.isOrdered());
+
+            for (hier::Connector::ConstNeighborIterator ni =
+                 coarse_to_fine.begin(cf);
+                 ni != coarse_to_fine.end(cf); ++ni) {
+
+               const hier::Box& fine_box = *ni;
+               if (finer_nbrs.find(fine_box) == finer_nbrs.end()) {
+                  tbox::perr << "Test fine FAILED" << std::endl;
+                  ++num_failures;
+               }
+            }
+         }
+      }
+
+      if (ln > 0) {
+
+         boost::shared_ptr<hier::PatchLevel> coarser_level(
+            hierarchy->getPatchLevel(ln-1));
+
+         const hier::Connector& fine_to_coarse =
+            current_level->findConnector(
+               *coarser_level,
+               hier::IntVector::getOne(hierarchy->getDim()),
+               hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+               true);
+
+         for (hier::Connector::ConstNeighborhoodIterator fc =
+              fine_to_coarse.begin(); fc != fine_to_coarse.end(); ++fc) {
+
+            const hier::BoxId& fine_box_id(*fc);
+            const hier::Box& fine_box =
+               *(current_level->getBoxLevel()->getBox(fine_box_id));
+            const hier::BoxContainer& coarser_nbrs =
+               hier_nbrs.getCoarserLevelNeighbors(fine_box, ln);
+            TBOX_ASSERT(coarser_nbrs.isOrdered());
+
+            for (hier::Connector::ConstNeighborIterator ni =
+                 fine_to_coarse.begin(fc);
+                 ni != fine_to_coarse.end(fc); ++ni) {
+
+               const hier::Box& coarse_box = *ni;
+               if (coarser_nbrs.find(coarse_box) == coarser_nbrs.end()) {
+                  tbox::perr << "Test coarse FAILED" << std::endl;
+                  ++num_failures;
+               }
+            }
+         }
+      }
+
+      const hier::Connector& current_to_current =
+         current_level->findConnector(
+            *current_level,
+            hier::IntVector::getOne(hierarchy->getDim()),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            true);
+
+      for (hier::Connector::ConstNeighborhoodIterator cc =
+           current_to_current.begin(); cc != current_to_current.end(); ++cc) {
+
+         const hier::BoxId& current_box_id(*cc);
+         const hier::Box& current_box =
+            *(current_level->getBoxLevel()->getBox(current_box_id));
+         const hier::BoxContainer& same_nbrs =
+            hier_nbrs.getSameLevelNeighbors(current_box, ln);
+         TBOX_ASSERT(same_nbrs.isOrdered() || same_nbrs.empty());
+
+         for (hier::Connector::ConstNeighborIterator ni =
+              current_to_current.begin(cc);
+              ni != current_to_current.end(cc); ++ni) {
+
+            const hier::Box& nbr_box = *ni;
+            if (nbr_box.getBoxId() != current_box.getBoxId()) {
+               if (same_nbrs.find(nbr_box) == same_nbrs.end()) {
+                  tbox::perr << "Test same FAILED" << std::endl;
+                  ++num_failures;
+               }
+            }
+         }
+      }
+   }
+
+   return num_failures;
+}
+
+int AutoTester::testFlattenedHierarchy(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+{
+   int num_failures = 0;
+   int num_levels = hierarchy->getNumberOfLevels();
+   hier::FlattenedHierarchy flat_hier(*hierarchy, 0, num_levels-1);
+
+   const boost::shared_ptr<hier::PatchLevel>& level_zero =
+      hierarchy->getPatchLevel(0);
+
+   double level_zero_size =
+      static_cast<double>(level_zero->getBoxLevel()->getGlobalNumberOfCells());
+
+   double local_size = 0.0;
+
+   hier::UncoveredBoxIterator itr = flat_hier.beginUncovered();
+   hier::UncoveredBoxIterator flat_end = flat_hier.endUncovered();
+   for ( ; itr != flat_end; ++itr) {
+
+      const hier::IntVector& ratio_to_zero =
+         itr->first->getPatchGeometry()->getRatio();
+
+      const hier::BlockId& block_id = itr->second.getBlockId();
+      double refine_quotient =
+         static_cast<double>(ratio_to_zero.getProduct(block_id));
+
+      double cell_value = 1.0 / refine_quotient;
+      local_size += (cell_value * static_cast<double>(itr->second.size()));
+
+   }
+
+   double global_flat_size = local_size;
+   if (hierarchy->getMPI().AllReduce(&global_flat_size, 1, MPI_SUM) != MPI_SUCCESS) {
+      tbox::perr << "FAILED: - AutoTester " << "\n"
+                 << "MPI sum reduction failed" << std::endl;
+      num_failures++;
+   }
+
+   if (tbox::MathUtilities<double>::Abs(global_flat_size-level_zero_size) >
+       1.0e-8) {
+      tbox::perr << "FAILED: - AutoTester " << "\n"
+                 << "Flattened hierarchy size not equivalent \n"
+                 << "to level zero size." << std::endl;
+      num_failures++;
    }
 
    return num_failures;

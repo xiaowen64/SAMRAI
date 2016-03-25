@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
@@ -1564,7 +1564,7 @@ SAMRAI_MPI::hasReceivableMessage(
 {
    int flag = false;
    if (s_mpi_is_initialized) {
-      tbox::SAMRAI_MPI::Status tmp_status;
+      SAMRAI_MPI::Status tmp_status;
       Barrier();
       int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
       if (mpi_err != MPI_SUCCESS) {

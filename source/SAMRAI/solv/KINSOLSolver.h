@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Wrapper class for KINSOL solver function calls and data
  *
  ************************************************************************/
@@ -90,8 +90,8 @@ namespace solv {
  * parallel computers", UCRL-ID-131185, Lawrence Livermore National
  * Laboratory, 1998.
  *
- * @see solv::KINSOLAbstractFunctions
- * @see solv::SundialsAbstractVector
+ * @see KINSOLAbstractFunctions
+ * @see SundialsAbstractVector
  */
 
 class KINSOLSolver

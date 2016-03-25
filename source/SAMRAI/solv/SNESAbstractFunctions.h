@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface to user functions for SAMRAI-based PETSc SNES context
  *
  ************************************************************************/
@@ -60,7 +60,7 @@ namespace solv {
  * Note that the virtual members of this class are all protected.  They should
  * not be used outside of a subclass of this class.
  *
- * @see solv::SNES_SAMRAIContext
+ * @see SNES_SAMRAIContext
  */
 
 class SNESAbstractFunctions

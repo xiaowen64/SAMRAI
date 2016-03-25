@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Base class for application-level variables
  *
  ************************************************************************/
@@ -62,7 +62,7 @@ namespace hier {
  * by the fineBoundaryRepresentsVariable() function.  Each concrete variable subclass
  * defines the behavior of this function.
  *
- * @see hier::PatchDataFactory
+ * @see PatchDataFactory
  */
 
 class Variable

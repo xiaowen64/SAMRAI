@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -36,7 +36,10 @@ namespace mesh {
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy using the cascade partitioning algorithm.
- * This is UNSUPPORTED, EXPERIMENTAL code not for general use.
+ *
+ * The algorithm is described in the article "Advances in Patch-Based
+ * Adaptive Mesh Refinement Scalability" submitted to JPDC.  Scaling
+ * benchmark results are also in the article.
  *
  * Currently, only uniform load balancing is supported.  Eventually,
  * non-uniform load balancing should be supported.  (Non-uniform load
@@ -113,7 +116,7 @@ namespace mesh {
  * Whether limit work a process can supply to its surplus.  The effects on partitioning
  * speed and quality are not yet known.
  *
- * @see mesh::LoadBalanceStrategy
+ * @see LoadBalanceStrategy
  */
 
 class CascadePartitioner:

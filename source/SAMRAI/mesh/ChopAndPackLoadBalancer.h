@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
@@ -184,7 +184,7 @@ namespace mesh {
  * However, you can probably use this load balancer on up to 1K
  * processors before its performance degrades noticably.
  *
- * @see mesh::LoadBalanceStrategy
+ * @see LoadBalanceStrategy
  */
 
 class ChopAndPackLoadBalancer:
@@ -413,7 +413,7 @@ public:
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
-      const hier::IntVector& cut_factor, // Default v2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
+      const hier::IntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
 
    /*!

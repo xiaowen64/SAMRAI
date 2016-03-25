@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real side-centered patch data.
  *
  ************************************************************************/
@@ -44,9 +44,9 @@ namespace math {
  * PatchSideDataOpsComplex and PatchSideDataOpsInteger,
  * repsectively.
  *
- * @see math::PatchSideDataBasicOps
- * @see math::PatchSideDataMiscellaneousOpsReal
- * @see math::PatchSideDataNormOpsReal
+ * @see PatchSideDataBasicOps
+ * @see PatchSideDataMiscellaneousOpsReal
+ * @see PatchSideDataNormOpsReal
  */
 
 template<class TYPE>

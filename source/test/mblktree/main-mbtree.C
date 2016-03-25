@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -195,7 +195,7 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
+      hier::IntVector one_vector(hier::IntVector::getOne(dim));
 
       hier::BoxLevel box_level(
          one_vector,
@@ -203,7 +203,7 @@ int main(
          tbox::SAMRAI_MPI::getSAMRAIWorld());
       grid_geometry->computePhysicalDomain(
          box_level,
-         hier::IntVector::getOne(dim));
+         one_vector);
       box_level.finalize();
 
       /*
@@ -266,7 +266,7 @@ int main(
          box_level,
          connector_width);
 
-      const hier::IntVector& refinement_ratio(one_vector);
+      const hier::IntVector refinement_ratio(one_vector);
 
       for (hier::BoxContainer::const_iterator bi = box_level.getBoxes().begin();
            bi != box_level.getBoxes().end(); ++bi) {
@@ -436,7 +436,7 @@ void breakUpBoxes(
 
    const hier::IntVector min_size(dim, 2);
    const hier::IntVector bad_interval(dim, 1);
-   const hier::IntVector cut_factor(dim, 1);
+   const hier::IntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,

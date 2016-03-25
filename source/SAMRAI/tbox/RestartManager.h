@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   An restart manager singleton class
  *
  ************************************************************************/
@@ -73,7 +73,7 @@ namespace tbox {
  * both a restart directory name and a restore number for its arguments.
  * See comments for member functions for more details.
  *
- * @see tbox::Database
+ * @see Database
  */
 
 class RestartManager

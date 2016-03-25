@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real edge-centered patch data.
  *
  ************************************************************************/
@@ -43,9 +43,9 @@ namespace math {
  * PatchEdgeDataOpsComplex and PatchEdgeDataOpsInteger,
  * repsectively.
  *
- * @see math::PatchEdgeDataBasicOps
- * @see math::PatchEdgeDataMiscellaneousOpsReal
- * @see math::PatchEdgeDataNormOpsReal
+ * @see PatchEdgeDataBasicOps
+ * @see PatchEdgeDataMiscellaneousOpsReal
+ * @see PatchEdgeDataNormOpsReal
  */
 
 template<class TYPE>

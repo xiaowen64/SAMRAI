@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Singleton manager for hierarchy data operation objects.
  *
  ************************************************************************/
@@ -55,9 +55,9 @@ namespace math {
  * See the Design Patterns book by Gamma {\em et al.} for more information
  * about the singleton pattern.
  *
- * @see math::HierarchyDataOpsComplex
- * @see math::HierarchyDataOpsInteger
- * @see math::HierarchyDataOpsReal
+ * @see HierarchyDataOpsComplex
+ * @see HierarchyDataOpsInteger
+ * @see HierarchyDataOpsReal
  */
 
 class HierarchyDataOpsManager

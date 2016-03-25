@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Wrapper class for CVODE solver function calls and data
  *
  ************************************************************************/
@@ -188,8 +188,8 @@ namespace solv {
  * "CVODE User Guide", UCRL-MA-118618, Lawrence Livermore National
  * Laboratory, 1994.
  *
- * @see solv::CVODEAbstractFunctions
- * @see solv::SundialsAbstractVector
+ * @see CVODEAbstractFunctions
+ * @see SundialsAbstractVector
  */
 
 class CVODESolver

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Default fill pattern class
  *
  ************************************************************************/
@@ -27,7 +27,7 @@ namespace xfer {
  * no VariableFillPattern object is provided when a refine operation is
  * registered with a RefineAlgorithm, this class is used by default.
  *
- * @see xfer::RefineAlgorithm
+ * @see RefineAlgorithm
  */
 
 class BoxGeometryVariableFillPattern:

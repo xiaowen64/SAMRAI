@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   A simple array template class
  *
  ************************************************************************/
@@ -33,7 +33,7 @@ namespace tbox {
  * Class TYPE must define a copy constructor and an assignment
  * operator.
  *
- * @see tbox::ReferenceCounter
+ * @see ReferenceCounter
  */
 
 template<class TYPE>
@@ -78,7 +78,7 @@ public:
    /**
     * Create an array of ``n'' uninitialized elements.
     *
-    * The tbox::Array::UNINITIALIZED value should be used for the
+    * The Array::UNINITIALIZED value should be used for the
     * second argument to flag that the array is uninitialized.
     *
     * CAUTION: Invoking this constructor will potentially result in a

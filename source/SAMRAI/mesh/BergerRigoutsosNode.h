@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -521,6 +521,11 @@ private:
     * @name Id of participating processes.
     */
    VectorOfInts d_group;
+
+   /*!
+    * Minimum size of a Box that d_box can potentially be chopped into.
+    */
+   hier::IntVector d_min_box_size;
 
    /*!
     * @brief MPI tag for message within a node.

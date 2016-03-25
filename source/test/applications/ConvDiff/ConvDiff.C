@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in convection
  *                diffusion example.
  *
@@ -981,7 +981,7 @@ void ConvDiff::getFromInput(
                           << endl);
       }
 
-      const hier::IntVector one_vec = hier::IntVector::getOne(d_dim);
+      const hier::IntVector& one_vec(hier::IntVector::getOne(d_dim));
       hier::IntVector periodic = d_grid_geometry->getPeriodicShift(one_vec);
       int num_per_dirs = 0;
       for (int id = 0; id < d_dim.getValue(); ++id) {

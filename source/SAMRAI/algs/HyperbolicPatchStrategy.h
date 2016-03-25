@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -53,7 +53,7 @@ class HyperbolicLevelIntegrator;
  * context.  The concrete patch strategy subclass can access the appropriate
  * context via the getDataContext() method.
  *
- * @see algs::HyperbolicLevelIntegrator
+ * @see HyperbolicLevelIntegrator
  * @see xfer::RefinePatchStrategy
  * @see xfer::CoarsenPatchStrategy
  */
@@ -323,6 +323,56 @@ public:
       hier::Patch& patch,
       const double fill_time,
       const hier::IntVector& ghost_width_to_fill) = 0;
+
+   /*!
+    * @brief Check the tags on a tagged patch.
+    *
+    * This virtual method provides an interface for a callback into
+    * application code to check the values held in user tag PatchData
+    * The tag data will contain the tags created by application code
+    * plus any tags added internally by the GriddingAlgorithm (for
+    * example, buffering).
+    *
+    * This is a virtual method with a no-op implementation provided, so that
+    * users who do not need this callback need not implement anything.
+    *
+    * @param[in] patch
+    * @param[in] tag_index     Patch data index for user tags
+    */
+   virtual void
+   checkUserTagData(
+      hier::Patch& patch,
+      const int tag_index) const
+   {
+      NULL_USE(patch);
+      NULL_USE(tag_index);
+   }
+
+
+   /*!
+    * @brief Check the tags on a newly-created patch.
+    *
+    * This virtual method provides an interface for a callback into
+    * application code to check the tag values that have been saved on
+    * a new patch that has been created during intitialization or
+    * regridding.  The tag values will be the values of the user tags
+    * on the coarser level, constant refined onto the cells of the patch
+    * on the new level.
+    *
+    * This is a virtual method with a no-op implementation provided, so that
+    * users who do not need this callback need not implement anything.
+    *
+    * @param[in] patch
+    * @param[in] tag_index      Patch data index for the new tags.
+    */
+   virtual void
+   checkNewPatchTagData(
+      hier::Patch& patch,
+      const int tag_index) const
+   {
+      NULL_USE(patch);
+      NULL_USE(tag_index);
+   }
 
    /**
     * Return pointer to patch data context.

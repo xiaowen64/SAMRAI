@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
@@ -367,8 +367,8 @@ namespace solv {
  * settings/changes will NOT be cached in the solver context, and so
  * will not be written to restart.
  *
- * @see solv::SNESAbstractFunctions
- * @see solv::NonlinearSolverStrategy
+ * @see SNESAbstractFunctions
+ * @see NonlinearSolverStrategy
  */
 
 class SNES_SAMRAIContext:

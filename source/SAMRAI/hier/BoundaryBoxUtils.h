@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Generic utilities for boundary box calculus.
  *
  ************************************************************************/
@@ -21,7 +21,7 @@ namespace hier {
  * @brief Perform shifts, extensions, etc on a BoundaryBox using the box's
  * location index and type.
  *
- * @see hier::BoundaryBox
+ * @see BoundaryBox
  */
 
 class BoundaryBoxUtils
@@ -184,7 +184,7 @@ public:
     * in 2D.  These surfaces lie on the boundary itself.
     *
     * The input boundary_box must be of type 1
-    * (see hier::BoundaryBox::getBoundaryType()).
+    * (see BoundaryBox::getBoundaryType()).
     *
     * This is a utility function for working with the surface
     * indices corresponding to a boundary box.

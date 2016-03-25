@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outernode data objects
  *
  ************************************************************************/
@@ -32,8 +32,8 @@ namespace pdat {
  * the factory and data classes are templated on the type of the contained
  * object (e.g., double or int).
  *
- * @see pdat::OuternodeData
- * @see pdat::PatchDataFactory
+ * @see OuternodeData
+ * @see PatchDataFactory
  */
 
 template<class TYPE>

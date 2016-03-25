@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface for writing user-defined data to VisIt
  *
  ************************************************************************/
@@ -44,7 +44,7 @@ namespace appu {
  * which calculates the derived data and writes it into the double
  * precision buffer passed in to it.
  *
- * @see appu::VisItDataWriter
+ * @see VisItDataWriter
  */
 
 class VisDerivedDataStrategy

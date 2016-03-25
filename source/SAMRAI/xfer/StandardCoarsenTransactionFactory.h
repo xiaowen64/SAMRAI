@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory for create standard copy transactions
  *                for coarsen schedules.
  *
@@ -29,7 +29,7 @@ namespace xfer {
  * @brief Concrete subclass of CoarsenTransactionFactory base class that
  * allocates CoarsenCopyTransaction objects for a CoarsenSchedule object.
  *
- * @see xfer::CoarsenCopyTransaction
+ * @see CoarsenCopyTransaction
  */
 
 class StandardCoarsenTransactionFactory:public CoarsenTransactionFactory

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -51,7 +51,7 @@ shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
-   const std::vector<int>& unshrunken_blocks);
+   const std::vector<hier::BlockId::block_t>& unshrunken_blocks);
 
 /*
  * Refine a BoxLevel by the given ratio.
@@ -187,7 +187,7 @@ int main(
          TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -206,21 +206,27 @@ int main(
        * Unshrunken blocks are blocks in which the small BoxLevel
        * has the same index space as the big BoxLevel.
        */
-      std::vector<int> unshrunken_blocks;
+      std::vector<hier::BlockId::block_t> unshrunken_blocks;
       if (main_db->isInteger("unshrunken_blocks")) {
-         unshrunken_blocks = main_db->getIntegerVector("unshrunken_blocks");
+         std::vector<int> input_unshrunken =
+            main_db->getIntegerVector("unshrunken_blocks");
+         for (std::vector<int>::const_iterator itr = input_unshrunken.begin();
+              itr != input_unshrunken.end(); ++itr) {
+            unshrunken_blocks.push_back(
+               static_cast<hier::BlockId::block_t>(*itr));
+         }
       }
 
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
-      const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
+      hier::IntVector one_vector(hier::IntVector::getOne(dim));
+      hier::IntVector zero_vector(hier::IntVector::getZero(dim));
 
       /*
        * How much to shrink the big BoxLevel to get the small one.
        */
-      const hier::IntVector shrinkage(dim, 1);
+      const hier::IntVector shrinkage(hier::IntVector::getOne(dim));
 
       hier::BoxLevelConnectorUtils mblcu;
 
@@ -246,11 +252,11 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld());
       const std::string exclude("exclude");
-      for (int bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
+      for (hier::BlockId::block_t bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
 
          const hier::BlockId block_id(bn);
 
-         const std::string exclude_boxes_name = exclude + tbox::Utilities::intToString(bn);
+         const std::string exclude_boxes_name = exclude + tbox::Utilities::intToString(static_cast<int>(bn));
          if (main_db->keyExists(exclude_boxes_name)) {
 
             /*
@@ -314,6 +320,9 @@ int main(
 
       hier::BoxLevel small_domain_level = *small_box_level;
 
+      std::vector<hier::IntVector> refinement_ratios(
+         1, hier::IntVector(dim, 1, grid_geometry->getNumberBlocks()));
+
       /*
        * Refine Boxlevels as user specified.
        */
@@ -324,6 +333,7 @@ int main(
             dim.getValue());
          refineBoxLevel(big_box_level, big_refinement_ratio);
       }
+      refinement_ratios.push_back(big_box_level.getRefinementRatio());
 
       if (main_db->isInteger("small_refinement_ratio")) {
          hier::IntVector small_refinement_ratio(dim);
@@ -332,6 +342,16 @@ int main(
             dim.getValue());
          refineBoxLevel(*small_box_level, small_refinement_ratio);
       }
+      TBOX_ASSERT(small_box_level->getRefinementRatio() >
+                  big_box_level.getRefinementRatio());
+      refinement_ratios.push_back(small_box_level->getRefinementRatio() /
+                                  big_box_level.getRefinementRatio());
+
+      /*
+       * These steps are usually handled by PatchHierarchy, but this
+       * test does not use PatchHierarchy.
+       */
+      grid_geometry->setUpRatios(refinement_ratios);
 
       /*
        * Partition the big and small BoxLevels.
@@ -379,9 +399,8 @@ int main(
 
       const hier::Connector& small_to_big(
          small_box_level->createConnectorWithTranspose(big_box_level,
-            shrinkage,
-            (small_box_level->getRefinementRatio()
-             / big_box_level.getRefinementRatio()) * shrinkage));
+            refinement_ratios.back() * shrinkage,
+            shrinkage));
       small_to_big.cacheGlobalReducedData();
 
       const hier::Connector& big_to_small = small_to_big.getTranspose();
@@ -708,7 +727,7 @@ void partitionBoxes(
    hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
-   const hier::IntVector cut_factor(dim, 1);
+   const hier::IntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -726,7 +745,7 @@ void shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
-   const std::vector<int>& unshrunken_blocks)
+   const std::vector<hier::BlockId::block_t>& unshrunken_blocks)
 {
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       big_box_level.getGridGeometry());

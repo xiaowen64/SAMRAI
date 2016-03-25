@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Variable class for defining outeredge centered variables
  *
  ************************************************************************/
@@ -29,9 +29,9 @@ namespace pdat {
  * array sections provided by the edge data implementation.  See header file for
  * the OuteredgeData<TYPE> class for a more detailed description of the data layout.
  *
- * @see pdat::EdgeData
- * @see pdat::OuteredgeData
- * @see pdat::OuteredgeDataFactory
+ * @see EdgeData
+ * @see OuteredgeData
+ * @see OuteredgeDataFactory
  * @see hier::Variable
  */
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -196,8 +196,8 @@ namespace hier {
  *   proper_nesting_buffer = 1
  * @endcode
  *
- * @see hier::PatchLevel
- * @see hier::PatchDescriptor
+ * @see PatchLevel
+ * @see PatchDescriptor
  */
 
 class PatchHierarchy:public tbox::Serializable
@@ -541,6 +541,12 @@ public:
    {
       return getNumberOfLevels() - 1;
    }
+
+   size_t
+   getNumberBlocks() const
+   {
+      return d_number_blocks;
+   } 
 
    /*!
     * @brief Check whether specified level can be refined.
@@ -1104,7 +1110,10 @@ private:
     */
    int d_number_levels;
 
-   int d_number_blocks;
+   /*!
+    * @brief Number of blocks in the grid represented by the hierarchy.
+    */
+   size_t d_number_blocks;
 
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy
@@ -1207,7 +1216,7 @@ private:
     *
     * This is mutable because it may have to be updated by
     * getRequiredConnectorWidth(), which is a const method.
-    *
+    * 
     * See registerConnectorWidthRequestor() and getRequiredConnectorWidth().
     */
    mutable std::vector<IntVector> d_self_connector_widths;

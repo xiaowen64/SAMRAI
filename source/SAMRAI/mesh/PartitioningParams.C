@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Parameters in load balancing.
  *
  ************************************************************************/
@@ -26,12 +26,12 @@ PartitioningParams::PartitioningParams(
    double flexible_load_tol):
    d_min_size(min_size),
    d_max_size(max_size),
-   d_bad_interval(bad_interval),
+   d_bad_interval(bad_interval, grid_geometry.getNumberBlocks()),
    d_cut_factor(cut_factor),
    d_flexible_load_tol(flexible_load_tol),
    d_load_comparison_tol(1e-6)
 {
-   for (int bid(0); bid < grid_geometry.getNumberBlocks(); ++bid) {
+   for (hier::BlockId::block_t bid(0); bid < grid_geometry.getNumberBlocks(); ++bid) {
       grid_geometry.computePhysicalDomain(
          d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
    }

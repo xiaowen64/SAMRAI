@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -186,7 +186,7 @@ namespace algs {
  *    tag_buffer            = 1,1,1,1   // a max of 4 finer levels in hierarchy
  * @endcode
  *
- * @see algs::TimeRefinementLevelStrategy
+ * @see TimeRefinementLevelStrategy
  * @see mesh::GriddingAlgorithmStrategy
  */
 

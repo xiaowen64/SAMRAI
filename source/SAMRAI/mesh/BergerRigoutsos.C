@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
@@ -42,8 +42,8 @@ BergerRigoutsos::BergerRigoutsos(
    // Parameters from clustering algorithm interface ...
    d_tag_data_index(-1),
    d_tag_val(1),
-   d_min_box(dim),
-   d_tag_to_new_width(dim, 1),
+   d_min_box(hier::IntVector::getZero(dim)),
+   d_tag_to_new_width(hier::IntVector::getZero(dim)),
 
    d_tag_level(),
    d_new_box_level(),
@@ -269,7 +269,8 @@ BergerRigoutsos::findBoxesContainingTags(
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
         bb_itr != bound_boxes.end(); ++bb_itr) {
-      if (!(bb_itr->numberCells() >= min_box)) {
+      if (!(bb_itr->numberCells() >=
+          min_box.getBlockVector(bb_itr->getBlockId()))) {
          if (d_check_min_box_size == 'e') {
             TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
                << "Input box " << *bb_itr << " has size " << bb_itr->numberCells()
@@ -317,7 +318,8 @@ BergerRigoutsos::findBoxesContainingTags(
    d_level_number = tag_level->getLevelNumber();
 
    d_tag_to_new_width = d_build_zero_width_connector ?
-      hier::IntVector::getZero(tag_to_new_width.getDim()) : tag_to_new_width;
+      hier::IntVector::getZero(tag_to_new_width.getDim())
+      : tag_to_new_width;
 
    setComputeRelationships("BIDIRECTIONAL");
 
@@ -373,7 +375,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_new_box_level->getGlobalNumberOfCells();
    for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
         bi != bound_boxes.end(); ++bi) {
-      d_new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
+      d_new_box_level->getGlobalBoundingBox(bi->getBlockId());
    }
    d_object_timers->t_global_reductions->stop();
 
@@ -404,14 +406,14 @@ BergerRigoutsos::findBoxesContainingTags(
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
-         const int bn = bi->getBlockId().getBlockValue();
-         tbox::plog << "Block " << bn
+         const hier::BlockId bid = bi->getBlockId();
+         tbox::plog << "Block " << static_cast<int>(bid.getBlockValue())
                     << " initial bounding box = " << *bi << ", "
                     << bi->size() << " cells, "
                     << "final global bounding box = "
-                    << d_new_box_level->getGlobalBoundingBox(bn)
+                    << d_new_box_level->getGlobalBoundingBox(bid)
                     << ", "
-                    << d_new_box_level->getGlobalBoundingBox(bn).size()
+                    << d_new_box_level->getGlobalBoundingBox(bid).size()
                     << " cells.\n\t";
       }
 

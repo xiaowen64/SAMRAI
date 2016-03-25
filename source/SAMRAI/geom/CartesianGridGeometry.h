@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -36,8 +36,7 @@ namespace geom {
  * domain.  The mesh increments on each level are defined with respect to
  * the coarsest hierarchy level and multiplying those values by the proper
  * refinement ratio.  This class sets geometry information on each patch in
- * an AMR hierarchy.  This class is derived from the geom::GridGeometry
- * base class.
+ * an AMR hierarchy.  This class is derived from the GridGeometry base class.
  *
  * <b> Input Parameters </b>
  *
@@ -121,7 +120,7 @@ namespace geom {
  * y-direction, and having 50 cells in the x-direction and 40 cells in
  * the y-direction, with the cell size 1 unit in each direction.
  *
- * @see geom::GridGeometry
+ * @see GridGeometry
  */
 
 class CartesianGridGeometry:

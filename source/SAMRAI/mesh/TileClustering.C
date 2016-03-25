@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
@@ -14,6 +14,7 @@
 
 #include "SAMRAI/mesh/TileClustering.h"
 
+#include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -145,6 +146,7 @@ TileClustering::findBoxesContainingTags(
       d_object_timers->t_find_boxes_containing_tags->barrierAndStart();
    }
 
+   d_object_timers->t_cluster->start();
    d_object_timers->t_cluster_setup->start();
 
    const hier::IntVector& zero_vector = hier::IntVector::getZero(tag_level->getDim());
@@ -281,12 +283,14 @@ TileClustering::findBoxesContainingTags(
       }
    }
 
+   d_object_timers->t_cluster->barrierAndStop();
+
    /*
     * Get some global parameters.  Do it before logging to prevent the
     * logging flag from having a side-effect on performance timers.
     */
 
-   d_object_timers->t_cluster_wrapup->barrierAndStart();
+   d_object_timers->t_cluster_wrapup->start();
 
    if (d_barrier_and_time) {
       d_object_timers->t_global_reductions->start();
@@ -314,14 +318,14 @@ TileClustering::findBoxesContainingTags(
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
-         const int bn = bi->getBlockId().getBlockValue();
-         tbox::plog << "\tBlock " << bn
+         const hier::BlockId& bid = bi->getBlockId();
+         tbox::plog << "\tBlock " << static_cast<int>(bid.getBlockValue())
                     << " initial bounding box = " << *bi << ", "
                     << bi->size() << " cells, "
                     << "final global bounding box = "
-                    << new_box_level->getGlobalBoundingBox(bn)
+                    << new_box_level->getGlobalBoundingBox(bid)
                     << ", "
-                    << new_box_level->getGlobalBoundingBox(bn).size()
+                    << new_box_level->getGlobalBoundingBox(bid).size()
                     << " cells.\n\t";
       }
 
@@ -396,7 +400,7 @@ TileClustering::clusterWithinProcessBoundaries(
    int tag_data_index,
    int tag_val)
 {
-   d_object_timers->t_cluster->start();
+   d_object_timers->t_cluster_local->start();
 
    // Determine max number of tiles any local patch can generate.
    int max_tiles_for_any_patch = 0;
@@ -457,7 +461,7 @@ TileClustering::clusterWithinProcessBoundaries(
 
    new_box_level.finalize();
 
-   d_object_timers->t_cluster->stop();
+   d_object_timers->t_cluster_local->stop();
 }
 
 /*
@@ -478,6 +482,15 @@ TileClustering::clusterWithinProcessBoundaries(
  * and removeDuplicateTiles().
  *
  * This method does no communication.
+ *
+ * TODO: The algorithm used can produce boxes violating mininum patch
+ * size if the minimum patch size is bigger than the refinement ratio.
+ * This happens when there is a tile boundary within 1 coarse cell of
+ * the domain boundary.  The box generated would be tile-sized, but
+ * when it's sheared off at the boundary (see
+ * shearTilesAtBlockBoundaries()), it would be 1 coarse-cell wide.  If
+ * the minimum patch size is set larger than the refinement ratio then
+ * the 1 coarse-cell box would end up violating minimum box size.
  ***********************************************************************
  */
 void
@@ -490,7 +503,7 @@ TileClustering::clusterWholeTiles(
    int tag_data_index,
    int tag_val)
 {
-   d_object_timers->t_cluster->start();
+   d_object_timers->t_cluster_local->start();
 
    if (d_print_steps) {
       tbox::plog << "TileClustering::clusterWholeTiles: entered." << std::endl;
@@ -512,7 +525,7 @@ TileClustering::clusterWholeTiles(
 
    hier::Connector& tile_to_tag = tag_to_tile->getTranspose();
 
-   hier::LocalId last_used_local_id(-1);
+   hier::SequentialLocalIdGenerator id_gen;
 
    /*
     * Generate tile_box_level.  To reduce box count and box aspect
@@ -584,7 +597,7 @@ TileClustering::clusterWholeTiles(
                coalescibles.pushBack(whole_tile);
             } else {
 
-               whole_tile.initialize(whole_tile, ++last_used_local_id,
+               whole_tile.initialize(whole_tile, id_gen.nextValue(),
                   patch_box.getOwnerRank());
                tile_box_level.addBox(whole_tile);
 
@@ -616,7 +629,7 @@ TileClustering::clusterWholeTiles(
             tbox::plog << "TileClustering::clusterWholeTiles: coalesce tiles." << std::endl;
          }
          d_object_timers->t_coalesce->start();
-         coalesceTiles(coalescibles, coalescibles.getBoundingBox());
+         coalesceBoxes(coalescibles);
          d_object_timers->t_coalesce->stop();
       }
 
@@ -628,7 +641,7 @@ TileClustering::clusterWholeTiles(
            bi != coalescibles.end(); ++bi) {
 
          hier::Box& tile = *bi;
-         tile.initialize(tile, ++last_used_local_id, patch_box.getOwnerRank());
+         tile.initialize(tile, id_gen.nextValue(), patch_box.getOwnerRank());
          tile_box_level.addBox(tile);
 
          hier::BoxContainer overlapping_tag_boxes;
@@ -656,7 +669,7 @@ TileClustering::clusterWholeTiles(
       tbox::plog << "TileClustering::clusterWholeTiles: leaving." << std::endl;
    }
 
-   d_object_timers->t_cluster->stop();
+   d_object_timers->t_cluster_local->stop();
 }
 
 /*
@@ -1041,7 +1054,7 @@ TileClustering::findTilesContainingTags(
       hier::LocalId last_used_id = tiles.back().getLocalId();
       // Coalesce the tiles in this patch and assign ids if they changed.
       hier::BoxContainer unordered_tiles(tiles.begin(), tiles.end(), false);
-      coalesceTiles(unordered_tiles, unordered_tiles.getBoundingBox());
+      coalesceBoxes(unordered_tiles);
       if (unordered_tiles.size() != num_coarse_tags) {
          tiles.clear();
          tiles.order();
@@ -1147,7 +1160,7 @@ TileClustering::coalesceClusters(
    d_object_timers->t_coalesce->start();
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = post_boxes_by_block.begin();
         mi != post_boxes_by_block.end(); ++mi) {
-      coalesceTiles(mi->second, mi->second.getBoundingBox());
+      coalesceBoxes(mi->second);
       for (hier::BoxContainer::iterator bi = mi->second.begin();
            bi != mi->second.end(); ++bi) {
          bi->setId(hier::BoxId(++last_used_id, tile_box_level.getMPI().getRank()));
@@ -1230,92 +1243,125 @@ TileClustering::coalesceClusters(
 
 /*
  ***********************************************************************
- * Coalesce tiles, which must be boxes whose boundaries coincide with
- * tile boundaries.  This method specializes to tiles and uses a
- * recursive bi-section algorithm to reduce the number of boxes given
- * to the O(N^3) BoxContainer::coalesce method, which is very slow for
- * large N.
+ * Coalesce boxes.  This method uses a recursive bi-section algorithm
+ * to reduce the number of boxes given to the O(N^3)
+ * BoxContainer::coalesce method, which is very slow for large N.
  *
  * tiles must contain tiles with matching BlockId.
  ***********************************************************************
  */
 void
-TileClustering::coalesceTiles(
-   hier::BoxContainer& tiles,
-   const hier::Box& bounding_box)
+TileClustering::coalesceBoxes(
+   hier::BoxContainer &boxes )
 {
-   if (tiles.size() < d_recursive_coalesce_limit) {
-      tiles.coalesce();
+   if ( boxes.size() < d_recursive_coalesce_limit ) {
+      boxes.coalesce();
       return;
    }
 
-   // Compute midpoint of the longest direction for splitting.
-   const tbox::Dimension::dir_t split_dir = bounding_box.longestDirection();
-   int split_idx = (bounding_box.lower() (split_dir) + bounding_box.upper() (split_dir)) / 2;
+#if 1
+   /*
+    * Choose splitting direction to be that with largest ratio of
+    * bounding box size to average box size.  This is intended to, on
+    * average, reduce the number of boxes that cross the splitting
+    * plane and favor generating low aspect ratio boxes.
+    */
+   hier::Box bounding_box(boxes.front().getDim());
+   hier::IntVector sum_box_size(boxes.front().getDim(), 0);
+   for ( hier::BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
+      bounding_box += *bi;
+      sum_box_size += bi->numberCells();
+   }
+   const hier::IntVector bounding_box_size = bounding_box.numberCells();
+   double avg_box_size[SAMRAI::MAX_DIM_VAL];
+   double ratio[SAMRAI::MAX_DIM_VAL];
+   tbox::Dimension::dir_t split_dir = 0;
+   for ( tbox::Dimension::dir_t d=0; d<sum_box_size.getDim().getValue(); ++d ) {
+      avg_box_size[d] = static_cast<double>(sum_box_size[d])/boxes.size();
+      ratio[d] = bounding_box_size(d)/avg_box_size[d];
+      if ( ratio[split_dir] < ratio[d] ) split_dir = d;
+   }
+#else
 
-   // Split tiles across the split_dir, into upper and lower groups.
-   hier::BoxContainer upper_tiles, lower_tiles;
-   hier::Box upper_bounding_box(tiles.front().getDim()), lower_bounding_box(tiles.front().getDim());
-   for (hier::BoxContainer::const_iterator bi = tiles.begin(); bi != tiles.end(); ++bi) {
-      if ((split_idx - bi->lower() (split_dir)) > (bi->upper() (split_dir) + 1 - split_idx)) {
-         lower_tiles.push_back(*bi);
+   // Choose the longest direction for splitting.
+   const hier::Box bounding_box = boxes.getBoundingBox();
+   const tbox::Dimension::dir_t split_dir = bounding_box.longestDirection();
+#endif
+
+   int split_idx = (bounding_box.lower()(split_dir) + bounding_box.upper()(split_dir))/2;
+   size_t old_size = 0;
+   // Split boxes across the split_dir, into upper and lower groups.
+   hier::BoxContainer upper_boxes, lower_boxes;
+   hier::Box upper_bounding_box(boxes.front().getDim()), lower_bounding_box(boxes.front().getDim());
+   for ( hier::BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
+      ++old_size;
+      if ( (split_idx - bi->lower()(split_dir)) > (bi->upper()(split_dir) + 1 - split_idx) ) {
+         lower_boxes.push_back(*bi);
          lower_bounding_box += *bi;
       } else {
-         upper_tiles.push_back(*bi);
+         upper_boxes.push_back(*bi);
          upper_bounding_box += *bi;
       }
    }
 
    /*
     * Heuristic fix-up used when all boxes went into one side.
-    * (This logic is rarely needed but critical for avoiding infinte recursions.)
+    * (This logic is rarely needed but critical for avoiding infinite recursions.)
     * Move boxes crossing split_idx into the side with no box.
     * If that doesn't help, end the recursion.
     */
-   if (lower_tiles.empty() || upper_tiles.empty()) {
-      hier::BoxContainer& empty = lower_tiles.empty() ? lower_tiles : upper_tiles;
-      hier::BoxContainer& full = lower_tiles.empty() ? upper_tiles : lower_tiles;
-      for (hier::BoxContainer::iterator bi = full.begin(); bi != full.end();
-           /* incremented in loop */) {
-         if (bi->upper() (split_dir) >= split_idx &&
-             bi->lower() (split_dir) < split_idx) {
+   if ( lower_boxes.empty() || upper_boxes.empty() ) {
+      hier::BoxContainer &empty = lower_boxes.empty() ? lower_boxes : upper_boxes;
+      hier::BoxContainer &full = lower_boxes.empty() ? upper_boxes : lower_boxes;
+      for ( hier::BoxContainer::iterator bi=full.begin(); bi!=full.end(); /* incremented in loop */ ) {
+         if ( bi->upper()(split_dir) >= split_idx &&
+              bi->lower()(split_dir) <  split_idx ) {
             empty.push_back(*bi);
             full.erase(bi++);
          } else {
             ++bi;
          }
       }
-      if (lower_tiles.empty() || upper_tiles.empty()) {
-         tiles.coalesce();
+      if ( lower_boxes.empty() || upper_boxes.empty() ) {
+         boxes.coalesce();
          return;
       }
-      lower_bounding_box = lower_tiles.getBoundingBox();
-      upper_bounding_box = upper_tiles.getBoundingBox();
+      lower_bounding_box = lower_boxes.getBoundingBox();
+      upper_bounding_box = upper_boxes.getBoundingBox();
    }
 
    // Recursively coalesce each group.
-   tiles.clear();
-   coalesceTiles(upper_tiles, upper_bounding_box);
-   coalesceTiles(lower_tiles, lower_bounding_box);
+   coalesceBoxes(upper_boxes);
+   coalesceBoxes(lower_boxes);
+
+   boxes.clear();
 
    /*
-    * Put lower_tiles and upper_tiles back into tiles, except for
-    * tiles that touch the opposite bounding box.  Try to coalesce
-    * those before placing in tiles.
+    * Put lower_boxes and upper_boxes back into boxes, except for
+    * boxes that touch the opposite bounding box.  Try to coalesce
+    * those before placing in boxes.  If coalescible.size() == boxes.size(),
+    * then the two are identical and we avoid using coalesceBoxes to
+    * prevent endless recursion.
     */
    hier::BoxContainer coalescible;
-   for (hier::BoxContainer::const_iterator bi = lower_tiles.begin(); bi != lower_tiles.end();
-        ++bi) {
-      bi->upper() (split_dir) < upper_bounding_box.lower() (split_dir) - 1 ?
-      tiles.push_back(*bi) : coalescible.push_back(*bi);
+   for ( hier::BoxContainer::const_iterator bi=lower_boxes.begin(); bi!=lower_boxes.end(); ++bi ) {
+      bi->upper()(split_dir) < upper_bounding_box.lower()(split_dir)-1 ?
+         boxes.push_back(*bi) : coalescible.push_back(*bi);
    }
-   for (hier::BoxContainer::const_iterator bi = upper_tiles.begin(); bi != upper_tiles.end();
-        ++bi) {
-      bi->lower() (split_dir) > lower_bounding_box.upper() (split_dir) + 1 ?
-      tiles.push_back(*bi) : coalescible.push_back(*bi);
+   for ( hier::BoxContainer::const_iterator bi=upper_boxes.begin(); bi!=upper_boxes.end(); ++bi ) {
+      bi->lower()(split_dir) > lower_bounding_box.upper()(split_dir)+1 ?
+         boxes.push_back(*bi) : coalescible.push_back(*bi);
    }
-   coalescible.coalesce();
-   tiles.spliceBack(coalescible);
+   if ( coalescible.size() == static_cast<int>(old_size) ) {
+      coalescible.coalesce();
+   }
+   else {
+      coalesceBoxes(coalescible);
+   }
+
+   boxes.spliceBack(coalescible);
+
+   return;
 }
 
 /*
@@ -1331,7 +1377,7 @@ TileClustering::coalesceClusters(
    boost::shared_ptr<hier::Connector>& tag_to_tile)
 {
    if (d_print_steps) {
-      tbox::plog << "TileClustering::coalesceClusters: entered without remote extent." << std::endl;
+      tbox::plog << "TileClustering::coalesceClusters: entered." << std::endl;
    }
 
    /*
@@ -1344,7 +1390,8 @@ TileClustering::coalesceClusters(
 
       hier::LocalId local_id(0);
 
-      const int nblocks = tile_box_level.getGridGeometry()->getNumberBlocks();
+      const int nblocks =
+         static_cast<int>(tile_box_level.getGridGeometry()->getNumberBlocks());
 
       for (int b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);
@@ -1353,7 +1400,7 @@ TileClustering::coalesceClusters(
 
          if (!block_boxes.empty()) {
             block_boxes.unorder();
-            coalesceTiles(block_boxes, block_boxes.getBoundingBox());
+            coalesceBoxes(block_boxes);
             TBOX_omp_set_lock(&l_outputs);
             box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end());
             TBOX_omp_unset_lock(&l_outputs);
@@ -1373,6 +1420,11 @@ TileClustering::coalesceClusters(
    tile_box_level.deallocateGlobalizedVersion();
 
    if (box_vector.size() != static_cast<size_t>(tile_box_level.getLocalNumberOfBoxes())) {
+
+      if (d_print_steps) {
+         tbox::plog << "TileClustering::coalesceClusters: starting coalesce adjustment."
+                    << "\n";
+      }
 
       d_object_timers->t_coalesce_adjustment->start();
 
@@ -1448,7 +1500,7 @@ TileClustering::coalesceClusters(
    }
 
    if (d_print_steps) {
-      tbox::plog << "TileClustering::coalesceClusters: leaving without remote extent." << std::endl;
+      tbox::plog << "TileClustering::coalesceClusters: leaving." << std::endl;
    }
 }
 
@@ -1475,6 +1527,8 @@ TileClustering::setTimerPrefix(
             timer_prefix + "::findBoxesContainingTags()");
       d_object_timers->t_cluster = tm->getTimer(
             timer_prefix + "::findBoxesContainingTags()_cluster");
+      d_object_timers->t_cluster_local = tm->getTimer(
+            timer_prefix + "::findBoxesContainingTags()_cluster_local");
       d_object_timers->t_coalesce = tm->getTimer(
             timer_prefix + "::findBoxesContainingTags()_coalesce");
       d_object_timers->t_coalesce_adjustment = tm->getTimer(

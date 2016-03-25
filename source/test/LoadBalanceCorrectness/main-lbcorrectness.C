@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance and quality of TreeLoadBalancer.
  *
  ************************************************************************/
@@ -739,7 +739,7 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L0.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L0.getGlobalBoundingBox(hier::BlockId(0))),
             min_size,
             required_connector_width);
          L0_to_L1->assertOverlapCorrectness();
@@ -932,7 +932,7 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L1.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L1.getGlobalBoundingBox(hier::BlockId(0))),
             min_size,
             required_connector_width);
 
@@ -1340,7 +1340,7 @@ void refineHead(
       head.getRefinementRatio() * refinement_ratio);
    head.finalize();
 
-   const hier::IntVector& head_to_ref_width =
+   hier::IntVector head_to_ref_width =
       refinement_ratio * head_to_ref.getConnectorWidth();
    head_to_ref.setBase(head);
    head_to_ref.setWidth(head_to_ref_width, true);

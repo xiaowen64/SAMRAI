@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -85,11 +85,13 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
    hier::IntVector effective_cut_factor = cut_factor;
-   if (d_tile_size != hier::IntVector::getOne(d_dim)) {
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         while (effective_cut_factor[d] / d_tile_size[d] * d_tile_size[d] !=
-                effective_cut_factor[d]) {
-            effective_cut_factor[d] += cut_factor[d];
+   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
+      const size_t nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+      for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+         for ( unsigned int d=0; d<d_dim.getValue(); ++d ) {
+            while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+               effective_cut_factor(b,d) += cut_factor[d];
+            }
          }
       }
    }
@@ -99,7 +101,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    d_bad_interval = bad_interval;
    d_cut_factor = effective_cut_factor;
    d_block_domain_boxes.clear();
-   int nblocks =
+   size_t nblocks =
       domain_box_level.getGridGeometry()->getNumberBlocks();
    d_block_domain_boxes.resize(nblocks);
 
@@ -752,10 +754,10 @@ GraphLoadBalancer::coalesceBoxLevel(
 
       const int my_rank = level_boxes.begin()->getOwnerRank();
 
-      int nblocks = level.getGridGeometry()->getNumberBlocks();
+      size_t nblocks = level.getGridGeometry()->getNumberBlocks();
       hier::LocalId local_id(0);
 
-      for (int b = 0; b < nblocks; ++b) {
+      for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);
 
          hier::BoxContainer block_boxes(level_boxes, block_id);

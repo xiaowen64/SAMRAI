@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -39,7 +39,7 @@ class EdgeIterator;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::EdgeOverlap
+ * @see EdgeOverlap
  */
 
 class EdgeGeometry:public hier::BoxGeometry

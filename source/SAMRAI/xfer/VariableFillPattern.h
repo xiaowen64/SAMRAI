@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -39,8 +39,8 @@ namespace xfer {
  * near a patch boundary.
  *
  * @see hier::BoxOverlap
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class VariableFillPattern

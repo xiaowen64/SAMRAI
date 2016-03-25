@@ -3,11 +3,12 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with MappingConnectors.
  *
  ************************************************************************/
 #include "SAMRAI/hier/BoxContainerUtils.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -269,9 +270,9 @@ MappingConnectorAlgorithm::modify(
             true) == 0);
       TBOX_ASSERT(old_to_new.checkOverlapCorrectness(true, false) == 0);
       TBOX_ASSERT(!new_to_old ||
-         new_to_old->checkOverlapCorrectness(true, false) == 0);
+                  new_to_old->checkOverlapCorrectness(true, false) == 0);
       TBOX_ASSERT(!new_to_old ||
-         old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
+                  old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
    }
 
    d_object_timers->t_modify_public->stop();
@@ -873,13 +874,13 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                      tbox::plog << std::endl;
                   }
                   if (anchor_to_new.hasLocalNeighbor(ianchor->getBoxId(),
-                         old_box_gone)) {
+                                                     old_box_gone)) {
                      if (s_print_steps == 'y') {
                         tbox::plog << "    Removing neighbor " << old_box_gone
                                    << " from list for " << *ianchor << std::endl;
                      }
                      anchor_to_new.eraseNeighbor(old_box_gone,
-                        ianchor->getBoxId());
+                                                 ianchor->getBoxId());
                   }
 
                   ++ianchor;
@@ -907,7 +908,8 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                mesg.insert(mesg.end(), 0);
                do {
                   mesg.insert(mesg.end(), ianchor->getLocalId().getValue());
-                  mesg.insert(mesg.end(), ianchor->getBlockId().getBlockValue());
+                  mesg.insert(mesg.end(), 
+                     static_cast<int>(ianchor->getBlockId().getBlockValue()));
                   ++mesg[i_count];
                   if (s_print_steps == 'y') tbox::plog
                      << "    Request change " << mesg[i_count]
@@ -1273,7 +1275,7 @@ MappingConnectorAlgorithm::privateModify_discover(
  * Find overlaps from visible_base_nabrs to head_rbbt.  Find only
  * overlaps for Boxes owned by owner_rank.
  *
- * On input, base_ni points to the first Box in visible_base_nabrs
+ * On entry, base_ni points to the first Box in visible_base_nabrs
  * owned by owner_rank.  Increment base_ni past those Boxes
  * processed and remove them from visible_base_nabrs.
  *
@@ -1299,6 +1301,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const InvertedNeighborhoodSet& inverted_nbrhd,
    const IntVector& head_refinement_ratio) const
 {
+   d_object_timers->t_modify_find_overlaps_for_one_process->start();
+
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       old.getGridGeometry());
@@ -1313,49 +1317,73 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                     << base_box << std::endl;
       }
       Box compare_box = base_box;
-      compare_box.grow(mapped_connector.getConnectorWidth());
-      if (unmapped_connector.getHeadCoarserFlag()) {
-         compare_box.coarsen(unmapped_connector.getRatio());
-      } else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
-         compare_box.refine(unmapped_connector_transpose.getRatio());
+      BoxContainer compare_boxes;
+
+      if (grid_geometry->getNumberBlocks() == 1 ||
+          grid_geometry->hasIsotropicRatios()) {
+         compare_box.grow(mapped_connector.getConnectorWidth());
+         if (unmapped_connector.getHeadCoarserFlag()) {
+            compare_box.coarsen(unmapped_connector.getRatio());
+         }
+         else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
+            compare_box.refine(unmapped_connector_transpose.getRatio());
+         }
+         compare_boxes.push_back(compare_box);
+      } else {
+         TBOX_ASSERT(unmapped_connector.getRatio() ==
+                     unmapped_connector_transpose.getRatio());
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(
+            compare_boxes,
+            compare_box,
+            grid_geometry,
+            mapped_connector.getBase().getRefinementRatio(),
+            unmapped_connector.getRatio(),
+            mapped_connector.getConnectorWidth(), 
+            unmapped_connector_transpose.getHeadCoarserFlag(),
+            unmapped_connector.getHeadCoarserFlag());
       }
 
-      BlockId compare_box_block_id(base_box.getBlockId());
-      Box transformed_compare_box(compare_box);
-
       std::vector<Box> found_nabrs;
-      InvertedNeighborhoodSet::const_iterator ini =
-         inverted_nbrhd.find(base_box);
-      if (ini != inverted_nbrhd.end()) {
-         const BoxIdSet& old_indices = ini->second;
+      for (BoxContainer::iterator c_itr = compare_boxes.begin();
+           c_itr != compare_boxes.end(); ++c_itr) {
+         const Box& comp_box = *c_itr;
+         BlockId compare_box_block_id(comp_box.getBlockId());
+         Box transformed_compare_box(comp_box);
 
-         for (BoxIdSet::const_iterator na = old_indices.begin();
-              na != old_indices.end(); ++na) {
-            Connector::ConstNeighborhoodIterator nbrhd =
-               mapping_connector.findLocal(*na);
-            if (nbrhd != mapping_connector.end()) {
-               /*
-                * There are anchor Boxes with relationships to
-                * the old Box identified by *na.
-                */
-               for (Connector::ConstNeighborIterator naa =
+         InvertedNeighborhoodSet::const_iterator ini =
+            inverted_nbrhd.find(base_box);
+         if (ini != inverted_nbrhd.end()) {
+            const BoxIdSet& old_indices = ini->second;
+
+            for (BoxIdSet::const_iterator na = old_indices.begin();
+                 na != old_indices.end(); ++na) {
+               Connector::ConstNeighborhoodIterator nbrhd =
+                  mapping_connector.findLocal(*na);
+               if (nbrhd != mapping_connector.end()) {
+                  /*
+                   * There are anchor Boxes with relationships to
+                   * the old Box identified by *na.
+                   */
+                  for (Connector::ConstNeighborIterator naa =
                        mapping_connector.begin(nbrhd);
-                    naa != mapping_connector.end(nbrhd); ++naa) {
-                  const Box& new_nabr(*naa);
-                  if (compare_box_block_id != new_nabr.getBlockId()) {
-                     // Re-transform compare_box and note its new BlockId.
-                     transformed_compare_box = compare_box;
-                     compare_box_block_id = new_nabr.getBlockId();
-                     if (compare_box_block_id != base_box.getBlockId()) {
-                        grid_geometry->transformBox(
-                           transformed_compare_box,
-                           head_refinement_ratio,
-                           new_nabr.getBlockId(),
-                           base_box.getBlockId());
+                       naa != mapping_connector.end(nbrhd); ++naa) {
+                     const Box& new_nabr(*naa);
+                     transformed_compare_box = comp_box;
+                     bool do_intersect = true;
+                     if (compare_box_block_id != new_nabr.getBlockId()) {
+                        // Re-transform compare_box and note its new BlockId.
+                        do_intersect = 
+                           grid_geometry->transformBox(
+                              transformed_compare_box,
+                              head_refinement_ratio,
+                              new_nabr.getBlockId(),
+                              compare_box_block_id);
                      }
-                  }
-                  if (transformed_compare_box.intersects(new_nabr)) {
-                     found_nabrs.insert(found_nabrs.end(), *naa);
+                     if (do_intersect) {
+                        if (transformed_compare_box.intersects(new_nabr)) {
+                           found_nabrs.insert(found_nabrs.end(), *naa);
+                        }
+                     }
                   }
                }
             }
@@ -1373,12 +1401,13 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          if (base_box.getOwnerRank() != rank) {
             // Pack up info for sending.
             ++send_mesg[remote_box_counter_index];
-            const int subsize = 3
-               + BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
+            const int subsize = 3 +
+               BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = base_box.getLocalId().getValue();
-            *(submesg++) = base_box.getBlockId().getBlockValue();
+            *(submesg++) = static_cast<int>(
+               base_box.getBlockId().getBlockValue());
             *(submesg++) = static_cast<int>(found_nabrs.size());
             for (std::vector<Box>::const_iterator na = found_nabrs.begin();
                  na != found_nabrs.end(); ++na) {
@@ -1416,6 +1445,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          }
       }
    }
+
+   d_object_timers->t_modify_find_overlaps_for_one_process->stop();
 }
 
 /*
@@ -1488,6 +1519,8 @@ MappingConnectorAlgorithm::getAllTimers(
       getTimer(timer_prefix + "::privateModify_removeAndCache()");
    timers.t_modify_discover_and_send = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::privateModify_discoverAndSend()");
+   timers.t_modify_find_overlaps_for_one_process = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify_findOverlapsForOneProcess()");
    timers.t_modify_receive_and_unpack = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::receiveAndUnpack()");
    timers.t_modify_MPI_wait = tbox::TimerManager::getManager()->

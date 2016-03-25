@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Euler gas dynamics sample application
  *
  ************************************************************************/
@@ -784,7 +784,7 @@ static void dumpMatlabData1dPencil(
             hierarchy->getPatchLevel(l1 + 1));
          hier::IntVector coarsen_ratio =
             finer_level->getRatioToCoarserLevel();
-         hier::BoxContainer takeaway = hier::BoxContainer(finer_level->getBoxes());
+         hier::BoxContainer takeaway(finer_level->getBoxes());
          takeaway.coarsen(coarsen_ratio);
          outboxes[l1].removeIntersections(takeaway);
       }

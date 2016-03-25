@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Singleton timer manager class.
  *
  ************************************************************************/
@@ -242,7 +242,7 @@ namespace tbox {
  * may lead to memory problems.  We recommend {\em not to use timers
  * to time recursive function calls}.
  *
- * @see tbox::Timer
+ * @see Timer
  */
 
 class TimerManager

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
@@ -90,12 +90,12 @@ namespace pdat {
  * The data type TYPE must define a default constructor (that takes no
  * arguments) and also the assignment operator.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::OuternodeDataFactory
- * @see pdat::OuternodeGeometry
- * @see pdat::NodeIterator
- * @see pdat::NodeIndex
+ * @see OuternodeDataFactory
+ * @see OuternodeGeometry
+ * @see NodeIterator
+ * @see NodeIndex
  */
 
 template<class TYPE>

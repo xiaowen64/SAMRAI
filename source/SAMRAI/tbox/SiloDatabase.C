@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -794,7 +794,7 @@ SiloDatabase::getDatabaseBoxVector(
    int offset = ca->elemlengths[0];
    for (int i = 0; i < (ca->elemlengths[0]); ++i) {
       TBOX_ASSERT(values[i] > 0 && values[i] <= SAMRAI::MAX_DIM_VAL);
-      boxVector[i].d_data.d_dimension = static_cast<tbox::Dimension::dir_t>(values[i]);
+      boxVector[i].d_data.d_dimension = static_cast<Dimension::dir_t>(values[i]);
       /*
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Implementation of TreeLoadBalancer.
  *
  ************************************************************************/
@@ -301,9 +301,9 @@ private:
          return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
       }
 private:
-      bool lexicalIndexLessThan(const hier::IntVector& a,
-                                const hier::IntVector& b) const {
-         for (hier::IntVector::dir_t i = 0; i < a.getDim().getValue(); ++i) {
+      bool lexicalIndexLessThan(const hier::Index& a,
+                                const hier::Index& b) const {
+         for (hier::Index::dir_t i = 0; i < a.getDim().getValue(); ++i) {
             if (a(i) != b(i)) return a(i) < b(i);
          }
          return false;

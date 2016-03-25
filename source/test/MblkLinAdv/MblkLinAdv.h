@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -245,7 +245,7 @@ public:
    setMappedGridOnPatch(
       const hier::Patch& patch,
       const int level_number,
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /**
     * Write state of MblkLinAdv object to the given database for restart.

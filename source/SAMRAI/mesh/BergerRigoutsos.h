@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Asynchronous Berger-Rigoutsos clustering algorithm.
  *
  ************************************************************************/
@@ -31,7 +31,7 @@ class BergerRigoutsosNode;
 /*!
  * @brief Asynchronous Berger-Rigoutsos implementation.
  * This class is derived from the abstract base class
- * mesh::BoxGeneratorStrategy.  Thus, it serves as a concrete
+ * BoxGeneratorStrategy.  Thus, it serves as a concrete
  * implementation of the box generator Strategy pattern interface.
  *
  * This class uses the BergerRigoutsosNode class
@@ -43,7 +43,7 @@ class BergerRigoutsosNode;
  * - Sorts the output data (if user requests).
  * - Performs some additional error checking.
  * For more details on the parallel implementation,
- * see mesh::BergerRigoutsosNode.
+ * see BergerRigoutsosNode.
  *
  * <b> Input Parameters </b>
  *
@@ -228,7 +228,7 @@ public:
    virtual ~BergerRigoutsos();
 
    /*!
-    * @brief Implement the mesh::BoxGeneratorStrategy interface
+    * @brief Implement the BoxGeneratorStrategy interface
     * method of the same name.
     *
     * Create a set of boxes that covers all integer tags on

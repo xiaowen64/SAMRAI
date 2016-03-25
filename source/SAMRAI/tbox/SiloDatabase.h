@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -40,7 +40,7 @@ namespace tbox {
  * It is assumed that all processors will access the database in the same
  * manner.  Error reporting is done using the SAMRAI error reporting macros.
  *
- * @see tbox::Database
+ * @see Database
  */
 
 class SiloDatabase:public Database

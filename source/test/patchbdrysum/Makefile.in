@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
 ## Description:   makefile for SAMRAI patch boundary hierarchy sum test 
 ##
 #########################################################################
@@ -20,19 +20,27 @@ default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DDISPLAY -DTESTING=1
+SUBDIRS = fortran
 
-CXX_OBJS      = main.o HierSumTest.o
-F_OBJS       = edgeops2d.o edgeops3d.o
+CPPFLAGS_EXTRA= -DDISPLAY -DTESTING=1
 
 NUM_TESTS = 17
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
+CXX_OBJS      = main.o HierSumTest.o
+F_OBJS       = fortran/edgeops2d.o fortran/edgeops3d.o
+
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
+
+# Prevents "No rule to make target" error.  Built in the rule for main.
+fortran/edgeops2d.o:
+
+fortran/edgeops3d.o:
 
 check:
 	$(MAKE) check2d
@@ -85,17 +93,7 @@ checkclean:
 clean: checkclean
 	$(CLEAN_COMMON_TEST_FILES)
 	$(RM) main
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 
 include $(SRCDIR)/Makefile.depend
-
-FORTRAN       = $(SRCDIR)
-M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
-
-edgeops2d.o:	$(FORTRAN)/edgeops2d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/edgeops2d.m4 > edgeops2d.f
-	$(F77) $(FFLAGS) -c edgeops2d.f -o $@
-
-edgeops3d.o:	$(FORTRAN)/edgeops3d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/edgeops3d.m4 > edgeops3d.f
-	$(F77) $(FFLAGS) -c edgeops3d.f -o $@

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -23,7 +23,7 @@ namespace xfer {
  * fills the entire region the destination level, both interior and
  * ghost.
  *
- * For documentation on this interface see @ref xfer::PatchLevelFillPattern
+ * For documentation on this interface see @ref PatchLevelFillPattern
  *
  * The fill boxes for this PatchLevelFillPattern will consist of
  * the entire region of the destination level that can be filled, both
@@ -34,8 +34,8 @@ namespace xfer {
  * PatchLevelFillPattern argument, this class will be used as the
  * default PatchLevelFillPattern.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class PatchLevelFullFillPattern:public PatchLevelFillPattern

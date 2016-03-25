@@ -3,12 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Routines for processing boxes within a domain of index space.
  *
  ************************************************************************/
 #include "SAMRAI/hier/BoxUtilities.h"
 
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -125,6 +126,7 @@ BoxUtilities::checkBoxConstraints(
    TBOX_ASSERT(min_size > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
+   BlockId::block_t b = box.getBlockId().getBlockValue();
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -161,8 +163,9 @@ BoxUtilities::checkBoxConstraints(
     */
    std::vector<bool> factor_is_bad(dim.getValue());
    bool factor_violation = false;
+   IntVector block_cut_factor(cut_factor.getBlockVector(box.getBlockId()));
    for (id = 0; id < dim.getValue(); ++id) {
-      if ((box.numberCells(id) % cut_factor(id)) != 0) {
+      if ((box.numberCells(id) % block_cut_factor(id)) != 0) {
          factor_is_bad[id] = true;
          factor_violation = true;
       } else {
@@ -171,7 +174,7 @@ BoxUtilities::checkBoxConstraints(
    }
 
    if (factor_violation) {
-      tbox::perr << "\nBox = " << box << " -- cut factor = " << cut_factor
+      tbox::perr << "\nBox = " << box << " -- cut factor = " << block_cut_factor
                  << std::endl;
       for (id = 0; id < dim.getValue(); ++id) {
          if (factor_is_bad[id]) {
@@ -212,7 +215,7 @@ BoxUtilities::checkBoxConstraints(
 
             int blo = box.lower(id);
             int bhi = box.upper(id);
-            int bad = bad_interval(id);
+            int bad = bad_interval(b,id);
 
             /*
              * Test lower box face in single direction.
@@ -357,6 +360,8 @@ BoxUtilities::chopBoxes(
             cut_factor);
 
       if (chop_box) {
+         IntVector block_cut_factor(
+            cut_factor.getBlockVector(box.getBlockId()));
          TBOX_ASSERT(box.getBlockId().isValid());
          BoxContainer phys_block_boxes(physical_boxes, box.getBlockId());
 
@@ -376,7 +381,7 @@ BoxUtilities::chopBoxes(
                   bad_cut_points,
                   box,
                   min_size(id),
-                  cut_factor(id));
+                  block_cut_factor(id));
 
             }
 
@@ -861,13 +866,14 @@ BoxUtilities::findBestCutPointsGivenMax(
 
    cut_points.resize(dim.getValue());
 
+   IntVector block_cut_factor(cut_factor.getBlockVector(box.getBlockId()));
    for (id = 0; id < dim.getValue(); ++id) {
       if (findBestCutPointsForDirectionGivenMax(id,
              cut_points[id],
              box,
              max_size(id),
              min_size(id),
-             cut_factor(id))) {
+             block_cut_factor(id))) {
          chop_ok = true;
       }
    }
@@ -1017,12 +1023,13 @@ BoxUtilities::findBestCutPointsGivenNumber(
    tbox::Dimension::dir_t id;
 
    cut_points.resize(dim.getValue());
+   IntVector block_cut_factor(cut_factor.getBlockVector(box.getBlockId()));
 
    std::vector<bool> chop_dir(dim.getValue());
    for (id = 0; id < dim.getValue(); ++id) {
       cut_points[id].clear();
       chop_dir[id] = (((number_boxes(id) <= 1)
-                       || (box.numberCells(id) % cut_factor(id))
+                       || (box.numberCells(id) % block_cut_factor(id))
                        || (box.numberCells(id) < 2 * min_size(id))
                        || (box.numberCells(id) <
                            (number_boxes(id) * min_size(id))))
@@ -1040,7 +1047,7 @@ BoxUtilities::findBestCutPointsGivenNumber(
                 box,
                 number_boxes(id),
                 min_size(id),
-                cut_factor(id))) {
+                block_cut_factor(id))) {
             chop_ok = true;
          }
 
@@ -1204,12 +1211,13 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
+   BlockId::block_t b = box.getBlockId().getBlockValue();
 
    bool found_bad = false;
 
    if (!physical_boxes.empty()) {
 
-      int bad = bad_interval(id);
+      int bad = bad_interval(b,id);
 
       tbox::Dimension::dir_t id2 = 0;
       while ((id2 < dim.getValue()) && !found_bad) {
@@ -1339,6 +1347,8 @@ BoxUtilities::findBadCutPointsForDirection(
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
 
+   BlockId::block_t b = box.getBlockId().getBlockValue();
+
    int ic;
 
    /*
@@ -1406,7 +1416,7 @@ BoxUtilities::findBadCutPointsForDirection(
                   bad_cuts,
                   box,
                   *bbox,
-                  bad_interval(id));
+                  bad_interval(b,id));
             }
          }
 
@@ -1445,7 +1455,7 @@ BoxUtilities::findBadCutPointsForDirection(
                   bad_cuts,
                   box,
                   *bbox,
-                  bad_interval(id));
+                  bad_interval(b,id));
             }
          }
 
@@ -1487,13 +1497,14 @@ BoxUtilities::fixBadCutPoints(
    TBOX_ASSERT(cut_factor > IntVector::getZero(dim));
 #endif
 
+   IntVector block_cut_factor(cut_factor.getBlockVector(box.getBlockId()));
    for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
       fixBadCutPointsForDirection(id,
          cuts[id],
          bad_cuts[id],
          box,
          min_size(id),
-         cut_factor(id));
+         block_cut_factor(id));
    }
 }
 
@@ -1792,6 +1803,192 @@ BoxUtilities::makeNonOverlappingBoxContainers(
       box_list.removeIntersections(remove);
    }
 }
+
+
+/*
+ *************************************************************************
+ *
+ * Grow a box by a given width and chop it at block boundaries.
+ *
+ *************************************************************************
+ */
+
+void
+BoxUtilities::growAndAdjustAcrossBlockBoundary(
+   BoxContainer& grown_boxes,
+   const Box& box,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const IntVector& ratio_to_level_zero,
+   const IntVector& refine_coarsen_ratio,
+   const IntVector& grow_width,
+   bool do_refine,
+   bool do_coarsen)
+{
+   TBOX_ASSERT(do_refine != do_coarsen || (!do_refine && !do_coarsen));
+
+   const size_t nblocks = grid_geom->getNumberBlocks();
+
+   TBOX_ASSERT(ratio_to_level_zero.getNumBlocks() == nblocks);
+   TBOX_ASSERT(refine_coarsen_ratio.getNumBlocks() == nblocks ||
+               refine_coarsen_ratio == 1);
+
+   const BlockId& base_block = box.getBlockId();
+
+   Box grow_box(box);
+
+   /*
+    * If coarsening, change everything to the coarsened index space.
+    */
+   if (do_coarsen) {
+      grow_box.coarsen(refine_coarsen_ratio);
+   }
+
+   IntVector compare_ratio(ratio_to_level_zero);
+   IntVector effective_grow_width(grow_width, nblocks);
+   if (do_coarsen) {
+      compare_ratio /= refine_coarsen_ratio;
+      effective_grow_width.ceilingDivide(refine_coarsen_ratio);
+   }
+
+   /*
+    * Grow and intersect with the domain on base block.
+    */
+   grow_box.grow(effective_grow_width);
+
+   BoxContainer domain_boxes;
+   grid_geom->computePhysicalDomain(
+      domain_boxes,
+      compare_ratio,
+      base_block);
+
+   domain_boxes.unorder();
+   domain_boxes.intersectBoxes(grow_box);
+
+   if (do_refine) {
+      domain_boxes.refine(refine_coarsen_ratio);
+   }
+
+   grown_boxes.spliceBack(domain_boxes);
+
+   /*
+    * Uniform width means the same value of grow width for all directions on
+    * all blocks.  The intersections with neighbor blocks are simpler if there
+    * is uniform width
+    */
+   bool uniform_width = true;
+   if (effective_grow_width.min() != effective_grow_width.max()) {
+      uniform_width = false;
+   }
+
+
+   /*
+    * If grow_box is contained within its own block, there is no need to
+    * check neighboring blocks, so we are done.
+    */
+   if (uniform_width && grown_boxes.size() == 1 &&
+       grown_boxes.front().isSpatiallyEqual(grow_box)) {
+      return;
+   }
+
+   /*
+    * Grow into neighbors.
+    */
+   for (BaseGridGeometry::ConstNeighborIterator ni =
+        grid_geom->begin(base_block); ni != grid_geom->end(base_block); ++ni) {
+
+      domain_boxes.clear(); 
+
+      const BaseGridGeometry::Neighbor& neighbor(*ni);
+      const BlockId& nbr_block = neighbor.getBlockId();
+
+      /*
+       * First step:  Grow into neighbor block by transforming and then
+       * growing, using the neighbor block's portion of effective_grow_width.
+       */
+      grid_geom->computePhysicalDomain(
+         domain_boxes,
+         compare_ratio,
+         nbr_block);
+      domain_boxes.unorder();
+
+      Box nbr_grow_box(box);
+      if (do_coarsen) {
+         nbr_grow_box.coarsen(refine_coarsen_ratio);
+      }
+      grid_geom->transformBox(nbr_grow_box,
+                              compare_ratio,
+                              nbr_block,
+                              base_block);
+      nbr_grow_box.grow(effective_grow_width);
+
+      BoxContainer nbr_block_boxes(domain_boxes);
+      nbr_block_boxes.unorder();
+      nbr_block_boxes.intersectBoxes(nbr_grow_box);
+
+      BoxContainer nbr_grown_boxes;
+      if (!nbr_block_boxes.empty()) {
+         if (do_refine) {
+            nbr_block_boxes.refine(refine_coarsen_ratio);
+         }
+
+         nbr_grown_boxes.spliceBack(nbr_block_boxes);
+      }
+
+      if (!uniform_width) {
+
+         /*
+          * When width is not uniform, we do a second step of growing the
+          * box using the base block's grow width and then transforming.
+          */
+
+         nbr_block_boxes.spliceBack(domain_boxes);
+
+         nbr_grow_box = box;
+         if (do_coarsen) {
+            nbr_grow_box.coarsen(refine_coarsen_ratio);
+         }
+         nbr_grow_box.grow(effective_grow_width);
+         grid_geom->transformBox(nbr_grow_box,
+                                 compare_ratio,
+                                 nbr_block,
+                                 base_block);
+
+         nbr_block_boxes.unorder();
+         nbr_block_boxes.intersectBoxes(nbr_grow_box);
+
+         /*
+          * nbr_grown_boxes will have the intersection results from both steps.
+          * Coalesce nbr_grown_boxes, which in most cases will reduce
+          * to one box.  In cases where it does not reduce to one, call
+          * simplify to guarantee that there is no overlapping index space in
+          * the container.
+          */
+         if (!nbr_block_boxes.empty()) {
+            if (do_refine) {
+               nbr_block_boxes.refine(refine_coarsen_ratio);
+            }
+
+            nbr_grown_boxes.spliceBack(nbr_block_boxes);
+            nbr_grown_boxes.coalesce();
+            if (nbr_grown_boxes.size() > 1) {
+               nbr_grown_boxes.simplify();
+            }
+         }
+      }
+
+      /*
+       * Splice the intersecting boxes for this neighbor onto the output
+       * container.
+       */
+      if (!nbr_grown_boxes.empty()) {
+         grown_boxes.spliceBack(nbr_grown_boxes);
+      }
+   }
+}
+
+
+
+
 
 }
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
@@ -1399,9 +1399,8 @@ VisItDataWriter::writePlotData(
 
    d_number_levels = hierarchy->getNumberOfLevels();
 
-   if (d_number_levels > static_cast<int>(d_scaling_ratios.size())) {
-      d_scaling_ratios.resize(d_number_levels, hier::IntVector(d_dim));
-   }
+   d_scaling_ratios.resize(d_number_levels,
+      hier::IntVector(d_dim, 1, hierarchy->getNumberBlocks()));
 
    for (int ln = 1; ln <= hierarchy->getFinestLevelNumber(); ++ln) {
       d_scaling_ratios[ln] =
@@ -2880,7 +2879,7 @@ VisItDataWriter::writeSummaryToHDFFile(
             if (ln == 0) {
                rtcl[idx] = VISIT_UNDEFINED_INDEX;
             } else {
-               rtcl[idx] = d_scaling_ratios[ln](i);
+               rtcl[idx] = d_scaling_ratios[ln](0,i);
             }
          }
       }
@@ -3133,7 +3132,9 @@ VisItDataWriter::writeSummaryToHDFFile(
                      dx_curr_lev[i] = ggeom->getDx()[i]; // coarsest level dx
                      dx[next] = dx_curr_lev[i];
                   } else {
-                     double scale_ratio = (double)d_scaling_ratios[ln](i);
+                     double scale_ratio =
+                        static_cast<double>(
+                           d_scaling_ratios[ln](0,i));
                      dx_curr_lev[i] = dx_curr_lev[i] / scale_ratio;
                      dx[next] = dx_curr_lev[i];
                   }
@@ -3267,7 +3268,9 @@ VisItDataWriter::writeSummaryToHDFFile(
           * Set the dx for the next level
           */
          for (i = 0; i < d_dim.getValue(); ++i) {
-            double scale_ratio = (double)d_scaling_ratios[ln](i);
+            double scale_ratio =
+               static_cast<double>(
+                  d_scaling_ratios[ln](0,i));
             dx_curr_lev[i] = dx_curr_lev[i] / scale_ratio;
          }
 
@@ -3638,7 +3641,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          hierarchy->getPatchLevel(ln)->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       boost::shared_ptr<hier::BoxContainer> child_box_tree;
-      hier::IntVector ratio(d_dim);
+      hier::IntVector ratio(hier::IntVector::getZero(d_dim));
 
       if (ln != finest_level) {
          boost::shared_ptr<hier::PatchLevel> child_patch_level(

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI class to manage package startup and shutdown
  *
  ************************************************************************/
@@ -50,8 +50,8 @@ namespace tbox {
  * Additionally this class manages static data that controls the maximum
  * number of patch data components that can be allowed.
  *
- * @see tbox::SAMRAI_MPI
- * @see tbox::StartupShutdownManager
+ * @see SAMRAI_MPI
+ * @see StartupShutdownManager
  */
 
 class SAMRAIManager

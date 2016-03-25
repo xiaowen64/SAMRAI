@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
@@ -177,7 +177,7 @@ public:
    /*!
     * @brief Get a vector of edge boundary boxes for a specified patch.
     *
-    * @see hier::BoundaryBox for more information.
+    * @see BoundaryBox for more information.
     *
     * Note that edge boxes are only meaningful if the dimension is > 1.
     * The specified patch must exist in the level used to compute
@@ -205,7 +205,7 @@ public:
    /*!
     * @brief Get a vector of face boundary boxes for a specified patch.
     *
-    * @see hier::BoundaryBox for more information.
+    * @see BoundaryBox for more information.
     *
     * Note that face boxes are only meaningful if the dimension is > 2.
     * The specified patch must exist in the level used to compute

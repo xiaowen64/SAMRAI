@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Box geometry description for overlap computations
  *
  ************************************************************************/
@@ -62,9 +62,9 @@ namespace hier {
  * then data will be copied only into the ghost cell values and not the
  * interior values of the patch.
  *
- * @see hier::BoxOverlap
- * @see hier::PatchDataFactory
- * @see hier::PatchData
+ * @see BoxOverlap
+ * @see PatchDataFactory
+ * @see PatchData
  */
 
 class BoxGeometry

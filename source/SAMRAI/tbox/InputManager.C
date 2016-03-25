@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   An input manager singleton class that parses input files
  *
  ************************************************************************/
@@ -128,7 +128,7 @@ InputManager::parseInputFile(
    int worked = (fstream ? 1 : 0);
    mpi.Bcast(&worked, 1, MPI_INT, 0);
    if (!worked) {
-      TBOX_ERROR("tbox::InputManager: Could not open input file``"
+      TBOX_ERROR("InputManager: Could not open input file``"
          << filename.c_str() << "''\n");
    }
 

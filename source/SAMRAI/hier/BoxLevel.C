@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Set of boxes in a box_level of a distributed box graph.
  *
  ************************************************************************/
@@ -55,7 +55,7 @@ BoxLevel::BoxLevel(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom):
 
    d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
-   d_ratio(dim, 0),
+   d_ratio(IntVector::getZero(dim)),
 
    d_local_number_of_cells(0),
    d_global_number_of_cells(0),
@@ -334,6 +334,19 @@ BoxLevel::initializePrivate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
    t_initialize_private->start();
 
+   d_ratio = ratio;
+   if (d_ratio.getNumBlocks() != grid_geom->getNumberBlocks()) {
+      if (d_ratio.max() == d_ratio.min()) {
+         size_t new_size = grid_geom->getNumberBlocks();
+         d_ratio = IntVector(d_ratio, new_size);
+      } else {
+         TBOX_ERROR("BoxLevel::initializePrivate: anisotropic refinement\n"
+            << "ratio " << ratio << " must be \n"
+            << "defined for " << grid_geom->getNumberBlocks() << " blocks."
+            << std::endl);
+      }
+   }
+
    clearForBoxChanges();
 
    d_mpi = mpi;
@@ -355,7 +368,6 @@ BoxLevel::initializePrivate(
       }
    }
 
-   d_ratio = ratio;
    d_parallel_state = parallel_state;
    d_global_number_of_cells = 0;
    d_global_number_of_boxes = 0;
@@ -460,7 +472,7 @@ BoxLevel::clear()
       d_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL);
       d_boxes.clear();
       d_global_boxes.clear();
-      d_ratio(0) = 0;
+      d_ratio(0,0) = 0;
       d_local_number_of_cells = 0;
       d_global_number_of_cells = 0;
       d_local_number_of_boxes = 0;
@@ -515,7 +527,6 @@ BoxLevel::swap(
 
       int tmpint;
       bool tmpbool;
-      IntVector tmpvec(level_a.getDim());
       Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
@@ -531,7 +542,7 @@ BoxLevel::swap(
       level_a.d_mpi = level_b.d_mpi;
       level_b.d_mpi = tmpmpi;
 
-      tmpvec = level_a.d_ratio;
+      IntVector tmpvec = level_a.d_ratio;
       level_a.d_ratio = level_b.d_ratio;
       level_b.d_ratio = tmpvec;
 
@@ -573,7 +584,7 @@ BoxLevel::computeLocalRedundantData()
 {
    const IntVector max_vec(d_ratio.getDim(), tbox::MathUtilities<int>::getMax());
    const IntVector& zero_vec = IntVector::getZero(d_ratio.getDim());
-   const int nblocks = d_grid_geometry->getNumberBlocks();
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
 
    d_local_number_of_boxes = 0;
    d_local_number_of_cells = 0;
@@ -588,7 +599,7 @@ BoxLevel::computeLocalRedundantData()
    for (RealBoxConstIterator ni(d_boxes.realBegin());
         ni != d_boxes.realEnd(); ++ni) {
 
-      int block_num = ni->getBlockId().getBlockValue();
+      const BlockId::block_t& block_num = ni->getBlockId().getBlockValue();
       const IntVector boxdim(ni->numberCells());
       ++d_local_number_of_boxes;
       d_local_number_of_cells += boxdim.getProduct();
@@ -622,7 +633,7 @@ BoxLevel::cacheGlobalReducedData() const
 
    t_cache_global_reduced_data->barrierAndStart();
 
-   const int nblocks = d_grid_geometry->getNumberBlocks();
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
 
    /*
     * Sum reduction is used to compute the global sums of box count
@@ -655,7 +666,7 @@ BoxLevel::cacheGlobalReducedData() const
       }
    }
 
-   if (int(d_global_bounding_box.size()) != nblocks) {
+   if (d_global_bounding_box.size() != nblocks) {
       d_global_bounding_box.resize(nblocks, Box(getDim()));
       d_global_min_box_size.resize(nblocks, IntVector(getDim()));
       d_global_max_box_size.resize(nblocks, IntVector(getDim()));
@@ -682,7 +693,7 @@ BoxLevel::cacheGlobalReducedData() const
 
          std::vector<int> send_mesg;
          send_mesg.reserve(nblocks * 4 * dim.getValue() + 4);
-         for (int bn = 0; bn < nblocks; ++bn) {
+         for (BlockId::block_t bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
                send_mesg.push_back(-d_local_bounding_box[bn].lower()[i]);
                send_mesg.push_back(d_local_bounding_box[bn].upper()[i]);
@@ -704,7 +715,7 @@ BoxLevel::cacheGlobalReducedData() const
             MPI_MAX);
 
          int tmpi = -1;
-         for (int bn = 0; bn < nblocks; ++bn) {
+         for (BlockId::block_t bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
                d_global_bounding_box[bn].setLower(static_cast<Box::dir_t>(i),
                   -recv_mesg[++tmpi]);
@@ -1039,7 +1050,6 @@ BoxLevel::addBox(
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);
    }
-   const tbox::Dimension& dim(getDim());
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually adding Boxes is a local process\n"
@@ -1517,9 +1527,18 @@ BoxLevel::putToRestart(
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
-   restart_db->putIntegerArray("d_ratio",
-      &d_ratio[0],
-      d_ratio.getDim().getValue());
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
+   for (BlockId::block_t b =0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" +
+         tbox::Utilities::intToString(static_cast<int>(b)); 
+      std::vector<int> tmp_ratio(d_ratio.getDim().getValue());
+      for (unsigned int d = 0; d < d_ratio.getDim().getValue(); ++d) {
+         tmp_ratio[d] = d_ratio(b,d);
+      }
+      restart_db->putIntegerArray(ratio_name,
+         &(tmp_ratio[0]),
+         d_ratio.getDim().getValue());
+   }
    getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 
@@ -1539,9 +1558,19 @@ BoxLevel::getFromRestart(
                                 restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
-   IntVector ratio(dim);
-   restart_db.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
+   const size_t nblocks = grid_geom->getNumberBlocks();
 
+   IntVector ratio(nblocks, dim);
+   for (BlockId::block_t b = 0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" +
+         tbox::Utilities::intToString(static_cast<int>(b));
+      std::vector<int> tmp_ratio(dim.getValue());
+      restart_db.getIntegerArray(ratio_name, &tmp_ratio[0], dim.getValue());
+      for (int d = 0; d < dim.getValue(); ++d) {
+         ratio(b,d) = tmp_ratio[d];
+      }
+   }
+ 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    const int nproc = restart_db.getInteger("d_nproc");
@@ -1657,8 +1686,8 @@ BoxLevel::recursivePrint(
    << d_global_number_of_boxes << '\n'
    << border << "Cell count     : " << d_local_number_of_cells << ", "
    << d_global_number_of_cells << '\n'
-   << border << "Bounding box   : " << getLocalBoundingBox(0) << ", "
-   << (d_global_data_up_to_date ? getGlobalBoundingBox(0) : Box(getDim()))
+   << border << "Bounding box   : " << getLocalBoundingBox(BlockId(0)) << ", "
+   << (d_global_data_up_to_date ? getGlobalBoundingBox(BlockId(0)) : Box(getDim()))
    << '\n'
    << border << "Comm,rank,nproc: " << d_mpi.getCommunicator() << ", " << d_mpi.getRank()
    << ", " << d_mpi.getSize() << '\n'

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Set of distributed box-graph relationships from one BoxLevel
  *                to another.
  *
@@ -178,7 +178,6 @@ public:
          d_mpi.setCommunicator(MPI_COMM_NULL);
          d_base_handle.reset();
          d_head_handle.reset();
-         d_base_width(0) = d_ratio(0) = 0;
          d_parallel_state = BoxLevel::DISTRIBUTED;
       }
    }
@@ -1051,7 +1050,7 @@ public:
     *
     * @param[in] base_refinement_ratio
     * @param[in] head_refinement_ratio
-    * @param[in] head_gcw The connector width in the head index space.
+    * @param[in] head_width The connector width in the head index space.
     *
     * @return A copy of the connector width converted to the base index
     * space.
@@ -1063,7 +1062,7 @@ public:
    convertHeadWidthToBase(
       const IntVector& base_refinement_ratio,
       const IntVector& head_refinement_ratio,
-      const IntVector& head_gcw);
+      const IntVector& head_width);
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.
@@ -1178,7 +1177,7 @@ public:
          d_transpose->d_transpose = this;
          d_transpose->d_owns_transpose = false;
 
-         if (d_ratio != hier::IntVector::getOne(d_ratio.getDim())) {
+         if (d_ratio != IntVector::getOne(d_ratio.getDim())) {
             if ((d_ratio * d_base_width) != d_transpose->d_base_width &&
                 d_base_width != (d_ratio * d_transpose->d_base_width)) {
 

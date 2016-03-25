@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -158,9 +158,9 @@ namespace algs {
  *    use_ghosts_to_compute_dt = TRUE
  * @endcode
  *
- * @see algs::TimeRefinementIntegrator
+ * @see TimeRefinementIntegrator
  * @see mesh::StandardTagAndInitStrategy
- * @see algs::HyperbolicPatchStrategy
+ * @see HyperbolicPatchStrategy
  */
 
 class HyperbolicLevelIntegrator:
@@ -860,6 +860,44 @@ protected:
       const double sync_time,
       const double coarse_sim_time);
 
+   /*!
+    * @brief Check the tags on a tagged level.
+    *
+    * This is a callback method that is used to check the values held in
+    * user tag PatchData.  The tag data will contain the tags created
+    * by either a gradient detector or Richardson extrapolation as well as
+    * any tags added internally by the GriddingAlgorithm (for
+    * example, buffering).
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number  Level number of the tagged level
+    * @param[in] tag_index     Patch data index for user tags
+    */
+   virtual void
+   checkUserTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index) const;
+
+   /*!
+    * @brief Check the tags on a newly-created level.
+    *
+    * This is a callback method that allow for checking tag values that
+    * have been saved on a new level that has been created during
+    * initialization or regridding.  The tag values will be the values
+    * of the user tags on the coarser level, constant-refined onto the
+    * cells of the new level.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number   Level number of the new level
+    * @param[in] tag_index      Patch data index for the new tags.
+    */
+   virtual void
+   checkNewLevelTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index) const;
+
 private:
    /*
     * Static integer constant describing class's version number.
@@ -1073,6 +1111,11 @@ private:
 
    static bool s_barrier_after_error_bdry_fill_comm;
 
+   /*!
+    * @brief For diagnostics: whether to separate major advanceLevel sections with MPI barriers.
+    */
+   bool d_barrier_advance_level_sections;
+
    /*
     * Timers interspersed throughout the class.
     */
@@ -1092,9 +1135,17 @@ private:
    static boost::shared_ptr<tbox::Timer> t_get_level_dt;
    static boost::shared_ptr<tbox::Timer> t_get_level_dt_sync;
    static boost::shared_ptr<tbox::Timer> t_advance_level;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_integrate;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_pre_integrate;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_post_integrate;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_patch_loop;
    static boost::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_comm;
    static boost::shared_ptr<tbox::Timer> t_patch_num_kernel;
+   static boost::shared_ptr<tbox::Timer> t_preprocess_flux_data;
+   static boost::shared_ptr<tbox::Timer> t_postprocess_flux_data;
    static boost::shared_ptr<tbox::Timer> t_advance_level_sync;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_compute_dt;
+   static boost::shared_ptr<tbox::Timer> t_copy_time_dependent_data;
    static boost::shared_ptr<tbox::Timer> t_std_level_sync;
    static boost::shared_ptr<tbox::Timer> t_sync_new_levels;
    static boost::shared_ptr<tbox::Timer> t_barrier_after_error_bdry_fill_comm;

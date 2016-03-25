@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -60,9 +60,9 @@ namespace xfer {
  *       CoarsenSchedule::setScheduleGenerationMethod(), which
  *       sets the option for all instances of the class.
  *
- * @see xfer::CoarsenAlgorithm
- * @see xfer::CoarsenPatchStrategy
- * @see xfer::CoarsenClasses
+ * @see CoarsenAlgorithm
+ * @see CoarsenPatchStrategy
+ * @see CoarsenClasses
  */
 
 class CoarsenSchedule

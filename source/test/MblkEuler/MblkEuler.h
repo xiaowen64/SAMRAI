@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -382,7 +382,7 @@ private:
    int d_dom_current_nboxes;
 
    /// the blocks bounding the current patch
-   int d_dom_local_blocks[6];
+   hier::BlockId::block_t d_dom_local_blocks[6];
 
    //
    // ====================== Refinement Data (private) =======================

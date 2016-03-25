@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -30,8 +30,8 @@ NodeIndex::NodeIndex(
    TBOX_ASSERT_OBJDIM_EQUALITY2(* this, rhs);
 
    setOffsets();
-   hier::IntVector::operator = (
-      rhs + s_offsets[getDim().getValue() - 1][(int)corner]);
+   hier::Index::operator = (
+      rhs + s_offsets[getDim().getValue() - 1][static_cast<size_t>(corner)]);
 }
 
 NodeIndex::NodeIndex(
@@ -47,7 +47,7 @@ NodeIndex::NodeIndex(
    }
 #endif
    setOffsets();
-   hier::IntVector::operator = (
+   hier::Index::operator = (
       rhs + corner);
 }
 

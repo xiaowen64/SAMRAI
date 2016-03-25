@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all transfer operators.
  *
  ************************************************************************/
@@ -35,15 +35,15 @@ namespace hier {
 /*!
  * @brief Class TransferOperatorRegistry is intended to serve as the registry
  * for SAMRAI transfer operators.  It will be a singleton object held by class
- * hier::BaseGridGeometry.
+ * BaseGridGeometry.
  *
- * This hier::TransferOperatorRegistry class provides a lookup mechanism to
+ * This TransferOperatorRegistry class provides a lookup mechanism to
  * search for time interpolation and spatial coarsening/refining operators.
  * That is, algorithms and applications that manage communication on an
- * AMR hierarchy may query the hier::TransferOperatorRegistry object for
+ * AMR hierarchy may query the TransferOperatorRegistry object for
  * operators that may be applied to specific variables.
  *
- * Typically, the operators are assigned to the hier::TrnasferOperatorRegistry
+ * Typically, the operators are assigned to the TransferOperatorRegistry
  * object in the constructor of the geometry object that defines the mesh
  * coordinate system.
  *
@@ -60,16 +60,16 @@ namespace hier {
  * either new patch data types or new operators for pre-existing patch data
  * types.
  *
- * @see hier::BaseGridGeometry
- * @see hier::RefineOperator
- * @see hier::CoarsenOperator
- * @see hier::TimeInterpolateOperator
+ * @see BaseGridGeometry
+ * @see RefineOperator
+ * @see CoarsenOperator
+ * @see TimeInterpolateOperator
  */
 class TransferOperatorRegistry
 {
 public:
    /*!
-    * @brief Set the state of the hier::TransferOperatorRegistry members.
+    * @brief Set the state of the TransferOperatorRegistry members.
     *
     * @param[in]  dim
     */
@@ -192,9 +192,9 @@ public:
     * @return The max stencil width computed from all registered
     * operators.
     *
-    * @see hier::BaseGridGeometry::getMaxTransferOpStencilWidth().
-    * @see hier::RefineOperator::getMaxRefineOpStencilWidth().
-    * @see hier::CoarsenOperator::getMaxCoarsenOpStencilWidth().
+    * @see BaseGridGeometry::getMaxTransferOpStencilWidth().
+    * @see RefineOperator::getMaxRefineOpStencilWidth().
+    * @see CoarsenOperator::getMaxCoarsenOpStencilWidth().
     */
    IntVector
    getMaxTransferOpStencilWidth(
@@ -252,7 +252,7 @@ private:
    /*
     * The hash maps of spatial coarsening operators is maintained to lookup
     * operators for specific variables as requested by algorithms and/or
-    * applications using the hier::BaseGridGeometry holding this object.
+    * applications using the BaseGridGeometry holding this object.
     * Standard concrete coarsening operators can be found in the patchdata
     * package.  Additional operators may be added to this hash map at any time
     * (see addCoarsenOperator() function).
@@ -264,7 +264,7 @@ private:
    /*
     * The hash map of spatial refinement operators is maintained to lookup
     * operators for specific variables as requested by algorithms and/or
-    * applications using the hier::BaseGridGeometry holding this object.
+    * applications using the BaseGridGeometry holding this object.
     * Standard concrete refinement operators can be found in the patchdata
     * package.  Additional operators may be added to this hash map at any time
     * (see addRefineOperator() function).
@@ -276,7 +276,7 @@ private:
    /*
     * The hash map of time interpolation operators is maintained to lookup
     * operators for specific variables as requested by algorithms and/or
-    * applications using the hier::BaseGridGeometry holding this object.
+    * applications using the BaseGridGeometry holding this object.
     * Standard concrete time interpolation operators can be found in the
     * patchdata package.  Additional operators may be added to this hash map at
     * any time (see addTimeInterpolateOperator() function).

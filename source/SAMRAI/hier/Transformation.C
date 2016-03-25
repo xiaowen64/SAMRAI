@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Class for managing transformations between index spaces in
  *                an AMR hierarchy.
  *
@@ -697,7 +697,7 @@ Transformation::rotateIndex(
          index[0] = -index[0] - 1;
       }
    } else if (dim.getValue() == 2) {
-      int num_rotations = (int)rotation;
+      int num_rotations = static_cast<int>(rotation);
 
       for (int j = 0; j < num_rotations; ++j) {
          int tmp_in[2];

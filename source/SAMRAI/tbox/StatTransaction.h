@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction structure for statistic data copies
  *
  ************************************************************************/
@@ -27,8 +27,8 @@ namespace tbox {
  * transaction between two processors for sending and gathering statistic
  * information generated on different processors.
  *
- * @see tbox::Schedule
- * @see tbox::Transaction
+ * @see Schedule
+ * @see Transaction
  */
 
 class StatTransaction:public Transaction

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
@@ -310,7 +310,7 @@ namespace solv {
  *   KINSOL_print_flag        =  3   // print all output KINSOL has to offer
  * @endcode
  *
- * @see solv::NonlinearSolverStrategy
+ * @see NonlinearSolverStrategy
  */
 class KINSOL_SAMRAIContext:
    public NonlinearSolverStrategy,

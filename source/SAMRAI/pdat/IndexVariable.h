@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   IndexVariable
  *
  ************************************************************************/
@@ -36,9 +36,9 @@ namespace pdat {
  * instructions on using this class to provide other irregular index set
  * types.
  *
- * @see pdat::IndexData
- * @see pdat::IndexDataFactory
- * @see pdat::Variable
+ * @see IndexData
+ * @see IndexDataFactory
+ * @see Variable
  */
 
 template<class TYPE, class BOX_GEOMETRY>

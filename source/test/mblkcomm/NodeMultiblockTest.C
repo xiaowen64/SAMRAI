@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -364,10 +364,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                   grid_geometry->find(patch_blk_id, encon_blk_id);
                if (itr != grid_geometry->end(patch_blk_id)) {
                   rotation = (*itr).getRotationIdentifier();
-                  offset = (*itr).getShift();
+                  offset = (*itr).getShift(encon_level.getLevelNumber());
                }
-
-               offset *= patch.getPatchGeometry()->getRatio();
 
                hier::Transformation transformation(rotation, offset,
                                                    encon_blk_id,

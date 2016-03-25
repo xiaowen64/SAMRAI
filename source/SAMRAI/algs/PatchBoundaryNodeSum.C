@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
@@ -716,6 +716,8 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          boost::shared_ptr<hier::Patch> cfpatch(
             coarsened_fine_level->getPatch(fpatch->getGlobalId()));
 
+         const hier::IntVector& fpatch_ratio = ratio;
+
          const hier::Index& filo = fpatch->getBox().lower();
          const hier::Index& fihi = fpatch->getBox().upper();
          const hier::Index& cilo = cfpatch->getBox().lower();
@@ -944,7 +946,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   fihi(0), fihi(1),
                   cilo(0), cilo(1),
                   cihi(0), cihi(1),
-                  &ratio[0],
+                  &fpatch_ratio[0],
                   node_data->getDepth(),
                   node_gcw(0), node_gcw(1),
                   node_data->getPointer(),     // node data dst
@@ -996,7 +998,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   fihi(0), fihi(1), fihi(2),
                   cilo(0), cilo(1), cilo(2),
                   cihi(0), cihi(1), cihi(2),
-                  &ratio[0],
+                  &fpatch_ratio[0],
                   node_data->getDepth(),
                   node_gcw(0), node_gcw(1), node_gcw(2),
                   node_data->getPointer(),     // node data dst
@@ -1031,7 +1033,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                         bboxilo(0), bboxilo(1),
                         bboxihi(0), bboxihi(1),
                         bbox_loc,
-                        &ratio[0],
+                        &fpatch_ratio[0],
                         node_data->getDepth(),
                         node_gcw(0), node_gcw(1),
                         node_data->getPointer());
@@ -1046,7 +1048,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                         bboxilo(0), bboxilo(1), bboxilo(2),
                         bboxihi(0), bboxihi(1), bboxihi(2),
                         bbox_loc,
-                        &ratio[0],
+                        &fpatch_ratio[0],
                         node_data->getDepth(),
                         node_gcw(0), node_gcw(1), node_gcw(2),
                         node_data->getPointer());

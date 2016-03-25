@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -26,11 +26,13 @@ namespace geom {
 CartesianPatchGeometry::CartesianPatchGeometry(
    const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
+   const hier::BlockId& block_id,
    const double* dx,
    const double* x_lo,
    const double* x_up):
    hier::PatchGeometry(ratio_to_level_zero,
-                       touches_regular_bdry)
+                       touches_regular_bdry,
+                       block_id)
 {
    TBOX_ASSERT(dx != 0);
    TBOX_ASSERT(x_lo != 0);

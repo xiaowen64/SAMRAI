@@ -1,7 +1,7 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
@@ -16,8 +16,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 9
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_MINOR 10
+#define SAMRAI_VERSION_PATCHLEVEL 0
 ])
 AH_BOTTOM([
 
@@ -447,7 +447,7 @@ dnl
 
 AC_CHECK_PROGS(AR, $with_AR ar,)
 if test -z "$AR"; then
-   AC_MSG_ERROR([ar archiver not found - specify with --with-m4=ARG])
+   AC_MSG_ERROR([ar archiver not found - specify with --with-AR=ARG])
 fi
 
 dnl

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Collects and writes out data on communication graphs.
  *
  ************************************************************************/
@@ -125,7 +125,7 @@ void CommGraphWriter::writeGraphSummaryToTextStream(
 
    const Record& record = d_records[record_number];
 
-   tbox::MessageStream ostr;
+   MessageStream ostr;
    std::vector<double> values;
    values.reserve(record.d_node_values.size() + record.d_edges.size());
 
@@ -186,7 +186,7 @@ void CommGraphWriter::writeFullGraphToTextStream(
 
    const Record& record = d_records[record_number];
 
-   tbox::MessageStream ostr;
+   MessageStream ostr;
 
    for (size_t inodev = 0; inodev < record.d_node_values.size(); ++inodev) {
       const NodeValue& nodev = record.d_node_values[inodev];
@@ -223,8 +223,8 @@ void CommGraphWriter::writeFullGraphToTextStream(
       os << "# proc" << '\t' << "dir" << '\t' << "remote" << '\t' << "value" << '\t' << "label\n";
 
       if (!tmpbuf.empty()) {
-         tbox::MessageStream istr(tmpbuf.size(),
-                                  tbox::MessageStream::Read,
+         MessageStream istr(tmpbuf.size(),
+                                  MessageStream::Read,
                                   &tmpbuf[0],
                                   false);
 

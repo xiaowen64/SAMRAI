@@ -1,9 +1,9 @@
 c
-c  File:        $URL$
-c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
-c  Revision:    $LastChangedRevision$
-c  Description: m4 include file for dimensioning 4d arrays in FORTRAN routines.
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   m4 include file for dimensioning 4d arrays in FORTRAN routines.
 c
 define(SAMRAICELL4d,`$1$4-$3:$2$4+$3,
      &          $1$5-$3:$2$5+$3,

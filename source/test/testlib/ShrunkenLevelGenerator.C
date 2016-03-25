@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   ShrunkenLevelGenerator class implementation
  *
  ************************************************************************/
@@ -215,15 +215,20 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
     * the largest of properly converted values for shrink_cells,
     * shrink_distance and nesting width.
     */
-   hier::IntVector shrink_width(dim, hierarchy->getProperNestingBuffer(tag_ln));
+   const int nblocks =
+      static_cast<int>(hierarchy->getGridGeometry()->getNumberBlocks());
+   hier::IntVector shrink_width(dim, hierarchy->getProperNestingBuffer(tag_ln), nblocks);
    shrink_width.max(shrink_cells);
 
-   const double* ref_dx = grid_geometry->getDx();
-   for (int i = 0; i < dim.getValue(); ++i) {
-      double h = ref_dx[i] / Ltag.getRefinementRatio() (i);
-      shrink_width(i) = tbox::MathUtilities<int>::Max(
-            static_cast<int>(0.5 + shrink_distance[i] / h),
-            shrink_width(i));
+   const double *ref_dx = grid_geometry->getDx();
+   for (int b = 0; b < nblocks; ++b) {
+      const hier::IntVector& ref_ratio = Ltag.getRefinementRatio();
+      for ( int i=0; i<dim.getValue(); ++i ) {
+         double h = ref_dx[i]/ref_ratio(i);
+         shrink_width(b,i) = tbox::MathUtilities<int>::Max(
+            static_cast<int>(0.5 + shrink_distance[i]/h),
+            shrink_width(b,i) );
+      }
    }
 
    boost::shared_ptr<hier::BoxLevel> tagfootprint;

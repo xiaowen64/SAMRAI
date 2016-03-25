@@ -1,12 +1,10 @@
 c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
 c
-c general boundary condition cases
-c
-c
-c node boundary conditions
-c
-c
-c edge boundary conditions
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   FORTRAN routines for general 2d boundary condition cases,
+c                node boundary conditions, and edge boundary conditions
 c
 c***********************************************************************
 c***********************************************************************
@@ -22,12 +20,7 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_skelbdryparams2d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 2d boundary constant common blocks
+c  2d boundary constant common blocks
 c
       common/skelbdrylocparams2d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,
@@ -180,12 +173,7 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_skelbdryparams2d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 2d boundary constant common blocks
+c  2d boundary constant common blocks
 c
       common/skelbdrylocparams2d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,
@@ -340,12 +328,7 @@ c***********************************************************************
      &  XLEFTin, XRIGHTin, YLEFTin, YRIGHTin,
      &  X0Y0in, X1Y0in, X0Y1in, X1Y1in
 c
-c  File:        appu_skelbdryparams2d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 2d boundary constant common blocks
+c  2d boundary constant common blocks
 c
       common/skelbdrylocparams2d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,
@@ -390,12 +373,7 @@ c***********************************************************************
      &  REFLECTin, XREFLECTin, YREFLECTin,
      &  DIRICHLETin, XDIRICHLETin, YDIRICHLETin
 c
-c  File:        appu_skelbdryparams2d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 2d boundary constant common blocks
+c  2d boundary constant common blocks
 c
       common/skelbdrylocparams2d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,

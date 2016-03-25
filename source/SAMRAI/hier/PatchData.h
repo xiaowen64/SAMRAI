@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for patch data objects
  *
  ************************************************************************/
@@ -47,11 +47,11 @@ namespace hier {
  * on a particular processor.  Patch data factories are guaranteed to
  * exist on all processors independent of the patch-to-processor mapping.
  *
- * @see hier::BoxOverlap
- * @see hier::BoxGeometry
- * @see hier::Patch
- * @see hier::PatchDataFactory
- * @see hier::PatchDescriptor
+ * @see BoxOverlap
+ * @see BoxGeometry
+ * @see Patch
+ * @see PatchDataFactory
+ * @see PatchDescriptor
  */
 
 class PatchData

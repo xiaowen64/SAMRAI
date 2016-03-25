@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -14,6 +14,7 @@
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
@@ -49,6 +50,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_rht_child(0),
    d_box(box),
    d_group(0),
+   d_min_box_size(common->d_min_box.getBlockVector(box.getBlockId())),
    d_mpi_tag(-1),
    d_overlap(tbox::MathUtilities<size_t>::getMax()),
    d_box_acceptance(undetermined),
@@ -116,6 +118,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_rht_child(0),
    d_box(common_params->getDim()),
    d_group(0),
+   d_min_box_size(d_parent->d_min_box_size),
    d_mpi_tag(-1),
    d_overlap(tbox::MathUtilities<size_t>::getMax()),
    d_box_acceptance(undetermined),
@@ -931,7 +934,7 @@ BergerRigoutsosNode::broadcastAcceptability_check()
           * check should be done outside of this class in order to
           * have flexibility regarding how to handle it.
           */
-         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
+         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_min_box_size);
       }
 
       if (boxRejected()) {
@@ -955,9 +958,9 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          d_rht_child->d_mpi_tag = *(ptr++);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (d_box.numberCells() >= d_common->d_min_box) {
-            TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
-            TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+         if (d_box.numberCells() >= d_min_box_size) {
+            TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_min_box_size);
+            TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_min_box_size);
          }
 #endif
          TBOX_ASSERT(d_lft_child->d_mpi_tag > -1);
@@ -1163,8 +1166,8 @@ BergerRigoutsosNode::broadcastToDropouts_check()
           * check should be done outside of this class in order to
           * have flexibility regarding how to handle it.
           */
-         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
-         d_box.initialize(d_box, accepted_box_local_id, d_box.getOwnerRank());   // Reset local id.
+         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_min_box_size);
+         d_box.initialize( d_box, accepted_box_local_id, d_box.getOwnerRank() ); // Reset local id.
       }
    }
    return d_comm_group->isDone();
@@ -1202,7 +1205,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
       if (block_id == d_box.getBlockId()) {
          const hier::Box intersection = patch.getBox() * d_box;
-         const hier::IntVector& lower = d_box.lower();
+         const hier::Index& lower = d_box.lower();
 
          if (!(intersection.empty())) {
 
@@ -1218,7 +1221,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(intersection));
                  ci != ciend; ++ci) {
                if (tag_data(*ci) == d_common->d_tag_val) {
-                  const hier::IntVector& idx = *ci;
+                  const hier::Index& idx = *ci;
                   for (int d = 0; d < d_common->getDim().getValue(); ++d) {
                      ++(d_histogram[d][idx(d) - lower(d)]);
                   }
@@ -1244,7 +1247,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
    hier::Index new_lower = d_box.lower();
    hier::Index new_upper = d_box.upper();
 
-   const hier::IntVector& min_box = d_common->d_min_box;
+   const hier::IntVector& min_box = d_min_box_size;
    hier::IntVector box_size = d_box.numberCells();
 
    /*
@@ -1279,7 +1282,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
        * check should be done outside of this class in order to
        * have flexibility regarding how to handle it.
        */
-      TBOX_ASSERT(d_parent == 0 || new_box.numberCells() >= d_common->d_min_box);
+      TBOX_ASSERT(d_parent == 0 || new_box.numberCells() >= min_box);
       /*
        * Save tagged part of the current histogram and reset the box.
        * Is this step really required?  No, we can just keep the
@@ -1389,8 +1392,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
     * If cut_margin is negative in any direction, we cannot cut d_box
     * across that direction without violating min_box.
     */
-   hier::IntVector min_size = d_common->d_min_box;
-   min_size.max(d_common->d_min_box_size_from_cutting);
+   hier::IntVector min_size(d_min_box_size);
+   min_size.max( d_common->d_min_box_size_from_cutting );
    const hier::IntVector cut_margin = boxdims - min_size * 2;
 
    if (d_box_acceptance == undetermined) {
@@ -1567,9 +1570,9 @@ BergerRigoutsosNode::acceptOrSplitBox()
       d_lft_child->d_box = hier::Box(box_lo, lft_hi, d_box.getBlockId());
       d_rht_child->d_box = hier::Box(rht_lo, box_hi, d_box.getBlockId());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_box.numberCells() >= d_common->d_min_box) {
-         TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
-         TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+      if (d_box.numberCells() >= d_min_box_size) {
+         TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_min_box_size);
+         TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_min_box_size);
       }
 #endif
 
@@ -1630,8 +1633,8 @@ BergerRigoutsosNode::findZeroCutSwath(
    const int lo = d_box.lower(dim);
    const int hi = d_box.upper(dim);
    // Compute the limit for the swath.
-   const int cut_lo_lim = lo + d_common->d_min_box(dim);
-   const int cut_hi_lim = hi - d_common->d_min_box(dim);
+   const int cut_lo_lim = lo + d_min_box_size(dim);
+   const int cut_hi_lim = hi - d_min_box_size(dim);
 
    /*
     * Start in the middle of the box.
@@ -1652,8 +1655,8 @@ BergerRigoutsosNode::findZeroCutSwath(
             --cut_lo;
          }
          TBOX_ASSERT(cut_hi >= cut_lo);
-         TBOX_ASSERT(cut_lo - lo >= d_common->d_min_box(dim));
-         TBOX_ASSERT(hi - cut_hi >= d_common->d_min_box(dim));
+         TBOX_ASSERT(cut_lo - lo >= d_min_box_size(dim));
+         TBOX_ASSERT(hi - cut_hi >= d_min_box_size(dim));
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int i = cut_lo; i <= cut_hi; ++i) {
             TBOX_ASSERT(d_histogram[dim][i - lo] == 0);
@@ -1671,8 +1674,8 @@ BergerRigoutsosNode::findZeroCutSwath(
             ++cut_hi;
          }
          TBOX_ASSERT(cut_hi >= cut_lo);
-         TBOX_ASSERT(cut_lo - lo >= d_common->d_min_box(dim));
-         TBOX_ASSERT(hi - cut_hi >= d_common->d_min_box(dim));
+         TBOX_ASSERT(cut_lo - lo >= d_min_box_size(dim));
+         TBOX_ASSERT(hi - cut_hi >= d_min_box_size(dim));
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int i = cut_lo; i <= cut_hi; ++i) {
             TBOX_ASSERT(d_histogram[dim][i - lo] == 0);
@@ -1743,8 +1746,8 @@ BergerRigoutsosNode::cutAtInflection(
    }
 
    const int min_box_size =
-      tbox::MathUtilities<int>::Max(d_common->d_min_box(dim),
-         d_common->d_min_box_size_from_cutting(dim));
+      tbox::MathUtilities<int>::Max( d_min_box_size(dim),
+                                     d_common->d_min_box_size_from_cutting(dim) );
 
    const int box_lo = 0;
    const int box_hi = hist_size - 1;
@@ -1887,7 +1890,7 @@ BergerRigoutsosNode::countOverlapWithLocalPatches()
          bool transformed =
             d_common->d_tag_level->getGridGeometry()->transformBox(
                transform_box,
-               d_common->d_tag_level->getRatioToLevelZero(),
+               d_common->d_tag_level->getLevelNumber(),
                d_box.getBlockId(),
                block_id);
 
@@ -2093,7 +2096,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     * check should be done outside of this class in order to
     * have flexibility regarding how to handle it.
     */
-   TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
+   TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_min_box_size);
    /*
     * We should not compute nabrs if we got the node
     * by a dropout broadcast because we already know
@@ -2104,6 +2107,22 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    // Create an expanded box for intersection check.
    hier::Box grown_box = d_box;
    grown_box.grow(d_common->d_tag_to_new_width);
+   hier::BoxContainer grown_boxes;
+   if (d_common->d_tag_level->getGridGeometry()->getNumberBlocks() == 1 ||
+       d_common->d_tag_level->getGridGeometry()->hasIsotropicRatios()) {
+      grown_boxes.pushBack(d_box);
+      grown_boxes.grow(d_common->d_tag_to_new_width);
+   } else {
+      hier::BoxUtilities::growAndAdjustAcrossBlockBoundary(
+         grown_boxes,
+         d_box,
+         d_common->d_tag_level->getGridGeometry(),
+         d_common->d_tag_to_new->getBase().getRefinementRatio(),
+         d_common->d_tag_to_new->getRatio(),
+         d_common->d_tag_to_new_width,
+         false,
+         false);
+   }
 
    /*
     * On the owner process, we store the neighbors of the new node.
@@ -2146,23 +2165,26 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
       const hier::Box& tag_box = *ni;
 
-      hier::Box intersection(d_common->getDim());
-      if (tag_box.getBlockId() == d_box.getBlockId()) {
-         intersection = tag_box * grown_box;
-      } else {
-         hier::Box transform_box(tag_box);
-         bool transformed =
-            d_common->d_tag_level->getGridGeometry()->transformBox(
-               transform_box,
-               d_common->d_tag_level->getRatioToLevelZero(),
-               d_box.getBlockId(),
-               tag_box.getBlockId());
-         if (transformed) {
-            intersection = transform_box * grown_box;
+      bool intersection = false;
+      for (hier::BoxContainer::const_iterator b_itr = grown_boxes.begin();
+           !intersection && b_itr != grown_boxes.end(); ++b_itr) {
+         if (tag_box.getBlockId() == b_itr->getBlockId()) {
+            intersection = tag_box.intersects(*b_itr);
+         } else {
+            hier::Box transform_box(tag_box);
+            bool transformed =
+               d_common->d_tag_level->getGridGeometry()->transformBox(
+                  transform_box,
+                  d_common->d_tag_level->getRatioToLevelZero(),
+                  b_itr->getBlockId(),
+                  tag_box.getBlockId());
+            if (transformed) {
+               intersection = transform_box.intersects(*b_itr);
+            }
          }
       }
 
-      if (!intersection.empty()) {
+      if (intersection) {
 
          // Add d_box as a neighbor of tag_box.
          d_common->d_tag_to_new->insertLocalNeighbor(d_box,
@@ -2246,8 +2268,8 @@ BergerRigoutsosNode::putBoxToBuffer(
    const hier::Box& box,
    int* buffer) const
 {
-   const hier::IntVector& l = box.lower();
-   const hier::IntVector& u = box.upper();
+   const hier::Index& l = box.lower();
+   const hier::Index& u = box.upper();
    int dim_val = d_common->getDim().getValue();
    for (int d = 0; d < dim_val; ++d) {
       *(buffer++) = l(d);

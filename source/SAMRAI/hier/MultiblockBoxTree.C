@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -101,8 +101,7 @@ MultiblockBoxTree::findOverlapBoxes(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*d_grid_geometry, box, refinement_ratio);
 
    const BlockId& block_id = box.getBlockId();
-   TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
-      block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
+   TBOX_ASSERT(block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
    /*
     * Search in the index space of block_id for overlaps.
@@ -164,8 +163,7 @@ MultiblockBoxTree::findOverlapBoxes(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*d_grid_geometry, box, refinement_ratio);
 
    const BlockId& block_id = box.getBlockId();
-   TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
-      block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
+   TBOX_ASSERT(block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
    /*
     * Search in the index space of block_id for overlaps.

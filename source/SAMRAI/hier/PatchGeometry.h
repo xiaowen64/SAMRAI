@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
@@ -35,8 +35,8 @@ namespace hier {
  * spaces.  The boundary information for patches is actually computed by
  * the BaseGridGeometry class.
  *
- * @see hier::BoundaryBox
- * @see hier::BaseGridGeometry
+ * @see BoundaryBox
+ * @see BaseGridGeometry
  */
 
 class PatchGeometry
@@ -115,7 +115,8 @@ private:
     */
    PatchGeometry(
       const IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry);
+      const TwoDimBool& touches_regular_bdry,
+      const BlockId& block_id);
 
    /**
     * The virtual destructor for the patch geometry base class.
@@ -349,6 +350,7 @@ private:
    PatchBoundaries d_patch_boundaries;
 
    TwoDimBool d_touches_regular_bdry;
+   BlockId d_block_id;
 };
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with mapping Connectors.
  *
  ************************************************************************/
@@ -263,10 +263,13 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
     */
 
    // Unpack neighbor-removal section.
+   // TODO: Get rid of 2 unused values, making sure adjustments in message sizes
+   // is correct.
    const int num_removed_boxes = *(ptr++);
    for (int ii = 0; ii < num_removed_boxes; ++ii) {
       const LocalId id_gone(*(ptr++));
-      const BlockId block_id_gone(*(ptr++));
+      // Skip unneeded value.
+      ++ptr;
       const int number_affected = *(ptr++);
       const Box box_gone(dim, GlobalId(id_gone, sender));
       if (print_steps) {
@@ -274,10 +277,10 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
                     << " removed, affecting " << number_affected
                     << " boxes." << std::endl;
       }
-//TODO: Is BoxId usage in this method correct regarding block id?
       for (int iii = 0; iii < number_affected; ++iii) {
          const LocalId id_affected(*(ptr++));
-         const BlockId block_id_affected(*(ptr++));
+         // Skip unneeded block id.
+         ++ptr;
          BoxId affected_nbrhd(id_affected, rank);
          if (print_steps) {
             tbox::plog << " Removing " << box_gone

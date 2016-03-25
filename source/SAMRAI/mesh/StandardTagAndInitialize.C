@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Routines for performing cell-tagging and initializing
  *                a new level.
  *
@@ -404,7 +404,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * between the regrid_start_time and the regrid_time.
     */
    double dt = (regrid_time - regrid_start_time)
-      / (double)(d_error_coarsen_ratio - 1);
+      / static_cast<double>(d_error_coarsen_ratio - 1);
 
    /*
     * Determine number of advance steps for time integration on the level.
@@ -686,7 +686,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * between the regrid_start_time and the regrid_time.
     */
    double dt = (regrid_time - regrid_start_time)
-      / (double)(d_error_coarsen_ratio - 1);
+      / static_cast<double>(d_error_coarsen_ratio - 1);
 
    /*
     * Determine start and end times for integration on the coarsened level.
@@ -937,7 +937,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
        * Compute GCD on first coordinate direction of level 1
        */
       int error_coarsen_ratio = 0;
-      int gcd_level1 = ratio_to_coarser[1](0);
+      int gcd_level1 = ratio_to_coarser[1](0,0);
       if ((gcd_level1 % 2) == 0) {
          error_coarsen_ratio = 2;
       } else if ((gcd_level1 % 3) == 0) {
@@ -956,9 +956,9 @@ StandardTagAndInitialize::checkCoarsenRatios(
       for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ++ln) {
 
          for (int d = 0; d < dim.getValue(); ++d) {
-            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
+            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](0,d));
             if ((gcd % error_coarsen_ratio) != 0) {
-               gcd = ratio_to_coarser[ln](d);
+               gcd = ratio_to_coarser[ln](0,d);
                TBOX_ERROR(
                   getObjectName() << "\n"
                                   << "Unable to perform Richardson extrapolation because\n"
@@ -2014,6 +2014,65 @@ StandardTagAndInitialize::processLevelBeforeRemoval(
       level_number,
       old_level);
 }
+
+
+/*
+ *************************************************************************
+ * Pass to StandardTagAndInitStrategy to check user tags on a tagged
+ * level.  Only calls into the strategy if using gradient detector or
+ * Richardson extrapolation at the curren time and cycle.
+ *************************************************************************
+ */
+void
+StandardTagAndInitialize::checkUserTagData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const int regrid_cycle,
+   const double regrid_time,
+   const int tag_index)
+{
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT((level_number >= 0)
+      && (level_number <= hierarchy->getFinestLevelNumber()));
+   TBOX_ASSERT(tag_index >= 0);
+
+   if (usesGradientDetector(regrid_cycle, regrid_time) ||
+       usesRichardsonExtrapolation(regrid_cycle, regrid_time)) {
+
+      TBOX_ASSERT(d_tag_strategy != 0);
+
+      d_tag_strategy->checkUserTagData(hierarchy,
+         level_number,
+         tag_index);
+
+   }
+}
+
+/*
+ *************************************************************************
+ * Pass to StandardTagAndInitStrategy to check saved tags on a new level.
+ *************************************************************************
+ */
+void
+StandardTagAndInitialize::checkNewLevelTagData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const int tag_index)
+{
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT((level_number >= 0)
+      && (level_number <= hierarchy->getFinestLevelNumber()));
+   TBOX_ASSERT(tag_index >= 0);
+   TBOX_ASSERT(d_tag_strategy != 0);
+
+   d_tag_strategy->checkNewLevelTagData(hierarchy,
+      level_number,
+      tag_index);
+
+}
+
+
+
 
 static int GCD(
    const int a,

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Utilitiy for breaking boxes during partitioning.
  *
  ************************************************************************/
@@ -330,6 +330,9 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
    sorted_dirs.sortIntVector(box_dims);
 
    bool sufficient_brk_load = false;
+   const hier::BlockId& block_id = trial.d_whole_box.getBlockId();
+   hier::IntVector cut_factor(
+      d_pparams->getCutFactor().getBlockVector(block_id));
 
    TrialBreak trial1(trial);
 
@@ -367,30 +370,30 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
       int lo_upper_cut_plane = trial.d_whole_box.lower() (brk_dir) + int(ideal_upper_cut_offset);
       int hi_upper_cut_plane = trial.d_whole_box.lower() (brk_dir) + int(ideal_upper_cut_offset)
          + 1;
-      lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_pparams->getCutFactor() (brk_dir));
-      hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_pparams->getCutFactor() (brk_dir));
+      lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, cut_factor(brk_dir));
+      hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, cut_factor(brk_dir));
       while (lo_upper_cut_plane > trial.d_whole_box.lower() (brk_dir) &&
              bad[lo_upper_cut_plane - trial.d_whole_box.lower() (brk_dir)]) {
-         lo_upper_cut_plane -= d_pparams->getCutFactor() (brk_dir);
+         lo_upper_cut_plane -= cut_factor(brk_dir);
       }
       while (hi_upper_cut_plane < trial.d_whole_box.upper() (brk_dir) + 1 &&
              bad[hi_upper_cut_plane - trial.d_whole_box.lower() (brk_dir)]) {
-         hi_upper_cut_plane += d_pparams->getCutFactor() (brk_dir);
+         hi_upper_cut_plane += cut_factor(brk_dir);
       }
 
       // Compute valid cut planes on high and low sides of lower cut plane.
       int lo_lower_cut_plane = trial.d_whole_box.lower() (brk_dir) + int(ideal_lower_cut_offset);
       int hi_lower_cut_plane = trial.d_whole_box.lower() (brk_dir) + int(ideal_lower_cut_offset)
          + 1;
-      lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_pparams->getCutFactor() (brk_dir));
-      hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_pparams->getCutFactor() (brk_dir));
+      lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, cut_factor(brk_dir));
+      hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, cut_factor(brk_dir));
       while (lo_lower_cut_plane > trial.d_whole_box.lower() (brk_dir) &&
              bad[lo_lower_cut_plane - trial.d_whole_box.lower() (brk_dir)]) {
-         lo_lower_cut_plane -= d_pparams->getCutFactor() (brk_dir);
+         lo_lower_cut_plane -= cut_factor(brk_dir);
       }
       while (hi_lower_cut_plane < trial.d_whole_box.upper() (brk_dir) + 1 &&
              bad[hi_lower_cut_plane - trial.d_whole_box.lower() (brk_dir)]) {
-         hi_lower_cut_plane += d_pparams->getCutFactor() (brk_dir);
+         hi_lower_cut_plane += cut_factor(brk_dir);
       }
 
       if (d_print_break_steps) {
@@ -601,6 +604,10 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
    hier::IntVector best_breakoff_size = zero_vec;
    double best_breakoff_load = 0;
 
+   const hier::BlockId& block_id = trial.d_whole_box.getBlockId();
+   const hier::IntVector& cut_factor(
+      d_pparams->getCutFactor().getBlockVector(block_id));
+
    /*
     * We consider 2^dim boxes grown from the incoming box's corners.
     * Imagine 2 cutting planes per dimension, perpendicular to each
@@ -628,16 +635,15 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
     * of the incoming box.
     */
    hier::IntVector brk_size(d_pparams->getMinBoxSize());
-   brk_size.max(d_pparams->getCutFactor());
+   brk_size.max(cut_factor);
    brk_size.min(box_dims);
 
    /*
-    * Make sure brk_size is a multiple of d_pparams->getCutFactor().
+    * Make sure brk_size is a multiple of cut_factor.
     */
    for (int d = 0; d < dim.getValue(); ++d) {
-      if (brk_size(d) % d_pparams->getCutFactor() (d) != 0) {
-         brk_size(d) =
-            ((brk_size(d) / d_pparams->getCutFactor() (d)) + 1) * d_pparams->getCutFactor() (d);
+      if (brk_size(d) % cut_factor(d) != 0) {
+         brk_size(d) = ((brk_size(d) / cut_factor(d)) + 1) * cut_factor(d);
       }
    }
 
@@ -651,9 +657,9 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       trial.d_whole_box.upper() - d_pparams->getMinBoxSize() + one_vec);
    for (int d = 0; d < dim.getValue(); ++d) {
       lower_intersection(d) = ROUND_TO_HI(lower_intersection(d),
-            d_pparams->getCutFactor() (d));
+            cut_factor(d));
       upper_intersection(d) = ROUND_TO_LO(upper_intersection(d),
-            d_pparams->getCutFactor() (d));
+            cut_factor(d));
    }
 
    const int num_corners = 1 << dim.getValue();
@@ -686,16 +692,16 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
                corner_box.setLower(static_cast<hier::Box::dir_t>(d),
                   trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)));
             }
-            expansion_rate(d) = -d_pparams->getCutFactor() (d);
-         } else {
+            expansion_rate(d) = -cut_factor(d);
+         }
+         else {
             corner_box.setUpper(static_cast<hier::Box::dir_t>(d),
                lower_intersection(d) - 1);
-            if (trial.d_whole_box.upper() (d) - corner_box.upper() (d) <
-                d_pparams->getMinBoxSize() (d)) {
+            if ( trial.d_whole_box.upper()(d) - corner_box.upper()(d) < d_pparams->getMinBoxSize()(d) ) {
                corner_box.setUpper(static_cast<hier::Box::dir_t>(d),
                   trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(d)));
             }
-            expansion_rate(d) = d_pparams->getCutFactor() (d);
+            expansion_rate(d) = cut_factor(d);
          }
 
       }

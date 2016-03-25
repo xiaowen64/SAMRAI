@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -83,7 +83,8 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    max_stencil_width.max(
       RefinePatchStrategy::getMaxRefineOpStencilWidth(dim));
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
+   hier::IntVector zero_vector(hier::IntVector::getZero(dim),
+                               patch_hierarchy.getNumberBlocks());
 
    /*
     * Compute the Connector width needed to ensure all edges are found
@@ -103,8 +104,10 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
     *   it.
     */
 
+   hier::IntVector self_width(max_data_gcw * d_gcw_factor,
+                              patch_hierarchy.getNumberBlocks()); 
    self_connector_widths.clear();
-   self_connector_widths.resize(max_levels, max_data_gcw * d_gcw_factor);
+   self_connector_widths.resize(max_levels, self_width);
 
    fine_connector_widths.clear();
    if (max_levels > 1) {
@@ -145,10 +148,14 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
       fine_connector_widths.insert(
          fine_connector_widths.end(),
          initial_dst_ln - fine_connector_widths.size(),
-         hier::IntVector::getZero(patch_hierarchy.getDim()));
+         hier::IntVector(patch_hierarchy.getDim(), 0,
+            patch_hierarchy.getGridGeometry()->getNumberBlocks()) );
    }
 
-   hier::IntVector width_for_refining_recursively = data_gcw_on_initial_dst_ln * d_gcw_factor;
+   const size_t nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();
+
+   hier::IntVector width_for_refining_recursively(
+      data_gcw_on_initial_dst_ln * d_gcw_factor, nblocks);
 
    for (int lnc = initial_dst_ln - 1; lnc > -1; --lnc) {
 

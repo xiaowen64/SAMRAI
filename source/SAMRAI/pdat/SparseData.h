@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -125,8 +125,8 @@ operator << (
  * SparseDataFactory.
  *
  * @see hier::PatchData
- * @see pdat::SparseDataFactory
- * @see pdat::SparseDataVariable
+ * @see SparseDataFactory
+ * @see SparseDataVariable
  */
 template<typename BOX_GEOMETRY>
 class SparseData:public hier::PatchData

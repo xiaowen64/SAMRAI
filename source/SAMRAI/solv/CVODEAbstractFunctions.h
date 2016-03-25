@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Interface to user-specified functions for CVODE package
  *
  ************************************************************************/
@@ -32,8 +32,8 @@ namespace solv {
  * In a few cases, some arguments do not appear in the function signatures
  * below since they are superfluous via this interface.
  *
- * @see solv::CVODESolver
- * @see solv::SundialsAbstractVector
+ * @see CVODESolver
+ * @see SundialsAbstractVector
  */
 
 class CVODEAbstractFunctions

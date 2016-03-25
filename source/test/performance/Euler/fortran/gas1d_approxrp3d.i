@@ -1,3 +1,11 @@
+c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   m4 include file defining routine to compute solution to
+c                Riemann problem in 3d.
+c
       subroutine gas1dapproxrp3d(eosgam,wleft,wright, striem)
 c***********************************************************************
 c description of arguments:

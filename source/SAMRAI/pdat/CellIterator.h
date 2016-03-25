@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Iterator for cell centered patch data types
  *
  ************************************************************************/
@@ -37,9 +37,9 @@ namespace pdat {
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see pdat::CellData
- * @see pdat::CellGeometry
- * @see pdat::CellIndex
+ * @see CellData
+ * @see CellGeometry
+ * @see CellIndex
  */
 
 class CellIterator

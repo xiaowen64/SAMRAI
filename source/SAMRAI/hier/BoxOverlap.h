@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Base class that describes intersections between AMR boxes
  *
  ************************************************************************/
@@ -38,7 +38,7 @@ namespace hier {
  * type-safe type casting should be used to access the subclass and its
  * member functions.
  *
- * @see hier::BoxGeometry
+ * @see BoxGeometry
  */
 
 class BoxOverlap

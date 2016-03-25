@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
@@ -29,6 +29,18 @@ namespace mesh {
 
 /*!
  * @brief Tiled patch clustering algorithm.
+ *
+ * Tiling generates clusters of a predetermined tile size.  Tile size can
+ * be different on different levels, and mixing tiled and untiled levels
+ * is permitted.  However, tiling is most efficient when tile boundaries
+ * coincide, which is achieved by setting Tc*R is divisible by Tf or vice
+ * versa, where Tc is the tile size on a coarser level, Tf is the tile size
+ * on the finer level and R is the refinement ratio between the two levels.
+ * Be sure to use a compatible tile size in the partitioning object.
+ *
+ * The algorithm is described in the article "Advances in Patch-Based
+ * Adaptive Mesh Refinement Scalability" submitted to JPDC.  Scaling
+ * benchmark results are also in the article.
  *
  * <b> Input Parameters </b>
  *
@@ -136,7 +148,7 @@ public:
    virtual ~TileClustering();
 
    /*!
-    * @brief Implement the mesh::BoxGeneratorStrategy interface
+    * @brief Implement the BoxGeneratorStrategy interface
     * method of the same name.
     *
     * Create a set of boxes that covers all integer tags on
@@ -273,9 +285,8 @@ private:
     * having O(N lg N) expected complexity.
     */
    void
-   coalesceTiles(
-      hier::BoxContainer& tiles,
-      const hier::Box& bounding_box);
+   coalesceBoxes(
+      hier::BoxContainer &boxes );
 
    const tbox::Dimension d_dim;
 
@@ -347,6 +358,7 @@ private:
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
       boost::shared_ptr<tbox::Timer> t_cluster;
+      boost::shared_ptr<tbox::Timer> t_cluster_local;
       boost::shared_ptr<tbox::Timer> t_coalesce;
       boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
       boost::shared_ptr<tbox::Timer> t_global_reductions;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -50,6 +50,7 @@ class BoxTree
    friend class MultiblockBoxTree;
 
 public:
+
    /*!
     * @brief Print statistics on number of constructor calls, tree
     * builds, tree searches, etc.
@@ -76,6 +77,7 @@ public:
    ~BoxTree();
 
 private:
+
    BoxTree(
       const std::list<const Box *> boxes,
       int min_number = 10);
@@ -268,8 +270,8 @@ private:
    void
    setupChildren(
       const int min_number,
-      std::list<const Box *>& left_boxes,
-      std::list<const Box *>& right_boxes);
+      std::list<const Box*>& left_boxes,
+      std::list<const Box*>& right_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -320,7 +322,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   std::list<const Box *> d_boxes;
+   std::list<const Box*> d_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Refine algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -112,9 +112,9 @@ namespace xfer {
  * as long as the patches involved in the communication process do not change;
  * thus, they can be used for multiple data communication cycles.
  *
- * @see xfer::RefineSchedule
- * @see xfer::RefinePatchStrategy
- * @see xfer::RefineClasses
+ * @see RefineSchedule
+ * @see RefinePatchStrategy
+ * @see RefineClasses
  */
 
 class RefineAlgorithm

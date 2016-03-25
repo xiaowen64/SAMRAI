@@ -3,12 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
 #include "SAMRAI/hier/PatchHierarchy.h"
 
+#include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -52,14 +53,14 @@ PatchHierarchy::PatchHierarchy(
    d_patch_factory(new PatchFactory),
    d_patch_level_factory(new PatchLevelFactory),
    d_max_levels(1),
-   d_ratio_to_coarser(1, IntVector(d_dim, 1)),
+   d_ratio_to_coarser(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
    d_proper_nesting_buffer(d_max_levels - 1, 1),
    d_smallest_patch_size(1, IntVector(d_dim, 1)),
    d_largest_patch_size(1, IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    d_allow_patches_smaller_than_ghostwidth(false),
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps(false),
-   d_self_connector_widths(),
-   d_fine_connector_widths(),
+   d_self_connector_widths(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
+   d_fine_connector_widths(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
    d_connector_widths_committed(false),
    d_individual_cwrs()
 {
@@ -75,12 +76,12 @@ PatchHierarchy::PatchHierarchy(
     * grid geometry and set up domain data dependent on it.
     */
    d_domain_box_level.reset(new BoxLevel(
-         IntVector::getOne(d_dim),
-         getGridGeometry(),
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         BoxLevel::GLOBALIZED));
+      d_ratio_to_coarser[0],
+      getGridGeometry(),
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      BoxLevel::GLOBALIZED));
    d_grid_geometry->computePhysicalDomain(*d_domain_box_level,
-      IntVector::getOne(d_dim));
+      d_ratio_to_coarser[0]);
    d_domain_box_level->finalize();
 
    d_individual_cwrs = s_class_cwrs;
@@ -94,6 +95,8 @@ PatchHierarchy::PatchHierarchy(
       getFromRestart();
    }
    getFromInput(input_db, is_from_restart);
+
+   d_grid_geometry->setUpRatios(d_ratio_to_coarser);
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 }
@@ -154,24 +157,81 @@ PatchHierarchy::getFromInput(
          }
 
          // Read in ratio_to_coarser.
-         if (input_db->isDatabase("ratio_to_coarser")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
-               input_db->getDatabase("ratio_to_coarser"));
-            for (int ln = 1; ln < d_max_levels; ++ln) {
-               if (tmp_db->isInteger(level_names[ln])) {
-                  tmp_db->getIntegerArray(level_names[ln],
-                     &d_ratio_to_coarser[ln][0],
-                     d_dim.getValue());
-                  for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (!(d_ratio_to_coarser[ln][i] > 0)) {
-                        INPUT_RANGE_ERROR("ratio_to_coarser");
+         d_ratio_to_coarser[0].setAll(IntVector::getOne(d_dim));
+         if (d_number_blocks == 1) {
+            if (input_db->isDatabase("ratio_to_coarser")) {
+               const boost::shared_ptr<tbox::Database> tmp_db(
+                  input_db->getDatabase("ratio_to_coarser"));
+               for (int ln = 1; ln < d_max_levels; ++ln) {
+                  if (tmp_db->isInteger(level_names[ln])) {
+                     IntVector read_vector(d_dim);
+                     tmp_db->getIntegerArray(level_names[ln],
+                        &read_vector[0], 
+                        //&d_ratio_to_coarser[ln].getBlockVector(BlockId(0))[0],
+                        d_dim.getValue());
+                     for (int i = 0; i < d_dim.getValue(); ++i) {
+                        if (!(read_vector[i] > 0)) {
+                           INPUT_RANGE_ERROR("ratio_to_coarser");
+                        }
                      }
+                     d_ratio_to_coarser[ln].setAll(read_vector);
+                  } else {
+                     d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln - 1];
                   }
-               } else {
-                  d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln - 1];
                }
             }
-         }
+         } else {
+            std::vector< std::vector<IntVector> > block_ratio(d_max_levels);
+            for (int ln = 1; ln < d_max_levels; ++ln) {
+               block_ratio[ln].resize(d_number_blocks, IntVector::getZero(d_dim));
+            }
+            for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+               std::string ratio_name("ratio_to_coarser_");
+               ratio_name += tbox::Utilities::intToString(static_cast<int>(b));
+               if (input_db->isDatabase(ratio_name)) {
+                  const boost::shared_ptr<tbox::Database> tmp_db(
+                     input_db->getDatabase(ratio_name));
+                  for (int ln = 1; ln < d_max_levels; ++ln) {
+                     if (tmp_db->isInteger(level_names[ln])) {
+                        tmp_db->getIntegerArray(level_names[ln],
+                           &block_ratio[ln][b][0],
+                           d_dim.getValue());
+                        for (int i = 0; i < d_dim.getValue(); ++i) {
+                           if (!(block_ratio[ln][b][i] > 0)) {
+                              INPUT_RANGE_ERROR(ratio_name);
+                           }
+                        }
+                     } else {
+                        block_ratio[ln][b] = block_ratio[ln-1][b];
+                     }
+                  }
+               } else if (input_db->isDatabase("ratio_to_coarser")) {
+                  const boost::shared_ptr<tbox::Database> tmp_db(
+                     input_db->getDatabase("ratio_to_coarser"));
+                  for (int ln = 1; ln < d_max_levels; ++ln) {
+                     if (tmp_db->isInteger(level_names[ln])) {
+                        tmp_db->getIntegerArray(level_names[ln],
+                           &block_ratio[ln][b][0],
+                           d_dim.getValue());
+                        for (int i = 0; i < d_dim.getValue(); ++i) {
+                           if (!(block_ratio[ln][b][i] > 0)) {
+                              INPUT_RANGE_ERROR(ratio_name);
+                           }
+                        }
+                     } else {
+                        block_ratio[ln][b] = block_ratio[ln-1][b];
+                     }
+                  }
+               }
+            }
+            for (int ln = 1; ln < d_max_levels; ++ln) {
+               for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     d_ratio_to_coarser[ln](b,i) = block_ratio[ln][b][i];
+                  }
+               }
+            }
+         } 
 
          // Read in smallest_patch_size.
          if (input_db->isDatabase("smallest_patch_size")) {
@@ -299,30 +359,6 @@ PatchHierarchy::getFromInput(
                                               std::string("level_"));
          for (int ln = 0; ln < d_max_levels; ++ln) {
             level_names[ln] += tbox::Utilities::intToString(ln);
-         }
-
-         // Read in ratio_to_coarser.
-         if (input_db->isDatabase("ratio_to_coarser")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
-               input_db->getDatabase("ratio_to_coarser"));
-            int ratio_to_coarser[SAMRAI::MAX_DIM_VAL];
-            bool error = false;
-            for (int ln = 1; !error && ln < d_max_levels; ++ln) {
-               if (tmp_db->isInteger(level_names[ln])) {
-                  tmp_db->getIntegerArray(level_names[ln],
-                     &ratio_to_coarser[0],
-                     d_dim.getValue());
-                  for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (ratio_to_coarser[i] != d_ratio_to_coarser[ln][i]) {
-                        TBOX_WARNING("PatchHierarchy::getFromInput error...\n"
-                           << "ratio_to_coarser may not be changed on restart."
-                           << std::endl);
-                        error = true;
-                        break;
-                     }
-                  }
-               }
-            }
          }
 
          // Read in smallest_patch_size.
@@ -537,16 +573,18 @@ PatchHierarchy::getRequiredConnectorWidth(
 void
 PatchHierarchy::computeRequiredConnectorWidths() const
 {
-   const IntVector& zero_vector(IntVector::getZero(d_dim));
+   IntVector zero_vector(d_dim, 0, d_number_blocks);
    d_self_connector_widths.clear();
-   d_self_connector_widths.insert(d_self_connector_widths.begin(),
-      d_max_levels,
-      zero_vector);
+   d_self_connector_widths.resize(d_max_levels, zero_vector);
+   for (int ln = 0; ln < d_max_levels; ++ln) {
+      d_self_connector_widths[ln].setAll(zero_vector);
+   }
    d_fine_connector_widths.clear();
    if (d_max_levels > 1) {
-      d_fine_connector_widths.insert(d_fine_connector_widths.begin(),
-         d_max_levels - 1,
-         zero_vector);
+      d_fine_connector_widths.resize(d_max_levels - 1, zero_vector);
+      for (int ln = 0; ln < d_max_levels-1; ++ln) {
+         d_fine_connector_widths[ln].setAll(zero_vector);
+      }
    }
 
    /*
@@ -554,8 +592,9 @@ PatchHierarchy::computeRequiredConnectorWidths() const
     * ConnectorWidthRequestorStrategy objects.
     */
 
-   std::vector<IntVector> self_connector_widths;
-   std::vector<IntVector> fine_connector_widths;
+   
+   std::vector<IntVector> self_connector_widths(0, d_self_connector_widths[0]);
+   std::vector<IntVector> fine_connector_widths(0, d_fine_connector_widths[0]);
    for (size_t i = 0; i < d_individual_cwrs.size(); ++i) {
       d_individual_cwrs[i]->computeRequiredConnectorWidths(
          self_connector_widths,
@@ -567,7 +606,9 @@ PatchHierarchy::computeRequiredConnectorWidths() const
          d_self_connector_widths[ln].max(self_connector_widths[ln]);
       }
       for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-         d_fine_connector_widths[ln].max(fine_connector_widths[ln]);
+         for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+            d_fine_connector_widths[ln].max(fine_connector_widths[ln]);
+         }
       }
    }
 
@@ -617,6 +658,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
 
    // Set hierarchy parameters.
 
+   fine_hierarchy->d_number_blocks = d_number_blocks;
    fine_hierarchy->d_max_levels = d_max_levels;
    fine_hierarchy->d_ratio_to_coarser = d_ratio_to_coarser;
    fine_hierarchy->d_smallest_patch_size = d_smallest_patch_size;
@@ -627,6 +669,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
       d_allow_patches_smaller_than_ghostwidth;
    fine_hierarchy->d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
+   fine_hierarchy->d_grid_geometry->setUpRatios(d_ratio_to_coarser);
 
    for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
@@ -679,12 +722,14 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
 
    // Set hierarchy parameters.
 
+   coarse_hierarchy->d_number_blocks = d_number_blocks;
    coarse_hierarchy->d_max_levels = d_max_levels;
    coarse_hierarchy->d_ratio_to_coarser = d_ratio_to_coarser;
    coarse_hierarchy->d_smallest_patch_size = d_smallest_patch_size;
    coarse_hierarchy->d_largest_patch_size = d_largest_patch_size;
    coarse_hierarchy->d_individual_cwrs = d_individual_cwrs;
    coarse_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
+   coarse_hierarchy->d_grid_geometry->setUpRatios(d_ratio_to_coarser);
 
    for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
@@ -736,6 +781,7 @@ PatchHierarchy::makeNewPatchLevel(
          << "max of " << d_max_levels << ".\n"
          << "Use setMaxNumberOfLevels() to change the max.\n");
    }
+
    if (ln > 0) {
       const IntVector expected_ratio(
          d_ratio_to_coarser[ln] * (d_patch_levels[ln - 1]->getRatioToLevelZero()));
@@ -771,9 +817,9 @@ PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln]->setLevelInHierarchy(true);
 
    if ((ln > 0) && d_patch_levels[ln - 1]) {
-      d_patch_levels[ln]->setRatioToCoarserLevel(
-         d_patch_levels[ln]->getRatioToLevelZero()
-         / (d_patch_levels[ln - 1]->getRatioToLevelZero()));
+      IntVector ratio = d_patch_levels[ln]->getRatioToLevelZero() /
+         d_patch_levels[ln-1]->getRatioToLevelZero();
+      d_patch_levels[ln]->setRatioToCoarserLevel(ratio);
    }
 
 }
@@ -843,9 +889,9 @@ PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln]->setLevelInHierarchy(true);
 
    if ((ln > 0) && d_patch_levels[ln - 1]) {
-      d_patch_levels[ln]->setRatioToCoarserLevel(
-         d_patch_levels[ln]->getRatioToLevelZero()
-         / (d_patch_levels[ln - 1]->getRatioToLevelZero()));
+      IntVector ratio = d_patch_levels[ln]->getRatioToLevelZero() /
+         d_patch_levels[ln-1]->getRatioToLevelZero();
+      d_patch_levels[ln]->setRatioToCoarserLevel(ratio);
    }
 
 }
@@ -887,9 +933,9 @@ PatchHierarchy::logMetadataStatistics(
    bool log_coarse_connector) const
 {
    const std::string name("L" + tbox::Utilities::levelToString(ln));
-   const boost::shared_ptr<hier::PatchLevel> level =
+   const boost::shared_ptr<PatchLevel> level =
       getPatchLevel(ln);
-   const hier::BoxLevel& box_level = *level->getBoxLevel();
+   const BoxLevel& box_level = *level->getBoxLevel();
 
    tbox::plog << "PatchHierarchy metadata statistics '"
               << note << "', at cycle " << cycle
@@ -899,10 +945,10 @@ PatchHierarchy::logMetadataStatistics(
               << '\t' << name << " statistics:\n"
               << box_level.formatStatistics("\t\t");
 
-   const hier::Connector& peer_conn =
+   const Connector& peer_conn =
       level->findConnector(*level,
          getRequiredConnectorWidth(ln, ln),
-         hier::CONNECTOR_CREATE,
+         CONNECTOR_CREATE,
          true);
    tbox::plog << "\tL" << ln
               << " Peer connector:\n" << peer_conn.format("\t\t", 0)
@@ -910,19 +956,19 @@ PatchHierarchy::logMetadataStatistics(
               << ln << " peer Connector statistics:\n" << peer_conn.formatStatistics("\t\t");
 
    if (log_fine_connector) {
-      const hier::Connector& to_fine =
+      const Connector& to_fine =
          level->findConnector(*getPatchLevel(ln + 1),
             getRequiredConnectorWidth(ln, ln + 1),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln << "->L" << ln + 1
                  << " Connector:\n" << to_fine.format("\t\t", 0)
                  << "\tL" << ln << "->L" << ln + 1
                  << " Connector statistics:\n" << to_fine.formatStatistics("\t\t");
-      const hier::Connector& from_fine =
+      const Connector& from_fine =
          getPatchLevel(ln + 1)->findConnector(*level,
             getRequiredConnectorWidth(ln + 1, ln),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln + 1 << "->L" << ln
                  << " Connector:\n" << from_fine.format("\t\t", 0)
@@ -931,19 +977,19 @@ PatchHierarchy::logMetadataStatistics(
    }
 
    if (log_coarse_connector) {
-      const hier::Connector& to_crse =
+      const Connector& to_crse =
          level->findConnector(*getPatchLevel(ln - 1),
             getRequiredConnectorWidth(ln, ln - 1),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln << "->L" << ln - 1
                  << " Connector:\n" << to_crse.format("\t\t", 0)
                  << "\tL" << ln << "->L" << ln - 1
                  << " Connector statistics:\n" << to_crse.formatStatistics("\t\t");
-      const hier::Connector& from_crse =
+      const Connector& from_crse =
          getPatchLevel(ln - 1)->findConnector(*level,
             getRequiredConnectorWidth(ln - 1, ln),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln - 1 << "->L" << ln
                  << " Connector:\n" << from_crse.format("\t\t", 0)
@@ -992,9 +1038,18 @@ PatchHierarchy::putToRestart(
    boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
       restart_db->putDatabase("ratio_to_coarser"));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      ratio_to_coarser_db->putIntegerArray(level_names[ln],
-         &d_ratio_to_coarser[ln][0],
-         d_dim.getValue());
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+         std::vector<int> ratio_vec(d_dim.getValue());
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            ratio_vec[d] = (d_ratio_to_coarser[ln](b,d));
+         }
+         std::string level_block_name(level_names[ln]);
+         level_block_name += "_";
+         level_block_name += tbox::Utilities::intToString(static_cast<int>(b));
+         ratio_to_coarser_db->putIntegerArray(level_block_name,
+            &ratio_vec[0],
+            d_dim.getValue());
+      }
    }
 
    boost::shared_ptr<tbox::Database> smallest_patch_db(
@@ -1026,20 +1081,36 @@ PatchHierarchy::putToRestart(
 
    boost::shared_ptr<tbox::Database> self_connector_widths_db(
       restart_db->putDatabase("d_self_connector_widths"));
-   d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1));
+   d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      self_connector_widths_db->putIntegerArray(level_names[ln],
-         &d_self_connector_widths[ln][0],
-         d_dim.getValue());
+
+      std::vector<int> put_self_widths(d_number_blocks * d_dim.getValue());
+      int ic = 0;
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            put_self_widths[ic] = d_self_connector_widths[ln](b,d);
+            ++ic;
+         }
+      }
+      self_connector_widths_db->putIntegerVector(level_names[ln],
+         put_self_widths);
    }
 
    boost::shared_ptr<tbox::Database> fine_connector_widths_db(
       restart_db->putDatabase("d_fine_connector_widths"));
-   d_fine_connector_widths.resize(d_max_levels - 1, IntVector(d_dim, 1));
+   d_fine_connector_widths.resize(d_max_levels-1, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-      fine_connector_widths_db->putIntegerArray(level_names[ln],
-         &d_fine_connector_widths[ln][0],
-         d_dim.getValue());
+
+      std::vector<int> put_fine_widths(d_number_blocks * d_dim.getValue());
+      int ic = 0;
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            put_fine_widths[ic] = d_self_connector_widths[ln](b,d);
+            ++ic;
+         }
+      }
+      fine_connector_widths_db->putIntegerVector(level_names[ln],
+         put_fine_widths);
    }
 
    for (int i = 0; i < d_number_levels; ++i) {
@@ -1107,9 +1178,18 @@ PatchHierarchy::getFromRestart()
       database->getDatabase("ratio_to_coarser"));
    d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      ratio_to_coarser_db->getIntegerArray(level_names[ln],
-         &d_ratio_to_coarser[ln][0],
-         d_dim.getValue());
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+         std::string level_block_name(level_names[ln]);
+         level_block_name += "_";
+         level_block_name += tbox::Utilities::intToString(static_cast<int>(b));
+         std::vector<int> ratio_vec(d_dim.getValue());
+         ratio_to_coarser_db->getIntegerArray(level_block_name,
+            &ratio_vec[0],
+            d_dim.getValue());
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            d_ratio_to_coarser[ln](b,d) = ratio_vec[d];
+         }
+      }
    }
 
    boost::shared_ptr<tbox::Database> smallest_patch_db(
@@ -1153,20 +1233,36 @@ PatchHierarchy::getFromRestart()
 
    boost::shared_ptr<tbox::Database> self_connector_widths_db(
       database->getDatabase("d_self_connector_widths"));
-   d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1));
+   d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      self_connector_widths_db->getIntegerArray(level_names[ln],
-         &d_self_connector_widths[ln][0],
-         d_dim.getValue());
+      std::vector<int> get_self_widths =
+         self_connector_widths_db->getIntegerVector(level_names[ln]);
+
+      d_self_connector_widths[ln] = IntVector(d_dim, 0, d_number_blocks);
+      int ic = 0;
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            d_self_connector_widths[ln](b,d) = get_self_widths[ic];
+            ++ic;
+         }
+      }
    }
 
    boost::shared_ptr<tbox::Database> fine_connector_widths_db(
       database->getDatabase("d_fine_connector_widths"));
-   d_fine_connector_widths.resize(d_max_levels - 1, IntVector(d_dim, 1));
+   d_fine_connector_widths.resize(d_max_levels - 1, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-      fine_connector_widths_db->getIntegerArray(level_names[ln],
-         &d_fine_connector_widths[ln][0],
-         d_dim.getValue());
+      std::vector<int> get_fine_widths =
+         fine_connector_widths_db->getIntegerVector(level_names[ln]);
+
+      d_fine_connector_widths[ln] = IntVector(d_dim, 0, d_number_blocks);
+      int ic = 0;
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            d_fine_connector_widths[ln](b,d) = get_fine_widths[ic];
+            ++ic;
+         }
+      }
    }
 }
 

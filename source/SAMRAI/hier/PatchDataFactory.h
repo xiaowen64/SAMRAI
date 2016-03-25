@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Factory abstract base class for creating patch data objects
  *
  ************************************************************************/
@@ -61,9 +61,9 @@ class MultiblockDataTranslator;
  * processors independent of the mapping of patches to processors.  Patch
  * data is guaranteed to exist only on those patches local to a processor.
  *
- * @see hier::BoxGeometry
- * @see hier::PatchData
- * @see hier::PatchDescriptor
+ * @see BoxGeometry
+ * @see PatchData
+ * @see PatchDescriptor
  */
 
 class PatchDataFactory

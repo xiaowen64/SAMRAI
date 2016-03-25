@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Singleton manager class for statistic objects.
  *
  ************************************************************************/
@@ -58,7 +58,7 @@ class StatisticRestartDatabase;
  * For more information about data that can be recorded with statistics,
  * consult the header file for the Statistic class.
  *
- * @see tbox::Statistic
+ * @see Statistic
  */
 
 class Statistician

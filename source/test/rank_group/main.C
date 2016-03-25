@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Test program for RankGroup with TreeLoadBalancer.
  *
  ************************************************************************/
@@ -701,7 +701,7 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(0)),
+      hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(hier::BlockId(0))),
       min_size,
       max_gcw);
 

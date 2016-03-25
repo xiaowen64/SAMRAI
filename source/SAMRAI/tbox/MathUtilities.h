@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Utilities class to access common POSIX constants and math ops
  *
  ************************************************************************/
@@ -38,11 +38,11 @@ namespace tbox {
  * computer architecture and how it implements floating point arithmetic
  * and hardware traps.
  *
- * Note that the class @see tbox::IEEE also provides operations for
+ * Note that the class @see IEEE also provides operations for
  * dealing with signaling NaNs.  This class provides the actual
- * implementation for such operations with functions in tbox::IEEE
+ * implementation for such operations with functions in IEEE
  * calling the approriate operations provided here.  The class
- * tbox::IEEE is not templated on the data type and so calling the
+ * IEEE is not templated on the data type and so calling the
  * operations provided there may be easier in some cases, such as in
  * codes built based on earlier versions of SAMRAI.
  */

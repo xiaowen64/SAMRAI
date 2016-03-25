@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
@@ -34,7 +34,7 @@ namespace tbox {
  * mode.  It should be rewritten as two classes, like std::cin and
  * std::cout are.  BTNG.
  *
- * @see tbox::Schedule
+ * @see Schedule
  */
 
 class MessageStream

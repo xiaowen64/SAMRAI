@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -3078,3 +3078,26 @@ void LinAdv::checkBoundaryData(
    }
 
 }
+
+void
+LinAdv::checkUserTagData(
+   hier::Patch& patch,
+   const int tag_index) const
+{
+   boost::shared_ptr<pdat::CellData<int> > tags(
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_index)));
+   TBOX_ASSERT(tags);
+}
+
+void
+LinAdv::checkNewPatchTagData(
+   hier::Patch& patch,
+   const int tag_index) const
+{
+   boost::shared_ptr<pdat::CellData<int> > tags(
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_index)));
+   TBOX_ASSERT(tags);
+}
+

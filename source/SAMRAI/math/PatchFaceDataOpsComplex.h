@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex face-centered patch data.
  *
  ************************************************************************/
@@ -42,8 +42,8 @@ namespace math {
  * integer patch data in the classes PatchFaceDataOpsReal and
  * PatchFaceDataOpsInteger, repsectively.
  *
- * @see math::PatchFaceDataBasicOps
- * @see math::PatchFaceDataNormOpsComplex
+ * @see PatchFaceDataBasicOps
+ * @see PatchFaceDataNormOpsComplex
  */
 
 class PatchFaceDataOpsComplex:

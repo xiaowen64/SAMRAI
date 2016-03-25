@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for cell-centered patch data
  *
  ************************************************************************/
@@ -255,7 +255,7 @@ void CellDataTest::setConservativeData(
        * is the vector between the coarse and fine cell centers.
        */
 
-      hier::IntVector ratio(level->getRatioToLevelZero());
+      const hier::IntVector& ratio = level->getRatioToLevelZero();
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(

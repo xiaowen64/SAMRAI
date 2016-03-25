@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Class to record statistics during program execution.
  *
  ************************************************************************/
@@ -70,7 +70,7 @@ class Statistician;
  * on level zero, level 1, etc.  In this case, one can cimply create a
  * separate statistic object for each level.
  *
- * @see tbox::Statistician
+ * @see Statistician
  */
 
 class Statistic

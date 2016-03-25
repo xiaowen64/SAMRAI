@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
  * Description:   Level fill pattern for enhanced connectivity
  *
  ************************************************************************/
@@ -28,7 +28,7 @@ namespace xfer {
  * It is intended for users who wish to handle the filling of data at these
  * singularities separately from the filling of all other data.
  *
- * @see xfer::RefineSchedule
+ * @see RefineSchedule
  */
 
 class PatchLevelEnhancedFillPattern:public PatchLevelFillPattern
